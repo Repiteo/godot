@@ -46,7 +46,7 @@ class GDScript;
 
 class GDScriptDataType {
 private:
-	GDScriptDataType *container_element_type = nullptr;
+	Vector<GDScriptDataType *> container_element_types;
 
 public:
 	enum Kind {
@@ -76,19 +76,20 @@ public:
 			case BUILTIN: {
 				Variant::Type var_type = p_variant.get_type();
 				bool valid = builtin_type == var_type;
-				if (valid && builtin_type == Variant::ARRAY && has_container_element_type()) {
+				if (valid && builtin_type == Variant::ARRAY && has_container_element_type(0)) {
 					Array array = p_variant;
 					if (array.is_typed()) {
+						GDScriptDataType array_container_type = get_container_element_type(0);
 						Variant::Type array_builtin_type = (Variant::Type)array.get_typed_builtin();
 						StringName array_native_type = array.get_typed_class_name();
 						Ref<Script> array_script_type_ref = array.get_typed_script();
 
 						if (array_script_type_ref.is_valid()) {
-							valid = (container_element_type->kind == SCRIPT || container_element_type->kind == GDSCRIPT) && container_element_type->script_type == array_script_type_ref.ptr();
+							valid = (array_container_type.kind == SCRIPT || array_container_type.kind == GDSCRIPT) && array_container_type.script_type == array_script_type_ref.ptr();
 						} else if (array_native_type != StringName()) {
-							valid = container_element_type->kind == NATIVE && container_element_type->native_type == array_native_type;
+							valid = array_container_type.kind == NATIVE && array_container_type.native_type == array_native_type;
 						} else {
-							valid = container_element_type->kind == BUILTIN && container_element_type->builtin_type == array_builtin_type;
+							valid = array_container_type.kind == BUILTIN && array_container_type.builtin_type == array_builtin_type;
 						}
 					} else {
 						valid = false;
@@ -147,24 +148,63 @@ public:
 		return false;
 	}
 
-	void set_container_element_type(const GDScriptDataType &p_element_type) {
-		container_element_type = memnew(GDScriptDataType(p_element_type));
+	int container_element_type_size() const {
+		return container_element_types.size();
 	}
 
-	GDScriptDataType get_container_element_type() const {
-		ERR_FAIL_NULL_V(container_element_type, GDScriptDataType());
-		return *container_element_type;
-	}
-
-	bool has_container_element_type() const {
-		return container_element_type != nullptr;
-	}
-
-	void unset_container_element_type() {
-		if (container_element_type) {
-			memdelete(container_element_type);
+	void set_container_element_type(int p_index, const GDScriptDataType &p_element_type) {
+		while (container_element_type_size() <= p_index) {
+			container_element_types.push_back(nullptr);
 		}
-		container_element_type = nullptr;
+		if (container_element_types[p_index] != nullptr) {
+			memdelete(container_element_types[p_index]);
+		}
+		container_element_types.write[p_index] = memnew(GDScriptDataType(p_element_type));
+	}
+
+	void set_container_element_types(const Vector<GDScriptDataType> &p_element_types) {
+		unset_container_element_types();
+		for (int i = 0; i < p_element_types.size(); i++) {
+			container_element_types.push_back(memnew(GDScriptDataType(p_element_types[i])));
+		}
+	}
+
+	GDScriptDataType get_container_element_type(int p_index) const {
+		ERR_FAIL_INDEX_V(p_index, container_element_type_size(), GDScriptDataType());
+		ERR_FAIL_NULL_V(container_element_types[p_index], GDScriptDataType());
+		return *container_element_types[p_index];
+	}
+
+	GDScriptDataType get_container_element_type_or_default(int p_index) const {
+		if (container_element_type_size() <= p_index || container_element_types[p_index] == nullptr) {
+			return GDScriptDataType();
+		}
+		return *container_element_types[p_index];
+	}
+
+	Vector<GDScriptDataType> get_container_element_types() const {
+		Vector<GDScriptDataType> container;
+		for (int i = 0; i < container_element_type_size(); i++) {
+			container.append(get_container_element_type_or_default(i));
+		}
+		return container;
+	}
+
+	bool has_container_element_type(int p_index) const {
+		return container_element_type_size() > p_index && container_element_types[p_index] != nullptr;
+	}
+
+	bool has_container_element_types() const {
+		return !container_element_types.is_empty();
+	}
+
+	void unset_container_element_types() {
+		for (int i = 0; i < container_element_type_size(); i++) {
+			if (container_element_types[i] != nullptr) {
+				memdelete(container_element_types[i]);
+			}
+		}
+		container_element_types.clear();
 	}
 
 	GDScriptDataType() = default;
@@ -176,10 +216,7 @@ public:
 		native_type = p_other.native_type;
 		script_type = p_other.script_type;
 		script_type_ref = p_other.script_type_ref;
-		unset_container_element_type();
-		if (p_other.has_container_element_type()) {
-			set_container_element_type(p_other.get_container_element_type());
-		}
+		set_container_element_types(p_other.get_container_element_types());
 	}
 
 	GDScriptDataType(const GDScriptDataType &p_other) {
@@ -187,7 +224,7 @@ public:
 	}
 
 	~GDScriptDataType() {
-		unset_container_element_type();
+		unset_container_element_types();
 	}
 };
 

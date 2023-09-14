@@ -3341,14 +3341,21 @@ GDScriptParser::TypeNode *GDScriptParser::parse_type(bool p_allow_void) {
 
 	if (match(GDScriptTokenizer::Token::BRACKET_OPEN)) {
 		// Typed collection (like Array[int]).
-		type->container_type = parse_type(false); // Don't allow void for array element type.
-		if (type->container_type == nullptr) {
-			push_error(R"(Expected type for collection after "[".)");
-			complete_extents(type);
-			type = nullptr;
-		} else if (type->container_type->container_type != nullptr) {
-			push_error("Nested typed collections are not supported.");
-		}
+		bool first_pass = true;
+		do {
+			TypeNode *container_type = parse_type(false); // Don't allow void for element type.
+			if (container_type == nullptr) {
+				push_error(vformat(R"(Expected type for collection after "%s".)", first_pass ? "[" : ","));
+				complete_extents(type);
+				type = nullptr;
+				break;
+			} else if (container_type->container_types.size() > 0) {
+				push_error("Nested typed collections are not supported.");
+			} else {
+				type->container_types.append(container_type);
+			}
+			first_pass = false;
+		} while (match(GDScriptTokenizer::Token::COMMA));
 		consume(GDScriptTokenizer::Token::BRACKET_CLOSE, R"(Expected closing "]" after collection type.)");
 		if (type != nullptr) {
 			complete_extents(type);
@@ -4000,8 +4007,8 @@ bool GDScriptParser::export_annotations(const AnnotationNode *p_annotation, Node
 			variable->export_info.type = Variant::INT;
 		}
 	} else if (p_annotation->name == SNAME("@export_multiline")) {
-		if (export_type.builtin_type == Variant::ARRAY && export_type.has_container_element_type()) {
-			DataType inner_type = export_type.get_container_element_type();
+		if (export_type.builtin_type == Variant::ARRAY && export_type.has_container_element_type(0)) {
+			DataType inner_type = export_type.get_container_element_type(0);
 			if (inner_type.builtin_type != Variant::STRING) {
 				push_error(vformat(R"("%s" annotation on arrays requires a string type but type "%s" was given instead.)", p_annotation->name.operator String(), inner_type.to_string()), variable);
 				return false;
@@ -4037,8 +4044,8 @@ bool GDScriptParser::export_annotations(const AnnotationNode *p_annotation, Node
 
 		bool is_array = false;
 
-		if (export_type.builtin_type == Variant::ARRAY && export_type.has_container_element_type()) {
-			export_type = export_type.get_container_element_type(); // Use inner type for.
+		if (export_type.builtin_type == Variant::ARRAY && export_type.has_container_element_type(0)) {
+			export_type = export_type.get_container_element_type(0); // Use inner type for.
 			is_array = true;
 		}
 
@@ -4348,8 +4355,8 @@ String GDScriptParser::DataType::to_string() const {
 			if (builtin_type == Variant::NIL) {
 				return "null";
 			}
-			if (builtin_type == Variant::ARRAY && has_container_element_type()) {
-				return vformat("Array[%s]", container_element_type->to_string());
+			if (builtin_type == Variant::ARRAY && has_container_element_type(0)) {
+				return vformat("Array[%s]", container_element_types[0]->to_string());
 			}
 			return Variant::get_type_name(builtin_type);
 		case NATIVE:
@@ -4402,8 +4409,8 @@ PropertyInfo GDScriptParser::DataType::to_property_info(const String &p_name) co
 	switch (kind) {
 		case BUILTIN:
 			result.type = builtin_type;
-			if (builtin_type == Variant::ARRAY && has_container_element_type()) {
-				const DataType *elem_type = container_element_type;
+			if (builtin_type == Variant::ARRAY && has_container_element_type(0)) {
+				const DataType *elem_type = container_element_types[0];
 				switch (elem_type->kind) {
 					case BUILTIN:
 						result.hint = PROPERTY_HINT_ARRAY_TYPE;

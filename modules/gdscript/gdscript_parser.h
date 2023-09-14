@@ -103,7 +103,7 @@ public:
 	class DataType {
 	private:
 		// Private access so we can control memory management.
-		DataType *container_element_type = nullptr;
+		Vector<DataType *> container_element_types;
 
 	public:
 		enum Kind {
@@ -152,24 +152,66 @@ public:
 		_FORCE_INLINE_ String to_string_strict() const { return is_hard_type() ? to_string() : "Variant"; }
 		PropertyInfo to_property_info(const String &p_name) const;
 
-		_FORCE_INLINE_ void set_container_element_type(const DataType &p_type) {
-			container_element_type = memnew(DataType(p_type));
+		_FORCE_INLINE_ int container_element_type_size() const {
+			return container_element_types.size();
 		}
 
-		_FORCE_INLINE_ DataType get_container_element_type() const {
-			ERR_FAIL_NULL_V(container_element_type, DataType());
-			return *container_element_type;
+		_FORCE_INLINE_ void set_container_element_type(int p_index, const DataType &p_type) {
+			while (container_element_type_size() <= p_index) {
+				container_element_types.push_back(nullptr);
+			}
+			if (container_element_types[p_index] != nullptr) {
+				memdelete(container_element_types[p_index]);
+			}
+			container_element_types.write[p_index] = memnew(DataType(p_type));
 		}
 
-		_FORCE_INLINE_ bool has_container_element_type() const {
-			return container_element_type != nullptr;
+		_FORCE_INLINE_ void set_container_element_types(const Vector<DataType> &p_types) {
+			unset_container_element_types();
+			for (int i = 0; i < p_types.size(); i++) {
+				container_element_types.push_back(memnew(DataType(p_types[i])));
+			}
 		}
 
-		_FORCE_INLINE_ void unset_container_element_type() {
-			if (container_element_type) {
-				memdelete(container_element_type);
-			};
-			container_element_type = nullptr;
+		_FORCE_INLINE_ DataType get_container_element_type(int p_index) const {
+			ERR_FAIL_INDEX_V(p_index, container_element_type_size(), DataType());
+			ERR_FAIL_NULL_V(container_element_types[p_index], DataType());
+			return *container_element_types[p_index];
+		}
+
+		_FORCE_INLINE_ DataType get_container_element_type_or_default(int p_index) const {
+			if (container_element_type_size() <= p_index || container_element_types[p_index] == nullptr) {
+				DataType datatype;
+				datatype.kind = VARIANT;
+				datatype.type_source = INFERRED;
+				return datatype;
+			}
+			return *container_element_types[p_index];
+		}
+
+		_FORCE_INLINE_ Vector<DataType> get_container_element_types() const {
+			Vector<DataType> container;
+			for (int i = 0; i < container_element_type_size(); i++) {
+				container.append(get_container_element_type_or_default(i));
+			}
+			return container;
+		}
+
+		_FORCE_INLINE_ bool has_container_element_type(int p_index) const {
+			return container_element_type_size() > p_index && container_element_types[p_index] != nullptr;
+		}
+
+		_FORCE_INLINE_ bool has_container_element_types() const {
+			return !container_element_types.is_empty();
+		}
+
+		_FORCE_INLINE_ void unset_container_element_types() {
+			for (int i = 0; i < container_element_type_size(); i++) {
+				if (container_element_types[i] != nullptr) {
+					memdelete(container_element_types[i]);
+				}
+			}
+			container_element_types.clear();
 		}
 
 		bool is_typed_container_type() const;
@@ -178,11 +220,11 @@ public:
 
 		bool operator==(const DataType &p_other) const {
 			if (type_source == UNDETECTED || p_other.type_source == UNDETECTED) {
-				return true; // Can be consireded equal for parsing purposes.
+				return true; // Can be considered equal for parsing purposes.
 			}
 
 			if (type_source == INFERRED || p_other.type_source == INFERRED) {
-				return true; // Can be consireded equal for parsing purposes.
+				return true; // Can be considered equal for parsing purposes.
 			}
 
 			if (kind != p_other.kind) {
@@ -229,10 +271,7 @@ public:
 			class_type = p_other.class_type;
 			method_info = p_other.method_info;
 			enum_values = p_other.enum_values;
-			unset_container_element_type();
-			if (p_other.has_container_element_type()) {
-				set_container_element_type(p_other.get_container_element_type());
-			}
+			set_container_element_types(p_other.get_container_element_types());
 		}
 
 		DataType() = default;
@@ -242,7 +281,7 @@ public:
 		}
 
 		~DataType() {
-			unset_container_element_type();
+			unset_container_element_types();
 		}
 	};
 
@@ -1183,7 +1222,11 @@ public:
 
 	struct TypeNode : public Node {
 		Vector<IdentifierNode *> type_chain;
-		TypeNode *container_type = nullptr;
+		Vector<TypeNode *> container_types;
+
+		TypeNode *get_container_type_or_null(int p_index) const {
+			return p_index < container_types.size() ? container_types[p_index] : nullptr;
+		}
 
 		TypeNode() {
 			type = TYPE;
