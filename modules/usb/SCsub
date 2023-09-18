@@ -1,0 +1,96 @@
+#!/usr/bin/env python
+
+Import("env")
+Import("env_modules")
+
+env_usb = env_modules.Clone()
+
+# Thirdparty source files
+
+thirdparty_obj = []
+
+# Not unbundled for now as they are not commonly available as shared library
+thirdparty_dir = "#thirdparty/libusb/"
+thirdparty_sources = [
+    "core.c",
+    "descriptor.c",
+    "hotplug.c",
+    "io.c",
+    "strerror.c",
+    "sync.c",
+]
+if env["platform"] == "windows":
+    env_usb.Append(CPPDEFINES=[("PLATFORM_WINDOWS", 1)])
+    thirdparty_sources += [
+        "os/events_windows.c",
+        "os/threads_windows.c",
+        "os/windows_common.c",
+        "os/windows_usbdk.c",
+        "os/windows_winusb.c",
+    ]
+else:
+    env_usb.Append(CPPDEFINES=[("PLATFORM_POSIX", 1)])
+    thirdparty_sources += [
+        "os/events_posix.c",
+        "os/threads_posix.c",
+    ]
+    if env["platform"] == "macos":
+        thirdparty_sources += "os/darwin_usb.c"
+    elif env["platform"] == "linuxbsd" or env["platform"] == "android":
+        if env.get("udev", True):
+            thirdparty_sources += ["os/linux_netlink.c"]
+        else:
+            thirdparty_sources += ["os/linux_udev.c"]
+            env_usb.Append(CPPDEFINES=[("HAVE_LIBUDEV", 1)])
+    else:
+        thirdparty_sources += ["os/null_usb.c"]
+thirdparty_sources = [thirdparty_dir + file for file in thirdparty_sources]
+
+headers = {
+    "IOKit/usb/IOUSBHostFamilyDefinitions.h": ("HAVE_IOKIT_USB_IOUSBHOSTFAMILYDEFINITIONS_H", 1),
+    "asm/types.h": ("HAVE_ASM_TYPES_H", 1),
+    "sys/time.h": ("HAVE_SYS_TIME_H", 1),
+}
+functions = {
+    "pipe2": ("HAVE_PIPE2", 1),
+    "pthread_threadid_np": ("HAVE_PTHREAD_THREADID_NP", 1),
+    "pthread_setname_np": ("HAVE_PTHREAD_SETNAME_NP", 1),
+    "clock_gettime": ("HAVE_CLOCK_GETTIME", 1),
+    "pthread_condattr_setclock": ("HAVE_PTHREAD_CONDATTR_SETCLOCK", 1),
+    "eventfd": ("HAVE_EVENTFD", 1),
+    "timerfd_create": ("HAVE_TIMERFD", 1),
+    "syslog": ("HAVE_SYSLOG", 1),
+}
+types = {"nfds_t": ("HAVE_NFDS_T", 1), "struct timespec": ("HAVE_STRUCT_TIMESPEC", 1)}
+
+conf = Configure(env_usb)
+for key in headers:
+    if conf.CheckHeader(key):
+        env_usb.AppendUnique(CPPDEFINES=[headers[key]])
+# msvc borks CheckFunc & CheckType for some reason
+if not env.msvc:
+    for key in functions:
+        if conf.CheckFunc(key):
+            env_usb.AppendUnique(CPPDEFINES=[functions[key]])
+    for key in types:
+        if conf.CheckType(key):
+            env_usb.AppendUnique(CPPDEFINES=[types[key]])
+env_usb = conf.Finish()
+
+env_usb.Prepend(CPPPATH=[thirdparty_dir])
+
+env_thirdparty = env_usb.Clone()
+env_thirdparty.disable_warnings()
+env_thirdparty.Prepend(CPPPATH=[thirdparty_dir, thirdparty_dir + "os/"])
+env_thirdparty.add_source_files(thirdparty_obj, thirdparty_sources)
+env.modules_sources += thirdparty_obj
+
+# Godot source files
+
+module_obj = []
+
+env_usb.add_source_files(module_obj, "*.cpp")
+env.modules_sources += module_obj
+
+# Needed to force rebuilding the module files when the thirdparty library is updated.
+env.Depends(module_obj, thirdparty_obj)

@@ -35,6 +35,7 @@
 #include "core/io/image.h"
 #include "core/io/logger.h"
 #include "core/io/remote_filesystem_client.h"
+#include "core/io/usb_access.h"
 #include "core/os/time_enums.h"
 #include "core/string/ustring.h"
 #include "core/templates/list.h"
@@ -164,6 +165,7 @@ public:
 	void set_delta_smoothing(bool p_enabled);
 	bool is_delta_smoothing_enabled() const;
 
+	virtual TypedArray<USBAccess> get_usb_devices() const;
 	virtual Vector<String> get_system_fonts() const { return Vector<String>(); };
 	virtual String get_system_font_path(const String &p_font_name, int p_weight = 400, int p_stretch = 100, bool p_italic = false) const { return String(); };
 	virtual Vector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const { return Vector<String>(); };

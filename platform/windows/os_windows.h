@@ -193,6 +193,7 @@ public:
 	virtual void set_environment(const String &p_var, const String &p_value) const override;
 	virtual void unset_environment(const String &p_var) const override;
 
+	virtual TypedArray<USBAccess> get_usb_devices() const override;
 	virtual Vector<String> get_system_fonts() const override;
 	virtual String get_system_font_path(const String &p_font_name, int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
 	virtual Vector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;

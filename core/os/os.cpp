@@ -36,6 +36,7 @@
 #include "core/io/file_access.h"
 #include "core/io/json.h"
 #include "core/os/midi_driver.h"
+#include "core/variant/typed_array.h"
 #include "core/version_generated.gen.h"
 
 #include <stdarg.h>
@@ -158,6 +159,10 @@ void OS::set_delta_smoothing(bool p_enabled) {
 
 bool OS::is_delta_smoothing_enabled() const {
 	return _delta_smoothing_enabled;
+}
+
+TypedArray<USBAccess> OS::get_usb_devices() const {
+	return TypedArray<USBAccess>();
 }
 
 String OS::get_executable_path() const {

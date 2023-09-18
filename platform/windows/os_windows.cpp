@@ -42,6 +42,7 @@
 #include "drivers/unix/net_socket_posix.h"
 #include "drivers/windows/dir_access_windows.h"
 #include "drivers/windows/file_access_windows.h"
+#include "drivers/windows/usb_access_windows.h"
 #include "main/main.h"
 #include "servers/audio_server.h"
 #include "servers/rendering/rendering_server_default.h"
@@ -49,12 +50,15 @@
 
 #include <avrt.h>
 #include <bcrypt.h>
+#include <cfgmgr32.h>
 #include <direct.h>
 #include <knownfolders.h>
 #include <process.h>
 #include <psapi.h>
 #include <regstr.h>
+#include <setupapi.h>
 #include <shlobj.h>
+#include <usbiodef.h>
 #include <wbemcli.h>
 #include <wincrypt.h>
 
@@ -181,6 +185,7 @@ void OS_Windows::initialize() {
 	DirAccess::make_default<DirAccessWindows>(DirAccess::ACCESS_RESOURCES);
 	DirAccess::make_default<DirAccessWindows>(DirAccess::ACCESS_USERDATA);
 	DirAccess::make_default<DirAccessWindows>(DirAccess::ACCESS_FILESYSTEM);
+	USBAccess::make_default<USBAccessWindows>();
 
 	NetSocketPosix::make_default();
 
@@ -910,6 +915,113 @@ Error OS_Windows::set_cwd(const String &p_cwd) {
 	}
 
 	return OK;
+}
+
+TypedArray<USBAccess> OS_Windows::get_usb_devices() const {
+	HDEVINFO handle = INVALID_HANDLE_VALUE;
+	handle = SetupDiGetClassDevsW(&GUID_DEVINTERFACE_USB_DEVICE, nullptr, 0, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
+	ERR_FAIL_COND_V_MSG(handle == INVALID_HANDLE_VALUE, TypedArray<USBAccess>(), format_error_message(GetLastError()));
+
+	TypedArray<USBAccess> devices;
+	DWORD index = 0;
+	while (true) {
+		// Dictionary device;
+		SP_DEVINFO_DATA info;
+		info.cbSize = sizeof(info);
+
+		BOOL success = SetupDiEnumDeviceInfo(handle, index, &info);
+		if (!success) {
+			DWORD err_code = GetLastError();
+			if (err_code != ERROR_NO_MORE_ITEMS) {
+				ERR_PRINT(format_error_message(err_code));
+			}
+			break;
+		}
+
+		Char16String id;
+		DWORD size = MAX_DEVICE_ID_LEN + 1;
+		id.resize(size);
+		success = SetupDiGetDeviceInstanceIdW(handle, &info, (PWSTR)id.ptrw(), size, &size);
+		ERR_BREAK_MSG(!success, format_error_message(GetLastError()));
+
+		String instance_id = String::utf16(id.ptr(), size);
+		WARN_PRINT_ED(instance_id);
+		uint16_t vendor_id = instance_id.substr(8, 4).hex_to_int();
+		uint16_t product_id = instance_id.substr(17, 4).hex_to_int();
+		// device["vendor_id"] = instance_id.substr(8, 4).hex_to_int();
+		// device["product_id"] = instance_id.substr(17, 4).hex_to_int();
+		// device["trail"] = instance_id.substr(22);
+
+		devices.append(USBAccess::open(vendor_id, product_id));
+		index++;
+
+		// success = SetupDiGetDeviceRegistryPropertyW(handle, &info, SPDRP_HARDWAREID, nullptr, nullptr, 0, &size);
+		// ERR_BREAK_MSG(!success && GetLastError() != ERROR_INSUFFICIENT_BUFFER, format_error_message(GetLastError()));
+		// if (!success) {
+		// 	DWORD err_code = GetLastError();
+		// 	ERR_BREAK_MSG(err_code != ERROR_INSUFFICIENT_BUFFER, format_error_message(err_code));
+		// }
+
+		// id.resize(size);
+		// success = SetupDiGetDeviceRegistryPropertyW(handle, &info, SPDRP_HARDWAREID, nullptr, (PBYTE)id.ptrw(), size, nullptr);
+		// ERR_BREAK_MSG(!success, format_error_message(GetLastError()));
+		// device["hardware_ids"] = String::utf16(id.ptr(), id.size());
+		// // String test = String(reinterpret_cast<const wchar_t *>(id.get_data()));
+		// // device["hardware_ids_reint"] = String(reinterpret_cast<const wchar_t *>(id.get_data()));
+		// for (DWORD i = 0; i < size - 1; i++) {
+		// 	if (id[i] == '\0') {
+		// 		id[i] = (char16_t)'\n';
+		// 	}
+		// }
+		// device["hardware_ids_alt"] = String::utf16(id.ptr(), id.size());
+
+		// Vector<uint8_t> bytes;
+		// bytes.resize(size);
+		// success = SetupDiGetDeviceRegistryPropertyW(handle, &info, SPDRP_HARDWAREID, nullptr, (PBYTE)bytes.ptrw(), size, nullptr);
+		// ERR_BREAK_MSG(!success, format_error_message(GetLastError()));
+		// device["hardware_ids_bytes_W"] = bytes;
+		// device["hardware_ids_bytes_W_str"] = String((const wchar_t *)bytes.ptr());
+		// success = SetupDiGetDeviceRegistryPropertyA(handle, &info, SPDRP_HARDWAREID, nullptr, (PBYTE)bytes.ptrw(), size, &size);
+		// ERR_BREAK_MSG(!success, format_error_message(GetLastError()));
+		// bytes.resize(size);
+		// device["hardware_ids_bytes_A"] = bytes;
+		// device["hardware_ids_bytes_A_str"] = String((const char *)bytes.ptr());
+
+		// devices.append(device);
+		// index++;
+
+		// REG_MULTI_SZ handles non-terminating nulls as newlines
+		// WARN_PRINT_ED(vformat("after: %s", id.size()));
+
+		// device["hardware_ids"] = String::utf16(id.ptr(), size).to_upper();
+
+		// Vector<uint8_t> bytes;
+		// bytes.resize(size);
+		// success = SetupDiGetDeviceRegistryPropertyW(handle, &info, SPDRP_HARDWAREID, &data_type, (PBYTE)bytes.ptrw(), size, nullptr);
+		// // for (DWORD i = 0; i < size; i++) {
+		// // 	if (new_ids[i] >= 'a' && new_ids[i] <= 'z') {
+		// // 		new_ids[i] -= 'a' - 'A';
+		// // 	}
+		// // }
+		// device["hardware_bytes"] = bytes;
+
+		// uint16_t vendor_id = 0;
+		// uint16_t product_id = 0;
+		// uint16_t revision = 0;
+		// device["hardware_ids"] = String::utf16(id.ptr(), size).to_upper();
+
+		// devices.append(device);
+		// index++;
+	}
+
+	if (handle != INVALID_HANDLE_VALUE) {
+		BOOL success = SetupDiDestroyDeviceInfoList(handle);
+		if (!success) {
+			ERR_PRINT(format_error_message(GetLastError()));
+		}
+	}
+
+	return devices;
 }
 
 Vector<String> OS_Windows::get_system_fonts() const {

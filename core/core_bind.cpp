@@ -241,6 +241,10 @@ void OS::crash(const String &p_message) {
 	CRASH_NOW_MSG(p_message);
 }
 
+TypedArray<USBAccess> OS::get_usb_devices() const {
+	return ::OS::get_singleton()->get_usb_devices();
+}
+
 Vector<String> OS::get_system_fonts() const {
 	return ::OS::get_singleton()->get_system_fonts();
 }
@@ -579,6 +583,7 @@ void OS::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_processor_count"), &OS::get_processor_count);
 	ClassDB::bind_method(D_METHOD("get_processor_name"), &OS::get_processor_name);
 
+	ClassDB::bind_method(D_METHOD("get_usb_devices"), &OS::get_usb_devices);
 	ClassDB::bind_method(D_METHOD("get_system_fonts"), &OS::get_system_fonts);
 	ClassDB::bind_method(D_METHOD("get_system_font_path", "font_name", "weight", "stretch", "italic"), &OS::get_system_font_path, DEFVAL(400), DEFVAL(100), DEFVAL(false));
 	ClassDB::bind_method(D_METHOD("get_system_font_path_for_text", "font_name", "text", "locale", "script", "weight", "stretch", "italic"), &OS::get_system_font_path_for_text, DEFVAL(String()), DEFVAL(String()), DEFVAL(400), DEFVAL(100), DEFVAL(false));
