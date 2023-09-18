@@ -452,6 +452,11 @@
 				[b]Note:[/b] Returns an empty string and prints an error on Web, as this method cannot be implemented on this platform.
 			</description>
 		</method>
+		<method name="get_usb_devices" qualifiers="const">
+			<return type="USBAccess[]" />
+			<description>
+			</description>
+		</method>
 		<method name="get_user_data_dir" qualifiers="const">
 			<return type="String" />
 			<description>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="USBAccess" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="close">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
+		<method name="get_open_error" qualifiers="static">
+			<return type="int" enum="Error" />
+			<description>
+			</description>
+		</method>
+		<method name="get_ports" qualifiers="static">
+			<return type="Dictionary[]" />
+			<description>
+			</description>
+		</method>
+		<method name="open" qualifiers="static">
+			<return type="USBAccess" />
+			<param index="0" name="vendor_id" type="int" />
+			<param index="1" name="product_id" type="int" />
+			<description>
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="product_id" type="int" setter="" getter="get_product_id">
+		</member>
+		<member name="vendor_id" type="int" setter="" getter="get_vendor_id">
+		</member>
+	</members>
+</class>

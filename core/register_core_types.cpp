@@ -64,6 +64,7 @@
 #include "core/io/tcp_server.h"
 #include "core/io/translation_loader_po.h"
 #include "core/io/udp_server.h"
+#include "core/io/usb_access.h"
 #include "core/io/xml_parser.h"
 #include "core/math/a_star.h"
 #include "core/math/a_star_grid_2d.h"
@@ -239,6 +240,7 @@ void register_core_types() {
 
 	GDREGISTER_ABSTRACT_CLASS(FileAccess);
 	GDREGISTER_ABSTRACT_CLASS(DirAccess);
+	GDREGISTER_ABSTRACT_CLASS(USBAccess);
 	GDREGISTER_CLASS(core_bind::Thread);
 	GDREGISTER_CLASS(core_bind::Mutex);
 	GDREGISTER_CLASS(core_bind::Semaphore);

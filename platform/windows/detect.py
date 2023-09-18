@@ -420,6 +420,8 @@ def configure_msvc(env, vcvars_msvc_config):
         "dwrite",
         "wbemuuid",
         "ntdll",
+        "cfgmgr32",
+        "setupapi",
     ]
 
     if env.debug_features:
@@ -612,6 +614,8 @@ def configure_mingw(env):
             "dwrite",
             "wbemuuid",
             "ntdll",
+            "cfgmgr32",
+            "setupapi",
         ]
     )
 
