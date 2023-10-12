@@ -760,7 +760,7 @@ LightmapperRD::BakeError LightmapperRD::_dilate(RenderingDevice *rd, Ref<RDShade
 	rd->compute_list_bind_uniform_set(compute_list, dilate_uniform_set, 1);
 	push_constant.region_ofs[0] = 0;
 	push_constant.region_ofs[1] = 0;
-	Vector3i group_size(Math::division_round_up(atlas_size.x, 8), Math::division_round_up(atlas_size.y, 8), 1); //restore group size
+	Vector3i group_size(Math::division_round_up((int)atlas_size.x, 8), Math::division_round_up((int)atlas_size.y, 8), 1); //restore group size
 
 	for (int i = 0; i < atlas_slices; i++) {
 		push_constant.atlas_slice = i;
@@ -943,8 +943,8 @@ LightmapperRD::BakeError LightmapperRD::_denoise(RenderingDevice *p_rd, Ref<RDSh
 	// We use a region with 1/4 the amount of pixels if we're denoising SH lightmaps, as
 	// all four of them are denoised in the shader in one dispatch.
 	const int max_region_size = p_bake_sh ? 512 : 1024;
-	int x_regions = Math::division_round_up(p_atlas_size.width, max_region_size);
-	int y_regions = Math::division_round_up(p_atlas_size.height, max_region_size);
+	int x_regions = Math::division_round_up((int)p_atlas_size.width, max_region_size);
+	int y_regions = Math::division_round_up((int)p_atlas_size.height, max_region_size);
 	for (int s = 0; s < p_atlas_slices; s++) {
 		p_push_constant.atlas_slice = s;
 
@@ -1440,7 +1440,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 	rd->free(compute_shader_secondary); \
 	rd->free(compute_shader_light_probes);
 
-	Vector3i group_size(Math::division_round_up(atlas_size.x, 8), Math::division_round_up(atlas_size.y, 8), 1);
+	Vector3i group_size(Math::division_round_up((int)atlas_size.x, 8), Math::division_round_up((int)atlas_size.y, 8), 1);
 	rd->submit();
 	rd->sync();
 
@@ -1633,8 +1633,8 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 		int max_region_size = nearest_power_of_2_templated(int(GLOBAL_GET("rendering/lightmapping/bake_performance/region_size")));
 		int max_rays = GLOBAL_GET("rendering/lightmapping/bake_performance/max_rays_per_pass");
 
-		int x_regions = Math::division_round_up(atlas_size.width, max_region_size);
-		int y_regions = Math::division_round_up(atlas_size.height, max_region_size);
+		int x_regions = Math::division_round_up((int)atlas_size.width, max_region_size);
+		int y_regions = Math::division_round_up((int)atlas_size.height, max_region_size);
 
 		int ray_iterations = Math::division_round_up((int32_t)push_constant.ray_count, max_rays);
 

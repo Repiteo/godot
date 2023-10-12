@@ -1156,8 +1156,11 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 		} break;
 #ifdef REAL_T_IS_DOUBLE
 		case Variant::VECTOR2:
+		case Variant::VECTOR2I:
 		case Variant::VECTOR3:
+		case Variant::VECTOR3I:
 		case Variant::VECTOR4:
+		case Variant::VECTOR4I:
 		case Variant::PACKED_VECTOR2_ARRAY:
 		case Variant::PACKED_VECTOR3_ARRAY:
 		case Variant::TRANSFORM2D:
@@ -1167,6 +1170,7 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 		case Variant::PLANE:
 		case Variant::BASIS:
 		case Variant::RECT2:
+		case Variant::RECT2I:
 		case Variant::AABB: {
 			flags |= ENCODE_FLAG_64;
 		} break;

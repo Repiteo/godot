@@ -157,14 +157,14 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 			{ Variant::FLOAT, sizeof(double), sizeof(double), sizeof(double), sizeof(double) },
 			{ Variant::STRING, ptrsize_32, ptrsize_64, ptrsize_32, ptrsize_64 },
 			{ Variant::VECTOR2, 2 * sizeof(float), 2 * sizeof(float), 2 * sizeof(double), 2 * sizeof(double) },
-			{ Variant::VECTOR2I, 2 * sizeof(int32_t), 2 * sizeof(int32_t), 2 * sizeof(int32_t), 2 * sizeof(int32_t) },
+			{ Variant::VECTOR2I, 2 * sizeof(int32_t), 2 * sizeof(int32_t), 2 * sizeof(int64_t), 2 * sizeof(int64_t) },
 			{ Variant::RECT2, 4 * sizeof(float), 4 * sizeof(float), 4 * sizeof(double), 4 * sizeof(double) },
-			{ Variant::RECT2I, 4 * sizeof(int32_t), 4 * sizeof(int32_t), 4 * sizeof(int32_t), 4 * sizeof(int32_t) },
+			{ Variant::RECT2I, 4 * sizeof(int32_t), 4 * sizeof(int32_t), 4 * sizeof(int64_t), 4 * sizeof(int64_t) },
 			{ Variant::VECTOR3, vec3_elems * sizeof(float), vec3_elems * sizeof(float), vec3_elems * sizeof(double), vec3_elems * sizeof(double) },
-			{ Variant::VECTOR3I, 3 * sizeof(int32_t), 3 * sizeof(int32_t), 3 * sizeof(int32_t), 3 * sizeof(int32_t) },
+			{ Variant::VECTOR3I, 3 * sizeof(int32_t), 3 * sizeof(int32_t), 3 * sizeof(int64_t), 3 * sizeof(int64_t) },
 			{ Variant::TRANSFORM2D, 6 * sizeof(float), 6 * sizeof(float), 6 * sizeof(double), 6 * sizeof(double) },
 			{ Variant::VECTOR4, 4 * sizeof(float), 4 * sizeof(float), 4 * sizeof(double), 4 * sizeof(double) },
-			{ Variant::VECTOR4I, 4 * sizeof(int32_t), 4 * sizeof(int32_t), 4 * sizeof(int32_t), 4 * sizeof(int32_t) },
+			{ Variant::VECTOR4I, 4 * sizeof(int32_t), 4 * sizeof(int32_t), 4 * sizeof(int64_t), 4 * sizeof(int64_t) },
 			{ Variant::PLANE, (vec3_elems + 1) * sizeof(float), (vec3_elems + 1) * sizeof(float), (vec3_elems + 1) * sizeof(double), (vec3_elems + 1) * sizeof(double) },
 			{ Variant::QUATERNION, 4 * sizeof(float), 4 * sizeof(float), 4 * sizeof(double), 4 * sizeof(double) },
 			{ Variant::AABB, (vec3_elems * 2) * sizeof(float), (vec3_elems * 2) * sizeof(float), (vec3_elems * 2) * sizeof(double), (vec3_elems * 2) * sizeof(double) },
@@ -284,32 +284,32 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 				sizeof(double),          \
 	}
 
-#define INT32_MEMBER_OFFSET(type, member) \
-	{                                     \
-		type,                             \
-				member,                   \
-				"int32",                  \
-				sizeof(int32_t),          \
-				"int32",                  \
-				sizeof(int32_t),          \
-				"int32",                  \
-				sizeof(int32_t),          \
-				"int32",                  \
-				sizeof(int32_t),          \
+#define INT_MEMBER_OFFSET(type, member) \
+	{                                   \
+		type,                           \
+				member,                 \
+				"int32",                \
+				sizeof(int32_t),        \
+				"int32",                \
+				sizeof(int32_t),        \
+				"int64",                \
+				sizeof(int64_t),        \
+				"int64",                \
+				sizeof(int64_t),        \
 	}
 
-#define INT32_BASED_BUILTIN_MEMBER_OFFSET(type, member, member_type, member_elems) \
-	{                                                                              \
-		type,                                                                      \
-				member,                                                            \
-				member_type,                                                       \
-				sizeof(int32_t) * member_elems,                                    \
-				member_type,                                                       \
-				sizeof(int32_t) * member_elems,                                    \
-				member_type,                                                       \
-				sizeof(int32_t) * member_elems,                                    \
-				member_type,                                                       \
-				sizeof(int32_t) * member_elems,                                    \
+#define INT_BASED_BUILTIN_MEMBER_OFFSET(type, member, member_type, member_elems) \
+	{                                                                            \
+		type,                                                                    \
+				member,                                                          \
+				member_type,                                                     \
+				sizeof(int32_t) * member_elems,                                  \
+				member_type,                                                     \
+				sizeof(int32_t) * member_elems,                                  \
+				member_type,                                                     \
+				sizeof(int64_t) * member_elems,                                  \
+				member_type,                                                     \
+				sizeof(int64_t) * member_elems,                                  \
 	}
 
 #define REAL_BASED_BUILTIN_MEMBER_OFFSET(type, member, member_type, member_elems) \
@@ -342,22 +342,22 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 			REAL_MEMBER_OFFSET(Variant::VECTOR2, "x"),
 			REAL_MEMBER_OFFSET(Variant::VECTOR2, "y"),
 			// Vector2i
-			INT32_MEMBER_OFFSET(Variant::VECTOR2I, "x"),
-			INT32_MEMBER_OFFSET(Variant::VECTOR2I, "y"),
+			INT_MEMBER_OFFSET(Variant::VECTOR2I, "x"),
+			INT_MEMBER_OFFSET(Variant::VECTOR2I, "y"),
 			// Rect2
 			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::RECT2, "position", "Vector2", 2),
 			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::RECT2, "size", "Vector2", 2),
 			// Rect2i
-			INT32_BASED_BUILTIN_MEMBER_OFFSET(Variant::RECT2I, "position", "Vector2i", 2),
-			INT32_BASED_BUILTIN_MEMBER_OFFSET(Variant::RECT2I, "size", "Vector2i", 2),
+			INT_BASED_BUILTIN_MEMBER_OFFSET(Variant::RECT2I, "position", "Vector2i", 2),
+			INT_BASED_BUILTIN_MEMBER_OFFSET(Variant::RECT2I, "size", "Vector2i", 2),
 			// Vector3
 			REAL_MEMBER_OFFSET(Variant::VECTOR3, "x"),
 			REAL_MEMBER_OFFSET(Variant::VECTOR3, "y"),
 			REAL_MEMBER_OFFSET(Variant::VECTOR3, "z"),
 			// Vector3i
-			INT32_MEMBER_OFFSET(Variant::VECTOR3I, "x"),
-			INT32_MEMBER_OFFSET(Variant::VECTOR3I, "y"),
-			INT32_MEMBER_OFFSET(Variant::VECTOR3I, "z"),
+			INT_MEMBER_OFFSET(Variant::VECTOR3I, "x"),
+			INT_MEMBER_OFFSET(Variant::VECTOR3I, "y"),
+			INT_MEMBER_OFFSET(Variant::VECTOR3I, "z"),
 			// Transform2D
 			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::TRANSFORM2D, "x", "Vector2", 2),
 			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::TRANSFORM2D, "y", "Vector2", 2),
@@ -368,10 +368,10 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 			REAL_MEMBER_OFFSET(Variant::VECTOR4, "z"),
 			REAL_MEMBER_OFFSET(Variant::VECTOR4, "w"),
 			// Vector4i
-			INT32_MEMBER_OFFSET(Variant::VECTOR4I, "x"),
-			INT32_MEMBER_OFFSET(Variant::VECTOR4I, "y"),
-			INT32_MEMBER_OFFSET(Variant::VECTOR4I, "z"),
-			INT32_MEMBER_OFFSET(Variant::VECTOR4I, "w"),
+			INT_MEMBER_OFFSET(Variant::VECTOR4I, "x"),
+			INT_MEMBER_OFFSET(Variant::VECTOR4I, "y"),
+			INT_MEMBER_OFFSET(Variant::VECTOR4I, "z"),
+			INT_MEMBER_OFFSET(Variant::VECTOR4I, "w"),
 			// Plane
 			REAL_BASED_BUILTIN_MEMBER_OFFSET(Variant::PLANE, "normal", "Vector3", vec3_elems),
 			REAL_MEMBER_OFFSET(Variant::PLANE, "d"),

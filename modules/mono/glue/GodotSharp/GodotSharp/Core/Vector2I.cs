@@ -1,6 +1,11 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+#if REAL_T_IS_DOUBLE
+using intr_t = System.Int64;
+#else
+using intr_t = System.Int32;
+#endif
 
 #nullable enable
 
@@ -32,12 +37,12 @@ namespace Godot
         /// <summary>
         /// The vector's X component. Also accessible by using the index position <c>[0]</c>.
         /// </summary>
-        public int X;
+        public intr_t X;
 
         /// <summary>
         /// The vector's Y component. Also accessible by using the index position <c>[1]</c>.
         /// </summary>
-        public int Y;
+        public intr_t Y;
 
         /// <summary>
         /// Access vector components using their index.
@@ -49,7 +54,7 @@ namespace Godot
         /// <c>[0]</c> is equivalent to <see cref="X"/>,
         /// <c>[1]</c> is equivalent to <see cref="Y"/>.
         /// </value>
-        public int this[int index]
+        public intr_t this[int index]
         {
             readonly get
             {
@@ -82,7 +87,7 @@ namespace Godot
         /// <summary>
         /// Helper method for deconstruction into a tuple.
         /// </summary>
-        public readonly void Deconstruct(out int x, out int y)
+        public readonly void Deconstruct(out intr_t x, out intr_t y)
         {
             x = X;
             y = Y;
@@ -91,7 +96,7 @@ namespace Godot
         /// <summary>
         /// Returns a new vector with all components in absolute values (i.e. positive).
         /// </summary>
-        /// <returns>A vector with <see cref="Mathf.Abs(int)"/> called on each component.</returns>
+        /// <returns>A vector with <see cref="Mathf.Abs(intr_t)"/> called on each component.</returns>
         public readonly Vector2I Abs()
         {
             return new Vector2I(Mathf.Abs(X), Mathf.Abs(Y));
@@ -109,7 +114,7 @@ namespace Godot
         /// <summary>
         /// Returns a new vector with all components clamped between the
         /// components of <paramref name="min"/> and <paramref name="max"/> using
-        /// <see cref="Mathf.Clamp(int, int, int)"/>.
+        /// <see cref="Mathf.Clamp(intr_t, intr_t, intr_t)"/>.
         /// </summary>
         /// <param name="min">The vector with minimum allowed values.</param>
         /// <param name="max">The vector with maximum allowed values.</param>
@@ -153,8 +158,8 @@ namespace Godot
         /// <returns>The length of this vector.</returns>
         public readonly real_t Length()
         {
-            int x2 = X * X;
-            int y2 = Y * Y;
+            intr_t x2 = X * X;
+            intr_t y2 = Y * Y;
 
             return Mathf.Sqrt(x2 + y2);
         }
@@ -165,10 +170,10 @@ namespace Godot
         /// you need to compare vectors or need the squared length for some formula.
         /// </summary>
         /// <returns>The squared length of this vector.</returns>
-        public readonly int LengthSquared()
+        public readonly intr_t LengthSquared()
         {
-            int x2 = X * X;
-            int y2 = Y * Y;
+            intr_t x2 = X * X;
+            intr_t y2 = Y * Y;
 
             return x2 + y2;
         }
@@ -196,7 +201,7 @@ namespace Godot
         /// <summary>
         /// Returns a vector with each component set to one or negative one, depending
         /// on the signs of this vector's components, or zero if the component is zero,
-        /// by calling <see cref="Mathf.Sign(int)"/> on each component.
+        /// by calling <see cref="Mathf.Sign(intr_t)"/> on each component.
         /// </summary>
         /// <returns>A vector with all components as either <c>1</c>, <c>-1</c>, or <c>0</c>.</returns>
         public readonly Vector2I Sign()
@@ -208,8 +213,8 @@ namespace Godot
         }
 
         // Constants
-        private static readonly Vector2I _minValue = new Vector2I(int.MinValue, int.MinValue);
-        private static readonly Vector2I _maxValue = new Vector2I(int.MaxValue, int.MaxValue);
+        private static readonly Vector2I _minValue = new Vector2I(intr_t.MinValue, intr_t.MinValue);
+        private static readonly Vector2I _maxValue = new Vector2I(intr_t.MaxValue, intr_t.MaxValue);
 
         private static readonly Vector2I _zero = new Vector2I(0, 0);
         private static readonly Vector2I _one = new Vector2I(1, 1);
@@ -220,12 +225,12 @@ namespace Godot
         private static readonly Vector2I _left = new Vector2I(-1, 0);
 
         /// <summary>
-        /// Min vector, a vector with all components equal to <see cref="int.MinValue"/>. Can be used as a negative integer equivalent of <see cref="Vector2.Inf"/>.
+        /// Min vector, a vector with all components equal to <see cref="intr_t.MinValue"/>. Can be used as a negative integer equivalent of <see cref="Vector2.Inf"/>.
         /// </summary>
         /// <value>Equivalent to <c>new Vector2I(int.MinValue, int.MinValue)</c>.</value>
         public static Vector2I MinValue { get { return _minValue; } }
         /// <summary>
-        /// Max vector, a vector with all components equal to <see cref="int.MaxValue"/>. Can be used as an integer equivalent of <see cref="Vector2.Inf"/>.
+        /// Max vector, a vector with all components equal to <see cref="intr_t.MaxValue"/>. Can be used as an integer equivalent of <see cref="Vector2.Inf"/>.
         /// </summary>
         /// <value>Equivalent to <c>new Vector2I(int.MaxValue, int.MaxValue)</c>.</value>
         public static Vector2I MaxValue { get { return _maxValue; } }
@@ -271,6 +276,17 @@ namespace Godot
         {
             X = x;
             Y = y;
+        }
+
+        /// <summary>
+        /// Constructs a new <see cref="Vector2I"/> with the given components.
+        /// </summary>
+        /// <param name="x">The vector's X component.</param>
+        /// <param name="y">The vector's Y component.</param>
+        public Vector2I(long x, long y)
+        {
+            X = (intr_t)x;
+            Y = (intr_t)y;
         }
 
         /// <summary>
@@ -332,6 +348,20 @@ namespace Godot
 
         /// <summary>
         /// Multiplies each component of the <see cref="Vector2I"/>
+        /// by the given <see langword="long"/>.
+        /// </summary>
+        /// <param name="vec">The vector to multiply.</param>
+        /// <param name="scale">The scale to multiply by.</param>
+        /// <returns>The multiplied vector.</returns>
+        public static Vector2I operator *(Vector2I vec, long scale)
+        {
+            vec.X *= (intr_t)scale;
+            vec.Y *= (intr_t)scale;
+            return vec;
+        }
+
+        /// <summary>
+        /// Multiplies each component of the <see cref="Vector2I"/>
         /// by the given <see langword="int"/>.
         /// </summary>
         /// <param name="scale">The scale to multiply by.</param>
@@ -341,6 +371,20 @@ namespace Godot
         {
             vec.X *= scale;
             vec.Y *= scale;
+            return vec;
+        }
+
+        /// <summary>
+        /// Multiplies each component of the <see cref="Vector2I"/>
+        /// by the given <see langword="long"/>.
+        /// </summary>
+        /// <param name="scale">The scale to multiply by.</param>
+        /// <param name="vec">The vector to multiply.</param>
+        /// <returns>The multiplied vector.</returns>
+        public static Vector2I operator *(long scale, Vector2I vec)
+        {
+            vec.X *= (intr_t)scale;
+            vec.Y *= (intr_t)scale;
             return vec;
         }
 
@@ -369,6 +413,20 @@ namespace Godot
         {
             vec.X /= divisor;
             vec.Y /= divisor;
+            return vec;
+        }
+
+        /// <summary>
+        /// Divides each component of the <see cref="Vector2I"/>
+        /// by the given <see langword="long"/>.
+        /// </summary>
+        /// <param name="vec">The dividend vector.</param>
+        /// <param name="divisor">The divisor value.</param>
+        /// <returns>The divided vector.</returns>
+        public static Vector2I operator /(Vector2I vec, long divisor)
+        {
+            vec.X /= (intr_t)divisor;
+            vec.Y /= (intr_t)divisor;
             return vec;
         }
 
@@ -411,10 +469,33 @@ namespace Godot
 
         /// <summary>
         /// Gets the remainder of each component of the <see cref="Vector2I"/>
+        /// with the components of the given <see langword="long"/>.
+        /// This operation uses truncated division, which is often not desired
+        /// as it does not work well with negative numbers.
+        /// Consider using <see cref="Mathf.PosMod(long, long)"/> instead
+        /// if you want to handle negative numbers.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// GD.Print(new Vector2I(10, -20) % 7); // Prints "(3, -6)"
+        /// </code>
+        /// </example>
+        /// <param name="vec">The dividend vector.</param>
+        /// <param name="divisor">The divisor value.</param>
+        /// <returns>The remainder vector.</returns>
+        public static Vector2I operator %(Vector2I vec, long divisor)
+        {
+            vec.X %= (intr_t)divisor;
+            vec.Y %= (intr_t)divisor;
+            return vec;
+        }
+
+        /// <summary>
+        /// Gets the remainder of each component of the <see cref="Vector2I"/>
         /// with the components of the given <see cref="Vector2I"/>.
         /// This operation uses truncated division, which is often not desired
         /// as it does not work well with negative numbers.
-        /// Consider using <see cref="Mathf.PosMod(int, int)"/> instead
+        /// Consider using <see cref="Mathf.PosMod(intr_t, intr_t)"/> instead
         /// if you want to handle negative numbers.
         /// </summary>
         /// <example>
@@ -552,7 +633,7 @@ namespace Godot
         /// <param name="value">The vector to convert.</param>
         public static explicit operator Vector2I(Vector2 value)
         {
-            return new Vector2I((int)value.X, (int)value.Y);
+            return new Vector2I((intr_t)value.X, (intr_t)value.Y);
         }
 
         /// <summary>

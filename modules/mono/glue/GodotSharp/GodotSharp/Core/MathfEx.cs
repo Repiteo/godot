@@ -83,6 +83,32 @@ namespace Godot
         }
 
         /// <summary>
+        /// Rounds <paramref name="s"/> upward (towards positive infinity).
+        ///
+        /// This is the same as <see cref="Ceil(float)"/>, but returns a <see langword="long"/>.
+        /// </summary>
+        /// <param name="s">The number to ceil.</param>
+        /// <returns>The smallest whole number that is not less than <paramref name="s"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static long CeilToLong(float s)
+        {
+            return (long)MathF.Ceiling(s);
+        }
+
+        /// <summary>
+        /// Rounds <paramref name="s"/> upward (towards positive infinity).
+        ///
+        /// This is the same as <see cref="Ceil(double)"/>, but returns a <see langword="long"/>.
+        /// </summary>
+        /// <param name="s">The number to ceil.</param>
+        /// <returns>The smallest whole number that is not less than <paramref name="s"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static long CeilToLong(double s)
+        {
+            return (long)Math.Ceiling(s);
+        }
+
+        /// <summary>
         /// Rounds <paramref name="s"/> downward (towards negative infinity).
         ///
         /// This is the same as <see cref="Floor(float)"/>, but returns an <see langword="int"/>.
@@ -109,6 +135,32 @@ namespace Godot
         }
 
         /// <summary>
+        /// Rounds <paramref name="s"/> downward (towards negative infinity).
+        ///
+        /// This is the same as <see cref="Floor(float)"/>, but returns a <see langword="long"/>.
+        /// </summary>
+        /// <param name="s">The number to floor.</param>
+        /// <returns>The largest whole number that is not more than <paramref name="s"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static long FloorToLong(float s)
+        {
+            return (long)MathF.Floor(s);
+        }
+
+        /// <summary>
+        /// Rounds <paramref name="s"/> downward (towards negative infinity).
+        ///
+        /// This is the same as <see cref="Floor(double)"/>, but returns a <see langword="long"/>.
+        /// </summary>
+        /// <param name="s">The number to floor.</param>
+        /// <returns>The largest whole number that is not more than <paramref name="s"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static long FloorToLong(double s)
+        {
+            return (long)Math.Floor(s);
+        }
+
+        /// <summary>
         /// Rounds <paramref name="s"/> to the nearest whole number.
         ///
         /// This is the same as <see cref="Round(float)"/>, but returns an <see langword="int"/>.
@@ -132,6 +184,32 @@ namespace Godot
         public static int RoundToInt(double s)
         {
             return (int)Math.Round(s);
+        }
+
+        /// <summary>
+        /// Rounds <paramref name="s"/> to the nearest whole number.
+        ///
+        /// This is the same as <see cref="Round(float)"/>, but returns a <see langword="long"/>.
+        /// </summary>
+        /// <param name="s">The number to round.</param>
+        /// <returns>The rounded number.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static long RoundToLong(float s)
+        {
+            return (long)MathF.Round(s);
+        }
+
+        /// <summary>
+        /// Rounds <paramref name="s"/> to the nearest whole number.
+        ///
+        /// This is the same as <see cref="Round(double)"/>, but returns a <see langword="long"/>.
+        /// </summary>
+        /// <param name="s">The number to round.</param>
+        /// <returns>The rounded number.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static long RoundToLong(double s)
+        {
+            return (long)Math.Round(s);
         }
 
         /// <summary>

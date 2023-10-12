@@ -2591,10 +2591,9 @@ int Image::get_image_required_mipmaps(int p_width, int p_height, Format p_format
 }
 
 Size2i Image::get_image_mipmap_size(int p_width, int p_height, Format p_format, int p_mipmap) {
-	int mm;
-	Size2i ret;
-	_get_dst_image_size(p_width, p_height, p_format, mm, p_mipmap, &ret.x, &ret.y);
-	return ret;
+	int mm, x, y;
+	_get_dst_image_size(p_width, p_height, p_format, mm, p_mipmap, &x, &y);
+	return Size2i(x, y);
 }
 
 int Image::get_image_mipmap_offset(int p_width, int p_height, Format p_format, int p_mipmap) {

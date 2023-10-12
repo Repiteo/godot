@@ -591,10 +591,18 @@ String BindingsGenerator::bbcode_to_xml(const String &p_bbcode, const TypeInterf
 				xml_output.append("<see cref=\"" BINDINGS_NAMESPACE_COLLECTIONS ".");
 				xml_output.append(tag);
 				xml_output.append("\"/>");
-			} else if (tag == "bool" || tag == "int") {
+			} else if (tag == "bool") {
 				xml_output.append("<see cref=\"");
 				xml_output.append(tag);
 				xml_output.append("\"/>");
+			} else if (tag == "int") {
+				xml_output.append("<see cref=\""
+#ifdef REAL_T_IS_DOUBLE
+								  "long"
+#else
+								  "int"
+#endif
+								  "\"/>");
 			} else if (tag == "float") {
 				xml_output.append("<see cref=\""
 #ifdef REAL_T_IS_DOUBLE

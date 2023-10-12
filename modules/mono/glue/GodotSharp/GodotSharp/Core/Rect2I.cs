@@ -1,6 +1,11 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+#if REAL_T_IS_DOUBLE
+using intr_t = System.Int64;
+#else
+using intr_t = System.Int32;
+#endif
 
 #nullable enable
 
@@ -56,7 +61,7 @@ namespace Godot
         /// The area of this <see cref="Rect2I"/>.
         /// See also <see cref="HasArea"/>.
         /// </summary>
-        public readonly int Area
+        public readonly intr_t Area
         {
             get { return _size.X * _size.Y; }
         }
@@ -187,6 +192,26 @@ namespace Godot
 
         /// <summary>
         /// Returns a copy of the <see cref="Rect2I"/> grown by the specified amount
+        /// on all sides.
+        /// </summary>
+        /// <seealso cref="GrowIndividual(long, long, long, long)"/>
+        /// <seealso cref="GrowSide(Side, long)"/>
+        /// <param name="by">The amount to grow by.</param>
+        /// <returns>The grown <see cref="Rect2I"/>.</returns>
+        public readonly Rect2I Grow(long by)
+        {
+            Rect2I g = this;
+
+            g._position.X -= (intr_t)by;
+            g._position.Y -= (intr_t)by;
+            g._size.X += (intr_t)by * 2;
+            g._size.Y += (intr_t)by * 2;
+
+            return g;
+        }
+
+        /// <summary>
+        /// Returns a copy of the <see cref="Rect2I"/> grown by the specified amount
         /// on each side individually.
         /// </summary>
         /// <seealso cref="Grow(int)"/>
@@ -210,6 +235,29 @@ namespace Godot
 
         /// <summary>
         /// Returns a copy of the <see cref="Rect2I"/> grown by the specified amount
+        /// on each side individually.
+        /// </summary>
+        /// <seealso cref="Grow(long)"/>
+        /// <seealso cref="GrowSide(Side, long)"/>
+        /// <param name="left">The amount to grow by on the left side.</param>
+        /// <param name="top">The amount to grow by on the top side.</param>
+        /// <param name="right">The amount to grow by on the right side.</param>
+        /// <param name="bottom">The amount to grow by on the bottom side.</param>
+        /// <returns>The grown <see cref="Rect2I"/>.</returns>
+        public readonly Rect2I GrowIndividual(long left, long top, long right, long bottom)
+        {
+            Rect2I g = this;
+
+            g._position.X -= (intr_t)left;
+            g._position.Y -= (intr_t)top;
+            g._size.X += (intr_t)left + (intr_t)right;
+            g._size.Y += (intr_t)top + (intr_t)bottom;
+
+            return g;
+        }
+
+        /// <summary>
+        /// Returns a copy of the <see cref="Rect2I"/> grown by the specified amount
         /// on the specified <see cref="Side"/>.
         /// </summary>
         /// <seealso cref="Grow(int)"/>
@@ -218,6 +266,27 @@ namespace Godot
         /// <param name="by">The amount to grow by.</param>
         /// <returns>The grown <see cref="Rect2I"/>.</returns>
         public readonly Rect2I GrowSide(Side side, int by)
+        {
+            Rect2I g = this;
+
+            g = g.GrowIndividual(Side.Left == side ? by : 0,
+                    Side.Top == side ? by : 0,
+                    Side.Right == side ? by : 0,
+                    Side.Bottom == side ? by : 0);
+
+            return g;
+        }
+
+        /// <summary>
+        /// Returns a copy of the <see cref="Rect2I"/> grown by the specified amount
+        /// on the specified <see cref="Side"/>.
+        /// </summary>
+        /// <seealso cref="Grow(long)"/>
+        /// <seealso cref="GrowIndividual(long, long, long, long)"/>
+        /// <param name="side">The side to grow.</param>
+        /// <param name="by">The amount to grow by.</param>
+        /// <returns>The grown <see cref="Rect2I"/>.</returns>
+        public readonly Rect2I GrowSide(Side side, long by)
         {
             Rect2I g = this;
 
@@ -330,12 +399,36 @@ namespace Godot
         }
 
         /// <summary>
+        /// Constructs a <see cref="Rect2I"/> from a position, width, and height.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        public Rect2I(Vector2I position, long width, long height)
+        {
+            _position = position;
+            _size = new Vector2I(width, height);
+        }
+
+        /// <summary>
         /// Constructs a <see cref="Rect2I"/> from x, y, and size.
         /// </summary>
         /// <param name="x">The position's X coordinate.</param>
         /// <param name="y">The position's Y coordinate.</param>
         /// <param name="size">The size.</param>
         public Rect2I(int x, int y, Vector2I size)
+        {
+            _position = new Vector2I(x, y);
+            _size = size;
+        }
+
+        /// <summary>
+        /// Constructs a <see cref="Rect2I"/> from x, y, and size.
+        /// </summary>
+        /// <param name="x">The position's X coordinate.</param>
+        /// <param name="y">The position's Y coordinate.</param>
+        /// <param name="size">The size.</param>
+        public Rect2I(long x, long y, Vector2I size)
         {
             _position = new Vector2I(x, y);
             _size = size;
@@ -349,6 +442,19 @@ namespace Godot
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         public Rect2I(int x, int y, int width, int height)
+        {
+            _position = new Vector2I(x, y);
+            _size = new Vector2I(width, height);
+        }
+
+        /// <summary>
+        /// Constructs a <see cref="Rect2I"/> from x, y, width, and height.
+        /// </summary>
+        /// <param name="x">The position's X coordinate.</param>
+        /// <param name="y">The position's Y coordinate.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        public Rect2I(long x, long y, long width, long height)
         {
             _position = new Vector2I(x, y);
             _size = new Vector2I(width, height);

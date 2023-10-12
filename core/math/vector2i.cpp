@@ -75,11 +75,11 @@ Vector2i Vector2i::operator*(const Vector2i &p_v1) const {
 	return Vector2i(x * p_v1.x, y * p_v1.y);
 }
 
-Vector2i Vector2i::operator*(int32_t p_rvalue) const {
+Vector2i Vector2i::operator*(intr_t p_rvalue) const {
 	return Vector2i(x * p_rvalue, y * p_rvalue);
 }
 
-void Vector2i::operator*=(int32_t p_rvalue) {
+void Vector2i::operator*=(intr_t p_rvalue) {
 	x *= p_rvalue;
 	y *= p_rvalue;
 }
@@ -88,11 +88,11 @@ Vector2i Vector2i::operator/(const Vector2i &p_v1) const {
 	return Vector2i(x / p_v1.x, y / p_v1.y);
 }
 
-Vector2i Vector2i::operator/(int32_t p_rvalue) const {
+Vector2i Vector2i::operator/(intr_t p_rvalue) const {
 	return Vector2i(x / p_rvalue, y / p_rvalue);
 }
 
-void Vector2i::operator/=(int32_t p_rvalue) {
+void Vector2i::operator/=(intr_t p_rvalue) {
 	x /= p_rvalue;
 	y /= p_rvalue;
 }
@@ -101,11 +101,11 @@ Vector2i Vector2i::operator%(const Vector2i &p_v1) const {
 	return Vector2i(x % p_v1.x, y % p_v1.y);
 }
 
-Vector2i Vector2i::operator%(int32_t p_rvalue) const {
+Vector2i Vector2i::operator%(intr_t p_rvalue) const {
 	return Vector2i(x % p_rvalue, y % p_rvalue);
 }
 
-void Vector2i::operator%=(int32_t p_rvalue) {
+void Vector2i::operator%=(intr_t p_rvalue) {
 	x %= p_rvalue;
 	y %= p_rvalue;
 }
@@ -127,5 +127,5 @@ Vector2i::operator String() const {
 }
 
 Vector2i::operator Vector2() const {
-	return Vector2((int32_t)x, (int32_t)y);
+	return Vector2((intr_t)x, (intr_t)y);
 }

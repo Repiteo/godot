@@ -59,6 +59,17 @@ namespace Godot
         /// <param name="s">The input number.</param>
         /// <returns>The absolute value of <paramref name="s"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static long Abs(long s)
+        {
+            return Math.Abs(s);
+        }
+
+        /// <summary>
+        /// Returns the absolute value of <paramref name="s"/> (i.e. positive value).
+        /// </summary>
+        /// <param name="s">The input number.</param>
+        /// <returns>The absolute value of <paramref name="s"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Abs(float s)
         {
             return Math.Abs(s);
@@ -355,6 +366,20 @@ namespace Godot
         /// <returns>The clamped value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Clamp(int value, int min, int max)
+        {
+            return Math.Clamp(value, min, max);
+        }
+
+        /// <summary>
+        /// Clamps a <paramref name="value"/> so that it is not less than <paramref name="min"/>
+        /// and not more than <paramref name="max"/>.
+        /// </summary>
+        /// <param name="value">The value to clamp.</param>
+        /// <param name="min">The minimum allowed value.</param>
+        /// <param name="max">The maximum allowed value.</param>
+        /// <returns>The clamped value.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static long Clamp(long value, long min, long max)
         {
             return Math.Clamp(value, min, max);
         }
@@ -1228,6 +1253,18 @@ namespace Godot
         /// <param name="b">The other value.</param>
         /// <returns>Whichever of the two values is higher.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static long Max(long a, long b)
+        {
+            return Math.Max(a, b);
+        }
+
+        /// <summary>
+        /// Returns the maximum of two values.
+        /// </summary>
+        /// <param name="a">One of the values.</param>
+        /// <param name="b">The other value.</param>
+        /// <returns>Whichever of the two values is higher.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Max(float a, float b)
         {
             return Math.Max(a, b);
@@ -1253,6 +1290,18 @@ namespace Godot
         /// <returns>Whichever of the two values is lower.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Min(int a, int b)
+        {
+            return Math.Min(a, b);
+        }
+
+        /// <summary>
+        /// Returns the minimum of two values.
+        /// </summary>
+        /// <param name="a">One of the values.</param>
+        /// <param name="b">The other value.</param>
+        /// <returns>Whichever of the two values is lower.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static long Min(long a, long b)
         {
             return Math.Min(a, b);
         }
@@ -1333,6 +1382,24 @@ namespace Godot
         }
 
         /// <summary>
+        /// Returns the nearest larger power of 2 for the integer <paramref name="value"/>.
+        /// </summary>
+        /// <param name="value">The input value.</param>
+        /// <returns>The nearest larger power of 2.</returns>
+        public static long NearestPo2(long value)
+        {
+            value--;
+            value |= value >> 1;
+            value |= value >> 2;
+            value |= value >> 4;
+            value |= value >> 8;
+            value |= value >> 16;
+            value |= value >> 32;
+            value++;
+            return value;
+        }
+
+        /// <summary>
         /// Performs a canonical Modulus operation, where the output is on the range [0, <paramref name="b"/>).
         /// </summary>
         /// <param name="a">The dividend, the primary input.</param>
@@ -1341,6 +1408,22 @@ namespace Godot
         public static int PosMod(int a, int b)
         {
             int c = a % b;
+            if ((c < 0 && b > 0) || (c > 0 && b < 0))
+            {
+                c += b;
+            }
+            return c;
+        }
+
+        /// <summary>
+        /// Performs a canonical Modulus operation, where the output is on the range [0, <paramref name="b"/>).
+        /// </summary>
+        /// <param name="a">The dividend, the primary input.</param>
+        /// <param name="b">The divisor. The output is on the range [0, <paramref name="b"/>).</param>
+        /// <returns>The resulting output.</returns>
+        public static long PosMod(long a, long b)
+        {
+            long c = a % b;
             if ((c < 0 && b > 0) || (c > 0 && b < 0))
             {
                 c += b;
@@ -1520,6 +1603,18 @@ namespace Godot
         /// <returns>One of three possible values: <c>1</c>, <c>-1</c>, or <c>0</c>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Sign(int s)
+        {
+            return Math.Sign(s);
+        }
+
+        /// <summary>
+        /// Returns the sign of <paramref name="s"/>: <c>-1</c> or <c>1</c>.
+        /// Returns <c>0</c> if <paramref name="s"/> is <c>0</c>.
+        /// </summary>
+        /// <param name="s">The input number.</param>
+        /// <returns>One of three possible values: <c>1</c>, <c>-1</c>, or <c>0</c>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int Sign(long s)
         {
             return Math.Sign(s);
         }
@@ -1780,6 +1875,25 @@ namespace Godot
         public static int Wrap(int value, int min, int max)
         {
             int range = max - min;
+            if (range == 0)
+                return min;
+
+            return min + ((((value - min) % range) + range) % range);
+        }
+
+        /// <summary>
+        /// Wraps <paramref name="value"/> between <paramref name="min"/> and <paramref name="max"/>.
+        /// Usable for creating loop-alike behavior or infinite surfaces.
+        /// If <paramref name="min"/> is <c>0</c>, this is equivalent
+        /// to <see cref="PosMod(long, long)"/>, so prefer using that instead.
+        /// </summary>
+        /// <param name="value">The value to wrap.</param>
+        /// <param name="min">The minimum allowed value and lower bound of the range.</param>
+        /// <param name="max">The maximum allowed value and upper bound of the range.</param>
+        /// <returns>The wrapped value.</returns>
+        public static long Wrap(long value, long min, long max)
+        {
+            long range = max - min;
             if (range == 0)
                 return min;
 

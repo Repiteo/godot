@@ -1,6 +1,11 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+#if REAL_T_IS_DOUBLE
+using intr_t = System.Int64;
+#else
+using intr_t = System.Int32;
+#endif
 
 #nullable enable
 
@@ -40,22 +45,22 @@ namespace Godot
         /// <summary>
         /// The vector's X component. Also accessible by using the index position <c>[0]</c>.
         /// </summary>
-        public int X;
+        public intr_t X;
 
         /// <summary>
         /// The vector's Y component. Also accessible by using the index position <c>[1]</c>.
         /// </summary>
-        public int Y;
+        public intr_t Y;
 
         /// <summary>
         /// The vector's Z component. Also accessible by using the index position <c>[2]</c>.
         /// </summary>
-        public int Z;
+        public intr_t Z;
 
         /// <summary>
         /// The vector's W component. Also accessible by using the index position <c>[3]</c>.
         /// </summary>
-        public int W;
+        public intr_t W;
 
         /// <summary>
         /// Access vector components using their <paramref name="index"/>.
@@ -69,7 +74,7 @@ namespace Godot
         /// <c>[2]</c> is equivalent to <see cref="Z"/>.
         /// <c>[3]</c> is equivalent to <see cref="W"/>.
         /// </value>
-        public int this[int index]
+        public intr_t this[int index]
         {
             readonly get
             {
@@ -112,7 +117,7 @@ namespace Godot
         /// <summary>
         /// Helper method for deconstruction into a tuple.
         /// </summary>
-        public readonly void Deconstruct(out int x, out int y, out int z, out int w)
+        public readonly void Deconstruct(out intr_t x, out intr_t y, out intr_t z, out intr_t w)
         {
             x = X;
             y = Y;
@@ -123,7 +128,7 @@ namespace Godot
         /// <summary>
         /// Returns a new vector with all components in absolute values (i.e. positive).
         /// </summary>
-        /// <returns>A vector with <see cref="Mathf.Abs(int)"/> called on each component.</returns>
+        /// <returns>A vector with <see cref="Mathf.Abs(intr_t)"/> called on each component.</returns>
         public readonly Vector4I Abs()
         {
             return new Vector4I(Mathf.Abs(X), Mathf.Abs(Y), Mathf.Abs(Z), Mathf.Abs(W));
@@ -132,7 +137,7 @@ namespace Godot
         /// <summary>
         /// Returns a new vector with all components clamped between the
         /// components of <paramref name="min"/> and <paramref name="max"/> using
-        /// <see cref="Mathf.Clamp(int, int, int)"/>.
+        /// <see cref="Mathf.Clamp(intr_t, intr_t, intr_t)"/>.
         /// </summary>
         /// <param name="min">The vector with minimum allowed values.</param>
         /// <param name="max">The vector with maximum allowed values.</param>
@@ -178,10 +183,10 @@ namespace Godot
         /// <returns>The length of this vector.</returns>
         public readonly real_t Length()
         {
-            int x2 = X * X;
-            int y2 = Y * Y;
-            int z2 = Z * Z;
-            int w2 = W * W;
+            intr_t x2 = X * X;
+            intr_t y2 = Y * Y;
+            intr_t z2 = Z * Z;
+            intr_t w2 = W * W;
 
             return Mathf.Sqrt(x2 + y2 + z2 + w2);
         }
@@ -192,12 +197,12 @@ namespace Godot
         /// you need to compare vectors or need the squared length for some formula.
         /// </summary>
         /// <returns>The squared length of this vector.</returns>
-        public readonly int LengthSquared()
+        public readonly intr_t LengthSquared()
         {
-            int x2 = X * X;
-            int y2 = Y * Y;
-            int z2 = Z * Z;
-            int w2 = W * W;
+            intr_t x2 = X * X;
+            intr_t y2 = Y * Y;
+            intr_t z2 = Z * Z;
+            intr_t w2 = W * W;
 
             return x2 + y2 + z2 + w2;
         }
@@ -210,7 +215,7 @@ namespace Godot
         public readonly Axis MaxAxisIndex()
         {
             int max_index = 0;
-            int max_value = X;
+            intr_t max_value = X;
             for (int i = 1; i < 4; i++)
             {
                 if (this[i] > max_value)
@@ -230,7 +235,7 @@ namespace Godot
         public readonly Axis MinAxisIndex()
         {
             int min_index = 0;
-            int min_value = X;
+            intr_t min_value = X;
             for (int i = 1; i < 4; i++)
             {
                 if (this[i] <= min_value)
@@ -245,7 +250,7 @@ namespace Godot
         /// <summary>
         /// Returns a vector with each component set to one or negative one, depending
         /// on the signs of this vector's components, or zero if the component is zero,
-        /// by calling <see cref="Mathf.Sign(int)"/> on each component.
+        /// by calling <see cref="Mathf.Sign(intr_t)"/> on each component.
         /// </summary>
         /// <returns>A vector with all components as either <c>1</c>, <c>-1</c>, or <c>0</c>.</returns>
         public readonly Vector4I Sign()
@@ -254,19 +259,19 @@ namespace Godot
         }
 
         // Constants
-        private static readonly Vector4I _minValue = new Vector4I(int.MinValue, int.MinValue, int.MinValue, int.MinValue);
-        private static readonly Vector4I _maxValue = new Vector4I(int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue);
+        private static readonly Vector4I _minValue = new Vector4I(intr_t.MinValue, intr_t.MinValue, intr_t.MinValue, intr_t.MinValue);
+        private static readonly Vector4I _maxValue = new Vector4I(intr_t.MaxValue, intr_t.MaxValue, intr_t.MaxValue, intr_t.MaxValue);
 
         private static readonly Vector4I _zero = new Vector4I(0, 0, 0, 0);
         private static readonly Vector4I _one = new Vector4I(1, 1, 1, 1);
 
         /// <summary>
-        /// Min vector, a vector with all components equal to <see cref="int.MinValue"/>. Can be used as a negative integer equivalent of <see cref="Vector4.Inf"/>.
+        /// Min vector, a vector with all components equal to <see cref="intr_t.MinValue"/>. Can be used as a negative integer equivalent of <see cref="Vector4.Inf"/>.
         /// </summary>
         /// <value>Equivalent to <c>new Vector4I(int.MinValue, int.MinValue, int.MinValue, int.MinValue)</c>.</value>
         public static Vector4I MinValue { get { return _minValue; } }
         /// <summary>
-        /// Max vector, a vector with all components equal to <see cref="int.MaxValue"/>. Can be used as an integer equivalent of <see cref="Vector4.Inf"/>.
+        /// Max vector, a vector with all components equal to <see cref="intr_t.MaxValue"/>. Can be used as an integer equivalent of <see cref="Vector4.Inf"/>.
         /// </summary>
         /// <value>Equivalent to <c>new Vector4I(int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue)</c>.</value>
         public static Vector4I MaxValue { get { return _maxValue; } }
@@ -295,6 +300,21 @@ namespace Godot
             Y = y;
             Z = z;
             W = w;
+        }
+
+        /// <summary>
+        /// Constructs a new <see cref="Vector4I"/> with the given components.
+        /// </summary>
+        /// <param name="x">The vector's X component.</param>
+        /// <param name="y">The vector's Y component.</param>
+        /// <param name="z">The vector's Z component.</param>
+        /// <param name="w">The vector's W component.</param>
+        public Vector4I(long x, long y, long z, long w)
+        {
+            X = (intr_t)x;
+            Y = (intr_t)y;
+            Z = (intr_t)z;
+            W = (intr_t)w;
         }
 
         /// <summary>
@@ -364,6 +384,22 @@ namespace Godot
 
         /// <summary>
         /// Multiplies each component of the <see cref="Vector4I"/>
+        /// by the given <see langword="long"/>.
+        /// </summary>
+        /// <param name="vec">The vector to multiply.</param>
+        /// <param name="scale">The scale to multiply by.</param>
+        /// <returns>The multiplied vector.</returns>
+        public static Vector4I operator *(Vector4I vec, long scale)
+        {
+            vec.X *= (intr_t)scale;
+            vec.Y *= (intr_t)scale;
+            vec.Z *= (intr_t)scale;
+            vec.W *= (intr_t)scale;
+            return vec;
+        }
+
+        /// <summary>
+        /// Multiplies each component of the <see cref="Vector4I"/>
         /// by the given <see langword="int"/>.
         /// </summary>
         /// <param name="scale">The scale to multiply by.</param>
@@ -375,6 +411,22 @@ namespace Godot
             vec.Y *= scale;
             vec.Z *= scale;
             vec.W *= scale;
+            return vec;
+        }
+
+        /// <summary>
+        /// Multiplies each component of the <see cref="Vector4I"/>
+        /// by the given <see langword="long"/>.
+        /// </summary>
+        /// <param name="scale">The scale to multiply by.</param>
+        /// <param name="vec">The vector to multiply.</param>
+        /// <returns>The multiplied vector.</returns>
+        public static Vector4I operator *(long scale, Vector4I vec)
+        {
+            vec.X *= (intr_t)scale;
+            vec.Y *= (intr_t)scale;
+            vec.Z *= (intr_t)scale;
+            vec.W *= (intr_t)scale;
             return vec;
         }
 
@@ -407,6 +459,22 @@ namespace Godot
             vec.Y /= divisor;
             vec.Z /= divisor;
             vec.W /= divisor;
+            return vec;
+        }
+
+        /// <summary>
+        /// Divides each component of the <see cref="Vector4I"/>
+        /// by the given <see langword="long"/>.
+        /// </summary>
+        /// <param name="vec">The dividend vector.</param>
+        /// <param name="divisor">The divisor value.</param>
+        /// <returns>The divided vector.</returns>
+        public static Vector4I operator /(Vector4I vec, long divisor)
+        {
+            vec.X /= (intr_t)divisor;
+            vec.Y /= (intr_t)divisor;
+            vec.Z /= (intr_t)divisor;
+            vec.W /= (intr_t)divisor;
             return vec;
         }
 
@@ -448,6 +516,31 @@ namespace Godot
             vec.Y %= divisor;
             vec.Z %= divisor;
             vec.W %= divisor;
+            return vec;
+        }
+
+        /// <summary>
+        /// Gets the remainder of each component of the <see cref="Vector4I"/>
+        /// with the components of the given <see langword="long"/>.
+        /// This operation uses truncated division, which is often not desired
+        /// as it does not work well with negative numbers.
+        /// Consider using <see cref="Mathf.PosMod(long, long)"/> instead
+        /// if you want to handle negative numbers.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// GD.Print(new Vector4I(10, -20, 30, -40) % 7); // Prints "(3, -6, 2, -5)"
+        /// </code>
+        /// </example>
+        /// <param name="vec">The dividend vector.</param>
+        /// <param name="divisor">The divisor value.</param>
+        /// <returns>The remainder vector.</returns>
+        public static Vector4I operator %(Vector4I vec, long divisor)
+        {
+            vec.X %= (intr_t)divisor;
+            vec.Y %= (intr_t)divisor;
+            vec.Z %= (intr_t)divisor;
+            vec.W %= (intr_t)divisor;
             return vec;
         }
 
@@ -628,7 +721,7 @@ namespace Godot
         /// <param name="value">The vector to convert.</param>
         public static explicit operator Vector4I(Vector4 value)
         {
-            return new Vector4I((int)value.X, (int)value.Y, (int)value.Z, (int)value.W);
+            return new Vector4I((intr_t)value.X, (intr_t)value.Y, (intr_t)value.Z, (intr_t)value.W);
         }
 
         /// <summary>
