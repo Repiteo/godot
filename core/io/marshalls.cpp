@@ -701,6 +701,57 @@ Error decode_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int
 
 			r_variant = Signal(id, StringName(name));
 		} break;
+		case Variant::TYPE_REF: {
+			ERR_FAIL_COND_V(len < 4, ERR_INVALID_DATA);
+			uint32_t variant_type = decode_uint32(buf);
+			buf += 4;
+			len -= 4;
+			if (r_len) {
+				(*r_len) += 4;
+			}
+
+			int used = 0;
+			Variant native_class;
+			Error err = decode_variant(native_class, buf, len, &used, p_allow_objects, p_depth + 1);
+			ERR_FAIL_COND_V_MSG(err != OK, err, "Error when trying to decode Variant.");
+			buf += used;
+			len -= used;
+			if (r_len) {
+				(*r_len) += used;
+			}
+
+			Variant script;
+			err = decode_variant(script, buf, len, &used, p_allow_objects, p_depth + 1);
+			ERR_FAIL_COND_V_MSG(err != OK, err, "Error when trying to decode Variant.");
+			buf += used;
+			len -= used;
+			if (r_len) {
+				(*r_len) += used;
+			}
+
+			int32_t count = decode_uint32(buf) & 0x7FFFFFFF;
+			buf += 4;
+			len -= 4;
+			if (r_len) {
+				(*r_len) += 4;
+			}
+
+			Array nested_types;
+
+			for (int i = 0; i < count; i++) {
+				Variant v;
+				err = decode_variant(v, buf, len, &used, p_allow_objects, p_depth + 1);
+				ERR_FAIL_COND_V_MSG(err != OK, err, "Error when trying to decode Variant.");
+				buf += used;
+				len -= used;
+				nested_types.push_back(v);
+				if (r_len) {
+					(*r_len) += used;
+				}
+			}
+
+			r_variant = TypeRef(variant_type, StringName(native_class), script, nested_types);
+		} break;
 		case Variant::DICTIONARY: {
 			ERR_FAIL_COND_V(len < 4, ERR_INVALID_DATA);
 			int32_t count = decode_uint32(buf);
@@ -1555,6 +1606,50 @@ Error encode_variant(const Variant &p_variant, uint8_t *r_buffer, int &r_len, bo
 				encode_uint64(signal.get_object_id(), buf);
 			}
 			r_len += 8;
+		} break;
+		case Variant::TYPE_REF: {
+			TypeRef t = p_variant;
+
+			if (buf) {
+				encode_uint32(t.get_builtin_type(), buf);
+				buf += 4;
+			}
+			r_len += 4;
+
+			int len;
+			Error err = encode_variant(t.get_native_type(), buf, len, p_full_objects, p_depth + 1);
+			ERR_FAIL_COND_V(err, err);
+			ERR_FAIL_COND_V(len % 4, ERR_BUG);
+			if (buf) {
+				buf += len;
+			}
+			r_len += len;
+
+			err = encode_variant(t.get_script_type(), buf, len, p_full_objects, p_depth + 1);
+			ERR_FAIL_COND_V(err, err);
+			ERR_FAIL_COND_V(len % 4, ERR_BUG);
+			if (buf) {
+				buf += len;
+			}
+			r_len += len;
+
+			Array nt = t.get_nested_types();
+			if (buf) {
+				encode_uint32(uint32_t(nt.size()), buf);
+				buf += 4;
+			}
+			r_len += 4;
+
+			for (int i = 0; i < nt.size(); i++) {
+				err = encode_variant(nt.get(i), buf, len, p_full_objects, p_depth + 1);
+				ERR_FAIL_COND_V(err, err);
+				ERR_FAIL_COND_V(len % 4, ERR_BUG);
+				r_len += len;
+				if (buf) {
+					buf += len;
+				}
+			}
+
 		} break;
 		case Variant::DICTIONARY: {
 			Dictionary d = p_variant;

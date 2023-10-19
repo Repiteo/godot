@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="TypeRef" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<constructors>
+		<constructor name="TypeRef">
+			<return type="TypeRef" />
+			<description>
+			</description>
+		</constructor>
+		<constructor name="TypeRef">
+			<return type="TypeRef" />
+			<param index="0" name="from" type="TypeRef" />
+			<description>
+			</description>
+		</constructor>
+		<constructor name="TypeRef">
+			<return type="TypeRef" />
+			<param index="0" name="type_struct" type="Array" />
+			<description>
+			</description>
+		</constructor>
+		<constructor name="TypeRef">
+			<return type="TypeRef" />
+			<param index="0" name="variant_type" type="int" />
+			<param index="1" name="class_name" type="StringName" />
+			<param index="2" name="script" type="Variant" />
+			<param index="3" name="nested_types" type="Array" />
+			<description>
+			</description>
+		</constructor>
+	</constructors>
+	<methods>
+		<method name="from_builtin_type" qualifiers="static">
+			<return type="TypeRef" />
+			<param index="0" name="variant_type" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="from_native_type" qualifiers="static">
+			<return type="TypeRef" />
+			<param index="0" name="class_name" type="StringName" />
+			<description>
+			</description>
+		</method>
+		<method name="from_script_type" qualifiers="static">
+			<return type="TypeRef" />
+			<param index="0" name="script" type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="get_builtin_type" qualifiers="const">
+			<return type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="get_native_type" qualifiers="const">
+			<return type="StringName" />
+			<description>
+			</description>
+		</method>
+		<method name="get_nested_types" qualifiers="const">
+			<return type="Array" />
+			<description>
+			</description>
+		</method>
+		<method name="get_script_type" qualifiers="const">
+			<return type="Variant" />
+			<description>
+			</description>
+		</method>
+		<method name="has_nested_types" qualifiers="const">
+			<return type="bool" />
+			<description>
+			</description>
+		</method>
+		<method name="hash" qualifiers="const">
+			<return type="int" />
+			<description>
+			</description>
+		</method>
+	</methods>
+</class>

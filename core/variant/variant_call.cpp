@@ -2180,6 +2180,21 @@ static void _register_variant_builtin_methods() {
 	bind_method(Projection, get_pixels_per_meter, sarray("for_pixel_width"), varray());
 	bind_method(Projection, get_lod_multiplier, sarray(), varray());
 
+	/* TypeRef */
+
+	bind_static_method(TypeRef, from_builtin_type, sarray("variant_type"), varray());
+	bind_static_method(TypeRef, from_native_type, sarray("class_name"), varray());
+	bind_static_method(TypeRef, from_script_type, sarray("script"), varray());
+
+	bind_method(TypeRef, get_builtin_type, sarray(), varray());
+	bind_method(TypeRef, get_native_type, sarray(), varray());
+	bind_method(TypeRef, get_script_type, sarray(), varray());
+
+	bind_method(TypeRef, has_nested_types, sarray(), varray());
+	bind_method(TypeRef, get_nested_types, sarray(), varray());
+
+	bind_method(TypeRef, hash, sarray(), varray());
+
 	/* Dictionary */
 
 	bind_method(Dictionary, size, sarray(), varray());

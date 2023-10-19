@@ -152,6 +152,7 @@ void PropertySelector::_update_search() {
 			search_options->get_editor_theme_icon(SNAME("MiniObject")),
 			search_options->get_editor_theme_icon(SNAME("Callable")),
 			search_options->get_editor_theme_icon(SNAME("Signal")),
+			search_options->get_editor_theme_icon(SNAME("TypeRef")),
 			search_options->get_editor_theme_icon(SNAME("Dictionary")),
 			search_options->get_editor_theme_icon(SNAME("Array")),
 			search_options->get_editor_theme_icon(SNAME("PackedByteArray")),

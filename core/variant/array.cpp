@@ -49,7 +49,7 @@ public:
 	ContainerTypeValidate typed;
 };
 
-void Array::_ref(const Array &p_from) const {
+void Array::_ref(const Array &p_from) {
 	ArrayPrivate *_fp = p_from._p;
 
 	ERR_FAIL_NULL(_fp); // Should NOT happen.
@@ -67,7 +67,7 @@ void Array::_ref(const Array &p_from) const {
 	_p = _fp;
 }
 
-void Array::_unref() const {
+void Array::_unref() {
 	if (!_p) {
 		return;
 	}

@@ -85,6 +85,7 @@ enum {
 	VARIANT_VECTOR4 = 50,
 	VARIANT_VECTOR4I = 51,
 	VARIANT_PROJECTION = 52,
+	VARIANT_TYPE_REF = 53,
 	OBJECT_EMPTY = 0,
 	OBJECT_EXTERNAL_RESOURCE = 1,
 	OBJECT_INTERNAL_RESOURCE = 2,
@@ -476,7 +477,25 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 		case VARIANT_SIGNAL: {
 			r_v = Signal();
 		} break;
+		case VARIANT_TYPE_REF: {
+			uint32_t variant_type = f->get_32();
+			Variant class_name;
+			Error err = parse_variant(class_name);
+			ERR_FAIL_COND_V_MSG(err, ERR_FILE_CORRUPT, "Error when trying to parse Variant.");
+			Variant script;
+			err = parse_variant(script);
+			ERR_FAIL_COND_V_MSG(err, ERR_FILE_CORRUPT, "Error when trying to parse Variant.");
+			int size = f->get_32() & 0x7FFFFFFF;
+			Array nested_types;
+			for (int i = 0; i < size; i++) {
+				Variant val;
+				err = parse_variant(val);
+				ERR_FAIL_COND_V_MSG(err, ERR_FILE_CORRUPT, "Error when trying to parse Variant.");
+				nested_types.append(val);
+			}
+			r_v = TypeRef(variant_type, StringName(class_name), script, nested_types);
 
+		} break;
 		case VARIANT_DICTIONARY: {
 			uint32_t len = f->get_32();
 			Dictionary d; //last bit means shared
@@ -1804,7 +1823,19 @@ void ResourceFormatSaverBinaryInstance::write_variant(Ref<FileAccess> f, const V
 			f->store_32(VARIANT_SIGNAL);
 			WARN_PRINT("Can't save Signals.");
 		} break;
+		case Variant::TYPE_REF: {
+			f->store_32(VARIANT_TYPE_REF);
+			TypeRef t = p_property;
+			f->store_32(t.get_builtin_type());
+			write_variant(f, t.get_native_type(), resource_map, external_resources, string_map);
+			write_variant(f, t.get_script_type(), resource_map, external_resources, string_map);
+			Array nt = t.get_nested_types();
+			f->store_32(uint32_t(nt.size()));
+			for (int i = 0; i < nt.size(); i++) {
+				write_variant(f, nt[i], resource_map, external_resources, string_map);
+			}
 
+		} break;
 		case Variant::DICTIONARY: {
 			f->store_32(VARIANT_DICTIONARY);
 			Dictionary d = p_property;

@@ -196,6 +196,11 @@ void Variant::_register_variant_constructors() {
 	add_constructor<VariantConstructor<Signal, Signal>>(sarray("from"));
 	add_constructor<VariantConstructorSignalArgs>(sarray("object", "signal"));
 
+	add_constructor<VariantConstructNoArgs<TypeRef>>(sarray());
+	add_constructor<VariantConstructor<TypeRef, TypeRef>>(sarray("from"));
+	add_constructor<VariantConstructor<TypeRef, Array>>(sarray("type_struct"));
+	add_constructor<VariantConstructorTypeRefArgs>(sarray("variant_type", "class_name", "script", "nested_types"));
+
 	add_constructor<VariantConstructNoArgs<Dictionary>>(sarray());
 	add_constructor<VariantConstructor<Dictionary, Dictionary>>(sarray("from"));
 

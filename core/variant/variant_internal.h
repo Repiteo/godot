@@ -181,6 +181,8 @@ public:
 	_FORCE_INLINE_ static const Callable *get_callable(const Variant *v) { return reinterpret_cast<const Callable *>(v->_data._mem); }
 	_FORCE_INLINE_ static Signal *get_signal(Variant *v) { return reinterpret_cast<Signal *>(v->_data._mem); }
 	_FORCE_INLINE_ static const Signal *get_signal(const Variant *v) { return reinterpret_cast<const Signal *>(v->_data._mem); }
+	_FORCE_INLINE_ static TypeRef *get_type_ref(Variant *v) { return reinterpret_cast<TypeRef *>(v->_data._mem); }
+	_FORCE_INLINE_ static const TypeRef *get_type_ref(const Variant *v) { return reinterpret_cast<const TypeRef *>(v->_data._mem); }
 	_FORCE_INLINE_ static Dictionary *get_dictionary(Variant *v) { return reinterpret_cast<Dictionary *>(v->_data._mem); }
 	_FORCE_INLINE_ static const Dictionary *get_dictionary(const Variant *v) { return reinterpret_cast<const Dictionary *>(v->_data._mem); }
 	_FORCE_INLINE_ static Array *get_array(Variant *v) { return reinterpret_cast<Array *>(v->_data._mem); }
@@ -268,6 +270,10 @@ public:
 	_FORCE_INLINE_ static void init_signal(Variant *v) {
 		memnew_placement(v->_data._mem, Signal);
 		v->type = Variant::SIGNAL;
+	}
+	_FORCE_INLINE_ static void init_type_ref(Variant *v) {
+		memnew_placement(v->_data._mem, TypeRef);
+		v->type = Variant::TYPE_REF;
 	}
 	_FORCE_INLINE_ static void init_dictionary(Variant *v) {
 		memnew_placement(v->_data._mem, Dictionary);
@@ -732,6 +738,12 @@ struct VariantGetInternalPtr<Signal> {
 };
 
 template <>
+struct VariantGetInternalPtr<TypeRef> {
+	static TypeRef *get_ptr(Variant *v) { return VariantInternal::get_type_ref(v); }
+	static const TypeRef *get_ptr(const Variant *v) { return VariantInternal::get_type_ref(v); }
+};
+
+template <>
 struct VariantGetInternalPtr<Dictionary> {
 	static Dictionary *get_ptr(Variant *v) { return VariantInternal::get_dictionary(v); }
 	static const Dictionary *get_ptr(const Variant *v) { return VariantInternal::get_dictionary(v); }
@@ -810,7 +822,7 @@ struct VariantInternalAccessor<bool> {
 #define VARIANT_ACCESSOR_NUMBER(m_type)                                                                        \
 	template <>                                                                                                \
 	struct VariantInternalAccessor<m_type> {                                                                   \
-		static _FORCE_INLINE_ m_type get(const Variant *v) { return (m_type)*VariantInternal::get_int(v); }    \
+		static _FORCE_INLINE_ m_type get(const Variant *v) { return (m_type) * VariantInternal::get_int(v); }  \
 		static _FORCE_INLINE_ void set(Variant *v, m_type p_value) { *VariantInternal::get_int(v) = p_value; } \
 	};
 
@@ -989,6 +1001,12 @@ template <>
 struct VariantInternalAccessor<Signal> {
 	static _FORCE_INLINE_ const Signal &get(const Variant *v) { return *VariantInternal::get_signal(v); }
 	static _FORCE_INLINE_ void set(Variant *v, const Signal &p_value) { *VariantInternal::get_signal(v) = p_value; }
+};
+
+template <>
+struct VariantInternalAccessor<TypeRef> {
+	static _FORCE_INLINE_ const TypeRef &get(const Variant *v) { return *VariantInternal::get_type_ref(v); }
+	static _FORCE_INLINE_ void set(Variant *v, const TypeRef &p_value) { *VariantInternal::get_type_ref(v) = p_value; }
 };
 
 template <>
@@ -1242,6 +1260,11 @@ struct VariantInitializer<Signal> {
 };
 
 template <>
+struct VariantInitializer<TypeRef> {
+	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_type_ref(v); }
+};
+
+template <>
 struct VariantInitializer<Dictionary> {
 	static _FORCE_INLINE_ void init(Variant *v) { VariantInternal::init_dictionary(v); }
 };
@@ -1433,6 +1456,11 @@ struct VariantZeroAssigner<Callable> {
 template <>
 struct VariantZeroAssigner<Signal> {
 	static _FORCE_INLINE_ void zero(Variant *v) { *VariantInternal::get_signal(v) = Signal(); }
+};
+
+template <>
+struct VariantZeroAssigner<TypeRef> {
+	static _FORCE_INLINE_ void zero(Variant *v) { *VariantInternal::get_type_ref(v) = TypeRef(); }
 };
 
 template <>

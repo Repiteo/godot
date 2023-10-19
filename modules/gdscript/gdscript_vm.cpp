@@ -173,6 +173,7 @@ void (*type_init_function_table[])(Variant *) = {
 	&VariantInitializer<Object *>::init, // OBJECT.
 	&VariantInitializer<Callable>::init, // CALLABLE.
 	&VariantInitializer<Signal>::init, // SIGNAL.
+	&VariantInitializer<TypeRef>::init, // TYPE_REF.
 	&VariantInitializer<Dictionary>::init, // DICTIONARY.
 	&VariantInitializer<Array>::init, // ARRAY.
 	&VariantInitializer<PackedByteArray>::init, // PACKED_BYTE_ARRAY.
@@ -320,6 +321,7 @@ void (*type_init_function_table[])(Variant *) = {
 		&&OPCODE_TYPE_ADJUST_OBJECT,                   \
 		&&OPCODE_TYPE_ADJUST_CALLABLE,                 \
 		&&OPCODE_TYPE_ADJUST_SIGNAL,                   \
+		&&OPCODE_TYPE_ADJUST_TYPE_REF,                 \
 		&&OPCODE_TYPE_ADJUST_DICTIONARY,               \
 		&&OPCODE_TYPE_ADJUST_ARRAY,                    \
 		&&OPCODE_TYPE_ADJUST_PACKED_BYTE_ARRAY,        \
@@ -392,6 +394,7 @@ void (*type_init_function_table[])(Variant *) = {
 #define OP_GET_NODE_PATH get_node_path
 #define OP_GET_CALLABLE get_callable
 #define OP_GET_SIGNAL get_signal
+#define OP_GET_TYPE_REF get_type_ref
 #define OP_GET_ARRAY get_array
 #define OP_GET_DICTIONARY get_dictionary
 #define OP_GET_PACKED_BYTE_ARRAY get_byte_array
@@ -3380,6 +3383,7 @@ Variant GDScriptFunction::call(GDScriptInstance *p_instance, const Variant **p_a
 			OPCODE_TYPE_ADJUST(OBJECT, Object *);
 			OPCODE_TYPE_ADJUST(CALLABLE, Callable);
 			OPCODE_TYPE_ADJUST(SIGNAL, Signal);
+			OPCODE_TYPE_ADJUST(TYPE_REF, TypeRef);
 			OPCODE_TYPE_ADJUST(DICTIONARY, Dictionary);
 			OPCODE_TYPE_ADJUST(ARRAY, Array);
 			OPCODE_TYPE_ADJUST(PACKED_BYTE_ARRAY, PackedByteArray);

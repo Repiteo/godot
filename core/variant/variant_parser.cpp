@@ -1871,6 +1871,10 @@ Error VariantWriter::write(const Variant &p_variant, StoreStringFunc p_store_str
 		case Variant::CALLABLE: {
 			p_store_string_func(p_store_string_ud, "Callable()");
 		} break;
+		case Variant::TYPE_REF: {
+			// TODO
+			p_store_string_func(p_store_string_ud, "TypeRef()");
+		} break;
 
 		case Variant::OBJECT: {
 			if (unlikely(p_recursion_count > MAX_RECURSION)) {

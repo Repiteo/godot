@@ -59,6 +59,7 @@
 #include "core/variant/array.h"
 #include "core/variant/callable.h"
 #include "core/variant/dictionary.h"
+#include "core/variant/type_ref.h"
 
 class Object;
 
@@ -112,6 +113,7 @@ public:
 		OBJECT,
 		CALLABLE,
 		SIGNAL,
+		TYPE_REF,
 		DICTIONARY,
 		ARRAY,
 
@@ -283,6 +285,7 @@ private:
 			true, //OBJECT,
 			true, //CALLABLE,
 			true, //SIGNAL,
+			true, //TYPE_REF,
 			true, //DICTIONARY,
 			true, //ARRAY,
 
@@ -396,6 +399,7 @@ public:
 
 	operator Callable() const;
 	operator Signal() const;
+	operator TypeRef() const;
 
 	operator Dictionary() const;
 	operator Array() const;
@@ -466,6 +470,7 @@ public:
 	Variant(const Object *p_object);
 	Variant(const Callable &p_callable);
 	Variant(const Signal &p_signal);
+	Variant(const TypeRef &p_type);
 	Variant(const Dictionary &p_dictionary);
 
 	Variant(const Array &p_array);

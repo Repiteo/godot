@@ -396,6 +396,19 @@ public:
 	EditorPropertyCallable();
 };
 
+class EditorPropertyTypeRef : public EditorProperty {
+	GDCLASS(EditorPropertyTypeRef, EditorProperty);
+	Button *edit = nullptr;
+	String base_type;
+
+protected:
+	static void _bind_methods();
+
+public:
+	virtual void update_property() override;
+	EditorPropertyTypeRef();
+};
+
 class EditorPropertyFloat : public EditorProperty {
 	GDCLASS(EditorPropertyFloat, EditorProperty);
 	EditorSpinSlider *spin = nullptr;

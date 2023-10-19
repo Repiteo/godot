@@ -132,6 +132,9 @@ String Variant::get_type_name(Variant::Type p_type) {
 		case NODE_PATH: {
 			return "NodePath";
 		}
+		case TYPE_REF: {
+			return "TypeRef";
+		}
 		case DICTIONARY: {
 			return "Dictionary";
 		}
@@ -388,6 +391,13 @@ bool Variant::can_convert(Variant::Type p_type_from, Variant::Type p_type_to) {
 		case NODE_PATH: {
 			static const Type valid[] = {
 				STRING,
+				NIL
+			};
+
+			valid_types = valid;
+		} break;
+		case TYPE_REF: {
+			static const Type valid[] = {
 				NIL
 			};
 
@@ -945,6 +955,9 @@ bool Variant::is_zero() const {
 		case NODE_PATH: {
 			return reinterpret_cast<const NodePath *>(_data._mem)->is_empty();
 		}
+		case TYPE_REF: {
+			return reinterpret_cast<const TypeRef *>(_data._mem)->is_variant();
+		}
 		case DICTIONARY: {
 			return reinterpret_cast<const Dictionary *>(_data._mem)->is_empty();
 		}
@@ -1174,6 +1187,9 @@ void Variant::reference(const Variant &p_variant) {
 		case NODE_PATH: {
 			memnew_placement(_data._mem, NodePath(*reinterpret_cast<const NodePath *>(p_variant._data._mem)));
 		} break;
+		case TYPE_REF: {
+			memnew_placement(_data._mem, TypeRef(*reinterpret_cast<const TypeRef *>(p_variant._data._mem)));
+		} break;
 		case DICTIONARY: {
 			memnew_placement(_data._mem, Dictionary(*reinterpret_cast<const Dictionary *>(p_variant._data._mem)));
 		} break;
@@ -1368,6 +1384,9 @@ void Variant::_clear_internal() {
 		} break;
 		case SIGNAL: {
 			reinterpret_cast<Signal *>(_data._mem)->~Signal();
+		} break;
+		case TYPE_REF: {
+			reinterpret_cast<TypeRef *>(_data._mem)->~TypeRef();
 		} break;
 		case DICTIONARY: {
 			reinterpret_cast<Dictionary *>(_data._mem)->~Dictionary();
@@ -1753,6 +1772,8 @@ String Variant::stringify(int recursion_count) const {
 			return operator NodePath();
 		case COLOR:
 			return operator Color();
+		case TYPE_REF:
+			return operator TypeRef();
 		case DICTIONARY: {
 			ERR_FAIL_COND_V_MSG(recursion_count > MAX_RECURSION, "{ ... }", "Maximum dictionary recursion reached!");
 			recursion_count++;
@@ -2179,6 +2200,26 @@ Variant::operator Signal() const {
 		return *reinterpret_cast<const Signal *>(_data._mem);
 	} else {
 		return Signal();
+	}
+}
+
+Variant::operator TypeRef() const {
+	if (type == TYPE_REF) {
+		return *reinterpret_cast<const TypeRef *>(_data._mem);
+	} else if (type == ARRAY) {
+		Array array = *reinterpret_cast<const Array *>(_data._mem);
+		Array typed;
+		typed.append(array.get_typed_builtin());
+		typed.append(array.get_typed_class_name());
+		typed.append(array.get_typed_script());
+		Array nested_types;
+		nested_types.append(typed);
+		return TypeRef(type, StringName(), Variant(), nested_types);
+	} else if (type == OBJECT) {
+		Object *obj = _get_obj().obj;
+		return TypeRef(type, obj->get_class_name(), obj->get_script(), Array());
+	} else {
+		return TypeRef::from_builtin_type(type);
 	}
 }
 
@@ -2630,6 +2671,11 @@ Variant::Variant(const Signal &p_callable) {
 	memnew_placement(_data._mem, Signal(p_callable));
 }
 
+Variant::Variant(const TypeRef &p_type) {
+	type = TYPE_REF;
+	memnew_placement(_data._mem, TypeRef(p_type));
+}
+
 Variant::Variant(const Dictionary &p_dictionary) {
 	type = DICTIONARY;
 	memnew_placement(_data._mem, Dictionary(p_dictionary));
@@ -2865,6 +2911,9 @@ void Variant::operator=(const Variant &p_variant) {
 		case SIGNAL: {
 			*reinterpret_cast<Signal *>(_data._mem) = *reinterpret_cast<const Signal *>(p_variant._data._mem);
 		} break;
+		case TYPE_REF: {
+			*reinterpret_cast<TypeRef *>(_data._mem) = *reinterpret_cast<const TypeRef *>(p_variant._data._mem);
+		} break;
 
 		case STRING_NAME: {
 			*reinterpret_cast<StringName *>(_data._mem) = *reinterpret_cast<const StringName *>(p_variant._data._mem);
@@ -3087,6 +3136,10 @@ uint32_t Variant::recursive_hash(int recursion_count) const {
 			const Signal &s = *reinterpret_cast<const Signal *>(_data._mem);
 			uint32_t hash = s.get_name().hash();
 			return hash_murmur3_one_64(s.get_object_id(), hash);
+		} break;
+		case TYPE_REF: {
+			// TODO
+			return 0;
 		} break;
 		case ARRAY: {
 			const Array &arr = *reinterpret_cast<const Array *>(_data._mem);

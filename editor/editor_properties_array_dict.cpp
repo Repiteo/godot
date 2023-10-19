@@ -1038,6 +1038,10 @@ void EditorPropertyDictionary::update_property() {
 					prop = memnew(EditorPropertyCallable);
 
 				} break;
+				case Variant::TYPE_REF: {
+					prop = memnew(EditorPropertyTypeRef);
+
+				} break;
 				case Variant::OBJECT: {
 					if (Object::cast_to<EncodedObjectAsID>(value)) {
 						EditorPropertyObjectID *editor = memnew(EditorPropertyObjectID);

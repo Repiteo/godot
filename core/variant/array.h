@@ -43,10 +43,10 @@ class Callable;
 
 class Array {
 	mutable ArrayPrivate *_p;
-	void _unref() const;
+	void _unref();
 
 public:
-	void _ref(const Array &p_from) const;
+	void _ref(const Array &p_from);
 
 	Variant &operator[](int p_idx);
 	const Variant &operator[](int p_idx) const;

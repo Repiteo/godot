@@ -528,6 +528,8 @@ static GDExtensionVariantFromTypeConstructorFunc gdextension_get_variant_from_ty
 			return VariantTypeConstructor<Callable>::variant_from_type;
 		case GDEXTENSION_VARIANT_TYPE_SIGNAL:
 			return VariantTypeConstructor<Signal>::variant_from_type;
+		case GDEXTENSION_VARIANT_TYPE_TYPE_REF:
+			return VariantTypeConstructor<TypeRef>::variant_from_type;
 		case GDEXTENSION_VARIANT_TYPE_DICTIONARY:
 			return VariantTypeConstructor<Dictionary>::variant_from_type;
 		case GDEXTENSION_VARIANT_TYPE_ARRAY:
@@ -611,6 +613,8 @@ static GDExtensionTypeFromVariantConstructorFunc gdextension_get_variant_to_type
 			return VariantTypeConstructor<Callable>::type_from_variant;
 		case GDEXTENSION_VARIANT_TYPE_SIGNAL:
 			return VariantTypeConstructor<Signal>::type_from_variant;
+		case GDEXTENSION_VARIANT_TYPE_TYPE_REF:
+			return VariantTypeConstructor<TypeRef>::type_from_variant;
 		case GDEXTENSION_VARIANT_TYPE_DICTIONARY:
 			return VariantTypeConstructor<Dictionary>::type_from_variant;
 		case GDEXTENSION_VARIANT_TYPE_ARRAY:

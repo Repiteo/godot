@@ -1444,6 +1444,26 @@ EditorPropertyCallable::EditorPropertyCallable() {
 	add_focusable(edit);
 }
 
+///////////////////// TYPE_REF /////////////////////////
+
+void EditorPropertyTypeRef::update_property() {
+	// TODO
+	edit->set_text("TypeRef");
+	edit->set_disabled(false);
+	edit->set_icon(get_editor_theme_icon(SNAME("TypeRef")));
+}
+
+void EditorPropertyTypeRef::_bind_methods() {
+	// TODO
+}
+
+EditorPropertyTypeRef::EditorPropertyTypeRef() {
+	// TODO
+	edit = memnew(Button);
+	add_child(edit);
+	add_focusable(edit);
+}
+
 ///////////////////// FLOAT /////////////////////////
 
 void EditorPropertyFloat::_set_read_only(bool p_read_only) {

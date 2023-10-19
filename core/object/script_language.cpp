@@ -417,6 +417,7 @@ void ScriptLanguage::get_core_type_words(List<String> *p_core_type_words) const 
 	p_core_type_words->push_back("RID");
 	p_core_type_words->push_back("Callable");
 	p_core_type_words->push_back("Signal");
+	p_core_type_words->push_back("TypeRef");
 	p_core_type_words->push_back("Dictionary");
 	p_core_type_words->push_back("Array");
 	p_core_type_words->push_back("PackedByteArray");

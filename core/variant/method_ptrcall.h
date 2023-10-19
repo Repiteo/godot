@@ -141,6 +141,7 @@ MAKE_PTRARG(RID);
 // Object doesn't need this.
 MAKE_PTRARG(Callable);
 MAKE_PTRARG(Signal);
+MAKE_PTRARG(TypeRef);
 MAKE_PTRARG(Dictionary);
 MAKE_PTRARG(Array);
 MAKE_PTRARG(PackedByteArray);

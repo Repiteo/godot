@@ -95,6 +95,7 @@ uint32_t GDScriptByteCodeGenerator::add_temporary(const GDScriptDataType &p_type
 			case Variant::RID:
 			case Variant::CALLABLE:
 			case Variant::SIGNAL:
+			case Variant::TYPE_REF:
 				temp_type = p_type.builtin_type;
 				break;
 			case Variant::OBJECT:
@@ -510,6 +511,9 @@ void GDScriptByteCodeGenerator::write_type_adjust(const Address &p_target, Varia
 			break;
 		case Variant::SIGNAL:
 			append_opcode(GDScriptFunction::OPCODE_TYPE_ADJUST_SIGNAL);
+			break;
+		case Variant::TYPE_REF:
+			append_opcode(GDScriptFunction::OPCODE_TYPE_ADJUST_TYPE_REF);
 			break;
 		case Variant::DICTIONARY:
 			append_opcode(GDScriptFunction::OPCODE_TYPE_ADJUST_DICTIONARY);
