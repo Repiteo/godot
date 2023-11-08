@@ -38,7 +38,7 @@
 #include "core/io/marshalls.h"
 #include "core/os/os.h"
 
-FileAccess::CreateFunc FileAccess::create_func[ACCESS_MAX] = { nullptr, nullptr };
+FileAccess::CreateFunc FileAccess::create_func[ACCESS_MAX] = { nullptr, nullptr, nullptr, nullptr };
 
 FileAccess::FileCloseFailNotify FileAccess::close_fail_notify = nullptr;
 
@@ -49,7 +49,9 @@ Ref<FileAccess> FileAccess::create(AccessType p_access) {
 	ERR_FAIL_INDEX_V(p_access, ACCESS_MAX, nullptr);
 
 	Ref<FileAccess> ret = create_func[p_access]();
-	ret->_set_access_type(p_access);
+	if (ret.is_valid()) {
+		ret->_set_access_type(p_access);
+	}
 	return ret;
 }
 
@@ -75,7 +77,8 @@ Ref<FileAccess> FileAccess::create_for_path(const String &p_path) {
 		ret = create(ACCESS_RESOURCES);
 	} else if (p_path.begins_with("user://")) {
 		ret = create(ACCESS_USERDATA);
-
+	} else if (p_path.begins_with("registry://")) {
+		ret = create(ACCESS_REGISTRY);
 	} else {
 		ret = create(ACCESS_FILESYSTEM);
 	}
@@ -211,6 +214,12 @@ String FileAccess::fix_path(const String &p_path) const {
 		} break;
 		case ACCESS_FILESYSTEM: {
 			return r_path;
+		} break;
+		case ACCESS_REGISTRY: {
+			if (p_path.contains("/")) {
+				r_path = p_path;
+			}
+			return r_path.replace("registry://", "");
 		} break;
 		case ACCESS_MAX:
 			break; // Can't happen, but silences warning

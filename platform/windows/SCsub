@@ -19,6 +19,8 @@ common_win = [
     "gl_manager_windows_native.cpp",
     "gl_manager_windows_angle.cpp",
     "wgl_detect_version.cpp",
+    "file_access_windows_registry.cpp",
+    "dir_access_windows_registry.cpp",
 ]
 
 common_win_wrap = [

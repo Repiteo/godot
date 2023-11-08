@@ -55,6 +55,8 @@ String DirAccess::_get_root_string() const {
 			return "res://";
 		case ACCESS_USERDATA:
 			return "user://";
+		case ACCESS_REGISTRY:
+			return "registry://";
 		default:
 			return "";
 	}
@@ -215,6 +217,9 @@ String DirAccess::fix_path(String p_path) const {
 		case ACCESS_FILESYSTEM: {
 			return p_path;
 		} break;
+		case ACCESS_REGISTRY: {
+			return p_path.replace_first("registry://", "");
+		} break;
 		case ACCESS_MAX:
 			break; // Can't happen, but silences warning
 	}
@@ -222,7 +227,7 @@ String DirAccess::fix_path(String p_path) const {
 	return p_path;
 }
 
-DirAccess::CreateFunc DirAccess::create_func[ACCESS_MAX] = { nullptr, nullptr, nullptr };
+DirAccess::CreateFunc DirAccess::create_func[ACCESS_MAX] = { nullptr, nullptr, nullptr, nullptr };
 
 Ref<DirAccess> DirAccess::create_for_path(const String &p_path) {
 	Ref<DirAccess> da;
@@ -230,6 +235,8 @@ Ref<DirAccess> DirAccess::create_for_path(const String &p_path) {
 		da = create(ACCESS_RESOURCES);
 	} else if (p_path.begins_with("user://")) {
 		da = create(ACCESS_USERDATA);
+	} else if (p_path.begins_with("registry://")) {
+		da = create(ACCESS_REGISTRY);
 	} else {
 		da = create(ACCESS_FILESYSTEM);
 	}
@@ -317,6 +324,8 @@ Ref<DirAccess> DirAccess::create(AccessType p_access) {
 			da->change_dir("res://");
 		} else if (p_access == ACCESS_USERDATA) {
 			da->change_dir("user://");
+		} else if (p_access == ACCESS_REGISTRY) {
+			da->change_dir("registry://");
 		}
 	}
 

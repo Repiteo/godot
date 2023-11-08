@@ -30,7 +30,9 @@
 
 #include "os_windows.h"
 
+#include "dir_access_windows_registry.h"
 #include "display_server_windows.h"
+#include "file_access_windows_registry.h"
 #include "joypad_windows.h"
 #include "lang_table.h"
 #include "windows_terminal_logger.h"
@@ -178,9 +180,11 @@ void OS_Windows::initialize() {
 	FileAccess::make_default<FileAccessWindows>(FileAccess::ACCESS_RESOURCES);
 	FileAccess::make_default<FileAccessWindows>(FileAccess::ACCESS_USERDATA);
 	FileAccess::make_default<FileAccessWindows>(FileAccess::ACCESS_FILESYSTEM);
+	FileAccess::make_default<FileAccessWindowsRegistry>(FileAccess::ACCESS_REGISTRY);
 	DirAccess::make_default<DirAccessWindows>(DirAccess::ACCESS_RESOURCES);
 	DirAccess::make_default<DirAccessWindows>(DirAccess::ACCESS_USERDATA);
 	DirAccess::make_default<DirAccessWindows>(DirAccess::ACCESS_FILESYSTEM);
+	DirAccess::make_default<DirAccessWindowsRegistry>(DirAccess::ACCESS_REGISTRY);
 
 	NetSocketPosix::make_default();
 
