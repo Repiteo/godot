@@ -167,6 +167,7 @@ namespace Godot.SourceGenerators.Sample
         [Export(PropertyHint.Enum, "A,B,C")] private String[] property_StringArrayEnum { get; set; } = { "foo", "bar" };
         [Export] private Vector2[] property_Vector2Array { get; set; } = { Vector2.Up, Vector2.Down, Vector2.Left, Vector2.Right };
         [Export] private Vector3[] property_Vector3Array { get; set; } = { Vector3.Up, Vector3.Down, Vector3.Left, Vector3.Right };
+        [Export] private Vector4[] property_Vector4Array { get; set; } = { Vector4.Zero, Vector4.One, Vector4.Inf };
         [Export] private Color[] property_ColorArray { get; set; } = { Colors.Aqua, Colors.Aquamarine, Colors.Azure, Colors.Beige };
         [Export] private GodotObject[] property_GodotObjectOrDerivedArray { get; set; } = { null };
         [Export] private StringName[] field_StringNameArray { get; set; } = { "foo", "bar" };

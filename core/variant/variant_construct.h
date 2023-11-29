@@ -96,6 +96,7 @@ MAKE_PTRCONSTRUCT(PackedFloat64Array);
 MAKE_PTRCONSTRUCT(PackedStringArray);
 MAKE_PTRCONSTRUCT(PackedVector2Array);
 MAKE_PTRCONSTRUCT(PackedVector3Array);
+MAKE_PTRCONSTRUCT(PackedVector4Array);
 MAKE_PTRCONSTRUCT(PackedColorArray);
 MAKE_PTRCONSTRUCT(Variant);
 

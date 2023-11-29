@@ -129,6 +129,7 @@ CLASSES_WITH_CSHARP_DIFFERENCES: List[str] = [
     "PackedStringArray",
     "PackedVector2Array",
     "PackedVector3Array",
+    "PackedVector4Array",
     "Variant",
 ]
 

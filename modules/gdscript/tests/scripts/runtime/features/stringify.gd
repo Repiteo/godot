@@ -39,4 +39,5 @@ func test():
 	print(PackedStringArray(["hello", "world"]))
 	print(PackedVector2Array([Vector2.ONE, Vector2.ZERO]))
 	print(PackedVector3Array([Vector3.ONE, Vector3.ZERO]))
+	print(PackedVector4Array([Vector4.ONE, Vector4.ZERO]))
 	print(PackedColorArray([Color.RED, Color.BLUE, Color.GREEN]))

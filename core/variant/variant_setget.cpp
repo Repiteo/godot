@@ -843,6 +843,7 @@ INDEXED_SETGET_STRUCT_TYPED_NUMERIC(PackedFloat32Array, double, float)
 INDEXED_SETGET_STRUCT_TYPED_NUMERIC(PackedFloat64Array, double, double)
 INDEXED_SETGET_STRUCT_TYPED(PackedVector2Array, Vector2)
 INDEXED_SETGET_STRUCT_TYPED(PackedVector3Array, Vector3)
+INDEXED_SETGET_STRUCT_TYPED(PackedVector4Array, Vector4)
 INDEXED_SETGET_STRUCT_TYPED(PackedStringArray, String)
 INDEXED_SETGET_STRUCT_TYPED(PackedColorArray, Color)
 
@@ -910,6 +911,7 @@ void register_indexed_setters_getters() {
 	REGISTER_INDEXED_MEMBER(PackedFloat64Array);
 	REGISTER_INDEXED_MEMBER(PackedVector2Array);
 	REGISTER_INDEXED_MEMBER(PackedVector3Array);
+	REGISTER_INDEXED_MEMBER(PackedVector4Array);
 	REGISTER_INDEXED_MEMBER(PackedStringArray);
 	REGISTER_INDEXED_MEMBER(PackedColorArray);
 
@@ -1442,6 +1444,14 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			r_iter = 0;
 			return true;
 		} break;
+		case PACKED_VECTOR4_ARRAY: {
+			const Vector<Vector4> *arr = &PackedArrayRef<Vector4>::get_array(_data.packed_array);
+			if (arr->size() == 0) {
+				return false;
+			}
+			r_iter = 0;
+			return true;
+		} break;
 		case PACKED_COLOR_ARRAY: {
 			const Vector<Color> *arr = &PackedArrayRef<Color>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
@@ -1690,6 +1700,16 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
+		case PACKED_VECTOR4_ARRAY: {
+			const Vector<Vector4> *arr = &PackedArrayRef<Vector4>::get_array(_data.packed_array);
+			int idx = r_iter;
+			idx++;
+			if (idx >= arr->size()) {
+				return false;
+			}
+			r_iter = idx;
+			return true;
+		} break;
 		case PACKED_COLOR_ARRAY: {
 			const Vector<Color> *arr = &PackedArrayRef<Color>::get_array(_data.packed_array);
 			int idx = r_iter;
@@ -1919,6 +1939,8 @@ Variant Variant::recursive_duplicate(bool p_deep, int recursion_count) const {
 			return operator Vector<Vector2>().duplicate();
 		case PACKED_VECTOR3_ARRAY:
 			return operator Vector<Vector3>().duplicate();
+		case PACKED_VECTOR4_ARRAY:
+			return operator Vector<Vector4>().duplicate();
 		case PACKED_COLOR_ARRAY:
 			return operator Vector<Color>().duplicate();
 		default:

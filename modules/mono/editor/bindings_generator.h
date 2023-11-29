@@ -680,7 +680,7 @@ class BindingsGenerator {
 		StringName type_Vector4i = StaticCString::create("Vector4i");
 
 		// Object not included as it must be checked for all derived classes
-		static constexpr int nullable_types_count = 18;
+		static constexpr int nullable_types_count = 19;
 		StringName nullable_types[nullable_types_count] = {
 			type_String,
 			type_StringName,
@@ -701,6 +701,7 @@ class BindingsGenerator {
 			StaticCString::create(_STR(PackedStringArray)),
 			StaticCString::create(_STR(PackedVector2Array)),
 			StaticCString::create(_STR(PackedVector3Array)),
+			StaticCString::create(_STR(PackedVector4Array)),
 			StaticCString::create(_STR(PackedColorArray)),
 		};
 

@@ -673,6 +673,8 @@ namespace Godot
                         return VariantUtils.CreateFrom(vector2Array);
                     case Vector3[] vector3Array:
                         return VariantUtils.CreateFrom(vector3Array);
+                    case Vector4[] vector4Array:
+                        return VariantUtils.CreateFrom(vector4Array);
                     case Color[] colorArray:
                         return VariantUtils.CreateFrom(colorArray);
                     case StringName[] stringNameArray:

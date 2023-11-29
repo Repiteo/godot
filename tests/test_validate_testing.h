@@ -175,6 +175,12 @@ TEST_SUITE("Validate tests") {
 		vec3_arr.push_back(Vector3(2, 2, 2));
 		INFO(vec3_arr);
 
+		PackedVector4Array vec4_arr;
+		vec4_arr.push_back(Vector4(0, 0, 0, 0));
+		vec4_arr.push_back(Vector4(1, 1, 1, 1));
+		vec4_arr.push_back(Vector4(2, 2, 2, 2));
+		INFO(vec4_arr);
+
 		PackedColorArray color_arr;
 		color_arr.push_back(Color(0, 0, 0));
 		color_arr.push_back(Color(1, 1, 1));

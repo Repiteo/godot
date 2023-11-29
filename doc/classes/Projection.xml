@@ -312,6 +312,13 @@
 			</description>
 		</operator>
 		<operator name="operator *">
+			<return type="PackedVector4Array" />
+			<param index="0" name="right" type="PackedVector4Array" />
+			<description>
+				Projects (multiplies) each element of the given [Vector4] array by this [Projection] matrix.
+			</description>
+		</operator>
+		<operator name="operator *">
 			<return type="Projection" />
 			<param index="0" name="right" type="Projection" />
 			<description>

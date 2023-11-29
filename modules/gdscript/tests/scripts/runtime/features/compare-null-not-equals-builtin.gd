@@ -133,6 +133,10 @@ func test():
 	value = PackedVector3Array()
 	print(null != value)
 
+	# PackedVector4Array
+	value = PackedVector4Array()
+	print(null != value)
+
 	# PackedColorArray
 	value = PackedColorArray()
 	print(null != value)

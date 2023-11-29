@@ -73,6 +73,7 @@ typedef Vector<double> PackedFloat64Array;
 typedef Vector<String> PackedStringArray;
 typedef Vector<Vector2> PackedVector2Array;
 typedef Vector<Vector3> PackedVector3Array;
+typedef Vector<Vector4> PackedVector4Array;
 typedef Vector<Color> PackedColorArray;
 
 class Variant {
@@ -124,6 +125,7 @@ public:
 		PACKED_STRING_ARRAY,
 		PACKED_VECTOR2_ARRAY,
 		PACKED_VECTOR3_ARRAY,
+		PACKED_VECTOR4_ARRAY,
 		PACKED_COLOR_ARRAY,
 
 		VARIANT_MAX
@@ -295,6 +297,7 @@ private:
 			true, //PACKED_STRING_ARRAY,
 			true, //PACKED_VECTOR2_ARRAY,
 			true, //PACKED_VECTOR3_ARRAY,
+			true, //PACKED_VECTOR4_ARRAY,
 			true, //PACKED_COLOR_ARRAY,
 		};
 
@@ -410,6 +413,7 @@ public:
 	operator Vector<double>() const;
 	operator Vector<String>() const;
 	operator Vector<Vector3>() const;
+	operator Vector<Vector4>() const;
 	operator Vector<Color>() const;
 	operator Vector<Plane>() const;
 	operator Vector<Face3>() const;
@@ -480,6 +484,7 @@ public:
 	Variant(const Vector<double> &p_float64_array);
 	Variant(const Vector<String> &p_string_array);
 	Variant(const Vector<Vector3> &p_vector3_array);
+	Variant(const Vector<Vector4> &p_vector4_array);
 	Variant(const Vector<Color> &p_color_array);
 	Variant(const Vector<Face3> &p_face_array);
 

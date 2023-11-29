@@ -123,6 +123,9 @@ struct _NO_DISCARD_ Projection {
 	Vector4 xform(const Vector4 &p_vec4) const;
 	Vector4 xform_inv(const Vector4 &p_vec4) const;
 
+	Vector<Vector4> xform(const Vector<Vector4> &p_vec4) const;
+	Vector<Vector4> xform_inv(const Vector<Vector4> &p_vec4) const;
+
 	operator String() const;
 
 	void scale_translate_to_fit(const AABB &p_aabb);

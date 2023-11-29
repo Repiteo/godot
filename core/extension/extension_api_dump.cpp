@@ -188,6 +188,7 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 			{ Variant::PACKED_STRING_ARRAY, ptrsize_32 * 2, ptrsize_64 * 2, ptrsize_32 * 2, ptrsize_64 * 2 },
 			{ Variant::PACKED_VECTOR2_ARRAY, ptrsize_32 * 2, ptrsize_64 * 2, ptrsize_32 * 2, ptrsize_64 * 2 },
 			{ Variant::PACKED_VECTOR3_ARRAY, ptrsize_32 * 2, ptrsize_64 * 2, ptrsize_32 * 2, ptrsize_64 * 2 },
+			{ Variant::PACKED_VECTOR4_ARRAY, ptrsize_32 * 2, ptrsize_64 * 2, ptrsize_32 * 2, ptrsize_64 * 2 },
 			{ Variant::PACKED_COLOR_ARRAY, ptrsize_32 * 2, ptrsize_64 * 2, ptrsize_32 * 2, ptrsize_64 * 2 },
 			{ Variant::VARIANT_MAX, sizeof(uint64_t) + sizeof(float) * 4, sizeof(uint64_t) + sizeof(float) * 4, sizeof(uint64_t) + sizeof(double) * 4, sizeof(uint64_t) + sizeof(double) * 4 },
 		};
@@ -229,6 +230,7 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 		static_assert(type_size_array[Variant::PACKED_STRING_ARRAY][sizeof(void *)] == sizeof(PackedStringArray), "Size of PackedStringArray mismatch");
 		static_assert(type_size_array[Variant::PACKED_VECTOR2_ARRAY][sizeof(void *)] == sizeof(PackedVector2Array), "Size of PackedVector2Array mismatch");
 		static_assert(type_size_array[Variant::PACKED_VECTOR3_ARRAY][sizeof(void *)] == sizeof(PackedVector3Array), "Size of PackedVector3Array mismatch");
+		static_assert(type_size_array[Variant::PACKED_VECTOR4_ARRAY][sizeof(void *)] == sizeof(PackedVector4Array), "Size of PackedVector4Array mismatch");
 		static_assert(type_size_array[Variant::PACKED_COLOR_ARRAY][sizeof(void *)] == sizeof(PackedColorArray), "Size of PackedColorArray mismatch");
 		static_assert(type_size_array[Variant::VARIANT_MAX][sizeof(void *)] == sizeof(Variant), "Size of Variant mismatch");
 

@@ -160,6 +160,7 @@ struct NamesCache {
 		StaticCString::create(_STR(PackedStringArray)),
 		StaticCString::create(_STR(PackedVector2Array)),
 		StaticCString::create(_STR(PackedVector3Array)),
+		StaticCString::create(_STR(PackedVector4Array)),
 		StaticCString::create(_STR(PackedColorArray)),
 	};
 
@@ -257,6 +258,7 @@ bool arg_default_value_is_assignable_to_type(const Context &p_context, const Var
 		case Variant::PACKED_STRING_ARRAY:
 		case Variant::PACKED_VECTOR2_ARRAY:
 		case Variant::PACKED_VECTOR3_ARRAY:
+		case Variant::PACKED_VECTOR4_ARRAY:
 		case Variant::PACKED_COLOR_ARRAY:
 		case Variant::CALLABLE:
 		case Variant::SIGNAL:

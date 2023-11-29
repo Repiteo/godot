@@ -2062,6 +2062,10 @@ TEST_CASE("[Variant] Identity comparison") {
 	CHECK(packed_vector3_array.identity_compare(packed_vector3_array));
 	CHECK_FALSE(packed_vector3_array.identity_compare(PackedVector3Array()));
 
+	Variant packed_vector4_array = PackedVector4Array();
+	CHECK(packed_vector4_array.identity_compare(packed_vector4_array));
+	CHECK_FALSE(packed_vector4_array.identity_compare(PackedVector4Array()));
+
 	Object obj_one = Object();
 	Variant obj_one_var = &obj_one;
 	Object obj_two = Object();

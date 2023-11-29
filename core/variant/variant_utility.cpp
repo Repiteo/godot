@@ -915,6 +915,8 @@ Variant VariantUtilityFunctions::type_convert(const Variant &p_variant, const Va
 			return p_variant.operator PackedVector2Array();
 		case Variant::Type::PACKED_VECTOR3_ARRAY:
 			return p_variant.operator PackedVector3Array();
+		case Variant::Type::PACKED_VECTOR4_ARRAY:
+			return p_variant.operator PackedVector4Array();
 		case Variant::Type::PACKED_COLOR_ARRAY:
 			return p_variant.operator PackedColorArray();
 		case Variant::Type::VARIANT_MAX:

@@ -118,6 +118,7 @@ DOCTEST_STRINGIFY_VARIANT(PackedFloat64Array);
 DOCTEST_STRINGIFY_VARIANT(PackedStringArray);
 DOCTEST_STRINGIFY_VARIANT(PackedVector2Array);
 DOCTEST_STRINGIFY_VARIANT(PackedVector3Array);
+DOCTEST_STRINGIFY_VARIANT(PackedVector4Array);
 DOCTEST_STRINGIFY_VARIANT(PackedColorArray);
 
 // Register test commands to be launched from the command-line.

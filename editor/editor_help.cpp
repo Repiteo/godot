@@ -76,6 +76,7 @@ const Vector<String> classes_with_csharp_differences = {
 	"PackedStringArray",
 	"PackedVector2Array",
 	"PackedVector3Array",
+	"PackedVector4Array",
 	"Variant",
 };
 #endif

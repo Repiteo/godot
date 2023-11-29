@@ -93,6 +93,32 @@ Vector4 Projection::xform_inv(const Vector4 &p_vec4) const {
 			columns[3][0] * p_vec4.x + columns[3][1] * p_vec4.y + columns[3][2] * p_vec4.z + columns[3][3] * p_vec4.w);
 }
 
+Vector<Vector4> Projection::xform(const Vector<Vector4> &p_array) const {
+	Vector<Vector4> array;
+	array.resize(p_array.size());
+
+	const Vector4 *r = p_array.ptr();
+	Vector4 *w = array.ptrw();
+
+	for (int i = 0; i < p_array.size(); ++i) {
+		w[i] = xform(r[i]);
+	}
+	return array;
+}
+
+Vector<Vector4> Projection::xform_inv(const Vector<Vector4> &p_array) const {
+	Vector<Vector4> array;
+	array.resize(p_array.size());
+
+	const Vector4 *r = p_array.ptr();
+	Vector4 *w = array.ptrw();
+
+	for (int i = 0; i < p_array.size(); ++i) {
+		w[i] = xform_inv(r[i]);
+	}
+	return array;
+}
+
 void Projection::adjust_perspective_znear(real_t p_new_znear) {
 	real_t zfar = get_z_far();
 	real_t znear = p_new_znear;

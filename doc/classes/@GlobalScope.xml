@@ -3158,10 +3158,13 @@
 		<constant name="TYPE_PACKED_VECTOR3_ARRAY" value="36" enum="Variant.Type">
 			Variable is of type [PackedVector3Array].
 		</constant>
-		<constant name="TYPE_PACKED_COLOR_ARRAY" value="37" enum="Variant.Type">
+		<constant name="TYPE_PACKED_VECTOR4_ARRAY" value="37" enum="Variant.Type">
+			Variable is of type [PackedVector4Array].
+		</constant>
+		<constant name="TYPE_PACKED_COLOR_ARRAY" value="38" enum="Variant.Type">
 			Variable is of type [PackedColorArray].
 		</constant>
-		<constant name="TYPE_MAX" value="38" enum="Variant.Type">
+		<constant name="TYPE_MAX" value="39" enum="Variant.Type">
 			Represents the size of the [enum Variant.Type] enum.
 		</constant>
 		<constant name="OP_EQUAL" value="0" enum="Variant.Operator">

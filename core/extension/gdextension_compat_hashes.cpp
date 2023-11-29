@@ -65,7 +65,8 @@ bool GDExtensionCompatHashes::get_legacy_hashes(const StringName &p_class, const
 			if (p_check_valid) {
 				MethodBind *mb = ClassDB::get_method_with_compatibility(p_class, p_method, mapping.current_hash);
 				if (!mb) {
-					WARN_PRINT(vformat("Compatibility hash %d mapped to non-existent hash %d. Please update gdextension_compat_hashes.cpp.", mapping.legacy_hash, mapping.current_hash));
+					WARN_PRINT(vformat("Compatibility hash %d mapped to non-existent hash %d. Please update gdextension_compat_hashes.cpp with class \"%s\" method \"%s\".",
+							mapping.legacy_hash, mapping.current_hash, p_class, p_method));
 					continue;
 				}
 			}
@@ -158,18 +159,18 @@ void GDExtensionCompatHashes::initialize() {
 		{ "draw_line", 2516941890, 1562330099 },
 		{ "draw_dashed_line", 2175215884, 684651049 },
 		{ "draw_polyline", 4175878946, 3797364428 },
-		{ "draw_polyline_colors", 2239164197, 2311979562 },
+		{ "draw_polyline_colors", 2239164197, 2487745743 },
 		{ "draw_arc", 3486841771, 4140652635 },
 		{ "draw_multiline", 4230657331, 2239075205 },
-		{ "draw_multiline_colors", 235933050, 4072951537 },
+		{ "draw_multiline_colors", 235933050, 3878967157 },
 		{ "draw_rect", 84391229, 2417231121 },
 		{ "draw_texture", 1695860435, 520200117 },
 		{ "draw_texture_rect", 3204081724, 3832805018 },
 		{ "draw_texture_rect_region", 3196597532, 3883821411 },
 		{ "draw_msdf_texture_rect_region", 2672026175, 4219163252 },
 		{ "draw_lcd_texture_rect_region", 169610548, 3212350954 },
-		{ "draw_primitive", 2248678295, 3288481815 },
-		{ "draw_polygon", 2683625537, 974537912 },
+		{ "draw_primitive", 2248678295, 92810484 },
+		{ "draw_polygon", 2683625537, 1934468955 },
 		{ "draw_colored_polygon", 1659099617, 15245644 },
 		{ "draw_string", 2552080639, 728290553 },
 		{ "draw_multiline_string", 4002645436, 1927038192 },
@@ -581,8 +582,8 @@ void GDExtensionCompatHashes::initialize() {
 		{ "buffer_get_data", 125363422, 3101830688 },
 		{ "render_pipeline_create", 2911419500, 2385451958 },
 		{ "compute_pipeline_create", 403593840, 1448838280 },
-		{ "draw_list_begin", 4252992020, 2468082605 },
-		{ "draw_list_begin_split", 832527510, 2406300660 },
+		{ "draw_list_begin", 4252992020, 3326262589 },
+		{ "draw_list_begin_split", 832527510, 3714114502 },
 		{ "draw_list_draw", 3710874499, 4230067973 },
 		{ "draw_list_enable_scissor", 338791288, 244650101 },
 	});
@@ -599,14 +600,14 @@ void GDExtensionCompatHashes::initialize() {
 		{ "instances_cull_convex", 3690700105, 2488539944 },
 		{ "canvas_item_set_custom_rect", 2180266943, 1333997032 },
 		{ "canvas_item_add_line", 2843922985, 1819681853 },
-		{ "canvas_item_add_polyline", 3438017257, 3098767073 },
-		{ "canvas_item_add_multiline", 3176074788, 2088642721 },
+		{ "canvas_item_add_polyline", 3438017257, 2327990905 },
+		{ "canvas_item_add_multiline", 3176074788, 3216110886 },
 		{ "canvas_item_add_texture_rect", 3205360868, 324864032 },
 		{ "canvas_item_add_msdf_texture_rect_region", 349157222, 97408773 },
 		{ "canvas_item_add_texture_rect_region", 2782979504, 485157892 },
 		{ "canvas_item_add_nine_patch", 904428547, 389957886 },
-		{ "canvas_item_add_polygon", 2907936855, 3580000528 },
-		{ "canvas_item_add_triangle_array", 749685193, 660261329 },
+		{ "canvas_item_add_polygon", 2907936855, 1406871144 },
+		{ "canvas_item_add_triangle_array", 749685193, 3440754407 },
 		{ "canvas_item_add_mesh", 3548053052, 316450961 },
 		{ "canvas_item_add_multimesh", 1541595251, 2131855138 },
 		{ "canvas_item_add_animation_slice", 4107531031, 2646834499 },
@@ -671,7 +672,7 @@ void GDExtensionCompatHashes::initialize() {
 		{ "connect_to_stream", 1325480781, 57169517 },
 	});
 	mappings.insert("SurfaceTool", {
-		{ "add_triangle_fan", 297960074, 2235017613 },
+		{ "add_triangle_fan", 297960074, 400733209 },
 		{ "generate_lod", 1894448909, 1938056459 },
 	});
 	mappings.insert("TCPServer", {

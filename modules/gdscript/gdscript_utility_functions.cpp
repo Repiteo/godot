@@ -514,6 +514,10 @@ struct GDScriptUtilityFunctionsDefinitions {
 				Vector<Vector3> d = *p_args[0];
 				*r_ret = d.size();
 			} break;
+			case Variant::PACKED_VECTOR4_ARRAY: {
+				Vector<Vector4> d = *p_args[0];
+				*r_ret = d.size();
+			} break;
 			case Variant::PACKED_COLOR_ARRAY: {
 				Vector<Color> d = *p_args[0];
 				*r_ret = d.size();
