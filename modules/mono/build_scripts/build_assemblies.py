@@ -193,7 +193,7 @@ def run_msbuild(tools: ToolsLocation, sln: str, msbuild_args: Optional[List[str]
     return subprocess.call(args, env=msbuild_env)
 
 
-def build_godot_api(msbuild_tool, module_dir, output_dir, push_nupkgs_local, precision):
+def build_godot_api(msbuild_tool, module_dir, output_dir, api_file, push_nupkgs_local, precision):
     target_filenames = [
         "GodotSharp.dll",
         "GodotSharp.pdb",
@@ -211,7 +211,7 @@ def build_godot_api(msbuild_tool, module_dir, output_dir, push_nupkgs_local, pre
 
         targets = [os.path.join(editor_api_dir, filename) for filename in target_filenames]
 
-        args = ["/restore", "/t:Build", "/p:Configuration=" + build_config, "/p:NoWarn=1591"]
+        args = ["/restore", "/t:Build", "/p:Configuration=" + build_config, "/p:ApiFile=" + api_file, "/p:NoWarn=1591"]
         if push_nupkgs_local:
             args += ["/p:ClearNuGetLocalCache=true", "/p:PushNuGetToLocalSource=" + push_nupkgs_local]
         if precision == "double":
@@ -343,12 +343,12 @@ def generate_sdk_package_versions():
         f.close()
 
 
-def build_all(msbuild_tool, module_dir, output_dir, godot_platform, dev_debug, push_nupkgs_local, precision):
+def build_all(msbuild_tool, module_dir, output_dir, api_file, godot_platform, dev_debug, push_nupkgs_local, precision):
     # Generate SdkPackageVersions.props and VersionDocsUrl constant
     generate_sdk_package_versions()
 
     # Godot API
-    exit_code = build_godot_api(msbuild_tool, module_dir, output_dir, push_nupkgs_local, precision)
+    exit_code = build_godot_api(msbuild_tool, module_dir, output_dir, api_file, push_nupkgs_local, precision)
     if exit_code != 0:
         return exit_code
 
@@ -385,6 +385,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="Builds all Godot .NET solutions")
     parser.add_argument("--godot-output-dir", type=str, required=True)
+    parser.add_argument("--api-file", type=str, required=True)
     parser.add_argument(
         "--dev-debug",
         action="store_true",
@@ -405,6 +406,8 @@ def main():
 
     output_dir = os.path.abspath(args.godot_output_dir)
 
+    api_file = os.path.abspath(args.api_file)
+
     push_nupkgs_local = os.path.abspath(args.push_nupkgs_local) if args.push_nupkgs_local else None
 
     msbuild_tool = find_any_msbuild_tool(args.mono_prefix)
@@ -417,6 +420,7 @@ def main():
         msbuild_tool,
         module_dir,
         output_dir,
+        api_file,
         args.godot_platform,
         args.dev_debug,
         push_nupkgs_local,

@@ -8,10 +8,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodotPlugins", "GodotPlugin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Godot.SourceGenerators.Internal", "Godot.SourceGenerators.Internal\Godot.SourceGenerators.Internal.csproj", "{7749662B-E30C-419A-B745-13852573360A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodotSharp.Generate", "GodotSharp.Generate\GodotSharp.Generate.csproj", "{4DDB2094-ED72-479D-AC15-8CAACA80A084}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-	Debug|Any CPU = Debug|Any CPU
-	Release|Any CPU = Release|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{AEBF0036-DA76-4341-B651-A3F2856AB2FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{7749662B-E30C-419A-B745-13852573360A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7749662B-E30C-419A-B745-13852573360A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7749662B-E30C-419A-B745-13852573360A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DDB2094-ED72-479D-AC15-8CAACA80A084}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DDB2094-ED72-479D-AC15-8CAACA80A084}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DDB2094-ED72-479D-AC15-8CAACA80A084}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DDB2094-ED72-479D-AC15-8CAACA80A084}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

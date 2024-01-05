@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>10</LangVersion>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Godot.Generate</RootNamespace>
+  </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="Exists('$(ApiFile)')">
+    <Exec Command="cd &quot;$(OutputPath)&quot;&#xD;&#xA;$(AssemblyName).exe &quot;$(ApiFile)&quot;" />
+  </Target>
+</Project>
