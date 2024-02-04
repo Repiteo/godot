@@ -2959,7 +2959,7 @@ String DisplayServerWindows::keyboard_get_layout_name(int p_index) const {
 void DisplayServerWindows::process_events() {
 	ERR_FAIL_COND(!Thread::is_main_thread());
 
-	if (!drop_events) {
+	if (!drop_events && joypad.is_valid()) {
 		joypad->process_joypads();
 	}
 
@@ -4870,7 +4870,9 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 
 		} break;
 		case WM_DEVICECHANGE: {
-			joypad->probe_joypads();
+			if (joypad.is_valid()) {
+				joypad->probe_joypads();
+			}
 		} break;
 		case WM_DESTROY: {
 			Input::get_singleton()->flush_buffered_events();
@@ -5860,7 +5862,8 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Win
 	WindowID main_window = _create_window(p_mode, p_vsync_mode, p_flags, Rect2i(window_position, p_resolution));
 	ERR_FAIL_COND_MSG(main_window == INVALID_WINDOW_ID, "Failed to create main window.");
 
-	joypad = new JoypadWindows(&windows[MAIN_WINDOW_ID].hWnd);
+	joypad.instantiate(&windows[MAIN_WINDOW_ID].hWnd);
+	Input::get_singleton()->add_handler(joypad);
 
 	for (int i = 0; i < WINDOW_FLAG_MAX; i++) {
 		if (p_flags & (1 << i)) {
@@ -5970,7 +5973,6 @@ void DisplayServerWindows::register_windows_driver() {
 }
 
 DisplayServerWindows::~DisplayServerWindows() {
-	delete joypad;
 	touch_state.clear();
 
 	cursors_cache.clear();

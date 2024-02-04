@@ -37,7 +37,7 @@
 // Remarks:
 // - It's not thread-safe by itself, so its functions must only be called on a single thread, which is the Android UI thread.
 // - Its functions must only call thread-safe methods.
-class AndroidInputHandler {
+class AndroidInputHandler : public InputHandler {
 public:
 	struct TouchPos {
 		int id = 0;

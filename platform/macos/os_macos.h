@@ -41,7 +41,7 @@
 #include "servers/audio_server.h"
 
 class OS_MacOS : public OS_Unix {
-	JoypadMacOS *joypad_macos = nullptr;
+	Ref<JoypadMacOS> joypad_macos;
 
 #ifdef COREAUDIO_ENABLED
 	AudioDriverCoreAudio audio_driver;

@@ -30,12 +30,24 @@
 				If the specified action is already pressed, this will release it.
 			</description>
 		</method>
+		<method name="add_handler">
+			<return type="void" />
+			<param index="0" name="handler" type="InputHandler" />
+			<description>
+			</description>
+		</method>
 		<method name="add_joy_mapping">
 			<return type="void" />
 			<param index="0" name="mapping" type="String" />
 			<param index="1" name="update_existing" type="bool" default="false" />
 			<description>
 				Adds a new mapping entry (in SDL2 format) to the mapping database. Optionally update already connected devices.
+			</description>
+		</method>
+		<method name="find_handler" qualifiers="const">
+			<return type="InputHandler" />
+			<param index="0" name="name" type="String" />
+			<description>
 			</description>
 		</method>
 		<method name="flush_buffered_events">
@@ -104,6 +116,22 @@
 			<description>
 				Returns the rotation rate in rad/s around a device's X, Y, and Z axes of the gyroscope sensor, if the device has one. Otherwise, the method returns [constant Vector3.ZERO].
 				[b]Note:[/b] This method only works on Android and iOS. On other platforms, it always returns [constant Vector3.ZERO].
+			</description>
+		</method>
+		<method name="get_handler" qualifiers="const">
+			<return type="InputHandler" />
+			<param index="0" name="idx" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="get_handler_count" qualifiers="const">
+			<return type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="get_handlers" qualifiers="const">
+			<return type="Dictionary[]" />
+			<description>
 			</description>
 		</method>
 		<method name="get_joy_axis" qualifiers="const">
@@ -304,6 +332,12 @@
 				[b]Note:[/b] Calling this function has no influence on the operating system. So for example sending an [InputEventMouseMotion] will not move the OS mouse cursor to the specified position (use [method warp_mouse] instead) and sending [kbd]Alt/Cmd + Tab[/kbd] as [InputEventKey] won't toggle between active windows.
 			</description>
 		</method>
+		<method name="remove_handler">
+			<return type="void" />
+			<param index="0" name="handler" type="InputHandler" />
+			<description>
+			</description>
+		</method>
 		<method name="remove_joy_mapping">
 			<return type="void" />
 			<param index="0" name="guid" type="String" />
@@ -435,6 +469,16 @@
 		</member>
 	</members>
 	<signals>
+		<signal name="handler_added">
+			<param index="0" name="handler_name" type="StringName" />
+			<description>
+			</description>
+		</signal>
+		<signal name="handler_removed">
+			<param index="0" name="handler_name" type="StringName" />
+			<description>
+			</description>
+		</signal>
 		<signal name="joy_connection_changed">
 			<param index="0" name="device" type="int" />
 			<param index="1" name="connected" type="bool" />

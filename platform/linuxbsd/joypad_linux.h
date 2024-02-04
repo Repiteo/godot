@@ -40,8 +40,10 @@
 
 struct input_absinfo;
 
-class JoypadLinux {
+class JoypadLinux : public InputHandler {
 public:
+	_FORCE_INLINE_ virtual String get_name() const override { return "JoypadLinux"; }
+
 	JoypadLinux(Input *in);
 	~JoypadLinux();
 	void process_joypads();

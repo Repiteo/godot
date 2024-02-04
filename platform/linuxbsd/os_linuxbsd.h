@@ -62,7 +62,7 @@ class OS_LinuxBSD : public OS_Unix {
 #endif
 
 #ifdef JOYDEV_ENABLED
-	JoypadLinux *joypad = nullptr;
+	Ref<JoypadLinux> joypad;
 #endif
 
 #ifdef ALSA_ENABLED

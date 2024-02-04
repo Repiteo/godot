@@ -39,6 +39,7 @@
 #import "view_controller.h"
 
 #include "core/config/project_settings.h"
+#include "core/input/input.h"
 #include "core/io/dir_access.h"
 #include "core/io/file_access.h"
 #include "core/io/file_access_pack.h"
@@ -134,14 +135,11 @@ void OS_IOS::initialize_modules() {
 	ios = memnew(iOS);
 	Engine::get_singleton()->add_singleton(Engine::Singleton("iOS", ios));
 
-	joypad_ios = memnew(JoypadIOS);
+	joypad_ios.instantiate();
+	Input::get_singleton()->add_handler(joypad_ios);
 }
 
 void OS_IOS::deinitialize_modules() {
-	if (joypad_ios) {
-		memdelete(joypad_ios);
-	}
-
 	if (ios) {
 		memdelete(ios);
 	}
@@ -181,7 +179,7 @@ void OS_IOS::start() {
 		main_loop->initialize();
 	}
 
-	if (joypad_ios) {
+	if (joypad_ios.is_valid()) {
 		joypad_ios->start_processing();
 	}
 }

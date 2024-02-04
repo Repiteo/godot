@@ -31,6 +31,7 @@
 #ifndef JOYPAD_WINDOWS_H
 #define JOYPAD_WINDOWS_H
 
+#include "core/input/input_handler.h"
 #include "os_windows.h"
 
 #define DIRECTINPUT_VERSION 0x0800
@@ -49,9 +50,10 @@
 #define XUSER_MAX_COUNT 4
 #endif
 
-class JoypadWindows {
+class JoypadWindows : public InputHandler {
 public:
-	JoypadWindows();
+	_FORCE_INLINE_ virtual String get_name() const override { return "JoypadWindows"; }
+
 	JoypadWindows(HWND *hwnd);
 	~JoypadWindows();
 
@@ -71,7 +73,6 @@ private:
 
 	struct dinput_gamepad {
 		int id;
-		bool attached;
 		bool confirmed;
 		bool last_buttons[MAX_JOY_BUTTONS];
 		DWORD last_pad;
@@ -83,7 +84,6 @@ private:
 		dinput_gamepad() {
 			id = -1;
 			last_pad = -1;
-			attached = false;
 			confirmed = false;
 			di_joy = nullptr;
 			guid = {};
@@ -95,7 +95,7 @@ private:
 	};
 
 	struct xinput_gamepad {
-		int id = 0;
+		int id = -1;
 		bool attached = false;
 		bool vibrating = false;
 		DWORD last_packet = 0;
@@ -114,10 +114,8 @@ private:
 
 	int id_to_change;
 	int slider_count;
-	int joypad_count;
-	bool attached_joypads[JOYPADS_MAX];
-	dinput_gamepad d_joypads[JOYPADS_MAX];
-	xinput_gamepad x_joypads[XUSER_MAX_COUNT];
+	HashMap<int, dinput_gamepad> d_joypads;
+	HashMap<int, xinput_gamepad> x_joypads;
 
 	static BOOL CALLBACK enumCallback(const DIDEVICEINSTANCE *p_instance, void *p_context);
 	static BOOL CALLBACK objectsCallback(const DIDEVICEOBJECTINSTANCE *instance, void *context);
