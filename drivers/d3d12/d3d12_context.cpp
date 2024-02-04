@@ -194,7 +194,7 @@ Error D3D12Context::_check_capabilities() {
 		D3D12_FEATURE_DATA_SHADER_MODEL shader_model = {};
 		shader_model.HighestShaderModel = MIN(D3D_HIGHEST_SHADER_MODEL, D3D_SHADER_MODEL_6_6);
 		HRESULT res = md.device->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shader_model, sizeof(shader_model));
-		ERR_FAIL_COND_V_MSG(!SUCCEEDED(res), ERR_CANT_CREATE, "CheckFeatureSupport failed with error " + vformat("0x%08ux", (uint64_t)res) + ".");
+		ERR_FAIL_COND_V_MSG(!SUCCEEDED(res), Error::CANT_CREATE, "CheckFeatureSupport failed with error " + vformat("0x%08ux", (uint64_t)res) + ".");
 		shader_capabilities.shader_model = shader_model.HighestShaderModel;
 	}
 	print_verbose("- Shader:");
@@ -287,7 +287,7 @@ Error D3D12Context::_check_capabilities() {
 		print_verbose("- Relaxed casting not supported");
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error D3D12Context::_initialize_debug_layers() {
@@ -298,16 +298,16 @@ Error D3D12Context::_initialize_debug_layers() {
 	} else {
 		res = D3D12GetDebugInterface(IID_PPV_ARGS(&debug_controller));
 	}
-	ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_QUERY_FAILED);
+	ERR_FAIL_COND_V(!SUCCEEDED(res), Error::QUERY_FAILED);
 	debug_controller->EnableDebugLayer();
-	return OK;
+	return Error::OK;
 }
 
 Error D3D12Context::_select_adapter(int &r_index) {
 	{
 		UINT flags = _use_validation_layers() ? DXGI_CREATE_FACTORY_DEBUG : 0;
 		HRESULT res = CreateDXGIFactory2(flags, IID_PPV_ARGS(&dxgi_factory));
-		ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(!SUCCEEDED(res), Error::CANT_CREATE);
 	}
 
 	ComPtr<IDXGIFactory6> factory6;
@@ -329,7 +329,7 @@ Error D3D12Context::_select_adapter(int &r_index) {
 		adapters.push_back(curr_adapter);
 	}
 
-	ERR_FAIL_COND_V_MSG(adapters.size() == 0, ERR_CANT_CREATE, "Adapters enumeration reported zero accessible devices.");
+	ERR_FAIL_COND_V_MSG(adapters.size() == 0, Error::CANT_CREATE, "Adapters enumeration reported zero accessible devices.");
 
 	// The device should really be a preference, but for now choosing a discrete GPU over the
 	// integrated one is better than the default.
@@ -410,7 +410,7 @@ Error D3D12Context::_select_adapter(int &r_index) {
 		adapter_index = user_adapter_index;
 	}
 
-	ERR_FAIL_COND_V_MSG(adapter_index == -1, ERR_CANT_CREATE, "None of D3D12 devices supports hardware rendering.");
+	ERR_FAIL_COND_V_MSG(adapter_index == -1, Error::CANT_CREATE, "None of D3D12 devices supports hardware rendering.");
 
 	gpu = adapters[adapter_index];
 	for (uint32_t i = 0; i < adapters.size(); ++i) {
@@ -433,7 +433,7 @@ Error D3D12Context::_select_adapter(int &r_index) {
 
 	r_index = adapter_index;
 
-	return OK;
+	return Error::OK;
 }
 
 void D3D12Context::_dump_adapter_info(int p_index) {
@@ -509,25 +509,25 @@ Error D3D12Context::_create_device(DeviceBasics &r_basics) {
 	} else {
 		res = D3D12CreateDevice(gpu.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(r_basics.device.GetAddressOf()));
 	}
-	ERR_FAIL_COND_V_MSG(!SUCCEEDED(res), ERR_CANT_CREATE, "D3D12CreateDevice failed with error " + vformat("0x%08ux", (uint64_t)res) + ".");
+	ERR_FAIL_COND_V_MSG(!SUCCEEDED(res), Error::CANT_CREATE, "D3D12CreateDevice failed with error " + vformat("0x%08ux", (uint64_t)res) + ".");
 
 	// Create direct command queue.
 	D3D12_COMMAND_QUEUE_DESC queue_desc = {};
 	queue_desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 	queue_desc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 	res = r_basics.device->CreateCommandQueue(&queue_desc, IID_PPV_ARGS(r_basics.queue.GetAddressOf()));
-	ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(!SUCCEEDED(res), Error::CANT_CREATE);
 
 	// Create sync objects.
 	res = r_basics.device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(r_basics.fence.GetAddressOf()));
-	ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(!SUCCEEDED(res), Error::CANT_CREATE);
 	r_basics.fence_event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-	ERR_FAIL_NULL_V(r_basics.fence_event, ERR_CANT_CREATE);
+	ERR_FAIL_NULL_V(r_basics.fence_event, Error::CANT_CREATE);
 
 	if (_use_validation_layers()) {
 		ComPtr<ID3D12InfoQueue> info_queue;
 		res = r_basics.device.As(&info_queue);
-		ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(!SUCCEEDED(res), Error::CANT_CREATE);
 
 		ComPtr<ID3D12InfoQueue1> info_queue_1;
 		r_basics.device.As(&info_queue_1);
@@ -537,17 +537,17 @@ Error D3D12Context::_create_device(DeviceBasics &r_basics) {
 			info_queue_1->SetMuteDebugOutput(TRUE);
 
 			res = info_queue_1->RegisterMessageCallback(&_debug_message_func, D3D12_MESSAGE_CALLBACK_IGNORE_FILTERS, nullptr, 0);
-			ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_CANT_CREATE);
+			ERR_FAIL_COND_V(!SUCCEEDED(res), Error::CANT_CREATE);
 		} else {
 			// Rely on D3D12's own debug printing.
 
 			if (Engine::get_singleton()->is_abort_on_gpu_errors_enabled()) {
 				res = info_queue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, TRUE);
-				ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_CANT_CREATE);
+				ERR_FAIL_COND_V(!SUCCEEDED(res), Error::CANT_CREATE);
 				res = info_queue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, TRUE);
-				ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_CANT_CREATE);
+				ERR_FAIL_COND_V(!SUCCEEDED(res), Error::CANT_CREATE);
 				res = info_queue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, TRUE);
-				ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_CANT_CREATE);
+				ERR_FAIL_COND_V(!SUCCEEDED(res), Error::CANT_CREATE);
 			}
 		}
 		D3D12_MESSAGE_SEVERITY severities_to_mute[] = {
@@ -569,21 +569,21 @@ Error D3D12Context::_create_device(DeviceBasics &r_basics) {
 		filter.DenyList.pIDList = messages_to_mute;
 
 		res = info_queue->PushStorageFilter(&filter);
-		ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(!SUCCEEDED(res), Error::CANT_CREATE);
 
 #if D3D12_DEBUG_LAYER_BREAK_ON_ERROR
 		res = info_queue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
-		ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(!SUCCEEDED(res), Error::CANT_CREATE);
 #endif
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error D3D12Context::_get_device_limits() {
 	D3D12_FEATURE_DATA_D3D12_OPTIONS options = {};
 	HRESULT res = md.device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options));
-	ERR_FAIL_COND_V_MSG(!SUCCEEDED(res), ERR_UNAVAILABLE, "CheckFeatureSupport failed with error " + vformat("0x%08ux", (uint64_t)res) + ".");
+	ERR_FAIL_COND_V_MSG(!SUCCEEDED(res), Error::UNAVAILABLE, "CheckFeatureSupport failed with error " + vformat("0x%08ux", (uint64_t)res) + ".");
 
 	// https://docs.microsoft.com/en-us/windows/win32/direct3d12/hardware-support
 	gpu_limits.max_srvs_per_shader_stage = options.ResourceBindingTier == D3D12_RESOURCE_BINDING_TIER_1 ? 128 : UINT64_MAX;
@@ -599,7 +599,7 @@ Error D3D12Context::_get_device_limits() {
 
 	md.queue->GetTimestampFrequency(&gpu_limits.timestamp_frequency);
 
-	return OK;
+	return Error::OK;
 }
 
 bool D3D12Context::_use_validation_layers() {
@@ -607,7 +607,7 @@ bool D3D12Context::_use_validation_layers() {
 }
 
 Error D3D12Context::window_create(DisplayServer::WindowID p_window_id, DisplayServer::VSyncMode p_vsync_mode, int p_width, int p_height, const void *p_platform_data) {
-	ERR_FAIL_COND_V(windows.has(p_window_id), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(windows.has(p_window_id), Error::INVALID_PARAMETER);
 
 	Window window;
 	window.hwnd = ((const WindowPlatformData *)p_platform_data)->window;
@@ -634,17 +634,17 @@ Error D3D12Context::window_create(DisplayServer::WindowID p_window_id, DisplaySe
 
 	for (uint32_t i = 0; i < IMAGE_COUNT; i++) {
 		Error err = window.framebuffers[i].rtv_heap.allocate(md.device.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 1, false);
-		ERR_FAIL_COND_V(err != OK, ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(err != Error::OK, Error::CANT_CREATE);
 		window.framebuffers[i].is_screen = true;
 		window.framebuffers[i].attachments_handle_inds.push_back(0);
 	}
 
 	Error err = _update_swap_chain(&window);
-	ERR_FAIL_COND_V(err != OK, ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(err != Error::OK, Error::CANT_CREATE);
 
 	windows[p_window_id] = window;
 
-	return OK;
+	return Error::OK;
 }
 
 void D3D12Context::window_resize(DisplayServer::WindowID p_window, int p_width, int p_height) {
@@ -696,7 +696,7 @@ void D3D12Context::window_destroy(DisplayServer::WindowID p_window_id) {
 Error D3D12Context::_update_swap_chain(Window *window) {
 	if (window->width == 0 || window->height == 0) {
 		// Likely window minimized, no swapchain created.
-		return ERR_SKIP;
+		return Error::SKIP;
 	}
 
 	DisplayServer::VSyncMode curr_vsync_mode = window->vsync_mode;
@@ -781,24 +781,24 @@ Error D3D12Context::_update_swap_chain(Window *window) {
 
 		ComPtr<IDXGISwapChain1> swapchain;
 		HRESULT res = dxgi_factory->CreateSwapChainForHwnd(md.queue.Get(), window->hwnd, &swapchain_desc, nullptr, nullptr, swapchain.GetAddressOf());
-		ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(!SUCCEEDED(res), Error::CANT_CREATE);
 		swapchain.As(&window->swapchain);
-		ERR_FAIL_NULL_V(window->swapchain, ERR_CANT_CREATE);
+		ERR_FAIL_NULL_V(window->swapchain, Error::CANT_CREATE);
 
 		format = swapchain_desc.Format;
 
 		res = dxgi_factory->MakeWindowAssociation(window->hwnd, DXGI_MWA_NO_ALT_ENTER | DXGI_MWA_NO_WINDOW_CHANGES);
-		ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(!SUCCEEDED(res), Error::CANT_CREATE);
 
 		res = window->swapchain->GetDesc1(&swapchain_desc);
-		ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_CANT_CREATE);
-		ERR_FAIL_COND_V(swapchain_desc.BufferCount != IMAGE_COUNT, ERR_BUG);
+		ERR_FAIL_COND_V(!SUCCEEDED(res), Error::CANT_CREATE);
+		ERR_FAIL_COND_V(swapchain_desc.BufferCount != IMAGE_COUNT, Error::BUG);
 		window->width = swapchain_desc.Width;
 		window->height = swapchain_desc.Height;
 
 	} else {
 		HRESULT res = window->swapchain->ResizeBuffers(IMAGE_COUNT, window->width, window->height, DXGI_FORMAT_UNKNOWN, swapchain_flags);
-		ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_UNAVAILABLE);
+		ERR_FAIL_COND_V(!SUCCEEDED(res), Error::UNAVAILABLE);
 	}
 
 	window->swapchain_flags = swapchain_flags;
@@ -809,12 +809,12 @@ Error D3D12Context::_update_swap_chain(Window *window) {
 		RenderingDeviceDriverD3D12::DescriptorsHeap::Walker walker = fb_info->rtv_heap.make_walker();
 
 		HRESULT res = window->swapchain->GetBuffer(i, IID_PPV_ARGS(&window->render_targets[i]));
-		ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(!SUCCEEDED(res), Error::CANT_CREATE);
 
 		md.device->CreateRenderTargetView(window->render_targets[i].Get(), nullptr, walker.get_curr_cpu_handle());
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void D3D12Context::_init_device_factory() {
@@ -845,35 +845,35 @@ Error D3D12Context::initialize() {
 
 	if (_use_validation_layers()) {
 		Error err = _initialize_debug_layers();
-		ERR_FAIL_COND_V(err, ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(err != Error::OK, Error::CANT_CREATE);
 	}
 
 	int adapter_index = 0;
 
 	Error err = _select_adapter(adapter_index);
-	ERR_FAIL_COND_V(err, ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(err != Error::OK, Error::CANT_CREATE);
 
 	err = _create_device(md);
-	ERR_FAIL_COND_V(err, ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(err != Error::OK, Error::CANT_CREATE);
 
 	_dump_adapter_info(adapter_index);
 
 	err = _check_capabilities();
-	ERR_FAIL_COND_V(err, ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(err != Error::OK, Error::CANT_CREATE);
 
 	err = _get_device_limits();
-	ERR_FAIL_COND_V(err, ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(err != Error::OK, Error::CANT_CREATE);
 
 	{
 		HRESULT res = md.device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(frame_fence.GetAddressOf()));
-		ERR_FAIL_COND_V(!SUCCEEDED(res), ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(!SUCCEEDED(res), Error::CANT_CREATE);
 		frame_fence_event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-		ERR_FAIL_NULL_V(frame_fence_event, ERR_CANT_CREATE);
+		ERR_FAIL_NULL_V(frame_fence_event, Error::CANT_CREATE);
 	}
 
 	md.driver = memnew(RenderingDeviceDriverD3D12(this, md.device.Get(), IMAGE_COUNT + 1));
 
-	return OK;
+	return Error::OK;
 }
 
 void D3D12Context::set_setup_buffer(RDD::CommandBufferID p_command_buffer) {
@@ -944,7 +944,7 @@ Error D3D12Context::prepare_buffers(RDD::CommandBufferID p_command_buffer) {
 
 	buffers_prepared = true;
 
-	return OK;
+	return Error::OK;
 }
 
 void D3D12Context::postpare_buffers(RDD::CommandBufferID p_command_buffer) {
@@ -996,7 +996,7 @@ Error D3D12Context::swap_buffers() {
 	frame++;
 
 	buffers_prepared = false;
-	return OK;
+	return Error::OK;
 }
 
 void D3D12Context::resize_notify() {

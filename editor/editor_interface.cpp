@@ -347,14 +347,14 @@ PackedStringArray EditorInterface::get_open_scenes() const {
 
 Error EditorInterface::save_scene() {
 	if (!get_edited_scene_root()) {
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 	if (get_edited_scene_root()->get_scene_file_path().is_empty()) {
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	save_scene_as(get_edited_scene_root()->get_scene_file_path());
-	return OK;
+	return Error::OK;
 }
 
 void EditorInterface::save_scene_as(const String &p_scene, bool p_with_preview) {

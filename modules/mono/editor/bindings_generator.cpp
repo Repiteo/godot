@@ -876,7 +876,7 @@ Error BindingsGenerator::_populate_method_icalls_table(const TypeInterface &p_it
 		}
 
 		const TypeInterface *return_type = _get_type_or_null(imethod.return_type);
-		ERR_FAIL_NULL_V(return_type, ERR_BUG); // Return type not found
+		ERR_FAIL_NULL_V(return_type, Error::BUG); // Return type not found
 
 		String im_unique_sig = get_ret_unique_sig(return_type) + ",CallMethodBind";
 
@@ -887,7 +887,7 @@ Error BindingsGenerator::_populate_method_icalls_table(const TypeInterface &p_it
 		// Get arguments information
 		for (const ArgumentInterface &iarg : imethod.arguments) {
 			const TypeInterface *arg_type = _get_type_or_null(iarg.type);
-			ERR_FAIL_NULL_V(arg_type, ERR_BUG); // Argument type not found
+			ERR_FAIL_NULL_V(arg_type, Error::BUG); // Argument type not found
 
 			im_unique_sig += ",";
 			im_unique_sig += get_arg_unique_sig(*arg_type);
@@ -922,7 +922,7 @@ Error BindingsGenerator::_populate_method_icalls_table(const TypeInterface &p_it
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void BindingsGenerator::_generate_array_extensions(StringBuilder &p_output) {
@@ -1097,14 +1097,14 @@ void BindingsGenerator::_generate_global_constants(StringBuilder &p_output) {
 }
 
 Error BindingsGenerator::generate_cs_core_project(const String &p_proj_dir) {
-	ERR_FAIL_COND_V(!initialized, ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(!initialized, Error::UNCONFIGURED);
 
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
-	ERR_FAIL_COND_V(da.is_null(), ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(da.is_null(), Error::CANT_CREATE);
 
 	if (!DirAccess::exists(p_proj_dir)) {
 		Error err = da->make_dir_recursive(p_proj_dir);
-		ERR_FAIL_COND_V_MSG(err != OK, ERR_CANT_CREATE, "Cannot create directory '" + p_proj_dir + "'.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, Error::CANT_CREATE, "Cannot create directory '" + p_proj_dir + "'.");
 	}
 
 	da->change_dir(p_proj_dir);
@@ -1122,7 +1122,7 @@ Error BindingsGenerator::generate_cs_core_project(const String &p_proj_dir) {
 		_generate_global_constants(constants_source);
 		String output_file = path::join(base_gen_dir, BINDINGS_GLOBAL_SCOPE_CLASS "_constants.cs");
 		Error save_err = _save_file(output_file, constants_source);
-		if (save_err != OK) {
+		if (save_err != Error::OK) {
 			return save_err;
 		}
 
@@ -1135,7 +1135,7 @@ Error BindingsGenerator::generate_cs_core_project(const String &p_proj_dir) {
 		_generate_array_extensions(extensions_source);
 		String output_file = path::join(base_gen_dir, BINDINGS_GLOBAL_SCOPE_CLASS "_extensions.cs");
 		Error save_err = _save_file(output_file, extensions_source);
-		if (save_err != OK) {
+		if (save_err != Error::OK) {
 			return save_err;
 		}
 
@@ -1152,11 +1152,11 @@ Error BindingsGenerator::generate_cs_core_project(const String &p_proj_dir) {
 		String output_file = path::join(godot_objects_gen_dir, itype.proxy_name + ".cs");
 		Error err = _generate_cs_type(itype, output_file);
 
-		if (err == ERR_SKIP) {
+		if (err == Error::SKIP) {
 			continue;
 		}
 
-		if (err != OK) {
+		if (err != Error::OK) {
 			return err;
 		}
 
@@ -1189,7 +1189,7 @@ Error BindingsGenerator::generate_cs_core_project(const String &p_proj_dir) {
 			continue;
 		}
 		Error err = _generate_cs_native_calls(icall, cs_icalls_content);
-		if (err != OK) {
+		if (err != Error::OK) {
 			return err;
 		}
 	}
@@ -1199,7 +1199,7 @@ Error BindingsGenerator::generate_cs_core_project(const String &p_proj_dir) {
 	String internal_methods_file = path::join(base_gen_dir, BINDINGS_CLASS_NATIVECALLS ".cs");
 
 	Error err = _save_file(internal_methods_file, cs_icalls_content);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 
@@ -1222,22 +1222,22 @@ Error BindingsGenerator::generate_cs_core_project(const String &p_proj_dir) {
 	String includes_props_file = path::join(base_gen_dir, "GeneratedIncludes.props");
 
 	err = _save_file(includes_props_file, includes_props_content);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error BindingsGenerator::generate_cs_editor_project(const String &p_proj_dir) {
-	ERR_FAIL_COND_V(!initialized, ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(!initialized, Error::UNCONFIGURED);
 
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
-	ERR_FAIL_COND_V(da.is_null(), ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(da.is_null(), Error::CANT_CREATE);
 
 	if (!DirAccess::exists(p_proj_dir)) {
 		Error err = da->make_dir_recursive(p_proj_dir);
-		ERR_FAIL_COND_V(err != OK, ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(err != Error::OK, Error::CANT_CREATE);
 	}
 
 	da->change_dir(p_proj_dir);
@@ -1259,11 +1259,11 @@ Error BindingsGenerator::generate_cs_editor_project(const String &p_proj_dir) {
 		String output_file = path::join(godot_objects_gen_dir, itype.proxy_name + ".cs");
 		Error err = _generate_cs_type(itype, output_file);
 
-		if (err == ERR_SKIP) {
+		if (err == Error::SKIP) {
 			continue;
 		}
 
-		if (err != OK) {
+		if (err != Error::OK) {
 			return err;
 		}
 
@@ -1298,7 +1298,7 @@ Error BindingsGenerator::generate_cs_editor_project(const String &p_proj_dir) {
 			continue;
 		}
 		Error err = _generate_cs_native_calls(icall, cs_icalls_content);
-		if (err != OK) {
+		if (err != Error::OK) {
 			return err;
 		}
 	}
@@ -1308,7 +1308,7 @@ Error BindingsGenerator::generate_cs_editor_project(const String &p_proj_dir) {
 	String internal_methods_file = path::join(base_gen_dir, BINDINGS_CLASS_NATIVECALLS_EDITOR ".cs");
 
 	Error err = _save_file(internal_methods_file, cs_icalls_content);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 
@@ -1331,24 +1331,24 @@ Error BindingsGenerator::generate_cs_editor_project(const String &p_proj_dir) {
 	String includes_props_file = path::join(base_gen_dir, "GeneratedIncludes.props");
 
 	err = _save_file(includes_props_file, includes_props_content);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error BindingsGenerator::generate_cs_api(const String &p_output_dir) {
-	ERR_FAIL_COND_V(!initialized, ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(!initialized, Error::UNCONFIGURED);
 
 	String output_dir = path::abspath(path::realpath(p_output_dir));
 
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
-	ERR_FAIL_COND_V(da.is_null(), ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(da.is_null(), Error::CANT_CREATE);
 
 	if (!DirAccess::exists(output_dir)) {
 		Error err = da->make_dir_recursive(output_dir);
-		ERR_FAIL_COND_V(err != OK, ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(err != Error::OK, Error::CANT_CREATE);
 	}
 
 	Error proj_err;
@@ -1358,7 +1358,7 @@ Error BindingsGenerator::generate_cs_api(const String &p_output_dir) {
 	String core_proj_dir = output_dir.path_join(CORE_API_ASSEMBLY_NAME);
 
 	proj_err = generate_cs_core_project(core_proj_dir);
-	if (proj_err != OK) {
+	if (proj_err != Error::OK) {
 		ERR_PRINT("Generation of the Core API C# project failed.");
 		return proj_err;
 	}
@@ -1368,14 +1368,14 @@ Error BindingsGenerator::generate_cs_api(const String &p_output_dir) {
 	String editor_proj_dir = output_dir.path_join(EDITOR_API_ASSEMBLY_NAME);
 
 	proj_err = generate_cs_editor_project(editor_proj_dir);
-	if (proj_err != OK) {
+	if (proj_err != Error::OK) {
 		ERR_PRINT("Generation of the Editor API C# project failed.");
 		return proj_err;
 	}
 
 	_log("The Godot API sources were successfully generated\n");
 
-	return OK;
+	return Error::OK;
 }
 
 // FIXME: There are some members that hide other inherited members.
@@ -1465,7 +1465,7 @@ Error BindingsGenerator::_generate_cs_type(const TypeInterface &itype, const Str
 			}
 		} else {
 			ERR_PRINT("Base type '" + itype.base_name.operator String() + "' does not exist, for class '" + itype.name + "'.");
-			return ERR_INVALID_DATA;
+			return Error::INVALID_DATA;
 		}
 	}
 
@@ -1509,7 +1509,7 @@ Error BindingsGenerator::_generate_cs_type(const TypeInterface &itype, const Str
 	// Add enums
 
 	for (const EnumInterface &ienum : itype.enums) {
-		ERR_FAIL_COND_V(ienum.constants.is_empty(), ERR_BUG);
+		ERR_FAIL_COND_V(ienum.constants.is_empty(), Error::BUG);
 
 		if (ienum.is_flags) {
 			output.append(MEMBER_BEGIN "[System.Flags]");
@@ -1557,7 +1557,7 @@ Error BindingsGenerator::_generate_cs_type(const TypeInterface &itype, const Str
 
 	for (const PropertyInterface &iprop : itype.properties) {
 		Error prop_err = _generate_cs_property(itype, iprop, output);
-		ERR_FAIL_COND_V_MSG(prop_err != OK, prop_err,
+		ERR_FAIL_COND_V_MSG(prop_err != Error::OK, prop_err,
 				"Failed to generate property '" + iprop.cname.operator String() +
 						"' for class '" + itype.name + "'.");
 	}
@@ -1642,7 +1642,7 @@ Error BindingsGenerator::_generate_cs_type(const TypeInterface &itype, const Str
 	int method_bind_count = 0;
 	for (const MethodInterface &imethod : itype.methods) {
 		Error method_err = _generate_cs_method(itype, imethod, method_bind_count, output);
-		ERR_FAIL_COND_V_MSG(method_err != OK, method_err,
+		ERR_FAIL_COND_V_MSG(method_err != Error::OK, method_err,
 				"Failed to generate method '" + imethod.name + "' for class '" + itype.name + "'.");
 	}
 
@@ -1650,7 +1650,7 @@ Error BindingsGenerator::_generate_cs_type(const TypeInterface &itype, const Str
 
 	for (const SignalInterface &isignal : itype.signals_) {
 		Error method_err = _generate_cs_signal(itype, isignal, output);
-		ERR_FAIL_COND_V_MSG(method_err != OK, method_err,
+		ERR_FAIL_COND_V_MSG(method_err != Error::OK, method_err,
 				"Failed to generate signal '" + isignal.name + "' for class '" + itype.name + "'.");
 	}
 
@@ -1729,7 +1729,7 @@ Error BindingsGenerator::_generate_cs_type(const TypeInterface &itype, const Str
 				const ArgumentInterface &iarg = imethod.arguments[i];
 
 				const TypeInterface *arg_type = _get_type_or_null(iarg.type);
-				ERR_FAIL_NULL_V(arg_type, ERR_BUG); // Argument type not found
+				ERR_FAIL_NULL_V(arg_type, Error::BUG); // Argument type not found
 
 				if (i != 0) {
 					output << ", ";
@@ -1749,7 +1749,7 @@ Error BindingsGenerator::_generate_cs_type(const TypeInterface &itype, const Str
 
 			if (imethod.return_type.cname != name_cache.type_void) {
 				const TypeInterface *return_type = _get_type_or_null(imethod.return_type);
-				ERR_FAIL_NULL_V(return_type, ERR_BUG); // Return type not found
+				ERR_FAIL_NULL_V(return_type, Error::BUG); // Return type not found
 
 				output << INDENT3 "ret = "
 					   << sformat(return_type->cs_managed_to_variant, "callRet", return_type->cs_type, return_type->name)
@@ -1881,7 +1881,7 @@ Error BindingsGenerator::_generate_cs_type(const TypeInterface &itype, const Str
 	HashMap<String, StringName> method_names;
 	for (const MethodInterface &imethod : itype.methods) {
 		if (method_names.has(imethod.proxy_name)) {
-			ERR_FAIL_COND_V_MSG(method_names[imethod.proxy_name] != imethod.cname, ERR_BUG, "Method name '" + imethod.proxy_name + "' already exists with a different value.");
+			ERR_FAIL_COND_V_MSG(method_names[imethod.proxy_name] != imethod.cname, Error::BUG, "Method name '" + imethod.proxy_name + "' already exists with a different value.");
 			continue;
 		}
 		method_names[imethod.proxy_name] = imethod.cname;
@@ -1922,7 +1922,7 @@ Error BindingsGenerator::_generate_cs_property(const BindingsGenerator::TypeInte
 	const TypeInterface *current_type = &p_itype;
 	while (!setter && current_type->base_name != StringName()) {
 		HashMap<StringName, TypeInterface>::Iterator base_match = obj_types.find(current_type->base_name);
-		ERR_FAIL_COND_V_MSG(!base_match, ERR_BUG, "Type not found '" + current_type->base_name + "'. Inherited by '" + current_type->name + "'.");
+		ERR_FAIL_COND_V_MSG(!base_match, Error::BUG, "Type not found '" + current_type->base_name + "'. Inherited by '" + current_type->name + "'.");
 		current_type = &base_match->value;
 		setter = current_type->find_method_by_name(p_iprop.setter);
 	}
@@ -1933,21 +1933,21 @@ Error BindingsGenerator::_generate_cs_property(const BindingsGenerator::TypeInte
 	current_type = &p_itype;
 	while (!getter && current_type->base_name != StringName()) {
 		HashMap<StringName, TypeInterface>::Iterator base_match = obj_types.find(current_type->base_name);
-		ERR_FAIL_COND_V_MSG(!base_match, ERR_BUG, "Type not found '" + current_type->base_name + "'. Inherited by '" + current_type->name + "'.");
+		ERR_FAIL_COND_V_MSG(!base_match, Error::BUG, "Type not found '" + current_type->base_name + "'. Inherited by '" + current_type->name + "'.");
 		current_type = &base_match->value;
 		getter = current_type->find_method_by_name(p_iprop.getter);
 	}
 
-	ERR_FAIL_COND_V(!setter && !getter, ERR_BUG);
+	ERR_FAIL_COND_V(!setter && !getter, Error::BUG);
 
 	if (setter) {
 		int setter_argc = p_iprop.index != -1 ? 2 : 1;
-		ERR_FAIL_COND_V(setter->arguments.size() != setter_argc, ERR_BUG);
+		ERR_FAIL_COND_V(setter->arguments.size() != setter_argc, Error::BUG);
 	}
 
 	if (getter) {
 		int getter_argc = p_iprop.index != -1 ? 1 : 0;
-		ERR_FAIL_COND_V(getter->arguments.size() != getter_argc, ERR_BUG);
+		ERR_FAIL_COND_V(getter->arguments.size() != getter_argc, Error::BUG);
 	}
 
 	if (getter && setter) {
@@ -1957,7 +1957,7 @@ Error BindingsGenerator::_generate_cs_property(const BindingsGenerator::TypeInte
 			bool whitelisted = getter->return_type.cname == name_cache.type_StringName &&
 					setter_first_arg.type.cname == name_cache.type_String;
 
-			ERR_FAIL_COND_V_MSG(!whitelisted, ERR_BUG,
+			ERR_FAIL_COND_V_MSG(!whitelisted, Error::BUG,
 					"Return type from getter doesn't match first argument of setter for property: '" +
 							p_itype.name + "." + String(p_iprop.cname) + "'.");
 		}
@@ -1966,13 +1966,13 @@ Error BindingsGenerator::_generate_cs_property(const BindingsGenerator::TypeInte
 	const TypeReference &proptype_name = getter ? getter->return_type : setter->arguments.back()->get().type;
 
 	const TypeInterface *prop_itype = _get_type_or_singleton_or_null(proptype_name);
-	ERR_FAIL_NULL_V(prop_itype, ERR_BUG); // Property type not found
+	ERR_FAIL_NULL_V(prop_itype, Error::BUG); // Property type not found
 
-	ERR_FAIL_COND_V_MSG(prop_itype->is_singleton, ERR_BUG,
+	ERR_FAIL_COND_V_MSG(prop_itype->is_singleton, Error::BUG,
 			"Property type is a singleton: '" + p_itype.name + "." + String(p_iprop.cname) + "'.");
 
 	if (p_itype.api_type == ClassDB::API_CORE) {
-		ERR_FAIL_COND_V_MSG(prop_itype->api_type == ClassDB::API_EDITOR, ERR_BUG,
+		ERR_FAIL_COND_V_MSG(prop_itype->api_type == ClassDB::API_EDITOR, Error::BUG,
 				"Property '" + p_itype.name + "." + String(p_iprop.cname) + "' has type '" + prop_itype->name +
 						"' from the editor API. Core API cannot have dependencies on the editor API.");
 	}
@@ -2050,18 +2050,18 @@ Error BindingsGenerator::_generate_cs_property(const BindingsGenerator::TypeInte
 
 	p_output.append(CLOSE_BLOCK_L1);
 
-	return OK;
+	return Error::OK;
 }
 
 Error BindingsGenerator::_generate_cs_method(const BindingsGenerator::TypeInterface &p_itype, const BindingsGenerator::MethodInterface &p_imethod, int &p_method_bind_count, StringBuilder &p_output) {
 	const TypeInterface *return_type = _get_type_or_singleton_or_null(p_imethod.return_type);
-	ERR_FAIL_NULL_V(return_type, ERR_BUG); // Return type not found
+	ERR_FAIL_NULL_V(return_type, Error::BUG); // Return type not found
 
-	ERR_FAIL_COND_V_MSG(return_type->is_singleton, ERR_BUG,
+	ERR_FAIL_COND_V_MSG(return_type->is_singleton, Error::BUG,
 			"Method return type is a singleton: '" + p_itype.name + "." + p_imethod.name + "'.");
 
 	if (p_itype.api_type == ClassDB::API_CORE) {
-		ERR_FAIL_COND_V_MSG(return_type->api_type == ClassDB::API_EDITOR, ERR_BUG,
+		ERR_FAIL_COND_V_MSG(return_type->api_type == ClassDB::API_EDITOR, Error::BUG,
 				"Method '" + p_itype.name + "." + p_imethod.name + "' has return type '" + return_type->name +
 						"' from the editor API. Core API cannot have dependencies on the editor API.");
 	}
@@ -2094,13 +2094,13 @@ Error BindingsGenerator::_generate_cs_method(const BindingsGenerator::TypeInterf
 	const ArgumentInterface &first = p_imethod.arguments.front()->get();
 	for (const ArgumentInterface &iarg : p_imethod.arguments) {
 		const TypeInterface *arg_type = _get_type_or_singleton_or_null(iarg.type);
-		ERR_FAIL_NULL_V(arg_type, ERR_BUG); // Argument type not found
+		ERR_FAIL_NULL_V(arg_type, Error::BUG); // Argument type not found
 
-		ERR_FAIL_COND_V_MSG(arg_type->is_singleton, ERR_BUG,
+		ERR_FAIL_COND_V_MSG(arg_type->is_singleton, Error::BUG,
 				"Argument type is a singleton: '" + iarg.name + "' of method '" + p_itype.name + "." + p_imethod.name + "'.");
 
 		if (p_itype.api_type == ClassDB::API_CORE) {
-			ERR_FAIL_COND_V_MSG(arg_type->api_type == ClassDB::API_EDITOR, ERR_BUG,
+			ERR_FAIL_COND_V_MSG(arg_type->api_type == ClassDB::API_EDITOR, Error::BUG,
 					"Argument '" + iarg.name + "' of method '" + p_itype.name + "." + p_imethod.name + "' has type '" +
 							arg_type->name + "' from the editor API. Core API cannot have dependencies on the editor API.");
 		}
@@ -2291,7 +2291,7 @@ Error BindingsGenerator::_generate_cs_method(const BindingsGenerator::TypeInterf
 				p_output.append(INDENT2 "return default;\n" CLOSE_BLOCK_L1);
 			}
 
-			return OK; // Won't increment method bind count
+			return Error::OK; // Won't increment method bind count
 		}
 
 		if (p_imethod.requires_object_call) {
@@ -2308,11 +2308,11 @@ Error BindingsGenerator::_generate_cs_method(const BindingsGenerator::TypeInterf
 
 			p_output.append(");\n" CLOSE_BLOCK_L1);
 
-			return OK; // Won't increment method bind count
+			return Error::OK; // Won't increment method bind count
 		}
 
 		HashMap<const MethodInterface *, const InternalCall *>::ConstIterator match = method_icalls_map.find(&p_imethod);
-		ERR_FAIL_NULL_V(match, ERR_BUG);
+		ERR_FAIL_NULL_V(match, Error::BUG);
 
 		const InternalCall *im_icall = match->value;
 
@@ -2339,7 +2339,7 @@ Error BindingsGenerator::_generate_cs_method(const BindingsGenerator::TypeInterf
 
 	p_method_bind_count++;
 
-	return OK;
+	return Error::OK;
 }
 
 Error BindingsGenerator::_generate_cs_signal(const BindingsGenerator::TypeInterface &p_itype, const BindingsGenerator::SignalInterface &p_isignal, StringBuilder &p_output) {
@@ -2354,13 +2354,13 @@ Error BindingsGenerator::_generate_cs_signal(const BindingsGenerator::TypeInterf
 	const ArgumentInterface &first = p_isignal.arguments.front()->get();
 	for (const ArgumentInterface &iarg : p_isignal.arguments) {
 		const TypeInterface *arg_type = _get_type_or_singleton_or_null(iarg.type);
-		ERR_FAIL_NULL_V(arg_type, ERR_BUG); // Argument type not found
+		ERR_FAIL_NULL_V(arg_type, Error::BUG); // Argument type not found
 
-		ERR_FAIL_COND_V_MSG(arg_type->is_singleton, ERR_BUG,
+		ERR_FAIL_COND_V_MSG(arg_type->is_singleton, Error::BUG,
 				"Argument type is a singleton: '" + iarg.name + "' of signal '" + p_itype.name + "." + p_isignal.name + "'.");
 
 		if (p_itype.api_type == ClassDB::API_CORE) {
-			ERR_FAIL_COND_V_MSG(arg_type->api_type == ClassDB::API_EDITOR, ERR_BUG,
+			ERR_FAIL_COND_V_MSG(arg_type->api_type == ClassDB::API_EDITOR, Error::BUG,
 					"Argument '" + iarg.name + "' of signal '" + p_itype.name + "." + p_isignal.name + "' has type '" +
 							arg_type->name + "' from the editor API. Core API cannot have dependencies on the editor API.");
 		}
@@ -2427,7 +2427,7 @@ Error BindingsGenerator::_generate_cs_signal(const BindingsGenerator::TypeInterf
 			int idx = 0;
 			for (const ArgumentInterface &iarg : p_isignal.arguments) {
 				const TypeInterface *arg_type = _get_type_or_null(iarg.type);
-				ERR_FAIL_NULL_V(arg_type, ERR_BUG); // Argument type not found
+				ERR_FAIL_NULL_V(arg_type, Error::BUG); // Argument type not found
 
 				if (idx != 0) {
 					p_output << ",";
@@ -2524,14 +2524,14 @@ Error BindingsGenerator::_generate_cs_signal(const BindingsGenerator::TypeInterf
 		p_output.append(CLOSE_BLOCK_L1);
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error BindingsGenerator::_generate_cs_native_calls(const InternalCall &p_icall, StringBuilder &r_output) {
 	bool ret_void = p_icall.return_type.cname == name_cache.type_void;
 
 	const TypeInterface *return_type = _get_type_or_null(p_icall.return_type);
-	ERR_FAIL_NULL_V(return_type, ERR_BUG); // Return type not found
+	ERR_FAIL_NULL_V(return_type, Error::BUG); // Return type not found
 
 	StringBuilder c_func_sig;
 	StringBuilder c_in_statements;
@@ -2547,7 +2547,7 @@ Error BindingsGenerator::_generate_cs_native_calls(const InternalCall &p_icall, 
 	int i = 0;
 	for (const TypeReference &arg_type_ref : p_icall.argument_types) {
 		const TypeInterface *arg_type = _get_type_or_null(arg_type_ref);
-		ERR_FAIL_NULL_V(arg_type, ERR_BUG); // Return type not found
+		ERR_FAIL_NULL_V(arg_type, Error::BUG); // Return type not found
 
 		String c_param_name = "arg" + itos(i + 1);
 
@@ -2559,7 +2559,7 @@ Error BindingsGenerator::_generate_cs_native_calls(const InternalCall &p_icall, 
 					c_in_vararg = "%5using godot_variant %1_in = VariantUtils.CreateFromGodotObjectPtr(%1);\n";
 				}
 
-				ERR_FAIL_COND_V_MSG(c_in_vararg.is_empty(), ERR_BUG,
+				ERR_FAIL_COND_V_MSG(c_in_vararg.is_empty(), Error::BUG,
 						"VarArg support not implemented for parameter type: " + arg_type->name);
 
 				c_in_statements
@@ -2738,16 +2738,16 @@ Error BindingsGenerator::_generate_cs_native_calls(const InternalCall &p_icall, 
 
 	r_output << CLOSE_BLOCK_L1;
 
-	return OK;
+	return Error::OK;
 }
 
 Error BindingsGenerator::_save_file(const String &p_path, const StringBuilder &p_content) {
 	Ref<FileAccess> file = FileAccess::open(p_path, FileAccess::WRITE);
-	ERR_FAIL_COND_V_MSG(file.is_null(), ERR_FILE_CANT_WRITE, "Cannot open file: '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(file.is_null(), Error::FILE_CANT_WRITE, "Cannot open file: '" + p_path + "'.");
 
 	file->store_string(p_content.as_string());
 
-	return OK;
+	return Error::OK;
 }
 
 const BindingsGenerator::TypeInterface *BindingsGenerator::_get_type_or_null(const TypeReference &p_typeref) {
@@ -4184,7 +4184,7 @@ void BindingsGenerator::_initialize() {
 	for (const KeyValue<StringName, TypeInterface> &E : obj_types) {
 		const TypeInterface &itype = E.value;
 		Error err = _populate_method_icalls_table(itype);
-		ERR_FAIL_COND_MSG(err != OK, "Failed to generate icalls table for type: " + itype.name);
+		ERR_FAIL_COND_MSG(err != Error::OK, "Failed to generate icalls table for type: " + itype.name);
 	}
 
 	initialized = true;
@@ -4203,7 +4203,7 @@ static void handle_cmdline_options(String glue_dir_path) {
 
 	CRASH_COND(glue_dir_path.is_empty());
 
-	if (bindings_generator.generate_cs_api(glue_dir_path.path_join(API_SOLUTION_NAME)) != OK) {
+	if (bindings_generator.generate_cs_api(glue_dir_path.path_join(API_SOLUTION_NAME)) != Error::OK) {
 		ERR_PRINT(generate_all_glue_option + ": Failed to generate the C# API.");
 	}
 }

@@ -90,11 +90,11 @@ TEST_CASE("[String] UTF8") {
 	static const uint8_t u8str[] = { 0x45, 0x20, 0xE3, 0x81, 0x8A, 0xE3, 0x98, 0x8F, 0xE3, 0x82, 0x88, 0xE3, 0x81, 0x86, 0xF0, 0x9F, 0x8E, 0xA4, 0 };
 	String s = u32str;
 	Error err = s.parse_utf8(s.utf8().get_data());
-	CHECK(err == OK);
+	CHECK(err == Error::OK);
 	CHECK(s == u32str);
 
 	err = s.parse_utf8((const char *)u8str);
-	CHECK(err == OK);
+	CHECK(err == Error::OK);
 	CHECK(s == u32str);
 
 	CharString cs = (const char *)u8str;
@@ -107,11 +107,11 @@ TEST_CASE("[String] UTF16") {
 	static const char16_t u16str[] = { 0x0045, 0x0020, 0x304A, 0x360F, 0x3088, 0x3046, 0xD83C, 0xDFA4, 0 };
 	String s = u32str;
 	Error err = s.parse_utf16(s.utf16().get_data());
-	CHECK(err == OK);
+	CHECK(err == Error::OK);
 	CHECK(s == u32str);
 
 	err = s.parse_utf16(u16str);
-	CHECK(err == OK);
+	CHECK(err == Error::OK);
 	CHECK(s == u32str);
 
 	Char16String cs = u16str;
@@ -124,7 +124,7 @@ TEST_CASE("[String] UTF8 with BOM") {
 	static const uint8_t u8str[] = { 0xEF, 0xBB, 0xBF, 0x45, 0x20, 0xE3, 0x81, 0x8A, 0xE3, 0x98, 0x8F, 0xE3, 0x82, 0x88, 0xE3, 0x81, 0x86, 0xF0, 0x9F, 0x8E, 0xA4, 0 };
 	String s;
 	Error err = s.parse_utf8((const char *)u8str);
-	CHECK(err == OK);
+	CHECK(err == Error::OK);
 	CHECK(s == u32str);
 
 	CharString cs = (const char *)u8str;
@@ -138,11 +138,11 @@ TEST_CASE("[String] UTF16 with BOM") {
 	static const char16_t u16str_swap[] = { 0xFFFE, 0x2000, 0x4500, 0x4A30, 0x0F36, 0x8830, 0x4630, 0x3CD8, 0xA4DF, 0 };
 	String s;
 	Error err = s.parse_utf16(u16str);
-	CHECK(err == OK);
+	CHECK(err == Error::OK);
 	CHECK(s == u32str);
 
 	err = s.parse_utf16(u16str_swap);
-	CHECK(err == OK);
+	CHECK(err == Error::OK);
 	CHECK(s == u32str);
 
 	Char16String cs = u16str;
@@ -157,12 +157,12 @@ TEST_CASE("[String] UTF8 with CR") {
 
 	String keep_cr;
 	Error err = keep_cr.parse_utf8(base.utf8().get_data());
-	CHECK(err == OK);
+	CHECK(err == Error::OK);
 	CHECK(keep_cr == base);
 
 	String no_cr;
 	err = no_cr.parse_utf8(base.utf8().get_data(), -1, true); // Skip CR.
-	CHECK(err == OK);
+	CHECK(err == Error::OK);
 	CHECK(no_cr == base.replace("\r", ""));
 }
 
@@ -173,7 +173,7 @@ TEST_CASE("[String] Invalid UTF8 (non-standard)") {
 	static const char32_t u32str[] = { 0x45, 0x304A, 0x3088, 0x3046, 0x1F3A4, 0x20AC, 0xFFFD, 0 };
 	String s;
 	Error err = s.parse_utf8((const char *)u8str);
-	CHECK(err == ERR_INVALID_DATA);
+	CHECK(err == Error::INVALID_DATA);
 	CHECK(s == u32str);
 
 	CharString cs = (const char *)u8str;
@@ -188,7 +188,7 @@ TEST_CASE("[String] Invalid UTF8 (unrecoverable)") {
 	static const char32_t u32str[] = { 0x45, 0x304A, 0xFFFD, 0xFFFD, 0xFFFD, 0xFFFD, 0x3088, 0x3046, 0xFFFD, 0x1F3A4, 0x20AC, 0xFFFD, 0 };
 	String s;
 	Error err = s.parse_utf8((const char *)u8str);
-	CHECK(err == ERR_INVALID_DATA);
+	CHECK(err == Error::INVALID_DATA);
 	CHECK(s == u32str);
 
 	CharString cs = (const char *)u8str;
@@ -203,7 +203,7 @@ TEST_CASE("[String] Invalid UTF16 (non-standard)") {
 	static const char32_t u32str[] = { 0x0045, 0x304A, 0x3088, 0x3046, 0xDFA4, 0 };
 	String s;
 	Error err = s.parse_utf16(u16str);
-	CHECK(err == ERR_PARSE_ERROR);
+	CHECK(err == Error::PARSE_ERROR);
 	CHECK(s == u32str);
 
 	Char16String cs = u16str;
@@ -1447,7 +1447,7 @@ TEST_CASE("[String] lstrip and rstrip") {
 
 TEST_CASE("[String] Ensuring empty string into parse_utf8 passes empty string") {
 	String empty;
-	CHECK(empty.parse_utf8(nullptr, -1) == ERR_INVALID_DATA);
+	CHECK(empty.parse_utf8(nullptr, -1) == Error::INVALID_DATA);
 }
 
 TEST_CASE("[String] Cyrillic to_lower()") {

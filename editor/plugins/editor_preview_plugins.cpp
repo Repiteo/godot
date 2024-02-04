@@ -116,7 +116,7 @@ Ref<Texture2D> EditorTexturePreviewPlugin::generate(const Ref<Resource> &p_from,
 	img->clear_mipmaps();
 
 	if (img->is_compressed()) {
-		if (img->decompress() != OK) {
+		if (img->decompress() != Error::OK) {
 			return Ref<Texture2D>();
 		}
 	} else if (img->get_format() != Image::FORMAT_RGB8 && img->get_format() != Image::FORMAT_RGBA8) {
@@ -157,7 +157,7 @@ Ref<Texture2D> EditorImagePreviewPlugin::generate(const Ref<Resource> &p_from, c
 	img->clear_mipmaps();
 
 	if (img->is_compressed()) {
-		if (img->decompress() != OK) {
+		if (img->decompress() != Error::OK) {
 			return Ref<Image>();
 		}
 	} else if (img->get_format() != Image::FORMAT_RGB8 && img->get_format() != Image::FORMAT_RGBA8) {
@@ -218,7 +218,7 @@ Ref<Texture2D> EditorBitmapPreviewPlugin::generate(const Ref<Resource> &p_from, 
 	Ref<Image> img = Image::create_from_data(bm->get_size().width, bm->get_size().height, false, Image::FORMAT_L8, data);
 
 	if (img->is_compressed()) {
-		if (img->decompress() != OK) {
+		if (img->decompress() != Error::OK) {
 			return Ref<Texture2D>();
 		}
 	} else if (img->get_format() != Image::FORMAT_RGB8 && img->get_format() != Image::FORMAT_RGBA8) {
@@ -271,7 +271,7 @@ Ref<Texture2D> EditorPackedScenePreviewPlugin::generate_from_path(const String &
 	Ref<Image> img;
 	img.instantiate();
 	Error err = img->load(path);
-	if (err == OK) {
+	if (err == Error::OK) {
 		post_process_preview(img);
 		return ImageTexture::create_from_image(img);
 

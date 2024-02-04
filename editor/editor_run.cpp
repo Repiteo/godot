@@ -322,7 +322,7 @@ Error EditorRun::run(const String &p_scene, const String &p_write_movie) {
 	for (int i = 0; i < instances; i++) {
 		OS::ProcessID pid = 0;
 		Error err = OS::get_singleton()->create_instance(args, &pid);
-		ERR_FAIL_COND_V(err, err);
+		ERR_FAIL_COND_V(err != Error::OK, err);
 		if (pid != 0) {
 			pids.push_back(pid);
 		}
@@ -333,7 +333,7 @@ Error EditorRun::run(const String &p_scene, const String &p_write_movie) {
 		running_scene = p_scene;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 bool EditorRun::has_child_process(OS::ProcessID p_pid) const {

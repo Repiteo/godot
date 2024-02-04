@@ -87,7 +87,7 @@ int GLManager_X11::_find_or_create_display(Display *p_x11_display) {
 
 	Error err = _create_context(d);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		_displays.remove_at(new_display_id);
 		return -1;
 	}
@@ -103,7 +103,7 @@ Error GLManager_X11::_create_context(GLDisplay &gl_display) {
 
 	GLXCREATECONTEXTATTRIBSARBPROC glXCreateContextAttribsARB = (GLXCREATECONTEXTATTRIBSARBPROC)glXGetProcAddress((const GLubyte *)"glXCreateContextAttribsARB");
 
-	ERR_FAIL_NULL_V(glXCreateContextAttribsARB, ERR_UNCONFIGURED);
+	ERR_FAIL_NULL_V(glXCreateContextAttribsARB, Error::UNCONFIGURED);
 
 	static int visual_attribs[] = {
 		GLX_RENDER_TYPE, GLX_RGBA_BIT,
@@ -134,7 +134,7 @@ Error GLManager_X11::_create_context(GLDisplay &gl_display) {
 
 	if (OS::get_singleton()->is_layered_allowed()) {
 		GLXFBConfig *fbc = glXChooseFBConfig(x11_display, DefaultScreen(x11_display), visual_attribs_layered, &fbcount);
-		ERR_FAIL_NULL_V(fbc, ERR_UNCONFIGURED);
+		ERR_FAIL_NULL_V(fbc, Error::UNCONFIGURED);
 
 		for (int i = 0; i < fbcount; i++) {
 			vi = (XVisualInfo *)glXGetVisualFromFBConfig(x11_display, fbc[i]);
@@ -156,10 +156,10 @@ Error GLManager_X11::_create_context(GLDisplay &gl_display) {
 		}
 		XFree(fbc);
 
-		ERR_FAIL_NULL_V(fbconfig, ERR_UNCONFIGURED);
+		ERR_FAIL_NULL_V(fbconfig, Error::UNCONFIGURED);
 	} else {
 		GLXFBConfig *fbc = glXChooseFBConfig(x11_display, DefaultScreen(x11_display), visual_attribs, &fbcount);
-		ERR_FAIL_NULL_V(fbc, ERR_UNCONFIGURED);
+		ERR_FAIL_NULL_V(fbc, Error::UNCONFIGURED);
 
 		vi = glXGetVisualFromFBConfig(x11_display, fbc[0]);
 
@@ -180,7 +180,7 @@ Error GLManager_X11::_create_context(GLDisplay &gl_display) {
 			};
 
 			gl_display.context->glx_context = glXCreateContextAttribsARB(x11_display, fbconfig, nullptr, true, context_attribs);
-			ERR_FAIL_COND_V(ctxErrorOccurred || !gl_display.context->glx_context, ERR_UNCONFIGURED);
+			ERR_FAIL_COND_V(ctxErrorOccurred || !gl_display.context->glx_context, Error::UNCONFIGURED);
 		} break;
 	}
 
@@ -195,25 +195,25 @@ Error GLManager_X11::_create_context(GLDisplay &gl_display) {
 
 	XFree(vi);
 
-	return OK;
+	return Error::OK;
 }
 
 XVisualInfo GLManager_X11::get_vi(Display *p_display, Error &r_error) {
 	int display_id = _find_or_create_display(p_display);
 	if (display_id < 0) {
-		r_error = FAILED;
+		r_error = Error::FAILED;
 		return XVisualInfo();
 	}
-	r_error = OK;
+	r_error = Error::OK;
 	return _displays[display_id].x_vi;
 }
 
 Error GLManager_X11::open_display(Display *p_display) {
 	int gldisplay_id = _find_or_create_display(p_display);
 	if (gldisplay_id < 0) {
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	} else {
-		return OK;
+		return Error::OK;
 	}
 }
 
@@ -234,7 +234,7 @@ Error GLManager_X11::window_create(DisplayServer::WindowID p_window_id, ::Window
 	win.gldisplay_id = _find_or_create_display(p_display);
 
 	if (win.gldisplay_id == -1) {
-		return FAILED;
+		return Error::FAILED;
 	}
 
 	// the display could be invalid .. check NYI
@@ -248,7 +248,7 @@ Error GLManager_X11::window_create(DisplayServer::WindowID p_window_id, ::Window
 
 	_internal_set_current_window(&win);
 
-	return OK;
+	return Error::OK;
 }
 
 void GLManager_X11::_internal_set_current_window(GLWindow *p_win) {
@@ -349,10 +349,10 @@ void GLManager_X11::swap_buffers() {
 
 Error GLManager_X11::initialize(Display *p_display) {
 	if (!gladLoaderLoadGLX(p_display, XScreenNumberOfScreen(XDefaultScreenOfDisplay(p_display)))) {
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void GLManager_X11::set_use_vsync(bool p_use) {

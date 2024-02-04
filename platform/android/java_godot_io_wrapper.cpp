@@ -80,11 +80,11 @@ jobject GodotIOJavaWrapper::get_instance() {
 Error GodotIOJavaWrapper::open_uri(const String &p_uri) {
 	if (_open_URI) {
 		JNIEnv *env = get_jni_env();
-		ERR_FAIL_NULL_V(env, ERR_UNAVAILABLE);
+		ERR_FAIL_NULL_V(env, Error::UNAVAILABLE);
 		jstring jStr = env->NewStringUTF(p_uri.utf8().get_data());
-		return env->CallIntMethod(godot_io_instance, _open_URI, jStr) ? ERR_CANT_OPEN : OK;
+		return env->CallIntMethod(godot_io_instance, _open_URI, jStr) ? Error::CANT_OPEN : Error::OK;
 	} else {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 }
 

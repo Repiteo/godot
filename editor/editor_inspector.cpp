@@ -2010,11 +2010,11 @@ Array EditorInspectorArray::_extract_properties_as_array(const List<PropertyInfo
 			}
 			if (to_char_index > 0) {
 				int array_index = str.left(to_char_index).to_int();
-				Error error = OK;
+				Error error = Error::OK;
 				if (array_index >= output.size()) {
 					error = output.resize(array_index + 1);
 				}
-				if (error == OK) {
+				if (error == Error::OK) {
 					String format_string = String(array_element_prefix) + "%d" + str.substr(to_char_index);
 					Dictionary dict = output[array_index];
 					dict[format_string] = object->get(pi.name);

@@ -33,9 +33,9 @@
 #include "core/crypto/crypto_core.h"
 
 Error HashingContext::start(HashType p_type) {
-	ERR_FAIL_COND_V(ctx != nullptr, ERR_ALREADY_IN_USE);
+	ERR_FAIL_COND_V(ctx != nullptr, Error::ALREADY_IN_USE);
 	_create_ctx(p_type);
-	ERR_FAIL_NULL_V(ctx, ERR_UNAVAILABLE);
+	ERR_FAIL_NULL_V(ctx, Error::UNAVAILABLE);
 	switch (type) {
 		case HASH_MD5:
 			return ((CryptoCore::MD5Context *)ctx)->start();
@@ -44,13 +44,13 @@ Error HashingContext::start(HashType p_type) {
 		case HASH_SHA256:
 			return ((CryptoCore::SHA256Context *)ctx)->start();
 	}
-	return ERR_UNAVAILABLE;
+	return Error::UNAVAILABLE;
 }
 
 Error HashingContext::update(PackedByteArray p_chunk) {
-	ERR_FAIL_NULL_V(ctx, ERR_UNCONFIGURED);
+	ERR_FAIL_NULL_V(ctx, Error::UNCONFIGURED);
 	size_t len = p_chunk.size();
-	ERR_FAIL_COND_V(len == 0, FAILED);
+	ERR_FAIL_COND_V(len == 0, Error::FAILED);
 	const uint8_t *r = p_chunk.ptr();
 	switch (type) {
 		case HASH_MD5:
@@ -60,13 +60,13 @@ Error HashingContext::update(PackedByteArray p_chunk) {
 		case HASH_SHA256:
 			return ((CryptoCore::SHA256Context *)ctx)->update(&r[0], len);
 	}
-	return ERR_UNAVAILABLE;
+	return Error::UNAVAILABLE;
 }
 
 PackedByteArray HashingContext::finish() {
 	ERR_FAIL_NULL_V(ctx, PackedByteArray());
 	PackedByteArray out;
-	Error err = FAILED;
+	Error err = Error::FAILED;
 	switch (type) {
 		case HASH_MD5:
 			out.resize(16);
@@ -82,7 +82,7 @@ PackedByteArray HashingContext::finish() {
 			break;
 	}
 	_delete_ctx();
-	ERR_FAIL_COND_V(err != OK, PackedByteArray());
+	ERR_FAIL_COND_V(err != Error::OK, PackedByteArray());
 	return out;
 }
 

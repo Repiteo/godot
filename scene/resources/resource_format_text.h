@@ -109,7 +109,7 @@ class ResourceLoaderText {
 	friend class ResourceFormatLoaderText;
 	friend class ResourceFormatSaverText;
 
-	Error error = OK;
+	Error error = Error::OK;
 
 	Ref<Resource> resource;
 

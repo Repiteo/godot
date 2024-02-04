@@ -36,7 +36,7 @@
 void TranslationPO::print_translation_map() {
 	Error err;
 	Ref<FileAccess> file = FileAccess::open("translation_map_print_test.txt", FileAccess::WRITE, &err);
-	if (err != OK) {
+	if (err != Error::OK) {
 		ERR_PRINT("Failed to open translation_map_print_test.txt");
 		return;
 	}
@@ -143,7 +143,7 @@ int TranslationPO::_get_plural_index(int p_n) const {
 	Variant result;
 	for (int i = 0; i < equi_tests.size(); i++) {
 		Error err = expr->parse(equi_tests[i], input_name);
-		ERR_FAIL_COND_V_MSG(err != OK, 0, "Cannot parse expression. Error: " + expr->get_error_text());
+		ERR_FAIL_COND_V_MSG(err != Error::OK, 0, "Cannot parse expression. Error: " + expr->get_error_text());
 
 		result = expr->execute(input_val);
 		ERR_FAIL_COND_V_MSG(expr->has_execute_failed(), 0, "Cannot evaluate expression.");

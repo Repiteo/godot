@@ -281,8 +281,8 @@ void OS_Windows::finalize_core() {
 
 Error OS_Windows::get_entropy(uint8_t *r_buffer, int p_bytes) {
 	NTSTATUS status = BCryptGenRandom(nullptr, r_buffer, p_bytes, BCRYPT_USE_SYSTEM_PREFERRED_RNG);
-	ERR_FAIL_COND_V(status, FAILED);
-	return OK;
+	ERR_FAIL_COND_V(status, Error::FAILED);
+	return Error::OK;
 }
 
 #ifdef DEBUG_ENABLED
@@ -360,7 +360,7 @@ Error OS_Windows::open_dynamic_library(const String p_path, void *&p_library_han
 		path = get_executable_path().get_base_dir().path_join(p_path.get_file());
 	}
 
-	ERR_FAIL_COND_V(!FileAccess::exists(path), ERR_FILE_NOT_FOUND);
+	ERR_FAIL_COND_V(!FileAccess::exists(path), Error::FILE_NOT_FOUND);
 
 	typedef DLL_DIRECTORY_COOKIE(WINAPI * PAddDllDirectory)(PCWSTR);
 	typedef BOOL(WINAPI * PRemoveDllDirectory)(DLL_DIRECTORY_COOKIE);
@@ -391,13 +391,13 @@ Error OS_Windows::open_dynamic_library(const String p_path, void *&p_library_han
 				}
 				missing += E;
 			}
-			ERR_FAIL_V_MSG(ERR_CANT_OPEN, vformat("Can't open dynamic library: %s. Missing dependencies: %s. Error: %s.", p_path, missing, format_error_message(err_code)));
+			ERR_FAIL_V_MSG(Error::CANT_OPEN, vformat("Can't open dynamic library: %s. Missing dependencies: %s. Error: %s.", p_path, missing, format_error_message(err_code)));
 		} else {
-			ERR_FAIL_V_MSG(ERR_CANT_OPEN, vformat("Can't open dynamic library: %s. Error: %s.", p_path, format_error_message(err_code)));
+			ERR_FAIL_V_MSG(Error::CANT_OPEN, vformat("Can't open dynamic library: %s. Error: %s.", p_path, format_error_message(err_code)));
 		}
 	}
 #else
-	ERR_FAIL_NULL_V_MSG(p_library_handle, ERR_CANT_OPEN, vformat("Can't open dynamic library: %s. Error: %s.", p_path, format_error_message(GetLastError())));
+	ERR_FAIL_NULL_V_MSG(p_library_handle, Error::CANT_OPEN, vformat("Can't open dynamic library: %s. Error: %s.", p_path, format_error_message(GetLastError())));
 #endif
 
 	if (cookie) {
@@ -408,26 +408,26 @@ Error OS_Windows::open_dynamic_library(const String p_path, void *&p_library_han
 		*r_resolved_path = path;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error OS_Windows::close_dynamic_library(void *p_library_handle) {
 	if (!FreeLibrary((HMODULE)p_library_handle)) {
-		return FAILED;
+		return Error::FAILED;
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error OS_Windows::get_dynamic_library_symbol_handle(void *p_library_handle, const String p_name, void *&p_symbol_handle, bool p_optional) {
 	p_symbol_handle = (void *)GetProcAddress((HMODULE)p_library_handle, p_name.utf8().get_data());
 	if (!p_symbol_handle) {
 		if (!p_optional) {
-			ERR_FAIL_V_MSG(ERR_CANT_RESOLVE, vformat("Can't resolve symbol %s, error: \"%s\".", p_name, format_error_message(GetLastError())));
+			ERR_FAIL_V_MSG(Error::CANT_RESOLVE, vformat("Can't resolve symbol %s, error: \"%s\".", p_name, format_error_message(GetLastError())));
 		} else {
-			return ERR_CANT_RESOLVE;
+			return Error::CANT_RESOLVE;
 		}
 	}
-	return OK;
+	return Error::OK;
 }
 
 String OS_Windows::get_name() const {
@@ -749,8 +749,8 @@ Error OS_Windows::execute(const String &p_path, const List<String> &p_arguments,
 		sa.bInheritHandle = true;
 		sa.lpSecurityDescriptor = nullptr;
 
-		ERR_FAIL_COND_V(!CreatePipe(&pipe[0], &pipe[1], &sa, 0), ERR_CANT_FORK);
-		ERR_FAIL_COND_V(!SetHandleInformation(pipe[0], HANDLE_FLAG_INHERIT, 0), ERR_CANT_FORK); // Read handle is for host process only and should not be inherited.
+		ERR_FAIL_COND_V(!CreatePipe(&pipe[0], &pipe[1], &sa, 0), Error::CANT_FORK);
+		ERR_FAIL_COND_V(!SetHandleInformation(pipe[0], HANDLE_FLAG_INHERIT, 0), Error::CANT_FORK); // Read handle is for host process only and should not be inherited.
 
 		pi.si.dwFlags |= STARTF_USESTDHANDLES;
 		pi.si.hStdOutput = pipe[1];
@@ -771,7 +771,7 @@ Error OS_Windows::execute(const String &p_path, const List<String> &p_arguments,
 		CloseHandle(pipe[0]); // Cleanup pipe handles.
 		CloseHandle(pipe[1]);
 	}
-	ERR_FAIL_COND_V_MSG(ret == 0, ERR_CANT_FORK, "Could not create child process: " + command);
+	ERR_FAIL_COND_V_MSG(ret == 0, Error::CANT_FORK, "Could not create child process: " + command);
 
 	if (r_pipe) {
 		CloseHandle(pipe[1]); // Close pipe write handle (only child process is writing).
@@ -826,7 +826,7 @@ Error OS_Windows::execute(const String &p_path, const List<String> &p_arguments,
 	CloseHandle(pi.pi.hProcess);
 	CloseHandle(pi.pi.hThread);
 
-	return OK;
+	return Error::OK;
 }
 
 Error OS_Windows::create_process(const String &p_path, const List<String> &p_arguments, ProcessID *r_child_id, bool p_open_console) {
@@ -850,7 +850,7 @@ Error OS_Windows::create_process(const String &p_path, const List<String> &p_arg
 	}
 
 	int ret = CreateProcessW(nullptr, (LPWSTR)(command.utf16().ptrw()), nullptr, nullptr, false, creation_flags, nullptr, nullptr, si_w, &pi.pi);
-	ERR_FAIL_COND_V_MSG(ret == 0, ERR_CANT_FORK, "Could not create child process: " + command);
+	ERR_FAIL_COND_V_MSG(ret == 0, Error::CANT_FORK, "Could not create child process: " + command);
 
 	ProcessID pid = pi.pi.dwProcessId;
 	if (r_child_id) {
@@ -858,7 +858,7 @@ Error OS_Windows::create_process(const String &p_path, const List<String> &p_arg
 	}
 	process_map->insert(pid, pi);
 
-	return OK;
+	return Error::OK;
 }
 
 Error OS_Windows::kill(const ProcessID &p_pid) {
@@ -880,7 +880,7 @@ Error OS_Windows::kill(const ProcessID &p_pid) {
 		}
 	}
 
-	return ret != 0 ? OK : FAILED;
+	return ret != 0 ? Error::OK : Error::FAILED;
 }
 
 int OS_Windows::get_process_id() const {
@@ -908,10 +908,10 @@ bool OS_Windows::is_process_running(const ProcessID &p_pid) const {
 
 Error OS_Windows::set_cwd(const String &p_cwd) {
 	if (_wchdir((LPCWSTR)(p_cwd.utf16().get_data())) != 0) {
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Vector<String> OS_Windows::get_system_fonts() const {
@@ -1336,23 +1336,23 @@ String OS_Windows::get_stdin_string() {
 Error OS_Windows::shell_open(String p_uri) {
 	INT_PTR ret = (INT_PTR)ShellExecuteW(nullptr, nullptr, (LPCWSTR)(p_uri.utf16().get_data()), nullptr, nullptr, SW_SHOWNORMAL);
 	if (ret > 32) {
-		return OK;
+		return Error::OK;
 	} else {
 		switch (ret) {
 			case ERROR_FILE_NOT_FOUND:
 			case SE_ERR_DLLNOTFOUND:
-				return ERR_FILE_NOT_FOUND;
+				return Error::FILE_NOT_FOUND;
 			case ERROR_PATH_NOT_FOUND:
-				return ERR_FILE_BAD_PATH;
+				return Error::FILE_BAD_PATH;
 			case ERROR_BAD_FORMAT:
-				return ERR_FILE_CORRUPT;
+				return Error::FILE_CORRUPT;
 			case SE_ERR_ACCESSDENIED:
-				return ERR_UNAUTHORIZED;
+				return Error::UNAUTHORIZED;
 			case 0:
 			case SE_ERR_OOM:
-				return ERR_OUT_OF_MEMORY;
+				return Error::OUT_OF_MEMORY;
 			default:
-				return FAILED;
+				return Error::FAILED;
 		}
 	}
 }
@@ -1368,7 +1368,7 @@ Error OS_Windows::shell_show_in_file_manager(String p_path, bool p_open_folder) 
 	}
 	p_path = p_path.replace("/", "\\");
 
-	INT_PTR ret = OK;
+	INT_PTR ret = (INT_PTR)Error::OK;
 	if (open_folder) {
 		ret = (INT_PTR)ShellExecuteW(nullptr, nullptr, L"explorer.exe", LPCWSTR(p_path.utf16().get_data()), nullptr, SW_SHOWNORMAL);
 	} else {
@@ -1376,23 +1376,23 @@ Error OS_Windows::shell_show_in_file_manager(String p_path, bool p_open_folder) 
 	}
 
 	if (ret > 32) {
-		return OK;
+		return Error::OK;
 	} else {
 		switch (ret) {
 			case ERROR_FILE_NOT_FOUND:
 			case SE_ERR_DLLNOTFOUND:
-				return ERR_FILE_NOT_FOUND;
+				return Error::FILE_NOT_FOUND;
 			case ERROR_PATH_NOT_FOUND:
-				return ERR_FILE_BAD_PATH;
+				return Error::FILE_BAD_PATH;
 			case ERROR_BAD_FORMAT:
-				return ERR_FILE_CORRUPT;
+				return Error::FILE_CORRUPT;
 			case SE_ERR_ACCESSDENIED:
-				return ERR_UNAUTHORIZED;
+				return Error::UNAUTHORIZED;
 			case 0:
 			case SE_ERR_OOM:
-				return ERR_OUT_OF_MEMORY;
+				return Error::OUT_OF_MEMORY;
 			default:
-				return FAILED;
+				return Error::FAILED;
 		}
 	}
 }
@@ -1672,10 +1672,10 @@ Error OS_Windows::move_to_trash(const String &p_path) {
 
 	if (ret) {
 		ERR_PRINT("SHFileOperation error: " + itos(ret));
-		return FAILED;
+		return Error::FAILED;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 String OS_Windows::get_system_ca_certificates() {

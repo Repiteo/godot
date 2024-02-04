@@ -59,8 +59,8 @@ void EMWSPeer::_esws_on_close(void *p_obj, int p_code, const char *p_reason, int
 }
 
 Error EMWSPeer::connect_to_url(const String &p_url, Ref<TLSOptions> p_tls_options) {
-	ERR_FAIL_COND_V(p_tls_options.is_valid() && p_tls_options->is_server(), ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(ready_state != STATE_CLOSED, ERR_ALREADY_IN_USE);
+	ERR_FAIL_COND_V(p_tls_options.is_valid() && p_tls_options->is_server(), Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(ready_state != STATE_CLOSED, Error::ALREADY_IN_USE);
 	_clear();
 
 	String host;
@@ -68,12 +68,12 @@ Error EMWSPeer::connect_to_url(const String &p_url, Ref<TLSOptions> p_tls_option
 	String scheme;
 	int port = 0;
 	Error err = p_url.parse_url(scheme, host, port, path);
-	ERR_FAIL_COND_V_MSG(err != OK, err, "Invalid URL: " + p_url);
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Invalid URL: " + p_url);
 
 	if (scheme.is_empty()) {
 		scheme = "ws://";
 	}
-	ERR_FAIL_COND_V_MSG(scheme != "ws://" && scheme != "wss://", ERR_INVALID_PARAMETER, vformat("Invalid protocol: \"%s\" (must be either \"ws://\" or \"wss://\").", scheme));
+	ERR_FAIL_COND_V_MSG(scheme != "ws://" && scheme != "wss://", INVALID_PARAMETER, vformat("Invalid protocol: \"%s\" (must be either \"ws://\" or \"wss://\").", scheme));
 
 	String proto_string;
 	for (int i = 0; i < supported_protocols.size(); i++) {
@@ -99,26 +99,26 @@ Error EMWSPeer::connect_to_url(const String &p_url, Ref<TLSOptions> p_tls_option
 
 	peer_sock = godot_js_websocket_create(this, requested_url.utf8().get_data(), proto_string.utf8().get_data(), &_esws_on_connect, &_esws_on_message, &_esws_on_error, &_esws_on_close);
 	if (peer_sock == -1) {
-		return FAILED;
+		return Error::FAILED;
 	}
 	in_buffer.resize(nearest_shift(inbound_buffer_size), max_queued_packets);
 	packet_buffer.resize(inbound_buffer_size);
 	ready_state = STATE_CONNECTING;
-	return OK;
+	return Error::OK;
 }
 
 Error EMWSPeer::accept_stream(Ref<StreamPeer> p_stream) {
 	WARN_PRINT_ONCE("Acting as WebSocket server is not supported in Web platforms.");
-	return ERR_UNAVAILABLE;
+	return Error::UNAVAILABLE;
 }
 
 Error EMWSPeer::_send(const uint8_t *p_buffer, int p_buffer_size, bool p_binary) {
-	ERR_FAIL_COND_V(outbound_buffer_size > 0 && (get_current_outbound_buffered_amount() + p_buffer_size >= outbound_buffer_size), ERR_OUT_OF_MEMORY);
+	ERR_FAIL_COND_V(outbound_buffer_size > 0 && (get_current_outbound_buffered_amount() + p_buffer_size >= outbound_buffer_size), Error::OUT_OF_MEMORY);
 
 	if (godot_js_websocket_send(peer_sock, p_buffer, p_buffer_size, p_binary ? 1 : 0) != 0) {
-		return FAILED;
+		return Error::FAILED;
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error EMWSPeer::send(const uint8_t *p_buffer, int p_buffer_size, WriteMode p_mode) {
@@ -131,17 +131,17 @@ Error EMWSPeer::put_packet(const uint8_t *p_buffer, int p_buffer_size) {
 
 Error EMWSPeer::get_packet(const uint8_t **r_buffer, int &r_buffer_size) {
 	if (in_buffer.packets_left() == 0) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 
 	int read = 0;
 	Error err = in_buffer.read_packet(packet_buffer.ptrw(), packet_buffer.size(), &was_string, read);
-	ERR_FAIL_COND_V(err != OK, err);
+	ERR_FAIL_COND_V(err != Error::OK, err);
 
 	*r_buffer = packet_buffer.ptr();
 	r_buffer_size = read;
 
-	return OK;
+	return Error::OK;
 }
 
 int EMWSPeer::get_available_packet_count() const {

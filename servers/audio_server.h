@@ -108,8 +108,8 @@ public:
 	virtual String get_output_device();
 	virtual void set_output_device(const String &p_name) {}
 
-	virtual Error input_start() { return FAILED; }
-	virtual Error input_stop() { return FAILED; }
+	virtual Error input_start() { return Error::FAILED; }
+	virtual Error input_stop() { return Error::FAILED; }
 
 	virtual PackedStringArray get_input_device_list();
 	virtual String get_input_device() { return "Default"; }

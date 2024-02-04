@@ -102,7 +102,7 @@ void ImportDock::set_edit_path(const String &p_path) {
 	Ref<ConfigFile> config;
 	config.instantiate();
 	Error err = config->load(p_path + ".import");
-	if (err != OK) {
+	if (err != Error::OK) {
 		clear();
 		return;
 	}
@@ -211,7 +211,7 @@ void ImportDock::set_edit_multiple_paths(const Vector<String> &p_paths) {
 		config.instantiate();
 		extensions.insert(p_paths[i].get_extension());
 		Error err = config->load(p_paths[i] + ".import");
-		ERR_CONTINUE(err != OK);
+		ERR_CONTINUE(err != Error::OK);
 
 		if (i == 0) {
 			params->importer = ResourceFormatImporter::get_singleton()->get_importer_by_name(config->get_value("remap", "importer"));
@@ -382,7 +382,7 @@ void ImportDock::_importer_selected(int i_idx) {
 			String path = params->paths[0];
 			config.instantiate();
 			Error err = config->load(path + ".import");
-			if (err != OK) {
+			if (err != Error::OK) {
 				config.unref();
 			}
 		}
@@ -495,7 +495,7 @@ void ImportDock::_reimport_attempt() {
 		Ref<ConfigFile> config;
 		config.instantiate();
 		Error err = config->load(params->paths[i] + ".import");
-		ERR_CONTINUE(err != OK);
+		ERR_CONTINUE(err != Error::OK);
 
 		String imported_with = config->get_value("remap", "importer");
 		if (imported_with != importer_name) {
@@ -570,7 +570,7 @@ void ImportDock::_reimport() {
 		Ref<ConfigFile> config;
 		config.instantiate();
 		Error err = config->load(params->paths[i] + ".import");
-		ERR_CONTINUE(err != OK);
+		ERR_CONTINUE(err != Error::OK);
 
 		if (params->importer.is_valid()) {
 			String importer_name = params->importer->get_importer_name();

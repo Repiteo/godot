@@ -46,13 +46,13 @@ Error GDScriptLanguageProtocol::LSPeer::handle_data() {
 		while (true) {
 			if (req_pos >= LSP_MAX_BUFFER_SIZE) {
 				req_pos = 0;
-				ERR_FAIL_V_MSG(ERR_OUT_OF_MEMORY, "Response header too big");
+				ERR_FAIL_V_MSG(Error::OUT_OF_MEMORY, "Response header too big");
 			}
 			Error err = connection->get_partial_data(&req_buf[req_pos], 1, read);
-			if (err != OK) {
-				return FAILED;
+			if (err != Error::OK) {
+				return Error::FAILED;
 			} else if (read != 1) { // Busy, wait until next poll
-				return ERR_BUSY;
+				return Error::BUSY;
 			}
 			char *r = (char *)req_buf;
 			int l = req_pos;
@@ -75,13 +75,13 @@ Error GDScriptLanguageProtocol::LSPeer::handle_data() {
 			if (req_pos >= LSP_MAX_BUFFER_SIZE) {
 				req_pos = 0;
 				has_header = false;
-				ERR_FAIL_COND_V_MSG(req_pos >= LSP_MAX_BUFFER_SIZE, ERR_OUT_OF_MEMORY, "Response content too big");
+				ERR_FAIL_COND_V_MSG(req_pos >= LSP_MAX_BUFFER_SIZE, Error::OUT_OF_MEMORY, "Response content too big");
 			}
 			Error err = connection->get_partial_data(&req_buf[req_pos], 1, read);
-			if (err != OK) {
-				return FAILED;
+			if (err != Error::OK) {
+				return Error::FAILED;
 			} else if (read != 1) {
-				return ERR_BUSY;
+				return Error::BUSY;
 			}
 			req_pos++;
 		}
@@ -100,7 +100,7 @@ Error GDScriptLanguageProtocol::LSPeer::handle_data() {
 			res_queue.push_back(output.utf8());
 		}
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error GDScriptLanguageProtocol::LSPeer::send_data() {
@@ -109,7 +109,7 @@ Error GDScriptLanguageProtocol::LSPeer::send_data() {
 		CharString c_res = res_queue[0];
 		if (res_sent < c_res.size()) {
 			Error err = connection->put_partial_data((const uint8_t *)c_res.get_data() + res_sent, c_res.size() - res_sent - 1, sent);
-			if (err != OK) {
+			if (err != Error::OK) {
 				return err;
 			}
 			res_sent += sent;
@@ -120,18 +120,18 @@ Error GDScriptLanguageProtocol::LSPeer::send_data() {
 			res_queue.remove_at(0);
 		}
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error GDScriptLanguageProtocol::on_client_connected() {
 	Ref<StreamPeerTCP> tcp_peer = server->take_connection();
-	ERR_FAIL_COND_V_MSG(clients.size() >= LSP_MAX_CLIENTS, FAILED, "Max client limits reached");
+	ERR_FAIL_COND_V_MSG(clients.size() >= LSP_MAX_CLIENTS, Error::FAILED, "Max client limits reached");
 	Ref<LSPeer> peer = memnew(LSPeer);
 	peer->connection = tcp_peer;
 	clients.insert(next_client_id, peer);
 	next_client_id++;
 	EditorNode::get_log()->add_message("[LSP] Connection Taken", EditorLog::MSG_TYPE_EDITOR);
-	return OK;
+	return Error::OK;
 }
 
 void GDScriptLanguageProtocol::on_client_disconnected(const int &p_client_id) {
@@ -247,14 +247,14 @@ void GDScriptLanguageProtocol::poll() {
 			if (peer->connection->get_available_bytes() > 0) {
 				latest_client_id = E->key;
 				Error err = peer->handle_data();
-				if (err != OK && err != ERR_BUSY) {
+				if (err != Error::OK && err != Error::BUSY) {
 					on_client_disconnected(E->key);
 					E = clients.begin();
 					continue;
 				}
 			}
 			Error err = peer->send_data();
-			if (err != OK && err != ERR_BUSY) {
+			if (err != Error::OK && err != Error::BUSY) {
 				on_client_disconnected(E->key);
 				E = clients.begin();
 				continue;

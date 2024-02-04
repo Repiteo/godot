@@ -268,10 +268,10 @@ RendererCompositorRD::RendererCompositorRD() {
 			ERR_PRINT("Can't create shader cache folder, no shader caching will happen: " + shader_cache_dir);
 		} else {
 			Error err = da->change_dir("shader_cache");
-			if (err != OK) {
+			if (err != Error::OK) {
 				err = da->make_dir("shader_cache");
 			}
-			if (err != OK) {
+			if (err != Error::OK) {
 				ERR_PRINT("Can't create shader cache folder, no shader caching will happen: " + shader_cache_dir);
 			} else {
 				shader_cache_dir = shader_cache_dir.path_join("shader_cache");

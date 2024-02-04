@@ -56,7 +56,7 @@ private:
 	GDScriptParser *parser = nullptr;
 	GDScriptAnalyzer *analyzer = nullptr;
 	Status status = EMPTY;
-	Error result = OK;
+	Error result = Error::OK;
 	String path;
 	bool cleared = false;
 

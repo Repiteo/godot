@@ -385,7 +385,7 @@ TEST_CASE("[Object] Signals") {
 
 	SUBCASE("Emitting a non existing signal will return an error") {
 		Error err = object.emit_signal("some_signal");
-		CHECK(err == ERR_UNAVAILABLE);
+		CHECK(err == Error::UNAVAILABLE);
 	}
 
 	SUBCASE("Emitting an existing signal should call the connected method") {
@@ -396,7 +396,7 @@ TEST_CASE("[Object] Signals") {
 		SIGNAL_CHECK_FALSE("my_custom_signal");
 
 		Error err = object.emit_signal("my_custom_signal");
-		CHECK(err == OK);
+		CHECK(err == Error::OK);
 
 		SIGNAL_CHECK("my_custom_signal", empty_signal_args);
 		SIGNAL_UNWATCH(&object, "my_custom_signal");

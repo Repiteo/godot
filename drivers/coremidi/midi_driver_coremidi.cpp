@@ -51,13 +51,13 @@ Error MIDIDriverCoreMidi::open() {
 	CFRelease(name);
 	if (result != noErr) {
 		ERR_PRINT("MIDIClientCreate failed, code: " + itos(result));
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
 	result = MIDIInputPortCreate(client, CFSTR("Godot Input"), MIDIDriverCoreMidi::read, (void *)this, &port_in);
 	if (result != noErr) {
 		ERR_PRINT("MIDIInputPortCreate failed, code: " + itos(result));
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
 	int sources = MIDIGetNumberOfSources();
@@ -69,7 +69,7 @@ Error MIDIDriverCoreMidi::open() {
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void MIDIDriverCoreMidi::close() {

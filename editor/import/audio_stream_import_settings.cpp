@@ -429,7 +429,7 @@ void AudioStreamImportSettingsDialog::edit(const String &p_path, const String &p
 		config_file.instantiate();
 		Error err = config_file->load(p_path + ".import");
 		updating_settings = true;
-		if (err == OK) {
+		if (err == Error::OK) {
 			double bpm = config_file->get_value("params", "bpm", 0);
 			int beats = config_file->get_value("params", "beat_count", 0);
 			bpm_edit->set_value(bpm > 0 ? bpm : 120);

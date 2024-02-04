@@ -962,7 +962,7 @@ void CSharpLanguage::reload_assemblies(bool p_soft_reload) {
 	}
 
 	// Do domain reload
-	if (gdmono->reload_project_assemblies() != OK) {
+	if (gdmono->reload_project_assemblies() != Error::OK) {
 		// Failed to reload the scripts domain
 		// Make sure to add the scripts back to their owners before returning
 		for (Ref<CSharpScript> &scr : to_reload) {
@@ -2669,7 +2669,7 @@ Variant CSharpScript::callp(const StringName &p_method, const Variant **p_args, 
 
 Error CSharpScript::reload(bool p_keep_state) {
 	if (!reload_invalidated) {
-		return OK;
+		return Error::OK;
 	}
 
 	// In the case of C#, reload doesn't really do any script reloading.
@@ -2699,7 +2699,7 @@ Error CSharpScript::reload(bool p_keep_state) {
 #endif
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 ScriptLanguage *CSharpScript::get_language() const {
@@ -2830,8 +2830,8 @@ const Variant CSharpScript::get_rpc_config() const {
 Error CSharpScript::load_source_code(const String &p_path) {
 	Error ferr = read_all_file_utf8(p_path, source);
 
-	ERR_FAIL_COND_V_MSG(ferr != OK, ferr,
-			ferr == ERR_INVALID_DATA
+	ERR_FAIL_COND_V_MSG(ferr != Error::OK, ferr,
+			ferr == Error::INVALID_DATA
 					? "Script '" + p_path + "' contains invalid unicode (UTF-8), so it was not loaded."
 											" Please ensure that scripts are saved in valid UTF-8 unicode."
 					: "Failed to read file: '" + p_path + "'.");
@@ -2840,7 +2840,7 @@ Error CSharpScript::load_source_code(const String &p_path) {
 	source_changed_cache = true;
 #endif
 
-	return OK;
+	return Error::OK;
 }
 
 void CSharpScript::_clear() {
@@ -2887,7 +2887,7 @@ void CSharpScript::get_members(HashSet<StringName> *p_members) {
 
 Ref<Resource> ResourceFormatLoaderCSharpScript::load(const String &p_path, const String &p_original_path, Error *r_error, bool p_use_sub_threads, float *r_progress, CacheMode p_cache_mode) {
 	if (r_error) {
-		*r_error = ERR_FILE_CANT_OPEN;
+		*r_error = Error::FILE_CANT_OPEN;
 	}
 
 	// TODO ignore anything inside bin/ and obj/ in tools builds?
@@ -2902,7 +2902,7 @@ Ref<Resource> ResourceFormatLoaderCSharpScript::load(const String &p_path, const
 
 #if defined(DEBUG_ENABLED) || defined(TOOLS_ENABLED)
 	Error err = scr->load_source_code(p_path);
-	ERR_FAIL_COND_V_MSG(err != OK, Ref<Resource>(), "Cannot load C# script file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Ref<Resource>(), "Cannot load C# script file '" + p_path + "'.");
 #endif
 
 	// Only one instance of a C# script is allowed to exist.
@@ -2913,7 +2913,7 @@ Ref<Resource> ResourceFormatLoaderCSharpScript::load(const String &p_path, const
 	scr->reload();
 
 	if (r_error) {
-		*r_error = OK;
+		*r_error = Error::OK;
 	}
 
 	return scr;
@@ -2933,7 +2933,7 @@ String ResourceFormatLoaderCSharpScript::get_resource_type(const String &p_path)
 
 Error ResourceFormatSaverCSharpScript::save(const Ref<Resource> &p_resource, const String &p_path, uint32_t p_flags) {
 	Ref<CSharpScript> sqscr = p_resource;
-	ERR_FAIL_COND_V(sqscr.is_null(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(sqscr.is_null(), Error::INVALID_PARAMETER);
 
 	String source = sqscr->get_source_code();
 
@@ -2950,12 +2950,12 @@ Error ResourceFormatSaverCSharpScript::save(const Ref<Resource> &p_resource, con
 	{
 		Error err;
 		Ref<FileAccess> file = FileAccess::open(p_path, FileAccess::WRITE, &err);
-		ERR_FAIL_COND_V_MSG(err != OK, err, "Cannot save C# script file '" + p_path + "'.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Cannot save C# script file '" + p_path + "'.");
 
 		file->store_string(source);
 
-		if (file->get_error() != OK && file->get_error() != ERR_FILE_EOF) {
-			return ERR_CANT_CREATE;
+		if (file->get_error() != Error::OK && file->get_error() != Error::FILE_EOF) {
+			return Error::CANT_CREATE;
 		}
 	}
 
@@ -2965,7 +2965,7 @@ Error ResourceFormatSaverCSharpScript::save(const Ref<Resource> &p_resource, con
 	}
 #endif
 
-	return OK;
+	return Error::OK;
 }
 
 void ResourceFormatSaverCSharpScript::get_recognized_extensions(const Ref<Resource> &p_resource, List<String> *p_extensions) const {

@@ -577,7 +577,7 @@ void EditorHelp::_pop_code_font() {
 Error EditorHelp::_goto_desc(const String &p_class) {
 	// If class doesn't have docs listed, attempt on-demand docgen
 	if (!doc->class_list.has(p_class) && !_attempt_doc_load(p_class)) {
-		return ERR_DOES_NOT_EXIST;
+		return Error::DOES_NOT_EXIST;
 	}
 
 	select_locked = true;
@@ -587,12 +587,12 @@ Error EditorHelp::_goto_desc(const String &p_class) {
 	description_line = 0;
 
 	if (p_class == edited_class) {
-		return OK; // Already there.
+		return Error::OK; // Already there.
 	}
 
 	edited_class = p_class;
 	_update_doc();
-	return OK;
+	return Error::OK;
 }
 
 void EditorHelp::_update_method_list(const Vector<DocData::MethodDoc> p_methods, MethodType p_method_type) {
@@ -1890,7 +1890,7 @@ void EditorHelp::_update_doc() {
 
 void EditorHelp::_request_help(const String &p_string) {
 	Error err = _goto_desc(p_string);
-	if (err == OK) {
+	if (err == Error::OK) {
 		EditorNode::get_singleton()->set_visible_editor(EditorNode::EDITOR_SCRIPT);
 	}
 }
@@ -2431,7 +2431,7 @@ void EditorHelp::_gen_doc_thread(void *p_udata) {
 	}
 	cache_res->set_meta("classes", classes);
 	Error err = ResourceSaver::save(cache_res, get_cache_full_path(), ResourceSaver::FLAG_COMPRESS);
-	if (err) {
+	if (err != Error::OK) {
 		ERR_PRINT("Cannot save editor help cache (" + get_cache_full_path() + ").");
 	}
 

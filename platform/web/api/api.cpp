@@ -117,7 +117,7 @@ bool JavaScriptBridge::pwa_needs_update() const {
 }
 
 Error JavaScriptBridge::pwa_update() {
-	return ERR_UNAVAILABLE;
+	return Error::UNAVAILABLE;
 }
 
 void JavaScriptBridge::force_fs_sync() {

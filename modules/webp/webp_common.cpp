@@ -61,7 +61,7 @@ Vector<uint8_t> _webp_packer(const Ref<Image> &p_image, float p_quality, bool p_
 	Ref<Image> img = p_image->duplicate();
 	if (img->is_compressed()) {
 		Error error = img->decompress();
-		ERR_FAIL_COND_V_MSG(error != OK, Vector<uint8_t>(), "Couldn't decompress image.");
+		ERR_FAIL_COND_V_MSG(error != Error::OK, Vector<uint8_t>(), "Couldn't decompress image.");
 	}
 	if (img->detect_alpha()) {
 		img->convert(Image::FORMAT_RGBA8);
@@ -154,11 +154,11 @@ Ref<Image> _webp_unpack(const Vector<uint8_t> &p_buffer) {
 }
 
 Error webp_load_image_from_buffer(Image *p_image, const uint8_t *p_buffer, int p_buffer_len) {
-	ERR_FAIL_NULL_V(p_image, ERR_INVALID_PARAMETER);
+	ERR_FAIL_NULL_V(p_image, Error::INVALID_PARAMETER);
 
 	WebPBitstreamFeatures features;
 	if (WebPGetFeatures(p_buffer, p_buffer_len, &features) != VP8_STATUS_OK) {
-		ERR_FAIL_V(ERR_FILE_CORRUPT);
+		ERR_FAIL_V(Error::FILE_CORRUPT);
 	}
 
 	Vector<uint8_t> dst_image;
@@ -173,10 +173,10 @@ Error webp_load_image_from_buffer(Image *p_image, const uint8_t *p_buffer, int p
 		errdec = WebPDecodeRGBInto(p_buffer, p_buffer_len, dst_w, datasize, 3 * features.width) == nullptr;
 	}
 
-	ERR_FAIL_COND_V_MSG(errdec, ERR_FILE_CORRUPT, "Failed decoding WebP image.");
+	ERR_FAIL_COND_V_MSG(errdec, Error::FILE_CORRUPT, "Failed decoding WebP image.");
 
 	p_image->set_data(features.width, features.height, false, features.has_alpha ? Image::FORMAT_RGBA8 : Image::FORMAT_RGB8, dst_image);
 
-	return OK;
+	return Error::OK;
 }
 } // namespace WebPCommon

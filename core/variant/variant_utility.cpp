@@ -946,11 +946,11 @@ String VariantUtilityFunctions::str(const Variant **p_args, int p_arg_count, Cal
 }
 
 String VariantUtilityFunctions::error_string(Error error) {
-	if (error < 0 || error >= ERR_MAX) {
+	if (error < Error::OK || error >= Error::MAX) {
 		return String("(invalid error code)");
 	}
 
-	return String(error_names[error]);
+	return String(error_names[(int)error]);
 }
 
 String VariantUtilityFunctions::type_string(Variant::Type p_type) {
@@ -1133,7 +1133,7 @@ Variant VariantUtilityFunctions::str_to_var(const String &p_var) {
 PackedByteArray VariantUtilityFunctions::var_to_bytes(const Variant &p_var) {
 	int len;
 	Error err = encode_variant(p_var, nullptr, len, false);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return PackedByteArray();
 	}
 
@@ -1142,7 +1142,7 @@ PackedByteArray VariantUtilityFunctions::var_to_bytes(const Variant &p_var) {
 	{
 		uint8_t *w = barr.ptrw();
 		err = encode_variant(p_var, w, len, false);
-		if (err != OK) {
+		if (err != Error::OK) {
 			return PackedByteArray();
 		}
 	}
@@ -1153,7 +1153,7 @@ PackedByteArray VariantUtilityFunctions::var_to_bytes(const Variant &p_var) {
 PackedByteArray VariantUtilityFunctions::var_to_bytes_with_objects(const Variant &p_var) {
 	int len;
 	Error err = encode_variant(p_var, nullptr, len, true);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return PackedByteArray();
 	}
 
@@ -1162,7 +1162,7 @@ PackedByteArray VariantUtilityFunctions::var_to_bytes_with_objects(const Variant
 	{
 		uint8_t *w = barr.ptrw();
 		err = encode_variant(p_var, w, len, true);
-		if (err != OK) {
+		if (err != Error::OK) {
 			return PackedByteArray();
 		}
 	}
@@ -1175,7 +1175,7 @@ Variant VariantUtilityFunctions::bytes_to_var(const PackedByteArray &p_arr) {
 	{
 		const uint8_t *r = p_arr.ptr();
 		Error err = decode_variant(ret, r, p_arr.size(), nullptr, false);
-		if (err != OK) {
+		if (err != Error::OK) {
 			return Variant();
 		}
 	}
@@ -1187,7 +1187,7 @@ Variant VariantUtilityFunctions::bytes_to_var_with_objects(const PackedByteArray
 	{
 		const uint8_t *r = p_arr.ptr();
 		Error err = decode_variant(ret, r, p_arr.size(), nullptr, true);
-		if (err != OK) {
+		if (err != Error::OK) {
 			return Variant();
 		}
 	}

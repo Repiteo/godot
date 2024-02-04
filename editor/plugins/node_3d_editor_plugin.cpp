@@ -6500,20 +6500,20 @@ void vertex() {
 	// Points are already in world space, so no need for MODEL_MATRIX anymore.
 	vec4 clip_a = PROJECTION_MATRIX * (VIEW_MATRIX * vec4(point_a, 1.0));
 	vec4 clip_b = PROJECTION_MATRIX * (VIEW_MATRIX * vec4(point_b, 1.0));
-	
+
 	vec2 screen_a = VIEWPORT_SIZE * (0.5 * clip_a.xy / clip_a.w + 0.5);
 	vec2 screen_b = VIEWPORT_SIZE * (0.5 * clip_b.xy / clip_b.w + 0.5);
-	
+
 	vec2 x_basis = normalize(screen_b - screen_a);
 	vec2 y_basis = vec2(-x_basis.y, x_basis.x);
-	
+
 	float width = 3.0;
 	vec2 screen_point_a = screen_a + width * (VERTEX.x * x_basis + VERTEX.y * y_basis);
 	vec2 screen_point_b = screen_b + width * (VERTEX.x * x_basis + VERTEX.y * y_basis);
 	vec2 screen_point_final = mix(screen_point_a, screen_point_b, VERTEX.z);
-	
+
 	vec4 clip_final = mix(clip_a, clip_b, VERTEX.z);
-	
+
 	POSITION = vec4(clip_final.w * ((2.0 * screen_point_final) / VIEWPORT_SIZE - 1.0), clip_final.z, clip_final.w);
 	UV = VERTEX.yz * clip_final.w;
 

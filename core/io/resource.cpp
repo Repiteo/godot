@@ -167,9 +167,9 @@ void Resource::reset_state() {
 }
 
 Error Resource::copy_from(const Ref<Resource> &p_resource) {
-	ERR_FAIL_COND_V(p_resource.is_null(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_resource.is_null(), Error::INVALID_PARAMETER);
 	if (get_class() != p_resource->get_class()) {
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 
 	reset_state(); // May want to reset state.
@@ -187,7 +187,7 @@ Error Resource::copy_from(const Ref<Resource> &p_resource) {
 
 		set(E.name, p_resource->get(E.name));
 	}
-	return OK;
+	return Error::OK;
 }
 void Resource::reload_from_file() {
 	String path = get_path();

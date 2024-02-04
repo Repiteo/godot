@@ -149,22 +149,22 @@ Error read_all_file_utf8(const String &p_path, String &r_content) {
 	Vector<uint8_t> sourcef;
 	Error err;
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ, &err);
-	ERR_FAIL_COND_V_MSG(err != OK, err, "Cannot open file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Cannot open file '" + p_path + "'.");
 
 	uint64_t len = f->get_length();
 	sourcef.resize(len + 1);
 	uint8_t *w = sourcef.ptrw();
 	uint64_t r = f->get_buffer(w, len);
-	ERR_FAIL_COND_V(r != len, ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(r != len, Error::CANT_OPEN);
 	w[len] = 0;
 
 	String source;
-	if (source.parse_utf8((const char *)w) != OK) {
-		ERR_FAIL_V(ERR_INVALID_DATA);
+	if (source.parse_utf8((const char *)w) != Error::OK) {
+		ERR_FAIL_V(Error::INVALID_DATA);
 	}
 
 	r_content = source;
-	return OK;
+	return Error::OK;
 }
 
 // TODO: Move to variadic templates once we upgrade to C++11

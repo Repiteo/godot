@@ -158,7 +158,7 @@ int zipio_testerror(voidpf opaque, voidpf stream) {
 	ERR_FAIL_NULL_V(fa, 1);
 	ERR_FAIL_COND_V(fa->is_null(), 0);
 
-	return (fa->is_valid() && (*fa)->get_error() != OK) ? 1 : 0;
+	return (fa->is_valid() && (*fa)->get_error() != Error::OK) ? 1 : 0;
 }
 
 voidpf zipio_alloc(voidpf opaque, uInt items, uInt size) {

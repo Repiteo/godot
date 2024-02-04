@@ -47,18 +47,18 @@ Error DAPeer::handle_data() {
 	// Read headers
 	if (!has_header) {
 		if (!connection->get_available_bytes()) {
-			return OK;
+			return Error::OK;
 		}
 		while (true) {
 			if (req_pos >= DAP_MAX_BUFFER_SIZE) {
 				req_pos = 0;
-				ERR_FAIL_V_MSG(ERR_OUT_OF_MEMORY, "Response header too big");
+				ERR_FAIL_V_MSG(Error::OUT_OF_MEMORY, "Response header too big");
 			}
 			Error err = connection->get_partial_data(&req_buf[req_pos], 1, read);
-			if (err != OK) {
-				return FAILED;
+			if (err != Error::OK) {
+				return Error::FAILED;
 			} else if (read != 1) { // Busy, wait until next poll
-				return ERR_BUSY;
+				return Error::BUSY;
 			}
 			char *r = (char *)req_buf;
 			int l = req_pos;
@@ -81,13 +81,13 @@ Error DAPeer::handle_data() {
 			if (content_length >= DAP_MAX_BUFFER_SIZE) {
 				req_pos = 0;
 				has_header = false;
-				ERR_FAIL_COND_V_MSG(req_pos >= DAP_MAX_BUFFER_SIZE, ERR_OUT_OF_MEMORY, "Response content too big");
+				ERR_FAIL_COND_V_MSG(req_pos >= DAP_MAX_BUFFER_SIZE, Error::OUT_OF_MEMORY, "Response content too big");
 			}
 			Error err = connection->get_partial_data(&req_buf[req_pos], content_length - req_pos, read);
-			if (err != OK) {
-				return FAILED;
+			if (err != Error::OK) {
+				return Error::FAILED;
 			} else if (read < content_length - req_pos) {
-				return ERR_BUSY;
+				return Error::BUSY;
 			}
 			req_pos += read;
 		}
@@ -109,7 +109,7 @@ Error DAPeer::handle_data() {
 			timestamp = 0;
 		}
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error DAPeer::send_data() {
@@ -124,14 +124,14 @@ Error DAPeer::send_data() {
 		while (data_sent < formatted_data.length()) {
 			int curr_sent = 0;
 			Error err = connection->put_partial_data((const uint8_t *)formatted_data.utf8().get_data(), formatted_data.size() - data_sent - 1, curr_sent);
-			if (err != OK) {
+			if (err != Error::OK) {
 				return err;
 			}
 			data_sent += curr_sent;
 		}
 		res_queue.pop_front();
 	}
-	return OK;
+	return Error::OK;
 }
 
 String DAPeer::format_output(const Dictionary &p_params) const {
@@ -146,7 +146,7 @@ String DAPeer::format_output(const Dictionary &p_params) const {
 }
 
 Error DebugAdapterProtocol::on_client_connected() {
-	ERR_FAIL_COND_V_MSG(clients.size() >= DAP_MAX_CLIENTS, FAILED, "Max client limits reached");
+	ERR_FAIL_COND_V_MSG(clients.size() >= DAP_MAX_CLIENTS, Error::FAILED, "Max client limits reached");
 
 	Ref<StreamPeerTCP> tcp_peer = server->take_connection();
 	tcp_peer->set_no_delay(true);
@@ -156,7 +156,7 @@ Error DebugAdapterProtocol::on_client_connected() {
 
 	EditorDebuggerNode::get_singleton()->get_default_debugger()->set_move_to_foreground(false);
 	EditorNode::get_log()->add_message("[DAP] Connection Taken", EditorLog::MSG_TYPE_EDITOR);
-	return OK;
+	return Error::OK;
 }
 
 void DebugAdapterProtocol::on_client_disconnected(const Ref<DAPeer> &p_peer) {
@@ -657,7 +657,7 @@ int DebugAdapterProtocol::parse_variant(const Variant &p_var) {
 
 bool DebugAdapterProtocol::process_message(const String &p_text) {
 	JSON json;
-	ERR_FAIL_COND_V_MSG(json.parse(p_text) != OK, true, "Malformed message!");
+	ERR_FAIL_COND_V_MSG(json.parse(p_text) != Error::OK, true, "Malformed message!");
 	Dictionary params = json.get_data();
 	bool completed = true;
 
@@ -981,11 +981,11 @@ void DebugAdapterProtocol::poll() {
 		} else {
 			_current_peer = peer;
 			Error err = peer->handle_data();
-			if (err != OK && err != ERR_BUSY) {
+			if (err != Error::OK && err != Error::BUSY) {
 				to_delete.push_back(peer);
 			}
 			err = peer->send_data();
-			if (err != OK && err != ERR_BUSY) {
+			if (err != Error::OK && err != Error::BUSY) {
 				to_delete.push_back(peer);
 			}
 		}

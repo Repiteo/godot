@@ -246,22 +246,22 @@ void OpenXRActionMapEditor::_on_interaction_profile_selected(const String p_path
 }
 
 void OpenXRActionMapEditor::_load_action_map(const String p_path, bool p_create_new_if_missing) {
-	Error err = OK;
+	Error err = Error::OK;
 	action_map = ResourceLoader::load(p_path, "", ResourceFormatLoader::CACHE_MODE_IGNORE, &err);
-	if (err != OK) {
-		if ((err == ERR_FILE_NOT_FOUND || err == ERR_CANT_OPEN) && p_create_new_if_missing) {
+	if (err != Error::OK) {
+		if ((err == Error::FILE_NOT_FOUND || err == Error::CANT_OPEN) && p_create_new_if_missing) {
 			action_map.instantiate();
 			action_map->create_default_action_sets();
 
 			// Save it immediately
 			err = ResourceSaver::save(action_map, p_path);
-			if (err != OK) {
+			if (err != Error::OK) {
 				// show warning but continue
-				EditorNode::get_singleton()->show_warning(vformat(TTR("Error saving file %s: %s"), edited_path, error_names[err]));
+				EditorNode::get_singleton()->show_warning(vformat(TTR("Error saving file %s: %s"), edited_path, error_names[(int)err]));
 			}
 
 		} else {
-			EditorNode::get_singleton()->show_warning(vformat(TTR("Error loading %s: %s."), edited_path, error_names[err]));
+			EditorNode::get_singleton()->show_warning(vformat(TTR("Error loading %s: %s."), edited_path, error_names[(int)err]));
 
 			edited_path = "";
 			header_label->set_text("");
@@ -275,8 +275,8 @@ void OpenXRActionMapEditor::_load_action_map(const String p_path, bool p_create_
 
 void OpenXRActionMapEditor::_on_save_action_map() {
 	Error err = ResourceSaver::save(action_map, edited_path);
-	if (err != OK) {
-		EditorNode::get_singleton()->show_warning(vformat(TTR("Error saving file %s: %s"), edited_path, error_names[err]));
+	if (err != Error::OK) {
+		EditorNode::get_singleton()->show_warning(vformat(TTR("Error saving file %s: %s"), edited_path, error_names[(int)err]));
 		return;
 	}
 

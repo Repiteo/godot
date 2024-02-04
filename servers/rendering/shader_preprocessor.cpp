@@ -480,19 +480,19 @@ void ShaderPreprocessor::process_elif(Tokenizer *p_tokenizer) {
 	}
 
 	Error error = expand_condition(body, line, body);
-	if (error != OK) {
+	if (error != Error::OK) {
 		return;
 	}
 
 	error = expand_macros(body, line, body);
-	if (error != OK) {
+	if (error != Error::OK) {
 		return;
 	}
 
 	Expression expression;
 	Vector<String> names;
 	error = expression.parse(body, names);
-	if (error != OK) {
+	if (error != Error::OK) {
 		set_error(expression.get_error_text(), line);
 		return;
 	}
@@ -585,19 +585,19 @@ void ShaderPreprocessor::process_if(Tokenizer *p_tokenizer) {
 	}
 
 	Error error = expand_condition(body, line, body);
-	if (error != OK) {
+	if (error != Error::OK) {
 		return;
 	}
 
 	error = expand_macros(body, line, body);
-	if (error != OK) {
+	if (error != Error::OK) {
 		return;
 	}
 
 	Expression expression;
 	Vector<String> names;
 	error = expression.parse(body, names);
-	if (error != OK) {
+	if (error != Error::OK) {
 		set_error(expression.get_error_text(), line);
 		return;
 	}
@@ -833,7 +833,7 @@ void ShaderPreprocessor::expand_output_macros(int p_start, int p_line_number) {
 	String line = vector_to_string(output, p_start, output.size());
 
 	Error error = expand_macros(line, p_line_number - 1, line); // We are already on next line, so -1.
-	if (error != OK) {
+	if (error != Error::OK) {
 		return;
 	}
 
@@ -863,11 +863,11 @@ Error ShaderPreprocessor::expand_condition(const String &p_string, int p_line, S
 		}
 		if (bracket_start_count > bracket_end_count) {
 			_set_expected_error(")", p_line);
-			return FAILED;
+			return Error::FAILED;
 		}
 		if (bracket_end_count > bracket_start_count) {
 			_set_expected_error("(", p_line);
-			return FAILED;
+			return Error::FAILED;
 		}
 	}
 
@@ -905,12 +905,12 @@ Error ShaderPreprocessor::expand_condition(const String &p_string, int p_line, S
 				if (c == '|' || c == '&') {
 					if (open_bracket) {
 						_set_unexpected_token_error(s, p_line);
-						return FAILED;
+						return Error::FAILED;
 					}
 					break;
 				} else if (!is_space) {
 					_set_unexpected_token_error(s, p_line);
-					return FAILED;
+					return Error::FAILED;
 				}
 			} else if (is_space) {
 				if (found_word && !open_bracket) {
@@ -920,14 +920,14 @@ Error ShaderPreprocessor::expand_condition(const String &p_string, int p_line, S
 			} else if (c == '(') {
 				if (open_bracket) {
 					_set_unexpected_token_error(s, p_line);
-					return FAILED;
+					return Error::FAILED;
 				}
 				open_bracket = true;
 			} else if (c == ')') {
 				if (open_bracket) {
 					if (!found_word) {
 						_set_unexpected_token_error(s, p_line);
-						return FAILED;
+						return Error::FAILED;
 					}
 					open_bracket = false;
 					post_bracket_index = i + 1;
@@ -940,14 +940,14 @@ Error ShaderPreprocessor::expand_condition(const String &p_string, int p_line, S
 				found_word = true;
 			} else {
 				_set_unexpected_token_error(s, p_line);
-				return FAILED;
+				return Error::FAILED;
 			}
 		}
 
 		if (word_completed) {
 			if (open_bracket) {
 				_set_expected_error(")", p_line);
-				return FAILED;
+				return Error::FAILED;
 			}
 			if (post_bracket_index != -1) {
 				index_end = post_bracket_index;
@@ -963,11 +963,11 @@ Error ShaderPreprocessor::expand_condition(const String &p_string, int p_line, S
 			}
 		} else {
 			set_error(RTR("Invalid macro name."), p_line);
-			return FAILED;
+			return Error::FAILED;
 		}
 	}
 	r_expanded = result;
-	return OK;
+	return Error::OK;
 }
 
 Error ShaderPreprocessor::expand_macros(const String &p_string, int p_line, String &r_expanded) {
@@ -995,9 +995,9 @@ Error ShaderPreprocessor::expand_macros(const String &p_string, int p_line, Stri
 	r_expanded = iterative;
 
 	if (!state->error.is_empty()) {
-		return FAILED;
+		return Error::FAILED;
 	}
-	return OK;
+	return Error::OK;
 }
 
 bool ShaderPreprocessor::expand_macros_once(const String &p_line, int p_line_number, const RBMap<String, Define *>::Element *p_define_pair, String &r_expanded) {
@@ -1234,7 +1234,7 @@ Error ShaderPreprocessor::preprocess(State *p_state, const String &p_code, Strin
 	String error = remover.get_error();
 	if (!error.is_empty()) {
 		set_error(error, remover.get_error_line());
-		return FAILED;
+		return Error::FAILED;
 	}
 
 	// Track code hashes to prevent cyclic include.
@@ -1266,7 +1266,7 @@ Error ShaderPreprocessor::preprocess(State *p_state, const String &p_code, Strin
 			if (has_symbols_before_directive) {
 				set_error(RTR("Invalid symbols placed before directive."), p_tokenizer.get_line());
 				state->cyclic_include_hashes.erase(code_hash); // Remove this hash.
-				return FAILED;
+				return Error::FAILED;
 			}
 			process_directive(&p_tokenizer);
 		} else {
@@ -1282,7 +1282,7 @@ Error ShaderPreprocessor::preprocess(State *p_state, const String &p_code, Strin
 
 		if (!state->error.is_empty()) {
 			state->cyclic_include_hashes.erase(code_hash); // Remove this hash.
-			return FAILED;
+			return Error::FAILED;
 		}
 	}
 	state->cyclic_include_hashes.erase(code_hash); // Remove this hash.
@@ -1290,7 +1290,7 @@ Error ShaderPreprocessor::preprocess(State *p_state, const String &p_code, Strin
 	if (!state->disabled) {
 		if (state->condition_depth != 0) {
 			set_error(RTR("Unmatched conditional statement."), p_tokenizer.line);
-			return FAILED;
+			return Error::FAILED;
 		}
 
 		expand_output_macros(last_size, p_tokenizer.get_line());
@@ -1298,7 +1298,7 @@ Error ShaderPreprocessor::preprocess(State *p_state, const String &p_code, Strin
 
 	r_result = vector_to_string(output);
 
-	return OK;
+	return Error::OK;
 }
 
 Error ShaderPreprocessor::preprocess(const String &p_code, const String &p_filename, String &r_result, String *r_error_text, List<FilePosition> *r_error_position, List<Region> *r_regions, HashSet<Ref<ShaderInclude>> *r_includes, List<ScriptLanguage::CodeCompletionOption> *r_completion_options, List<ScriptLanguage::CodeCompletionOption> *r_completion_defines, IncludeCompletionFunction p_include_completion_func) {
@@ -1308,7 +1308,7 @@ Error ShaderPreprocessor::preprocess(const String &p_code, const String &p_filen
 		pp_state.save_regions = r_regions != nullptr;
 	}
 	Error err = preprocess(&pp_state, p_code, r_result);
-	if (err != OK) {
+	if (err != Error::OK) {
 		if (r_error_text) {
 			*r_error_text = pp_state.error;
 		}

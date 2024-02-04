@@ -131,7 +131,7 @@ Error MultiplayerAPI::encode_and_compress_variant(const Variant &p_variant, uint
 		default:
 			// Any other case is not yet compressed.
 			Error err = encode_variant(p_variant, r_buffer, r_len, p_allow_object_decoding);
-			if (err != OK) {
+			if (err != Error::OK) {
 				return err;
 			}
 			if (r_buffer) {
@@ -141,18 +141,18 @@ Error MultiplayerAPI::encode_and_compress_variant(const Variant &p_variant, uint
 			}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error MultiplayerAPI::decode_and_decompress_variant(Variant &r_variant, const uint8_t *p_buffer, int p_len, int *r_len, bool p_allow_object_decoding) {
 	const uint8_t *buf = p_buffer;
 	int len = p_len;
 
-	ERR_FAIL_COND_V(len < 1, ERR_INVALID_DATA);
+	ERR_FAIL_COND_V(len < 1, Error::INVALID_DATA);
 	uint8_t type = buf[0] & VARIANT_META_TYPE_MASK;
 	uint8_t encode_mode = buf[0] & VARIANT_META_EMODE_MASK;
 
-	ERR_FAIL_COND_V(type >= Variant::VARIANT_MAX, ERR_INVALID_DATA);
+	ERR_FAIL_COND_V(type >= Variant::VARIANT_MAX, Error::INVALID_DATA);
 
 	switch (type) {
 		case Variant::BOOL: {
@@ -170,7 +170,7 @@ Error MultiplayerAPI::decode_and_decompress_variant(Variant &r_variant, const ui
 			}
 			if (encode_mode == ENCODE_8) {
 				// 8 bits.
-				ERR_FAIL_COND_V(len < 1, ERR_INVALID_DATA);
+				ERR_FAIL_COND_V(len < 1, Error::INVALID_DATA);
 				int8_t val = buf[0];
 				r_variant = val;
 				if (r_len) {
@@ -178,7 +178,7 @@ Error MultiplayerAPI::decode_and_decompress_variant(Variant &r_variant, const ui
 				}
 			} else if (encode_mode == ENCODE_16) {
 				// 16 bits.
-				ERR_FAIL_COND_V(len < 2, ERR_INVALID_DATA);
+				ERR_FAIL_COND_V(len < 2, Error::INVALID_DATA);
 				int16_t val = decode_uint16(buf);
 				r_variant = val;
 				if (r_len) {
@@ -186,7 +186,7 @@ Error MultiplayerAPI::decode_and_decompress_variant(Variant &r_variant, const ui
 				}
 			} else if (encode_mode == ENCODE_32) {
 				// 32 bits.
-				ERR_FAIL_COND_V(len < 4, ERR_INVALID_DATA);
+				ERR_FAIL_COND_V(len < 4, Error::INVALID_DATA);
 				int32_t val = decode_uint32(buf);
 				r_variant = val;
 				if (r_len) {
@@ -194,7 +194,7 @@ Error MultiplayerAPI::decode_and_decompress_variant(Variant &r_variant, const ui
 				}
 			} else {
 				// 64 bits.
-				ERR_FAIL_COND_V(len < 8, ERR_INVALID_DATA);
+				ERR_FAIL_COND_V(len < 8, Error::INVALID_DATA);
 				int64_t val = decode_uint64(buf);
 				r_variant = val;
 				if (r_len) {
@@ -204,12 +204,12 @@ Error MultiplayerAPI::decode_and_decompress_variant(Variant &r_variant, const ui
 		} break;
 		default:
 			Error err = decode_variant(r_variant, p_buffer, p_len, r_len, p_allow_object_decoding);
-			if (err != OK) {
+			if (err != Error::OK) {
 				return err;
 			}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error MultiplayerAPI::encode_and_compress_variants(const Variant **p_variants, int p_count, uint8_t *p_buffer, int &r_len, bool *r_raw, bool p_allow_object_decoding) {
@@ -220,7 +220,7 @@ Error MultiplayerAPI::encode_and_compress_variants(const Variant **p_variants, i
 		if (r_raw) {
 			*r_raw = true;
 		}
-		return OK;
+		return Error::OK;
 	}
 
 	// Try raw encoding optimization.
@@ -238,7 +238,7 @@ Error MultiplayerAPI::encode_and_compress_variants(const Variant **p_variants, i
 			encode_and_compress_variant(v, p_buffer, size, p_allow_object_decoding);
 			r_len += size;
 		}
-		return OK;
+		return Error::OK;
 	}
 
 	// Regular encoding.
@@ -247,23 +247,23 @@ Error MultiplayerAPI::encode_and_compress_variants(const Variant **p_variants, i
 		encode_and_compress_variant(v, p_buffer ? p_buffer + r_len : nullptr, size, p_allow_object_decoding);
 		r_len += size;
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error MultiplayerAPI::decode_and_decompress_variants(Vector<Variant> &r_variants, const uint8_t *p_buffer, int p_len, int &r_len, bool p_raw, bool p_allow_object_decoding) {
 	r_len = 0;
 	int argc = r_variants.size();
 	if (argc == 0 && p_raw) {
-		return OK;
+		return Error::OK;
 	}
-	ERR_FAIL_COND_V(p_raw && argc != 1, ERR_INVALID_DATA);
+	ERR_FAIL_COND_V(p_raw && argc != 1, Error::INVALID_DATA);
 	if (p_raw) {
 		r_len = p_len;
 		PackedByteArray pba;
 		pba.resize(p_len);
 		memcpy(pba.ptrw(), p_buffer, p_len);
 		r_variants.write[0] = pba;
-		return OK;
+		return Error::OK;
 	}
 
 	Vector<Variant> args;
@@ -271,14 +271,14 @@ Error MultiplayerAPI::decode_and_decompress_variants(Vector<Variant> &r_variants
 	args.resize(argc);
 
 	for (int i = 0; i < argc; i++) {
-		ERR_FAIL_COND_V_MSG(r_len >= p_len, ERR_INVALID_DATA, "Invalid packet received. Size too small.");
+		ERR_FAIL_COND_V_MSG(r_len >= p_len, Error::INVALID_DATA, "Invalid packet received. Size too small.");
 
 		int vlen;
 		Error err = MultiplayerAPI::decode_and_decompress_variant(r_variants.write[i], &p_buffer[r_len], p_len - r_len, &vlen, p_allow_object_decoding);
-		ERR_FAIL_COND_V_MSG(err != OK, err, "Invalid packet received. Unable to decode state variable.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Invalid packet received. Unable to decode state variable.");
 		r_len += vlen;
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error MultiplayerAPI::_rpc_bind(int p_peer, Object *p_object, const StringName &p_method, Array p_args) {
@@ -329,7 +329,7 @@ void MultiplayerAPI::_bind_methods() {
 /// MultiplayerAPIExtension
 
 Error MultiplayerAPIExtension::poll() {
-	Error err = OK;
+	Error err = Error::OK;
 	GDVIRTUAL_CALL(_poll, err);
 	return err;
 }
@@ -358,13 +358,13 @@ Vector<int> MultiplayerAPIExtension::get_peer_ids() {
 
 Error MultiplayerAPIExtension::rpcp(Object *p_obj, int p_peer_id, const StringName &p_method, const Variant **p_arg, int p_argcount) {
 	if (!GDVIRTUAL_IS_OVERRIDDEN(_rpc)) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 	Array args;
 	for (int i = 0; i < p_argcount; i++) {
 		args.push_back(*p_arg[i]);
 	}
-	Error ret = FAILED;
+	Error ret = Error::FAILED;
 	GDVIRTUAL_CALL(_rpc, p_peer_id, p_obj, p_method, args, ret);
 	return ret;
 }
@@ -376,13 +376,13 @@ int MultiplayerAPIExtension::get_remote_sender_id() {
 }
 
 Error MultiplayerAPIExtension::object_configuration_add(Object *p_object, Variant p_config) {
-	Error err = ERR_UNAVAILABLE;
+	Error err = Error::UNAVAILABLE;
 	GDVIRTUAL_CALL(_object_configuration_add, p_object, p_config, err);
 	return err;
 }
 
 Error MultiplayerAPIExtension::object_configuration_remove(Object *p_object, Variant p_config) {
-	Error err = ERR_UNAVAILABLE;
+	Error err = Error::UNAVAILABLE;
 	GDVIRTUAL_CALL(_object_configuration_remove, p_object, p_config, err);
 	return err;
 }

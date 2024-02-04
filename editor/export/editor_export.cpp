@@ -189,14 +189,14 @@ void EditorExport::load_config() {
 	Ref<ConfigFile> config;
 	config.instantiate();
 	Error err = config->load("res://export_presets.cfg");
-	if (err != OK) {
+	if (err != Error::OK) {
 		return;
 	}
 
 	Ref<ConfigFile> credentials;
 	credentials.instantiate();
 	err = credentials->load("res://.godot/export_credentials.cfg");
-	if (!(err == OK || err == ERR_FILE_NOT_FOUND)) {
+	if (!(err == Error::OK || err == Error::FILE_NOT_FOUND)) {
 		return;
 	}
 

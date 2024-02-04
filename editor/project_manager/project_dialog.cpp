@@ -89,12 +89,12 @@ String ProjectDialog::_test_path() {
 	const String base_path = project_path->get_text();
 	String valid_path, valid_install_path;
 	bool is_zip = false;
-	if (d->change_dir(base_path) == OK) {
+	if (d->change_dir(base_path) == Error::OK) {
 		valid_path = base_path;
 	} else if (is_zip_file(d, base_path)) {
 		valid_path = base_path;
 		is_zip = true;
-	} else if (d->change_dir(base_path.strip_edges()) == OK) {
+	} else if (d->change_dir(base_path.strip_edges()) == Error::OK) {
 		valid_path = base_path.strip_edges();
 	} else if (is_zip_file(d, base_path.strip_edges())) {
 		valid_path = base_path.strip_edges();
@@ -108,9 +108,9 @@ String ProjectDialog::_test_path() {
 	}
 
 	if (mode == MODE_IMPORT && is_zip) {
-		if (d->change_dir(install_path->get_text()) == OK) {
+		if (d->change_dir(install_path->get_text()) == Error::OK) {
 			valid_install_path = install_path->get_text();
-		} else if (d->change_dir(install_path->get_text().strip_edges()) == OK) {
+		} else if (d->change_dir(install_path->get_text().strip_edges()) == Error::OK) {
 			valid_install_path = install_path->get_text().strip_edges();
 		}
 
@@ -349,9 +349,9 @@ void ProjectDialog::_create_folder() {
 	}
 
 	Ref<DirAccess> d = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
-	if (d->change_dir(project_path->get_text()) == OK) {
+	if (d->change_dir(project_path->get_text()) == Error::OK) {
 		if (!d->dir_exists(project_name_no_edges)) {
-			if (d->make_dir(project_name_no_edges) == OK) {
+			if (d->make_dir(project_name_no_edges) == Error::OK) {
 				d->change_dir(project_name_no_edges);
 				String dir_str = d->get_current_dir();
 				project_path->set_text(dir_str);
@@ -441,12 +441,12 @@ void ProjectDialog::ok_pressed() {
 		ConfigFile cfg;
 		String project_godot = dir2.path_join("project.godot");
 		Error err = cfg.load(project_godot);
-		if (err != OK) {
+		if (err != Error::OK) {
 			_set_message(vformat(TTR("Couldn't load project at '%s' (error %d). It may be missing or corrupted."), project_godot, err), MESSAGE_ERROR);
 		} else {
 			cfg.set_value("application", "config/name", project_name->get_text().strip_edges());
 			err = cfg.save(project_godot);
-			if (err != OK) {
+			if (err != Error::OK) {
 				_set_message(vformat(TTR("Couldn't save project at '%s' (error %d)."), project_godot, err), MESSAGE_ERROR);
 			}
 		}
@@ -506,7 +506,7 @@ void ProjectDialog::ok_pressed() {
 				initial_settings["application/config/name"] = project_name->get_text().strip_edges();
 				initial_settings["application/config/icon"] = "res://icon.svg";
 
-				if (ProjectSettings::get_singleton()->save_custom(dir.path_join("project.godot"), initial_settings, Vector<String>(), false) != OK) {
+				if (ProjectSettings::get_singleton()->save_custom(dir.path_join("project.godot"), initial_settings, Vector<String>(), false) != Error::OK) {
 					_set_message(TTR("Couldn't create project.godot in project path."), MESSAGE_ERROR);
 				} else {
 					// Store default project icon in SVG format.
@@ -514,7 +514,7 @@ void ProjectDialog::ok_pressed() {
 					Ref<FileAccess> fa_icon = FileAccess::open(dir.path_join("icon.svg"), FileAccess::WRITE, &err);
 					fa_icon->store_string(get_default_project_icon());
 
-					if (err != OK) {
+					if (err != Error::OK) {
 						_set_message(TTR("Couldn't create icon.svg in project path."), MESSAGE_ERROR);
 					}
 
@@ -692,7 +692,7 @@ void ProjectDialog::show_dialog() {
 		ConfigFile cfg;
 		String project_godot = project_path->get_text().path_join("project.godot");
 		Error err = cfg.load(project_godot);
-		if (err != OK) {
+		if (err != Error::OK) {
 			_set_message(vformat(TTR("Couldn't load project at '%s' (error %d). It may be missing or corrupted."), project_godot, err), MESSAGE_ERROR);
 			status_rect->show();
 			msg->show();

@@ -230,16 +230,16 @@ Error OS_MacOS::open_dynamic_library(const String p_path, void *&p_library_handl
 		path = get_framework_executable(get_executable_path().get_base_dir().path_join("../Frameworks").path_join(p_path.get_file()));
 	}
 
-	ERR_FAIL_COND_V(!FileAccess::exists(path), ERR_FILE_NOT_FOUND);
+	ERR_FAIL_COND_V(!FileAccess::exists(path), Error::FILE_NOT_FOUND);
 
 	p_library_handle = dlopen(path.utf8().get_data(), RTLD_NOW);
-	ERR_FAIL_NULL_V_MSG(p_library_handle, ERR_CANT_OPEN, vformat("Can't open dynamic library: %s. Error: %s.", p_path, dlerror()));
+	ERR_FAIL_NULL_V_MSG(p_library_handle, Error::CANT_OPEN, vformat("Can't open dynamic library: %s. Error: %s.", p_path, dlerror()));
 
 	if (r_resolved_path != nullptr) {
 		*r_resolved_path = path;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 MainLoop *OS_MacOS::get_main_loop() const {
@@ -350,7 +350,7 @@ Error OS_MacOS::shell_show_in_file_manager(String p_path, bool p_open_folder) {
 	} else {
 		[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ uri ]];
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error OS_MacOS::shell_open(String p_uri) {
@@ -361,7 +361,7 @@ Error OS_MacOS::shell_open(String p_uri) {
 		uri = [[NSURL alloc] initWithString:[string stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]];
 	}
 	[[NSWorkspace sharedWorkspace] openURL:uri];
-	return OK;
+	return Error::OK;
 }
 
 String OS_MacOS::get_locale() const {
@@ -603,24 +603,24 @@ Error OS_MacOS::create_process(const String &p_path, const List<String> &p_argum
 			[configuration setArguments:arguments];
 			[configuration setCreatesNewApplicationInstance:YES];
 			__block dispatch_semaphore_t lock = dispatch_semaphore_create(0);
-			__block Error err = ERR_TIMEOUT;
+			__block Error err = Error::TIMEOUT;
 			__block pid_t pid = 0;
 
 			[[NSWorkspace sharedWorkspace] openApplicationAtURL:url
 												  configuration:configuration
 											  completionHandler:^(NSRunningApplication *app, NSError *error) {
-												  if (error) {
-													  err = ERR_CANT_FORK;
+												  if (error != Error::OK) {
+													  err = Error::CANT_FORK;
 													  NSLog(@"Failed to execute: %@", error.localizedDescription);
 												  } else {
 													  pid = [app processIdentifier];
-													  err = OK;
+													  err = Error::OK;
 												  }
 												  dispatch_semaphore_signal(lock);
 											  }];
 			dispatch_semaphore_wait(lock, dispatch_time(DISPATCH_TIME_NOW, 20000000000)); // 20 sec timeout, wait for app to launch.
 
-			if (err == OK) {
+			if (err == Error::OK) {
 				if (r_child_id) {
 					*r_child_id = (ProcessID)pid;
 				}
@@ -628,17 +628,17 @@ Error OS_MacOS::create_process(const String &p_path, const List<String> &p_argum
 
 			return err;
 		} else {
-			Error err = ERR_TIMEOUT;
+			Error err = Error::TIMEOUT;
 			NSError *error = nullptr;
 			NSRunningApplication *app = [[NSWorkspace sharedWorkspace] launchApplicationAtURL:url options:NSWorkspaceLaunchNewInstance configuration:[NSDictionary dictionaryWithObject:arguments forKey:NSWorkspaceLaunchConfigurationArguments] error:&error];
-			if (error) {
-				err = ERR_CANT_FORK;
+			if (error != Error::OK) {
+				err = Error::CANT_FORK;
 				NSLog(@"Failed to execute: %@", error.localizedDescription);
 			} else {
 				if (r_child_id) {
 					*r_child_id = (ProcessID)[app processIdentifier];
 				}
-				err = OK;
+				err = Error::OK;
 			}
 			return err;
 		}
@@ -710,10 +710,10 @@ Error OS_MacOS::move_to_trash(const String &p_path) {
 
 	if (![fm trashItemAtURL:url resultingItemURL:nil error:&err]) {
 		ERR_PRINT("trashItemAtURL error: " + String::utf8(err.localizedDescription.UTF8String));
-		return FAILED;
+		return Error::FAILED;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 String OS_MacOS::get_system_ca_certificates() {
@@ -737,7 +737,7 @@ String OS_MacOS::get_system_ca_certificates() {
 		size_t b64len = 0;
 		Error err = CryptoCore::b64_encode(pba.ptrw(), pba.size(), &b64len, (unsigned char *)CFDataGetBytePtr(der), derlen);
 		CFRelease(der);
-		ERR_CONTINUE(err != OK);
+		ERR_CONTINUE(err != Error::OK);
 		certs += "-----BEGIN CERTIFICATE-----\n" + String((char *)pba.ptr(), b64len) + "\n-----END CERTIFICATE-----\n";
 	}
 	CFRelease(result);

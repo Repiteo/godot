@@ -703,7 +703,7 @@ bool EditorData::check_and_update_scene(int p_idx) {
 		ep.step(TTR("Storing local changes..."), 0);
 		// Pack first, so it stores diffs to previous version of saved scene.
 		Error err = pscene->pack(edited_scene[p_idx].root);
-		ERR_FAIL_COND_V(err != OK, false);
+		ERR_FAIL_COND_V(err != Error::OK, false);
 		ep.step(TTR("Updating scene..."), 1);
 		Node *new_scene = pscene->instantiate(PackedScene::GEN_EDIT_STATE_MAIN);
 		ERR_FAIL_NULL_V(new_scene, false);

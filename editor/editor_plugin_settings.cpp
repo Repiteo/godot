@@ -68,7 +68,7 @@ void EditorPluginSettings::update_plugins() {
 
 		Error err2 = cf->load(path);
 
-		if (err2 != OK) {
+		if (err2 != Error::OK) {
 			WARN_PRINT("Can't load plugin config: " + path);
 		} else {
 			bool key_missing = false;
@@ -177,7 +177,7 @@ void EditorPluginSettings::_cell_button_pressed(Object *p_item, int p_column, in
 Vector<String> EditorPluginSettings::_get_plugins(const String &p_dir) {
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_RESOURCES);
 	Error err = da->change_dir(p_dir);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return Vector<String>();
 	}
 

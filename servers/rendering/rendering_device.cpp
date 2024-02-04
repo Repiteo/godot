@@ -175,13 +175,13 @@ Error RenderingDevice::_insert_staging_block() {
 	StagingBufferBlock block;
 
 	block.driver_id = driver->buffer_create(staging_buffer_block_size, RDD::BUFFER_USAGE_TRANSFER_FROM_BIT, RDD::MEMORY_ALLOCATION_TYPE_CPU);
-	ERR_FAIL_COND_V(!block.driver_id, ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(!block.driver_id, Error::CANT_CREATE);
 
 	block.frame_used = 0;
 	block.fill_amount = 0;
 
 	staging_buffer_blocks.insert(staging_buffer_current, block);
-	return OK;
+	return Error::OK;
 }
 
 Error RenderingDevice::_staging_buffer_allocate(uint32_t p_amount, uint32_t p_required_align, uint32_t &r_alloc_offset, uint32_t &r_alloc_size, StagingRequiredAction &r_required_action, bool p_can_segment) {
@@ -230,7 +230,7 @@ Error RenderingDevice::_staging_buffer_allocate(uint32_t p_amount, uint32_t p_re
 					if ((uint64_t)staging_buffer_blocks.size() * staging_buffer_block_size < staging_buffer_max_size) {
 						// We can, so we are safe.
 						Error err = _insert_staging_block();
-						if (err) {
+						if (err != Error::OK) {
 							return err;
 						}
 						// Claim for this frame.
@@ -258,7 +258,7 @@ Error RenderingDevice::_staging_buffer_allocate(uint32_t p_amount, uint32_t p_re
 			if ((uint64_t)staging_buffer_blocks.size() * staging_buffer_block_size < staging_buffer_max_size) {
 				// We are still allowed to create a new block, so let's do that and insert it for current pos.
 				Error err = _insert_staging_block();
-				if (err) {
+				if (err != Error::OK) {
 					return err;
 				}
 				// Claim for this frame.
@@ -278,7 +278,7 @@ Error RenderingDevice::_staging_buffer_allocate(uint32_t p_amount, uint32_t p_re
 
 	staging_buffer_used = true;
 
-	return OK;
+	return Error::OK;
 }
 
 void RenderingDevice::_staging_buffer_execute_required_action(StagingRequiredAction p_required_action) {
@@ -336,7 +336,7 @@ Error RenderingDevice::_buffer_update(Buffer *p_buffer, RID p_buffer_id, size_t 
 		StagingRequiredAction required_action;
 
 		Error err = _staging_buffer_allocate(MIN(to_submit, staging_buffer_block_size), p_required_align, block_write_offset, block_write_amount, required_action);
-		if (err) {
+		if (err != Error::OK) {
 			return err;
 		}
 
@@ -355,7 +355,7 @@ Error RenderingDevice::_buffer_update(Buffer *p_buffer, RID p_buffer_id, size_t 
 
 		// Map staging buffer (It's CPU and coherent).
 		uint8_t *data_ptr = driver->buffer_map(staging_buffer_blocks[staging_buffer_current].driver_id);
-		ERR_FAIL_NULL_V(data_ptr, ERR_CANT_CREATE);
+		ERR_FAIL_NULL_V(data_ptr, Error::CANT_CREATE);
 
 		// Copy to staging buffer.
 		memcpy(data_ptr + block_write_offset, p_data + submit_from, block_write_amount);
@@ -393,30 +393,30 @@ Error RenderingDevice::_buffer_update(Buffer *p_buffer, RID p_buffer_id, size_t 
 		draw_graph.add_buffer_update(p_buffer->driver_id, p_buffer->draw_tracker, command_buffer_copies_vector);
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error RenderingDevice::buffer_copy(RID p_src_buffer, RID p_dst_buffer, uint32_t p_src_offset, uint32_t p_dst_offset, uint32_t p_size) {
 	_THREAD_SAFE_METHOD_
 
-	ERR_FAIL_COND_V_MSG(draw_list, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(draw_list, Error::INVALID_PARAMETER,
 			"Copying buffers is forbidden during creation of a draw list");
-	ERR_FAIL_COND_V_MSG(compute_list, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(compute_list, Error::INVALID_PARAMETER,
 			"Copying buffers is forbidden during creation of a compute list");
 
 	Buffer *src_buffer = _get_buffer_from_owner(p_src_buffer);
 	if (!src_buffer) {
-		ERR_FAIL_V_MSG(ERR_INVALID_PARAMETER, "Source buffer argument is not a valid buffer of any type.");
+		ERR_FAIL_V_MSG(Error::INVALID_PARAMETER, "Source buffer argument is not a valid buffer of any type.");
 	}
 
 	Buffer *dst_buffer = _get_buffer_from_owner(p_dst_buffer);
 	if (!dst_buffer) {
-		ERR_FAIL_V_MSG(ERR_INVALID_PARAMETER, "Destination buffer argument is not a valid buffer of any type.");
+		ERR_FAIL_V_MSG(Error::INVALID_PARAMETER, "Destination buffer argument is not a valid buffer of any type.");
 	}
 
 	// Validate the copy's dimensions for both buffers.
-	ERR_FAIL_COND_V_MSG((p_size + p_src_offset) > src_buffer->size, ERR_INVALID_PARAMETER, "Size is larger than the source buffer.");
-	ERR_FAIL_COND_V_MSG((p_size + p_dst_offset) > dst_buffer->size, ERR_INVALID_PARAMETER, "Size is larger than the destination buffer.");
+	ERR_FAIL_COND_V_MSG((p_size + p_src_offset) > src_buffer->size, Error::INVALID_PARAMETER, "Size is larger than the source buffer.");
+	ERR_FAIL_COND_V_MSG((p_size + p_dst_offset) > dst_buffer->size, Error::INVALID_PARAMETER, "Size is larger than the destination buffer.");
 
 	// Perform the copy.
 	RDD::BufferCopyRegion region;
@@ -431,23 +431,23 @@ Error RenderingDevice::buffer_copy(RID p_src_buffer, RID p_dst_buffer, uint32_t 
 
 	draw_graph.add_buffer_copy(src_buffer->driver_id, src_buffer->draw_tracker, dst_buffer->driver_id, dst_buffer->draw_tracker, region);
 
-	return OK;
+	return Error::OK;
 }
 
 Error RenderingDevice::buffer_update(RID p_buffer, uint32_t p_offset, uint32_t p_size, const void *p_data) {
 	_THREAD_SAFE_METHOD_
 
-	ERR_FAIL_COND_V_MSG(draw_list, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(draw_list, Error::INVALID_PARAMETER,
 			"Updating buffers is forbidden during creation of a draw list");
-	ERR_FAIL_COND_V_MSG(compute_list, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(compute_list, Error::INVALID_PARAMETER,
 			"Updating buffers is forbidden during creation of a compute list");
 
 	Buffer *buffer = _get_buffer_from_owner(p_buffer);
 	if (!buffer) {
-		ERR_FAIL_V_MSG(ERR_INVALID_PARAMETER, "Buffer argument is not a valid buffer of any type.");
+		ERR_FAIL_V_MSG(Error::INVALID_PARAMETER, "Buffer argument is not a valid buffer of any type.");
 	}
 
-	ERR_FAIL_COND_V_MSG(p_offset + p_size > buffer->size, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(p_offset + p_size > buffer->size, Error::INVALID_PARAMETER,
 			"Attempted to write buffer (" + itos((p_offset + p_size) - buffer->size) + " bytes) past the end.");
 
 	return _buffer_update(buffer, p_buffer, p_offset, (uint8_t *)p_data, p_size, true);
@@ -456,19 +456,19 @@ Error RenderingDevice::buffer_update(RID p_buffer, uint32_t p_offset, uint32_t p
 Error RenderingDevice::buffer_clear(RID p_buffer, uint32_t p_offset, uint32_t p_size) {
 	_THREAD_SAFE_METHOD_
 
-	ERR_FAIL_COND_V_MSG((p_size % 4) != 0, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG((p_size % 4) != 0, Error::INVALID_PARAMETER,
 			"Size must be a multiple of four");
-	ERR_FAIL_COND_V_MSG(draw_list, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(draw_list, Error::INVALID_PARAMETER,
 			"Updating buffers in is forbidden during creation of a draw list");
-	ERR_FAIL_COND_V_MSG(compute_list, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(compute_list, Error::INVALID_PARAMETER,
 			"Updating buffers is forbidden during creation of a compute list");
 
 	Buffer *buffer = _get_buffer_from_owner(p_buffer);
 	if (!buffer) {
-		ERR_FAIL_V_MSG(ERR_INVALID_PARAMETER, "Buffer argument is not a valid buffer of any type.");
+		ERR_FAIL_V_MSG(Error::INVALID_PARAMETER, "Buffer argument is not a valid buffer of any type.");
 	}
 
-	ERR_FAIL_COND_V_MSG(p_offset + p_size > buffer->size, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(p_offset + p_size > buffer->size, Error::INVALID_PARAMETER,
 			"Attempted to write buffer (" + itos((p_offset + p_size) - buffer->size) + " bytes) past the end.");
 
 	if (_buffer_make_mutable(buffer, p_buffer)) {
@@ -478,7 +478,7 @@ Error RenderingDevice::buffer_clear(RID p_buffer, uint32_t p_offset, uint32_t p_
 
 	draw_graph.add_buffer_clear(buffer->driver_id, buffer->draw_tracker, p_offset, p_size);
 
-	return OK;
+	return Error::OK;
 }
 
 Vector<uint8_t> RenderingDevice::buffer_get_data(RID p_buffer, uint32_t p_offset, uint32_t p_size) {
@@ -983,29 +983,29 @@ static _ALWAYS_INLINE_ void _copy_region(uint8_t const *__restrict p_src, uint8_
 Error RenderingDevice::_texture_update(RID p_texture, uint32_t p_layer, const Vector<uint8_t> &p_data, bool p_use_setup_queue, bool p_validate_can_update) {
 	_THREAD_SAFE_METHOD_
 
-	ERR_FAIL_COND_V_MSG((draw_list || compute_list) && !p_use_setup_queue, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG((draw_list || compute_list) && !p_use_setup_queue, Error::INVALID_PARAMETER,
 			"Updating textures is forbidden during creation of a draw or compute list");
 
 	Texture *texture = texture_owner.get_or_null(p_texture);
-	ERR_FAIL_NULL_V(texture, ERR_INVALID_PARAMETER);
+	ERR_FAIL_NULL_V(texture, Error::INVALID_PARAMETER);
 
 	if (texture->owner != RID()) {
 		p_texture = texture->owner;
 		texture = texture_owner.get_or_null(texture->owner);
-		ERR_FAIL_NULL_V(texture, ERR_BUG); // This is a bug.
+		ERR_FAIL_NULL_V(texture, Error::BUG); // This is a bug.
 	}
 
-	ERR_FAIL_COND_V_MSG(texture->bound, ERR_CANT_ACQUIRE_RESOURCE,
+	ERR_FAIL_COND_V_MSG(texture->bound, Error::CANT_ACQUIRE_RESOURCE,
 			"Texture can't be updated while a draw list that uses it as part of a framebuffer is being created. Ensure the draw list is finalized (and that the color/depth texture using it is not set to `RenderingDevice.FINAL_ACTION_CONTINUE`) to update this texture.");
 
-	ERR_FAIL_COND_V_MSG(p_validate_can_update && !(texture->usage_flags & TEXTURE_USAGE_CAN_UPDATE_BIT), ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(p_validate_can_update && !(texture->usage_flags & TEXTURE_USAGE_CAN_UPDATE_BIT), Error::INVALID_PARAMETER,
 			"Texture requires the `RenderingDevice.TEXTURE_USAGE_CAN_UPDATE_BIT` to be set to be updatable.");
 
 	uint32_t layer_count = texture->layers;
 	if (texture->type == TEXTURE_TYPE_CUBE || texture->type == TEXTURE_TYPE_CUBE_ARRAY) {
 		layer_count *= 6;
 	}
-	ERR_FAIL_COND_V(p_layer >= layer_count, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_layer >= layer_count, Error::INVALID_PARAMETER);
 
 	uint32_t width, height;
 	uint32_t tight_mip_size = get_image_format_required_size(texture->format, texture->width, texture->height, texture->depth, texture->mipmaps, &width, &height);
@@ -1016,7 +1016,7 @@ Error RenderingDevice::_texture_update(RID p_texture, uint32_t p_layer, const Ve
 	}
 	required_align = STEPIFY(required_align, driver->api_trait_get(RDD::API_TRAIT_TEXTURE_TRANSFER_ALIGNMENT));
 
-	ERR_FAIL_COND_V_MSG(required_size != (uint32_t)p_data.size(), ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(required_size != (uint32_t)p_data.size(), Error::INVALID_PARAMETER,
 			"Required size for texture update (" + itos(required_size) + ") does not match data supplied size (" + itos(p_data.size()) + ").");
 
 	uint32_t region_size = texture_upload_region_size_px;
@@ -1076,7 +1076,7 @@ Error RenderingDevice::_texture_update(RID p_texture, uint32_t p_layer, const Ve
 					uint32_t alloc_offset = 0, alloc_size = 0;
 					StagingRequiredAction required_action;
 					Error err = _staging_buffer_allocate(to_allocate, required_align, alloc_offset, alloc_size, required_action, false);
-					ERR_FAIL_COND_V(err, ERR_CANT_CREATE);
+					ERR_FAIL_COND_V(err != Error::OK, Error::CANT_CREATE);
 
 					if (!p_use_setup_queue && !command_buffer_to_texture_copies_vector.is_empty() && required_action == STAGING_REQUIRED_ACTION_FLUSH_CURRENT) {
 						if (_texture_make_mutable(texture, p_texture)) {
@@ -1095,13 +1095,13 @@ Error RenderingDevice::_texture_update(RID p_texture, uint32_t p_layer, const Ve
 
 					{ // Map.
 						uint8_t *data_ptr = driver->buffer_map(staging_buffer_blocks[staging_buffer_current].driver_id);
-						ERR_FAIL_NULL_V(data_ptr, ERR_CANT_CREATE);
+						ERR_FAIL_NULL_V(data_ptr, Error::CANT_CREATE);
 						write_ptr = data_ptr;
 						write_ptr += alloc_offset;
 					}
 
-					ERR_FAIL_COND_V(region_w % block_w, ERR_BUG);
-					ERR_FAIL_COND_V(region_h % block_h, ERR_BUG);
+					ERR_FAIL_COND_V(region_w % block_w, Error::BUG);
+					ERR_FAIL_COND_V(region_h % block_h, Error::BUG);
 
 					if (block_w != 1 || block_h != 1) {
 						// Compressed image (blocks).
@@ -1175,7 +1175,7 @@ Error RenderingDevice::_texture_update(RID p_texture, uint32_t p_layer, const Ve
 		draw_graph.add_texture_update(texture->driver_id, texture->draw_tracker, command_buffer_to_texture_copies_vector);
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Vector<uint8_t> RenderingDevice::_texture_get_data(Texture *tex, uint32_t p_layer, bool p_2d) {
@@ -1411,11 +1411,11 @@ Error RenderingDevice::texture_copy(RID p_from_texture, RID p_to_texture, const 
 	_THREAD_SAFE_METHOD_
 
 	Texture *src_tex = texture_owner.get_or_null(p_from_texture);
-	ERR_FAIL_NULL_V(src_tex, ERR_INVALID_PARAMETER);
+	ERR_FAIL_NULL_V(src_tex, Error::INVALID_PARAMETER);
 
-	ERR_FAIL_COND_V_MSG(src_tex->bound, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(src_tex->bound, Error::INVALID_PARAMETER,
 			"Source texture can't be copied while a draw list that uses it as part of a framebuffer is being created. Ensure the draw list is finalized (and that the color/depth texture using it is not set to `RenderingDevice.FINAL_ACTION_CONTINUE`) to copy this texture.");
-	ERR_FAIL_COND_V_MSG(!(src_tex->usage_flags & TEXTURE_USAGE_CAN_COPY_FROM_BIT), ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(!(src_tex->usage_flags & TEXTURE_USAGE_CAN_COPY_FROM_BIT), Error::INVALID_PARAMETER,
 			"Source texture requires the `RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT` to be set to be retrieved.");
 
 	uint32_t src_layer_count = src_tex->layers;
@@ -1425,18 +1425,18 @@ Error RenderingDevice::texture_copy(RID p_from_texture, RID p_to_texture, const 
 		src_layer_count *= 6;
 	}
 
-	ERR_FAIL_COND_V(p_from.x < 0 || p_from.x + p_size.x > src_width, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_from.y < 0 || p_from.y + p_size.y > src_height, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_from.z < 0 || p_from.z + p_size.z > src_depth, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_src_mipmap >= src_tex->mipmaps, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_src_layer >= src_layer_count, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_from.x < 0 || p_from.x + p_size.x > src_width, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_from.y < 0 || p_from.y + p_size.y > src_height, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_from.z < 0 || p_from.z + p_size.z > src_depth, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_src_mipmap >= src_tex->mipmaps, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_src_layer >= src_layer_count, Error::INVALID_PARAMETER);
 
 	Texture *dst_tex = texture_owner.get_or_null(p_to_texture);
-	ERR_FAIL_NULL_V(dst_tex, ERR_INVALID_PARAMETER);
+	ERR_FAIL_NULL_V(dst_tex, Error::INVALID_PARAMETER);
 
-	ERR_FAIL_COND_V_MSG(dst_tex->bound, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(dst_tex->bound, Error::INVALID_PARAMETER,
 			"Destination texture can't be copied while a draw list that uses it as part of a framebuffer is being created. Ensure the draw list is finalized (and that the color/depth texture using it is not set to `RenderingDevice.FINAL_ACTION_CONTINUE`) to copy this texture.");
-	ERR_FAIL_COND_V_MSG(!(dst_tex->usage_flags & TEXTURE_USAGE_CAN_COPY_TO_BIT), ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(!(dst_tex->usage_flags & TEXTURE_USAGE_CAN_COPY_TO_BIT), Error::INVALID_PARAMETER,
 			"Destination texture requires the `RenderingDevice.TEXTURE_USAGE_CAN_COPY_TO_BIT` to be set to be retrieved.");
 
 	uint32_t dst_layer_count = dst_tex->layers;
@@ -1446,13 +1446,13 @@ Error RenderingDevice::texture_copy(RID p_from_texture, RID p_to_texture, const 
 		dst_layer_count *= 6;
 	}
 
-	ERR_FAIL_COND_V(p_to.x < 0 || p_to.x + p_size.x > dst_width, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_to.y < 0 || p_to.y + p_size.y > dst_height, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_to.z < 0 || p_to.z + p_size.z > dst_depth, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_dst_mipmap >= dst_tex->mipmaps, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_dst_layer >= dst_layer_count, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_to.x < 0 || p_to.x + p_size.x > dst_width, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_to.y < 0 || p_to.y + p_size.y > dst_height, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_to.z < 0 || p_to.z + p_size.z > dst_depth, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_dst_mipmap >= dst_tex->mipmaps, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_dst_layer >= dst_layer_count, Error::INVALID_PARAMETER);
 
-	ERR_FAIL_COND_V_MSG(src_tex->read_aspect_flags != dst_tex->read_aspect_flags, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(src_tex->read_aspect_flags != dst_tex->read_aspect_flags, Error::INVALID_PARAMETER,
 			"Source and destination texture must be of the same type (color or depth).");
 
 	RDD::TextureCopyRegion copy_region;
@@ -1479,38 +1479,38 @@ Error RenderingDevice::texture_copy(RID p_from_texture, RID p_to_texture, const 
 
 	draw_graph.add_texture_copy(src_tex->driver_id, src_tex->draw_tracker, dst_tex->driver_id, dst_tex->draw_tracker, copy_region);
 
-	return OK;
+	return Error::OK;
 }
 
 Error RenderingDevice::texture_resolve_multisample(RID p_from_texture, RID p_to_texture) {
 	_THREAD_SAFE_METHOD_
 
 	Texture *src_tex = texture_owner.get_or_null(p_from_texture);
-	ERR_FAIL_NULL_V(src_tex, ERR_INVALID_PARAMETER);
+	ERR_FAIL_NULL_V(src_tex, Error::INVALID_PARAMETER);
 
-	ERR_FAIL_COND_V_MSG(src_tex->bound, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(src_tex->bound, Error::INVALID_PARAMETER,
 			"Source texture can't be copied while a draw list that uses it as part of a framebuffer is being created. Ensure the draw list is finalized (and that the color/depth texture using it is not set to `RenderingDevice.FINAL_ACTION_CONTINUE`) to copy this texture.");
-	ERR_FAIL_COND_V_MSG(!(src_tex->usage_flags & TEXTURE_USAGE_CAN_COPY_FROM_BIT), ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(!(src_tex->usage_flags & TEXTURE_USAGE_CAN_COPY_FROM_BIT), Error::INVALID_PARAMETER,
 			"Source texture requires the `RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT` to be set to be retrieved.");
 
-	ERR_FAIL_COND_V_MSG(src_tex->type != TEXTURE_TYPE_2D, ERR_INVALID_PARAMETER, "Source texture must be 2D (or a slice of a 3D/Cube texture)");
-	ERR_FAIL_COND_V_MSG(src_tex->samples == TEXTURE_SAMPLES_1, ERR_INVALID_PARAMETER, "Source texture must be multisampled.");
+	ERR_FAIL_COND_V_MSG(src_tex->type != TEXTURE_TYPE_2D, Error::INVALID_PARAMETER, "Source texture must be 2D (or a slice of a 3D/Cube texture)");
+	ERR_FAIL_COND_V_MSG(src_tex->samples == TEXTURE_SAMPLES_1, Error::INVALID_PARAMETER, "Source texture must be multisampled.");
 
 	Texture *dst_tex = texture_owner.get_or_null(p_to_texture);
-	ERR_FAIL_NULL_V(dst_tex, ERR_INVALID_PARAMETER);
+	ERR_FAIL_NULL_V(dst_tex, Error::INVALID_PARAMETER);
 
-	ERR_FAIL_COND_V_MSG(dst_tex->bound, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(dst_tex->bound, Error::INVALID_PARAMETER,
 			"Destination texture can't be copied while a draw list that uses it as part of a framebuffer is being created. Ensure the draw list is finalized (and that the color/depth texture using it is not set to `RenderingDevice.FINAL_ACTION_CONTINUE`) to copy this texture.");
-	ERR_FAIL_COND_V_MSG(!(dst_tex->usage_flags & TEXTURE_USAGE_CAN_COPY_TO_BIT), ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(!(dst_tex->usage_flags & TEXTURE_USAGE_CAN_COPY_TO_BIT), Error::INVALID_PARAMETER,
 			"Destination texture requires the `RenderingDevice.TEXTURE_USAGE_CAN_COPY_TO_BIT` to be set to be retrieved.");
 
-	ERR_FAIL_COND_V_MSG(dst_tex->type != TEXTURE_TYPE_2D, ERR_INVALID_PARAMETER, "Destination texture must be 2D (or a slice of a 3D/Cube texture).");
-	ERR_FAIL_COND_V_MSG(dst_tex->samples != TEXTURE_SAMPLES_1, ERR_INVALID_PARAMETER, "Destination texture must not be multisampled.");
+	ERR_FAIL_COND_V_MSG(dst_tex->type != TEXTURE_TYPE_2D, Error::INVALID_PARAMETER, "Destination texture must be 2D (or a slice of a 3D/Cube texture).");
+	ERR_FAIL_COND_V_MSG(dst_tex->samples != TEXTURE_SAMPLES_1, Error::INVALID_PARAMETER, "Destination texture must not be multisampled.");
 
-	ERR_FAIL_COND_V_MSG(src_tex->format != dst_tex->format, ERR_INVALID_PARAMETER, "Source and Destination textures must be the same format.");
-	ERR_FAIL_COND_V_MSG(src_tex->width != dst_tex->width && src_tex->height != dst_tex->height && src_tex->depth != dst_tex->depth, ERR_INVALID_PARAMETER, "Source and Destination textures must have the same dimensions.");
+	ERR_FAIL_COND_V_MSG(src_tex->format != dst_tex->format, Error::INVALID_PARAMETER, "Source and Destination textures must be the same format.");
+	ERR_FAIL_COND_V_MSG(src_tex->width != dst_tex->width && src_tex->height != dst_tex->height && src_tex->depth != dst_tex->depth, Error::INVALID_PARAMETER, "Source and Destination textures must have the same dimensions.");
 
-	ERR_FAIL_COND_V_MSG(src_tex->read_aspect_flags != dst_tex->read_aspect_flags, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(src_tex->read_aspect_flags != dst_tex->read_aspect_flags, Error::INVALID_PARAMETER,
 			"Source and destination texture must be of the same type (color or depth).");
 
 	// The textures must be mutable to be used in the resolve operation.
@@ -1522,22 +1522,22 @@ Error RenderingDevice::texture_resolve_multisample(RID p_from_texture, RID p_to_
 
 	draw_graph.add_texture_resolve(src_tex->driver_id, src_tex->draw_tracker, dst_tex->driver_id, dst_tex->draw_tracker, src_tex->base_layer, src_tex->base_mipmap, dst_tex->base_layer, dst_tex->base_mipmap);
 
-	return OK;
+	return Error::OK;
 }
 
 Error RenderingDevice::texture_clear(RID p_texture, const Color &p_color, uint32_t p_base_mipmap, uint32_t p_mipmaps, uint32_t p_base_layer, uint32_t p_layers) {
 	_THREAD_SAFE_METHOD_
 
 	Texture *src_tex = texture_owner.get_or_null(p_texture);
-	ERR_FAIL_NULL_V(src_tex, ERR_INVALID_PARAMETER);
+	ERR_FAIL_NULL_V(src_tex, Error::INVALID_PARAMETER);
 
-	ERR_FAIL_COND_V_MSG(src_tex->bound, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(src_tex->bound, Error::INVALID_PARAMETER,
 			"Source texture can't be cleared while a draw list that uses it as part of a framebuffer is being created. Ensure the draw list is finalized (and that the color/depth texture using it is not set to `RenderingDevice.FINAL_ACTION_CONTINUE`) to clear this texture.");
 
-	ERR_FAIL_COND_V(p_layers == 0, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_mipmaps == 0, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_layers == 0, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_mipmaps == 0, Error::INVALID_PARAMETER);
 
-	ERR_FAIL_COND_V_MSG(!(src_tex->usage_flags & TEXTURE_USAGE_CAN_COPY_TO_BIT), ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(!(src_tex->usage_flags & TEXTURE_USAGE_CAN_COPY_TO_BIT), Error::INVALID_PARAMETER,
 			"Source texture requires the `RenderingDevice.TEXTURE_USAGE_CAN_COPY_TO_BIT` to be set to be cleared.");
 
 	uint32_t src_layer_count = src_tex->layers;
@@ -1545,8 +1545,8 @@ Error RenderingDevice::texture_clear(RID p_texture, const Color &p_color, uint32
 		src_layer_count *= 6;
 	}
 
-	ERR_FAIL_COND_V(p_base_mipmap + p_mipmaps > src_tex->mipmaps, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_base_layer + p_layers > src_layer_count, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_base_mipmap + p_mipmaps > src_tex->mipmaps, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_base_layer + p_layers > src_layer_count, Error::INVALID_PARAMETER);
 
 	RDD::TextureSubresourceRange range;
 	range.aspect = src_tex->read_aspect_flags;
@@ -1562,7 +1562,7 @@ Error RenderingDevice::texture_clear(RID p_texture, const Color &p_color, uint32
 
 	draw_graph.add_texture_clear(src_tex->driver_id, src_tex->draw_tracker, p_color, range);
 
-	return OK;
+	return Error::OK;
 }
 
 bool RenderingDevice::texture_is_format_supported_for_usage(DataFormat p_format, BitField<RenderingDevice::TextureUsageBits> p_usage) const {
@@ -3166,14 +3166,14 @@ Error RenderingDevice::_draw_list_setup_framebuffer(Framebuffer *p_framebuffer, 
 			if (texture) {
 				attachments.push_back(texture->driver_id);
 				if (!(texture->usage_flags & TEXTURE_USAGE_VRS_ATTACHMENT_BIT)) { // VRS attachment will be a different size.
-					ERR_FAIL_COND_V(texture->width != p_framebuffer->size.width, ERR_BUG);
-					ERR_FAIL_COND_V(texture->height != p_framebuffer->size.height, ERR_BUG);
+					ERR_FAIL_COND_V(texture->width != p_framebuffer->size.width, Error::BUG);
+					ERR_FAIL_COND_V(texture->height != p_framebuffer->size.height, Error::BUG);
 				}
 			}
 		}
 
 		version.framebuffer = driver->framebuffer_create(version.render_pass, attachments, p_framebuffer->size.width, p_framebuffer->size.height);
-		ERR_FAIL_COND_V(!version.framebuffer, ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(!version.framebuffer, Error::CANT_CREATE);
 
 		version.subpass_count = framebuffer_formats[p_framebuffer->format_id].E->key().passes.size();
 
@@ -3184,7 +3184,7 @@ Error RenderingDevice::_draw_list_setup_framebuffer(Framebuffer *p_framebuffer, 
 	*r_render_pass = version.render_pass;
 	*r_subpass_count = version.subpass_count;
 
-	return OK;
+	return Error::OK;
 }
 
 Error RenderingDevice::_draw_list_render_pass_begin(Framebuffer *p_framebuffer, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Vector<Color> &p_clear_colors, float p_clear_depth, uint32_t p_clear_stencil, Point2i p_viewport_offset, Point2i p_viewport_size, RDD::FramebufferID p_framebuffer_driver_id, RDD::RenderPassID p_render_pass) {
@@ -3208,7 +3208,7 @@ Error RenderingDevice::_draw_list_render_pass_begin(Framebuffer *p_framebuffer, 
 
 			if (texture->usage_flags & TEXTURE_USAGE_COLOR_ATTACHMENT_BIT) {
 				if (color_index < p_clear_colors.size()) {
-					ERR_FAIL_INDEX_V(color_index, p_clear_colors.size(), ERR_BUG); // A bug.
+					ERR_FAIL_INDEX_V(color_index, p_clear_colors.size(), Error::BUG); // A bug.
 					clear_value.color = p_clear_colors[color_index];
 					color_index++;
 				}
@@ -3243,7 +3243,7 @@ Error RenderingDevice::_draw_list_render_pass_begin(Framebuffer *p_framebuffer, 
 		draw_list_bound_textures.push_back(p_framebuffer->texture_ids[i]);
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void RenderingDevice::_draw_list_set_viewport(Rect2i p_rect) {
@@ -3334,11 +3334,11 @@ RenderingDevice::DrawListID RenderingDevice::draw_list_begin(RID p_framebuffer, 
 	RDD::RenderPassID render_pass;
 
 	Error err = _draw_list_setup_framebuffer(framebuffer, p_initial_color_action, p_final_color_action, p_initial_depth_action, p_final_depth_action, &fb_driver_id, &render_pass, &draw_list_subpass_count);
-	ERR_FAIL_COND_V(err != OK, INVALID_ID);
+	ERR_FAIL_COND_V(err != Error::OK, INVALID_ID);
 
 	err = _draw_list_render_pass_begin(framebuffer, p_initial_color_action, p_final_color_action, p_initial_depth_action, p_final_depth_action, p_clear_color_values, p_clear_depth, p_clear_stencil, viewport_offset, viewport_size, fb_driver_id, render_pass);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		return INVALID_ID;
 	}
 
@@ -3359,7 +3359,7 @@ RenderingDevice::DrawListID RenderingDevice::draw_list_begin(RID p_framebuffer, 
 
 #ifndef DISABLE_DEPRECATED
 Error RenderingDevice::draw_list_begin_split(RID p_framebuffer, uint32_t p_splits, DrawListID *r_split_ids, InitialAction p_initial_color_action, FinalAction p_final_color_action, InitialAction p_initial_depth_action, FinalAction p_final_depth_action, const Vector<Color> &p_clear_color_values, float p_clear_depth, uint32_t p_clear_stencil, const Rect2 &p_region, const Vector<RID> &p_storage_textures) {
-	ERR_FAIL_V_MSG(ERR_UNAVAILABLE, "Deprecated. Split draw lists are used automatically by RenderingDevice.");
+	ERR_FAIL_V_MSG(Error::UNAVAILABLE, "Deprecated. Split draw lists are used automatically by RenderingDevice.");
 }
 #endif
 
@@ -3765,7 +3765,7 @@ RenderingDevice::DrawListID RenderingDevice::draw_list_switch_to_next_pass() {
 
 #ifndef DISABLE_DEPRECATED
 Error RenderingDevice::draw_list_switch_to_next_pass_split(uint32_t p_splits, DrawListID *r_split_ids) {
-	ERR_FAIL_V_MSG(ERR_UNAVAILABLE, "Deprecated. Split draw lists are used automatically by RenderingDevice.");
+	ERR_FAIL_V_MSG(Error::UNAVAILABLE, "Deprecated. Split draw lists are used automatically by RenderingDevice.");
 }
 #endif
 
@@ -3777,7 +3777,7 @@ Error RenderingDevice::_draw_list_allocate(const Rect2i &p_viewport, uint32_t p_
 	draw_list->viewport = p_viewport;
 	draw_list_count = 0;
 
-	return OK;
+	return Error::OK;
 }
 
 void RenderingDevice::_draw_list_free(Rect2i *r_last_viewport) {
@@ -4896,7 +4896,7 @@ void RenderingDevice::initialize(ApiContextRD *p_context, bool p_local_device) {
 	for (int i = 0; i < frame_count; i++) {
 		// Staging was never used, create a block.
 		Error err = _insert_staging_block();
-		ERR_CONTINUE(err != OK);
+		ERR_CONTINUE(err != Error::OK);
 	}
 
 	draw_list = nullptr;

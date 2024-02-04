@@ -45,7 +45,7 @@ uint32_t EditorOBJImporter::get_import_flags() const {
 
 static Error _parse_material_library(const String &p_path, HashMap<String, Ref<StandardMaterial3D>> &material_map, List<String> *r_missing_deps) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
-	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_CANT_OPEN, vformat("Couldn't open MTL file '%s', it may not exist or not be readable.", p_path));
+	ERR_FAIL_COND_V_MSG(f.is_null(), Error::CANT_OPEN, vformat("Couldn't open MTL file '%s', it may not exist or not be readable.", p_path));
 
 	Ref<StandardMaterial3D> current;
 	String current_name;
@@ -66,9 +66,9 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 
 		} else if (l.begins_with("Kd ")) {
 			//normal
-			ERR_FAIL_COND_V(current.is_null(), ERR_FILE_CORRUPT);
+			ERR_FAIL_COND_V(current.is_null(), Error::FILE_CORRUPT);
 			Vector<String> v = l.split(" ", false);
-			ERR_FAIL_COND_V(v.size() < 4, ERR_INVALID_DATA);
+			ERR_FAIL_COND_V(v.size() < 4, Error::INVALID_DATA);
 			Color c = current->get_albedo();
 			c.r = v[1].to_float();
 			c.g = v[2].to_float();
@@ -76,9 +76,9 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 			current->set_albedo(c);
 		} else if (l.begins_with("Ks ")) {
 			//normal
-			ERR_FAIL_COND_V(current.is_null(), ERR_FILE_CORRUPT);
+			ERR_FAIL_COND_V(current.is_null(), Error::FILE_CORRUPT);
 			Vector<String> v = l.split(" ", false);
-			ERR_FAIL_COND_V(v.size() < 4, ERR_INVALID_DATA);
+			ERR_FAIL_COND_V(v.size() < 4, Error::INVALID_DATA);
 			float r = v[1].to_float();
 			float g = v[2].to_float();
 			float b = v[3].to_float();
@@ -86,16 +86,16 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 			current->set_metallic(metalness);
 		} else if (l.begins_with("Ns ")) {
 			//normal
-			ERR_FAIL_COND_V(current.is_null(), ERR_FILE_CORRUPT);
+			ERR_FAIL_COND_V(current.is_null(), Error::FILE_CORRUPT);
 			Vector<String> v = l.split(" ", false);
-			ERR_FAIL_COND_V(v.size() != 2, ERR_INVALID_DATA);
+			ERR_FAIL_COND_V(v.size() != 2, Error::INVALID_DATA);
 			float s = v[1].to_float();
 			current->set_metallic((1000.0 - s) / 1000.0);
 		} else if (l.begins_with("d ")) {
 			//normal
-			ERR_FAIL_COND_V(current.is_null(), ERR_FILE_CORRUPT);
+			ERR_FAIL_COND_V(current.is_null(), Error::FILE_CORRUPT);
 			Vector<String> v = l.split(" ", false);
-			ERR_FAIL_COND_V(v.size() != 2, ERR_INVALID_DATA);
+			ERR_FAIL_COND_V(v.size() != 2, Error::INVALID_DATA);
 			float d = v[1].to_float();
 			Color c = current->get_albedo();
 			c.a = d;
@@ -105,9 +105,9 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 			}
 		} else if (l.begins_with("Tr ")) {
 			//normal
-			ERR_FAIL_COND_V(current.is_null(), ERR_FILE_CORRUPT);
+			ERR_FAIL_COND_V(current.is_null(), Error::FILE_CORRUPT);
 			Vector<String> v = l.split(" ", false);
-			ERR_FAIL_COND_V(v.size() != 2, ERR_INVALID_DATA);
+			ERR_FAIL_COND_V(v.size() != 2, Error::INVALID_DATA);
 			float d = v[1].to_float();
 			Color c = current->get_albedo();
 			c.a = 1.0 - d;
@@ -122,7 +122,7 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 
 		} else if (l.begins_with("map_Kd ")) {
 			//normal
-			ERR_FAIL_COND_V(current.is_null(), ERR_FILE_CORRUPT);
+			ERR_FAIL_COND_V(current.is_null(), Error::FILE_CORRUPT);
 
 			String p = l.replace("map_Kd", "").replace("\\", "/").strip_edges();
 			String path;
@@ -142,7 +142,7 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 
 		} else if (l.begins_with("map_Ks ")) {
 			//normal
-			ERR_FAIL_COND_V(current.is_null(), ERR_FILE_CORRUPT);
+			ERR_FAIL_COND_V(current.is_null(), Error::FILE_CORRUPT);
 
 			String p = l.replace("map_Ks", "").replace("\\", "/").strip_edges();
 			String path;
@@ -162,7 +162,7 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 
 		} else if (l.begins_with("map_Ns ")) {
 			//normal
-			ERR_FAIL_COND_V(current.is_null(), ERR_FILE_CORRUPT);
+			ERR_FAIL_COND_V(current.is_null(), Error::FILE_CORRUPT);
 
 			String p = l.replace("map_Ns", "").replace("\\", "/").strip_edges();
 			String path;
@@ -181,7 +181,7 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 			}
 		} else if (l.begins_with("map_bump ")) {
 			//normal
-			ERR_FAIL_COND_V(current.is_null(), ERR_FILE_CORRUPT);
+			ERR_FAIL_COND_V(current.is_null(), Error::FILE_CORRUPT);
 
 			String p = l.replace("map_bump", "").replace("\\", "/").strip_edges();
 			String path = base_path.path_join(p);
@@ -199,12 +199,12 @@ static Error _parse_material_library(const String &p_path, HashMap<String, Ref<S
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes, bool p_single_mesh, bool p_generate_tangents, bool p_optimize, Vector3 p_scale_mesh, Vector3 p_offset_mesh, bool p_disable_compression, List<String> *r_missing_deps) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
-	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_CANT_OPEN, vformat("Couldn't open OBJ file '%s', it may not exist or not be readable.", p_path));
+	ERR_FAIL_COND_V_MSG(f.is_null(), Error::CANT_OPEN, vformat("Couldn't open OBJ file '%s', it may not exist or not be readable.", p_path));
 
 	// Avoid trying to load/interpret potential build artifacts from Visual Studio (e.g. when compiling native plugins inside the project tree)
 	// This should only match, if it's indeed a COFF file header
@@ -217,7 +217,7 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 		0x14c, // IMAGE_FILE_MACHINE_I386
 		0x200, // IMAGE_FILE_MACHINE_IA64
 	};
-	ERR_FAIL_COND_V_MSG(coff_header_machines.find(first_bytes) != -1, ERR_FILE_CORRUPT, vformat("Couldn't read OBJ file '%s', it seems to be binary, corrupted, or empty.", p_path));
+	ERR_FAIL_COND_V_MSG(coff_header_machines.find(first_bytes) != -1, Error::FILE_CORRUPT, vformat("Couldn't read OBJ file '%s', it seems to be binary, corrupted, or empty.", p_path));
 	f->seek(0);
 
 	Ref<ImporterMesh> mesh;
@@ -259,7 +259,7 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 		if (l.begins_with("v ")) {
 			//vertex
 			Vector<String> v = l.split(" ", false);
-			ERR_FAIL_COND_V(v.size() < 4, ERR_FILE_CORRUPT);
+			ERR_FAIL_COND_V(v.size() < 4, Error::FILE_CORRUPT);
 			Vector3 vtx;
 			vtx.x = v[1].to_float() * scale_mesh.x + offset_mesh.x;
 			vtx.y = v[2].to_float() * scale_mesh.y + offset_mesh.y;
@@ -281,7 +281,7 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 		} else if (l.begins_with("vt ")) {
 			//uv
 			Vector<String> v = l.split(" ", false);
-			ERR_FAIL_COND_V(v.size() < 3, ERR_FILE_CORRUPT);
+			ERR_FAIL_COND_V(v.size() < 3, Error::FILE_CORRUPT);
 			Vector2 uv;
 			uv.x = v[1].to_float();
 			uv.y = 1.0 - v[2].to_float();
@@ -289,7 +289,7 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 		} else if (l.begins_with("vn ")) {
 			//normal
 			Vector<String> v = l.split(" ", false);
-			ERR_FAIL_COND_V(v.size() < 4, ERR_FILE_CORRUPT);
+			ERR_FAIL_COND_V(v.size() < 4, Error::FILE_CORRUPT);
 			Vector3 nrm;
 			nrm.x = v[1].to_float();
 			nrm.y = v[2].to_float();
@@ -299,20 +299,20 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 			//vertex
 
 			Vector<String> v = l.split(" ", false);
-			ERR_FAIL_COND_V(v.size() < 4, ERR_FILE_CORRUPT);
+			ERR_FAIL_COND_V(v.size() < 4, Error::FILE_CORRUPT);
 
 			//not very fast, could be sped up
 
 			Vector<String> face[3];
 			face[0] = v[1].split("/");
 			face[1] = v[2].split("/");
-			ERR_FAIL_COND_V(face[0].size() == 0, ERR_FILE_CORRUPT);
+			ERR_FAIL_COND_V(face[0].size() == 0, Error::FILE_CORRUPT);
 
-			ERR_FAIL_COND_V(face[0].size() != face[1].size(), ERR_FILE_CORRUPT);
+			ERR_FAIL_COND_V(face[0].size() != face[1].size(), Error::FILE_CORRUPT);
 			for (int i = 2; i < v.size() - 1; i++) {
 				face[2] = v[i + 1].split("/");
 
-				ERR_FAIL_COND_V(face[0].size() != face[2].size(), ERR_FILE_CORRUPT);
+				ERR_FAIL_COND_V(face[0].size() != face[2].size(), Error::FILE_CORRUPT);
 				for (int j = 0; j < 3; j++) {
 					int idx = j;
 
@@ -325,7 +325,7 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 						if (norm < 0) {
 							norm += normals.size() + 1;
 						}
-						ERR_FAIL_INDEX_V(norm, normals.size(), ERR_FILE_CORRUPT);
+						ERR_FAIL_INDEX_V(norm, normals.size(), Error::FILE_CORRUPT);
 						surf_tool->set_normal(normals[norm]);
 						if (generate_tangents && uvs.is_empty()) {
 							// We can't generate tangents without UVs, so create dummy tangents.
@@ -345,7 +345,7 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 						if (uv < 0) {
 							uv += uvs.size() + 1;
 						}
-						ERR_FAIL_INDEX_V(uv, uvs.size(), ERR_FILE_CORRUPT);
+						ERR_FAIL_INDEX_V(uv, uvs.size(), Error::FILE_CORRUPT);
 						surf_tool->set_uv(uvs[uv]);
 					}
 
@@ -353,7 +353,7 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 					if (vtx < 0) {
 						vtx += vertices.size() + 1;
 					}
-					ERR_FAIL_INDEX_V(vtx, vertices.size(), ERR_FILE_CORRUPT);
+					ERR_FAIL_INDEX_V(vtx, vertices.size(), Error::FILE_CORRUPT);
 
 					Vector3 vertex = vertices[vtx];
 					if (!colors.is_empty()) {
@@ -461,7 +461,7 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 					lib_path = p_path.get_base_dir().path_join(current_material_library);
 				}
 				Error err = _parse_material_library(lib_path, lib, r_missing_deps);
-				if (err == OK) {
+				if (err == Error::OK) {
 					material_map[current_material_library] = lib;
 				}
 			}
@@ -472,7 +472,7 @@ static Error _parse_obj(const String &p_path, List<Ref<ImporterMesh>> &r_meshes,
 		r_meshes.push_back(mesh);
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Node *EditorOBJImporter::import_scene(const String &p_path, uint32_t p_flags, const HashMap<StringName, Variant> &p_options, List<String> *r_missing_deps, Error *r_err) {
@@ -480,7 +480,7 @@ Node *EditorOBJImporter::import_scene(const String &p_path, uint32_t p_flags, co
 
 	Error err = _parse_obj(p_path, meshes, false, p_flags & IMPORT_GENERATE_TANGENT_ARRAYS, false, Vector3(1, 1, 1), Vector3(0, 0, 0), p_flags & IMPORT_FORCE_DISABLE_MESH_COMPRESSION, r_missing_deps);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		if (r_err) {
 			*r_err = err;
 		}
@@ -498,7 +498,7 @@ Node *EditorOBJImporter::import_scene(const String &p_path, uint32_t p_flags, co
 	}
 
 	if (r_err) {
-		*r_err = OK;
+		*r_err = Error::OK;
 	}
 
 	return scene;
@@ -562,18 +562,18 @@ Error ResourceImporterOBJ::import(const String &p_source_file, const String &p_s
 
 	Error err = _parse_obj(p_source_file, meshes, true, p_options["generate_tangents"], p_options["optimize_mesh"], p_options["scale_mesh"], p_options["offset_mesh"], p_options["force_disable_mesh_compression"], nullptr);
 
-	ERR_FAIL_COND_V(err != OK, err);
-	ERR_FAIL_COND_V(meshes.size() != 1, ERR_BUG);
+	ERR_FAIL_COND_V(err != Error::OK, err);
+	ERR_FAIL_COND_V(meshes.size() != 1, Error::BUG);
 
 	String save_path = p_save_path + ".mesh";
 
 	err = ResourceSaver::save(meshes.front()->get()->get_mesh(), save_path);
 
-	ERR_FAIL_COND_V_MSG(err != OK, err, "Cannot save Mesh to file '" + save_path + "'.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Cannot save Mesh to file '" + save_path + "'.");
 
 	r_gen_files->push_back(save_path);
 
-	return OK;
+	return Error::OK;
 }
 
 ResourceImporterOBJ::ResourceImporterOBJ() {

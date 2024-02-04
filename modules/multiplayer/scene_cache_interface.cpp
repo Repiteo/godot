@@ -186,14 +186,14 @@ Error SceneCacheInterface::_send_confirm_path(Node *p_node, NodeCache &p_cache, 
 	ofs += encode_cstring(path.get_data(), &packet.write[ofs]);
 
 	Ref<MultiplayerPeer> multiplayer_peer = multiplayer->get_multiplayer_peer();
-	ERR_FAIL_COND_V(multiplayer_peer.is_null(), ERR_BUG);
+	ERR_FAIL_COND_V(multiplayer_peer.is_null(), Error::BUG);
 
-	Error err = OK;
+	Error err = Error::OK;
 	for (int peer_id : p_peers) {
 		multiplayer_peer->set_transfer_channel(0);
 		multiplayer_peer->set_transfer_mode(MultiplayerPeer::TRANSFER_MODE_RELIABLE);
 		err = multiplayer->send_command(peer_id, packet.ptr(), packet.size());
-		ERR_FAIL_COND_V(err != OK, err);
+		ERR_FAIL_COND_V(err != Error::OK, err);
 		// Insert into confirmed, but as false since it was not confirmed.
 		p_cache.confirmed_peers.insert(peer_id, false);
 		ERR_CONTINUE(!peers_info.has(peer_id));

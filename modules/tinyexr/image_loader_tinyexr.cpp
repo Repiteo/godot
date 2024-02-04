@@ -40,7 +40,7 @@
 Error ImageLoaderTinyEXR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField<ImageFormatLoader::LoaderFlags> p_flags, float p_scale) {
 	Vector<uint8_t> src_image;
 	uint64_t src_image_len = f->get_length();
-	ERR_FAIL_COND_V(src_image_len == 0, ERR_FILE_CORRUPT);
+	ERR_FAIL_COND_V(src_image_len == 0, Error::FILE_CORRUPT);
 	src_image.resize(src_image_len);
 
 	uint8_t *w = src_image.ptrw();
@@ -61,7 +61,7 @@ Error ImageLoaderTinyEXR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitF
 
 	int ret = ParseEXRVersionFromMemory(&exr_version, w, src_image_len);
 	if (ret != TINYEXR_SUCCESS) {
-		return ERR_FILE_CORRUPT;
+		return Error::FILE_CORRUPT;
 	}
 
 	ret = ParseEXRHeaderFromMemory(&exr_header, &exr_version, w, src_image_len, &err);
@@ -70,7 +70,7 @@ Error ImageLoaderTinyEXR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitF
 			ERR_PRINT(String(err));
 			FreeEXRErrorMessage(err);
 		}
-		return ERR_FILE_CORRUPT;
+		return Error::FILE_CORRUPT;
 	}
 
 	// Read HALF channel as FLOAT. (GH-13490)
@@ -89,7 +89,7 @@ Error ImageLoaderTinyEXR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitF
 			ERR_PRINT(String(err));
 			FreeEXRErrorMessage(err);
 		}
-		return ERR_FILE_CORRUPT;
+		return Error::FILE_CORRUPT;
 	}
 
 	// RGBA
@@ -125,18 +125,18 @@ Error ImageLoaderTinyEXR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitF
 		format = use_float16 ? Image::FORMAT_RGBAH : Image::FORMAT_RGBAF;
 		output_channels = 4;
 	} else if (idxB != -1) {
-		ERR_FAIL_COND_V(idxG == -1, ERR_FILE_CORRUPT);
-		ERR_FAIL_COND_V(idxR == -1, ERR_FILE_CORRUPT);
+		ERR_FAIL_COND_V(idxG == -1, Error::FILE_CORRUPT);
+		ERR_FAIL_COND_V(idxR == -1, Error::FILE_CORRUPT);
 		imgdata.resize(exr_image.width * exr_image.height * 3 * channel_size); //RGB
 		format = use_float16 ? Image::FORMAT_RGBH : Image::FORMAT_RGBF;
 		output_channels = 3;
 	} else if (idxG != -1) {
-		ERR_FAIL_COND_V(idxR == -1, ERR_FILE_CORRUPT);
+		ERR_FAIL_COND_V(idxR == -1, Error::FILE_CORRUPT);
 		imgdata.resize(exr_image.width * exr_image.height * 2 * channel_size); //RG
 		format = use_float16 ? Image::FORMAT_RGH : Image::FORMAT_RGF;
 		output_channels = 2;
 	} else {
-		ERR_FAIL_COND_V(idxR == -1, ERR_FILE_CORRUPT);
+		ERR_FAIL_COND_V(idxR == -1, Error::FILE_CORRUPT);
 		imgdata.resize(exr_image.width * exr_image.height * 1 * channel_size); //R
 		format = use_float16 ? Image::FORMAT_RH : Image::FORMAT_RF;
 		output_channels = 1;
@@ -287,7 +287,7 @@ Error ImageLoaderTinyEXR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitF
 	FreeEXRHeader(&exr_header);
 	FreeEXRImage(&exr_image);
 
-	return OK;
+	return Error::OK;
 }
 
 void ImageLoaderTinyEXR::get_recognized_extensions(List<String> *p_extensions) const {

@@ -63,7 +63,7 @@ func _init():
 	ERR_PRINT_OFF;
 	const Error error = gdscript->reload();
 	ERR_PRINT_ON;
-	CHECK_MESSAGE(error == OK, "The script should parse successfully.");
+	CHECK_MESSAGE(error == Error::OK, "The script should parse successfully.");
 
 	// Run the script by assigning it to a reference-counted object.
 	Ref<RefCounted> ref_counted = memnew(RefCounted);

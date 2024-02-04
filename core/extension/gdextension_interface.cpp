@@ -875,7 +875,7 @@ static void gdextension_string_operator_plus_eq_c32str(GDExtensionStringPtr p_se
 
 static GDExtensionInt gdextension_string_resize(GDExtensionStringPtr p_self, GDExtensionInt p_length) {
 	String *self = (String *)p_self;
-	return (*self).resize(p_length);
+	return (int)(*self).resize(p_length);
 }
 
 static void gdextension_string_name_new_with_latin1_chars(GDExtensionUninitializedStringNamePtr r_dest, const char *p_contents, GDExtensionBool p_is_static) {
@@ -1388,7 +1388,7 @@ static void gdextension_editor_help_load_xml_from_utf8_chars(const char *p_data)
 #endif
 }
 
-#define REGISTER_INTERFACE_FUNC(m_name) GDExtension::register_interface_function(#m_name, (GDExtensionInterfaceFunctionPtr)&gdextension_##m_name)
+#define REGISTER_INTERFACE_FUNC(m_name) GDExtension::register_interface_function(#m_name, (GDExtensionInterfaceFunctionPtr) & gdextension_##m_name)
 
 void gdextension_setup_interface() {
 	REGISTER_INTERFACE_FUNC(get_godot_version);

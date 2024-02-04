@@ -333,7 +333,7 @@ void AcceptDialog::remove_button(Control *p_button) {
 	Button *button = Object::cast_to<Button>(p_button);
 	ERR_FAIL_NULL(button);
 	ERR_FAIL_COND_MSG(button->get_parent() != buttons_hbox, vformat("Cannot remove button %s as it does not belong to this dialog.", button->get_name()));
-	ERR_FAIL_COND_MSG(button == ok_button, "Cannot remove dialog's OK button.");
+	ERR_FAIL_COND_MSG(button == ok_button, "Cannot remove dialog's Error::OK button.");
 
 	Control *right_spacer = Object::cast_to<Control>(button->get_meta("__right_spacer"));
 	if (right_spacer) {

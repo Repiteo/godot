@@ -104,7 +104,7 @@ Error ResourceImporterOggVorbis::import(const String &p_source_file, const Strin
 
 	Ref<AudioStreamOggVorbis> ogg_vorbis_stream = load_from_file(p_source_file);
 	if (ogg_vorbis_stream.is_null()) {
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
 	ogg_vorbis_stream->set_loop(loop);
@@ -144,17 +144,17 @@ Ref<AudioStreamOggVorbis> ResourceImporterOggVorbis::load_from_buffer(const Vect
 	bool done = false;
 	while (!done) {
 		err = ogg_sync_check(&sync_state);
-		ERR_FAIL_COND_V_MSG(err != 0, Ref<AudioStreamOggVorbis>(), "Ogg sync error " + itos(err));
+		ERR_FAIL_COND_V_MSG(err != 0, Ref<AudioStreamOggVorbis>(), "Ogg sync error " + itos((int)err));
 		while (ogg_sync_pageout(&sync_state, &page) != 1) {
 			if (cursor >= size_t(file_data.size())) {
 				done = true;
 				break;
 			}
 			err = ogg_sync_check(&sync_state);
-			ERR_FAIL_COND_V_MSG(err != 0, Ref<AudioStreamOggVorbis>(), "Ogg sync error " + itos(err));
+			ERR_FAIL_COND_V_MSG(err != 0, Ref<AudioStreamOggVorbis>(), "Ogg sync error " + itos((int)err));
 			char *sync_buf = ogg_sync_buffer(&sync_state, OGG_SYNC_BUFFER_SIZE);
 			err = ogg_sync_check(&sync_state);
-			ERR_FAIL_COND_V_MSG(err != 0, Ref<AudioStreamOggVorbis>(), "Ogg sync error " + itos(err));
+			ERR_FAIL_COND_V_MSG(err != 0, Ref<AudioStreamOggVorbis>(), "Ogg sync error " + itos((int)err));
 			ERR_FAIL_COND_V(cursor > size_t(file_data.size()), Ref<AudioStreamOggVorbis>());
 			size_t copy_size = file_data.size() - cursor;
 			if (copy_size > OGG_SYNC_BUFFER_SIZE) {
@@ -164,13 +164,13 @@ Ref<AudioStreamOggVorbis> ResourceImporterOggVorbis::load_from_buffer(const Vect
 			ogg_sync_wrote(&sync_state, copy_size);
 			cursor += copy_size;
 			err = ogg_sync_check(&sync_state);
-			ERR_FAIL_COND_V_MSG(err != 0, Ref<AudioStreamOggVorbis>(), "Ogg sync error " + itos(err));
+			ERR_FAIL_COND_V_MSG(err != 0, Ref<AudioStreamOggVorbis>(), "Ogg sync error " + itos((int)err));
 		}
 		if (done) {
 			break;
 		}
 		err = ogg_sync_check(&sync_state);
-		ERR_FAIL_COND_V_MSG(err != 0, Ref<AudioStreamOggVorbis>(), "Ogg sync error " + itos(err));
+		ERR_FAIL_COND_V_MSG(err != 0, Ref<AudioStreamOggVorbis>(), "Ogg sync error " + itos((int)err));
 
 		// Have a page now.
 		if (!initialized_stream) {
@@ -181,7 +181,7 @@ Ref<AudioStreamOggVorbis> ResourceImporterOggVorbis::load_from_buffer(const Vect
 		}
 		ogg_stream_pagein(&stream_state, &page);
 		err = ogg_stream_check(&stream_state);
-		ERR_FAIL_COND_V_MSG(err != 0, Ref<AudioStreamOggVorbis>(), "Ogg stream error " + itos(err));
+		ERR_FAIL_COND_V_MSG(err != 0, Ref<AudioStreamOggVorbis>(), "Ogg stream error " + itos((int)err));
 		int desync_iters = 0;
 
 		RBMap<uint64_t, Vector<Vector<uint8_t>>> sorted_packets;

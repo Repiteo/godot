@@ -178,7 +178,7 @@ Error MIDIDriverALSAMidi::open() {
 	void **hints;
 
 	if (snd_device_name_hint(-1, "rawmidi", &hints) < 0) {
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
 	int i = 0;
@@ -202,7 +202,7 @@ Error MIDIDriverALSAMidi::open() {
 	exit_thread.clear();
 	thread.start(MIDIDriverALSAMidi::thread_func, this);
 
-	return OK;
+	return Error::OK;
 }
 
 void MIDIDriverALSAMidi::close() {

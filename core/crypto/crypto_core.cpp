@@ -59,7 +59,7 @@ CryptoCore::RandomGenerator::~RandomGenerator() {
 int CryptoCore::RandomGenerator::_entropy_poll(void *p_data, unsigned char *r_buffer, size_t p_len, size_t *r_len) {
 	*r_len = 0;
 	Error err = OS::get_singleton()->get_entropy(r_buffer, p_len);
-	ERR_FAIL_COND_V(err, MBEDTLS_ERR_ENTROPY_SOURCE_FAILED);
+	ERR_FAIL_COND_V(err != Error::OK, MBEDTLS_ERR_ENTROPY_SOURCE_FAILED);
 	*r_len = p_len;
 	return 0;
 }
@@ -67,16 +67,16 @@ int CryptoCore::RandomGenerator::_entropy_poll(void *p_data, unsigned char *r_bu
 Error CryptoCore::RandomGenerator::init() {
 	int ret = mbedtls_ctr_drbg_seed((mbedtls_ctr_drbg_context *)ctx, mbedtls_entropy_func, (mbedtls_entropy_context *)entropy, nullptr, 0);
 	if (ret) {
-		ERR_FAIL_COND_V_MSG(ret, FAILED, " failed\n  ! mbedtls_ctr_drbg_seed returned an error" + itos(ret));
+		ERR_FAIL_COND_V_MSG(ret, Error::FAILED, " failed\n  ! mbedtls_ctr_drbg_seed returned an error" + itos(ret));
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error CryptoCore::RandomGenerator::get_random_bytes(uint8_t *r_buffer, size_t p_bytes) {
-	ERR_FAIL_NULL_V(ctx, ERR_UNCONFIGURED);
+	ERR_FAIL_NULL_V(ctx, Error::UNCONFIGURED);
 	int ret = mbedtls_ctr_drbg_random((mbedtls_ctr_drbg_context *)ctx, r_buffer, p_bytes);
-	ERR_FAIL_COND_V_MSG(ret, FAILED, " failed\n  ! mbedtls_ctr_drbg_seed returned an error" + itos(ret));
-	return OK;
+	ERR_FAIL_COND_V_MSG(ret, Error::FAILED, " failed\n  ! mbedtls_ctr_drbg_seed returned an error" + itos(ret));
+	return Error::OK;
 }
 
 // MD5
@@ -92,17 +92,17 @@ CryptoCore::MD5Context::~MD5Context() {
 
 Error CryptoCore::MD5Context::start() {
 	int ret = mbedtls_md5_starts_ret((mbedtls_md5_context *)ctx);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::MD5Context::update(const uint8_t *p_src, size_t p_len) {
 	int ret = mbedtls_md5_update_ret((mbedtls_md5_context *)ctx, p_src, p_len);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::MD5Context::finish(unsigned char r_hash[16]) {
 	int ret = mbedtls_md5_finish_ret((mbedtls_md5_context *)ctx, r_hash);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 // SHA1
@@ -118,17 +118,17 @@ CryptoCore::SHA1Context::~SHA1Context() {
 
 Error CryptoCore::SHA1Context::start() {
 	int ret = mbedtls_sha1_starts_ret((mbedtls_sha1_context *)ctx);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::SHA1Context::update(const uint8_t *p_src, size_t p_len) {
 	int ret = mbedtls_sha1_update_ret((mbedtls_sha1_context *)ctx, p_src, p_len);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::SHA1Context::finish(unsigned char r_hash[20]) {
 	int ret = mbedtls_sha1_finish_ret((mbedtls_sha1_context *)ctx, r_hash);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 // SHA256
@@ -144,17 +144,17 @@ CryptoCore::SHA256Context::~SHA256Context() {
 
 Error CryptoCore::SHA256Context::start() {
 	int ret = mbedtls_sha256_starts_ret((mbedtls_sha256_context *)ctx, 0);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::SHA256Context::update(const uint8_t *p_src, size_t p_len) {
 	int ret = mbedtls_sha256_update_ret((mbedtls_sha256_context *)ctx, p_src, p_len);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::SHA256Context::finish(unsigned char r_hash[32]) {
 	int ret = mbedtls_sha256_finish_ret((mbedtls_sha256_context *)ctx, r_hash);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 // AES256
@@ -170,44 +170,44 @@ CryptoCore::AESContext::~AESContext() {
 
 Error CryptoCore::AESContext::set_encode_key(const uint8_t *p_key, size_t p_bits) {
 	int ret = mbedtls_aes_setkey_enc((mbedtls_aes_context *)ctx, p_key, p_bits);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::AESContext::set_decode_key(const uint8_t *p_key, size_t p_bits) {
 	int ret = mbedtls_aes_setkey_dec((mbedtls_aes_context *)ctx, p_key, p_bits);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::AESContext::encrypt_ecb(const uint8_t p_src[16], uint8_t r_dst[16]) {
 	int ret = mbedtls_aes_crypt_ecb((mbedtls_aes_context *)ctx, MBEDTLS_AES_ENCRYPT, p_src, r_dst);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::AESContext::encrypt_cbc(size_t p_length, uint8_t r_iv[16], const uint8_t *p_src, uint8_t *r_dst) {
 	int ret = mbedtls_aes_crypt_cbc((mbedtls_aes_context *)ctx, MBEDTLS_AES_ENCRYPT, p_length, r_iv, p_src, r_dst);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::AESContext::encrypt_cfb(size_t p_length, uint8_t p_iv[16], const uint8_t *p_src, uint8_t *r_dst) {
 	size_t iv_off = 0; // Ignore and assume 16-byte alignment.
 	int ret = mbedtls_aes_crypt_cfb128((mbedtls_aes_context *)ctx, MBEDTLS_AES_ENCRYPT, p_length, &iv_off, p_iv, p_src, r_dst);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::AESContext::decrypt_ecb(const uint8_t p_src[16], uint8_t r_dst[16]) {
 	int ret = mbedtls_aes_crypt_ecb((mbedtls_aes_context *)ctx, MBEDTLS_AES_DECRYPT, p_src, r_dst);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::AESContext::decrypt_cbc(size_t p_length, uint8_t r_iv[16], const uint8_t *p_src, uint8_t *r_dst) {
 	int ret = mbedtls_aes_crypt_cbc((mbedtls_aes_context *)ctx, MBEDTLS_AES_DECRYPT, p_length, r_iv, p_src, r_dst);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::AESContext::decrypt_cfb(size_t p_length, uint8_t p_iv[16], const uint8_t *p_src, uint8_t *r_dst) {
 	size_t iv_off = 0; // Ignore and assume 16-byte alignment.
 	int ret = mbedtls_aes_crypt_cfb128((mbedtls_aes_context *)ctx, MBEDTLS_AES_DECRYPT, p_length, &iv_off, p_iv, p_src, r_dst);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 // CryptoCore
@@ -217,32 +217,32 @@ String CryptoCore::b64_encode_str(const uint8_t *p_src, int p_src_len) {
 	b64buff.resize(b64len);
 	uint8_t *w64 = b64buff.ptrw();
 	size_t strlen = 0;
-	int ret = b64_encode(&w64[0], b64len, &strlen, p_src, p_src_len);
+	int ret = (int)b64_encode(&w64[0], b64len, &strlen, p_src, p_src_len);
 	w64[strlen] = 0;
 	return ret ? String() : (const char *)&w64[0];
 }
 
 Error CryptoCore::b64_encode(uint8_t *r_dst, int p_dst_len, size_t *r_len, const uint8_t *p_src, int p_src_len) {
 	int ret = mbedtls_base64_encode(r_dst, p_dst_len, r_len, p_src, p_src_len);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::b64_decode(uint8_t *r_dst, int p_dst_len, size_t *r_len, const uint8_t *p_src, int p_src_len) {
 	int ret = mbedtls_base64_decode(r_dst, p_dst_len, r_len, p_src, p_src_len);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::md5(const uint8_t *p_src, int p_src_len, unsigned char r_hash[16]) {
 	int ret = mbedtls_md5_ret(p_src, p_src_len, r_hash);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::sha1(const uint8_t *p_src, int p_src_len, unsigned char r_hash[20]) {
 	int ret = mbedtls_sha1_ret(p_src, p_src_len, r_hash);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error CryptoCore::sha256(const uint8_t *p_src, int p_src_len, unsigned char r_hash[32]) {
 	int ret = mbedtls_sha256_ret(p_src, p_src_len, r_hash, 0);
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }

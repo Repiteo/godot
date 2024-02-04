@@ -62,12 +62,12 @@ int ENetMultiplayerPeer::get_packet_channel() const {
 }
 
 Error ENetMultiplayerPeer::create_server(int p_port, int p_max_clients, int p_max_channels, int p_in_bandwidth, int p_out_bandwidth) {
-	ERR_FAIL_COND_V_MSG(_is_active(), ERR_ALREADY_IN_USE, "The multiplayer instance is already active.");
+	ERR_FAIL_COND_V_MSG(_is_active(), Error::ALREADY_IN_USE, "The multiplayer instance is already active.");
 	set_refuse_new_connections(false);
 	Ref<ENetConnection> host;
 	host.instantiate();
 	Error err = host->create_host_bound(bind_ip, p_port, p_max_clients, 0, p_max_channels > 0 ? p_max_channels + SYSCH_MAX : 0, p_out_bandwidth);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 
@@ -75,11 +75,11 @@ Error ENetMultiplayerPeer::create_server(int p_port, int p_max_clients, int p_ma
 	unique_id = 1;
 	connection_status = CONNECTION_CONNECTED;
 	hosts[0] = host;
-	return OK;
+	return Error::OK;
 }
 
 Error ENetMultiplayerPeer::create_client(const String &p_address, int p_port, int p_channel_count, int p_in_bandwidth, int p_out_bandwidth, int p_local_port) {
-	ERR_FAIL_COND_V_MSG(_is_active(), ERR_ALREADY_IN_USE, "The multiplayer instance is already active.");
+	ERR_FAIL_COND_V_MSG(_is_active(), Error::ALREADY_IN_USE, "The multiplayer instance is already active.");
 	set_refuse_new_connections(false);
 	Ref<ENetConnection> host;
 	host.instantiate();
@@ -89,7 +89,7 @@ Error ENetMultiplayerPeer::create_client(const String &p_address, int p_port, in
 	} else {
 		err = host->create_host(1, 0, p_in_bandwidth, p_out_bandwidth);
 	}
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 
@@ -98,7 +98,7 @@ Error ENetMultiplayerPeer::create_client(const String &p_address, int p_port, in
 	Ref<ENetPacketPeer> peer = host->connect_to_host(p_address, p_port, p_channel_count > 0 ? p_channel_count + SYSCH_MAX : 0, unique_id);
 	if (peer.is_null()) {
 		host->destroy();
-		ERR_FAIL_V_MSG(ERR_CANT_CREATE, "Couldn't connect to the ENet multiplayer server.");
+		ERR_FAIL_V_MSG(Error::CANT_CREATE, "Couldn't connect to the ENet multiplayer server.");
 	}
 
 	// Need to wait for CONNECT event.
@@ -107,28 +107,28 @@ Error ENetMultiplayerPeer::create_client(const String &p_address, int p_port, in
 	peers[1] = peer;
 	hosts[0] = host;
 
-	return OK;
+	return Error::OK;
 }
 
 Error ENetMultiplayerPeer::create_mesh(int p_id) {
-	ERR_FAIL_COND_V_MSG(p_id <= 0, ERR_INVALID_PARAMETER, "The unique ID must be greater then 0");
-	ERR_FAIL_COND_V_MSG(_is_active(), ERR_ALREADY_IN_USE, "The multiplayer instance is already active.");
+	ERR_FAIL_COND_V_MSG(p_id <= 0, Error::INVALID_PARAMETER, "The unique ID must be greater then 0");
+	ERR_FAIL_COND_V_MSG(_is_active(), Error::ALREADY_IN_USE, "The multiplayer instance is already active.");
 	active_mode = MODE_MESH;
 	unique_id = p_id;
 	connection_status = CONNECTION_CONNECTED;
-	return OK;
+	return Error::OK;
 }
 
 Error ENetMultiplayerPeer::add_mesh_peer(int p_id, Ref<ENetConnection> p_host) {
-	ERR_FAIL_COND_V(p_host.is_null(), ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V_MSG(active_mode != MODE_MESH, ERR_UNCONFIGURED, "The multiplayer instance is not configured as a mesh. Call 'create_mesh' first.");
+	ERR_FAIL_COND_V(p_host.is_null(), Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V_MSG(active_mode != MODE_MESH, Error::UNCONFIGURED, "The multiplayer instance is not configured as a mesh. Call 'create_mesh' first.");
 	List<Ref<ENetPacketPeer>> host_peers;
 	p_host->get_peers(host_peers);
-	ERR_FAIL_COND_V_MSG(host_peers.size() != 1 || host_peers[0]->get_state() != ENetPacketPeer::STATE_CONNECTED, ERR_INVALID_PARAMETER, "The provided host must have exactly one peer in the connected state.");
+	ERR_FAIL_COND_V_MSG(host_peers.size() != 1 || host_peers[0]->get_state() != ENetPacketPeer::STATE_CONNECTED, Error::INVALID_PARAMETER, "The provided host must have exactly one peer in the connected state.");
 	hosts[p_id] = p_host;
 	peers[p_id] = host_peers[0];
 	emit_signal(SNAME("peer_connected"), p_id);
-	return OK;
+	return Error::OK;
 }
 
 void ENetMultiplayerPeer::_store_packet(int32_t p_source, ENetConnection::Event &p_event) {
@@ -321,7 +321,7 @@ int ENetMultiplayerPeer::get_available_packet_count() const {
 }
 
 Error ENetMultiplayerPeer::get_packet(const uint8_t **r_buffer, int &r_buffer_size) {
-	ERR_FAIL_COND_V_MSG(incoming_packets.size() == 0, ERR_UNAVAILABLE, "No incoming packets available.");
+	ERR_FAIL_COND_V_MSG(incoming_packets.size() == 0, Error::UNAVAILABLE, "No incoming packets available.");
 
 	_pop_current_packet();
 
@@ -331,14 +331,14 @@ Error ENetMultiplayerPeer::get_packet(const uint8_t **r_buffer, int &r_buffer_si
 	*r_buffer = (const uint8_t *)(current_packet.packet->data);
 	r_buffer_size = current_packet.packet->dataLength;
 
-	return OK;
+	return Error::OK;
 }
 
 Error ENetMultiplayerPeer::put_packet(const uint8_t *p_buffer, int p_buffer_size) {
-	ERR_FAIL_COND_V_MSG(!_is_active(), ERR_UNCONFIGURED, "The multiplayer instance isn't currently active.");
-	ERR_FAIL_COND_V_MSG(connection_status != CONNECTION_CONNECTED, ERR_UNCONFIGURED, "The multiplayer instance isn't currently connected to any server or client.");
-	ERR_FAIL_COND_V_MSG(target_peer != 0 && !peers.has(ABS(target_peer)), ERR_INVALID_PARAMETER, vformat("Invalid target peer: %d", target_peer));
-	ERR_FAIL_COND_V(active_mode == MODE_CLIENT && !peers.has(1), ERR_BUG);
+	ERR_FAIL_COND_V_MSG(!_is_active(), Error::UNCONFIGURED, "The multiplayer instance isn't currently active.");
+	ERR_FAIL_COND_V_MSG(connection_status != CONNECTION_CONNECTED, Error::UNCONFIGURED, "The multiplayer instance isn't currently connected to any server or client.");
+	ERR_FAIL_COND_V_MSG(target_peer != 0 && !peers.has(ABS(target_peer)), Error::INVALID_PARAMETER, vformat("Invalid target peer: %d", target_peer));
+	ERR_FAIL_COND_V(active_mode == MODE_CLIENT && !peers.has(1), Error::BUG);
 
 	int packet_flags = 0;
 	int channel = SYSCH_RELIABLE;
@@ -387,12 +387,12 @@ Error ENetMultiplayerPeer::put_packet(const uint8_t *p_buffer, int p_buffer_size
 		} else {
 			peers[target_peer]->send(channel, packet);
 		}
-		ERR_FAIL_COND_V(!hosts.has(0), ERR_BUG);
+		ERR_FAIL_COND_V(!hosts.has(0), Error::BUG);
 		hosts[0]->flush();
 
 	} else if (active_mode == MODE_CLIENT) {
 		peers[1]->send(channel, packet); // Send to server for broadcast.
-		ERR_FAIL_COND_V(!hosts.has(0), ERR_BUG);
+		ERR_FAIL_COND_V(!hosts.has(0), Error::BUG);
 		hosts[0]->flush();
 
 	} else {
@@ -409,12 +409,12 @@ Error ENetMultiplayerPeer::put_packet(const uint8_t *p_buffer, int p_buffer_size
 			_destroy_unused(packet);
 		} else {
 			peers[target_peer]->send(channel, packet);
-			ERR_FAIL_COND_V(!hosts.has(target_peer), ERR_BUG);
+			ERR_FAIL_COND_V(!hosts.has(target_peer), Error::BUG);
 			hosts[target_peer]->flush();
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 int ENetMultiplayerPeer::get_max_packet_size() const {

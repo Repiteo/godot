@@ -1123,7 +1123,7 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 			config->save(texture_path + ".import");
 
 			Error err = texture_image->save_exr(texture_path, false);
-			ERR_FAIL_COND_V(err, BAKE_ERROR_CANT_CREATE_IMAGE);
+			ERR_FAIL_COND_V(err != Error::OK, BAKE_ERROR_CANT_CREATE_IMAGE);
 			ResourceLoader::import(texture_path);
 			Ref<TextureLayered> t = ResourceLoader::load(texture_path); // If already loaded, it will be updated on refocus?
 			ERR_FAIL_COND_V(t.is_null(), BAKE_ERROR_CANT_CREATE_IMAGE);
@@ -1295,7 +1295,7 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 	gi_data->set_path(p_image_data_path);
 	Error err = ResourceSaver::save(gi_data);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		return BAKE_ERROR_CANT_CREATE_IMAGE;
 	}
 

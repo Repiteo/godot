@@ -1137,7 +1137,7 @@ void DynamicFontImportSettingsDialog::open_settings(const String &p_path) {
 
 	Error err = config->load(p_path + ".import");
 	print_verbose("Loading import settings:");
-	if (err == OK) {
+	if (err == Error::OK) {
 		List<String> keys;
 		config->get_section_keys("params", &keys);
 		for (List<String>::Element *E = keys.front(); E; E = E->next()) {

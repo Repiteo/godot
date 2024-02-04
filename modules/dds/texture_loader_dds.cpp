@@ -233,7 +233,7 @@ static DDSFormat dxgi_to_dds_format(uint32_t p_dxgi_format) {
 
 Ref<Resource> ResourceFormatDDS::load(const String &p_path, const String &p_original_path, Error *r_error, bool p_use_sub_threads, float *r_progress, CacheMode p_cache_mode) {
 	if (r_error) {
-		*r_error = ERR_CANT_OPEN;
+		*r_error = Error::CANT_OPEN;
 	}
 
 	Error err;
@@ -244,10 +244,10 @@ Ref<Resource> ResourceFormatDDS::load(const String &p_path, const String &p_orig
 
 	Ref<FileAccess> fref(f);
 	if (r_error) {
-		*r_error = ERR_FILE_CORRUPT;
+		*r_error = Error::FILE_CORRUPT;
 	}
 
-	ERR_FAIL_COND_V_MSG(err != OK, Ref<Resource>(), "Unable to open DDS texture file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Ref<Resource>(), "Unable to open DDS texture file '" + p_path + "'.");
 
 	uint32_t magic = f->get_32();
 	uint32_t hsize = f->get_32();
@@ -577,7 +577,7 @@ Ref<Resource> ResourceFormatDDS::load(const String &p_path, const String &p_orig
 	Ref<ImageTexture> texture = ImageTexture::create_from_image(img);
 
 	if (r_error) {
-		*r_error = OK;
+		*r_error = Error::OK;
 	}
 
 	return texture;

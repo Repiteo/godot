@@ -98,7 +98,7 @@ Error RemoteDebugger::_put_msg(String p_message, Array p_data) {
 	msg.push_back(Thread::get_caller_id());
 	msg.push_back(p_data);
 	Error err = peer->put_message(msg);
-	if (err != OK) {
+	if (err != Error::OK) {
 		n_messages_dropped++;
 	}
 	return err;
@@ -196,7 +196,7 @@ void RemoteDebugger::flush_output() {
 
 	if (n_messages_dropped > 0) {
 		ErrorMessage err_msg = _create_overflow_error("TOO_MANY_MESSAGES", "Too many messages! " + String::num_int64(n_messages_dropped) + " messages were dropped. Profiling might misbheave, try raising 'network/limits/debugger/max_queued_messages' in project setting.");
-		if (_put_msg("error", err_msg.serialize()) == OK) {
+		if (_put_msg("error", err_msg.serialize()) == Error::OK) {
 			n_messages_dropped = 0;
 		}
 	}
@@ -340,11 +340,11 @@ Error RemoteDebugger::_try_capture(const String &p_msg, const Array &p_data, boo
 	const int idx = p_msg.find(":");
 	r_captured = false;
 	if (idx < 0) { // No prefix, unknown message.
-		return OK;
+		return Error::OK;
 	}
 	const String cap = p_msg.substr(0, idx);
 	if (!has_capture(cap)) {
-		return ERR_UNAVAILABLE; // Unknown message...
+		return Error::UNAVAILABLE; // Unknown message...
 	}
 	const String msg = p_msg.substr(idx + 1);
 	return capture_parse(cap, msg, p_data, r_captured);
@@ -531,7 +531,7 @@ void RemoteDebugger::debug(bool p_can_continue, bool p_is_error_breakpoint) {
 				script_debugger->set_skip_breakpoints(data[0]);
 			} else {
 				bool captured = false;
-				ERR_CONTINUE(_try_capture(command, data, captured) != OK);
+				ERR_CONTINUE(_try_capture(command, data, captured) != Error::OK);
 				if (!captured) {
 					WARN_PRINT("Unknown message received from debugger: " + command);
 				}
@@ -601,10 +601,10 @@ void RemoteDebugger::poll_events(bool p_is_idle) {
 			Array scripts_to_reload;
 			for (int i = 0; i < script_paths_to_reload.size(); ++i) {
 				String path = script_paths_to_reload[i];
-				Error err = OK;
+				Error err = Error::OK;
 				Ref<Script> script = ResourceLoader::load(path, "", ResourceFormatLoader::CACHE_MODE_REUSE, &err);
-				ERR_CONTINUE_MSG(err != OK, vformat("Could not reload script '%s': %s", path, error_names[err]));
-				ERR_CONTINUE_MSG(script.is_null(), vformat("Could not reload script '%s': Not a script!", path, error_names[err]));
+				ERR_CONTINUE_MSG(err != Error::OK, vformat("Could not reload script '%s': %s", path, error_names[(int)err]));
+				ERR_CONTINUE_MSG(script.is_null(), vformat("Could not reload script '%s': Not a script!", path, error_names[(int)err]));
 				scripts_to_reload.push_back(script);
 			}
 			for (int i = 0; i < ScriptServer::get_language_count(); i++) {
@@ -622,7 +622,7 @@ Error RemoteDebugger::_core_capture(const String &p_cmd, const Array &p_data, bo
 	} else if (p_cmd == "reload_all_scripts") {
 		reload_all_scripts = true;
 	} else if (p_cmd == "breakpoint") {
-		ERR_FAIL_COND_V(p_data.size() < 3, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_data.size() < 3, Error::INVALID_DATA);
 		bool set = p_data[2];
 		if (set) {
 			script_debugger->insert_breakpoint(p_data[1], p_data[0]);
@@ -631,29 +631,29 @@ Error RemoteDebugger::_core_capture(const String &p_cmd, const Array &p_data, bo
 		}
 
 	} else if (p_cmd == "set_skip_breakpoints") {
-		ERR_FAIL_COND_V(p_data.size() < 1, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_data.size() < 1, Error::INVALID_DATA);
 		script_debugger->set_skip_breakpoints(p_data[0]);
 	} else if (p_cmd == "break") {
 		script_debugger->debug(script_debugger->get_break_language());
 	} else {
 		r_captured = false;
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error RemoteDebugger::_profiler_capture(const String &p_cmd, const Array &p_data, bool &r_captured) {
 	r_captured = false;
-	ERR_FAIL_COND_V(p_data.size() < 1, ERR_INVALID_DATA);
-	ERR_FAIL_COND_V(p_data[0].get_type() != Variant::BOOL, ERR_INVALID_DATA);
-	ERR_FAIL_COND_V(!has_profiler(p_cmd), ERR_UNAVAILABLE);
+	ERR_FAIL_COND_V(p_data.size() < 1, Error::INVALID_DATA);
+	ERR_FAIL_COND_V(p_data[0].get_type() != Variant::BOOL, Error::INVALID_DATA);
+	ERR_FAIL_COND_V(!has_profiler(p_cmd), Error::UNAVAILABLE);
 	Array opts;
 	if (p_data.size() > 1) { // Optional profiler parameters.
-		ERR_FAIL_COND_V(p_data[1].get_type() != Variant::ARRAY, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_data[1].get_type() != Variant::ARRAY, Error::INVALID_DATA);
 		opts = p_data[1];
 	}
 	r_captured = true;
 	profiler_enable(p_cmd, p_data[0], opts);
-	return OK;
+	return Error::OK;
 }
 
 RemoteDebugger::RemoteDebugger(Ref<RemoteDebuggerPeer> p_peer) {

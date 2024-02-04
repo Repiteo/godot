@@ -757,7 +757,7 @@ struct _VariantCall {
 
 		int result = Compression::decompress_dynamic(&decompressed, max_output_size, p_instance->ptr(), p_instance->size(), mode);
 
-		if (result == OK) {
+		if (result == (int)Error::OK) {
 			return decompressed;
 		} else {
 			decompressed.clear();
@@ -848,7 +848,7 @@ struct _VariantCall {
 		const uint8_t *r = p_instance->ptr();
 		Variant ret;
 		Error err = decode_variant(ret, r + p_offset, size - p_offset, nullptr, p_allow_objects);
-		return err == OK;
+		return err == Error::OK;
 	}
 
 	static Variant func_PackedByteArray_decode_var(PackedByteArray *p_instance, int64_t p_offset, bool p_allow_objects) {
@@ -857,7 +857,7 @@ struct _VariantCall {
 		const uint8_t *r = p_instance->ptr();
 		Variant ret;
 		Error err = decode_variant(ret, r + p_offset, size - p_offset, nullptr, p_allow_objects);
-		if (err != OK) {
+		if (err != Error::OK) {
 			ret = Variant();
 		}
 		return ret;
@@ -870,7 +870,7 @@ struct _VariantCall {
 		Variant ret;
 		int r_size;
 		Error err = decode_variant(ret, r + p_offset, size - p_offset, &r_size, p_allow_objects);
-		if (err == OK) {
+		if (err == Error::OK) {
 			return r_size;
 		}
 		return 0;
@@ -1008,7 +1008,7 @@ struct _VariantCall {
 		uint8_t *w = p_instance->ptrw();
 		int len;
 		Error err = encode_variant(p_value, nullptr, len, p_allow_objects);
-		if (err != OK) {
+		if (err != Error::OK) {
 			return -1;
 		}
 		if (uint64_t(p_offset + len) > size) {

@@ -85,20 +85,20 @@ TEST_CASE("[Image] Saving and loading") {
 	Error err;
 	err = image->save_png(save_path_png);
 	CHECK_MESSAGE(
-			err == OK,
+			err == Error::OK,
 			"The image should be saved successfully as a .png file.");
 
 	// Save EXR
 	err = image->save_exr(save_path_exr, false);
 	CHECK_MESSAGE(
-			err == OK,
+			err == Error::OK,
 			"The image should be saved successfully as an .exr file.");
 
 	// Load using load()
 	Ref<Image> image_load = memnew(Image());
 	err = image_load->load(save_path_png);
 	CHECK_MESSAGE(
-			err == OK,
+			err == Error::OK,
 			"The image should load successfully using load().");
 	CHECK_MESSAGE(
 			image->get_data() == image_load->get_data(),
@@ -112,7 +112,7 @@ TEST_CASE("[Image] Saving and loading") {
 	data_bmp.resize(f_bmp->get_length() + 1);
 	f_bmp->get_buffer(data_bmp.ptrw(), f_bmp->get_length());
 	CHECK_MESSAGE(
-			image_bmp->load_bmp_from_buffer(data_bmp) == OK,
+			image_bmp->load_bmp_from_buffer(data_bmp) == Error::OK,
 			"The BMP image should load successfully.");
 
 	// Load JPG
@@ -123,7 +123,7 @@ TEST_CASE("[Image] Saving and loading") {
 	data_jpg.resize(f_jpg->get_length() + 1);
 	f_jpg->get_buffer(data_jpg.ptrw(), f_jpg->get_length());
 	CHECK_MESSAGE(
-			image_jpg->load_jpg_from_buffer(data_jpg) == OK,
+			image_jpg->load_jpg_from_buffer(data_jpg) == Error::OK,
 			"The JPG image should load successfully.");
 
 	// Load WebP
@@ -134,7 +134,7 @@ TEST_CASE("[Image] Saving and loading") {
 	data_webp.resize(f_webp->get_length() + 1);
 	f_webp->get_buffer(data_webp.ptrw(), f_webp->get_length());
 	CHECK_MESSAGE(
-			image_webp->load_webp_from_buffer(data_webp) == OK,
+			image_webp->load_webp_from_buffer(data_webp) == Error::OK,
 			"The WebP image should load successfully.");
 
 	// Load PNG
@@ -145,7 +145,7 @@ TEST_CASE("[Image] Saving and loading") {
 	data_png.resize(f_png->get_length() + 1);
 	f_png->get_buffer(data_png.ptrw(), f_png->get_length());
 	CHECK_MESSAGE(
-			image_png->load_png_from_buffer(data_png) == OK,
+			image_png->load_png_from_buffer(data_png) == Error::OK,
 			"The PNG image should load successfully.");
 
 	// Load TGA
@@ -156,7 +156,7 @@ TEST_CASE("[Image] Saving and loading") {
 	data_tga.resize(f_tga->get_length() + 1);
 	f_tga->get_buffer(data_tga.ptrw(), f_tga->get_length());
 	CHECK_MESSAGE(
-			image_tga->load_tga_from_buffer(data_tga) == OK,
+			image_tga->load_tga_from_buffer(data_tga) == Error::OK,
 			"The TGA image should load successfully.");
 }
 

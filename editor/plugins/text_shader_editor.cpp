@@ -97,7 +97,7 @@ void ShaderTextEditor::_notification(int p_what) {
 		case NOTIFICATION_THEME_CHANGED: {
 			if (is_visible_in_tree()) {
 				_load_theme_settings();
-				if (warnings.size() > 0 && last_compile_result == OK) {
+				if (warnings.size() > 0 && last_compile_result == Error::OK) {
 					warnings_panel->clear();
 					_update_warning_panel();
 				}
@@ -471,7 +471,7 @@ void ShaderTextEditor::_validate_script() {
 	set_error("");
 	set_error_count(0);
 
-	if (last_compile_result != OK) {
+	if (last_compile_result != Error::OK) {
 		//preprocessor error
 		ERR_FAIL_COND(err_positions.size() == 0);
 
@@ -534,7 +534,7 @@ void ShaderTextEditor::_validate_script() {
 		//compiler error
 		last_compile_result = sl.compile(code, comp_info);
 
-		if (last_compile_result != OK) {
+		if (last_compile_result != Error::OK) {
 			String err_text;
 			int err_line;
 			Vector<ShaderLanguage::FilePosition> include_positions = sl.get_include_positions();
@@ -555,14 +555,14 @@ void ShaderTextEditor::_validate_script() {
 			set_error("");
 		}
 
-		if (warnings.size() > 0 || last_compile_result != OK) {
+		if (warnings.size() > 0 || last_compile_result != Error::OK) {
 			warnings_panel->clear();
 		}
 		warnings.clear();
 		for (List<ShaderWarning>::Element *E = sl.get_warnings_ptr(); E; E = E->next()) {
 			warnings.push_back(E->get());
 		}
-		if (warnings.size() > 0 && last_compile_result == OK) {
+		if (warnings.size() > 0 && last_compile_result == Error::OK) {
 			warnings.sort_custom<WarningsComparator>();
 			_update_warning_panel();
 		} else {
@@ -570,7 +570,7 @@ void ShaderTextEditor::_validate_script() {
 		}
 	}
 
-	emit_signal(SNAME("script_validated"), last_compile_result == OK); // Notify that validation finished, to update the list of scripts
+	emit_signal(SNAME("script_validated"), last_compile_result == Error::OK); // Notify that validation finished, to update the list of scripts
 }
 
 void ShaderTextEditor::_update_warning_panel() {

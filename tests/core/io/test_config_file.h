@@ -63,7 +63,7 @@ antialiasing = true
 antiAliasing = false
 )");
 
-	CHECK_MESSAGE(error == OK, "The configuration file should parse successfully.");
+	CHECK_MESSAGE(error == Error::OK, "The configuration file should parse successfully.");
 	CHECK_MESSAGE(
 			String(config_file.get_value("player", "name")) == "Unnamed Player",
 			"Reading `player/name` should return the expected value.");
@@ -85,7 +85,7 @@ antiAliasing = false
 
 	// An empty ConfigFile is valid.
 	const Error error_empty = config_file.parse("");
-	CHECK_MESSAGE(error_empty == OK,
+	CHECK_MESSAGE(error_empty == Error::OK,
 			"An empty configuration file should parse successfully.");
 }
 
@@ -111,7 +111,7 @@ antialiasing = false ; Duplicate key.
 )");
 	ERR_PRINT_ON;
 
-	CHECK_MESSAGE(error == ERR_PARSE_ERROR,
+	CHECK_MESSAGE(error == Error::PARSE_ERROR,
 			"The configuration file shouldn't parse successfully.");
 }
 

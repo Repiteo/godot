@@ -366,9 +366,9 @@ Error GDScriptParser::parse(const String &p_source_code, const String &p_script_
 #endif
 
 	if (errors.is_empty()) {
-		return OK;
+		return Error::OK;
 	} else {
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 }
 

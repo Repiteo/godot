@@ -1115,7 +1115,7 @@ void ScriptEditor::_file_dialog_action(String p_file) {
 			Error err;
 			{
 				Ref<FileAccess> file = FileAccess::open(p_file, FileAccess::WRITE, &err);
-				if (err) {
+				if (err != Error::OK) {
 					EditorNode::get_singleton()->show_warning(TTR("Error writing TextFile:") + "\n" + p_file, TTR("Error!"));
 					break;
 				}
@@ -1143,7 +1143,7 @@ void ScriptEditor::_file_dialog_action(String p_file) {
 				String path = ProjectSettings::get_singleton()->localize_path(p_file);
 				Error err = _save_text_file(resource, path);
 
-				if (err != OK) {
+				if (err != Error::OK) {
 					EditorNode::get_singleton()->show_accept(TTR("Error saving file!"), TTR("OK"));
 					return;
 				}
@@ -1274,7 +1274,7 @@ void ScriptEditor::_menu_option(int p_option) {
 			} else {
 				Error error;
 				Ref<TextFile> text_file = _load_text_file(path, &error);
-				if (error != OK) {
+				if (error != Error::OK) {
 					EditorNode::get_singleton()->show_warning(TTR("Could not load file at:") + "\n\n" + path, TTR("Error!"));
 				}
 
@@ -1398,7 +1398,7 @@ void ScriptEditor::_menu_option(int p_option) {
 				current->apply_code();
 
 				Error err = scr->reload(false); // Always hard reload the script before running.
-				if (err != OK || !scr->is_valid()) {
+				if (err != Error::OK || !scr->is_valid()) {
 					EditorToaster::get_singleton()->popup_str(TTR("Cannot run the script because it contains errors, check the output log."), EditorToaster::SEVERITY_WARNING);
 					return;
 				}
@@ -2231,7 +2231,7 @@ void ScriptEditor::_update_script_names() {
 
 Ref<TextFile> ScriptEditor::_load_text_file(const String &p_path, Error *r_error) const {
 	if (r_error) {
-		*r_error = ERR_FILE_CANT_OPEN;
+		*r_error = Error::FILE_CANT_OPEN;
 	}
 
 	String local_path = ProjectSettings::get_singleton()->localize_path(p_path);
@@ -2241,7 +2241,7 @@ Ref<TextFile> ScriptEditor::_load_text_file(const String &p_path, Error *r_error
 	Ref<TextFile> text_res(text_file);
 	Error err = text_file->load_text(path);
 
-	ERR_FAIL_COND_V_MSG(err != OK, Ref<Resource>(), "Cannot load text file '" + path + "'.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Ref<Resource>(), "Cannot load text file '" + path + "'.");
 
 	text_file->set_file_path(local_path);
 	text_file->set_path(local_path, true);
@@ -2251,7 +2251,7 @@ Ref<TextFile> ScriptEditor::_load_text_file(const String &p_path, Error *r_error
 	}
 
 	if (r_error) {
-		*r_error = OK;
+		*r_error = Error::OK;
 	}
 
 	return text_res;
@@ -2259,7 +2259,7 @@ Ref<TextFile> ScriptEditor::_load_text_file(const String &p_path, Error *r_error
 
 Error ScriptEditor::_save_text_file(Ref<TextFile> p_text_file, const String &p_path) {
 	Ref<TextFile> sqscr = p_text_file;
-	ERR_FAIL_COND_V(sqscr.is_null(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(sqscr.is_null(), Error::INVALID_PARAMETER);
 
 	String source = sqscr->get_text();
 
@@ -2267,11 +2267,11 @@ Error ScriptEditor::_save_text_file(Ref<TextFile> p_text_file, const String &p_p
 	{
 		Ref<FileAccess> file = FileAccess::open(p_path, FileAccess::WRITE, &err);
 
-		ERR_FAIL_COND_V_MSG(err, err, "Cannot save text file '" + p_path + "'.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Cannot save text file '" + p_path + "'.");
 
 		file->store_string(source);
-		if (file->get_error() != OK && file->get_error() != ERR_FILE_EOF) {
-			return ERR_CANT_CREATE;
+		if (file->get_error() != Error::OK && file->get_error() != Error::FILE_EOF) {
+			return Error::CANT_CREATE;
 		}
 	}
 
@@ -2282,7 +2282,7 @@ Error ScriptEditor::_save_text_file(Ref<TextFile> p_text_file, const String &p_p
 	EditorFileSystem::get_singleton()->update_file(p_path);
 
 	_res_saved_callback(sqscr);
-	return OK;
+	return Error::OK;
 }
 
 bool ScriptEditor::edit(const Ref<Resource> &p_resource, int p_line, int p_col, bool p_grab_focus) {
@@ -2304,7 +2304,7 @@ bool ScriptEditor::edit(const Ref<Resource> &p_resource, int p_line, int p_col, 
 	if (scr.is_valid() && scr->get_language()->overrides_external_editor()) {
 		if (should_open) {
 			Error err = scr->get_language()->open_in_external_editor(scr, p_line >= 0 ? p_line : 0, p_col);
-			if (err != OK) {
+			if (err != Error::OK) {
 				ERR_PRINT("Couldn't open script in the overridden external text editor");
 			}
 		}
@@ -2365,7 +2365,7 @@ bool ScriptEditor::edit(const Ref<Resource> &p_resource, int p_line, int p_col, 
 
 		if (!path.is_empty()) {
 			Error err = OS::get_singleton()->create_process(path, args);
-			if (err == OK) {
+			if (err == Error::OK) {
 				return false;
 			}
 		}
@@ -2698,7 +2698,7 @@ Ref<Resource> ScriptEditor::open_file(const String &p_file) {
 
 	Error error;
 	Ref<TextFile> text_file = _load_text_file(p_file, &error);
-	if (error != OK) {
+	if (error != Error::OK) {
 		EditorNode::get_singleton()->show_warning(TTR("Could not load file at:") + "\n\n" + p_file, TTR("Error!"));
 		return Ref<Resource>();
 	}
@@ -2997,7 +2997,7 @@ bool ScriptEditor::can_drop_data_fw(const Point2 &p_point, const Variant &p_data
 			if (textfile_extensions.has(file.get_extension())) {
 				Error err;
 				Ref<TextFile> text_file = _load_text_file(file, &err);
-				if (text_file.is_valid() && err == OK) {
+				if (text_file.is_valid() && err == Error::OK) {
 					return true;
 				}
 			}
@@ -3257,7 +3257,7 @@ void ScriptEditor::set_window_layout(Ref<ConfigFile> p_layout) {
 		} else {
 			Error error;
 			Ref<TextFile> text_file = _load_text_file(path, &error);
-			if (error != OK || !text_file.is_valid()) {
+			if (error != Error::OK || !text_file.is_valid()) {
 				continue;
 			}
 			if (!edit(text_file, false)) {

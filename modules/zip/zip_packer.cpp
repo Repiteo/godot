@@ -40,14 +40,14 @@ Error ZIPPacker::open(const String &p_path, ZipAppend p_append) {
 
 	zlib_filefunc_def io = zipio_create_io(&fa);
 	zf = zipOpen2(p_path.utf8().get_data(), p_append, nullptr, &io);
-	return zf != nullptr ? OK : FAILED;
+	return zf != nullptr ? Error::OK : Error::FAILED;
 }
 
 Error ZIPPacker::close() {
-	ERR_FAIL_COND_V_MSG(fa.is_null(), FAILED, "ZIPPacker cannot be closed because it is not open.");
+	ERR_FAIL_COND_V_MSG(fa.is_null(), Error::FAILED, "ZIPPacker cannot be closed because it is not open.");
 
-	Error err = zipClose(zf, nullptr) == ZIP_OK ? OK : FAILED;
-	if (err == OK) {
+	Error err = zipClose(zf, nullptr) == ZIP_OK ? Error::OK : Error::FAILED;
+	if (err == Error::OK) {
 		DEV_ASSERT(fa == nullptr);
 		zf = nullptr;
 	}
@@ -56,7 +56,7 @@ Error ZIPPacker::close() {
 }
 
 Error ZIPPacker::start_file(const String &p_path) {
-	ERR_FAIL_COND_V_MSG(fa.is_null(), FAILED, "ZIPPacker must be opened before use.");
+	ERR_FAIL_COND_V_MSG(fa.is_null(), Error::FAILED, "ZIPPacker must be opened before use.");
 
 	zip_fileinfo zipfi;
 
@@ -90,19 +90,19 @@ Error ZIPPacker::start_file(const String &p_path) {
 			0,
 			0, // "version made by", indicates the compatibility of the file attribute information (the `external_fa` field above).
 			1 << 11); // Bit 11 is the language encoding flag. When set, filename and comment fields must be encoded using UTF-8.
-	return err == ZIP_OK ? OK : FAILED;
+	return err == ZIP_OK ? Error::OK : Error::FAILED;
 }
 
 Error ZIPPacker::write_file(const Vector<uint8_t> &p_data) {
-	ERR_FAIL_COND_V_MSG(fa.is_null(), FAILED, "ZIPPacker must be opened before use.");
+	ERR_FAIL_COND_V_MSG(fa.is_null(), Error::FAILED, "ZIPPacker must be opened before use.");
 
-	return zipWriteInFileInZip(zf, p_data.ptr(), p_data.size()) == ZIP_OK ? OK : FAILED;
+	return zipWriteInFileInZip(zf, p_data.ptr(), p_data.size()) == ZIP_OK ? Error::OK : Error::FAILED;
 }
 
 Error ZIPPacker::close_file() {
-	ERR_FAIL_COND_V_MSG(fa.is_null(), FAILED, "ZIPPacker must be opened before use.");
+	ERR_FAIL_COND_V_MSG(fa.is_null(), Error::FAILED, "ZIPPacker must be opened before use.");
 
-	return zipCloseFileInZip(zf) == ZIP_OK ? OK : FAILED;
+	return zipCloseFileInZip(zf) == ZIP_OK ? Error::OK : Error::FAILED;
 }
 
 void ZIPPacker::_bind_methods() {

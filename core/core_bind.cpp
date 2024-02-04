@@ -67,10 +67,10 @@ Ref<Resource> ResourceLoader::load_threaded_get(const String &p_path) {
 }
 
 Ref<Resource> ResourceLoader::load(const String &p_path, const String &p_type_hint, CacheMode p_cache_mode) {
-	Error err = OK;
+	Error err = Error::OK;
 	Ref<Resource> ret = ::ResourceLoader::load(p_path, p_type_hint, ResourceFormatLoader::CacheMode(p_cache_mode), &err);
 
-	ERR_FAIL_COND_V_MSG(err != OK, ret, "Error loading resource: '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, ret, "Error loading resource: '" + p_path + "'.");
 	return ret;
 }
 
@@ -150,7 +150,7 @@ void ResourceLoader::_bind_methods() {
 ////// ResourceSaver //////
 
 Error ResourceSaver::save(const Ref<Resource> &p_resource, const String &p_path, BitField<SaverFlags> p_flags) {
-	ERR_FAIL_COND_V_MSG(p_resource.is_null(), ERR_INVALID_PARAMETER, "Can't save empty resource to path '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(p_resource.is_null(), Error::INVALID_PARAMETER, "Can't save empty resource to path '" + p_path + "'.");
 	return ::ResourceSaver::save(p_resource, p_path, p_flags);
 }
 
@@ -288,7 +288,7 @@ int OS::execute(const String &p_path, const Vector<String> &p_arguments, Array r
 	int exitcode = 0;
 	Error err = ::OS::get_singleton()->execute(p_path, args, &pipe, &exitcode, p_read_stderr, nullptr, p_open_console);
 	r_output.push_back(pipe);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return -1;
 	}
 	return exitcode;
@@ -301,7 +301,7 @@ int OS::create_instance(const Vector<String> &p_arguments) {
 	}
 	::OS::ProcessID pid = 0;
 	Error err = ::OS::get_singleton()->create_instance(args, &pid);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return -1;
 	}
 	return pid;
@@ -314,7 +314,7 @@ int OS::create_process(const String &p_path, const Vector<String> &p_arguments, 
 	}
 	::OS::ProcessID pid = 0;
 	Error err = ::OS::get_singleton()->create_process(p_path, args, &pid, p_open_console);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return -1;
 	}
 	return pid;
@@ -1079,14 +1079,14 @@ Marshalls *Marshalls::get_singleton() {
 String Marshalls::variant_to_base64(const Variant &p_var, bool p_full_objects) {
 	int len;
 	Error err = encode_variant(p_var, nullptr, len, p_full_objects);
-	ERR_FAIL_COND_V_MSG(err != OK, "", "Error when trying to encode Variant.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, "", "Error when trying to encode Variant.");
 
 	Vector<uint8_t> buff;
 	buff.resize(len);
 	uint8_t *w = buff.ptrw();
 
 	err = encode_variant(p_var, &w[0], len, p_full_objects);
-	ERR_FAIL_COND_V_MSG(err != OK, "", "Error when trying to encode Variant.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, "", "Error when trying to encode Variant.");
 
 	String ret = CryptoCore::b64_encode_str(&w[0], len);
 	ERR_FAIL_COND_V(ret.is_empty(), ret);
@@ -1103,11 +1103,11 @@ Variant Marshalls::base64_to_variant(const String &p_str, bool p_allow_objects) 
 	uint8_t *w = buf.ptrw();
 
 	size_t len = 0;
-	ERR_FAIL_COND_V(CryptoCore::b64_decode(&w[0], buf.size(), &len, (unsigned char *)cstr.get_data(), strlen) != OK, Variant());
+	ERR_FAIL_COND_V(CryptoCore::b64_decode(&w[0], buf.size(), &len, (unsigned char *)cstr.get_data(), strlen) != Error::OK, Variant());
 
 	Variant v;
 	Error err = decode_variant(v, &w[0], len, nullptr, p_allow_objects);
-	ERR_FAIL_COND_V_MSG(err != OK, Variant(), "Error when trying to decode Variant.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Variant(), "Error when trying to decode Variant.");
 
 	return v;
 }
@@ -1128,7 +1128,7 @@ Vector<uint8_t> Marshalls::base64_to_raw(const String &p_str) {
 		buf.resize(strlen / 4 * 3 + 1);
 		uint8_t *w = buf.ptrw();
 
-		ERR_FAIL_COND_V(CryptoCore::b64_decode(&w[0], buf.size(), &arr_len, (unsigned char *)cstr.get_data(), strlen) != OK, Vector<uint8_t>());
+		ERR_FAIL_COND_V(CryptoCore::b64_decode(&w[0], buf.size(), &arr_len, (unsigned char *)cstr.get_data(), strlen) != Error::OK, Vector<uint8_t>());
 	}
 	buf.resize(arr_len);
 
@@ -1151,7 +1151,7 @@ String Marshalls::base64_to_utf8(const String &p_str) {
 	uint8_t *w = buf.ptrw();
 
 	size_t len = 0;
-	ERR_FAIL_COND_V(CryptoCore::b64_decode(&w[0], buf.size(), &len, (unsigned char *)cstr.get_data(), strlen) != OK, String());
+	ERR_FAIL_COND_V(CryptoCore::b64_decode(&w[0], buf.size(), &len, (unsigned char *)cstr.get_data(), strlen) != Error::OK, String());
 
 	w[len] = 0;
 	String ret = String::utf8((char *)&w[0]);
@@ -1256,9 +1256,9 @@ void Thread::_start_func(void *ud) {
 }
 
 Error Thread::start(const Callable &p_callable, Priority p_priority) {
-	ERR_FAIL_COND_V_MSG(is_started(), ERR_ALREADY_IN_USE, "Thread already started.");
-	ERR_FAIL_COND_V(!p_callable.is_valid(), ERR_INVALID_PARAMETER);
-	ERR_FAIL_INDEX_V(p_priority, PRIORITY_MAX, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V_MSG(is_started(), Error::ALREADY_IN_USE, "Thread already started.");
+	ERR_FAIL_COND_V(!p_callable.is_valid(), Error::INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_priority, PRIORITY_MAX, Error::INVALID_PARAMETER);
 
 	ret = Variant();
 	target_callable = p_callable;
@@ -1270,7 +1270,7 @@ Error Thread::start(const Callable &p_callable, Priority p_priority) {
 	s.priority = (::Thread::Priority)p_priority;
 	thread.start(_start_func, ud, s);
 
-	return OK;
+	return Error::OK;
 }
 
 String Thread::get_id() const {
@@ -1421,11 +1421,11 @@ Error ClassDB::class_set_property(Object *p_object, const StringName &p_property
 	Variant ret;
 	bool valid;
 	if (!::ClassDB::set_property(p_object, p_property, p_value, &valid)) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	} else if (!valid) {
-		return ERR_INVALID_DATA;
+		return Error::INVALID_DATA;
 	}
-	return OK;
+	return Error::OK;
 }
 
 bool ClassDB::class_has_method(const StringName &p_class, const StringName &p_method, bool p_no_inheritance) const {
@@ -1805,7 +1805,7 @@ void EngineDebugger::register_profiler(const StringName &p_name, Ref<EngineProfi
 	ERR_FAIL_COND_MSG(p_profiler->is_bound(), "Profiler already registered.");
 	ERR_FAIL_COND_MSG(profilers.has(p_name) || has_profiler(p_name), "Profiler name already in use: " + p_name);
 	Error err = p_profiler->bind(p_name);
-	ERR_FAIL_COND_MSG(err != OK, "Profiler failed to register with error: " + itos(err));
+	ERR_FAIL_COND_MSG(err != Error::OK, "Profiler failed to register with error: " + itos((int)err));
 	profilers.insert(p_name, p_profiler);
 }
 
@@ -1859,17 +1859,17 @@ void EngineDebugger::send_message(const String &p_msg, const Array &p_data) {
 Error EngineDebugger::call_capture(void *p_user, const String &p_cmd, const Array &p_data, bool &r_captured) {
 	Callable &capture = *(Callable *)p_user;
 	if (capture.is_null()) {
-		return FAILED;
+		return Error::FAILED;
 	}
 	Variant cmd = p_cmd, data = p_data;
 	const Variant *args[2] = { &cmd, &data };
 	Variant retval;
 	Callable::CallError err;
 	capture.callp(args, 2, retval, err);
-	ERR_FAIL_COND_V_MSG(err.error != Callable::CallError::CALL_OK, FAILED, "Error calling 'capture' to callable: " + Variant::get_callable_error_text(capture, args, 2, err));
-	ERR_FAIL_COND_V_MSG(retval.get_type() != Variant::BOOL, FAILED, "Error calling 'capture' to callable: " + String(capture) + ". Return type is not bool.");
+	ERR_FAIL_COND_V_MSG(err.error != Callable::CallError::CALL_OK, Error::FAILED, "Error calling 'capture' to callable: " + Variant::get_callable_error_text(capture, args, 2, err));
+	ERR_FAIL_COND_V_MSG(retval.get_type() != Variant::BOOL, Error::FAILED, "Error calling 'capture' to callable: " + String(capture) + ". Return type is not bool.");
 	r_captured = retval;
-	return OK;
+	return Error::OK;
 }
 
 EngineDebugger::~EngineDebugger() {

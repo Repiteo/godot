@@ -53,8 +53,8 @@ void PCKPacker::_bind_methods() {
 }
 
 Error PCKPacker::pck_start(const String &p_file, int p_alignment, const String &p_key, bool p_encrypt_directory) {
-	ERR_FAIL_COND_V_MSG((p_key.is_empty() || !p_key.is_valid_hex_number(false) || p_key.length() != 64), ERR_CANT_CREATE, "Invalid Encryption Key (must be 64 characters long).");
-	ERR_FAIL_COND_V_MSG(p_alignment <= 0, ERR_CANT_CREATE, "Invalid alignment, must be greater then 0.");
+	ERR_FAIL_COND_V_MSG((p_key.is_empty() || !p_key.is_valid_hex_number(false) || p_key.length() != 64), Error::CANT_CREATE, "Invalid Encryption Key (must be 64 characters long).");
+	ERR_FAIL_COND_V_MSG(p_alignment <= 0, Error::CANT_CREATE, "Invalid alignment, must be greater then 0.");
 
 	String _key = p_key.to_lower();
 	key.resize(32);
@@ -84,7 +84,7 @@ Error PCKPacker::pck_start(const String &p_file, int p_alignment, const String &
 	enc_dir = p_encrypt_directory;
 
 	file = FileAccess::open(p_file, FileAccess::WRITE);
-	ERR_FAIL_COND_V_MSG(file.is_null(), ERR_CANT_CREATE, "Can't open file to write: " + String(p_file) + ".");
+	ERR_FAIL_COND_V_MSG(file.is_null(), Error::CANT_CREATE, "Can't open file to write: " + String(p_file) + ".");
 
 	alignment = p_alignment;
 
@@ -103,15 +103,15 @@ Error PCKPacker::pck_start(const String &p_file, int p_alignment, const String &
 	files.clear();
 	ofs = 0;
 
-	return OK;
+	return Error::OK;
 }
 
 Error PCKPacker::add_file(const String &p_file, const String &p_src, bool p_encrypt) {
-	ERR_FAIL_COND_V_MSG(file.is_null(), ERR_INVALID_PARAMETER, "File must be opened before use.");
+	ERR_FAIL_COND_V_MSG(file.is_null(), Error::INVALID_PARAMETER, "File must be opened before use.");
 
 	Ref<FileAccess> f = FileAccess::open(p_src, FileAccess::READ);
 	if (f.is_null()) {
-		return ERR_FILE_CANT_OPEN;
+		return Error::FILE_CANT_OPEN;
 	}
 
 	File pf;
@@ -148,11 +148,11 @@ Error PCKPacker::add_file(const String &p_file, const String &p_src, bool p_encr
 
 	files.push_back(pf);
 
-	return OK;
+	return Error::OK;
 }
 
 Error PCKPacker::flush(bool p_verbose) {
-	ERR_FAIL_COND_V_MSG(file.is_null(), ERR_INVALID_PARAMETER, "File must be opened before use.");
+	ERR_FAIL_COND_V_MSG(file.is_null(), Error::INVALID_PARAMETER, "File must be opened before use.");
 
 	int64_t file_base_ofs = file->get_position();
 	file->store_64(0); // files base
@@ -169,10 +169,10 @@ Error PCKPacker::flush(bool p_verbose) {
 
 	if (enc_dir) {
 		fae.instantiate();
-		ERR_FAIL_COND_V(fae.is_null(), ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(fae.is_null(), Error::CANT_CREATE);
 
 		Error err = fae->open_and_parse(file, key, FileAccessEncrypted::MODE_WRITE_AES256, false);
-		ERR_FAIL_COND_V(err != OK, ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(err != Error::OK, Error::CANT_CREATE);
 
 		fhead = fae;
 	}
@@ -224,10 +224,10 @@ Error PCKPacker::flush(bool p_verbose) {
 		Ref<FileAccess> ftmp = file;
 		if (files[i].encrypted) {
 			fae.instantiate();
-			ERR_FAIL_COND_V(fae.is_null(), ERR_CANT_CREATE);
+			ERR_FAIL_COND_V(fae.is_null(), Error::CANT_CREATE);
 
 			Error err = fae->open_and_parse(file, key, FileAccessEncrypted::MODE_WRITE_AES256, false);
-			ERR_FAIL_COND_V(err != OK, ERR_CANT_CREATE);
+			ERR_FAIL_COND_V(err != Error::OK, Error::CANT_CREATE);
 			ftmp = fae;
 		}
 
@@ -257,5 +257,5 @@ Error PCKPacker::flush(bool p_verbose) {
 	file.unref();
 	memdelete_arr(buf);
 
-	return OK;
+	return Error::OK;
 }

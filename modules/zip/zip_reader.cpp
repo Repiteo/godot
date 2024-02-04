@@ -40,14 +40,14 @@ Error ZIPReader::open(const String &p_path) {
 
 	zlib_filefunc_def io = zipio_create_io(&fa);
 	uzf = unzOpen2(p_path.utf8().get_data(), &io);
-	return uzf != nullptr ? OK : FAILED;
+	return uzf != nullptr ? Error::OK : Error::FAILED;
 }
 
 Error ZIPReader::close() {
-	ERR_FAIL_COND_V_MSG(fa.is_null(), FAILED, "ZIPReader cannot be closed because it is not open.");
+	ERR_FAIL_COND_V_MSG(fa.is_null(), Error::FAILED, "ZIPReader cannot be closed because it is not open.");
 
-	Error err = unzClose(uzf) == UNZ_OK ? OK : FAILED;
-	if (err == OK) {
+	Error err = unzClose(uzf) == UNZ_OK ? Error::OK : Error::FAILED;
+	if (err == Error::OK) {
 		DEV_ASSERT(fa == nullptr);
 		uzf = nullptr;
 	}

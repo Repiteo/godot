@@ -178,8 +178,8 @@ JNIEXPORT jboolean JNICALL Java_org_godotengine_godot_GodotLib_setup(JNIEnv *env
 		memfree(cmdline);
 	}
 
-	// Note: --help and --version return ERR_HELP, but this should be translated to 0 if exit codes are propagated.
-	if (err != OK) {
+	// Note: --help and --version return HELP, but this should be translated to 0 if exit codes are propagated.
+	if (err != Error::OK) {
 		return false;
 	}
 

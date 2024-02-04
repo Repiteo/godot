@@ -34,7 +34,7 @@
 
 Error RemoteDebuggerPeerWebSocket::connect_to_host(const String &p_uri) {
 	ws_peer = Ref<WebSocketPeer>(WebSocketPeer::create());
-	ERR_FAIL_COND_V(ws_peer.is_null(), ERR_BUG);
+	ERR_FAIL_COND_V(ws_peer.is_null(), Error::BUG);
 
 	Vector<String> protocols;
 	protocols.push_back("binary"); // Compatibility for emscripten TCP-to-WebSocket.
@@ -45,16 +45,16 @@ Error RemoteDebuggerPeerWebSocket::connect_to_host(const String &p_uri) {
 	ws_peer->set_outbound_buffer_size((1 << 23) - 1);
 
 	Error err = ws_peer->connect_to_url(p_uri);
-	ERR_FAIL_COND_V(err != OK, err);
+	ERR_FAIL_COND_V(err != Error::OK, err);
 
 	ws_peer->poll();
 	WebSocketPeer::State ready_state = ws_peer->get_ready_state();
 	if (ready_state != WebSocketPeer::STATE_CONNECTING && ready_state != WebSocketPeer::STATE_OPEN) {
 		ERR_PRINT(vformat("Remote Debugger: Unable to connect. State: %s.", ws_peer->get_ready_state()));
-		return FAILED;
+		return Error::FAILED;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 bool RemoteDebuggerPeerWebSocket::is_peer_connected() {
@@ -68,7 +68,7 @@ void RemoteDebuggerPeerWebSocket::poll() {
 	while (ws_peer->get_ready_state() == WebSocketPeer::STATE_OPEN && ws_peer->get_available_packet_count() > 0 && in_queue.size() < max_queued_messages) {
 		Variant var;
 		Error err = ws_peer->get_var(var);
-		ERR_CONTINUE(err != OK);
+		ERR_CONTINUE(err != Error::OK);
 		ERR_CONTINUE(var.get_type() != Variant::ARRAY);
 		in_queue.push_back(var);
 	}
@@ -76,7 +76,7 @@ void RemoteDebuggerPeerWebSocket::poll() {
 	while (ws_peer->get_ready_state() == WebSocketPeer::STATE_OPEN && out_queue.size() > 0) {
 		Array var = out_queue[0];
 		Error err = ws_peer->put_var(var);
-		ERR_BREAK(err != OK); // Peer buffer full?
+		ERR_BREAK(err != Error::OK); // Peer buffer full?
 		out_queue.pop_front();
 	}
 }
@@ -99,10 +99,10 @@ Array RemoteDebuggerPeerWebSocket::get_message() {
 
 Error RemoteDebuggerPeerWebSocket::put_message(const Array &p_arr) {
 	if (out_queue.size() >= max_queued_messages) {
-		return ERR_OUT_OF_MEMORY;
+		return Error::OUT_OF_MEMORY;
 	}
 	out_queue.push_back(p_arr);
-	return OK;
+	return Error::OK;
 }
 
 void RemoteDebuggerPeerWebSocket::close() {
@@ -133,7 +133,7 @@ RemoteDebuggerPeer *RemoteDebuggerPeerWebSocket::create(const String &p_uri) {
 	ERR_FAIL_COND_V(!p_uri.begins_with("ws://") && !p_uri.begins_with("wss://"), nullptr);
 	RemoteDebuggerPeerWebSocket *peer = memnew(RemoteDebuggerPeerWebSocket);
 	Error err = peer->connect_to_host(p_uri);
-	if (err != OK) {
+	if (err != Error::OK) {
 		memdelete(peer);
 		return nullptr;
 	}

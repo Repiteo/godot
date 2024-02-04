@@ -45,17 +45,17 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 
 		if (p_spirv[i].shader_stage == SHADER_STAGE_COMPUTE) {
 			r_reflection.is_compute = true;
-			ERR_FAIL_COND_V_MSG(p_spirv.size() != 1, FAILED,
+			ERR_FAIL_COND_V_MSG(p_spirv.size() != 1, Error::FAILED,
 					"Compute shaders can only receive one stage, dedicated to compute.");
 		}
-		ERR_FAIL_COND_V_MSG(r_reflection.stages.has_flag(stage_flag), FAILED,
+		ERR_FAIL_COND_V_MSG(r_reflection.stages.has_flag(stage_flag), Error::FAILED,
 				"Stage " + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + " submitted more than once.");
 
 		{
 			SpvReflectShaderModule module;
 			const uint8_t *spirv = p_spirv[i].spirv.ptr();
 			SpvReflectResult result = spvReflectCreateShaderModule(p_spirv[i].spirv.size(), spirv, &module);
-			ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, FAILED,
+			ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, Error::FAILED,
 					"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "' failed parsing shader.");
 
 			if (r_reflection.is_compute) {
@@ -65,7 +65,7 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 			}
 			uint32_t binding_count = 0;
 			result = spvReflectEnumerateDescriptorBindings(&module, &binding_count, nullptr);
-			ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, FAILED,
+			ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, Error::FAILED,
 					"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "' failed enumerating descriptor bindings.");
 
 			if (binding_count > 0) {
@@ -75,7 +75,7 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 				bindings.resize(binding_count);
 				result = spvReflectEnumerateDescriptorBindings(&module, &binding_count, bindings.ptrw());
 
-				ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, FAILED,
+				ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, Error::FAILED,
 						"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "' failed getting descriptor bindings.");
 
 				for (uint32_t j = 0; j < binding_count; j++) {
@@ -169,7 +169,7 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 					uniform.binding = binding.binding;
 					uint32_t set = binding.set;
 
-					ERR_FAIL_COND_V_MSG(set >= MAX_UNIFORM_SETS, FAILED,
+					ERR_FAIL_COND_V_MSG(set >= MAX_UNIFORM_SETS, Error::FAILED,
 							"On shader stage '" + String(SHADER_STAGE_NAMES[stage]) + "', uniform '" + binding.name + "' uses a set (" + itos(set) + ") index larger than what is supported (" + itos(MAX_UNIFORM_SETS) + ").");
 
 					if (set < (uint32_t)r_reflection.uniform_sets.size()) {
@@ -178,15 +178,15 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 						for (int k = 0; k < r_reflection.uniform_sets[set].size(); k++) {
 							if (r_reflection.uniform_sets[set][k].binding == uniform.binding) {
 								// Already exists, verify that it's the same type.
-								ERR_FAIL_COND_V_MSG(r_reflection.uniform_sets[set][k].type != uniform.type, FAILED,
+								ERR_FAIL_COND_V_MSG(r_reflection.uniform_sets[set][k].type != uniform.type, Error::FAILED,
 										"On shader stage '" + String(SHADER_STAGE_NAMES[stage]) + "', uniform '" + binding.name + "' trying to reuse location for set=" + itos(set) + ", binding=" + itos(uniform.binding) + " with different uniform type.");
 
 								// Also, verify that it's the same size.
-								ERR_FAIL_COND_V_MSG(r_reflection.uniform_sets[set][k].length != uniform.length, FAILED,
+								ERR_FAIL_COND_V_MSG(r_reflection.uniform_sets[set][k].length != uniform.length, Error::FAILED,
 										"On shader stage '" + String(SHADER_STAGE_NAMES[stage]) + "', uniform '" + binding.name + "' trying to reuse location for set=" + itos(set) + ", binding=" + itos(uniform.binding) + " with different uniform size.");
 
 								// Also, verify that it has the same writability.
-								ERR_FAIL_COND_V_MSG(r_reflection.uniform_sets[set][k].writable != uniform.writable, FAILED,
+								ERR_FAIL_COND_V_MSG(r_reflection.uniform_sets[set][k].writable != uniform.writable, Error::FAILED,
 										"On shader stage '" + String(SHADER_STAGE_NAMES[stage]) + "', uniform '" + binding.name + "' trying to reuse location for set=" + itos(set) + ", binding=" + itos(uniform.binding) + " with different writability.");
 
 								// Just append stage mask and return.
@@ -216,7 +216,7 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 
 				uint32_t sc_count = 0;
 				result = spvReflectEnumerateSpecializationConstants(&module, &sc_count, nullptr);
-				ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, FAILED,
+				ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, Error::FAILED,
 						"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "' failed enumerating specialization constants.");
 
 				if (sc_count) {
@@ -224,7 +224,7 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 					spec_constants.resize(sc_count);
 
 					result = spvReflectEnumerateSpecializationConstants(&module, &sc_count, spec_constants.ptrw());
-					ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, FAILED,
+					ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, Error::FAILED,
 							"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "' failed obtaining specialization constants.");
 
 					for (uint32_t j = 0; j < sc_count; j++) {
@@ -252,8 +252,8 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 
 						for (int k = 0; k < r_reflection.specialization_constants.size(); k++) {
 							if (r_reflection.specialization_constants[k].constant_id == sconst.constant_id) {
-								ERR_FAIL_COND_V_MSG(r_reflection.specialization_constants[k].type != sconst.type, FAILED, "More than one specialization constant used for id (" + itos(sconst.constant_id) + "), but their types differ.");
-								ERR_FAIL_COND_V_MSG(r_reflection.specialization_constants[k].int_value != sconst.int_value, FAILED, "More than one specialization constant used for id (" + itos(sconst.constant_id) + "), but their default values differ.");
+								ERR_FAIL_COND_V_MSG(r_reflection.specialization_constants[k].type != sconst.type, Error::FAILED, "More than one specialization constant used for id (" + itos(sconst.constant_id) + "), but their types differ.");
+								ERR_FAIL_COND_V_MSG(r_reflection.specialization_constants[k].int_value != sconst.int_value, Error::FAILED, "More than one specialization constant used for id (" + itos(sconst.constant_id) + "), but their default values differ.");
 								existing = k;
 								break;
 							}
@@ -271,7 +271,7 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 			if (stage == SHADER_STAGE_VERTEX) {
 				uint32_t iv_count = 0;
 				result = spvReflectEnumerateInputVariables(&module, &iv_count, nullptr);
-				ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, FAILED,
+				ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, Error::FAILED,
 						"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "' failed enumerating input variables.");
 
 				if (iv_count) {
@@ -279,7 +279,7 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 					input_vars.resize(iv_count);
 
 					result = spvReflectEnumerateInputVariables(&module, &iv_count, input_vars.ptrw());
-					ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, FAILED,
+					ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, Error::FAILED,
 							"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "' failed obtaining input variables.");
 
 					for (uint32_t j = 0; j < iv_count; j++) {
@@ -293,7 +293,7 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 			if (stage == SHADER_STAGE_FRAGMENT) {
 				uint32_t ov_count = 0;
 				result = spvReflectEnumerateOutputVariables(&module, &ov_count, nullptr);
-				ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, FAILED,
+				ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, Error::FAILED,
 						"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "' failed enumerating output variables.");
 
 				if (ov_count) {
@@ -301,7 +301,7 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 					output_vars.resize(ov_count);
 
 					result = spvReflectEnumerateOutputVariables(&module, &ov_count, output_vars.ptrw());
-					ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, FAILED,
+					ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, Error::FAILED,
 							"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "' failed obtaining output variables.");
 
 					for (uint32_t j = 0; j < ov_count; j++) {
@@ -315,17 +315,17 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 
 			uint32_t pc_count = 0;
 			result = spvReflectEnumeratePushConstantBlocks(&module, &pc_count, nullptr);
-			ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, FAILED,
+			ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, Error::FAILED,
 					"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "' failed enumerating push constants.");
 
 			if (pc_count) {
-				ERR_FAIL_COND_V_MSG(pc_count > 1, FAILED,
+				ERR_FAIL_COND_V_MSG(pc_count > 1, Error::FAILED,
 						"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "': Only one push constant is supported, which should be the same across shader stages.");
 
 				Vector<SpvReflectBlockVariable *> pconstants;
 				pconstants.resize(pc_count);
 				result = spvReflectEnumeratePushConstantBlocks(&module, &pc_count, pconstants.ptrw());
-				ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, FAILED,
+				ERR_FAIL_COND_V_MSG(result != SPV_REFLECT_RESULT_SUCCESS, Error::FAILED,
 						"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "' failed obtaining push constants.");
 #if 0
 				if (pconstants[0] == nullptr) {
@@ -334,7 +334,7 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 				}
 #endif
 
-				ERR_FAIL_COND_V_MSG(r_reflection.push_constant_size && r_reflection.push_constant_size != pconstants[0]->size, FAILED,
+				ERR_FAIL_COND_V_MSG(r_reflection.push_constant_size && r_reflection.push_constant_size != pconstants[0]->size, Error::FAILED,
 						"Reflection of SPIR-V shader stage '" + String(SHADER_STAGE_NAMES[p_spirv[i].shader_stage]) + "': Push constant block must be the same across shader stages.");
 
 				r_reflection.push_constant_size = pconstants[0]->size;
@@ -350,7 +350,7 @@ Error RenderingDeviceDriver::_reflect_spirv(VectorView<ShaderStageSPIRVData> p_s
 		r_reflection.stages.set_flag(stage_flag);
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 /**************/

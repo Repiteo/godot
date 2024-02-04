@@ -1728,7 +1728,7 @@ typedef void (*GDExtensionInterfaceStringNameNewWithUtf8CharsAndLen)(GDExtension
  * @param p_buffer A pointer to the buffer.
  * @param p_size The size of the buffer.
  *
- * @return A Godot error code (ex. OK, ERR_INVALID_DATA, etc).
+ * @return A Godot error code (ex. Error::OK, Error::INVALID_DATA, etc).
  *
  * @see XMLParser::open_buffer()
  */

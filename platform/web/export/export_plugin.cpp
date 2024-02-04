@@ -53,13 +53,13 @@ Error EditorExportPlatformWeb::_extract_template(const String &p_template, const
 
 	if (!pkg) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Prepare Templates"), vformat(TTR("Could not open template for export: \"%s\"."), p_template));
-		return ERR_FILE_NOT_FOUND;
+		return Error::FILE_NOT_FOUND;
 	}
 
 	if (unzGoToFirstFile(pkg) != UNZ_OK) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Prepare Templates"), vformat(TTR("Invalid export template: \"%s\"."), p_template));
 		unzClose(pkg);
-		return ERR_FILE_CORRUPT;
+		return Error::FILE_CORRUPT;
 	}
 
 	do {
@@ -93,23 +93,23 @@ Error EditorExportPlatformWeb::_extract_template(const String &p_template, const
 		if (f.is_null()) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("Prepare Templates"), vformat(TTR("Could not write file: \"%s\"."), dst));
 			unzClose(pkg);
-			return ERR_FILE_CANT_WRITE;
+			return Error::FILE_CANT_WRITE;
 		}
 		f->store_buffer(data.ptr(), data.size());
 
 	} while (unzGoToNextFile(pkg) == UNZ_OK);
 	unzClose(pkg);
-	return OK;
+	return Error::OK;
 }
 
 Error EditorExportPlatformWeb::_write_or_error(const uint8_t *p_content, int p_size, String p_path) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::WRITE);
 	if (f.is_null()) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not write file: \"%s\"."), p_path));
-		return ERR_FILE_CANT_WRITE;
+		return Error::FILE_CANT_WRITE;
 	}
 	f->store_buffer(p_content, p_size);
-	return OK;
+	return Error::OK;
 }
 
 void EditorExportPlatformWeb::_replace_strings(const HashMap<String, String> &p_replaces, Vector<uint8_t> &r_template) {
@@ -188,7 +188,7 @@ Error EditorExportPlatformWeb::_add_manifest_icon(const String &p_path, const St
 	if (!p_icon.is_empty()) {
 		icon.instantiate();
 		const Error err = ImageLoader::load_image(p_icon, icon);
-		if (err != OK) {
+		if (err != Error::OK) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("Icon Creation"), vformat(TTR("Could not read file: \"%s\"."), p_icon));
 			return err;
 		}
@@ -200,7 +200,7 @@ Error EditorExportPlatformWeb::_add_manifest_icon(const String &p_path, const St
 		icon->resize(p_size, p_size);
 	}
 	const Error err = icon->save_png(icon_dest);
-	if (err != OK) {
+	if (err != Error::OK) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Icon Creation"), vformat(TTR("Could not write file: \"%s\"."), icon_dest));
 		return err;
 	}
@@ -258,14 +258,14 @@ Error EditorExportPlatformWeb::_build_pwa(const Ref<EditorExportPreset> &p_prese
 		Ref<FileAccess> f = FileAccess::open(sw_path, FileAccess::READ);
 		if (f.is_null()) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("PWA"), vformat(TTR("Could not read file: \"%s\"."), sw_path));
-			return ERR_FILE_CANT_READ;
+			return Error::FILE_CANT_READ;
 		}
 		sw.resize(f->get_length());
 		f->get_buffer(sw.ptrw(), sw.size());
 	}
 	_replace_strings(replaces, sw);
 	Error err = _write_or_error(sw.ptr(), sw.size(), dir.path_join(name + ".service.worker.js"));
-	if (err != OK) {
+	if (err != Error::OK) {
 		// Message is supplied by the subroutine method.
 		return err;
 	}
@@ -276,7 +276,7 @@ Error EditorExportPlatformWeb::_build_pwa(const Ref<EditorExportPreset> &p_prese
 		Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 		const String offline_dest = dir.path_join(name + ".offline.html");
 		err = da->copy(ProjectSettings::get_singleton()->globalize_path(offline_page), offline_dest);
-		if (err != OK) {
+		if (err != Error::OK) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("PWA"), vformat(TTR("Could not read file: \"%s\"."), offline_dest));
 			return err;
 		}
@@ -298,19 +298,19 @@ Error EditorExportPlatformWeb::_build_pwa(const Ref<EditorExportPreset> &p_prese
 	Array icons_arr;
 	const String icon144_path = p_preset->get("progressive_web_app/icon_144x144");
 	err = _add_manifest_icon(p_path, icon144_path, 144, icons_arr);
-	if (err != OK) {
+	if (err != Error::OK) {
 		// Message is supplied by the subroutine method.
 		return err;
 	}
 	const String icon180_path = p_preset->get("progressive_web_app/icon_180x180");
 	err = _add_manifest_icon(p_path, icon180_path, 180, icons_arr);
-	if (err != OK) {
+	if (err != Error::OK) {
 		// Message is supplied by the subroutine method.
 		return err;
 	}
 	const String icon512_path = p_preset->get("progressive_web_app/icon_512x512");
 	err = _add_manifest_icon(p_path, icon512_path, 512, icons_arr);
-	if (err != OK) {
+	if (err != Error::OK) {
 		// Message is supplied by the subroutine method.
 		return err;
 	}
@@ -318,12 +318,12 @@ Error EditorExportPlatformWeb::_build_pwa(const Ref<EditorExportPreset> &p_prese
 
 	CharString cs = Variant(manifest).to_json_string().utf8();
 	err = _write_or_error((const uint8_t *)cs.get_data(), cs.length(), dir.path_join(name + ".manifest.json"));
-	if (err != OK) {
+	if (err != Error::OK) {
 		// Message is supplied by the subroutine method.
 		return err;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void EditorExportPlatformWeb::get_preset_features(const Ref<EditorExportPreset> &p_preset, List<String> *r_features) const {
@@ -455,7 +455,7 @@ Error EditorExportPlatformWeb::export_project(const Ref<EditorExportPreset> &p_p
 
 	if (!DirAccess::exists(base_dir)) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Target folder does not exist or is inaccessible: \"%s\""), base_dir));
-		return ERR_FILE_BAD_PATH;
+		return Error::FILE_BAD_PATH;
 	}
 
 	// Find the correct template
@@ -469,14 +469,14 @@ Error EditorExportPlatformWeb::export_project(const Ref<EditorExportPreset> &p_p
 
 	if (!template_path.is_empty() && !FileAccess::exists(template_path)) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Prepare Templates"), vformat(TTR("Template file not found: \"%s\"."), template_path));
-		return ERR_FILE_NOT_FOUND;
+		return Error::FILE_NOT_FOUND;
 	}
 
 	// Export pck and shared objects
 	Vector<SharedObject> shared_objects;
 	String pck_path = base_path + ".pck";
 	Error error = save_pack(p_preset, p_debug, pck_path, &shared_objects);
-	if (error != OK) {
+	if (error != Error::OK) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not write file: \"%s\"."), pck_path));
 		return error;
 	}
@@ -486,7 +486,7 @@ Error EditorExportPlatformWeb::export_project(const Ref<EditorExportPreset> &p_p
 		for (int i = 0; i < shared_objects.size(); i++) {
 			String dst = base_dir.path_join(shared_objects[i].path.get_file());
 			error = da->copy(shared_objects[i].path, dst);
-			if (error != OK) {
+			if (error != Error::OK) {
 				add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not write file: \"%s\"."), shared_objects[i].path.get_file()));
 				return error;
 			}
@@ -495,7 +495,7 @@ Error EditorExportPlatformWeb::export_project(const Ref<EditorExportPreset> &p_p
 
 	// Extract templates.
 	error = _extract_template(template_path, base_dir, base_name, pwa);
-	if (error) {
+	if (error != Error::OK) {
 		// Message is supplied by the subroutine method.
 		return error;
 	}
@@ -517,7 +517,7 @@ Error EditorExportPlatformWeb::export_project(const Ref<EditorExportPreset> &p_p
 	f = FileAccess::open(html_path, FileAccess::READ);
 	if (f.is_null()) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not read HTML shell: \"%s\"."), html_path));
-		return ERR_FILE_CANT_READ;
+		return Error::FILE_CANT_READ;
 	}
 	html.resize(f->get_length());
 	f->get_buffer(html.ptrw(), html.size());
@@ -526,7 +526,7 @@ Error EditorExportPlatformWeb::export_project(const Ref<EditorExportPreset> &p_p
 	// Generate HTML file with replaced strings.
 	_fix_html(html, p_preset, base_name, p_debug, p_flags, shared_objects, file_sizes);
 	Error err = _write_or_error(html.ptr(), html.size(), p_path);
-	if (err != OK) {
+	if (err != Error::OK) {
 		// Message is supplied by the subroutine method.
 		return err;
 	}
@@ -535,9 +535,9 @@ Error EditorExportPlatformWeb::export_project(const Ref<EditorExportPreset> &p_p
 	// Export splash (why?)
 	Ref<Image> splash = _get_project_splash();
 	const String splash_png_path = base_path + ".png";
-	if (splash->save_png(splash_png_path) != OK) {
+	if (splash->save_png(splash_png_path) != Error::OK) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not write file: \"%s\"."), splash_png_path));
-		return ERR_FILE_CANT_WRITE;
+		return Error::FILE_CANT_WRITE;
 	}
 
 	// Save a favicon that can be accessed without waiting for the project to finish loading.
@@ -545,28 +545,28 @@ Error EditorExportPlatformWeb::export_project(const Ref<EditorExportPreset> &p_p
 	if (export_icon) {
 		Ref<Image> favicon = _get_project_icon();
 		const String favicon_png_path = base_path + ".icon.png";
-		if (favicon->save_png(favicon_png_path) != OK) {
+		if (favicon->save_png(favicon_png_path) != Error::OK) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not write file: \"%s\"."), favicon_png_path));
-			return ERR_FILE_CANT_WRITE;
+			return Error::FILE_CANT_WRITE;
 		}
 		favicon->resize(180, 180);
 		const String apple_icon_png_path = base_path + ".apple-touch-icon.png";
-		if (favicon->save_png(apple_icon_png_path) != OK) {
+		if (favicon->save_png(apple_icon_png_path) != Error::OK) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not write file: \"%s\"."), apple_icon_png_path));
-			return ERR_FILE_CANT_WRITE;
+			return Error::FILE_CANT_WRITE;
 		}
 	}
 
 	// Generate the PWA worker and manifest
 	if (pwa) {
 		err = _build_pwa(p_preset, p_path, shared_objects);
-		if (err != OK) {
+		if (err != Error::OK) {
 			// Message is supplied by the subroutine method.
 			return err;
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 bool EditorExportPlatformWeb::poll_export() {
@@ -605,14 +605,14 @@ Error EditorExportPlatformWeb::run(const Ref<EditorExportPreset> &p_preset, int 
 	if (p_option == 1) {
 		MutexLock lock(server_lock);
 		server->stop();
-		return OK;
+		return Error::OK;
 	}
 
 	const String dest = EditorPaths::get_singleton()->get_cache_dir().path_join("web");
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 	if (!da->dir_exists(dest)) {
 		Error err = da->make_dir_recursive(dest);
-		if (err != OK) {
+		if (err != Error::OK) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("Run"), vformat(TTR("Could not create HTTP server directory: %s."), dest));
 			return err;
 		}
@@ -620,7 +620,7 @@ Error EditorExportPlatformWeb::run(const Ref<EditorExportPreset> &p_preset, int 
 
 	const String basepath = dest.path_join("tmp_js_export");
 	Error err = export_project(p_preset, true, basepath + ".html", p_debug_flags);
-	if (err != OK) {
+	if (err != Error::OK) {
 		// Export generates several files, clean them up on failure.
 		DirAccess::remove_file_or_error(basepath + ".html");
 		DirAccess::remove_file_or_error(basepath + ".offline.html");
@@ -646,7 +646,7 @@ Error EditorExportPlatformWeb::run(const Ref<EditorExportPreset> &p_preset, int 
 	} else {
 		bind_ip = IP::get_singleton()->resolve_hostname(bind_host);
 	}
-	ERR_FAIL_COND_V_MSG(!bind_ip.is_valid(), ERR_INVALID_PARAMETER, "Invalid editor setting 'export/web/http_host': '" + bind_host + "'. Try using '127.0.0.1'.");
+	ERR_FAIL_COND_V_MSG(!bind_ip.is_valid(), Error::INVALID_PARAMETER, "Invalid editor setting 'export/web/http_host': '" + bind_host + "'. Try using '127.0.0.1'.");
 
 	const bool use_tls = EDITOR_GET("export/web/use_tls");
 	const String tls_key = EDITOR_GET("export/web/tls_key");
@@ -659,7 +659,7 @@ Error EditorExportPlatformWeb::run(const Ref<EditorExportPreset> &p_preset, int 
 		server->stop();
 		err = server->listen(bind_port, bind_ip, use_tls, tls_key, tls_cert);
 	}
-	if (err != OK) {
+	if (err != Error::OK) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Run"), vformat(TTR("Error starting HTTP server: %d."), err));
 		return err;
 	}
@@ -667,7 +667,7 @@ Error EditorExportPlatformWeb::run(const Ref<EditorExportPreset> &p_preset, int 
 	OS::get_singleton()->shell_open(String((use_tls ? "https://" : "http://") + bind_host + ":" + itos(bind_port) + "/tmp_js_export.html"));
 	// FIXME: Find out how to clean up export files after running the successfully
 	// exported game. Might not be trivial.
-	return OK;
+	return Error::OK;
 }
 
 Ref<Texture2D> EditorExportPlatformWeb::get_run_icon() const {

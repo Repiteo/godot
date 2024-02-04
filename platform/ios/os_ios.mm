@@ -228,7 +228,7 @@ Error OS_IOS::open_dynamic_library(const String p_path, void *&p_library_handle,
 			*r_resolved_path = p_path;
 		}
 
-		return OK;
+		return Error::OK;
 	}
 
 	String path = get_framework_executable(p_path);
@@ -253,21 +253,21 @@ Error OS_IOS::open_dynamic_library(const String p_path, void *&p_library_handle,
 		path = get_framework_executable(get_executable_path().get_base_dir().path_join("Frameworks").path_join(p_path.get_file().get_basename() + ".framework"));
 	}
 
-	ERR_FAIL_COND_V(!FileAccess::exists(path), ERR_FILE_NOT_FOUND);
+	ERR_FAIL_COND_V(!FileAccess::exists(path), Error::FILE_NOT_FOUND);
 
 	p_library_handle = dlopen(path.utf8().get_data(), RTLD_NOW);
-	ERR_FAIL_NULL_V_MSG(p_library_handle, ERR_CANT_OPEN, vformat("Can't open dynamic library: %s. Error: %s.", p_path, dlerror()));
+	ERR_FAIL_NULL_V_MSG(p_library_handle, Error::CANT_OPEN, vformat("Can't open dynamic library: %s. Error: %s.", p_path, dlerror()));
 
 	if (r_resolved_path != nullptr) {
 		*r_resolved_path = path;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error OS_IOS::close_dynamic_library(void *p_library_handle) {
 	if (p_library_handle == RTLD_SELF) {
-		return OK;
+		return Error::OK;
 	}
 	return OS_Unix::close_dynamic_library(p_library_handle);
 }
@@ -277,7 +277,7 @@ Error OS_IOS::get_dynamic_library_symbol_handle(void *p_library_handle, const St
 		void **ptr = OS_IOS::dynamic_symbol_lookup_table.getptr(p_name);
 		if (ptr) {
 			p_symbol_handle = *ptr;
-			return OK;
+			return Error::OK;
 		}
 	}
 	return OS_Unix::get_dynamic_library_symbol_handle(p_library_handle, p_name, p_symbol_handle, p_optional);
@@ -310,14 +310,14 @@ Error OS_IOS::shell_open(String p_uri) {
 	NSURL *url = [NSURL URLWithString:urlPath];
 
 	if (![[UIApplication sharedApplication] canOpenURL:url]) {
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
 	print_verbose(vformat("Opening URL %s", p_uri));
 
 	[[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
 
-	return OK;
+	return Error::OK;
 }
 
 String OS_IOS::get_user_data_dir() const {

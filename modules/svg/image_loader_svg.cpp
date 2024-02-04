@@ -72,19 +72,19 @@ Ref<Image> ImageLoaderSVG::load_mem_svg(const uint8_t *p_svg, int p_size, float 
 	img.instantiate();
 
 	Error err = create_image_from_utf8_buffer(img, p_svg, p_size, p_scale, false);
-	ERR_FAIL_COND_V(err, Ref<Image>());
+	ERR_FAIL_COND_V(err != Error::OK, Ref<Image>());
 
 	return img;
 }
 
 Error ImageLoaderSVG::create_image_from_utf8_buffer(Ref<Image> p_image, const uint8_t *p_buffer, int p_buffer_size, float p_scale, bool p_upsample) {
-	ERR_FAIL_COND_V_MSG(Math::is_zero_approx(p_scale), ERR_INVALID_PARAMETER, "ImageLoaderSVG: Can't load SVG with a scale of 0.");
+	ERR_FAIL_COND_V_MSG(Math::is_zero_approx(p_scale), Error::INVALID_PARAMETER, "ImageLoaderSVG: Can't load SVG with a scale of 0.");
 
 	std::unique_ptr<tvg::Picture> picture = tvg::Picture::gen();
 
 	tvg::Result result = picture->load((const char *)p_buffer, p_buffer_size, "svg", true);
 	if (result != tvg::Result::Success) {
-		return ERR_INVALID_DATA;
+		return Error::INVALID_DATA;
 	}
 	float fw, fh;
 	picture->size(&fw, &fh);
@@ -110,25 +110,25 @@ Error ImageLoaderSVG::create_image_from_utf8_buffer(Ref<Image> p_image, const ui
 	tvg::Result res = sw_canvas->target(buffer, width, width, height, tvg::SwCanvas::ARGB8888S);
 	if (res != tvg::Result::Success) {
 		memfree(buffer);
-		ERR_FAIL_V_MSG(FAILED, "ImageLoaderSVG: Couldn't set target on ThorVG canvas.");
+		ERR_FAIL_V_MSG(Error::FAILED, "ImageLoaderSVG: Couldn't set target on ThorVG canvas.");
 	}
 
 	res = sw_canvas->push(std::move(picture));
 	if (res != tvg::Result::Success) {
 		memfree(buffer);
-		ERR_FAIL_V_MSG(FAILED, "ImageLoaderSVG: Couldn't insert ThorVG picture on canvas.");
+		ERR_FAIL_V_MSG(Error::FAILED, "ImageLoaderSVG: Couldn't insert ThorVG picture on canvas.");
 	}
 
 	res = sw_canvas->draw();
 	if (res != tvg::Result::Success) {
 		memfree(buffer);
-		ERR_FAIL_V_MSG(FAILED, "ImageLoaderSVG: Couldn't draw ThorVG pictures on canvas.");
+		ERR_FAIL_V_MSG(Error::FAILED, "ImageLoaderSVG: Couldn't draw ThorVG pictures on canvas.");
 	}
 
 	res = sw_canvas->sync();
 	if (res != tvg::Result::Success) {
 		memfree(buffer);
-		ERR_FAIL_V_MSG(FAILED, "ImageLoaderSVG: Couldn't sync ThorVG canvas.");
+		ERR_FAIL_V_MSG(Error::FAILED, "ImageLoaderSVG: Couldn't sync ThorVG canvas.");
 	}
 
 	Vector<uint8_t> image;
@@ -149,7 +149,7 @@ Error ImageLoaderSVG::create_image_from_utf8_buffer(Ref<Image> p_image, const ui
 	memfree(buffer);
 
 	p_image->set_data(width, height, false, Image::FORMAT_RGBA8, image);
-	return OK;
+	return Error::OK;
 }
 
 Error ImageLoaderSVG::create_image_from_utf8_buffer(Ref<Image> p_image, const PackedByteArray &p_buffer, float p_scale, bool p_upsample) {
@@ -182,16 +182,16 @@ Error ImageLoaderSVG::load_image(Ref<Image> p_image, Ref<FileAccess> p_fileacces
 		err = create_image_from_string(p_image, svg, p_scale, false, HashMap<Color, Color>());
 	}
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	} else if (p_image->is_empty()) {
-		return ERR_INVALID_DATA;
+		return Error::INVALID_DATA;
 	}
 
 	if (p_flags & FLAG_FORCE_LINEAR) {
 		p_image->srgb_to_linear();
 	}
-	return OK;
+	return Error::OK;
 }
 
 ImageLoaderSVG::ImageLoaderSVG() {

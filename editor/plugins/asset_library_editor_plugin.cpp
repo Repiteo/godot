@@ -505,7 +505,7 @@ void EditorAssetLibraryItemDownload::_make_request() {
 	download->set_download_file(EditorPaths::get_singleton()->get_cache_dir().path_join("tmp_asset_" + itos(asset_id)) + ".zip");
 
 	Error err = download->request(host);
-	if (err != OK) {
+	if (err != Error::OK) {
 		status->set_text(TTR("Error making request"));
 	} else {
 		set_process(true);
@@ -897,7 +897,7 @@ void EditorAssetLibrary::_update_image_queue() {
 			}
 
 			Error err = E.value.request->request(E.value.image_url, headers);
-			if (err != OK) {
+			if (err != Error::OK) {
 				to_delete.push_back(E.key);
 			} else {
 				E.value.active = true;

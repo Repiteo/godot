@@ -61,7 +61,7 @@ Error MIDIDriverWinMidi::open() {
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 PackedStringArray MIDIDriverWinMidi::get_connected_inputs() {

@@ -343,10 +343,10 @@ bool ProjectConverter3To4::convert() {
 
 		ERR_FAIL_COND_V_MSG(!FileAccess::exists("project.godot"), false, "Current working directory doesn't contain a \"project.godot\" file for a Godot 3 project.");
 
-		Error err = OK;
+		Error err = Error::OK;
 		String project_godot_content = FileAccess::get_file_as_string("project.godot", &err);
 
-		ERR_FAIL_COND_V_MSG(err != OK, false, "Unable to read \"project.godot\".");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, false, "Unable to read \"project.godot\".");
 		ERR_FAIL_COND_V_MSG(project_godot_content.contains(converter_text), false, "Project was already converted with this tool.");
 
 		Ref<FileAccess> file = FileAccess::open("project.godot", FileAccess::WRITE);
@@ -548,10 +548,10 @@ bool ProjectConverter3To4::validate_conversion() {
 
 		ERR_FAIL_COND_V_MSG(!FileAccess::exists("project.godot"), false, "Current directory doesn't contain any Godot 3 project");
 
-		Error err = OK;
+		Error err = Error::OK;
 		String project_godot_content = FileAccess::get_file_as_string("project.godot", &err);
 
-		ERR_FAIL_COND_V_MSG(err != OK, false, "Failed to read content of \"project.godot\" file.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, false, "Failed to read content of \"project.godot\" file.");
 		ERR_FAIL_COND_V_MSG(project_godot_content.contains(conventer_text), false, "Project already was converted with this tool.");
 	}
 
@@ -816,9 +816,9 @@ bool ProjectConverter3To4::test_conversion(RegExContainer &reg_container) {
 
 	// Custom Renames.
 
-	valid = valid && test_conversion_with_regex("(Connect(A,B,C,D,E,F,G) != OK):", "(Connect(A, new Callable(B, C), D, E, F, G) != OK):", &ProjectConverter3To4::rename_csharp_functions, "custom rename csharp", reg_container);
-	valid = valid && test_conversion_with_regex("(Disconnect(A,B,C) != OK):", "(Disconnect(A, new Callable(B, C)) != OK):", &ProjectConverter3To4::rename_csharp_functions, "custom rename csharp", reg_container);
-	valid = valid && test_conversion_with_regex("(IsConnected(A,B,C) != OK):", "(IsConnected(A, new Callable(B, C)) != OK):", &ProjectConverter3To4::rename_csharp_functions, "custom rename", reg_container);
+	valid = valid && test_conversion_with_regex("(Connect(A,B,C,D,E,F,G) != Error::OK):", "(Connect(A, new Callable(B, C), D, E, F, G) != Error::OK):", &ProjectConverter3To4::rename_csharp_functions, "custom rename csharp", reg_container);
+	valid = valid && test_conversion_with_regex("(Disconnect(A,B,C) != Error::OK):", "(Disconnect(A, new Callable(B, C)) != Error::OK):", &ProjectConverter3To4::rename_csharp_functions, "custom rename csharp", reg_container);
+	valid = valid && test_conversion_with_regex("(IsConnected(A,B,C) != Error::OK):", "(IsConnected(A, new Callable(B, C)) != Error::OK):", &ProjectConverter3To4::rename_csharp_functions, "custom rename", reg_container);
 
 	valid = valid && test_conversion_with_regex("[Remote]", "[RPC(MultiplayerAPI.RPCMode.AnyPeer)]", &ProjectConverter3To4::rename_csharp_attributes, "custom rename csharp", reg_container);
 	valid = valid && test_conversion_with_regex("[RemoteSync]", "[RPC(MultiplayerAPI.RPCMode.AnyPeer, CallLocal = true)]", &ProjectConverter3To4::rename_csharp_attributes, "custom rename csharp", reg_container);
@@ -958,12 +958,12 @@ bool ProjectConverter3To4::test_conversion(RegExContainer &reg_container) {
 	valid = valid && test_conversion_gdscript_builtin("'.a'", "'.a'", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 	valid = valid && test_conversion_gdscript_builtin("\t._input(_event)", "\tsuper._input(_event)", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 
-	valid = valid && test_conversion_gdscript_builtin("(connect(A,B,C) != OK):", "(connect(A, Callable(B, C)) != OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin("(connect(A,B,C,D) != OK):", "(connect(A, Callable(B, C).bind(D)) != OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin("(connect(A,B,C,[D]) != OK):", "(connect(A, Callable(B, C).bind(D)) != OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin("(connect(A,B,C,[D,E]) != OK):", "(connect(A, Callable(B, C).bind(D,E)) != OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin("(connect(A,B,C,[D,E],F) != OK):", "(connect(A, Callable(B, C).bind(D,E), F) != OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin("(connect(A,B,C,D,E) != OK):", "(connect(A, Callable(B, C).bind(D), E) != OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("(connect(A,B,C) != Error::OK):", "(connect(A, Callable(B, C)) != Error::OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("(connect(A,B,C,D) != Error::OK):", "(connect(A, Callable(B, C).bind(D)) != Error::OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("(connect(A,B,C,[D]) != Error::OK):", "(connect(A, Callable(B, C).bind(D)) != Error::OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("(connect(A,B,C,[D,E]) != Error::OK):", "(connect(A, Callable(B, C).bind(D,E)) != Error::OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("(connect(A,B,C,[D,E],F) != Error::OK):", "(connect(A, Callable(B, C).bind(D,E), F) != Error::OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("(connect(A,B,C,D,E) != Error::OK):", "(connect(A, Callable(B, C).bind(D), E) != Error::OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 
 	valid = valid && test_conversion_gdscript_builtin(".connect(A,B,C)", ".connect(A, Callable(B, C))", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 	valid = valid && test_conversion_gdscript_builtin("abc.connect(A,B,C)", "abc.connect(A, Callable(B, C))", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
@@ -974,11 +974,11 @@ bool ProjectConverter3To4::test_conversion(RegExContainer &reg_container) {
 	valid = valid && test_conversion_gdscript_builtin("$connect(A,B,C)", "$connect(A,B,C)", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 	valid = valid && test_conversion_gdscript_builtin("@connect(A,B,C)", "@connect(A,B,C)", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 
-	valid = valid && test_conversion_gdscript_builtin("(start(A,B) != OK):", "(start(Callable(A, B)) != OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("(start(A,B) != Error::OK):", "(start(Callable(A, B)) != Error::OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 	valid = valid && test_conversion_gdscript_builtin("func start(A,B):", "func start(A,B):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin("(start(A,B,C,D,E,F,G) != OK):", "(start(Callable(A, B).bind(C), D, E, F, G) != OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin("disconnect(A,B,C) != OK):", "disconnect(A, Callable(B, C)) != OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
-	valid = valid && test_conversion_gdscript_builtin("is_connected(A,B,C) != OK):", "is_connected(A, Callable(B, C)) != OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("(start(A,B,C,D,E,F,G) != Error::OK):", "(start(Callable(A, B).bind(C), D, E, F, G) != Error::OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("disconnect(A,B,C) != Error::OK):", "disconnect(A, Callable(B, C)) != Error::OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
+	valid = valid && test_conversion_gdscript_builtin("is_connected(A,B,C) != Error::OK):", "is_connected(A, Callable(B, C)) != Error::OK):", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 	valid = valid && test_conversion_gdscript_builtin("is_connected(A,B,C))", "is_connected(A, Callable(B, C)))", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);
 
 	valid = valid && test_conversion_gdscript_builtin("(tween_method(A,B,C,D,E).foo())", "(tween_method(Callable(A, B), C, D, E).foo())", &ProjectConverter3To4::rename_gdscript_functions, "custom rename", reg_container, false);

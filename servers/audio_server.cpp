@@ -208,7 +208,7 @@ void AudioDriverManager::initialize(int p_driver) {
 
 	// Check if there is a selected driver
 	if (p_driver >= 0 && p_driver < driver_count) {
-		if (drivers[p_driver]->init() == OK) {
+		if (drivers[p_driver]->init() == Error::OK) {
 			drivers[p_driver]->set_singleton();
 			return;
 		} else {
@@ -223,7 +223,7 @@ void AudioDriverManager::initialize(int p_driver) {
 			continue;
 		}
 
-		if (drivers[i]->init() == OK) {
+		if (drivers[i]->init() == Error::OK) {
 			drivers[i]->set_singleton();
 			break;
 		}

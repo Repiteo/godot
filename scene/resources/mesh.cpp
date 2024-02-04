@@ -546,7 +546,7 @@ Ref<ConvexPolygonShape3D> Mesh::create_convex_shape(bool p_clean, bool p_simplif
 	if (p_clean) {
 		Geometry3D::MeshData md;
 		Error err = ConvexHullComputer::convex_hull(vertices, md);
-		if (err == OK) {
+		if (err == Error::OK) {
 			shape->set_points(md.vertices);
 			return shape;
 		} else {
@@ -1801,7 +1801,7 @@ void ArrayMesh::add_surface_from_arrays(PrimitiveType p_primitive, const Array &
 	RS::SurfaceData surface;
 
 	Error err = RS::get_singleton()->mesh_create_surface_data_from_arrays(&surface, (RenderingServer::PrimitiveType)p_primitive, p_arrays, p_blend_shapes, p_lods, p_flags);
-	ERR_FAIL_COND(err != OK);
+	ERR_FAIL_COND(err != Error::OK);
 
 	/* Debug code.
 	print_line("format: " + itos(surface.format));
@@ -2049,9 +2049,9 @@ Error ArrayMesh::lightmap_unwrap(const Transform3D &p_base_transform, float p_te
 }
 
 Error ArrayMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, float p_texel_size, const Vector<uint8_t> &p_src_cache, Vector<uint8_t> &r_dst_cache, bool p_generate_cache) {
-	ERR_FAIL_NULL_V(array_mesh_lightmap_unwrap_callback, ERR_UNCONFIGURED);
-	ERR_FAIL_COND_V_MSG(blend_shapes.size() != 0, ERR_UNAVAILABLE, "Can't unwrap mesh with blend shapes.");
-	ERR_FAIL_COND_V_MSG(p_texel_size <= 0.0f, ERR_PARAMETER_RANGE_ERROR, "Texel size must be greater than 0.");
+	ERR_FAIL_NULL_V(array_mesh_lightmap_unwrap_callback, Error::UNCONFIGURED);
+	ERR_FAIL_COND_V_MSG(blend_shapes.size() != 0, Error::UNAVAILABLE, "Can't unwrap mesh with blend shapes.");
+	ERR_FAIL_COND_V_MSG(p_texel_size <= 0.0f, Error::PARAMETER_RANGE_ERROR, "Texel size must be greater than 0.");
 
 	LocalVector<float> vertices;
 	LocalVector<float> normals;
@@ -2074,9 +2074,9 @@ Error ArrayMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, flo
 		ArrayMeshLightmapSurface s;
 		s.primitive = surface_get_primitive_type(i);
 
-		ERR_FAIL_COND_V_MSG(s.primitive != Mesh::PRIMITIVE_TRIANGLES, ERR_UNAVAILABLE, "Only triangles are supported for lightmap unwrap.");
+		ERR_FAIL_COND_V_MSG(s.primitive != Mesh::PRIMITIVE_TRIANGLES, Error::UNAVAILABLE, "Only triangles are supported for lightmap unwrap.");
 		s.format = surface_get_format(i);
-		ERR_FAIL_COND_V_MSG(!(s.format & ARRAY_FORMAT_NORMAL), ERR_UNAVAILABLE, "Normals are required for lightmap unwrap.");
+		ERR_FAIL_COND_V_MSG(!(s.format & ARRAY_FORMAT_NORMAL), Error::UNAVAILABLE, "Normals are required for lightmap unwrap.");
 
 		Array arrays = surface_get_arrays(i);
 		s.material = surface_get_material(i);
@@ -2160,7 +2160,7 @@ Error ArrayMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, flo
 	bool ok = array_mesh_lightmap_unwrap_callback(p_texel_size, vertices.ptr(), normals.ptr(), vertices.size() / 3, indices.ptr(), indices.size(), p_src_cache.ptr(), &use_cache, &gen_cache, &gen_cache_size, &gen_uvs, &gen_vertices, &gen_vertex_count, &gen_indices, &gen_index_count, &size_x, &size_y);
 
 	if (!ok) {
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	clear_surfaces();
@@ -2180,11 +2180,11 @@ Error ArrayMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, flo
 
 	//go through all indices
 	for (int i = 0; i < gen_index_count; i += 3) {
-		ERR_FAIL_INDEX_V(gen_vertices[gen_indices[i + 0]], (int)uv_indices.size(), ERR_BUG);
-		ERR_FAIL_INDEX_V(gen_vertices[gen_indices[i + 1]], (int)uv_indices.size(), ERR_BUG);
-		ERR_FAIL_INDEX_V(gen_vertices[gen_indices[i + 2]], (int)uv_indices.size(), ERR_BUG);
+		ERR_FAIL_INDEX_V(gen_vertices[gen_indices[i + 0]], (int)uv_indices.size(), Error::BUG);
+		ERR_FAIL_INDEX_V(gen_vertices[gen_indices[i + 1]], (int)uv_indices.size(), Error::BUG);
+		ERR_FAIL_INDEX_V(gen_vertices[gen_indices[i + 2]], (int)uv_indices.size(), Error::BUG);
 
-		ERR_FAIL_COND_V(uv_indices[gen_vertices[gen_indices[i + 0]]].first != uv_indices[gen_vertices[gen_indices[i + 1]]].first || uv_indices[gen_vertices[gen_indices[i + 0]]].first != uv_indices[gen_vertices[gen_indices[i + 2]]].first, ERR_BUG);
+		ERR_FAIL_COND_V(uv_indices[gen_vertices[gen_indices[i + 0]]].first != uv_indices[gen_vertices[gen_indices[i + 1]]].first || uv_indices[gen_vertices[gen_indices[i + 0]]].first != uv_indices[gen_vertices[gen_indices[i + 2]]].first, Error::BUG);
 
 		int surface = uv_indices[gen_vertices[gen_indices[i + 0]]].first;
 
@@ -2241,7 +2241,7 @@ Error ArrayMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, flo
 		memfree(gen_uvs);
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void ArrayMesh::set_shadow_mesh(const Ref<ArrayMesh> &p_mesh) {

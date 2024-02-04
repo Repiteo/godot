@@ -89,10 +89,10 @@ Error ResourceImporterCSVTranslation::import(const String &p_source_file, const 
 	}
 
 	Ref<FileAccess> f = FileAccess::open(p_source_file, FileAccess::READ);
-	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_INVALID_PARAMETER, "Cannot open file from path '" + p_source_file + "'.");
+	ERR_FAIL_COND_V_MSG(f.is_null(), Error::INVALID_PARAMETER, "Cannot open file from path '" + p_source_file + "'.");
 
 	Vector<String> line = f->get_csv_line(delimiter);
-	ERR_FAIL_COND_V(line.size() <= 1, ERR_PARSE_ERROR);
+	ERR_FAIL_COND_V(line.size() <= 1, Error::PARSE_ERROR);
 
 	Vector<String> locales;
 	Vector<Ref<Translation>> translations;
@@ -145,7 +145,7 @@ Error ResourceImporterCSVTranslation::import(const String &p_source_file, const 
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 ResourceImporterCSVTranslation::ResourceImporterCSVTranslation() {

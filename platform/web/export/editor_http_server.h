@@ -68,7 +68,7 @@ private:
 		if (!regen) {
 			key = Ref<CryptoKey>(CryptoKey::create());
 			cert = Ref<X509Certificate>(X509Certificate::create());
-			if (key->load(key_path) != OK || cert->load(crt_path) != OK) {
+			if (key->load(key_path) != Error::OK || cert->load(crt_path) != Error::OK) {
 				regen = true;
 			}
 		}
@@ -103,15 +103,15 @@ public:
 		if (use_tls) {
 			Ref<Crypto> crypto = Crypto::create();
 			if (crypto.is_null()) {
-				return ERR_UNAVAILABLE;
+				return Error::UNAVAILABLE;
 			}
 			if (!p_tls_key.is_empty() && !p_tls_cert.is_empty()) {
 				key = Ref<CryptoKey>(CryptoKey::create());
 				Error err = key->load(p_tls_key);
-				ERR_FAIL_COND_V(err != OK, err);
+				ERR_FAIL_COND_V(err != Error::OK, err);
 				cert = Ref<X509Certificate>(X509Certificate::create());
 				err = cert->load(p_tls_cert);
-				ERR_FAIL_COND_V(err != OK, err);
+				ERR_FAIL_COND_V(err != Error::OK, err);
 			} else {
 				_set_internal_certs(crypto);
 			}
@@ -154,7 +154,7 @@ public:
 
 		Ref<FileAccess> f = FileAccess::open(filepath, FileAccess::READ);
 		ERR_FAIL_COND(f.is_null());
-		String s = "HTTP/1.1 200 OK\r\n";
+		String s = "HTTP/1.1 200 Error::OK\r\n";
 		s += "Connection: Close\r\n";
 		s += "Content-Type: " + ctype + "\r\n";
 		s += "Access-Control-Allow-Origin: *\r\n";
@@ -164,7 +164,7 @@ public:
 		s += "\r\n";
 		CharString cs = s.utf8();
 		Error err = peer->put_data((const uint8_t *)cs.get_data(), cs.size() - 1);
-		if (err != OK) {
+		if (err != Error::OK) {
 			ERR_FAIL();
 		}
 
@@ -175,7 +175,7 @@ public:
 				break;
 			}
 			err = peer->put_data(bytes, read);
-			if (err != OK) {
+			if (err != Error::OK) {
 				ERR_FAIL();
 			}
 		}
@@ -205,7 +205,7 @@ public:
 			if (tls.is_null()) {
 				tls = Ref<StreamPeerTLS>(StreamPeerTLS::create());
 				peer = tls;
-				if (tls->accept_stream(tcp, TLSOptions::server(key, cert)) != OK) {
+				if (tls->accept_stream(tcp, TLSOptions::server(key, cert)) != Error::OK) {
 					_clear_client();
 					return;
 				}
@@ -233,7 +233,7 @@ public:
 			int read = 0;
 			ERR_FAIL_COND(req_pos >= 4096);
 			Error err = peer->get_partial_data(&req_buf[req_pos], 1, read);
-			if (err != OK) {
+			if (err != Error::OK) {
 				// Got an error
 				_clear_client();
 				return;

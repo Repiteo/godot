@@ -525,7 +525,7 @@ void Skeleton3DEditor::_file_selected(const String &p_file) {
 
 	Error err = ResourceSaver::save(sp, p_file);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		EditorNode::get_singleton()->show_warning(vformat(TTR("Error saving file: %s"), p_file));
 		return;
 	}

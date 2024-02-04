@@ -58,7 +58,7 @@ Error FileAccessCompressed::open_after_magic(Ref<FileAccess> p_base) {
 	block_size = f->get_32();
 	if (block_size == 0) {
 		f.unref();
-		ERR_FAIL_V_MSG(ERR_FILE_CORRUPT, "Can't open compressed file '" + p_base->get_path() + "' with block size 0, it is corrupted.");
+		ERR_FAIL_V_MSG(Error::FILE_CORRUPT, "Can't open compressed file '" + p_base->get_path() + "' with block size 0, it is corrupted.");
 	}
 	read_total = f->get_32();
 	uint32_t bc = (read_total / block_size) + 1;
@@ -86,16 +86,16 @@ Error FileAccessCompressed::open_after_magic(Ref<FileAccess> p_base) {
 	read_block = 0;
 	read_pos = 0;
 
-	return ret == -1 ? ERR_FILE_CORRUPT : OK;
+	return ret == -1 ? Error::FILE_CORRUPT : Error::OK;
 }
 
 Error FileAccessCompressed::open_internal(const String &p_path, int p_mode_flags) {
-	ERR_FAIL_COND_V(p_mode_flags == READ_WRITE, ERR_UNAVAILABLE);
+	ERR_FAIL_COND_V(p_mode_flags == READ_WRITE, Error::UNAVAILABLE);
 	_close();
 
 	Error err;
 	f = FileAccess::open(p_path, p_mode_flags, &err);
-	if (err != OK) {
+	if (err != Error::OK) {
 		//not openable
 		f.unref();
 		return err;
@@ -115,14 +115,14 @@ Error FileAccessCompressed::open_internal(const String &p_path, int p_mode_flags
 		char rmagic[5];
 		f->get_buffer((uint8_t *)rmagic, 4);
 		rmagic[4] = 0;
-		err = ERR_FILE_UNRECOGNIZED;
-		if (magic != rmagic || (err = open_after_magic(f)) != OK) {
+		err = Error::FILE_UNRECOGNIZED;
+		if (magic != rmagic || (err = open_after_magic(f)) != Error::OK) {
 			f.unref();
 			return err;
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void FileAccessCompressed::_close() {
@@ -331,7 +331,7 @@ uint64_t FileAccessCompressed::get_buffer(uint8_t *p_dst, uint64_t p_length) con
 }
 
 Error FileAccessCompressed::get_error() const {
-	return read_eof ? ERR_FILE_EOF : OK;
+	return read_eof ? Error::FILE_EOF : Error::OK;
 }
 
 void FileAccessCompressed::flush() {
@@ -376,7 +376,7 @@ Error FileAccessCompressed::_set_unix_permissions(const String &p_file, BitField
 	if (f.is_valid()) {
 		return f->_set_unix_permissions(p_file, p_permissions);
 	}
-	return FAILED;
+	return Error::FAILED;
 }
 
 bool FileAccessCompressed::_get_hidden_attribute(const String &p_file) {
@@ -390,7 +390,7 @@ Error FileAccessCompressed::_set_hidden_attribute(const String &p_file, bool p_h
 	if (f.is_valid()) {
 		return f->_set_hidden_attribute(p_file, p_hidden);
 	}
-	return FAILED;
+	return Error::FAILED;
 }
 
 bool FileAccessCompressed::_get_read_only_attribute(const String &p_file) {
@@ -404,7 +404,7 @@ Error FileAccessCompressed::_set_read_only_attribute(const String &p_file, bool 
 	if (f.is_valid()) {
 		return f->_set_read_only_attribute(p_file, p_ro);
 	}
-	return FAILED;
+	return Error::FAILED;
 }
 
 void FileAccessCompressed::close() {

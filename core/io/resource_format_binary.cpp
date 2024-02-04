@@ -126,7 +126,7 @@ static Error read_reals(real_t *dst, Ref<FileAccess> &f, size_t count) {
 				dst[i] = f->get_double();
 			}
 		} else {
-			ERR_FAIL_V_MSG(ERR_UNAVAILABLE, "real_t size is neither 4 nor 8!");
+			ERR_FAIL_V_MSG(Error::UNAVAILABLE, "real_t size is neither 4 nor 8!");
 		}
 	} else {
 		if constexpr (sizeof(real_t) == 4) {
@@ -145,10 +145,10 @@ static Error read_reals(real_t *dst, Ref<FileAccess> &f, size_t count) {
 				dst[i] = f->get_float();
 			}
 		} else {
-			ERR_FAIL_V_MSG(ERR_UNAVAILABLE, "real_t size is neither 4 nor 8!");
+			ERR_FAIL_V_MSG(Error::UNAVAILABLE, "real_t size is neither 4 nor 8!");
 		}
 	}
-	return OK;
+	return Error::OK;
 }
 
 StringName ResourceLoaderBinary::_get_string() {
@@ -401,7 +401,7 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 					String path;
 
 					if (using_named_scene_ids) { // New format.
-						ERR_FAIL_INDEX_V((int)index, internal_resources.size(), ERR_PARSE_ERROR);
+						ERR_FAIL_INDEX_V((int)index, internal_resources.size(), Error::PARSE_ERROR);
 						path = internal_resources[index].path;
 					} else {
 						path += res_path + "::" + itos(index);
@@ -455,7 +455,7 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 									if (!ResourceLoader::get_abort_on_missing_resources()) {
 										ResourceLoader::notify_dependency_error(local_path, external_resources[erindex].path, external_resources[erindex].type);
 									} else {
-										error = ERR_FILE_MISSING_DEPENDENCIES;
+										error = Error::FILE_MISSING_DEPENDENCIES;
 										ERR_FAIL_V_MSG(error, "Can't load dependency: " + external_resources[erindex].path + ".");
 									}
 								}
@@ -466,7 +466,7 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 					}
 				} break;
 				default: {
-					ERR_FAIL_V(ERR_FILE_CORRUPT);
+					ERR_FAIL_V(Error::FILE_CORRUPT);
 				} break;
 			}
 		} break;
@@ -484,10 +484,10 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 			for (uint32_t i = 0; i < len; i++) {
 				Variant key;
 				Error err = parse_variant(key);
-				ERR_FAIL_COND_V_MSG(err, ERR_FILE_CORRUPT, "Error when trying to parse Variant.");
+				ERR_FAIL_COND_V_MSG(err != Error::OK, Error::FILE_CORRUPT, "Error when trying to parse Variant.");
 				Variant value;
 				err = parse_variant(value);
-				ERR_FAIL_COND_V_MSG(err, ERR_FILE_CORRUPT, "Error when trying to parse Variant.");
+				ERR_FAIL_COND_V_MSG(err != Error::OK, Error::FILE_CORRUPT, "Error when trying to parse Variant.");
 				d[key] = value;
 			}
 			r_v = d;
@@ -500,7 +500,7 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 			for (uint32_t i = 0; i < len; i++) {
 				Variant val;
 				Error err = parse_variant(val);
-				ERR_FAIL_COND_V_MSG(err, ERR_FILE_CORRUPT, "Error when trying to parse Variant.");
+				ERR_FAIL_COND_V_MSG(err != Error::OK, Error::FILE_CORRUPT, "Error when trying to parse Variant.");
 				a[i] = val;
 			}
 			r_v = a;
@@ -614,7 +614,7 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 			Vector2 *w = array.ptrw();
 			static_assert(sizeof(Vector2) == 2 * sizeof(real_t));
 			const Error err = read_reals(reinterpret_cast<real_t *>(w), f, len * 2);
-			ERR_FAIL_COND_V(err != OK, err);
+			ERR_FAIL_COND_V(err != Error::OK, err);
 
 			r_v = array;
 
@@ -627,7 +627,7 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 			Vector3 *w = array.ptrw();
 			static_assert(sizeof(Vector3) == 3 * sizeof(real_t));
 			const Error err = read_reals(reinterpret_cast<real_t *>(w), f, len * 3);
-			ERR_FAIL_COND_V(err != OK, err);
+			ERR_FAIL_COND_V(err != Error::OK, err);
 
 			r_v = array;
 
@@ -654,11 +654,11 @@ Error ResourceLoaderBinary::parse_variant(Variant &r_v) {
 			r_v = array;
 		} break;
 		default: {
-			ERR_FAIL_V(ERR_FILE_CORRUPT);
+			ERR_FAIL_V(Error::FILE_CORRUPT);
 		} break;
 	}
 
-	return OK; //never reach anyway
+	return Error::OK; //never reach anyway
 }
 
 Ref<Resource> ResourceLoaderBinary::get_resource() {
@@ -666,7 +666,7 @@ Ref<Resource> ResourceLoaderBinary::get_resource() {
 }
 
 Error ResourceLoaderBinary::load() {
-	if (error != OK) {
+	if (error != Error::OK) {
 		return error;
 	}
 
@@ -688,7 +688,7 @@ Error ResourceLoaderBinary::load() {
 			if (!ResourceLoader::get_abort_on_missing_resources()) {
 				ResourceLoader::notify_dependency_error(local_path, path, external_resources[i].type);
 			} else {
-				error = ERR_FILE_MISSING_DEPENDENCIES;
+				error = Error::FILE_MISSING_DEPENDENCIES;
 				ERR_FAIL_V_MSG(error, "Can't load dependency: " + path + ".");
 			}
 		}
@@ -716,7 +716,7 @@ Error ResourceLoaderBinary::load() {
 				Ref<Resource> cached = ResourceCache::get_ref(path);
 				if (cached.is_valid()) {
 					//already loaded, don't do anything
-					error = OK;
+					error = Error::OK;
 					internal_index_cache[path] = cached;
 					continue;
 				}
@@ -758,17 +758,17 @@ Error ResourceLoaderBinary::load() {
 					missing_resource->set_recording_properties(true);
 					obj = missing_resource;
 				} else {
-					error = ERR_FILE_CORRUPT;
-					ERR_FAIL_V_MSG(ERR_FILE_CORRUPT, local_path + ":Resource of unrecognized type in file: " + t + ".");
+					error = Error::FILE_CORRUPT;
+					ERR_FAIL_V_MSG(Error::FILE_CORRUPT, local_path + ":Resource of unrecognized type in file: " + t + ".");
 				}
 			}
 
 			Resource *r = Object::cast_to<Resource>(obj);
 			if (!r) {
 				String obj_class = obj->get_class();
-				error = ERR_FILE_CORRUPT;
+				error = Error::FILE_CORRUPT;
 				memdelete(obj); //bye
-				ERR_FAIL_V_MSG(ERR_FILE_CORRUPT, local_path + ":Resource type in resource field not a resource, type is: " + obj_class + ".");
+				ERR_FAIL_V_MSG(Error::FILE_CORRUPT, local_path + ":Resource type in resource field not a resource, type is: " + obj_class + ".");
 			}
 
 			res = Ref<Resource>(r);
@@ -794,14 +794,14 @@ Error ResourceLoaderBinary::load() {
 			StringName name = _get_string();
 
 			if (name == StringName()) {
-				error = ERR_FILE_CORRUPT;
-				ERR_FAIL_V(ERR_FILE_CORRUPT);
+				error = Error::FILE_CORRUPT;
+				ERR_FAIL_V(Error::FILE_CORRUPT);
 			}
 
 			Variant value;
 
 			error = parse_variant(value);
-			if (error) {
+			if (error != Error::OK) {
 				return error;
 			}
 
@@ -857,12 +857,12 @@ Error ResourceLoaderBinary::load() {
 			f.unref();
 			resource = res;
 			resource->set_as_translation_remapped(translation_remapped);
-			error = OK;
-			return OK;
+			error = Error::OK;
+			return Error::OK;
 		}
 	}
 
-	return ERR_FILE_EOF;
+	return Error::FILE_EOF;
 }
 
 void ResourceLoaderBinary::set_translation_remapped(bool p_remapped) {
@@ -901,14 +901,14 @@ String ResourceLoaderBinary::get_unicode_string() {
 
 void ResourceLoaderBinary::get_classes_used(Ref<FileAccess> p_f, HashSet<StringName> *p_classes) {
 	open(p_f, false, true);
-	if (error) {
+	if (error != Error::OK) {
 		return;
 	}
 
 	for (int i = 0; i < internal_resources.size(); i++) {
 		p_f->seek(internal_resources[i].offset);
 		String t = get_unicode_string();
-		ERR_FAIL_COND(p_f->get_error() != OK);
+		ERR_FAIL_COND(p_f->get_error() != Error::OK);
 		if (t != String()) {
 			p_classes->insert(t);
 		}
@@ -917,7 +917,7 @@ void ResourceLoaderBinary::get_classes_used(Ref<FileAccess> p_f, HashSet<StringN
 
 void ResourceLoaderBinary::get_dependencies(Ref<FileAccess> p_f, List<String> *p_dependencies, bool p_add_types) {
 	open(p_f, false, true);
-	if (error) {
+	if (error != Error::OK) {
 		return;
 	}
 
@@ -947,7 +947,7 @@ void ResourceLoaderBinary::get_dependencies(Ref<FileAccess> p_f, List<String> *p
 }
 
 void ResourceLoaderBinary::open(Ref<FileAccess> p_f, bool p_no_resources, bool p_keep_uuid_paths) {
-	error = OK;
+	error = Error::OK;
 
 	f = p_f;
 	uint8_t header[4];
@@ -957,7 +957,7 @@ void ResourceLoaderBinary::open(Ref<FileAccess> p_f, bool p_no_resources, bool p
 		Ref<FileAccessCompressed> fac;
 		fac.instantiate();
 		error = fac->open_after_magic(f);
-		if (error != OK) {
+		if (error != Error::OK) {
 			f.unref();
 			ERR_FAIL_MSG("Failed to open binary resource file: " + local_path + ".");
 		}
@@ -965,7 +965,7 @@ void ResourceLoaderBinary::open(Ref<FileAccess> p_f, bool p_no_resources, bool p
 
 	} else if (header[0] != 'R' || header[1] != 'S' || header[2] != 'R' || header[3] != 'C') {
 		// Not normal.
-		error = ERR_FILE_UNRECOGNIZED;
+		error = Error::FILE_UNRECOGNIZED;
 		f.unref();
 		ERR_FAIL_MSG("Unrecognized binary resource file: " + local_path + ".");
 	}
@@ -1078,14 +1078,14 @@ void ResourceLoaderBinary::open(Ref<FileAccess> p_f, bool p_no_resources, bool p
 	print_bl("int resources: " + itos(int_resources_size));
 
 	if (f->eof_reached()) {
-		error = ERR_FILE_CORRUPT;
+		error = Error::FILE_CORRUPT;
 		f.unref();
 		ERR_FAIL_MSG("Premature end of file (EOF): " + local_path + ".");
 	}
 }
 
 String ResourceLoaderBinary::recognize(Ref<FileAccess> p_f) {
-	error = OK;
+	error = Error::OK;
 
 	f = p_f;
 	uint8_t header[4];
@@ -1095,7 +1095,7 @@ String ResourceLoaderBinary::recognize(Ref<FileAccess> p_f) {
 		Ref<FileAccessCompressed> fac;
 		fac.instantiate();
 		error = fac->open_after_magic(f);
-		if (error != OK) {
+		if (error != Error::OK) {
 			f.unref();
 			return "";
 		}
@@ -1103,7 +1103,7 @@ String ResourceLoaderBinary::recognize(Ref<FileAccess> p_f) {
 
 	} else if (header[0] != 'R' || header[1] != 'S' || header[2] != 'R' || header[3] != 'C') {
 		// Not normal.
-		error = ERR_FILE_UNRECOGNIZED;
+		error = Error::FILE_UNRECOGNIZED;
 		f.unref();
 		return "";
 	}
@@ -1126,7 +1126,7 @@ String ResourceLoaderBinary::recognize(Ref<FileAccess> p_f) {
 }
 
 String ResourceLoaderBinary::recognize_script_class(Ref<FileAccess> p_f) {
-	error = OK;
+	error = Error::OK;
 
 	f = p_f;
 	uint8_t header[4];
@@ -1136,7 +1136,7 @@ String ResourceLoaderBinary::recognize_script_class(Ref<FileAccess> p_f) {
 		Ref<FileAccessCompressed> fac;
 		fac.instantiate();
 		error = fac->open_after_magic(f);
-		if (error != OK) {
+		if (error != Error::OK) {
 			f.unref();
 			return "";
 		}
@@ -1144,7 +1144,7 @@ String ResourceLoaderBinary::recognize_script_class(Ref<FileAccess> p_f) {
 
 	} else if (header[0] != 'R' || header[1] != 'S' || header[2] != 'R' || header[3] != 'C') {
 		// Not normal.
-		error = ERR_FILE_UNRECOGNIZED;
+		error = Error::FILE_UNRECOGNIZED;
 		f.unref();
 		return "";
 	}
@@ -1178,13 +1178,13 @@ String ResourceLoaderBinary::recognize_script_class(Ref<FileAccess> p_f) {
 
 Ref<Resource> ResourceFormatLoaderBinary::load(const String &p_path, const String &p_original_path, Error *r_error, bool p_use_sub_threads, float *r_progress, CacheMode p_cache_mode) {
 	if (r_error) {
-		*r_error = ERR_FILE_CANT_OPEN;
+		*r_error = Error::FILE_CANT_OPEN;
 	}
 
 	Error err;
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ, &err);
 
-	ERR_FAIL_COND_V_MSG(err != OK, Ref<Resource>(), "Cannot open file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Ref<Resource>(), "Cannot open file '" + p_path + "'.");
 
 	ResourceLoaderBinary loader;
 	loader.cache_mode = p_cache_mode;
@@ -1201,7 +1201,7 @@ Ref<Resource> ResourceFormatLoaderBinary::load(const String &p_path, const Strin
 		*r_error = err;
 	}
 
-	if (err) {
+	if (err != Error::OK) {
 		return Ref<Resource>();
 	}
 	return loader.resource;
@@ -1251,7 +1251,7 @@ void ResourceFormatLoaderBinary::get_dependencies(const String &p_path, List<Str
 
 Error ResourceFormatLoaderBinary::rename_dependencies(const String &p_path, const HashMap<String, String> &p_map) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
-	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_CANT_OPEN, "Cannot open file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(f.is_null(), Error::CANT_OPEN, "Cannot open file '" + p_path + "'.");
 
 	Ref<FileAccess> fw;
 
@@ -1264,23 +1264,23 @@ Error ResourceFormatLoaderBinary::rename_dependencies(const String &p_path, cons
 		Ref<FileAccessCompressed> fac;
 		fac.instantiate();
 		Error err = fac->open_after_magic(f);
-		ERR_FAIL_COND_V_MSG(err != OK, err, "Cannot open file '" + p_path + "'.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Cannot open file '" + p_path + "'.");
 		f = fac;
 
 		Ref<FileAccessCompressed> facw;
 		facw.instantiate();
 		facw->configure("RSCC");
 		err = facw->open_internal(p_path + ".depren", FileAccess::WRITE);
-		ERR_FAIL_COND_V_MSG(err, ERR_FILE_CORRUPT, "Cannot create file '" + p_path + ".depren'.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, Error::FILE_CORRUPT, "Cannot create file '" + p_path + ".depren'.");
 
 		fw = facw;
 
 	} else if (header[0] != 'R' || header[1] != 'S' || header[2] != 'R' || header[3] != 'C') {
 		// Not normal.
-		ERR_FAIL_V_MSG(ERR_FILE_UNRECOGNIZED, "Unrecognized binary resource file '" + local_path + "'.");
+		ERR_FAIL_V_MSG(Error::FILE_UNRECOGNIZED, "Unrecognized binary resource file '" + local_path + "'.");
 	} else {
 		fw = FileAccess::open(p_path + ".depren", FileAccess::WRITE);
-		ERR_FAIL_COND_V_MSG(fw.is_null(), ERR_CANT_CREATE, "Cannot create file '" + p_path + ".depren'.");
+		ERR_FAIL_COND_V_MSG(fw.is_null(), Error::CANT_CREATE, "Cannot create file '" + p_path + ".depren'.");
 
 		uint8_t magic[4] = { 'R', 'S', 'R', 'C' };
 		fw->store_buffer(magic, 4);
@@ -1317,7 +1317,7 @@ Error ResourceFormatLoaderBinary::rename_dependencies(const String &p_path, cons
 		Error err;
 		f = FileAccess::open(p_path, FileAccess::READ, &err);
 
-		ERR_FAIL_COND_V_MSG(err != OK, ERR_FILE_CANT_OPEN, "Cannot open file '" + p_path + "'.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, Error::FILE_CANT_OPEN, "Cannot open file '" + p_path + "'.");
 
 		ResourceLoaderBinary loader;
 		loader.local_path = ProjectSettings::get_singleton()->localize_path(p_path);
@@ -1327,15 +1327,15 @@ Error ResourceFormatLoaderBinary::rename_dependencies(const String &p_path, cons
 
 		err = loader.load();
 
-		ERR_FAIL_COND_V(err != ERR_FILE_EOF, ERR_FILE_CORRUPT);
+		ERR_FAIL_COND_V(err != Error::FILE_EOF, Error::FILE_CORRUPT);
 		Ref<Resource> res = loader.get_resource();
-		ERR_FAIL_COND_V(!res.is_valid(), ERR_FILE_CORRUPT);
+		ERR_FAIL_COND_V(!res.is_valid(), Error::FILE_CORRUPT);
 
 		return ResourceFormatSaverBinary::singleton->save(res, p_path);
 	}
 
 	if (ver_format > FORMAT_VERSION || ver_major > VERSION_MAJOR) {
-		ERR_FAIL_V_MSG(ERR_FILE_UNRECOGNIZED,
+		ERR_FAIL_V_MSG(Error::FILE_UNRECOGNIZED,
 				vformat("File '%s' can't be loaded, as it uses a format version (%d) or engine version (%d.%d) which are not supported by your engine version (%s).",
 						local_path, ver_format, ver_major, ver_minor, VERSION_BRANCH));
 	}
@@ -1442,13 +1442,13 @@ Error ResourceFormatLoaderBinary::rename_dependencies(const String &p_path, cons
 	}
 	f.unref();
 
-	bool all_ok = fw->get_error() == OK;
+	bool all_ok = fw->get_error() == Error::OK;
 
 	fw->seek(md_ofs);
 	fw->store_64(importmd_ofs + size_diff);
 
 	if (!all_ok) {
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	fw.unref();
@@ -1458,7 +1458,7 @@ Error ResourceFormatLoaderBinary::rename_dependencies(const String &p_path, cons
 		da->remove(p_path);
 		da->rename(p_path + ".depren", p_path);
 	}
-	return OK;
+	return Error::OK;
 }
 
 void ResourceFormatLoaderBinary::get_classes_used(const String &p_path, HashSet<StringName> *r_classes) {
@@ -1511,7 +1511,7 @@ ResourceUID::ID ResourceFormatLoaderBinary::get_resource_uid(const String &p_pat
 	loader.local_path = ProjectSettings::get_singleton()->localize_path(p_path);
 	loader.res_path = loader.local_path;
 	loader.open(f, true);
-	if (loader.error != OK) {
+	if (loader.error != Error::OK) {
 		return ResourceUID::INVALID_ID; //could not read
 	}
 	return loader.uid;
@@ -2076,7 +2076,7 @@ Error ResourceFormatSaverBinaryInstance::save(const String &p_path, const Ref<Re
 		f = FileAccess::open(p_path, FileAccess::WRITE, &err);
 	}
 
-	ERR_FAIL_COND_V_MSG(err != OK, err, "Cannot create file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Cannot create file '" + p_path + "'.");
 
 	relative_paths = p_flags & ResourceSaver::FLAG_RELATIVE_PATHS;
 	skip_editor = p_flags & ResourceSaver::FLAG_OMIT_EDITOR_PROPERTIES;
@@ -2111,8 +2111,8 @@ Error ResourceFormatSaverBinaryInstance::save(const String &p_path, const Ref<Re
 	f->store_32(VERSION_MINOR);
 	f->store_32(FORMAT_VERSION);
 
-	if (f->get_error() != OK && f->get_error() != ERR_FILE_EOF) {
-		return ERR_CANT_CREATE;
+	if (f->get_error() != Error::OK && f->get_error() != Error::FILE_EOF) {
+		return Error::CANT_CREATE;
 	}
 
 	save_unicode_string(f, _resource_get_class(p_resource));
@@ -2298,16 +2298,16 @@ Error ResourceFormatSaverBinaryInstance::save(const String &p_path, const Ref<Re
 
 	f->store_buffer((const uint8_t *)"RSRC", 4); //magic at end
 
-	if (f->get_error() != OK && f->get_error() != ERR_FILE_EOF) {
-		return ERR_CANT_CREATE;
+	if (f->get_error() != Error::OK && f->get_error() != Error::FILE_EOF) {
+		return Error::CANT_CREATE;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error ResourceFormatSaverBinaryInstance::set_uid(const String &p_path, ResourceUID::ID p_uid) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
-	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_CANT_OPEN, "Cannot open file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(f.is_null(), Error::CANT_OPEN, "Cannot open file '" + p_path + "'.");
 
 	Ref<FileAccess> fw;
 
@@ -2320,23 +2320,23 @@ Error ResourceFormatSaverBinaryInstance::set_uid(const String &p_path, ResourceU
 		Ref<FileAccessCompressed> fac;
 		fac.instantiate();
 		Error err = fac->open_after_magic(f);
-		ERR_FAIL_COND_V_MSG(err != OK, err, "Cannot open file '" + p_path + "'.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Cannot open file '" + p_path + "'.");
 		f = fac;
 
 		Ref<FileAccessCompressed> facw;
 		facw.instantiate();
 		facw->configure("RSCC");
 		err = facw->open_internal(p_path + ".uidren", FileAccess::WRITE);
-		ERR_FAIL_COND_V_MSG(err, ERR_FILE_CORRUPT, "Cannot create file '" + p_path + ".uidren'.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, Error::FILE_CORRUPT, "Cannot create file '" + p_path + ".uidren'.");
 
 		fw = facw;
 
 	} else if (header[0] != 'R' || header[1] != 'S' || header[2] != 'R' || header[3] != 'C') {
 		// Not a binary resource.
-		return ERR_FILE_UNRECOGNIZED;
+		return Error::FILE_UNRECOGNIZED;
 	} else {
 		fw = FileAccess::open(p_path + ".uidren", FileAccess::WRITE);
-		ERR_FAIL_COND_V_MSG(fw.is_null(), ERR_CANT_CREATE, "Cannot create file '" + p_path + ".uidren'.");
+		ERR_FAIL_COND_V_MSG(fw.is_null(), Error::CANT_CREATE, "Cannot create file '" + p_path + ".uidren'.");
 
 		uint8_t magich[4] = { 'R', 'S', 'R', 'C' };
 		fw->store_buffer(magich, 4);
@@ -2368,11 +2368,11 @@ Error ResourceFormatSaverBinaryInstance::set_uid(const String &p_path, ResourceU
 		// Use the old approach.
 
 		WARN_PRINT("This file is old, so it does not support UIDs, opening and resaving '" + p_path + "'.");
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 
 	if (ver_format > FORMAT_VERSION || ver_major > VERSION_MAJOR) {
-		ERR_FAIL_V_MSG(ERR_FILE_UNRECOGNIZED,
+		ERR_FAIL_V_MSG(Error::FILE_UNRECOGNIZED,
 				vformat("File '%s' can't be loaded, as it uses a format version (%d) or engine version (%d.%d) which are not supported by your engine version (%s).",
 						local_path, ver_format, ver_major, ver_minor, VERSION_BRANCH));
 	}
@@ -2407,10 +2407,10 @@ Error ResourceFormatSaverBinaryInstance::set_uid(const String &p_path, ResourceU
 
 	f.unref();
 
-	bool all_ok = fw->get_error() == OK;
+	bool all_ok = fw->get_error() == Error::OK;
 
 	if (!all_ok) {
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	fw.unref();
@@ -2418,7 +2418,7 @@ Error ResourceFormatSaverBinaryInstance::set_uid(const String &p_path, ResourceU
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_RESOURCES);
 	da->remove(p_path);
 	da->rename(p_path + ".uidren", p_path);
-	return OK;
+	return Error::OK;
 }
 
 Error ResourceFormatSaverBinary::save(const Ref<Resource> &p_resource, const String &p_path, uint32_t p_flags) {

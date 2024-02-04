@@ -96,16 +96,16 @@ Error RemoteFilesystemClient::_store_file(const String &p_path, const LocalVecto
 	}
 
 	Ref<FileAccess> f = FileAccess::open(full_path, FileAccess::WRITE);
-	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_FILE_CANT_OPEN, "Unable to open file for writing to remote filesystem cache: " + p_path);
+	ERR_FAIL_COND_V_MSG(f.is_null(), Error::FILE_CANT_OPEN, "Unable to open file for writing to remote filesystem cache: " + p_path);
 	f->store_buffer(p_file.ptr(), p_file.size());
 	Error err = f->get_error();
-	if (err) {
+	if (err != Error::OK) {
 		return err;
 	}
 	f.unref(); // Unref to ensure file is not locked and modified time can be obtained.
 
 	modified_time = FileAccess::get_modified_time(full_path);
-	return OK;
+	return Error::OK;
 }
 
 Error RemoteFilesystemClient::_remove_file(const String &p_path) {
@@ -115,16 +115,16 @@ Error RemoteFilesystemClient::_store_cache_file(const Vector<FileCache> &p_cache
 	String full_path = cache_path.path_join(FILES_CACHE_FILE);
 	String base_file_dir = full_path.get_base_dir();
 	Error err = DirAccess::make_dir_recursive_absolute(base_file_dir);
-	ERR_FAIL_COND_V_MSG(err != OK && err != ERR_ALREADY_EXISTS, err, "Unable to create base directory to store cache file: " + base_file_dir);
+	ERR_FAIL_COND_V_MSG(err != Error::OK && err != Error::ALREADY_EXISTS, err, "Unable to create base directory to store cache file: " + base_file_dir);
 
 	Ref<FileAccess> f = FileAccess::open(full_path, FileAccess::WRITE);
-	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_FILE_CANT_OPEN, "Unable to open the remote cache file for writing: " + full_path);
+	ERR_FAIL_COND_V_MSG(f.is_null(), Error::FILE_CANT_OPEN, "Unable to open the remote cache file for writing: " + full_path);
 	f->store_line(itos(FILESYSTEM_CACHE_VERSION));
 	for (int i = 0; i < p_cache.size(); i++) {
 		String l = p_cache[i].path + "::" + itos(p_cache[i].server_modified_time) + "::" + itos(p_cache[i].modified_time);
 		f->store_line(l);
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error RemoteFilesystemClient::synchronize_with_server(const String &p_host, int p_port, const String &p_password, String &r_cache_path) {
@@ -151,10 +151,10 @@ Error RemoteFilesystemClient::_synchronize_with_server(const String &p_host, int
 	tcp_client.instantiate();
 
 	IPAddress ip = p_host.is_valid_ip_address() ? IPAddress(p_host) : IP::get_singleton()->resolve_hostname(p_host);
-	ERR_FAIL_COND_V_MSG(!ip.is_valid(), ERR_INVALID_PARAMETER, "Unable to resolve remote filesystem server hostname: " + p_host);
+	ERR_FAIL_COND_V_MSG(!ip.is_valid(), Error::INVALID_PARAMETER, "Unable to resolve remote filesystem server hostname: " + p_host);
 	print_verbose(vformat("Remote Filesystem: Connecting to host %s, port %d.", ip, p_port));
 	Error err = tcp_client->connect_to_host(ip, p_port);
-	ERR_FAIL_COND_V_MSG(err != OK, err, "Unable to open connection to remote file server (" + String(p_host) + ", port " + itos(p_port) + ") failed.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Unable to open connection to remote file server (" + String(p_host) + ", port " + itos(p_port) + ") failed.");
 
 	while (tcp_client->get_status() == StreamPeerTCP::STATUS_CONNECTING) {
 		tcp_client->poll();
@@ -162,11 +162,11 @@ Error RemoteFilesystemClient::_synchronize_with_server(const String &p_host, int
 	}
 
 	if (tcp_client->get_status() != StreamPeerTCP::STATUS_CONNECTED) {
-		ERR_FAIL_V_MSG(ERR_CANT_CONNECT, "Connection to remote file server (" + String(p_host) + ", port " + itos(p_port) + ") failed.");
+		ERR_FAIL_V_MSG(Error::CANT_CONNECT, "Connection to remote file server (" + String(p_host) + ", port " + itos(p_port) + ") failed.");
 	}
 
 	// Connection OK, now send the current file state.
-	print_verbose("Remote Filesystem: Connection OK.");
+	print_verbose("Remote Filesystem: Connection Error::OK.");
 
 	// Header (GRFS) - Godot Remote File System
 	print_verbose("Remote Filesystem: Sending header");
@@ -235,11 +235,11 @@ Error RemoteFilesystemClient::_synchronize_with_server(const String &p_host, int
 	}
 
 	tcp_client->poll();
-	ERR_FAIL_COND_V_MSG(tcp_client->get_status() != StreamPeerTCP::STATUS_CONNECTED, ERR_CONNECTION_ERROR, "Remote filesystem server disconnected after sending header.");
+	ERR_FAIL_COND_V_MSG(tcp_client->get_status() != StreamPeerTCP::STATUS_CONNECTED, Error::CONNECTION_ERROR, "Remote filesystem server disconnected after sending header.");
 
 	uint32_t file_count = tcp_client->get_32();
 
-	ERR_FAIL_COND_V_MSG(tcp_client->get_status() != StreamPeerTCP::STATUS_CONNECTED, ERR_CONNECTION_ERROR, "Remote filesystem server disconnected while waiting for file list");
+	ERR_FAIL_COND_V_MSG(tcp_client->get_status() != StreamPeerTCP::STATUS_CONNECTED, Error::CONNECTION_ERROR, "Remote filesystem server disconnected while waiting for file list");
 
 	LocalVector<uint8_t> file_buffer;
 
@@ -248,9 +248,9 @@ Error RemoteFilesystemClient::_synchronize_with_server(const String &p_host, int
 	HashSet<String> files_processed;
 	for (uint32_t i = 0; i < file_count; i++) {
 		String file = tcp_client->get_utf8_string();
-		ERR_FAIL_COND_V_MSG(file == String(), ERR_CONNECTION_ERROR, "Invalid file name received from remote filesystem.");
+		ERR_FAIL_COND_V_MSG(file == String(), Error::CONNECTION_ERROR, "Invalid file name received from remote filesystem.");
 		uint64_t server_modified_time = tcp_client->get_u64();
-		ERR_FAIL_COND_V_MSG(tcp_client->get_status() != StreamPeerTCP::STATUS_CONNECTED, ERR_CONNECTION_ERROR, "Remote filesystem server disconnected while waiting for file info.");
+		ERR_FAIL_COND_V_MSG(tcp_client->get_status() != StreamPeerTCP::STATUS_CONNECTED, Error::CONNECTION_ERROR, "Remote filesystem server disconnected while waiting for file info.");
 
 		FileCache fc;
 		fc.path = file;
@@ -279,7 +279,7 @@ Error RemoteFilesystemClient::_synchronize_with_server(const String &p_host, int
 		file_buffer.resize(file_size);
 
 		err = tcp_client->get_data(file_buffer.ptr(), file_size);
-		if (err != OK) {
+		if (err != Error::OK) {
 			ERR_PRINT("Error retrieving file from remote filesystem: " + file);
 			server_disconnected = true;
 		}
@@ -297,7 +297,7 @@ Error RemoteFilesystemClient::_synchronize_with_server(const String &p_host, int
 
 		uint64_t modified_time = 0;
 		err = _store_file(file, file_buffer, modified_time);
-		if (err != OK) {
+		if (err != Error::OK) {
 			server_disconnected = true;
 			continue;
 		}
@@ -320,10 +320,10 @@ Error RemoteFilesystemClient::_synchronize_with_server(const String &p_host, int
 	}
 
 	err = _store_cache_file(new_file_cache);
-	ERR_FAIL_COND_V_MSG(err != OK, ERR_FILE_CANT_OPEN, "Error writing the remote filesystem file cache.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Error::FILE_CANT_OPEN, "Error writing the remote filesystem file cache.");
 
 	print_verbose("Remote Filesystem: Update success.");
 
 	_update_cache_path(r_cache_path);
-	return OK;
+	return Error::OK;
 }

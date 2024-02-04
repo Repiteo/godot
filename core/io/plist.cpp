@@ -74,7 +74,7 @@ Variant PListNode::get_value() const {
 				buf.resize(strlen / 4 * 3 + 1);
 				uint8_t *w = buf.ptrw();
 
-				ERR_FAIL_COND_V(CryptoCore::b64_decode(&w[0], buf.size(), &arr_len, (unsigned char *)data_string.get_data(), strlen) != OK, Vector<uint8_t>());
+				ERR_FAIL_COND_V(CryptoCore::b64_decode(&w[0], buf.size(), &arr_len, (unsigned char *)data_string.get_data(), strlen) != Error::OK, Vector<uint8_t>());
 			}
 			buf.resize(arr_len);
 			return buf;
@@ -640,7 +640,7 @@ bool PList::load_file(const String &p_filename) {
 		// Load text plist.
 		Error err;
 		Vector<uint8_t> array = FileAccess::get_file_as_bytes(p_filename, &err);
-		ERR_FAIL_COND_V(err != OK, false);
+		ERR_FAIL_COND_V(err != Error::OK, false);
 
 		String ret;
 		ret.parse_utf8((const char *)array.ptr(), array.size());

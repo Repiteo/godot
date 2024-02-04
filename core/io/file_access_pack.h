@@ -151,12 +151,12 @@ class FileAccessPack : public FileAccess {
 	virtual Error open_internal(const String &p_path, int p_mode_flags) override;
 	virtual uint64_t _get_modified_time(const String &p_file) override { return 0; }
 	virtual BitField<FileAccess::UnixPermissionFlags> _get_unix_permissions(const String &p_file) override { return 0; }
-	virtual Error _set_unix_permissions(const String &p_file, BitField<FileAccess::UnixPermissionFlags> p_permissions) override { return FAILED; }
+	virtual Error _set_unix_permissions(const String &p_file, BitField<FileAccess::UnixPermissionFlags> p_permissions) override { return Error::FAILED; }
 
 	virtual bool _get_hidden_attribute(const String &p_file) override { return false; }
-	virtual Error _set_hidden_attribute(const String &p_file, bool p_hidden) override { return ERR_UNAVAILABLE; }
+	virtual Error _set_hidden_attribute(const String &p_file, bool p_hidden) override { return Error::UNAVAILABLE; }
 	virtual bool _get_read_only_attribute(const String &p_file) override { return false; }
-	virtual Error _set_read_only_attribute(const String &p_file, bool p_ro) override { return ERR_UNAVAILABLE; }
+	virtual Error _set_read_only_attribute(const String &p_file, bool p_ro) override { return Error::UNAVAILABLE; }
 
 public:
 	virtual bool is_open() const override;
@@ -249,7 +249,7 @@ public:
 
 	virtual bool is_link(String p_file) override { return false; }
 	virtual String read_link(String p_file) override { return p_file; }
-	virtual Error create_link(String p_source, String p_target) override { return FAILED; }
+	virtual Error create_link(String p_source, String p_target) override { return Error::FAILED; }
 
 	virtual String get_filesystem_type() const override;
 
@@ -258,7 +258,7 @@ public:
 
 Ref<DirAccess> PackedData::try_open_directory(const String &p_path) {
 	Ref<DirAccess> da = memnew(DirAccessPack());
-	if (da->change_dir(p_path) != OK) {
+	if (da->change_dir(p_path) != Error::OK) {
 		da = Ref<DirAccess>();
 	}
 	return da;

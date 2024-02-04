@@ -89,12 +89,12 @@ Error Callable::rpcp(int p_id, const Variant **p_arguments, int p_argcount, Call
 		r_call_error.error = CallError::CALL_ERROR_INSTANCE_IS_NULL;
 		r_call_error.argument = 0;
 		r_call_error.expected = 0;
-		return ERR_UNCONFIGURED;
+		return Error::UNCONFIGURED;
 	} else if (!is_custom()) {
 		r_call_error.error = CallError::CALL_ERROR_INVALID_METHOD;
 		r_call_error.argument = 0;
 		r_call_error.expected = 0;
-		return ERR_UNCONFIGURED;
+		return Error::UNCONFIGURED;
 	} else {
 		return custom->rpc(p_id, p_arguments, p_argcount, r_call_error);
 	}
@@ -396,7 +396,7 @@ Error CallableCustom::rpc(int p_peer_id, const Variant **p_arguments, int p_argc
 	r_call_error.error = Callable::CallError::CALL_ERROR_INVALID_METHOD;
 	r_call_error.argument = 0;
 	r_call_error.expected = 0;
-	return ERR_UNCONFIGURED;
+	return Error::UNCONFIGURED;
 }
 
 const Callable *CallableCustom::get_base_comparator() const {
@@ -463,7 +463,7 @@ Signal::operator String() const {
 Error Signal::emit(const Variant **p_arguments, int p_argcount) const {
 	Object *obj = ObjectDB::get_instance(object);
 	if (!obj) {
-		return ERR_INVALID_DATA;
+		return Error::INVALID_DATA;
 	}
 
 	return obj->emit_signalp(name, p_arguments, p_argcount);
@@ -471,7 +471,7 @@ Error Signal::emit(const Variant **p_arguments, int p_argcount) const {
 
 Error Signal::connect(const Callable &p_callable, uint32_t p_flags) {
 	Object *obj = get_object();
-	ERR_FAIL_NULL_V(obj, ERR_UNCONFIGURED);
+	ERR_FAIL_NULL_V(obj, Error::UNCONFIGURED);
 
 	return obj->connect(name, p_callable, p_flags);
 }

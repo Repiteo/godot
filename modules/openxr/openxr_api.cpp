@@ -1312,12 +1312,12 @@ bool OpenXRAPI::openxr_loader_init() {
 
 	{
 		Error error_code = OS::get_singleton()->open_dynamic_library(OPENXR_LOADER_NAME, openxr_loader_library_handle);
-		ERR_FAIL_COND_V_MSG(error_code != OK, false, "OpenXR loader not found.");
+		ERR_FAIL_COND_V_MSG(error_code != Error::OK, false, "OpenXR loader not found.");
 	}
 
 	{
 		Error error_code = OS::get_singleton()->get_dynamic_library_symbol_handle(openxr_loader_library_handle, "xrGetInstanceProcAddr", (void *&)xrGetInstanceProcAddr);
-		ERR_FAIL_COND_V_MSG(error_code != OK, false, "Symbol xrGetInstanceProcAddr not found in OpenXR Loader library.");
+		ERR_FAIL_COND_V_MSG(error_code != Error::OK, false, "Symbol xrGetInstanceProcAddr not found in OpenXR Loader library.");
 	}
 #endif
 

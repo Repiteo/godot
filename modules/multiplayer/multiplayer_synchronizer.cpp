@@ -154,32 +154,32 @@ PackedStringArray MultiplayerSynchronizer::get_configuration_warnings() const {
 }
 
 Error MultiplayerSynchronizer::get_state(const List<NodePath> &p_properties, Object *p_obj, Vector<Variant> &r_variant, Vector<const Variant *> &r_variant_ptrs) {
-	ERR_FAIL_NULL_V(p_obj, ERR_INVALID_PARAMETER);
+	ERR_FAIL_NULL_V(p_obj, Error::INVALID_PARAMETER);
 	r_variant.resize(p_properties.size());
 	r_variant_ptrs.resize(r_variant.size());
 	int i = 0;
 	for (const NodePath &prop : p_properties) {
 		bool valid = false;
 		const Object *obj = _get_prop_target(p_obj, prop);
-		ERR_FAIL_NULL_V(obj, FAILED);
+		ERR_FAIL_NULL_V(obj, Error::FAILED);
 		r_variant.write[i] = obj->get_indexed(prop.get_subnames(), &valid);
 		r_variant_ptrs.write[i] = &r_variant[i];
-		ERR_FAIL_COND_V_MSG(!valid, ERR_INVALID_DATA, vformat("Property '%s' not found.", prop));
+		ERR_FAIL_COND_V_MSG(!valid, Error::INVALID_DATA, vformat("Property '%s' not found.", prop));
 		i++;
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error MultiplayerSynchronizer::set_state(const List<NodePath> &p_properties, Object *p_obj, const Vector<Variant> &p_state) {
-	ERR_FAIL_NULL_V(p_obj, ERR_INVALID_PARAMETER);
+	ERR_FAIL_NULL_V(p_obj, Error::INVALID_PARAMETER);
 	int i = 0;
 	for (const NodePath &prop : p_properties) {
 		Object *obj = _get_prop_target(p_obj, prop);
-		ERR_FAIL_NULL_V(obj, FAILED);
+		ERR_FAIL_NULL_V(obj, Error::FAILED);
 		obj->set_indexed(prop.get_subnames(), p_state[i]);
 		i += 1;
 	}
-	return OK;
+	return Error::OK;
 }
 
 bool MultiplayerSynchronizer::is_visibility_public() const {
@@ -370,16 +370,16 @@ void MultiplayerSynchronizer::set_multiplayer_authority(int p_peer_id, bool p_re
 }
 
 Error MultiplayerSynchronizer::_watch_changes(uint64_t p_usec) {
-	ERR_FAIL_COND_V(replication_config.is_null(), FAILED);
+	ERR_FAIL_COND_V(replication_config.is_null(), Error::FAILED);
 	const List<NodePath> props = replication_config->get_watch_properties();
 	if (props.size() != watchers.size()) {
 		watchers.resize(props.size());
 	}
 	if (props.size() == 0) {
-		return OK;
+		return Error::OK;
 	}
 	Node *node = get_root_node();
-	ERR_FAIL_NULL_V(node, FAILED);
+	ERR_FAIL_NULL_V(node, Error::FAILED);
 	int idx = -1;
 	Watcher *ptr = watchers.ptrw();
 	for (const NodePath &prop : props) {
@@ -399,7 +399,7 @@ Error MultiplayerSynchronizer::_watch_changes(uint64_t p_usec) {
 			w.last_change_usec = p_usec;
 		}
 	}
-	return OK;
+	return Error::OK;
 }
 
 List<Variant> MultiplayerSynchronizer::get_delta_state(uint64_t p_cur_usec, uint64_t p_last_usec, uint64_t &r_indexes) {
@@ -416,7 +416,7 @@ List<Variant> MultiplayerSynchronizer::get_delta_state(uint64_t p_cur_usec, uint
 	} else {
 		// Watch for changes.
 		Error err = _watch_changes(p_cur_usec);
-		ERR_FAIL_COND_V(err != OK, out);
+		ERR_FAIL_COND_V(err != Error::OK, out);
 		last_watch_usec = p_cur_usec;
 	}
 

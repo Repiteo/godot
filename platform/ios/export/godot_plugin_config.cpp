@@ -177,7 +177,7 @@ PluginConfigIOS PluginConfigIOS::load_plugin_config(Ref<ConfigFile> config_file,
 
 	Error err = config_file->load(path);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		return plugin_config;
 	}
 

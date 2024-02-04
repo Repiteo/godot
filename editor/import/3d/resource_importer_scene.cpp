@@ -1470,7 +1470,7 @@ Ref<Animation> ResourceImporterScene::_save_animation_to_file(Ref<Animation> ani
 	}
 	anim->set_path(p_save_to_path, true); // Set path to save externally.
 	Error err = ResourceSaver::save(anim, p_save_to_path, ResourceSaver::FLAG_CHANGE_PATH);
-	ERR_FAIL_COND_V_MSG(err != OK, anim, "Saving of animation failed: " + p_save_to_path);
+	ERR_FAIL_COND_V_MSG(err != Error::OK, anim, "Saving of animation failed: " + p_save_to_path);
 	return anim;
 }
 
@@ -2376,10 +2376,10 @@ Node *ResourceImporterScene::pre_import(const String &p_source_file, const HashM
 
 	ERR_FAIL_COND_V(!importer.is_valid(), nullptr);
 
-	Error err = OK;
+	Error err = Error::OK;
 
 	Node *scene = importer->import_scene(p_source_file, EditorSceneFormatImporter::IMPORT_ANIMATION | EditorSceneFormatImporter::IMPORT_GENERATE_TANGENT_ARRAYS | EditorSceneFormatImporter::IMPORT_FORCE_DISABLE_MESH_COMPRESSION, p_options, nullptr, &err);
-	if (!scene || err != OK) {
+	if (!scene || err != Error::OK) {
 		return nullptr;
 	}
 
@@ -2415,7 +2415,7 @@ Error ResourceImporterScene::import(const String &p_source_file, const String &p
 		}
 	}
 
-	ERR_FAIL_COND_V(!importer.is_valid(), ERR_FILE_UNRECOGNIZED);
+	ERR_FAIL_COND_V(!importer.is_valid(), Error::FILE_UNRECOGNIZED);
 
 	int import_flags = 0;
 
@@ -2442,10 +2442,10 @@ Error ResourceImporterScene::import(const String &p_source_file, const String &p
 		import_flags |= EditorSceneFormatImporter::IMPORT_FORCE_DISABLE_MESH_COMPRESSION;
 	}
 
-	Error err = OK;
+	Error err = Error::OK;
 	List<String> missing_deps; // for now, not much will be done with this
 	Node *scene = importer->import_scene(src_path, import_flags, p_options, &missing_deps, &err);
-	if (!scene || err != OK) {
+	if (!scene || err != Error::OK) {
 		return err;
 	}
 
@@ -2556,7 +2556,7 @@ Error ResourceImporterScene::import(const String &p_source_file, const String &p
 
 	{
 		src_lightmap_cache = FileAccess::get_file_as_bytes(p_source_file + ".unwrap_cache", &err);
-		if (err != OK) {
+		if (err != Error::OK) {
 			src_lightmap_cache.clear();
 		}
 	}
@@ -2577,7 +2577,7 @@ Error ResourceImporterScene::import(const String &p_source_file, const String &p
 			}
 		}
 	}
-	err = OK;
+	err = Error::OK;
 
 	progress.step(TTR("Running Custom Script..."), 2);
 
@@ -2594,7 +2594,7 @@ Error ResourceImporterScene::import(const String &p_source_file, const String &p
 			if (!post_import_script->get_script_instance()) {
 				EditorNode::add_io_error(TTR("Invalid/broken script for post-import (check console):") + " " + post_import_script_path);
 				post_import_script.unref();
-				return ERR_CANT_CREATE;
+				return Error::CANT_CREATE;
 			}
 		}
 	}
@@ -2641,14 +2641,14 @@ Error ResourceImporterScene::import(const String &p_source_file, const String &p
 
 		print_verbose("Saving animation to: " + p_save_path + ".res");
 		err = ResourceSaver::save(library, p_save_path + ".res", flags); //do not take over, let the changed files reload themselves
-		ERR_FAIL_COND_V_MSG(err != OK, err, "Cannot save animation to file '" + p_save_path + ".res'.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Cannot save animation to file '" + p_save_path + ".res'.");
 
 	} else {
 		Ref<PackedScene> packer = memnew(PackedScene);
 		packer->pack(scene);
 		print_verbose("Saving scene to: " + p_save_path + ".scn");
 		err = ResourceSaver::save(packer, p_save_path + ".scn", flags); //do not take over, let the changed files reload themselves
-		ERR_FAIL_COND_V_MSG(err != OK, err, "Cannot save scene to file '" + p_save_path + ".scn'.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Cannot save scene to file '" + p_save_path + ".scn'.");
 	}
 
 	memdelete(scene);
@@ -2656,7 +2656,7 @@ Error ResourceImporterScene::import(const String &p_source_file, const String &p
 	//this is not the time to reimport, wait until import process is done, import file is saved, etc.
 	//EditorNode::get_singleton()->reload_scene(p_source_file);
 
-	return OK;
+	return Error::OK;
 }
 
 ResourceImporterScene *ResourceImporterScene::scene_singleton = nullptr;

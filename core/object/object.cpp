@@ -1047,14 +1047,14 @@ Error Object::_emit_signal(const Variant **p_args, int p_argcount, Callable::Cal
 	if (unlikely(p_argcount < 1)) {
 		r_error.error = Callable::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 		r_error.expected = 1;
-		ERR_FAIL_V(Error::ERR_INVALID_PARAMETER);
+		ERR_FAIL_V(Error::INVALID_PARAMETER);
 	}
 
 	if (unlikely(p_args[0]->get_type() != Variant::STRING_NAME && p_args[0]->get_type() != Variant::STRING)) {
 		r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 		r_error.argument = 0;
 		r_error.expected = Variant::STRING_NAME;
-		ERR_FAIL_V(Error::ERR_INVALID_PARAMETER);
+		ERR_FAIL_V(Error::INVALID_PARAMETER);
 	}
 
 	r_error.error = Callable::CallError::CALL_OK;
@@ -1073,7 +1073,7 @@ Error Object::_emit_signal(const Variant **p_args, int p_argcount, Callable::Cal
 
 Error Object::emit_signalp(const StringName &p_name, const Variant **p_args, int p_argcount) {
 	if (_block_signals) {
-		return ERR_CANT_ACQUIRE_RESOURCE; //no emit, signals blocked
+		return Error::CANT_ACQUIRE_RESOURCE; //no emit, signals blocked
 	}
 
 	SignalData *s = signal_map.getptr(p_name);
@@ -1081,10 +1081,10 @@ Error Object::emit_signalp(const StringName &p_name, const Variant **p_args, int
 #ifdef DEBUG_ENABLED
 		bool signal_is_valid = ClassDB::has_signal(get_class_name(), p_name);
 		//check in script
-		ERR_FAIL_COND_V_MSG(!signal_is_valid && !script.is_null() && !Ref<Script>(script)->has_script_signal(p_name), ERR_UNAVAILABLE, "Can't emit non-existing signal " + String("\"") + p_name + "\".");
+		ERR_FAIL_COND_V_MSG(!signal_is_valid && !script.is_null() && !Ref<Script>(script)->has_script_signal(p_name), Error::UNAVAILABLE, "Can't emit non-existing signal " + String("\"") + p_name + "\".");
 #endif
 		//not connected? just return
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 
 	// If this is a ref-counted object, prevent it from being destroyed during signal emission,
@@ -1107,7 +1107,7 @@ Error Object::emit_signalp(const StringName &p_name, const Variant **p_args, int
 
 	OBJ_DEBUG_LOCK
 
-	Error err = OK;
+	Error err = Error::OK;
 
 	for (const Connection &c : slot_conns) {
 		if (!c.callable.is_valid()) {
@@ -1138,7 +1138,7 @@ Error Object::emit_signalp(const StringName &p_name, const Variant **p_args, int
 					//most likely object is not initialized yet, do not throw error.
 				} else {
 					ERR_PRINT("Error calling from signal '" + String(p_name) + "' to callable: " + Variant::get_callable_error_text(c.callable, args, argc, ce) + ".");
-					err = ERR_METHOD_NOT_FOUND;
+					err = Error::METHOD_NOT_FOUND;
 				}
 			}
 		}
@@ -1312,15 +1312,15 @@ void Object::get_signals_connected_to_this(List<Connection> *p_connections) cons
 }
 
 Error Object::connect(const StringName &p_signal, const Callable &p_callable, uint32_t p_flags) {
-	ERR_FAIL_COND_V_MSG(p_callable.is_null(), ERR_INVALID_PARAMETER, "Cannot connect to '" + p_signal + "': the provided callable is null.");
+	ERR_FAIL_COND_V_MSG(p_callable.is_null(), Error::INVALID_PARAMETER, "Cannot connect to '" + p_signal + "': the provided callable is null.");
 
 	if (p_callable.is_standard()) {
 		// FIXME: This branch should probably removed in favor of the `is_valid()` branch, but there exist some classes
 		// that call `connect()` before they are fully registered with ClassDB. Until all such classes can be found
 		// and registered soon enough this branch is needed to allow `connect()` to succeed.
-		ERR_FAIL_NULL_V_MSG(p_callable.get_object(), ERR_INVALID_PARAMETER, "Cannot connect to '" + p_signal + "' to callable '" + p_callable + "': the callable object is null.");
+		ERR_FAIL_NULL_V_MSG(p_callable.get_object(), Error::INVALID_PARAMETER, "Cannot connect to '" + p_signal + "' to callable '" + p_callable + "': the callable object is null.");
 	} else {
-		ERR_FAIL_COND_V_MSG(!p_callable.is_valid(), ERR_INVALID_PARAMETER, "Cannot connect to '" + p_signal + "': the provided callable is not valid: " + p_callable);
+		ERR_FAIL_COND_V_MSG(!p_callable.is_valid(), Error::INVALID_PARAMETER, "Cannot connect to '" + p_signal + "': the provided callable is not valid: " + p_callable);
 	}
 
 	SignalData *s = signal_map.getptr(p_signal);
@@ -1341,7 +1341,7 @@ Error Object::connect(const StringName &p_signal, const Callable &p_callable, ui
 #endif
 		}
 
-		ERR_FAIL_COND_V_MSG(!signal_is_valid, ERR_INVALID_PARAMETER, "In Object of type '" + String(get_class()) + "': Attempt to connect nonexistent signal '" + p_signal + "' to callable '" + p_callable + "'.");
+		ERR_FAIL_COND_V_MSG(!signal_is_valid, Error::INVALID_PARAMETER, "In Object of type '" + String(get_class()) + "': Attempt to connect nonexistent signal '" + p_signal + "' to callable '" + p_callable + "'.");
 
 		signal_map[p_signal] = SignalData();
 		s = &signal_map[p_signal];
@@ -1351,9 +1351,9 @@ Error Object::connect(const StringName &p_signal, const Callable &p_callable, ui
 	if (s->slot_map.has(*p_callable.get_base_comparator())) {
 		if (p_flags & CONNECT_REFERENCE_COUNTED) {
 			s->slot_map[*p_callable.get_base_comparator()].reference_count++;
-			return OK;
+			return Error::OK;
 		} else {
-			ERR_FAIL_V_MSG(ERR_INVALID_PARAMETER, "Signal '" + p_signal + "' is already connected to given callable '" + p_callable + "' in that object.");
+			ERR_FAIL_V_MSG(Error::INVALID_PARAMETER, "Signal '" + p_signal + "' is already connected to given callable '" + p_callable + "' in that object.");
 		}
 	}
 
@@ -1376,7 +1376,7 @@ Error Object::connect(const StringName &p_signal, const Callable &p_callable, ui
 	//use callable version as key, so binds can be ignored
 	s->slot_map[*p_callable.get_base_comparator()] = slot;
 
-	return OK;
+	return Error::OK;
 }
 
 bool Object::is_connected(const StringName &p_signal, const Callable &p_callable) const {

@@ -1546,7 +1546,7 @@ static bool compare_sub_dict_array(HashSet<String> &r_removed_classes_registered
 Error GDExtensionAPIDump::validate_extension_json_file(const String &p_path) {
 	Error error;
 	String text = FileAccess::get_file_as_string(p_path, &error);
-	if (error != OK) {
+	if (error != Error::OK) {
 		ERR_PRINT(vformat("Validate extension JSON: Could not open file '%s'.", p_path));
 		return error;
 	}
@@ -1554,7 +1554,7 @@ Error GDExtensionAPIDump::validate_extension_json_file(const String &p_path) {
 	Ref<JSON> json;
 	json.instantiate();
 	error = json->parse(text);
-	if (error != OK) {
+	if (error != Error::OK) {
 		ERR_PRINT(vformat("Validate extension JSON: Error parsing '%s' at line %d: %s", p_path, json->get_error_line(), json->get_error_message()));
 		return error;
 	}
@@ -1564,13 +1564,13 @@ Error GDExtensionAPIDump::validate_extension_json_file(const String &p_path) {
 
 	{ // Validate header:
 		Dictionary header = old_api["header"];
-		ERR_FAIL_COND_V(!header.has("version_major"), ERR_INVALID_DATA);
-		ERR_FAIL_COND_V(!header.has("version_minor"), ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(!header.has("version_major"), Error::INVALID_DATA);
+		ERR_FAIL_COND_V(!header.has("version_minor"), Error::INVALID_DATA);
 		int major = header["version_major"];
 		int minor = header["version_minor"];
 
-		ERR_FAIL_COND_V_MSG(major != VERSION_MAJOR, ERR_INVALID_DATA, vformat("JSON API dump is for a different engine version (%d) than this one (%d)", major, VERSION_MAJOR));
-		ERR_FAIL_COND_V_MSG(minor > VERSION_MINOR, ERR_INVALID_DATA, vformat("JSON API dump is for a newer version of the engine: %d.%d", major, minor));
+		ERR_FAIL_COND_V_MSG(major != VERSION_MAJOR, Error::INVALID_DATA, vformat("JSON API dump is for a different engine version (%d) than this one (%d)", major, VERSION_MAJOR));
+		ERR_FAIL_COND_V_MSG(minor > VERSION_MINOR, Error::INVALID_DATA, vformat("JSON API dump is for a newer version of the engine: %d.%d", major, minor));
 	}
 
 	bool failed = false;
@@ -1638,9 +1638,9 @@ Error GDExtensionAPIDump::validate_extension_json_file(const String &p_path) {
 	}
 
 	if (failed) {
-		return ERR_INVALID_DATA;
+		return Error::INVALID_DATA;
 	} else {
-		return OK;
+		return Error::OK;
 	}
 }
 

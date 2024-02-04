@@ -45,7 +45,7 @@ void FileAccessUnix::check_errors() const {
 	ERR_FAIL_NULL_MSG(f, "File must be opened before use.");
 
 	if (feof(f)) {
-		last_error = ERR_FILE_EOF;
+		last_error = Error::FILE_EOF;
 	}
 }
 
@@ -56,7 +56,7 @@ Error FileAccessUnix::open_internal(const String &p_path, int p_mode_flags) {
 	path = fix_path(p_path);
 	//printf("opening %s, %i\n", path.utf8().get_data(), Memory::get_static_mem_usage());
 
-	ERR_FAIL_COND_V_MSG(f, ERR_ALREADY_IN_USE, "File is already in use.");
+	ERR_FAIL_COND_V_MSG(f, Error::ALREADY_IN_USE, "File is already in use.");
 	const char *mode_string;
 
 	if (p_mode_flags == READ) {
@@ -68,7 +68,7 @@ Error FileAccessUnix::open_internal(const String &p_path, int p_mode_flags) {
 	} else if (p_mode_flags == WRITE_READ) {
 		mode_string = "wb+";
 	} else {
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 
 	/* pretty much every implementation that uses fopen as primary
@@ -83,7 +83,7 @@ Error FileAccessUnix::open_internal(const String &p_path, int p_mode_flags) {
 			case S_IFREG:
 				break;
 			default:
-				return ERR_FILE_CANT_OPEN;
+				return Error::FILE_CANT_OPEN;
 		}
 	}
 
@@ -94,7 +94,7 @@ Error FileAccessUnix::open_internal(const String &p_path, int p_mode_flags) {
 		CharString cs = path.utf8();
 		int fd = mkstemp(cs.ptrw());
 		if (fd == -1) {
-			last_error = ERR_FILE_CANT_OPEN;
+			last_error = Error::FILE_CANT_OPEN;
 			return last_error;
 		}
 		fchmod(fd, 0666);
@@ -105,7 +105,7 @@ Error FileAccessUnix::open_internal(const String &p_path, int p_mode_flags) {
 			// Delete temp file and close descriptor if open failed.
 			::unlink(cs.ptr());
 			::close(fd);
-			last_error = ERR_FILE_CANT_OPEN;
+			last_error = Error::FILE_CANT_OPEN;
 			return last_error;
 		}
 	} else {
@@ -115,10 +115,10 @@ Error FileAccessUnix::open_internal(const String &p_path, int p_mode_flags) {
 	if (f == nullptr) {
 		switch (errno) {
 			case ENOENT: {
-				last_error = ERR_FILE_NOT_FOUND;
+				last_error = Error::FILE_NOT_FOUND;
 			} break;
 			default: {
-				last_error = ERR_FILE_CANT_OPEN;
+				last_error = Error::FILE_CANT_OPEN;
 			} break;
 		}
 		return last_error;
@@ -132,9 +132,9 @@ Error FileAccessUnix::open_internal(const String &p_path, int p_mode_flags) {
 		fcntl(fd, F_SETFD, opts | FD_CLOEXEC);
 	}
 
-	last_error = OK;
+	last_error = Error::OK;
 	flags = p_mode_flags;
-	return OK;
+	return Error::OK;
 }
 
 void FileAccessUnix::_close() {
@@ -176,7 +176,7 @@ String FileAccessUnix::get_path_absolute() const {
 void FileAccessUnix::seek(uint64_t p_position) {
 	ERR_FAIL_NULL_MSG(f, "File must be opened before use.");
 
-	last_error = OK;
+	last_error = Error::OK;
 	if (fseeko(f, p_position, SEEK_SET)) {
 		check_errors();
 	}
@@ -215,7 +215,7 @@ uint64_t FileAccessUnix::get_length() const {
 }
 
 bool FileAccessUnix::eof_reached() const {
-	return last_error == ERR_FILE_EOF;
+	return last_error == Error::FILE_EOF;
 }
 
 uint8_t FileAccessUnix::get_8() const {
@@ -339,7 +339,7 @@ bool FileAccessUnix::file_exists(const String &p_path) {
 
 	// Does the name exist at all?
 	err = stat(filename.utf8().get_data(), &st);
-	if (err) {
+	if (err != Error::OK) {
 		return false;
 	}
 
@@ -388,10 +388,10 @@ Error FileAccessUnix::_set_unix_permissions(const String &p_file, BitField<FileA
 
 	int err = chmod(file.utf8().get_data(), p_permissions);
 	if (!err) {
-		return OK;
+		return Error::OK;
 	}
 
-	return FAILED;
+	return Error::FAILED;
 }
 
 bool FileAccessUnix::_get_hidden_attribute(const String &p_file) {
@@ -400,7 +400,7 @@ bool FileAccessUnix::_get_hidden_attribute(const String &p_file) {
 
 	struct stat st = {};
 	int err = stat(file.utf8().get_data(), &st);
-	ERR_FAIL_COND_V_MSG(err, false, "Failed to get attributes for: " + p_file);
+	ERR_FAIL_COND_V_MSG(err != Error::OK, false, "Failed to get attributes for: " + p_file);
 
 	return (st.st_flags & UF_HIDDEN);
 #else
@@ -414,17 +414,17 @@ Error FileAccessUnix::_set_hidden_attribute(const String &p_file, bool p_hidden)
 
 	struct stat st = {};
 	int err = stat(file.utf8().get_data(), &st);
-	ERR_FAIL_COND_V_MSG(err, FAILED, "Failed to get attributes for: " + p_file);
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Error::FAILED, "Failed to get attributes for: " + p_file);
 
 	if (p_hidden) {
 		err = chflags(file.utf8().get_data(), st.st_flags | UF_HIDDEN);
 	} else {
 		err = chflags(file.utf8().get_data(), st.st_flags & ~UF_HIDDEN);
 	}
-	ERR_FAIL_COND_V_MSG(err, FAILED, "Failed to set attributes for: " + p_file);
-	return OK;
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Error::FAILED, "Failed to set attributes for: " + p_file);
+	return Error::OK;
 #else
-	return ERR_UNAVAILABLE;
+	return Error::UNAVAILABLE;
 #endif
 }
 
@@ -434,7 +434,7 @@ bool FileAccessUnix::_get_read_only_attribute(const String &p_file) {
 
 	struct stat st = {};
 	int err = stat(file.utf8().get_data(), &st);
-	ERR_FAIL_COND_V_MSG(err, false, "Failed to get attributes for: " + p_file);
+	ERR_FAIL_COND_V_MSG(err != Error::OK, false, "Failed to get attributes for: " + p_file);
 
 	return st.st_flags & UF_IMMUTABLE;
 #else
@@ -448,17 +448,17 @@ Error FileAccessUnix::_set_read_only_attribute(const String &p_file, bool p_ro) 
 
 	struct stat st = {};
 	int err = stat(file.utf8().get_data(), &st);
-	ERR_FAIL_COND_V_MSG(err, FAILED, "Failed to get attributes for: " + p_file);
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Error::FAILED, "Failed to get attributes for: " + p_file);
 
 	if (p_ro) {
 		err = chflags(file.utf8().get_data(), st.st_flags | UF_IMMUTABLE);
 	} else {
 		err = chflags(file.utf8().get_data(), st.st_flags & ~UF_IMMUTABLE);
 	}
-	ERR_FAIL_COND_V_MSG(err, FAILED, "Failed to set attributes for: " + p_file);
-	return OK;
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Error::FAILED, "Failed to set attributes for: " + p_file);
+	return Error::OK;
 #else
-	return ERR_UNAVAILABLE;
+	return Error::UNAVAILABLE;
 #endif
 }
 

@@ -302,7 +302,7 @@ Vector<String> OS_LinuxBSD::get_video_adapter_driver_info() const {
 	List<String> lspci_args;
 	lspci_args.push_back("-n");
 	Error err = const_cast<OS_LinuxBSD *>(this)->execute("lspci", lspci_args, &vendor_device_id_mappings);
-	if (err != OK || vendor_device_id_mappings.is_empty()) {
+	if (err != Error::OK || vendor_device_id_mappings.is_empty()) {
 		return Vector<String>();
 	}
 
@@ -386,7 +386,7 @@ Vector<String> OS_LinuxBSD::get_video_adapter_driver_info() const {
 	List<String> modinfo_args;
 	modinfo_args.push_back(driver_name);
 	err = const_cast<OS_LinuxBSD *>(this)->execute("modinfo", modinfo_args, &modinfo);
-	if (err != OK || modinfo.is_empty()) {
+	if (err != Error::OK || modinfo.is_empty()) {
 		info.push_back(""); // So that this method always either returns an empty array, or an array of length 2.
 		return info;
 	}
@@ -418,7 +418,7 @@ Vector<String> OS_LinuxBSD::lspci_device_filter(Vector<String> vendor_device_id_
 		d_args.push_back(mapping + sep + class_suffix);
 		d_args.push_back("-vmm");
 		Error err = const_cast<OS_LinuxBSD *>(this)->execute("lspci", d_args, &device); // e.g. `lspci -d 10de:13c2:0300 -vmm`
-		if (err != OK) {
+		if (err != Error::OK) {
 			return Vector<String>();
 		} else if (device.is_empty()) {
 			continue;
@@ -457,7 +457,7 @@ Vector<String> OS_LinuxBSD::lspci_get_device_value(Vector<String> vendor_device_
 		d_args.push_back(mapping);
 		d_args.push_back("-k");
 		Error err = const_cast<OS_LinuxBSD *>(this)->execute("lspci", d_args, &device); // e.g. `lspci -d 10de:13c2 -k`
-		if (err != OK) {
+		if (err != Error::OK) {
 			return Vector<String>();
 		} else if (device.is_empty()) {
 			continue;
@@ -494,33 +494,33 @@ Error OS_LinuxBSD::shell_open(String p_uri) {
 
 	// Agnostic
 	ok = execute("xdg-open", args, nullptr, &err_code);
-	if (ok == OK && !err_code) {
-		return OK;
+	if (ok == Error::OK && !err_code) {
+		return Error::OK;
 	} else if (err_code == 2) {
-		return ERR_FILE_NOT_FOUND;
+		return Error::FILE_NOT_FOUND;
 	}
 	// GNOME
 	args.push_front("open"); // The command is `gio open`, so we need to add it to args
 	ok = execute("gio", args, nullptr, &err_code);
-	if (ok == OK && !err_code) {
-		return OK;
+	if (ok == Error::OK && !err_code) {
+		return Error::OK;
 	} else if (err_code == 2) {
-		return ERR_FILE_NOT_FOUND;
+		return Error::FILE_NOT_FOUND;
 	}
 	args.pop_front();
 	ok = execute("gvfs-open", args, nullptr, &err_code);
-	if (ok == OK && !err_code) {
-		return OK;
+	if (ok == Error::OK && !err_code) {
+		return Error::OK;
 	} else if (err_code == 2) {
-		return ERR_FILE_NOT_FOUND;
+		return Error::FILE_NOT_FOUND;
 	}
 	// KDE
 	ok = execute("kde-open5", args, nullptr, &err_code);
-	if (ok == OK && !err_code) {
-		return OK;
+	if (ok == Error::OK && !err_code) {
+		return Error::OK;
 	}
 	ok = execute("kde-open", args, nullptr, &err_code);
-	return !err_code ? ok : FAILED;
+	return !err_code ? ok : Error::FAILED;
 }
 
 bool OS_LinuxBSD::_check_internal_feature_support(const String &p_feature) {
@@ -919,7 +919,7 @@ String OS_LinuxBSD::get_system_dir(SystemDir p_dir, bool p_shared_storage) const
 	List<String> arg;
 	arg.push_back(xdgparam);
 	Error err = const_cast<OS_LinuxBSD *>(this)->execute("xdg-user-dir", arg, &pipe);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return ".";
 	}
 	return pipe.strip_edges();
@@ -997,23 +997,23 @@ Error OS_LinuxBSD::move_to_trash(const String &p_path) {
 
 	args.push_front("trash"); // The command is `gio trash <file_name>` so we add it before the path.
 	Error result = execute("gio", args, nullptr, &err_code); // For GNOME based machines.
-	if (result == OK && err_code == 0) { // Success.
-		return OK;
+	if (result == Error::OK && err_code == 0) { // Success.
+		return Error::OK;
 	}
 
 	args.pop_front();
 	args.push_front("move");
 	args.push_back("trash:/"); // The command is `kioclient5 move <file_name> trash:/`.
 	result = execute("kioclient5", args, nullptr, &err_code); // For KDE based machines.
-	if (result == OK && err_code == 0) {
-		return OK;
+	if (result == Error::OK && err_code == 0) {
+		return Error::OK;
 	}
 
 	args.pop_front();
 	args.pop_back();
 	result = execute("gvfs-trash", args, nullptr, &err_code); // For older Linux machines.
-	if (result == OK && err_code == 0) {
-		return OK;
+	if (result == Error::OK && err_code == 0) {
+		return Error::OK;
 	}
 
 	// If the commands `kioclient5`, `gio` or `gvfs-trash` don't work on the system we do it manually.
@@ -1046,7 +1046,7 @@ Error OS_LinuxBSD::move_to_trash(const String &p_path) {
 	}
 
 	// Issue an error if none of the previous locations is appropriate for the trash can.
-	ERR_FAIL_COND_V_MSG(trash_path.is_empty(), FAILED, "Could not determine the trash can location");
+	ERR_FAIL_COND_V_MSG(trash_path.is_empty(), Error::FAILED, "Could not determine the trash can location");
 
 	// Create needed directories for decided trash can location.
 	{
@@ -1054,11 +1054,11 @@ Error OS_LinuxBSD::move_to_trash(const String &p_path) {
 		Error err = dir_access->make_dir_recursive(trash_path);
 
 		// Issue an error if trash can is not created properly.
-		ERR_FAIL_COND_V_MSG(err != OK, err, "Could not create the trash path \"" + trash_path + "\"");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Could not create the trash path \"" + trash_path + "\"");
 		err = dir_access->make_dir_recursive(trash_path + "/files");
-		ERR_FAIL_COND_V_MSG(err != OK, err, "Could not create the trash path \"" + trash_path + "/files\"");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Could not create the trash path \"" + trash_path + "/files\"");
 		err = dir_access->make_dir_recursive(trash_path + "/info");
-		ERR_FAIL_COND_V_MSG(err != OK, err, "Could not create the trash path \"" + trash_path + "/info\"");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Could not create the trash path \"" + trash_path + "/info\"");
 	}
 
 	// The trash can is successfully created, now we check that we don't exceed our file name length limit.
@@ -1081,7 +1081,7 @@ Error OS_LinuxBSD::move_to_trash(const String &p_path) {
 
 		// Added a limit to check for identically named files already on the trash can
 		// if there are too many it could make the editor unresponsive.
-		ERR_FAIL_COND_V_MSG(id_number > 99, FAILED, "Too many identically named resources already in the trash can.");
+		ERR_FAIL_COND_V_MSG(id_number > 99, Error::FAILED, "Too many identically named resources already in the trash can.");
 		fn = file_name + "." + itos(id_number);
 		dest_path = trash_path + "/files/" + fn;
 	}
@@ -1098,14 +1098,14 @@ Error OS_LinuxBSD::move_to_trash(const String &p_path) {
 		Error err;
 		{
 			Ref<FileAccess> file = FileAccess::open(trash_path + "/info/" + file_name + ".trashinfo", FileAccess::WRITE, &err);
-			ERR_FAIL_COND_V_MSG(err != OK, err, "Can't create trashinfo file: \"" + trash_path + "/info/" + file_name + ".trashinfo\"");
+			ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Can't create trashinfo file: \"" + trash_path + "/info/" + file_name + ".trashinfo\"");
 			file->store_string(trash_info);
 		}
 
 		// Rename our resource before moving it to the trash can.
 		Ref<DirAccess> dir_access = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 		err = dir_access->rename(path, renamed_path);
-		ERR_FAIL_COND_V_MSG(err != OK, err, "Can't rename file \"" + path + "\" to \"" + renamed_path + "\"");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Can't rename file \"" + path + "\" to \"" + renamed_path + "\"");
 	}
 
 	// Move the given resource to the trash can.
@@ -1118,15 +1118,15 @@ Error OS_LinuxBSD::move_to_trash(const String &p_path) {
 		Error err = execute("mv", mv_args, nullptr, &retval);
 
 		// Issue an error if "mv" failed to move the given resource to the trash can.
-		if (err != OK || retval != 0) {
+		if (err != Error::OK || retval != 0) {
 			ERR_PRINT("move_to_trash: Could not move the resource \"" + path + "\" to the trash can \"" + trash_path + "/files\"");
 			Ref<DirAccess> dir_access = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 			err = dir_access->rename(renamed_path, path);
-			ERR_FAIL_COND_V_MSG(err != OK, err, "Could not rename \"" + renamed_path + "\" back to its original name: \"" + path + "\"");
-			return FAILED;
+			ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Could not rename \"" + renamed_path + "\" back to its original name: \"" + path + "\"");
+			return Error::FAILED;
 		}
 	}
-	return OK;
+	return Error::OK;
 }
 
 String OS_LinuxBSD::get_system_ca_certificates() {

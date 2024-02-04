@@ -47,7 +47,7 @@ Error QuickHull::build(const Vector<Vector3> &p_points, Geometry3D::MeshData &r_
 	}
 
 	if (aabb.size == Vector3()) {
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	Vector<bool> valid_points;
@@ -230,7 +230,7 @@ Error QuickHull::build(const Vector<Vector3> &p_points, Geometry3D::MeshData &r_
 			}
 		}
 
-		ERR_FAIL_COND_V(next == -1, ERR_BUG);
+		ERR_FAIL_COND_V(next == -1, Error::BUG);
 
 		Vector3 v = p_points[f.points_over[next]];
 
@@ -458,5 +458,5 @@ Error QuickHull::build(const Vector<Vector3> &p_points, Geometry3D::MeshData &r_
 
 	r_mesh.vertices = p_points;
 
-	return OK;
+	return Error::OK;
 }

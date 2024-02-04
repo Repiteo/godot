@@ -85,10 +85,10 @@ Error DirAccessWindows::list_dir_begin() {
 	p->h = FindFirstFileExW((LPCWSTR)(String(current_dir + "\\*").utf16().get_data()), FindExInfoStandard, &p->fu, FindExSearchNameMatch, nullptr, 0);
 
 	if (p->h == INVALID_HANDLE_VALUE) {
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 String DirAccessWindows::get_next() {
@@ -165,7 +165,7 @@ Error DirAccessWindows::change_dir(String p_dir) {
 
 	SetCurrentDirectoryW((LPCWSTR)(prev_dir.utf16().get_data()));
 
-	return worked ? OK : ERR_INVALID_PARAMETER;
+	return worked ? Error::OK : Error::INVALID_PARAMETER;
 }
 
 Error DirAccessWindows::make_dir(String p_dir) {
@@ -186,14 +186,14 @@ Error DirAccessWindows::make_dir(String p_dir) {
 	err = GetLastError();
 
 	if (success) {
-		return OK;
+		return Error::OK;
 	}
 
 	if (err == ERROR_ALREADY_EXISTS || err == ERROR_ACCESS_DENIED) {
-		return ERR_ALREADY_EXISTS;
+		return Error::ALREADY_EXISTS;
 	}
 
-	return ERR_CANT_CREATE;
+	return Error::CANT_CREATE;
 }
 
 String DirAccessWindows::get_current_dir(bool p_include_drive) const {
@@ -273,30 +273,30 @@ Error DirAccessWindows::rename(String p_path, String p_new_path) {
 	if (p_path.to_lower() == p_new_path.to_lower()) {
 		if (dir_exists(p_path)) {
 			// The path is a dir; just rename
-			return ::_wrename((LPCWSTR)(p_path.utf16().get_data()), (LPCWSTR)(p_new_path.utf16().get_data())) == 0 ? OK : FAILED;
+			return ::_wrename((LPCWSTR)(p_path.utf16().get_data()), (LPCWSTR)(p_new_path.utf16().get_data())) == 0 ? Error::OK : Error::FAILED;
 		}
 		// The path is a file; juggle
 		WCHAR tmpfile[MAX_PATH];
 
 		if (!GetTempFileNameW((LPCWSTR)(fix_path(get_current_dir()).utf16().get_data()), nullptr, 0, tmpfile)) {
-			return FAILED;
+			return Error::FAILED;
 		}
 
 		if (!::ReplaceFileW(tmpfile, (LPCWSTR)(p_path.utf16().get_data()), nullptr, 0, nullptr, nullptr)) {
 			DeleteFileW(tmpfile);
-			return FAILED;
+			return Error::FAILED;
 		}
 
-		return ::_wrename(tmpfile, (LPCWSTR)(p_new_path.utf16().get_data())) == 0 ? OK : FAILED;
+		return ::_wrename(tmpfile, (LPCWSTR)(p_new_path.utf16().get_data())) == 0 ? Error::OK : Error::FAILED;
 
 	} else {
 		if (file_exists(p_new_path)) {
-			if (remove(p_new_path) != OK) {
-				return FAILED;
+			if (remove(p_new_path) != Error::OK) {
+				return Error::FAILED;
 			}
 		}
 
-		return ::_wrename((LPCWSTR)(p_path.utf16().get_data()), (LPCWSTR)(p_new_path.utf16().get_data())) == 0 ? OK : FAILED;
+		return ::_wrename((LPCWSTR)(p_path.utf16().get_data()), (LPCWSTR)(p_new_path.utf16().get_data())) == 0 ? Error::OK : Error::FAILED;
 	}
 }
 
@@ -311,12 +311,12 @@ Error DirAccessWindows::remove(String p_path) {
 
 	fileAttr = GetFileAttributesW((LPCWSTR)(p_path.utf16().get_data()));
 	if (INVALID_FILE_ATTRIBUTES == fileAttr) {
-		return FAILED;
+		return Error::FAILED;
 	}
 	if ((fileAttr & FILE_ATTRIBUTE_DIRECTORY)) {
-		return ::_wrmdir((LPCWSTR)(p_path.utf16().get_data())) == 0 ? OK : FAILED;
+		return ::_wrmdir((LPCWSTR)(p_path.utf16().get_data())) == 0 ? Error::OK : Error::FAILED;
 	} else {
-		return ::_wunlink((LPCWSTR)(p_path.utf16().get_data())) == 0 ? OK : FAILED;
+		return ::_wunlink((LPCWSTR)(p_path.utf16().get_data())) == 0 ? Error::OK : Error::FAILED;
 	}
 }
 

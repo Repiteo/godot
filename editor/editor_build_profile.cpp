@@ -255,32 +255,32 @@ Error EditorBuildProfile::save_to_file(const String &p_path) {
 	}
 
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::WRITE);
-	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_CANT_CREATE, "Cannot create file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(f.is_null(), Error::CANT_CREATE, "Cannot create file '" + p_path + "'.");
 
 	String text = JSON::stringify(data, "\t");
 	f->store_string(text);
-	return OK;
+	return Error::OK;
 }
 
 Error EditorBuildProfile::load_from_file(const String &p_path) {
 	Error err;
 	String text = FileAccess::get_file_as_string(p_path, &err);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 
 	JSON json;
 	err = json.parse(text);
-	if (err != OK) {
+	if (err != Error::OK) {
 		ERR_PRINT("Error parsing '" + p_path + "' on line " + itos(json.get_error_line()) + ": " + json.get_error_message());
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 
 	Dictionary data = json.get_data();
 
 	if (!data.has("type") || String(data["type"]) != "build_profile") {
 		ERR_PRINT("Error parsing '" + p_path + "', it's not a build profile.");
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 
 	disabled_classes.clear();
@@ -318,7 +318,7 @@ Error EditorBuildProfile::load_from_file(const String &p_path) {
 		force_detect_classes = data["force_detect_classes"];
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void EditorBuildProfile::_bind_methods() {
@@ -392,7 +392,7 @@ void EditorBuildProfileManager::_profile_action(int p_action) {
 		case ACTION_SAVE: {
 			if (!profile_path->get_text().is_empty()) {
 				Error err = edited->save_to_file(profile_path->get_text());
-				if (err != OK) {
+				if (err != Error::OK) {
 					EditorNode::get_singleton()->show_warning(TTR("File saving failed."));
 				}
 				break;
@@ -778,7 +778,7 @@ void EditorBuildProfileManager::_import_profile(const String &p_path) {
 	profile.instantiate();
 	Error err = profile->load_from_file(p_path);
 	String basefile = p_path.get_file();
-	if (err != OK) {
+	if (err != Error::OK) {
 		EditorNode::get_singleton()->show_warning(vformat(TTR("File '%s' format is invalid, import aborted."), basefile));
 		return;
 	}
@@ -793,7 +793,7 @@ void EditorBuildProfileManager::_import_profile(const String &p_path) {
 void EditorBuildProfileManager::_export_profile(const String &p_path) {
 	ERR_FAIL_COND(edited.is_null());
 	Error err = edited->save_to_file(p_path);
-	if (err != OK) {
+	if (err != Error::OK) {
 		EditorNode::get_singleton()->show_warning(vformat(TTR("Error saving profile to path: '%s'."), p_path));
 	} else {
 		profile_path->set_text(p_path);

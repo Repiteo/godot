@@ -55,12 +55,12 @@ Error DirAccessJAndroid::list_dir_begin() {
 	list_dir_end();
 	int res = dir_open(current_dir);
 	if (res <= 0) {
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
 	id = res;
 
-	return OK;
+	return Error::OK;
 }
 
 String DirAccessJAndroid::get_next() {
@@ -163,15 +163,15 @@ String DirAccessJAndroid::get_current_dir(bool p_include_drive) const {
 Error DirAccessJAndroid::change_dir(String p_dir) {
 	String new_dir = get_absolute_path(p_dir);
 	if (new_dir == current_dir) {
-		return OK;
+		return Error::OK;
 	}
 
 	if (!dir_exists(new_dir)) {
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 
 	current_dir = new_dir;
-	return OK;
+	return Error::OK;
 }
 
 String DirAccessJAndroid::get_absolute_path(String p_path) {
@@ -221,24 +221,24 @@ bool DirAccessJAndroid::dir_exists(String p_dir) {
 Error DirAccessJAndroid::make_dir_recursive(String p_dir) {
 	// Check if the directory exists already
 	if (dir_exists(p_dir)) {
-		return ERR_ALREADY_EXISTS;
+		return Error::ALREADY_EXISTS;
 	}
 
 	if (_make_dir) {
 		JNIEnv *env = get_jni_env();
-		ERR_FAIL_NULL_V(env, ERR_UNCONFIGURED);
+		ERR_FAIL_NULL_V(env, Error::UNCONFIGURED);
 
 		String path = get_absolute_path(p_dir);
 		jstring j_dir = env->NewStringUTF(path.utf8().get_data());
 		bool result = env->CallBooleanMethod(dir_access_handler, _make_dir, get_access_type(), j_dir);
 		env->DeleteLocalRef(j_dir);
 		if (result) {
-			return OK;
+			return Error::OK;
 		} else {
-			return FAILED;
+			return Error::FAILED;
 		}
 	} else {
-		return ERR_UNCONFIGURED;
+		return Error::UNCONFIGURED;
 	}
 }
 
@@ -249,7 +249,7 @@ Error DirAccessJAndroid::make_dir(String p_dir) {
 Error DirAccessJAndroid::rename(String p_from, String p_to) {
 	if (_rename) {
 		JNIEnv *env = get_jni_env();
-		ERR_FAIL_NULL_V(env, ERR_UNCONFIGURED);
+		ERR_FAIL_NULL_V(env, Error::UNCONFIGURED);
 
 		String from_path = get_absolute_path(p_from);
 		jstring j_from = env->NewStringUTF(from_path.utf8().get_data());
@@ -261,31 +261,31 @@ Error DirAccessJAndroid::rename(String p_from, String p_to) {
 		env->DeleteLocalRef(j_from);
 		env->DeleteLocalRef(j_to);
 		if (result) {
-			return OK;
+			return Error::OK;
 		} else {
-			return FAILED;
+			return Error::FAILED;
 		}
 	} else {
-		return ERR_UNCONFIGURED;
+		return Error::UNCONFIGURED;
 	}
 }
 
 Error DirAccessJAndroid::remove(String p_name) {
 	if (_remove) {
 		JNIEnv *env = get_jni_env();
-		ERR_FAIL_NULL_V(env, ERR_UNCONFIGURED);
+		ERR_FAIL_NULL_V(env, Error::UNCONFIGURED);
 
 		String path = get_absolute_path(p_name);
 		jstring j_name = env->NewStringUTF(path.utf8().get_data());
 		bool result = env->CallBooleanMethod(dir_access_handler, _remove, get_access_type(), j_name);
 		env->DeleteLocalRef(j_name);
 		if (result) {
-			return OK;
+			return Error::OK;
 		} else {
-			return FAILED;
+			return Error::FAILED;
 		}
 	} else {
-		return ERR_UNCONFIGURED;
+		return Error::UNCONFIGURED;
 	}
 }
 

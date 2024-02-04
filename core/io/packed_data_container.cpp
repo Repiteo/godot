@@ -114,9 +114,9 @@ Variant PackedDataContainer::_get_at_ofs(uint32_t p_ofs, const uint8_t *p_buf, b
 		Variant v;
 		Error rerr = decode_variant(v, p_buf + p_ofs, datalen - p_ofs, nullptr, false);
 
-		if (rerr != OK) {
+		if (rerr != Error::OK) {
 			err = true;
-			ERR_FAIL_COND_V_MSG(err != OK, Variant(), "Error when trying to decode Variant.");
+			ERR_FAIL_COND_V_MSG(err, Variant(), "Error when trying to decode Variant.");
 		}
 		return v;
 	}
@@ -316,11 +316,11 @@ uint32_t PackedDataContainer::_pack(const Variant &p_data, Vector<uint8_t> &tmpd
 		}
 	}
 
-	return OK;
+	return (int)Error::OK;
 }
 
 Error PackedDataContainer::pack(const Variant &p_data) {
-	ERR_FAIL_COND_V_MSG(p_data.get_type() != Variant::ARRAY && p_data.get_type() != Variant::DICTIONARY, ERR_INVALID_DATA, "PackedDataContainer can pack only Array and Dictionary type.");
+	ERR_FAIL_COND_V_MSG(p_data.get_type() != Variant::ARRAY && p_data.get_type() != Variant::DICTIONARY, Error::INVALID_DATA, "PackedDataContainer can pack only Array and Dictionary type.");
 
 	Vector<uint8_t> tmpdata;
 	HashMap<String, uint32_t> string_cache;
@@ -330,7 +330,7 @@ Error PackedDataContainer::pack(const Variant &p_data) {
 	uint8_t *w = data.ptrw();
 	memcpy(w, tmpdata.ptr(), tmpdata.size());
 
-	return OK;
+	return Error::OK;
 }
 
 void PackedDataContainer::_set_data(const Vector<uint8_t> &p_data) {
@@ -363,7 +363,7 @@ void PackedDataContainer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("pack", "value"), &PackedDataContainer::pack);
 	ClassDB::bind_method(D_METHOD("size"), &PackedDataContainer::size);
 
-	BIND_METHOD_ERR_RETURN_DOC("pack", ERR_INVALID_DATA);
+	BIND_METHOD_ERR_RETURN_DOC("pack", Error::INVALID_DATA);
 
 	ADD_PROPERTY(PropertyInfo(Variant::PACKED_BYTE_ARRAY, "__data__", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL), "_set_data", "_get_data");
 }

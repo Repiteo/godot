@@ -75,14 +75,14 @@ void SpinBox::_text_submitted(const String &p_string) {
 	text = text.trim_prefix(prefix + " ").trim_suffix(" " + suffix);
 
 	Error err = expr->parse(text);
-	if (err != OK) {
+	if (err != Error::OK) {
 		// If the expression failed try without converting commas to dots - they might have been for parameter separation.
 		text = p_string;
 		text = TS->parse_number(text);
 		text = text.trim_prefix(prefix + " ").trim_suffix(" " + suffix);
 
 		err = expr->parse(text);
-		if (err != OK) {
+		if (err != Error::OK) {
 			return;
 		}
 	}

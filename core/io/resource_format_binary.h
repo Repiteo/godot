@@ -82,7 +82,7 @@ class ResourceLoaderBinary {
 	void _advance_padding(uint32_t p_len);
 
 	HashMap<String, String> remaps;
-	Error error = OK;
+	Error error = Error::OK;
 
 	ResourceFormatLoader::CacheMode cache_mode = ResourceFormatLoader::CACHE_MODE_REUSE;
 

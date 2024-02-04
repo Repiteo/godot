@@ -112,12 +112,12 @@ Error OS_Web::create_process(const String &p_path, const List<String> &p_argumen
 	}
 	String json_args = Variant(args).to_json_string();
 	int failed = godot_js_os_execute(json_args.utf8().get_data());
-	ERR_FAIL_COND_V_MSG(failed, ERR_UNAVAILABLE, "OS::execute() or create_process() must be implemented in Web via 'engine.setOnExecute' if required.");
-	return OK;
+	ERR_FAIL_COND_V_MSG(failed, Error::UNAVAILABLE, "OS::execute() or create_process() must be implemented in Web via 'engine.setOnExecute' if required.");
+	return Error::OK;
 }
 
 Error OS_Web::kill(const ProcessID &p_pid) {
-	ERR_FAIL_V_MSG(ERR_UNAVAILABLE, "OS::kill() is not available on the Web platform.");
+	ERR_FAIL_V_MSG(Error::UNAVAILABLE, "OS::kill() is not available on the Web platform.");
 }
 
 int OS_Web::get_process_id() const {
@@ -153,7 +153,7 @@ String OS_Web::get_executable_path() const {
 Error OS_Web::shell_open(String p_uri) {
 	// Open URI in a new tab, browser will deal with it by protocol.
 	godot_js_os_shell_open(p_uri.utf8().get_data());
-	return OK;
+	return Error::OK;
 }
 
 String OS_Web::get_name() const {
@@ -232,7 +232,7 @@ void OS_Web::force_fs_sync() {
 }
 
 Error OS_Web::pwa_update() {
-	return godot_js_pwa_update() ? FAILED : OK;
+	return godot_js_pwa_update() ? Error::FAILED : Error::OK;
 }
 
 bool OS_Web::is_userfs_persistent() const {
@@ -242,13 +242,13 @@ bool OS_Web::is_userfs_persistent() const {
 Error OS_Web::open_dynamic_library(const String p_path, void *&p_library_handle, bool p_also_set_library_path, String *r_resolved_path) {
 	String path = p_path.get_file();
 	p_library_handle = dlopen(path.utf8().get_data(), RTLD_NOW);
-	ERR_FAIL_NULL_V_MSG(p_library_handle, ERR_CANT_OPEN, vformat("Can't open dynamic library: %s. Error: %s.", p_path, dlerror()));
+	ERR_FAIL_NULL_V_MSG(p_library_handle, Error::CANT_OPEN, vformat("Can't open dynamic library: %s. Error: %s.", p_path, dlerror()));
 
 	if (r_resolved_path != nullptr) {
 		*r_resolved_path = path;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 OS_Web *OS_Web::get_singleton() {

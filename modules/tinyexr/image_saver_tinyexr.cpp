@@ -272,7 +272,7 @@ Vector<uint8_t> save_exr_buffer(const Ref<Image> &p_img, bool p_grayscale) {
 	const char *err = nullptr;
 
 	size_t bytes = SaveEXRImageToMemory(&image, &header, &mem, &err);
-	if (err && *err != OK) {
+	if (err && *err != (int)Error::OK) {
 		return Vector<uint8_t>();
 	}
 	Vector<uint8_t> buffer;
@@ -286,12 +286,12 @@ Error save_exr(const String &p_path, const Ref<Image> &p_img, bool p_grayscale) 
 	const Vector<uint8_t> buffer = save_exr_buffer(p_img, p_grayscale);
 	if (buffer.size() == 0) {
 		print_error(String("Saving EXR failed."));
-		return ERR_FILE_CANT_WRITE;
+		return Error::FILE_CANT_WRITE;
 	} else {
 		Ref<FileAccess> ref = FileAccess::open(p_path, FileAccess::WRITE);
-		ERR_FAIL_COND_V(ref.is_null(), ERR_FILE_CANT_WRITE);
+		ERR_FAIL_COND_V(ref.is_null(), Error::FILE_CANT_WRITE);
 		ref->store_buffer(buffer.ptr(), buffer.size());
 	}
 
-	return OK;
+	return Error::OK;
 }

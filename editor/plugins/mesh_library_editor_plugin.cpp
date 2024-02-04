@@ -223,7 +223,7 @@ void MeshLibraryEditor::_import_scene_cbk(const String &p_str) {
 
 Error MeshLibraryEditor::update_library_file(Node *p_base_scene, Ref<MeshLibrary> ml, bool p_merge, bool p_apply_xforms) {
 	_import_scene(p_base_scene, ml, p_merge, p_apply_xforms);
-	return OK;
+	return Error::OK;
 }
 
 void MeshLibraryEditor::_menu_cbk(int p_option) {

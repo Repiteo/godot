@@ -40,16 +40,16 @@ void MeshDataTool::clear() {
 }
 
 Error MeshDataTool::create_from_surface(const Ref<ArrayMesh> &p_mesh, int p_surface) {
-	ERR_FAIL_COND_V(p_mesh.is_null(), ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_mesh->surface_get_primitive_type(p_surface) != Mesh::PRIMITIVE_TRIANGLES, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_mesh.is_null(), Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_mesh->surface_get_primitive_type(p_surface) != Mesh::PRIMITIVE_TRIANGLES, Error::INVALID_PARAMETER);
 
 	Array arrays = p_mesh->surface_get_arrays(p_surface);
-	ERR_FAIL_COND_V(arrays.is_empty(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(arrays.is_empty(), Error::INVALID_PARAMETER);
 
 	Vector<Vector3> varray = arrays[Mesh::ARRAY_VERTEX];
 
 	int vcount = varray.size();
-	ERR_FAIL_COND_V(vcount == 0, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(vcount == 0, Error::INVALID_PARAMETER);
 
 	Vector<int> indices;
 
@@ -67,10 +67,10 @@ Error MeshDataTool::create_from_surface(const Ref<ArrayMesh> &p_mesh, int p_surf
 	int icount = indices.size();
 	const int *r = indices.ptr();
 
-	ERR_FAIL_COND_V(icount == 0, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(icount % 3, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(icount == 0, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(icount % 3, Error::INVALID_PARAMETER);
 	for (int i = 0; i < icount; i++) {
-		ERR_FAIL_INDEX_V(r[i], vcount, ERR_INVALID_PARAMETER);
+		ERR_FAIL_INDEX_V(r[i], vcount, Error::INVALID_PARAMETER);
 	}
 
 	clear();
@@ -188,11 +188,11 @@ Error MeshDataTool::create_from_surface(const Ref<ArrayMesh> &p_mesh, int p_surf
 		faces.push_back(face);
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error MeshDataTool::commit_to_surface(const Ref<ArrayMesh> &p_mesh, uint64_t p_compression_flags) {
-	ERR_FAIL_COND_V(p_mesh.is_null(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_mesh.is_null(), Error::INVALID_PARAMETER);
 	Array arr;
 	arr.resize(Mesh::ARRAY_MAX);
 
@@ -331,7 +331,7 @@ Error MeshDataTool::commit_to_surface(const Ref<ArrayMesh> &p_mesh, uint64_t p_c
 	ncmesh->add_surface_from_arrays(Mesh::PRIMITIVE_TRIANGLES, arr, TypedArray<Array>(), Dictionary(), p_compression_flags);
 	ncmesh->surface_set_material(sc, material);
 
-	return OK;
+	return Error::OK;
 }
 
 uint64_t MeshDataTool::get_format() const {

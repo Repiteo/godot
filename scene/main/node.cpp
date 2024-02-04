@@ -681,7 +681,7 @@ Error Node::_rpc_bind(const Variant **p_args, int p_argcount, Callable::CallErro
 	if (p_argcount < 1) {
 		r_error.error = Callable::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 		r_error.expected = 1;
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 
 	Variant::Type type = p_args[0]->get_type();
@@ -689,7 +689,7 @@ Error Node::_rpc_bind(const Variant **p_args, int p_argcount, Callable::CallErro
 		r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 		r_error.argument = 0;
 		r_error.expected = Variant::STRING_NAME;
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 
 	StringName method = (*p_args[0]).operator StringName();
@@ -703,14 +703,14 @@ Error Node::_rpc_id_bind(const Variant **p_args, int p_argcount, Callable::CallE
 	if (p_argcount < 2) {
 		r_error.error = Callable::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 		r_error.expected = 2;
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 
 	if (p_args[0]->get_type() != Variant::INT) {
 		r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 		r_error.argument = 0;
 		r_error.expected = Variant::INT;
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 
 	Variant::Type type = p_args[1]->get_type();
@@ -718,7 +718,7 @@ Error Node::_rpc_id_bind(const Variant **p_args, int p_argcount, Callable::CallE
 		r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 		r_error.argument = 1;
 		r_error.expected = Variant::STRING_NAME;
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 
 	int peer_id = *p_args[0];
@@ -730,11 +730,11 @@ Error Node::_rpc_id_bind(const Variant **p_args, int p_argcount, Callable::CallE
 }
 
 Error Node::rpcp(int p_peer_id, const StringName &p_method, const Variant **p_arg, int p_argcount) {
-	ERR_FAIL_COND_V(!is_inside_tree(), ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(!is_inside_tree(), Error::UNCONFIGURED);
 
 	Ref<MultiplayerAPI> api = get_multiplayer();
 	if (api.is_null()) {
-		return ERR_UNCONFIGURED;
+		return Error::UNCONFIGURED;
 	}
 	return api->rpcp(this, p_peer_id, p_method, p_arg, p_argcount);
 }
@@ -3668,7 +3668,7 @@ void Node::get_meta_list(List<StringName> *p_list) const {
 }
 
 Error Node::emit_signalp(const StringName &p_name, const Variant **p_args, int p_argcount) {
-	ERR_THREAD_GUARD_V(ERR_INVALID_PARAMETER);
+	ERR_THREAD_GUARD_V(Error::INVALID_PARAMETER);
 	return Object::emit_signalp(p_name, p_args, p_argcount);
 }
 
@@ -3703,7 +3703,7 @@ void Node::get_signals_connected_to_this(List<Connection> *p_connections) const 
 }
 
 Error Node::connect(const StringName &p_signal, const Callable &p_callable, uint32_t p_flags) {
-	ERR_THREAD_GUARD_V(ERR_INVALID_PARAMETER);
+	ERR_THREAD_GUARD_V(Error::INVALID_PARAMETER);
 	return Object::connect(p_signal, p_callable, p_flags);
 }
 

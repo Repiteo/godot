@@ -153,7 +153,7 @@ bool load_hostfxr(void *&r_hostfxr_dll_handle) {
 
 	Error err = OS::get_singleton()->open_dynamic_library(hostfxr_path, r_hostfxr_dll_handle);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		return false;
 	}
 
@@ -162,19 +162,19 @@ bool load_hostfxr(void *&r_hostfxr_dll_handle) {
 	void *symbol = nullptr;
 
 	err = OS::get_singleton()->get_dynamic_library_symbol_handle(lib, "hostfxr_initialize_for_dotnet_command_line", symbol);
-	ERR_FAIL_COND_V(err != OK, false);
+	ERR_FAIL_COND_V(err != Error::OK, false);
 	hostfxr_initialize_for_dotnet_command_line = (hostfxr_initialize_for_dotnet_command_line_fn)symbol;
 
 	err = OS::get_singleton()->get_dynamic_library_symbol_handle(lib, "hostfxr_initialize_for_runtime_config", symbol);
-	ERR_FAIL_COND_V(err != OK, false);
+	ERR_FAIL_COND_V(err != Error::OK, false);
 	hostfxr_initialize_for_runtime_config = (hostfxr_initialize_for_runtime_config_fn)symbol;
 
 	err = OS::get_singleton()->get_dynamic_library_symbol_handle(lib, "hostfxr_get_runtime_delegate", symbol);
-	ERR_FAIL_COND_V(err != OK, false);
+	ERR_FAIL_COND_V(err != Error::OK, false);
 	hostfxr_get_runtime_delegate = (hostfxr_get_runtime_delegate_fn)symbol;
 
 	err = OS::get_singleton()->get_dynamic_library_symbol_handle(lib, "hostfxr_close", symbol);
-	ERR_FAIL_COND_V(err != OK, false);
+	ERR_FAIL_COND_V(err != Error::OK, false);
 	hostfxr_close = (hostfxr_close_fn)symbol;
 
 	return (hostfxr_initialize_for_runtime_config &&
@@ -325,7 +325,7 @@ godot_plugins_initialize_fn try_load_native_aot_library(void *&r_aot_dll_handle)
 
 	Error err = OS::get_singleton()->open_dynamic_library(native_aot_so_path, r_aot_dll_handle);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		return nullptr;
 	}
 
@@ -334,7 +334,7 @@ godot_plugins_initialize_fn try_load_native_aot_library(void *&r_aot_dll_handle)
 	void *symbol = nullptr;
 
 	err = OS::get_singleton()->get_dynamic_library_symbol_handle(lib, "godotsharp_game_main_init", symbol);
-	ERR_FAIL_COND_V(err != OK, nullptr);
+	ERR_FAIL_COND_V(err != Error::OK, nullptr);
 	return (godot_plugins_initialize_fn)symbol;
 }
 #endif
@@ -514,14 +514,14 @@ void GDMono::reload_failure() {
 }
 
 Error GDMono::reload_project_assemblies() {
-	ERR_FAIL_COND_V(!runtime_initialized, ERR_BUG);
+	ERR_FAIL_COND_V(!runtime_initialized, Error::BUG);
 
 	finalizing_scripts_domain = true;
 
 	if (!get_plugin_callbacks().UnloadProjectPluginCallback()) {
 		ERR_PRINT_ED(".NET: Failed to unload assemblies. Please check https://github.com/godotengine/godot/issues/78513 for more information.");
 		reload_failure();
-		return FAILED;
+		return Error::FAILED;
 	}
 
 	finalizing_scripts_domain = false;
@@ -531,7 +531,7 @@ Error GDMono::reload_project_assemblies() {
 	if (!_load_project_assembly()) {
 		ERR_PRINT_ED(".NET: Failed to load project assembly.");
 		reload_failure();
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
 	if (project_load_failure_count > 0) {
@@ -539,7 +539,7 @@ Error GDMono::reload_project_assemblies() {
 		ERR_PRINT_ED(".NET: Assembly reloading succeeded after failures.");
 	}
 
-	return OK;
+	return Error::OK;
 }
 #endif
 

@@ -36,7 +36,7 @@
 
 Ref<Resource> TranslationLoaderPO::load_translation(Ref<FileAccess> f, Error *r_error) {
 	if (r_error) {
-		*r_error = ERR_FILE_CORRUPT;
+		*r_error = Error::FILE_CORRUPT;
 	}
 
 	const String path = f->get_path();
@@ -152,7 +152,7 @@ Ref<Resource> TranslationLoaderPO::load_translation(Ref<FileAccess> f, Error *r_
 		Vector<String> msgs_plural;
 
 		if (r_error) {
-			*r_error = ERR_FILE_CORRUPT;
+			*r_error = Error::FILE_CORRUPT;
 		}
 
 		int line = 1;
@@ -338,7 +338,7 @@ Ref<Resource> TranslationLoaderPO::load_translation(Ref<FileAccess> f, Error *r_
 	}
 
 	if (r_error) {
-		*r_error = OK;
+		*r_error = Error::OK;
 	}
 
 	return translation;
@@ -346,7 +346,7 @@ Ref<Resource> TranslationLoaderPO::load_translation(Ref<FileAccess> f, Error *r_
 
 Ref<Resource> TranslationLoaderPO::load(const String &p_path, const String &p_original_path, Error *r_error, bool p_use_sub_threads, float *r_progress, CacheMode p_cache_mode) {
 	if (r_error) {
-		*r_error = ERR_CANT_OPEN;
+		*r_error = Error::CANT_OPEN;
 	}
 
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);

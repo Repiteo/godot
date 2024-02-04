@@ -399,7 +399,7 @@ void SceneRPCInterface::_send_rpc(Node *p_node, int p_to, uint16_t p_rpc_id, con
 
 	int len;
 	Error err = MultiplayerAPI::encode_and_compress_variants(p_arg, p_argcount, nullptr, len, &byte_only_or_no_args, multiplayer->is_object_decoding_allowed());
-	ERR_FAIL_COND_MSG(err != OK, "Unable to encode RPC arguments. THIS IS LIKELY A BUG IN THE ENGINE!");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Unable to encode RPC arguments. THIS IS LIKELY A BUG IN THE ENGINE!");
 	if (byte_only_or_no_args) {
 		MAKE_ROOM(ofs + len);
 	} else {
@@ -461,21 +461,21 @@ void SceneRPCInterface::_send_rpc(Node *p_node, int p_to, uint16_t p_rpc_id, con
 
 Error SceneRPCInterface::rpcp(Object *p_obj, int p_peer_id, const StringName &p_method, const Variant **p_arg, int p_argcount) {
 	Ref<MultiplayerPeer> peer = multiplayer->get_multiplayer_peer();
-	ERR_FAIL_COND_V_MSG(!peer.is_valid(), ERR_UNCONFIGURED, "Trying to call an RPC while no multiplayer peer is active.");
+	ERR_FAIL_COND_V_MSG(!peer.is_valid(), Error::UNCONFIGURED, "Trying to call an RPC while no multiplayer peer is active.");
 	Node *node = Object::cast_to<Node>(p_obj);
-	ERR_FAIL_COND_V_MSG(!node || !node->is_inside_tree(), ERR_INVALID_PARAMETER, "The object must be a valid Node inside the SceneTree");
-	ERR_FAIL_COND_V_MSG(peer->get_connection_status() != MultiplayerPeer::CONNECTION_CONNECTED, ERR_CONNECTION_ERROR, "Trying to call an RPC via a multiplayer peer which is not connected.");
+	ERR_FAIL_COND_V_MSG(!node || !node->is_inside_tree(), Error::INVALID_PARAMETER, "The object must be a valid Node inside the SceneTree");
+	ERR_FAIL_COND_V_MSG(peer->get_connection_status() != MultiplayerPeer::CONNECTION_CONNECTED, Error::CONNECTION_ERROR, "Trying to call an RPC via a multiplayer peer which is not connected.");
 
 	int caller_id = multiplayer->get_unique_id();
 	bool call_local_native = false;
 	bool call_local_script = false;
 	const RPCConfigCache &config_cache = _get_node_config(node);
 	uint16_t rpc_id = config_cache.ids.has(p_method) ? config_cache.ids[p_method] : UINT16_MAX;
-	ERR_FAIL_COND_V_MSG(rpc_id == UINT16_MAX, ERR_INVALID_PARAMETER,
+	ERR_FAIL_COND_V_MSG(rpc_id == UINT16_MAX, Error::INVALID_PARAMETER,
 			vformat("Unable to get the RPC configuration for the function \"%s\" at path: \"%s\". This happens when the method is missing or not marked for RPCs in the local script.", p_method, node->get_path()));
 	const RPCConfig &config = config_cache.configs[rpc_id];
 
-	ERR_FAIL_COND_V_MSG(p_peer_id == caller_id && !config.call_local, ERR_INVALID_PARAMETER, "RPC '" + p_method + "' on yourself is not allowed by selected mode.");
+	ERR_FAIL_COND_V_MSG(p_peer_id == caller_id && !config.call_local, Error::INVALID_PARAMETER, "RPC '" + p_method + "' on yourself is not allowed by selected mode.");
 
 	if (p_peer_id == 0 || p_peer_id == caller_id || (p_peer_id < 0 && p_peer_id != -caller_id)) {
 		if (rpc_id & (1 << 15)) {
@@ -500,7 +500,7 @@ Error SceneRPCInterface::rpcp(Object *p_obj, int p_peer_id, const StringName &p_
 			String error = Variant::get_call_error_text(node, p_method, p_arg, p_argcount, ce);
 			error = "rpc() aborted in local call:  - " + error + ".";
 			ERR_PRINT(error);
-			return FAILED;
+			return Error::FAILED;
 		}
 	}
 
@@ -516,8 +516,8 @@ Error SceneRPCInterface::rpcp(Object *p_obj, int p_peer_id, const StringName &p_
 			String error = Variant::get_call_error_text(node, p_method, p_arg, p_argcount, ce);
 			error = "rpc() aborted in script local call:  - " + error + ".";
 			ERR_PRINT(error);
-			return FAILED;
+			return Error::FAILED;
 		}
 	}
-	return OK;
+	return Error::OK;
 }

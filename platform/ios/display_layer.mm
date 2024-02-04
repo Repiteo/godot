@@ -127,7 +127,7 @@
 
 #ifdef DEBUG_ENABLED
 	GLenum err = glGetError();
-	if (err) {
+	if (err != Error::OK) {
 		NSLog(@"DrawView: %x error", err);
 	}
 #endif

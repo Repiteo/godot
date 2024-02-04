@@ -305,12 +305,12 @@ Error PoolAllocator::resize(ID p_mem, int p_new_size) {
 
 	if (!e) {
 		mt_unlock();
-		ERR_FAIL_NULL_V(e, ERR_INVALID_PARAMETER);
+		ERR_FAIL_NULL_V(e, Error::INVALID_PARAMETER);
 	}
 
 	if (needs_locking && e->lock) {
 		mt_unlock();
-		ERR_FAIL_COND_V(e->lock, ERR_ALREADY_IN_USE);
+		ERR_FAIL_COND_V(e->lock, Error::ALREADY_IN_USE);
 	}
 
 	uint32_t alloc_size = aligned(p_new_size);
@@ -318,13 +318,13 @@ Error PoolAllocator::resize(ID p_mem, int p_new_size) {
 	if ((uint32_t)aligned(e->len) == alloc_size) {
 		e->len = p_new_size;
 		mt_unlock();
-		return OK;
+		return Error::OK;
 	} else if (e->len > (uint32_t)p_new_size) {
 		free_mem += aligned(e->len);
 		free_mem -= alloc_size;
 		e->len = p_new_size;
 		mt_unlock();
-		return OK;
+		return Error::OK;
 	}
 
 	//p_new_size = align(p_new_size)
@@ -332,7 +332,7 @@ Error PoolAllocator::resize(ID p_mem, int p_new_size) {
 
 	if (uint32_t(_free + aligned(e->len)) < alloc_size) {
 		mt_unlock();
-		ERR_FAIL_V(ERR_OUT_OF_MEMORY);
+		ERR_FAIL_V(Error::OUT_OF_MEMORY);
 	}
 
 	EntryIndicesPos entry_indices_pos;
@@ -341,7 +341,7 @@ Error PoolAllocator::resize(ID p_mem, int p_new_size) {
 
 	if (!index_found) {
 		mt_unlock();
-		ERR_FAIL_COND_V(!index_found, ERR_BUG);
+		ERR_FAIL_COND_V(!index_found, Error::BUG);
 	}
 
 	//no need to move stuff around, it fits before the next block
@@ -357,7 +357,7 @@ Error PoolAllocator::resize(ID p_mem, int p_new_size) {
 		e->len = p_new_size;
 		free_mem -= alloc_size;
 		mt_unlock();
-		return OK;
+		return Error::OK;
 	}
 	//it doesn't fit, compact around BEFORE current index (make room behind)
 
@@ -372,7 +372,7 @@ Error PoolAllocator::resize(ID p_mem, int p_new_size) {
 		if (free_mem < free_mem_peak) {
 			free_mem_peak = free_mem;
 		}
-		return OK;
+		return Error::OK;
 	}
 
 	//STILL doesn't fit, compact around AFTER current index (make room after)
@@ -388,27 +388,27 @@ Error PoolAllocator::resize(ID p_mem, int p_new_size) {
 		if (free_mem < free_mem_peak) {
 			free_mem_peak = free_mem;
 		}
-		return OK;
+		return Error::OK;
 	}
 
 	mt_unlock();
-	ERR_FAIL_V(ERR_OUT_OF_MEMORY);
+	ERR_FAIL_V(Error::OUT_OF_MEMORY);
 }
 
 Error PoolAllocator::lock(ID p_mem) {
 	if (!needs_locking) {
-		return OK;
+		return Error::OK;
 	}
 	mt_lock();
 	Entry *e = get_entry(p_mem);
 	if (!e) {
 		mt_unlock();
 		ERR_PRINT("!e");
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 	e->lock++;
 	mt_unlock();
-	return OK;
+	return Error::OK;
 }
 
 bool PoolAllocator::is_locked(ID p_mem) const {

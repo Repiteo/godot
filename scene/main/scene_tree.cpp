@@ -1406,20 +1406,20 @@ void SceneTree::_flush_scene_change() {
 }
 
 Error SceneTree::change_scene_to_file(const String &p_path) {
-	ERR_FAIL_COND_V_MSG(!Thread::is_main_thread(), ERR_INVALID_PARAMETER, "Changing scene can only be done from the main thread.");
+	ERR_FAIL_COND_V_MSG(!Thread::is_main_thread(), Error::INVALID_PARAMETER, "Changing scene can only be done from the main thread.");
 	Ref<PackedScene> new_scene = ResourceLoader::load(p_path);
 	if (new_scene.is_null()) {
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
 	return change_scene_to_packed(new_scene);
 }
 
 Error SceneTree::change_scene_to_packed(const Ref<PackedScene> &p_scene) {
-	ERR_FAIL_COND_V_MSG(p_scene.is_null(), ERR_INVALID_PARAMETER, "Can't change to a null scene. Use unload_current_scene() if you wish to unload it.");
+	ERR_FAIL_COND_V_MSG(p_scene.is_null(), Error::INVALID_PARAMETER, "Can't change to a null scene. Use unload_current_scene() if you wish to unload it.");
 
 	Node *new_scene = p_scene->instantiate();
-	ERR_FAIL_NULL_V(new_scene, ERR_CANT_CREATE);
+	ERR_FAIL_NULL_V(new_scene, Error::CANT_CREATE);
 
 	// If called again while a change is pending.
 	if (pending_new_scene) {
@@ -1437,12 +1437,12 @@ Error SceneTree::change_scene_to_packed(const Ref<PackedScene> &p_scene) {
 	DEV_ASSERT(!current_scene);
 
 	pending_new_scene = new_scene;
-	return OK;
+	return Error::OK;
 }
 
 Error SceneTree::reload_current_scene() {
-	ERR_FAIL_COND_V_MSG(!Thread::is_main_thread(), ERR_INVALID_PARAMETER, "Reloading scene can only be done from the main thread.");
-	ERR_FAIL_NULL_V(current_scene, ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V_MSG(!Thread::is_main_thread(), Error::INVALID_PARAMETER, "Reloading scene can only be done from the main thread.");
+	ERR_FAIL_NULL_V(current_scene, Error::UNCONFIGURED);
 	String fname = current_scene->get_scene_file_path();
 	return change_scene_to_file(fname);
 }
@@ -1816,7 +1816,7 @@ SceneTree::SceneTree() {
 		Ref<Image> vrs_image;
 		vrs_image.instantiate();
 		Error load_err = ImageLoader::load_image(vrs_texture_path, vrs_image);
-		if (load_err) {
+		if (load_err != Error::OK) {
 			ERR_PRINT("Non-existing or invalid VRS texture at '" + vrs_texture_path + "'.");
 		} else {
 			Ref<ImageTexture> vrs_texture;

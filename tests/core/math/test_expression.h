@@ -41,35 +41,35 @@ TEST_CASE("[Expression] Integer arithmetic") {
 	Expression expression;
 
 	CHECK_MESSAGE(
-			expression.parse("-123456") == OK,
+			expression.parse("-123456") == Error::OK,
 			"Integer identity should parse successfully.");
 	CHECK_MESSAGE(
 			int(expression.execute()) == -123456,
 			"Integer identity should return the expected result.");
 
 	CHECK_MESSAGE(
-			expression.parse("2 + 3") == OK,
+			expression.parse("2 + 3") == Error::OK,
 			"Integer addition should parse successfully.");
 	CHECK_MESSAGE(
 			int(expression.execute()) == 5,
 			"Integer addition should return the expected result.");
 
 	CHECK_MESSAGE(
-			expression.parse("999999999999 + 999999999999") == OK,
+			expression.parse("999999999999 + 999999999999") == Error::OK,
 			"Large integer addition should parse successfully.");
 	CHECK_MESSAGE(
 			int64_t(expression.execute()) == 1'999'999'999'998,
 			"Large integer addition should return the expected result.");
 
 	CHECK_MESSAGE(
-			expression.parse("25 / 10") == OK,
+			expression.parse("25 / 10") == Error::OK,
 			"Integer / integer division should parse successfully.");
 	CHECK_MESSAGE(
 			int(expression.execute()) == 2,
 			"Integer / integer division should return the expected result.");
 
 	CHECK_MESSAGE(
-			expression.parse("2 * (6 + 14) / 2 - 5") == OK,
+			expression.parse("2 * (6 + 14) / 2 - 5") == Error::OK,
 			"Integer multiplication-addition-subtraction-division should parse successfully.");
 	CHECK_MESSAGE(
 			int(expression.execute()) == 15,
@@ -80,42 +80,42 @@ TEST_CASE("[Expression] Floating-point arithmetic") {
 	Expression expression;
 
 	CHECK_MESSAGE(
-			expression.parse("-123.456") == OK,
+			expression.parse("-123.456") == Error::OK,
 			"Float identity should parse successfully.");
 	CHECK_MESSAGE(
 			double(expression.execute()) == doctest::Approx(-123.456),
 			"Float identity should return the expected result.");
 
 	CHECK_MESSAGE(
-			expression.parse("2.0 + 3.0") == OK,
+			expression.parse("2.0 + 3.0") == Error::OK,
 			"Float addition should parse successfully.");
 	CHECK_MESSAGE(
 			double(expression.execute()) == doctest::Approx(5),
 			"Float addition should return the expected result.");
 
 	CHECK_MESSAGE(
-			expression.parse("3.0 / 10") == OK,
+			expression.parse("3.0 / 10") == Error::OK,
 			"Float / integer division should parse successfully.");
 	CHECK_MESSAGE(
 			double(expression.execute()) == doctest::Approx(0.3),
 			"Float / integer division should return the expected result.");
 
 	CHECK_MESSAGE(
-			expression.parse("3 / 10.0") == OK,
+			expression.parse("3 / 10.0") == Error::OK,
 			"Basic integer / float division should parse successfully.");
 	CHECK_MESSAGE(
 			double(expression.execute()) == doctest::Approx(0.3),
 			"Basic integer / float division should return the expected result.");
 
 	CHECK_MESSAGE(
-			expression.parse("3.0 / 10.0") == OK,
+			expression.parse("3.0 / 10.0") == Error::OK,
 			"Float / float division should parse successfully.");
 	CHECK_MESSAGE(
 			double(expression.execute()) == doctest::Approx(0.3),
 			"Float / float division should return the expected result.");
 
 	CHECK_MESSAGE(
-			expression.parse("2.5 * (6.0 + 14.25) / 2.0 - 5.12345") == OK,
+			expression.parse("2.5 * (6.0 + 14.25) / 2.0 - 5.12345") == Error::OK,
 			"Float multiplication-addition-subtraction-division should parse successfully.");
 	CHECK_MESSAGE(
 			double(expression.execute()) == doctest::Approx(20.18905),
@@ -126,7 +126,7 @@ TEST_CASE("[Expression] Scientific notation") {
 	Expression expression;
 
 	CHECK_MESSAGE(
-			expression.parse("2.e5") == OK,
+			expression.parse("2.e5") == Error::OK,
 			"The expression should parse successfully.");
 	CHECK_MESSAGE(
 			double(expression.execute()) == doctest::Approx(200'000),
@@ -134,14 +134,14 @@ TEST_CASE("[Expression] Scientific notation") {
 
 	// The middle "e" is ignored here.
 	CHECK_MESSAGE(
-			expression.parse("2e5") == OK,
+			expression.parse("2e5") == Error::OK,
 			"The expression should parse successfully.");
 	CHECK_MESSAGE(
 			double(expression.execute()) == doctest::Approx(2e5),
 			"The expression should return the expected result.");
 
 	CHECK_MESSAGE(
-			expression.parse("2e.5") == OK,
+			expression.parse("2e.5") == Error::OK,
 			"The expression should parse successfully.");
 	CHECK_MESSAGE(
 			double(expression.execute()) == doctest::Approx(2),
@@ -152,13 +152,13 @@ TEST_CASE("[Expression] Underscored numeric literals") {
 	Expression expression;
 
 	CHECK_MESSAGE(
-			expression.parse("1_000_000") == OK,
+			expression.parse("1_000_000") == Error::OK,
 			"The expression should parse successfully.");
 	CHECK_MESSAGE(
-			expression.parse("1_000.000") == OK,
+			expression.parse("1_000.000") == Error::OK,
 			"The expression should parse successfully.");
 	CHECK_MESSAGE(
-			expression.parse("0xff_99_00") == OK,
+			expression.parse("0xff_99_00") == Error::OK,
 			"The expression should parse successfully.");
 }
 
@@ -166,21 +166,21 @@ TEST_CASE("[Expression] Built-in functions") {
 	Expression expression;
 
 	CHECK_MESSAGE(
-			expression.parse("sqrt(pow(3, 2) + pow(4, 2))") == OK,
+			expression.parse("sqrt(pow(3, 2) + pow(4, 2))") == Error::OK,
 			"The expression should parse successfully.");
 	CHECK_MESSAGE(
 			int(expression.execute()) == 5,
 			"`sqrt(pow(3, 2) + pow(4, 2))` should return the expected result.");
 
 	CHECK_MESSAGE(
-			expression.parse("snapped(sin(0.5), 0.01)") == OK,
+			expression.parse("snapped(sin(0.5), 0.01)") == Error::OK,
 			"The expression should parse successfully.");
 	CHECK_MESSAGE(
 			double(expression.execute()) == doctest::Approx(0.48),
 			"`snapped(sin(0.5), 0.01)` should return the expected result.");
 
 	CHECK_MESSAGE(
-			expression.parse("pow(2.0, -2500)") == OK,
+			expression.parse("pow(2.0, -2500)") == Error::OK,
 			"The expression should parse successfully.");
 	CHECK_MESSAGE(
 			Math::is_zero_approx(double(expression.execute())),
@@ -191,63 +191,63 @@ TEST_CASE("[Expression] Boolean expressions") {
 	Expression expression;
 
 	CHECK_MESSAGE(
-			expression.parse("24 >= 12") == OK,
+			expression.parse("24 >= 12") == Error::OK,
 			"The boolean expression should parse successfully.");
 	CHECK_MESSAGE(
 			bool(expression.execute()),
 			"The boolean expression should evaluate to `true`.");
 
 	CHECK_MESSAGE(
-			expression.parse("1.0 < 1.25 && 1.25 < 2.0") == OK,
+			expression.parse("1.0 < 1.25 && 1.25 < 2.0") == Error::OK,
 			"The boolean expression should parse successfully.");
 	CHECK_MESSAGE(
 			bool(expression.execute()),
 			"The boolean expression should evaluate to `true`.");
 
 	CHECK_MESSAGE(
-			expression.parse("!2") == OK,
+			expression.parse("!2") == Error::OK,
 			"The boolean expression should parse successfully.");
 	CHECK_MESSAGE(
 			!bool(expression.execute()),
 			"The boolean expression should evaluate to `false`.");
 
 	CHECK_MESSAGE(
-			expression.parse("!!2") == OK,
+			expression.parse("!!2") == Error::OK,
 			"The boolean expression should parse successfully.");
 	CHECK_MESSAGE(
 			bool(expression.execute()),
 			"The boolean expression should evaluate to `true`.");
 
 	CHECK_MESSAGE(
-			expression.parse("!0") == OK,
+			expression.parse("!0") == Error::OK,
 			"The boolean expression should parse successfully.");
 	CHECK_MESSAGE(
 			bool(expression.execute()),
 			"The boolean expression should evaluate to `true`.");
 
 	CHECK_MESSAGE(
-			expression.parse("!!0") == OK,
+			expression.parse("!!0") == Error::OK,
 			"The boolean expression should parse successfully.");
 	CHECK_MESSAGE(
 			!bool(expression.execute()),
 			"The boolean expression should evaluate to `false`.");
 
 	CHECK_MESSAGE(
-			expression.parse("2 && 5") == OK,
+			expression.parse("2 && 5") == Error::OK,
 			"The boolean expression should parse successfully.");
 	CHECK_MESSAGE(
 			bool(expression.execute()),
 			"The boolean expression should evaluate to `true`.");
 
 	CHECK_MESSAGE(
-			expression.parse("0 || 0") == OK,
+			expression.parse("0 || 0") == Error::OK,
 			"The boolean expression should parse successfully.");
 	CHECK_MESSAGE(
 			!bool(expression.execute()),
 			"The boolean expression should evaluate to `false`.");
 
 	CHECK_MESSAGE(
-			expression.parse("(2 <= 4) && (2 > 5)") == OK,
+			expression.parse("(2 <= 4) && (2 > 5)") == Error::OK,
 			"The boolean expression should parse successfully.");
 	CHECK_MESSAGE(
 			!bool(expression.execute()),
@@ -261,7 +261,7 @@ TEST_CASE("[Expression] Expressions with variables") {
 	parameter_names.push_back("foo");
 	parameter_names.push_back("bar");
 	CHECK_MESSAGE(
-			expression.parse("foo + bar + 50", parameter_names) == OK,
+			expression.parse("foo + bar + 50", parameter_names) == Error::OK,
 			"The expression should parse successfully.");
 	Array values;
 	values.push_back(60);
@@ -274,7 +274,7 @@ TEST_CASE("[Expression] Expressions with variables") {
 	parameter_names_invalid.push_back("foo");
 	parameter_names_invalid.push_back("baz"); // Invalid parameter name.
 	CHECK_MESSAGE(
-			expression.parse("foo + bar + 50", parameter_names_invalid) == OK,
+			expression.parse("foo + bar + 50", parameter_names_invalid) == Error::OK,
 			"The expression should parse successfully.");
 	Array values_invalid;
 	values_invalid.push_back(60);
@@ -291,7 +291,7 @@ TEST_CASE("[Expression] Expressions with variables") {
 	parameter_names_mismatch.push_back("foo");
 	parameter_names_mismatch.push_back("bar");
 	CHECK_MESSAGE(
-			expression.parse("foo + bar + 50", parameter_names_mismatch) == OK,
+			expression.parse("foo + bar + 50", parameter_names_mismatch) == Error::OK,
 			"The expression should parse successfully.");
 	Array values_mismatch;
 	values_mismatch.push_back(60);
@@ -307,7 +307,7 @@ TEST_CASE("[Expression] Expressions with variables") {
 	parameter_names_mismatch2.push_back("bar");
 	parameter_names_mismatch2.push_back("baz");
 	CHECK_MESSAGE(
-			expression.parse("foo + bar + baz + 50", parameter_names_mismatch2) == OK,
+			expression.parse("foo + bar + baz + 50", parameter_names_mismatch2) == Error::OK,
 			"The expression should parse successfully.");
 	Array values_mismatch2;
 	values_mismatch2.push_back(60);
@@ -325,39 +325,39 @@ TEST_CASE("[Expression] Invalid expressions") {
 	Expression expression;
 
 	CHECK_MESSAGE(
-			expression.parse("\\") == ERR_INVALID_PARAMETER,
+			expression.parse("\\") == Error::INVALID_PARAMETER,
 			"The expression shouldn't parse successfully.");
 
 	CHECK_MESSAGE(
-			expression.parse("0++") == ERR_INVALID_PARAMETER,
+			expression.parse("0++") == Error::INVALID_PARAMETER,
 			"The expression shouldn't parse successfully.");
 
 	CHECK_MESSAGE(
-			expression.parse("()") == ERR_INVALID_PARAMETER,
+			expression.parse("()") == Error::INVALID_PARAMETER,
 			"The expression shouldn't parse successfully.");
 
 	CHECK_MESSAGE(
-			expression.parse("()()") == ERR_INVALID_PARAMETER,
+			expression.parse("()()") == Error::INVALID_PARAMETER,
 			"The expression shouldn't parse successfully.");
 
 	CHECK_MESSAGE(
-			expression.parse("() - ()") == ERR_INVALID_PARAMETER,
+			expression.parse("() - ()") == Error::INVALID_PARAMETER,
 			"The expression shouldn't parse successfully.");
 
 	CHECK_MESSAGE(
-			expression.parse("() * 12345") == ERR_INVALID_PARAMETER,
+			expression.parse("() * 12345") == Error::INVALID_PARAMETER,
 			"The expression shouldn't parse successfully.");
 
 	CHECK_MESSAGE(
-			expression.parse("() * 12345") == ERR_INVALID_PARAMETER,
+			expression.parse("() * 12345") == Error::INVALID_PARAMETER,
 			"The expression shouldn't parse successfully.");
 
 	CHECK_MESSAGE(
-			expression.parse("123'456") == ERR_INVALID_PARAMETER,
+			expression.parse("123'456") == Error::INVALID_PARAMETER,
 			"The expression shouldn't parse successfully.");
 
 	CHECK_MESSAGE(
-			expression.parse("123\"456") == ERR_INVALID_PARAMETER,
+			expression.parse("123\"456") == Error::INVALID_PARAMETER,
 			"The expression shouldn't parse successfully.");
 }
 
@@ -366,13 +366,13 @@ TEST_CASE("[Expression] Unusual expressions") {
 
 	// Redundant parentheses don't cause a parse error as long as they're matched.
 	CHECK_MESSAGE(
-			expression.parse("(((((((((((((((666)))))))))))))))") == OK,
+			expression.parse("(((((((((((((((666)))))))))))))))") == Error::OK,
 			"The expression should parse successfully.");
 
 	// Using invalid identifiers doesn't cause a parse error.
 	ERR_PRINT_OFF;
 	CHECK_MESSAGE(
-			expression.parse("hello + hello") == OK,
+			expression.parse("hello + hello") == Error::OK,
 			"The expression should parse successfully.");
 	CHECK_MESSAGE(
 			int(expression.execute()) == 0,
@@ -381,7 +381,7 @@ TEST_CASE("[Expression] Unusual expressions") {
 
 	ERR_PRINT_OFF;
 	CHECK_MESSAGE(
-			expression.parse("$1.00 + ???5") == OK,
+			expression.parse("$1.00 + ???5") == Error::OK,
 			"The expression should parse successfully.");
 	CHECK_MESSAGE(
 			int(expression.execute()) == 0,
@@ -390,7 +390,7 @@ TEST_CASE("[Expression] Unusual expressions") {
 
 	// Commas can't be used as a decimal parameter.
 	CHECK_MESSAGE(
-			expression.parse("123,456") == OK,
+			expression.parse("123,456") == Error::OK,
 			"The expression should parse successfully.");
 	CHECK_MESSAGE(
 			int(expression.execute()) == 123,
@@ -398,7 +398,7 @@ TEST_CASE("[Expression] Unusual expressions") {
 
 	// Spaces can't be used as a separator for large numbers.
 	CHECK_MESSAGE(
-			expression.parse("123 456") == OK,
+			expression.parse("123 456") == Error::OK,
 			"The expression should parse successfully.");
 	CHECK_MESSAGE(
 			int(expression.execute()) == 123,
@@ -406,7 +406,7 @@ TEST_CASE("[Expression] Unusual expressions") {
 
 	// Division by zero is accepted, even though it prints an error message normally.
 	CHECK_MESSAGE(
-			expression.parse("-25.4 / 0") == OK,
+			expression.parse("-25.4 / 0") == Error::OK,
 			"The expression should parse successfully.");
 	ERR_PRINT_OFF;
 	CHECK_MESSAGE(
@@ -415,7 +415,7 @@ TEST_CASE("[Expression] Unusual expressions") {
 	ERR_PRINT_ON;
 
 	CHECK_MESSAGE(
-			expression.parse("0 / 0") == OK,
+			expression.parse("0 / 0") == Error::OK,
 			"The expression should parse successfully.");
 	ERR_PRINT_OFF;
 	CHECK_MESSAGE(

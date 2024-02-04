@@ -165,7 +165,7 @@ Error EditorImportBlendRunner::start_blender(const String &p_python_script, bool
 		int exitcode = 0;
 		err = OS::get_singleton()->execute(blender_path, args, nullptr, &exitcode);
 		if (exitcode != 0) {
-			return FAILED;
+			return Error::FAILED;
 		}
 	} else {
 		err = OS::get_singleton()->create_process(blender_path, args, &blender_pid);
@@ -176,9 +176,9 @@ Error EditorImportBlendRunner::start_blender(const String &p_python_script, bool
 Error EditorImportBlendRunner::do_import(const Dictionary &p_options) {
 	if (is_using_rpc()) {
 		Error err = do_import_rpc(p_options);
-		if (err != OK) {
+		if (err != Error::OK) {
 			// Retry without using RPC (slow, but better than the import failing completely).
-			if (err == ERR_CONNECTION_ERROR) {
+			if (err == Error::CONNECTION_ERROR) {
 				// Disable RPC if the connection could not be established.
 				print_error(vformat("Failed to connect to Blender via RPC, switching to direct imports of .blend files. Check your proxy and firewall settings, then RPC can be re-enabled by changing the editor setting `filesystem/import/blender/rpc_port` to %d.", rpc_port));
 				EditorSettings::get_singleton()->set_manually("filesystem/import/blender/rpc_port", 0);
@@ -234,8 +234,8 @@ Error EditorImportBlendRunner::do_import_rpc(const Dictionary &p_options) {
 		// Start an XML RPC server on the given port.
 		String python = vformat(PYTHON_SCRIPT_RPC, rpc_port);
 		Error err = start_blender(python, false);
-		if (err != OK || blender_pid == 0) {
-			return FAILED;
+		if (err != Error::OK || blender_pid == 0) {
+			return Error::FAILED;
 		}
 	}
 
@@ -247,13 +247,13 @@ Error EditorImportBlendRunner::do_import_rpc(const Dictionary &p_options) {
 	Ref<HTTPClient> client = HTTPClient::create();
 	HTTPClient::Status status = connect_blender_rpc(client, 1000000);
 	if (status != HTTPClient::STATUS_CONNECTED) {
-		ERR_FAIL_V_MSG(ERR_CONNECTION_ERROR, vformat("Unexpected status during RPC connection: %d", status));
+		ERR_FAIL_V_MSG(Error::CONNECTION_ERROR, vformat("Unexpected status during RPC connection: %d", status));
 	}
 
 	// Send XML request.
 	PackedByteArray xml_buffer = xml_body.to_utf8_buffer();
 	Error err = client->request(HTTPClient::METHOD_POST, "/", Vector<String>(), xml_buffer.ptr(), xml_buffer.size());
-	if (err != OK) {
+	if (err != Error::OK) {
 		ERR_FAIL_V_MSG(err, vformat("Unable to send RPC request: %d", err));
 	}
 
@@ -273,23 +273,23 @@ Error EditorImportBlendRunner::do_import_rpc(const Dictionary &p_options) {
 				break;
 			}
 			default: {
-				ERR_FAIL_V_MSG(ERR_CONNECTION_ERROR, vformat("Unexpected status during RPC response: %d", status));
+				ERR_FAIL_V_MSG(Error::CONNECTION_ERROR, vformat("Unexpected status during RPC response: %d", status));
 			}
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error EditorImportBlendRunner::do_import_direct(const Dictionary &p_options) {
 	// Export glTF directly.
 	String python = vformat(PYTHON_SCRIPT_DIRECT, dict_to_python(p_options));
 	Error err = start_blender(python, true);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void EditorImportBlendRunner::_resources_reimported(const PackedStringArray &p_files) {

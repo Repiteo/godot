@@ -159,7 +159,7 @@ int AudioRBResampler::get_num_of_ready_frames() {
 }
 
 Error AudioRBResampler::setup(int p_channels, int p_src_mix_rate, int p_target_mix_rate, int p_buffer_msec, int p_minbuff_needed) {
-	ERR_FAIL_COND_V(p_channels != 1 && p_channels != 2 && p_channels != 4 && p_channels != 6, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_channels != 1 && p_channels != 2 && p_channels != 4 && p_channels != 6, Error::INVALID_PARAMETER);
 
 	int desired_rb_bits = nearest_shift(MAX((p_buffer_msec / 1000.0) * p_src_mix_rate, p_minbuff_needed));
 
@@ -193,7 +193,7 @@ Error AudioRBResampler::setup(int p_channels, int p_src_mix_rate, int p_target_m
 		read_buf[i] = 0;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void AudioRBResampler::clear() {

@@ -79,15 +79,15 @@ Error EditorDebuggerServerTCP::start(const String &p_uri) {
 	if (!p_uri.is_empty() && p_uri != "tcp://") {
 		String scheme, path;
 		Error err = p_uri.parse_url(scheme, bind_host, bind_port, path);
-		ERR_FAIL_COND_V(err != OK, ERR_INVALID_PARAMETER);
-		ERR_FAIL_COND_V(!bind_host.is_valid_ip_address() && bind_host != "*", ERR_INVALID_PARAMETER);
+		ERR_FAIL_COND_V(err != Error::OK, Error::INVALID_PARAMETER);
+		ERR_FAIL_COND_V(!bind_host.is_valid_ip_address() && bind_host != "*", Error::INVALID_PARAMETER);
 	}
 
 	// Try listening on ports
 	const int max_attempts = 5;
 	for (int attempt = 1;; ++attempt) {
 		const Error err = server->listen(bind_port, bind_host);
-		if (err == OK) {
+		if (err == Error::OK) {
 			break;
 		}
 		if (attempt >= max_attempts) {
@@ -101,7 +101,7 @@ Error EditorDebuggerServerTCP::start(const String &p_uri) {
 	// Endpoint that the client should connect to
 	endpoint = vformat("tcp://%s:%d", bind_host, bind_port);
 
-	return OK;
+	return Error::OK;
 }
 
 void EditorDebuggerServerTCP::stop() {

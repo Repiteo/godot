@@ -47,20 +47,20 @@ TEST_CASE("[XMLParser] End-to-end") {
 	parser.open_buffer(buff);
 
 	// <?xml ...?> gets parsed as NODE_UNKNOWN
-	CHECK(parser.read() == OK);
+	CHECK(parser.read() == Error::OK);
 	CHECK(parser.get_node_type() == XMLParser::NodeType::NODE_UNKNOWN);
 
-	CHECK(parser.read() == OK);
+	CHECK(parser.read() == Error::OK);
 	CHECK(parser.get_node_type() == XMLParser::NodeType::NODE_ELEMENT);
 	CHECK(parser.get_node_name() == "top");
 	CHECK(parser.has_attribute("attr"));
 	CHECK(parser.get_named_attribute_value("attr") == "attr value");
 
-	CHECK(parser.read() == OK);
+	CHECK(parser.read() == Error::OK);
 	CHECK(parser.get_node_type() == XMLParser::NodeType::NODE_TEXT);
 	CHECK(parser.get_node_data().lstrip(" \t") == "Text<AB>");
 
-	CHECK(parser.read() == OK);
+	CHECK(parser.read() == Error::OK);
 	CHECK(parser.get_node_type() == XMLParser::NodeType::NODE_ELEMENT_END);
 	CHECK(parser.get_node_name() == "top");
 
@@ -72,37 +72,37 @@ TEST_CASE("[XMLParser] Comments") {
 
 	SUBCASE("Missing end of comment") {
 		const String input = "<first></first><!-- foo";
-		REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), OK);
-		REQUIRE_EQ(parser.read(), OK);
+		REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), Error::OK);
+		REQUIRE_EQ(parser.read(), Error::OK);
 		REQUIRE_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_ELEMENT);
-		REQUIRE_EQ(parser.read(), OK);
+		REQUIRE_EQ(parser.read(), Error::OK);
 		REQUIRE_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_ELEMENT_END);
-		REQUIRE_EQ(parser.read(), OK);
+		REQUIRE_EQ(parser.read(), Error::OK);
 		CHECK_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_COMMENT);
 		CHECK_EQ(parser.get_node_name(), " foo");
 	}
 	SUBCASE("Bad start of comment") {
 		const String input = "<first></first><!-";
-		REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), OK);
-		REQUIRE_EQ(parser.read(), OK);
+		REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), Error::OK);
+		REQUIRE_EQ(parser.read(), Error::OK);
 		REQUIRE_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_ELEMENT);
-		REQUIRE_EQ(parser.read(), OK);
+		REQUIRE_EQ(parser.read(), Error::OK);
 		REQUIRE_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_ELEMENT_END);
-		REQUIRE_EQ(parser.read(), OK);
+		REQUIRE_EQ(parser.read(), Error::OK);
 		CHECK_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_COMMENT);
 		CHECK_EQ(parser.get_node_name(), "-");
 	}
 	SUBCASE("Unblanced angle brackets in comment") {
 		const String input = "<!-- example << --><next-tag></next-tag>";
-		REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), OK);
-		REQUIRE_EQ(parser.read(), OK);
+		REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), Error::OK);
+		REQUIRE_EQ(parser.read(), Error::OK);
 		CHECK_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_COMMENT);
 		CHECK_EQ(parser.get_node_name(), " example << ");
 	}
 	SUBCASE("Doctype") {
 		const String input = "<!DOCTYPE greeting [<!ELEMENT greeting (#PCDATA)>]>";
-		REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), OK);
-		REQUIRE_EQ(parser.read(), OK);
+		REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), Error::OK);
+		REQUIRE_EQ(parser.read(), Error::OK);
 		CHECK_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_COMMENT);
 		CHECK_EQ(parser.get_node_name(), "DOCTYPE greeting [<!ELEMENT greeting (#PCDATA)>]");
 	}
@@ -141,12 +141,12 @@ TEST_CASE("[XMLParser] Premature endings") {
 		}
 
 		XMLParser parser;
-		REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), OK);
-		REQUIRE_EQ(parser.read(), OK);
+		REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), Error::OK);
+		REQUIRE_EQ(parser.read(), Error::OK);
 		REQUIRE_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_ELEMENT);
-		REQUIRE_EQ(parser.read(), OK);
+		REQUIRE_EQ(parser.read(), Error::OK);
 		REQUIRE_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_ELEMENT_END);
-		REQUIRE_EQ(parser.read(), OK);
+		REQUIRE_EQ(parser.read(), Error::OK);
 		CHECK_EQ(parser.get_node_type(), expected_type);
 		CHECK_EQ(parser.get_node_name(), expected_name);
 	}
@@ -156,10 +156,10 @@ TEST_CASE("[XMLParser] Premature endings") {
 
 		SUBCASE("Incomplete start-tag attribute name") {
 			const String input = "<first></first><second attr1=\"foo\" attr2";
-			REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), OK);
-			REQUIRE_EQ(parser.read(), OK);
-			REQUIRE_EQ(parser.read(), OK);
-			REQUIRE_EQ(parser.read(), OK);
+			REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), Error::OK);
+			REQUIRE_EQ(parser.read(), Error::OK);
+			REQUIRE_EQ(parser.read(), Error::OK);
+			REQUIRE_EQ(parser.read(), Error::OK);
 			CHECK_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_ELEMENT);
 			CHECK_EQ(parser.get_node_name(), "second");
 			CHECK_EQ(parser.get_attribute_count(), 1);
@@ -169,10 +169,10 @@ TEST_CASE("[XMLParser] Premature endings") {
 
 		SUBCASE("Incomplete start-tag attribute unquoted value") {
 			const String input = "<first></first><second attr1=\"foo\" attr2=bar";
-			REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), OK);
-			REQUIRE_EQ(parser.read(), OK);
-			REQUIRE_EQ(parser.read(), OK);
-			REQUIRE_EQ(parser.read(), OK);
+			REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), Error::OK);
+			REQUIRE_EQ(parser.read(), Error::OK);
+			REQUIRE_EQ(parser.read(), Error::OK);
+			REQUIRE_EQ(parser.read(), Error::OK);
 			CHECK_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_ELEMENT);
 			CHECK_EQ(parser.get_node_name(), "second");
 			CHECK_EQ(parser.get_attribute_count(), 1);
@@ -182,10 +182,10 @@ TEST_CASE("[XMLParser] Premature endings") {
 
 		SUBCASE("Incomplete start-tag attribute quoted value") {
 			const String input = "<first></first><second attr1=\"foo\" attr2=\"bar";
-			REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), OK);
-			REQUIRE_EQ(parser.read(), OK);
-			REQUIRE_EQ(parser.read(), OK);
-			REQUIRE_EQ(parser.read(), OK);
+			REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), Error::OK);
+			REQUIRE_EQ(parser.read(), Error::OK);
+			REQUIRE_EQ(parser.read(), Error::OK);
+			REQUIRE_EQ(parser.read(), Error::OK);
 			CHECK_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_ELEMENT);
 			CHECK_EQ(parser.get_node_name(), "second");
 			CHECK_EQ(parser.get_attribute_count(), 2);
@@ -197,19 +197,19 @@ TEST_CASE("[XMLParser] Premature endings") {
 
 		SUBCASE("Incomplete end-tag name") {
 			const String input = "<first></fir";
-			REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), OK);
-			REQUIRE_EQ(parser.read(), OK);
-			REQUIRE_EQ(parser.read(), OK);
+			REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), Error::OK);
+			REQUIRE_EQ(parser.read(), Error::OK);
+			REQUIRE_EQ(parser.read(), Error::OK);
 			CHECK_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_ELEMENT_END);
 			CHECK_EQ(parser.get_node_name(), "fir");
 		}
 
 		SUBCASE("Trailing text") {
 			const String input = "<first></first>example";
-			REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), OK);
-			REQUIRE_EQ(parser.read(), OK);
-			REQUIRE_EQ(parser.read(), OK);
-			REQUIRE_EQ(parser.read(), OK);
+			REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), Error::OK);
+			REQUIRE_EQ(parser.read(), Error::OK);
+			REQUIRE_EQ(parser.read(), Error::OK);
+			REQUIRE_EQ(parser.read(), Error::OK);
 			CHECK_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_TEXT);
 			CHECK_EQ(parser.get_node_data(), "example");
 		}
@@ -219,14 +219,14 @@ TEST_CASE("[XMLParser] Premature endings") {
 TEST_CASE("[XMLParser] CDATA") {
 	const String input = "<a><![CDATA[my cdata content goes here]]></a>";
 	XMLParser parser;
-	REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), OK);
-	REQUIRE_EQ(parser.read(), OK);
+	REQUIRE_EQ(parser.open_buffer(input.to_utf8_buffer()), Error::OK);
+	REQUIRE_EQ(parser.read(), Error::OK);
 	CHECK_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_ELEMENT);
 	CHECK_EQ(parser.get_node_name(), "a");
-	REQUIRE_EQ(parser.read(), OK);
+	REQUIRE_EQ(parser.read(), Error::OK);
 	CHECK_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_CDATA);
 	CHECK_EQ(parser.get_node_name(), "my cdata content goes here");
-	REQUIRE_EQ(parser.read(), OK);
+	REQUIRE_EQ(parser.read(), Error::OK);
 	CHECK_EQ(parser.get_node_type(), XMLParser::NodeType::NODE_ELEMENT_END);
 	CHECK_EQ(parser.get_node_name(), "a");
 }

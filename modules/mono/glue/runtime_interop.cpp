@@ -1349,7 +1349,7 @@ void godotsharp_str_to_var(const godot_string *p_str, godot_variant *r_ret) {
 	String errs;
 	int line;
 	Error err = VariantParser::parse(&ss, ret, errs, line);
-	if (err != OK) {
+	if (err != Error::OK) {
 		String err_str = "Parse error at line " + itos(line) + ": " + errs + ".";
 		ERR_PRINT(err_str);
 		ret = err_str;
@@ -1363,7 +1363,7 @@ void godotsharp_var_to_bytes(const godot_variant *p_var, bool p_full_objects, go
 
 	int len;
 	Error err = encode_variant(var, nullptr, len, p_full_objects);
-	ERR_FAIL_COND_MSG(err != OK, "Unexpected error encoding variable to bytes, likely unserializable type found (Object or RID).");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Unexpected error encoding variable to bytes, likely unserializable type found (Object or RID).");
 
 	bytes.resize(len);
 	encode_variant(var, bytes.ptrw(), len, p_full_objects);
@@ -1373,7 +1373,7 @@ void godotsharp_bytes_to_var(const godot_packed_array *p_bytes, bool p_allow_obj
 	const PackedByteArray *bytes = reinterpret_cast<const PackedByteArray *>(p_bytes);
 	Variant ret;
 	Error err = decode_variant(ret, bytes->ptr(), bytes->size(), nullptr, p_allow_objects);
-	if (err != OK) {
+	if (err != Error::OK) {
 		ret = RTR("Not enough bytes for decoding bytes, or invalid format.");
 	}
 	memnew_placement(r_ret, Variant(ret));

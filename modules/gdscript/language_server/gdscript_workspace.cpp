@@ -216,16 +216,16 @@ void GDScriptWorkspace::reload_all_workspace_scripts() {
 	for (const String &path : paths) {
 		Error err;
 		String content = FileAccess::get_file_as_string(path, &err);
-		ERR_CONTINUE(err != OK);
+		ERR_CONTINUE(err != Error::OK);
 		err = parse_script(path, content);
 
-		if (err != OK) {
+		if (err != Error::OK) {
 			HashMap<String, ExtendGDScriptParser *>::Iterator S = parse_results.find(path);
 			String err_msg = "Failed parse script " + path;
 			if (S) {
 				err_msg += "\n" + S->value->get_errors()[0].message;
 			}
-			ERR_CONTINUE_MSG(err != OK, err_msg);
+			ERR_CONTINUE_MSG(err != Error::OK, err_msg);
 		}
 	}
 }
@@ -233,7 +233,7 @@ void GDScriptWorkspace::reload_all_workspace_scripts() {
 void GDScriptWorkspace::list_script_files(const String &p_root_dir, List<String> &r_files) {
 	Error err;
 	Ref<DirAccess> dir = DirAccess::open(p_root_dir, &err);
-	if (OK == err) {
+	if (Error::OK == err) {
 		dir->list_dir_begin();
 		String file_name = dir->get_next();
 		while (file_name.length()) {
@@ -274,7 +274,7 @@ ExtendGDScriptParser *GDScriptWorkspace::get_parse_result(const String &p_path) 
 
 Error GDScriptWorkspace::initialize() {
 	if (initialized) {
-		return OK;
+		return Error::OK;
 	}
 
 	DocTools *doc = EditorHelp::get_doc_data();
@@ -410,7 +410,7 @@ Error GDScriptWorkspace::initialize() {
 	EditorNode *editor_node = EditorNode::get_singleton();
 	editor_node->connect("script_add_function_request", callable_mp(this, &GDScriptWorkspace::apply_new_signal));
 
-	return OK;
+	return Error::OK;
 }
 
 Error GDScriptWorkspace::parse_script(const String &p_path, const String &p_content) {
@@ -419,7 +419,7 @@ Error GDScriptWorkspace::parse_script(const String &p_path, const String &p_cont
 	HashMap<String, ExtendGDScriptParser *>::Iterator last_parser = parse_results.find(p_path);
 	HashMap<String, ExtendGDScriptParser *>::Iterator last_script = scripts.find(p_path);
 
-	if (err == OK) {
+	if (err == Error::OK) {
 		remove_cache_parser(p_path);
 		parse_results[p_path] = parser;
 		scripts[p_path] = parser;
@@ -545,7 +545,7 @@ Vector<lsp::Location> GDScriptWorkspace::find_all_usages(const lsp::DocumentSymb
 Error GDScriptWorkspace::parse_local_script(const String &p_path) {
 	Error err;
 	String content = FileAccess::get_file_as_string(p_path, &err);
-	if (err == OK) {
+	if (err == Error::OK) {
 		err = parse_script(p_path, content);
 	}
 	return err;
@@ -691,7 +691,7 @@ const lsp::DocumentSymbol *GDScriptWorkspace::resolve_symbol(const lsp::TextDocu
 				if (symbol_identifier == "new" && parser->get_lines()[p_doc_pos.position.line].replace(" ", "").replace("\t", "").find("new(") > -1) {
 					symbol_identifier = "_init";
 				}
-				if (OK == GDScriptLanguage::get_singleton()->lookup_code(parser->get_text_for_lookup_symbol(pos, symbol_identifier, p_func_required), symbol_identifier, path, nullptr, ret)) {
+				if (Error::OK == GDScriptLanguage::get_singleton()->lookup_code(parser->get_text_for_lookup_symbol(pos, symbol_identifier, p_func_required), symbol_identifier, path, nullptr, ret)) {
 					if (ret.type == ScriptLanguage::LOOKUP_RESULT_SCRIPT_LOCATION) {
 						String target_script_path = path;
 						if (!ret.script.is_null()) {
@@ -804,7 +804,7 @@ Error GDScriptWorkspace::resolve_signature(const lsp::TextDocumentPositionParams
 		lsp::TextDocumentPositionParams text_pos;
 		text_pos.textDocument = p_doc_pos.textDocument;
 
-		if (parser->get_left_function_call(p_doc_pos.position, text_pos.position, r_signature.activeParameter) == OK) {
+		if (parser->get_left_function_call(p_doc_pos.position, text_pos.position, r_signature.activeParameter) == Error::OK) {
 			List<const lsp::DocumentSymbol *> symbols;
 
 			if (const lsp::DocumentSymbol *symbol = resolve_symbol(text_pos)) {
@@ -831,11 +831,11 @@ Error GDScriptWorkspace::resolve_signature(const lsp::TextDocumentPositionParams
 			}
 
 			if (r_signature.signatures.size()) {
-				return OK;
+				return Error::OK;
 			}
 		}
 	}
-	return ERR_METHOD_NOT_FOUND;
+	return Error::METHOD_NOT_FOUND;
 }
 
 GDScriptWorkspace::GDScriptWorkspace() {

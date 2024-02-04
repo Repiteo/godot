@@ -98,7 +98,7 @@ Error ResourceImporterTextureAtlas::import(const String &p_source_file, const St
 	Ref<Image> broken = memnew(Image((const char **)atlas_import_failed_xpm));
 	ResourceSaver::save(ImageTexture::create_from_image(broken), p_save_path + ".tex");
 
-	return OK;
+	return Error::OK;
 }
 
 // FIXME: Rasterization has issues, see https://github.com/godotengine/godot/issues/68350#issuecomment-1305610290
@@ -192,7 +192,7 @@ static void _plot_triangle(Vector2i *p_vertices, const Vector2i &p_offset, bool 
 }
 
 Error ResourceImporterTextureAtlas::import_group_file(const String &p_group_file, const HashMap<String, HashMap<StringName, Variant>> &p_source_file_options, const HashMap<String, String> &p_base_paths) {
-	ERR_FAIL_COND_V(p_source_file_options.size() == 0, ERR_BUG); //should never happen
+	ERR_FAIL_COND_V(p_source_file_options.size() == 0, Error::BUG); //should never happen
 
 	Vector<EditorAtlasPacker::Chart> charts;
 	Vector<PackData> pack_data_files;
@@ -208,7 +208,7 @@ Error ResourceImporterTextureAtlas::import_group_file(const String &p_group_file
 		Ref<Image> image;
 		image.instantiate();
 		Error err = ImageLoader::load_image(source, image);
-		ERR_CONTINUE(err != OK);
+		ERR_CONTINUE(err != Error::OK);
 
 		pack_data.image = image;
 
@@ -395,7 +395,7 @@ Error ResourceImporterTextureAtlas::import_group_file(const String &p_group_file
 		idx++;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 ResourceImporterTextureAtlas::ResourceImporterTextureAtlas() {

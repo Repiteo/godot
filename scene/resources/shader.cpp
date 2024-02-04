@@ -80,7 +80,7 @@ void Shader::set_code(const String &p_code) {
 		HashSet<Ref<ShaderInclude>> new_include_dependencies;
 		ShaderPreprocessor preprocessor;
 		Error result = preprocessor.preprocess(p_code, path, pp_code, nullptr, nullptr, nullptr, &new_include_dependencies);
-		if (result == OK) {
+		if (result == Error::OK) {
 			// This ensures previous include resources are not freed and then re-loaded during parse (which would make compiling slower)
 			include_dependencies = new_include_dependencies;
 		}
@@ -231,17 +231,17 @@ Shader::~Shader() {
 
 Ref<Resource> ResourceFormatLoaderShader::load(const String &p_path, const String &p_original_path, Error *r_error, bool p_use_sub_threads, float *r_progress, CacheMode p_cache_mode) {
 	if (r_error) {
-		*r_error = ERR_FILE_CANT_OPEN;
+		*r_error = Error::FILE_CANT_OPEN;
 	}
 
-	Error error = OK;
+	Error error = Error::OK;
 	Vector<uint8_t> buffer = FileAccess::get_file_as_bytes(p_path, &error);
-	ERR_FAIL_COND_V_MSG(error, nullptr, "Cannot load shader: " + p_path);
+	ERR_FAIL_COND_V_MSG(error != Error::OK, nullptr, "Cannot load shader: " + p_path);
 
 	String str;
 	if (buffer.size() > 0) {
 		error = str.parse_utf8((const char *)buffer.ptr(), buffer.size());
-		ERR_FAIL_COND_V_MSG(error, nullptr, "Cannot parse shader: " + p_path);
+		ERR_FAIL_COND_V_MSG(error != Error::OK, nullptr, "Cannot parse shader: " + p_path);
 	}
 
 	Ref<Shader> shader;
@@ -251,7 +251,7 @@ Ref<Resource> ResourceFormatLoaderShader::load(const String &p_path, const Strin
 	shader->set_code(str);
 
 	if (r_error) {
-		*r_error = OK;
+		*r_error = Error::OK;
 	}
 
 	return shader;
@@ -275,21 +275,21 @@ String ResourceFormatLoaderShader::get_resource_type(const String &p_path) const
 
 Error ResourceFormatSaverShader::save(const Ref<Resource> &p_resource, const String &p_path, uint32_t p_flags) {
 	Ref<Shader> shader = p_resource;
-	ERR_FAIL_COND_V(shader.is_null(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(shader.is_null(), Error::INVALID_PARAMETER);
 
 	String source = shader->get_code();
 
 	Error err;
 	Ref<FileAccess> file = FileAccess::open(p_path, FileAccess::WRITE, &err);
 
-	ERR_FAIL_COND_V_MSG(err, err, "Cannot save shader '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Cannot save shader '" + p_path + "'.");
 
 	file->store_string(source);
-	if (file->get_error() != OK && file->get_error() != ERR_FILE_EOF) {
-		return ERR_CANT_CREATE;
+	if (file->get_error() != Error::OK && file->get_error() != Error::FILE_EOF) {
+		return Error::CANT_CREATE;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void ResourceFormatSaverShader::get_recognized_extensions(const Ref<Resource> &p_resource, List<String> *p_extensions) const {

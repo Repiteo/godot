@@ -145,7 +145,7 @@ void GLManagerNative_Windows::_nvapi_disable_threaded_optimization() {
 		return;
 	}
 
-	print_verbose("NVAPI: Init OK!");
+	print_verbose("NVAPI: Init Error::OK!");
 
 	NvDRSSessionHandle session_handle;
 
@@ -267,7 +267,7 @@ int GLManagerNative_Windows::_find_or_create_display(GLWindow &win) {
 	GLDisplay &d = _displays[new_display_id];
 	Error err = _create_context(win, d);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		// not good
 		// delete the _display?
 		_displays.remove_at(new_display_id);
@@ -302,16 +302,16 @@ static Error _configure_pixel_format(HDC hDC) {
 	int pixel_format = ChoosePixelFormat(hDC, &pfd);
 	if (!pixel_format) // Did Windows Find A Matching Pixel Format?
 	{
-		return ERR_CANT_CREATE; // Return FALSE
+		return Error::CANT_CREATE; // Return FALSE
 	}
 
 	BOOL ret = SetPixelFormat(hDC, pixel_format, &pfd);
 	if (!ret) // Are We Able To Set The Pixel Format?
 	{
-		return ERR_CANT_CREATE; // Return FALSE
+		return Error::CANT_CREATE; // Return FALSE
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 PFNWGLCREATECONTEXT gd_wglCreateContext;
@@ -321,26 +321,26 @@ PFNWGLGETPROCADDRESS gd_wglGetProcAddress;
 
 Error GLManagerNative_Windows::_create_context(GLWindow &win, GLDisplay &gl_display) {
 	Error err = _configure_pixel_format(win.hDC);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 
 	HMODULE module = LoadLibraryW(L"opengl32.dll");
 	if (!module) {
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 	gd_wglCreateContext = (PFNWGLCREATECONTEXT)GetProcAddress(module, "wglCreateContext");
 	gd_wglMakeCurrent = (PFNWGLMAKECURRENT)GetProcAddress(module, "wglMakeCurrent");
 	gd_wglDeleteContext = (PFNWGLDELETECONTEXT)GetProcAddress(module, "wglDeleteContext");
 	gd_wglGetProcAddress = (PFNWGLGETPROCADDRESS)GetProcAddress(module, "wglGetProcAddress");
 	if (!gd_wglCreateContext || !gd_wglMakeCurrent || !gd_wglDeleteContext || !gd_wglGetProcAddress) {
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	gl_display.hRC = gd_wglCreateContext(win.hDC);
 	if (!gl_display.hRC) // Are We Able To Get A Rendering Context?
 	{
-		return ERR_CANT_CREATE; // Return FALSE
+		return Error::CANT_CREATE; // Return FALSE
 	}
 
 	if (!gd_wglMakeCurrent(win.hDC, gl_display.hRC)) {
@@ -363,14 +363,14 @@ Error GLManagerNative_Windows::_create_context(GLWindow &win, GLDisplay &gl_disp
 	{
 		gd_wglDeleteContext(gl_display.hRC);
 		gl_display.hRC = 0;
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	HGLRC new_hRC = wglCreateContextAttribsARB(win.hDC, 0, attribs);
 	if (!new_hRC) {
 		gd_wglDeleteContext(gl_display.hRC);
 		gl_display.hRC = 0;
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	if (!gd_wglMakeCurrent(win.hDC, nullptr)) {
@@ -385,25 +385,25 @@ Error GLManagerNative_Windows::_create_context(GLWindow &win, GLDisplay &gl_disp
 		ERR_PRINT("Could not attach OpenGL context to newly created window with replaced OpenGL context: " + format_error_message(GetLastError()));
 		gd_wglDeleteContext(gl_display.hRC);
 		gl_display.hRC = 0;
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	if (!wglSwapIntervalEXT) {
 		wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)gd_wglGetProcAddress("wglSwapIntervalEXT");
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error GLManagerNative_Windows::window_create(DisplayServer::WindowID p_window_id, HWND p_hwnd, HINSTANCE p_hinstance, int p_width, int p_height) {
 	HDC hDC = GetDC(p_hwnd);
 	if (!hDC) {
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	// configure the HDC to use a compatible pixel format
 	Error result = _configure_pixel_format(hDC);
-	if (result != OK) {
+	if (result != Error::OK) {
 		return result;
 	}
 
@@ -414,7 +414,7 @@ Error GLManagerNative_Windows::window_create(DisplayServer::WindowID p_window_id
 	win.gldisplay_id = _find_or_create_display(win);
 
 	if (win.gldisplay_id == -1) {
-		return FAILED;
+		return Error::FAILED;
 	}
 
 	// WARNING: p_window_id is an eternally growing integer since popup windows keep coming and going
@@ -424,7 +424,7 @@ Error GLManagerNative_Windows::window_create(DisplayServer::WindowID p_window_id
 	// make current
 	window_make_current(p_window_id);
 
-	return OK;
+	return Error::OK;
 }
 
 void GLManagerNative_Windows::_internal_set_current_window(GLWindow *p_win) {
@@ -486,7 +486,7 @@ void GLManagerNative_Windows::swap_buffers() {
 
 Error GLManagerNative_Windows::initialize() {
 	_nvapi_disable_threaded_optimization();
-	return OK;
+	return Error::OK;
 }
 
 void GLManagerNative_Windows::set_use_vsync(DisplayServer::WindowID p_window_id, bool p_use) {

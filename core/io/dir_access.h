@@ -115,7 +115,7 @@ public:
 	static void remove_file_or_error(String p_path) {
 		Ref<DirAccess> da = create(ACCESS_FILESYSTEM);
 		if (da->file_exists(p_path)) {
-			if (da->remove(p_path) != OK) {
+			if (da->remove(p_path) != Error::OK) {
 				ERR_FAIL_MSG("Cannot remove file or directory: " + p_path);
 			}
 		} else {

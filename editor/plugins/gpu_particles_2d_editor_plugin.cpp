@@ -176,7 +176,7 @@ void GPUParticles2DEditorPlugin::_generate_emission_mask() {
 	Ref<Image> img;
 	img.instantiate();
 	Error err = ImageLoader::load_image(source_emission_file, img);
-	ERR_FAIL_COND_MSG(err != OK, "Error loading image '" + source_emission_file + "'.");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Error loading image '" + source_emission_file + "'.");
 
 	if (img->is_compressed()) {
 		img->decompress();

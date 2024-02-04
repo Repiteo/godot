@@ -33,10 +33,10 @@
 #include "packet_peer_mbed_dtls.h"
 
 Error DTLSServerMbedTLS::setup(Ref<TLSOptions> p_options) {
-	ERR_FAIL_COND_V(p_options.is_null() || !p_options->is_server(), ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(cookies->setup() != OK, ERR_ALREADY_IN_USE);
+	ERR_FAIL_COND_V(p_options.is_null() || !p_options->is_server(), Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(cookies->setup() != Error::OK, Error::ALREADY_IN_USE);
 	tls_options = p_options;
-	return OK;
+	return Error::OK;
 }
 
 void DTLSServerMbedTLS::stop() {

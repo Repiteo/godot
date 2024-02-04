@@ -220,8 +220,8 @@ Dictionary DebugAdapterParser::_launch_process(const Dictionary &p_params) const
 
 		EditorRunBar *run_bar = EditorRunBar::get_singleton();
 		Error err = platform_string == "android" ? run_bar->start_native_device(device * 10000 + idx) : run_bar->start_native_device(idx);
-		if (err) {
-			if (err == ERR_INVALID_PARAMETER && platform_string == "android") {
+		if (err != Error::OK) {
+			if (err == Error::INVALID_PARAMETER && platform_string == "android") {
 				return prepare_error_response(p_params, DAP::ErrorType::MISSING_DEVICE);
 			} else {
 				return prepare_error_response(p_params, DAP::ErrorType::UNKNOWN);

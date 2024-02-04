@@ -152,9 +152,9 @@ public:
 
 	virtual void alert(const String &p_alert, const String &p_title = "ALERT!");
 
-	virtual Error open_dynamic_library(const String p_path, void *&p_library_handle, bool p_also_set_library_path = false, String *r_resolved_path = nullptr) { return ERR_UNAVAILABLE; }
-	virtual Error close_dynamic_library(void *p_library_handle) { return ERR_UNAVAILABLE; }
-	virtual Error get_dynamic_library_symbol_handle(void *p_library_handle, const String p_name, void *&p_symbol_handle, bool p_optional = false) { return ERR_UNAVAILABLE; }
+	virtual Error open_dynamic_library(const String p_path, void *&p_library_handle, bool p_also_set_library_path = false, String *r_resolved_path = nullptr) { return Error::UNAVAILABLE; }
+	virtual Error close_dynamic_library(void *p_library_handle) { return Error::UNAVAILABLE; }
+	virtual Error get_dynamic_library_symbol_handle(void *p_library_handle, const String p_name, void *&p_symbol_handle, bool p_optional = false) { return Error::UNAVAILABLE; }
 
 	virtual void set_low_processor_usage_mode(bool p_enabled);
 	virtual bool is_in_low_processor_usage_mode() const;
@@ -279,7 +279,7 @@ public:
 
 	virtual String get_system_dir(SystemDir p_dir, bool p_shared_storage = true) const;
 
-	virtual Error move_to_trash(const String &p_path) { return FAILED; }
+	virtual Error move_to_trash(const String &p_path) { return Error::FAILED; }
 
 	virtual int get_exit_code() const;
 	// `set_exit_code` should only be used from `SceneTree` (or from a similar

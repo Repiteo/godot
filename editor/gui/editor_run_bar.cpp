@@ -233,7 +233,7 @@ void EditorRunBar::_run_scene(const String &p_scene_path) {
 
 	EditorDebuggerNode::get_singleton()->start();
 	Error error = editor_run.run(run_filename, write_movie_file);
-	if (error != OK) {
+	if (error != Error::OK) {
 		EditorDebuggerNode::get_singleton()->stop();
 		EditorNode::get_singleton()->show_accept(TTR("Could not start subprocess(es)!"), TTR("OK"));
 		return;

@@ -235,7 +235,7 @@ void fog() {
 		shader_inc->set_path(lpath);
 
 		Error error = ResourceSaver::save(shader_inc, lpath, ResourceSaver::FLAG_CHANGE_PATH);
-		if (error != OK) {
+		if (error != Error::OK) {
 			alert->set_text(TTR("Error - Could not create shader include in filesystem."));
 			alert->popup_centered();
 			return;
@@ -248,7 +248,7 @@ void fog() {
 			shader->set_path(lpath);
 
 			Error error = ResourceSaver::save(shader, lpath, ResourceSaver::FLAG_CHANGE_PATH);
-			if (error != OK) {
+			if (error != Error::OK) {
 				alert->set_text(TTR("Error - Could not create shader in filesystem."));
 				alert->popup_centered();
 				return;
@@ -433,7 +433,7 @@ String ShaderCreateDialog::_validate_path(const String &p_path) {
 	}
 
 	Ref<DirAccess> d = DirAccess::create(DirAccess::ACCESS_RESOURCES);
-	if (d->change_dir(p.get_base_dir()) != OK) {
+	if (d->change_dir(p.get_base_dir()) != Error::OK) {
 		return TTR("Invalid base path.");
 	}
 

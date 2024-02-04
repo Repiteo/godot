@@ -43,7 +43,7 @@ void ImageTexture::reload_from_file() {
 	Ref<Image> img;
 	img.instantiate();
 
-	if (ImageLoader::load_image(path, img) == OK) {
+	if (ImageLoader::load_image(path, img) == Error::OK) {
 		set_image(img);
 	} else {
 		Resource::reload_from_file();
@@ -271,7 +271,7 @@ Error ImageTextureLayered::_create_from_images(const TypedArray<Image> &p_images
 	Vector<Ref<Image>> images;
 	for (int i = 0; i < p_images.size(); i++) {
 		Ref<Image> img = p_images[i];
-		ERR_FAIL_COND_V(img.is_null(), ERR_INVALID_PARAMETER);
+		ERR_FAIL_COND_V(img.is_null(), Error::INVALID_PARAMETER);
 		images.push_back(img);
 	}
 
@@ -287,21 +287,21 @@ TypedArray<Image> ImageTextureLayered::_get_images() const {
 }
 
 void ImageTextureLayered::_set_images(const TypedArray<Image> &p_images) {
-	ERR_FAIL_COND(_create_from_images(p_images) != OK);
+	ERR_FAIL_COND(_create_from_images(p_images) != Error::OK);
 }
 
 Error ImageTextureLayered::create_from_images(Vector<Ref<Image>> p_images) {
 	int new_layers = p_images.size();
-	ERR_FAIL_COND_V(new_layers == 0, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(new_layers == 0, Error::INVALID_PARAMETER);
 	if (layered_type == LAYERED_TYPE_CUBEMAP) {
-		ERR_FAIL_COND_V_MSG(new_layers != 6, ERR_INVALID_PARAMETER,
+		ERR_FAIL_COND_V_MSG(new_layers != 6, Error::INVALID_PARAMETER,
 				"Cubemaps require exactly 6 layers");
 	} else if (layered_type == LAYERED_TYPE_CUBEMAP_ARRAY) {
-		ERR_FAIL_COND_V_MSG((new_layers % 6) != 0, ERR_INVALID_PARAMETER,
+		ERR_FAIL_COND_V_MSG((new_layers % 6) != 0, Error::INVALID_PARAMETER,
 				"Cubemap array layers must be a multiple of 6");
 	}
 
-	ERR_FAIL_COND_V(p_images[0].is_null() || p_images[0]->is_empty(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_images[0].is_null() || p_images[0]->is_empty(), Error::INVALID_PARAMETER);
 
 	Image::Format new_format = p_images[0]->get_format();
 	int new_width = p_images[0]->get_width();
@@ -309,21 +309,21 @@ Error ImageTextureLayered::create_from_images(Vector<Ref<Image>> p_images) {
 	bool new_mipmaps = p_images[0]->has_mipmaps();
 
 	for (int i = 1; i < p_images.size(); i++) {
-		ERR_FAIL_COND_V_MSG(p_images[i]->get_format() != new_format, ERR_INVALID_PARAMETER,
+		ERR_FAIL_COND_V_MSG(p_images[i]->get_format() != new_format, Error::INVALID_PARAMETER,
 				"All images must share the same format");
-		ERR_FAIL_COND_V_MSG(p_images[i]->get_width() != new_width || p_images[i]->get_height() != new_height, ERR_INVALID_PARAMETER,
+		ERR_FAIL_COND_V_MSG(p_images[i]->get_width() != new_width || p_images[i]->get_height() != new_height, Error::INVALID_PARAMETER,
 				"All images must share the same dimensions");
-		ERR_FAIL_COND_V_MSG(p_images[i]->has_mipmaps() != new_mipmaps, ERR_INVALID_PARAMETER,
+		ERR_FAIL_COND_V_MSG(p_images[i]->has_mipmaps() != new_mipmaps, Error::INVALID_PARAMETER,
 				"All images must share the usage of mipmaps");
 	}
 
 	if (texture.is_valid()) {
 		RID new_texture = RS::get_singleton()->texture_2d_layered_create(p_images, RS::TextureLayeredType(layered_type));
-		ERR_FAIL_COND_V(!new_texture.is_valid(), ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(!new_texture.is_valid(), Error::CANT_CREATE);
 		RS::get_singleton()->texture_replace(texture, new_texture);
 	} else {
 		texture = RS::get_singleton()->texture_2d_layered_create(p_images, RS::TextureLayeredType(layered_type));
-		ERR_FAIL_COND_V(!texture.is_valid(), ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(!texture.is_valid(), Error::CANT_CREATE);
 	}
 
 	format = new_format;
@@ -331,7 +331,7 @@ Error ImageTextureLayered::create_from_images(Vector<Ref<Image>> p_images) {
 	height = new_height;
 	layers = new_layers;
 	mipmaps = new_mipmaps;
-	return OK;
+	return Error::OK;
 }
 
 void ImageTextureLayered::update_layer(const Ref<Image> &p_image, int p_layer) {
@@ -421,7 +421,7 @@ void ImageTexture3D::_update(const TypedArray<Image> &p_data) {
 
 Error ImageTexture3D::create(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Vector<Ref<Image>> &p_data) {
 	RID tex = RenderingServer::get_singleton()->texture_3d_create(p_format, p_width, p_height, p_depth, p_mipmaps, p_data);
-	ERR_FAIL_COND_V(tex.is_null(), ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(tex.is_null(), Error::CANT_CREATE);
 
 	if (texture.is_valid()) {
 		RenderingServer::get_singleton()->texture_replace(texture, tex);
@@ -435,7 +435,7 @@ Error ImageTexture3D::create(Image::Format p_format, int p_width, int p_height, 
 	depth = p_depth;
 	mipmaps = p_mipmaps;
 
-	return OK;
+	return Error::OK;
 }
 
 void ImageTexture3D::update(const Vector<Ref<Image>> &p_data) {
@@ -505,7 +505,7 @@ void ImageTexture3D::_set_images(const TypedArray<Image> &p_images) {
 	}
 
 	Error err = _create(new_format, new_width, new_height, new_depth, new_mipmaps, p_images);
-	ERR_FAIL_COND(err != OK);
+	ERR_FAIL_COND(err != Error::OK);
 }
 
 void ImageTexture3D::_bind_methods() {

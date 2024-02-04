@@ -102,9 +102,9 @@ int ios_main(int argc, char **argv) {
 
 	Error err = Main::setup(fargv[0], argc - 1, &fargv[1], false);
 
-	if (err == ERR_HELP) { // Returned by --help and --version, so success.
+	if (err == Error::HELP) { // Returned by --help and --version, so success.
 		return 0;
-	} else if (err != OK) {
+	} else if (err != Error::OK) {
 		return 255;
 	}
 

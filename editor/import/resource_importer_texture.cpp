@@ -104,7 +104,7 @@ void ResourceImporterTexture::update_imports() {
 			String src_path = String(E.key) + ".import";
 
 			Error err = cf->load(src_path);
-			ERR_CONTINUE(err != OK);
+			ERR_CONTINUE(err != Error::OK);
 
 			bool changed = false;
 
@@ -479,7 +479,7 @@ Error ResourceImporterTexture::import(const String &p_source_file, const String 
 	Image::RoughnessChannel roughness_channel = Image::ROUGHNESS_CHANNEL_R;
 	if (mipmaps && roughness > 1 && FileAccess::exists(normal_map)) {
 		normal_image.instantiate();
-		if (ImageLoader::load_image(normal_map, normal_image) == OK) {
+		if (ImageLoader::load_image(normal_map, normal_image) == Error::OK) {
 			roughness_channel = Image::RoughnessChannel(roughness - 2);
 		}
 	}
@@ -488,7 +488,7 @@ Error ResourceImporterTexture::import(const String &p_source_file, const String 
 	Ref<Image> image;
 	image.instantiate();
 	Error err = ImageLoader::load_image(p_source_file, image, nullptr, loader_flags, scale);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 	images_imported.push_back(image);
@@ -509,7 +509,7 @@ Error ResourceImporterTexture::import(const String &p_source_file, const String 
 
 		editor_image.instantiate();
 		err = ImageLoader::load_image(p_source_file, editor_image, nullptr, editor_loader_flags, editor_scale);
-		if (err != OK) {
+		if (err != Error::OK) {
 			WARN_PRINT("Failed to import an image resource for editor use from '" + p_source_file + "'");
 		} else {
 			images_imported.push_back(editor_image);
@@ -716,7 +716,7 @@ Error ResourceImporterTexture::import(const String &p_source_file, const String 
 		*r_metadata = meta;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 const char *ResourceImporterTexture::compression_formats[] = {

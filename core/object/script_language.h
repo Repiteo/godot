@@ -256,7 +256,7 @@ public:
 	virtual bool can_inherit_from_file() const { return false; }
 	virtual int find_function(const String &p_function, const String &p_code) const = 0;
 	virtual String make_function(const String &p_class, const String &p_name, const PackedStringArray &p_args) const = 0;
-	virtual Error open_in_external_editor(const Ref<Script> &p_script, int p_line, int p_col) { return ERR_UNAVAILABLE; }
+	virtual Error open_in_external_editor(const Ref<Script> &p_script, int p_line, int p_col) { return Error::UNAVAILABLE; }
 	virtual bool overrides_external_editor() { return false; }
 
 	// Keep enums in sync with:
@@ -313,7 +313,7 @@ public:
 		TypedArray<int> charac;
 	};
 
-	virtual Error complete_code(const String &p_code, const String &p_path, Object *p_owner, List<CodeCompletionOption> *r_options, bool &r_force, String &r_call_hint) { return ERR_UNAVAILABLE; }
+	virtual Error complete_code(const String &p_code, const String &p_path, Object *p_owner, List<CodeCompletionOption> *r_options, bool &r_force, String &r_call_hint) { return Error::UNAVAILABLE; }
 
 	enum LookupResultType {
 		LOOKUP_RESULT_SCRIPT_LOCATION,
@@ -337,7 +337,7 @@ public:
 		int location;
 	};
 
-	virtual Error lookup_code(const String &p_code, const String &p_symbol, const String &p_path, Object *p_owner, LookupResult &r_result) { return ERR_UNAVAILABLE; }
+	virtual Error lookup_code(const String &p_code, const String &p_symbol, const String &p_path, Object *p_owner, LookupResult &r_result) { return Error::UNAVAILABLE; }
 
 	virtual void auto_indent_code(String &p_code, int p_from_line, int p_to_line) const = 0;
 	virtual void add_global_constant(const StringName &p_variable, const Variant &p_value) = 0;

@@ -47,13 +47,13 @@ Error ImageLoaderBMP::convert_to_image(Ref<Image> p_image,
 		const uint8_t *p_color_buffer,
 		const uint32_t color_table_size,
 		const bmp_header_s &p_header) {
-	Error err = OK;
+	Error err = Error::OK;
 
 	if (p_buffer == nullptr) {
-		err = FAILED;
+		err = Error::FAILED;
 	}
 
-	if (err == OK) {
+	if (err == Error::OK) {
 		size_t index = 0;
 		size_t width = (size_t)p_header.bmp_info_header.bmp_width;
 		size_t height = (size_t)p_header.bmp_info_header.bmp_height;
@@ -63,23 +63,23 @@ Error ImageLoaderBMP::convert_to_image(Ref<Image> p_image,
 
 		if (bits_per_pixel == 1) {
 			// Requires bit unpacking...
-			ERR_FAIL_COND_V_MSG(width % 8 != 0, ERR_UNAVAILABLE,
+			ERR_FAIL_COND_V_MSG(width % 8 != 0, Error::UNAVAILABLE,
 					vformat("1-bpp BMP images must have a width that is a multiple of 8, but the imported BMP is %d pixels wide.", int(width)));
-			ERR_FAIL_COND_V_MSG(height % 8 != 0, ERR_UNAVAILABLE,
+			ERR_FAIL_COND_V_MSG(height % 8 != 0, Error::UNAVAILABLE,
 					vformat("1-bpp BMP images must have a height that is a multiple of 8, but the imported BMP is %d pixels tall.", int(height)));
 
 		} else if (bits_per_pixel == 2) {
 			// Requires bit unpacking...
-			ERR_FAIL_COND_V_MSG(width % 4 != 0, ERR_UNAVAILABLE,
+			ERR_FAIL_COND_V_MSG(width % 4 != 0, Error::UNAVAILABLE,
 					vformat("2-bpp BMP images must have a width that is a multiple of 4, but the imported BMP is %d pixels wide.", int(width)));
-			ERR_FAIL_COND_V_MSG(height % 4 != 0, ERR_UNAVAILABLE,
+			ERR_FAIL_COND_V_MSG(height % 4 != 0, Error::UNAVAILABLE,
 					vformat("2-bpp BMP images must have a height that is a multiple of 4, but the imported BMP is %d pixels tall.", int(height)));
 
 		} else if (bits_per_pixel == 4) {
 			// Requires bit unpacking...
-			ERR_FAIL_COND_V_MSG(width % 2 != 0, ERR_UNAVAILABLE,
+			ERR_FAIL_COND_V_MSG(width % 2 != 0, Error::UNAVAILABLE,
 					vformat("4-bpp BMP images must have a width that is a multiple of 2, but the imported BMP is %d pixels wide.", int(width)));
-			ERR_FAIL_COND_V_MSG(height % 2 != 0, ERR_UNAVAILABLE,
+			ERR_FAIL_COND_V_MSG(height % 2 != 0, Error::UNAVAILABLE,
 					vformat("4-bpp BMP images must have a height that is a multiple of 2, but the imported BMP is %d pixels tall.", int(height)));
 		}
 
@@ -92,7 +92,7 @@ Error ImageLoaderBMP::convert_to_image(Ref<Image> p_image,
 		} else { // color
 			data_len = width * height * 4;
 		}
-		ERR_FAIL_COND_V_MSG(data_len == 0, ERR_BUG, "Couldn't parse the BMP image data.");
+		ERR_FAIL_COND_V_MSG(data_len == 0, Error::BUG, "Couldn't parse the BMP image data.");
 		err = data.resize(data_len);
 
 		uint8_t *data_w = data.ptrw();
@@ -111,7 +111,7 @@ Error ImageLoaderBMP::convert_to_image(Ref<Image> p_image,
 			const uint8_t *line_ptr = line;
 
 			for (unsigned int j = 0; j < w; j++) {
-				ERR_FAIL_COND_V(line_ptr >= end_buffer, ERR_FILE_CORRUPT);
+				ERR_FAIL_COND_V(line_ptr >= end_buffer, Error::FILE_CORRUPT);
 				switch (bits_per_pixel) {
 					case 1: {
 						uint8_t color_index = *line_ptr;
@@ -255,7 +255,7 @@ Error ImageLoaderBMP::convert_to_image(Ref<Image> p_image,
 
 Error ImageLoaderBMP::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField<ImageFormatLoader::LoaderFlags> p_flags, float p_scale) {
 	bmp_header_s bmp_header;
-	Error err = ERR_INVALID_DATA;
+	Error err = Error::INVALID_DATA;
 
 	// A valid bmp file should always at least have a
 	// file header and a minimal info header
@@ -269,14 +269,14 @@ Error ImageLoaderBMP::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField
 
 			// Info Header
 			bmp_header.bmp_info_header.bmp_header_size = f->get_32();
-			ERR_FAIL_COND_V_MSG(bmp_header.bmp_info_header.bmp_header_size < BITMAP_INFO_HEADER_MIN_SIZE, ERR_FILE_CORRUPT,
+			ERR_FAIL_COND_V_MSG(bmp_header.bmp_info_header.bmp_header_size < BITMAP_INFO_HEADER_MIN_SIZE, Error::FILE_CORRUPT,
 					vformat("Couldn't parse the BMP info header. The file is likely corrupt: %s", f->get_path()));
 
 			bmp_header.bmp_info_header.bmp_width = f->get_32();
 			bmp_header.bmp_info_header.bmp_height = f->get_32();
 
 			bmp_header.bmp_info_header.bmp_planes = f->get_16();
-			ERR_FAIL_COND_V_MSG(bmp_header.bmp_info_header.bmp_planes != 1, ERR_FILE_CORRUPT,
+			ERR_FAIL_COND_V_MSG(bmp_header.bmp_info_header.bmp_planes != 1, Error::FILE_CORRUPT,
 					vformat("Couldn't parse the BMP planes. The file is likely corrupt: %s", f->get_path()));
 
 			bmp_header.bmp_info_header.bmp_bit_count = f->get_16();
@@ -312,7 +312,7 @@ Error ImageLoaderBMP::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField
 				case BI_CMYKRLE8:
 				case BI_CMYKRLE4: {
 					// Stop parsing.
-					ERR_FAIL_V_MSG(ERR_UNAVAILABLE,
+					ERR_FAIL_V_MSG(Error::UNAVAILABLE,
 							vformat("RLE compressed BMP files are not yet supported: %s", f->get_path()));
 				} break;
 			}
@@ -328,7 +328,7 @@ Error ImageLoaderBMP::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField
 			if (bmp_header.bmp_info_header.bmp_bit_count <= 8) {
 				// Support 256 colors max
 				color_table_size = 1 << bmp_header.bmp_info_header.bmp_bit_count;
-				ERR_FAIL_COND_V_MSG(color_table_size == 0, ERR_BUG,
+				ERR_FAIL_COND_V_MSG(color_table_size == 0, Error::BUG,
 						vformat("Couldn't parse the BMP color table: %s", f->get_path()));
 			}
 
@@ -344,7 +344,7 @@ Error ImageLoaderBMP::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField
 
 			Vector<uint8_t> bmp_buffer;
 			err = bmp_buffer.resize(bmp_buffer_size);
-			if (err == OK) {
+			if (err == Error::OK) {
 				uint8_t *bmp_buffer_w = bmp_buffer.ptrw();
 				f->get_buffer(bmp_buffer_w, bmp_buffer_size);
 
@@ -366,12 +366,12 @@ static Ref<Image> _bmp_mem_loader_func(const uint8_t *p_bmp, int p_size) {
 	Ref<FileAccessMemory> memfile;
 	memfile.instantiate();
 	Error open_memfile_error = memfile->open_custom(p_bmp, p_size);
-	ERR_FAIL_COND_V_MSG(open_memfile_error, Ref<Image>(), "Could not create memfile for BMP image buffer.");
+	ERR_FAIL_COND_V_MSG(open_memfile_error != Error::OK, Ref<Image>(), "Could not create memfile for BMP image buffer.");
 
 	Ref<Image> img;
 	img.instantiate();
 	Error load_error = ImageLoaderBMP().load_image(img, memfile, false, 1.0f);
-	ERR_FAIL_COND_V_MSG(load_error, Ref<Image>(), "Failed to load BMP image.");
+	ERR_FAIL_COND_V_MSG(load_error != Error::OK, Ref<Image>(), "Failed to load BMP image.");
 	return img;
 }
 

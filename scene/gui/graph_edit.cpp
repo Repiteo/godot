@@ -261,7 +261,7 @@ PackedStringArray GraphEdit::get_configuration_warnings() const {
 
 Error GraphEdit::connect_node(const StringName &p_from, int p_from_port, const StringName &p_to, int p_to_port) {
 	if (is_node_connected(p_from, p_from_port, p_to, p_to_port)) {
-		return OK;
+		return Error::OK;
 	}
 	Ref<Connection> c;
 	c.instantiate();
@@ -299,7 +299,7 @@ Error GraphEdit::connect_node(const StringName &p_from, int p_from_port, const S
 	connections_layer->queue_redraw();
 	callable_mp(this, &GraphEdit::_update_top_connection_layer).call_deferred();
 
-	return OK;
+	return Error::OK;
 }
 
 bool GraphEdit::is_node_connected(const StringName &p_from, int p_from_port, const StringName &p_to, int p_to_port) {

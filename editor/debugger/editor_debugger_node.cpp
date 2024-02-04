@@ -260,9 +260,9 @@ void EditorDebuggerNode::set_keep_open(bool p_keep_open) {
 }
 
 Error EditorDebuggerNode::start(const String &p_uri) {
-	ERR_FAIL_COND_V(p_uri.find("://") < 0, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_uri.find("://") < 0, Error::INVALID_PARAMETER);
 	if (keep_open && current_uri == p_uri && server.is_valid()) {
-		return OK;
+		return Error::OK;
 	}
 	stop(true);
 	current_uri = p_uri;
@@ -273,12 +273,12 @@ Error EditorDebuggerNode::start(const String &p_uri) {
 	}
 	server = Ref<EditorDebuggerServer>(EditorDebuggerServer::create(p_uri.substr(0, p_uri.find("://") + 3)));
 	const Error err = server->start(p_uri);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 	set_process(true);
 	EditorNode::get_log()->add_message("--- Debugging process started ---", EditorLog::MSG_TYPE_EDITOR);
-	return OK;
+	return Error::OK;
 }
 
 void EditorDebuggerNode::stop(bool p_force) {

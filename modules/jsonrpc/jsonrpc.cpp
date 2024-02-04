@@ -158,7 +158,7 @@ String JSONRPC::process_string(const String &p_input) {
 
 	Variant ret;
 	JSON json;
-	if (json.parse(p_input) == OK) {
+	if (json.parse(p_input) == Error::OK) {
 		ret = process_action(json.get_data(), true);
 	} else {
 		ret = make_response_error(JSONRPC::PARSE_ERROR, "Parse error");

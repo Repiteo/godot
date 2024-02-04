@@ -85,7 +85,7 @@ GDScriptRPCCallable::GDScriptRPCCallable(Object *p_object, const StringName &p_m
 Error GDScriptRPCCallable::rpc(int p_peer_id, const Variant **p_arguments, int p_argcount, Callable::CallError &r_call_error) const {
 	if (unlikely(!node)) {
 		r_call_error.error = Callable::CallError::CALL_ERROR_INSTANCE_IS_NULL;
-		return ERR_UNCONFIGURED;
+		return Error::UNCONFIGURED;
 	}
 	r_call_error.error = Callable::CallError::CALL_OK;
 	return node->rpcp(p_peer_id, method, p_arguments, p_argcount);

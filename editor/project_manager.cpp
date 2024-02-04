@@ -381,7 +381,7 @@ void ProjectManager::_show_quick_settings() {
 void ProjectManager::_restart_confirmed() {
 	List<String> args = OS::get_singleton()->get_cmdline_args();
 	Error err = OS::get_singleton()->create_instance(args);
-	ERR_FAIL_COND(err);
+	ERR_FAIL_COND(err != Error::OK);
 
 	_dim_window();
 	get_tree()->quit();
@@ -464,7 +464,7 @@ void ProjectManager::_run_project_confirm() {
 		args.push_back(path);
 
 		Error err = OS::get_singleton()->create_instance(args);
-		ERR_FAIL_COND(err);
+		ERR_FAIL_COND(err != Error::OK);
 	}
 }
 
@@ -497,7 +497,7 @@ void ProjectManager::_open_selected_projects() {
 		args.push_back("--editor");
 
 		Error err = OS::get_singleton()->create_instance(args);
-		if (err != OK) {
+		if (err != Error::OK) {
 			loading_label->hide();
 			_show_error(vformat(TTR("Can't open project at '%s'.\nFailed to start the editor."), path));
 			ERR_PRINT(vformat("Failed to start an editor instance for the project at '%s', error code %d.", path, err));
@@ -794,7 +794,7 @@ void ProjectManager::_apply_project_tags() {
 	ConfigFile cfg;
 	const String project_godot = project_list->get_selected_projects()[0].path.path_join("project.godot");
 	Error err = cfg.load(project_godot);
-	if (err != OK) {
+	if (err != Error::OK) {
 		tag_edit_error->set_text(vformat(TTR("Couldn't load project at '%s' (error %d). It may be missing or corrupted."), project_godot, err));
 		tag_edit_error->show();
 		callable_mp((Window *)tag_manage_dialog, &Window::show).call_deferred(); // Make sure the dialog does not disappear.
@@ -803,7 +803,7 @@ void ProjectManager::_apply_project_tags() {
 		tags.sort();
 		cfg.set_value("application", "config/tags", tags);
 		err = cfg.save(project_godot);
-		if (err != OK) {
+		if (err != Error::OK) {
 			tag_edit_error->set_text(vformat(TTR("Couldn't save project at '%s' (error %d)."), project_godot, err));
 			tag_edit_error->show();
 			callable_mp((Window *)tag_manage_dialog, &Window::show).call_deferred();
@@ -886,7 +886,7 @@ void ProjectManager::_perform_full_project_conversion() {
 	args.push_back(Main::get_rendering_driver_name());
 
 	Error err = OS::get_singleton()->create_instance(args);
-	ERR_FAIL_COND(err);
+	ERR_FAIL_COND(err != Error::OK);
 
 	project_list->set_project_version(path, GODOT4_CONFIG_VERSION);
 }
@@ -1504,7 +1504,7 @@ ProjectManager::ProjectManager() {
 		String default_project_path = EDITOR_GET("filesystem/directories/default_project_path");
 		if (!default_project_path.is_empty() && !dir_access->dir_exists(default_project_path)) {
 			Error error = dir_access->make_dir_recursive(default_project_path);
-			if (error != OK) {
+			if (error != Error::OK) {
 				ERR_PRINT("Could not create default project directory at: " + default_project_path);
 			}
 		}
@@ -1518,7 +1518,7 @@ ProjectManager::ProjectManager() {
 				scanned_for_projects = true;
 			} else {
 				Error error = dir_access->make_dir_recursive(autoscan_path);
-				if (error != OK) {
+				if (error != Error::OK) {
 					ERR_PRINT("Could not create project autoscan directory at: " + autoscan_path);
 				}
 			}

@@ -909,7 +909,7 @@ void EditorNode::_fs_changed() {
 
 	// FIXME: Move this to a cleaner location, it's hacky to do this in _fs_changed.
 	String export_error;
-	Error err = OK;
+	Error err = Error::OK;
 	if (!export_defer.preset.is_empty() && !EditorFileSystem::get_singleton()->is_scanning()) {
 		String preset_name = export_defer.preset;
 		// Ensures export_project does not loop infinitely, because notifications may
@@ -927,7 +927,7 @@ void EditorNode::_fs_changed() {
 		if (export_preset.is_null()) {
 			Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_RESOURCES);
 			if (da->file_exists("res://export_presets.cfg")) {
-				err = FAILED;
+				err = Error::FAILED;
 				export_error = vformat(
 						"Invalid export preset name: %s.\nThe following presets were detected in this project's `export_presets.cfg`:\n\n",
 						preset_name);
@@ -936,17 +936,17 @@ void EditorNode::_fs_changed() {
 					export_error += vformat("        \"%s\"\n", EditorExport::get_singleton()->get_export_preset(i)->get_name());
 				}
 			} else {
-				err = FAILED;
+				err = Error::FAILED;
 				export_error = "This project doesn't have an `export_presets.cfg` file at its root.\nCreate an export preset from the \"Project > Export\" dialog and try again.";
 			}
 		} else {
 			Ref<EditorExportPlatform> platform = export_preset->get_platform();
 			const String export_path = export_defer.path.is_empty() ? export_preset->get_export_path() : export_defer.path;
 			if (export_path.is_empty()) {
-				err = FAILED;
+				err = Error::FAILED;
 				export_error = vformat("Export preset \"%s\" doesn't have a default export path, and none was specified.", preset_name);
 			} else if (platform.is_null()) {
-				err = FAILED;
+				err = Error::FAILED;
 				export_error = vformat("Export preset \"%s\" doesn't have a matching platform.", preset_name);
 			} else {
 				if (export_defer.pack_only) { // Only export .pck or .zip data pack.
@@ -963,13 +963,13 @@ void EditorNode::_fs_changed() {
 					}
 					if (!platform->can_export(export_preset, config_error, missing_templates, export_defer.debug)) {
 						ERR_PRINT(vformat("Cannot export project with preset \"%s\" due to configuration errors:\n%s", preset_name, config_error));
-						err = missing_templates ? ERR_FILE_NOT_FOUND : ERR_UNCONFIGURED;
+						err = missing_templates ? Error::FILE_NOT_FOUND : Error::UNCONFIGURED;
 					} else {
 						platform->clear_messages();
 						err = platform->export_project(export_preset, export_defer.debug, export_path);
 					}
 				}
-				if (err != OK) {
+				if (err != Error::OK) {
 					export_error = vformat("Project export for preset \"%s\" failed.", preset_name);
 				} else if (platform->get_worst_message_type() >= EditorExportPlatform::EXPORT_MESSAGE_WARNING) {
 					export_error = vformat("Project export for preset \"%s\" completed with warnings.", preset_name);
@@ -977,7 +977,7 @@ void EditorNode::_fs_changed() {
 			}
 		}
 
-		if (err != OK) {
+		if (err != Error::OK) {
 			ERR_PRINT(export_error);
 			_exit_editor(EXIT_FAILURE);
 		} else if (!export_error.is_empty()) {
@@ -1116,7 +1116,7 @@ void EditorNode::_reload_modified_scenes() {
 			_remove_edited_scene(false);
 
 			Error err = load_scene(filename, false, false, true, false, true);
-			if (err != OK) {
+			if (err != Error::OK) {
 				ERR_PRINT(vformat("Failed to load scene: %s", filename));
 			}
 			editor_data.move_edited_scene_to_index(i);
@@ -1210,7 +1210,7 @@ Error EditorNode::load_resource(const String &p_resource, bool p_ignore_broken_d
 	} else if (textfile_extensions.has(p_resource.get_extension())) {
 		res = ScriptEditor::get_singleton()->open_file(p_resource);
 	}
-	ERR_FAIL_COND_V(!res.is_valid(), ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(!res.is_valid(), Error::CANT_OPEN);
 
 	if (!p_ignore_broken_deps && dependency_errors.has(p_resource)) {
 		Vector<String> errors;
@@ -1220,11 +1220,11 @@ Error EditorNode::load_resource(const String &p_resource, bool p_ignore_broken_d
 		dependency_error->show(DependencyErrorDialog::MODE_RESOURCE, p_resource, errors);
 		dependency_errors.erase(p_resource);
 
-		return ERR_FILE_MISSING_DEPENDENCIES;
+		return Error::FILE_MISSING_DEPENDENCIES;
 	}
 
 	InspectorDock::get_singleton()->edit_resource(res);
-	return OK;
+	return Error::OK;
 }
 
 void EditorNode::edit_node(Node *p_node) {
@@ -1251,7 +1251,7 @@ void EditorNode::save_resource_in_path(const Ref<Resource> &p_resource, const St
 	String path = ProjectSettings::get_singleton()->localize_path(p_path);
 	Error err = ResourceSaver::save(p_resource, path, flg | ResourceSaver::FLAG_REPLACE_SUBRESOURCE_PATHS);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		if (ResourceLoader::is_imported(p_resource->get_path())) {
 			show_accept(TTR("Imported resources can't be saved."), TTR("OK"));
 		} else {
@@ -1382,12 +1382,12 @@ void EditorNode::trigger_menu_option(int p_option, bool p_confirmed) {
 }
 
 void EditorNode::_dialog_display_save_error(String p_file, Error p_error) {
-	if (p_error) {
+	if (p_error != Error::OK) {
 		switch (p_error) {
-			case ERR_FILE_CANT_WRITE: {
+			case Error::FILE_CANT_WRITE: {
 				show_accept(TTR("Can't open file for writing:") + " " + p_file.get_extension(), TTR("OK"));
 			} break;
-			case ERR_FILE_UNRECOGNIZED: {
+			case Error::FILE_UNRECOGNIZED: {
 				show_accept(TTR("Requested file format unknown:") + " " + p_file.get_extension(), TTR("OK"));
 			} break;
 			default: {
@@ -1398,18 +1398,18 @@ void EditorNode::_dialog_display_save_error(String p_file, Error p_error) {
 }
 
 void EditorNode::_dialog_display_load_error(String p_file, Error p_error) {
-	if (p_error) {
+	if (p_error != Error::OK) {
 		switch (p_error) {
-			case ERR_CANT_OPEN: {
+			case Error::CANT_OPEN: {
 				show_accept(vformat(TTR("Can't open file '%s'. The file could have been moved or deleted."), p_file.get_file()), TTR("OK"));
 			} break;
-			case ERR_PARSE_ERROR: {
+			case Error::PARSE_ERROR: {
 				show_accept(vformat(TTR("Error while parsing file '%s'."), p_file.get_file()), TTR("OK"));
 			} break;
-			case ERR_FILE_CORRUPT: {
+			case Error::FILE_CORRUPT: {
 				show_accept(vformat(TTR("Scene file '%s' appears to be invalid/corrupt."), p_file.get_file()), TTR("OK"));
 			} break;
-			case ERR_FILE_NOT_FOUND: {
+			case Error::FILE_NOT_FOUND: {
 				show_accept(vformat(TTR("Missing file '%s' or one of its dependencies."), p_file.get_file()), TTR("OK"));
 			} break;
 			default: {
@@ -1475,7 +1475,7 @@ void EditorNode::_save_editor_states(const String &p_file, int p_idx) {
 	cf->set_value("editor_states", "selected_nodes", selection_paths);
 
 	Error err = cf->save(path);
-	ERR_FAIL_COND_MSG(err != OK, "Cannot save config file to '" + path + "'.");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Cannot save config file to '" + path + "'.");
 }
 
 bool EditorNode::_find_and_save_resource(Ref<Resource> p_res, HashMap<Ref<Resource>, bool> &processed, int32_t flags) {
@@ -1792,7 +1792,7 @@ void EditorNode::_save_scene(String p_file, int idx) {
 	}
 	Error err = sdata->pack(scene);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		show_accept(TTR("Couldn't save scene. Likely dependencies (instances or inheritance) couldn't be satisfied."), TTR("OK"));
 		return;
 	}
@@ -1818,7 +1818,7 @@ void EditorNode::_save_scene(String p_file, int idx) {
 		E.first->restore(E.second);
 	}
 
-	if (err == OK) {
+	if (err == Error::OK) {
 		scene->set_scene_file_path(ProjectSettings::get_singleton()->localize_path(p_file));
 		editor_data.set_scene_as_saved(idx);
 		editor_data.set_scene_modified_time(idx, FileAccess::get_modified_time(p_file));
@@ -2043,7 +2043,7 @@ void EditorNode::_dialog_action(String p_file) {
 			MeshLibraryEditor::update_library_file(editor_data.get_edited_scene_root(), ml, true, file_export_lib_apply_xforms->is_pressed());
 
 			Error err = ResourceSaver::save(ml, p_file);
-			if (err) {
+			if (err != Error::OK) {
 				show_accept(TTR("Error saving MeshLibrary!"), TTR("OK"));
 				return;
 			} else if (ResourceCache::has(p_file)) {
@@ -2072,9 +2072,9 @@ void EditorNode::_dialog_action(String p_file) {
 			config.instantiate();
 			Error err = config->load(EditorSettings::get_singleton()->get_editor_layouts_config());
 
-			if (err == ERR_FILE_CANT_OPEN || err == ERR_FILE_NOT_FOUND) {
+			if (err == Error::FILE_CANT_OPEN || err == Error::FILE_NOT_FOUND) {
 				config.instantiate();
-			} else if (err != OK) {
+			} else if (err != Error::OK) {
 				show_warning(TTR("An error occurred while trying to save the editor layout.\nMake sure the editor's user data path is writable."));
 				return;
 			}
@@ -2100,7 +2100,7 @@ void EditorNode::_dialog_action(String p_file) {
 			config.instantiate();
 			Error err = config->load(EditorSettings::get_singleton()->get_editor_layouts_config());
 
-			if (err != OK || !config->has_section(p_file)) {
+			if (err != Error::OK || !config->has_section(p_file)) {
 				show_warning(TTR("Layout name not found!"));
 				return;
 			}
@@ -2689,7 +2689,7 @@ void EditorNode::_menu_option_confirm(int p_option, bool p_confirmed) {
 
 			bool oprev = opening_prev;
 			Error err = load_scene(external_file);
-			if (err == OK && oprev) {
+			if (err == Error::OK && oprev) {
 				previous_scenes.pop_back();
 				opening_prev = false;
 			}
@@ -2771,7 +2771,7 @@ void EditorNode::_menu_option_confirm(int p_option, bool p_confirmed) {
 			int cur_idx = editor_data.get_edited_scene();
 			_remove_edited_scene();
 			Error err = load_scene(filename);
-			if (err != OK) {
+			if (err != Error::OK) {
 				ERR_PRINT("Failed to load scene");
 			}
 			editor_data.move_edited_scene_to_index(cur_idx);
@@ -3050,7 +3050,7 @@ void EditorNode::_save_screenshot(NodePath p_path) {
 	Ref<Image> img = texture->get_image();
 	ERR_FAIL_COND_MSG(img.is_null(), "Cannot get an image from a viewport texture of the editor main screen.");
 	Error error = img->save_png(p_path);
-	ERR_FAIL_COND_MSG(error != OK, "Cannot save screenshot to file '" + p_path + "'.");
+	ERR_FAIL_COND_MSG(error != Error::OK, "Cannot save screenshot to file '" + p_path + "'.");
 }
 
 void EditorNode::_tool_menu_option(int p_idx) {
@@ -3189,7 +3189,7 @@ void EditorNode::_discard_changes(const String &p_str) {
 			args.push_back("--project-manager");
 
 			Error err = OS::get_singleton()->create_instance(args);
-			ERR_FAIL_COND(err);
+			ERR_FAIL_COND(err != Error::OK);
 		} break;
 		case RELOAD_CURRENT_PROJECT: {
 			restart_editor();
@@ -3416,7 +3416,7 @@ void EditorNode::set_addon_plugin_enabled(const String &p_addon, bool p_enabled,
 		return;
 	}
 	Error err = cf->load(addon_path);
-	if (err != OK) {
+	if (err != Error::OK) {
 		show_warning(vformat(TTR("Unable to enable addon plugin at: '%s' parsing of config failed."), addon_path));
 		return;
 	}
@@ -3744,14 +3744,14 @@ int EditorNode::new_scene() {
 Error EditorNode::load_scene(const String &p_scene, bool p_ignore_broken_deps, bool p_set_inherited, bool p_clear_errors, bool p_force_open_imported, bool p_silent_change_tab) {
 	if (!is_inside_tree()) {
 		defer_load_scene = p_scene;
-		return OK;
+		return Error::OK;
 	}
 
 	if (!p_set_inherited) {
 		for (int i = 0; i < editor_data.get_edited_scene_count(); i++) {
 			if (editor_data.get_scene_path(i) == p_scene) {
 				_set_current_scene(i);
-				return OK;
+				return Error::OK;
 			}
 		}
 
@@ -3760,7 +3760,7 @@ Error EditorNode::load_scene(const String &p_scene, bool p_ignore_broken_deps, b
 			open_imported->popup_centered();
 			new_inherited_button->grab_focus();
 			open_import_request = p_scene;
-			return OK;
+			return Error::OK;
 		}
 	}
 
@@ -3773,7 +3773,7 @@ Error EditorNode::load_scene(const String &p_scene, bool p_ignore_broken_deps, b
 	if (!lpath.begins_with("res://")) {
 		show_accept(TTR("Error loading scene, it must be inside the project path. Use 'Import' to open the scene, then save it inside the project path."), TTR("OK"));
 		opening_prev = false;
-		return ERR_FILE_NOT_FOUND;
+		return Error::FILE_NOT_FOUND;
 	}
 
 	int prev = editor_data.get_edited_scene();
@@ -3805,7 +3805,7 @@ Error EditorNode::load_scene(const String &p_scene, bool p_ignore_broken_deps, b
 			_set_current_scene(prev);
 			editor_data.remove_scene(idx);
 		}
-		return ERR_FILE_MISSING_DEPENDENCIES;
+		return Error::FILE_MISSING_DEPENDENCIES;
 	}
 
 	if (!sdata.is_valid()) {
@@ -3816,7 +3816,7 @@ Error EditorNode::load_scene(const String &p_scene, bool p_ignore_broken_deps, b
 			_set_current_scene(prev);
 			editor_data.remove_scene(idx);
 		}
-		return ERR_FILE_NOT_FOUND;
+		return Error::FILE_NOT_FOUND;
 	}
 
 	dependency_errors.erase(lpath); // At least not self path.
@@ -3846,13 +3846,13 @@ Error EditorNode::load_scene(const String &p_scene, bool p_ignore_broken_deps, b
 
 	if (!new_scene) {
 		sdata.unref();
-		_dialog_display_load_error(lpath, ERR_FILE_CORRUPT);
+		_dialog_display_load_error(lpath, Error::FILE_CORRUPT);
 		opening_prev = false;
 		if (prev != -1) {
 			_set_current_scene(prev);
 			editor_data.remove_scene(idx);
 		}
-		return ERR_FILE_CORRUPT;
+		return Error::FILE_CORRUPT;
 	}
 
 	if (p_set_inherited) {
@@ -3870,7 +3870,7 @@ Error EditorNode::load_scene(const String &p_scene, bool p_ignore_broken_deps, b
 	Ref<ConfigFile> editor_state_cf;
 	editor_state_cf.instantiate();
 	Error editor_state_cf_err = editor_state_cf->load(config_file_path);
-	if (editor_state_cf_err == OK || editor_state_cf->has_section("editor_states")) {
+	if (editor_state_cf_err == Error::OK || editor_state_cf->has_section("editor_states")) {
 		_load_editor_plugin_states_from_config(editor_state_cf);
 	}
 
@@ -3917,7 +3917,7 @@ Error EditorNode::load_scene(const String &p_scene, bool p_ignore_broken_deps, b
 		save_editor_layout_delayed();
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 HashMap<StringName, Variant> EditorNode::get_modified_properties_for_node(Node *p_node) {
@@ -4182,7 +4182,7 @@ void EditorNode::_open_recent_scene(int p_idx) {
 		Array rc = EditorSettings::get_singleton()->get_project_metadata("recent_files", "scenes", Array());
 		ERR_FAIL_INDEX(p_idx, rc.size());
 
-		if (load_scene(rc[p_idx]) != OK) {
+		if (load_scene(rc[p_idx]) != Error::OK) {
 			rc.remove_at(p_idx);
 			EditorSettings::get_singleton()->set_project_metadata("recent_files", "scenes", rc);
 			_update_recent_scenes();
@@ -4299,7 +4299,7 @@ Ref<Script> EditorNode::get_object_custom_type_base(const Object *p_object) cons
 		// Uncommenting would break things! Consider adding a parameter if you need it.
 		// StringName name = EditorNode::get_editor_data().script_class_get_name(base_script->get_path());
 		// if (name != StringName()) {
-		// 	return name;
+		//  return name;
 		// }
 
 		// TODO: Should probably be deprecated in 4.x
@@ -4701,7 +4701,7 @@ Error EditorNode::export_preset(const String &p_preset, const String &p_path, bo
 	export_defer.pack_only = p_pack_only;
 	export_defer.android_build_template = p_android_build_template;
 	cmdline_export_mode = true;
-	return OK;
+	return Error::OK;
 }
 
 bool EditorNode::is_project_exporting() const {
@@ -4780,7 +4780,7 @@ void EditorNode::_load_editor_layout() {
 	Ref<ConfigFile> config;
 	config.instantiate();
 	Error err = config->load(EditorPaths::get_singleton()->get_project_settings_dir().path_join("editor_layout.cfg"));
-	if (err != OK) { // No config.
+	if (err != Error::OK) { // No config.
 		// If config is not found, expand the res:// folder and favorites by default.
 		TreeItem *root = FileSystemDock::get_singleton()->get_tree_control()->get_item_with_metadata("res://", 0);
 		if (root) {
@@ -4925,7 +4925,7 @@ bool EditorNode::has_scenes_in_session() {
 	Ref<ConfigFile> config;
 	config.instantiate();
 	Error err = config->load(EditorPaths::get_singleton()->get_project_settings_dir().path_join("editor_layout.cfg"));
-	if (err != OK) {
+	if (err != Error::OK) {
 		return false;
 	}
 	if (!config->has_section(EDITOR_NODE_CONFIG_SECTION) || !config->has_section_key(EDITOR_NODE_CONFIG_SECTION, "open_scenes")) {
@@ -5019,7 +5019,7 @@ void EditorNode::_update_layouts_menu() {
 	Ref<ConfigFile> config;
 	config.instantiate();
 	Error err = config->load(EditorSettings::get_singleton()->get_editor_layouts_config());
-	if (err != OK) {
+	if (err != Error::OK) {
 		return; // No config.
 	}
 
@@ -5060,7 +5060,7 @@ void EditorNode::_layout_menu_option(int p_id) {
 			Ref<ConfigFile> config;
 			config.instantiate();
 			Error err = config->load(EditorSettings::get_singleton()->get_editor_layouts_config());
-			if (err != OK) {
+			if (err != Error::OK) {
 				return; // No config.
 			}
 
@@ -5608,7 +5608,7 @@ void EditorNode::reload_instances_with_path_in_edited_scenes(const String &p_ins
 		Ref<PackedScene> instance_scene_packed_scene = ResourceLoader::load(p_instance_path, "", ResourceFormatLoader::CACHE_MODE_IGNORE, &err);
 		instance_scene_packed_scene->set_path(p_instance_path, true);
 
-		ERR_FAIL_COND(err != OK);
+		ERR_FAIL_COND(err != Error::OK);
 		ERR_FAIL_COND(instance_scene_packed_scene.is_null());
 
 		HashMap<String, Ref<PackedScene>> local_scene_cache;
@@ -5875,7 +5875,7 @@ void EditorNode::reload_instances_with_path_in_edited_scenes(const String &p_ins
 								Callable new_callable = Callable(target_node, conn.callable.get_method());
 
 								if (!modifiable_node->is_connected(conn.signal.get_name(), new_callable)) {
-									ERR_FAIL_COND(modifiable_node->connect(conn.signal.get_name(), new_callable, conn.flags) != OK);
+									ERR_FAIL_COND(modifiable_node->connect(conn.signal.get_name(), new_callable, conn.flags) != Error::OK);
 								}
 							}
 						}
@@ -5891,7 +5891,7 @@ void EditorNode::reload_instances_with_path_in_edited_scenes(const String &p_ins
 							Object *source_object = conn.signal.get_object();
 
 							if (source_object) {
-								ERR_FAIL_COND(source_object->connect(conn.signal.get_name(), Callable(modifiable_node, conn.callable.get_method()), conn.flags) != OK);
+								ERR_FAIL_COND(source_object->connect(conn.signal.get_name(), Callable(modifiable_node, conn.callable.get_method()), conn.flags) != Error::OK);
 							}
 						}
 
@@ -6154,8 +6154,8 @@ static void _execute_thread(void *p_ud) {
 	EditorNode::ExecuteThreadArgs *eta = (EditorNode::ExecuteThreadArgs *)p_ud;
 	Error err = OS::get_singleton()->execute(eta->path, eta->args, &eta->output, &eta->exitcode, true, &eta->execute_output_mutex);
 	print_verbose("Thread exit status: " + itos(eta->exitcode));
-	if (err != OK) {
-		eta->exitcode = err;
+	if (err != Error::OK) {
+		eta->exitcode = (int)err;
 	}
 
 	eta->done.set();

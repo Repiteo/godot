@@ -241,20 +241,20 @@ bool GDScriptAnalyzer::has_member_name_conflict_in_native_type(const StringName 
 Error GDScriptAnalyzer::check_native_member_name_conflict(const StringName &p_member_name, const GDScriptParser::Node *p_member_node, const StringName &p_native_type_string) {
 	if (has_member_name_conflict_in_native_type(p_member_name, p_native_type_string)) {
 		push_error(vformat(R"(Member "%s" redefined (original in native class '%s'))", p_member_name, p_native_type_string), p_member_node);
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 
 	if (class_exists(p_member_name)) {
 		push_error(vformat(R"(The member "%s" shadows a native class.)", p_member_name), p_member_node);
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 
 	if (GDScriptParser::get_builtin_type(p_member_name) < Variant::VARIANT_MAX) {
 		push_error(vformat(R"(The member "%s" cannot have the same name as a builtin type.)", p_member_name), p_member_node);
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error GDScriptAnalyzer::check_class_member_name_conflict(const GDScriptParser::ClassNode *p_class_node, const StringName &p_member_name, const GDScriptParser::Node *p_member_node) {
@@ -268,7 +268,7 @@ Error GDScriptAnalyzer::check_class_member_name_conflict(const GDScriptParser::C
 				parent_class_name = current_class_node->identifier->name;
 			}
 			push_error(vformat(R"(The member "%s" already exists in parent class %s.)", p_member_name, parent_class_name), p_member_node);
-			return ERR_PARSE_ERROR;
+			return Error::PARSE_ERROR;
 		}
 		current_data_type = &current_class_node->base_type;
 	}
@@ -283,7 +283,7 @@ Error GDScriptAnalyzer::check_class_member_name_conflict(const GDScriptParser::C
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void GDScriptAnalyzer::get_class_node_current_scope_classes(GDScriptParser::ClassNode *p_node, List<GDScriptParser::ClassNode *> *p_list) {
@@ -315,12 +315,12 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 
 	if (p_class->base_type.is_resolving()) {
 		push_error(vformat(R"(Could not resolve class "%s": Cyclic reference.)", type_from_metatype(p_class->get_datatype()).to_string()), p_source);
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 
 	if (!p_class->base_type.has_no_type()) {
 		// Already resolved.
-		return OK;
+		return Error::OK;
 	}
 
 	if (!parser->has_class(p_class)) {
@@ -328,16 +328,16 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 		Ref<GDScriptParserRef> parser_ref = get_parser_for(script_path);
 		if (parser_ref.is_null()) {
 			push_error(vformat(R"(Could not find script "%s".)", script_path), p_source);
-			return ERR_PARSE_ERROR;
+			return Error::PARSE_ERROR;
 		}
 
 		Error err = parser_ref->raise_status(GDScriptParserRef::PARSED);
-		if (err) {
-			push_error(vformat(R"(Could not parse script "%s": %s.)", script_path, error_names[err]), p_source);
-			return ERR_PARSE_ERROR;
+		if (err != Error::OK) {
+			push_error(vformat(R"(Could not parse script "%s": %s.)", script_path, error_names[(int)err]), p_source);
+			return Error::PARSE_ERROR;
 		}
 
-		ERR_FAIL_COND_V_MSG(!parser_ref->get_parser()->has_class(p_class), ERR_PARSE_ERROR, R"(Parser bug: Mismatched external parser.)");
+		ERR_FAIL_COND_V_MSG(!parser_ref->get_parser()->has_class(p_class), Error::PARSE_ERROR, R"(Parser bug: Mismatched external parser.)");
 
 		GDScriptAnalyzer *other_analyzer = parser_ref->get_analyzer();
 		GDScriptParser *other_parser = parser_ref->get_parser();
@@ -346,10 +346,10 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 		other_analyzer->resolve_class_inheritance(p_class);
 		if (other_parser->errors.size() > error_count) {
 			push_error(vformat(R"(Could not resolve inheritance for class "%s".)", p_class->fqcn), p_source);
-			return ERR_PARSE_ERROR;
+			return Error::PARSE_ERROR;
 		}
 
-		return OK;
+		return Error::OK;
 	}
 
 	GDScriptParser::ClassNode *previous_class = parser->current_class;
@@ -403,11 +403,11 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 			Ref<GDScriptParserRef> ext_parser = get_parser_for(p_class->extends_path);
 			if (ext_parser.is_null()) {
 				push_error(vformat(R"(Could not resolve super class path "%s".)", p_class->extends_path), p_class);
-				return ERR_PARSE_ERROR;
+				return Error::PARSE_ERROR;
 			}
 
 			Error err = ext_parser->raise_status(GDScriptParserRef::INHERITANCE_SOLVED);
-			if (err != OK) {
+			if (err != Error::OK) {
 				push_error(vformat(R"(Could not resolve super class inheritance from "%s".)", p_class->extends_path), p_class);
 				return err;
 			}
@@ -416,7 +416,7 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 		} else {
 			if (p_class->extends.is_empty()) {
 				push_error("Could not resolve an empty super class path.", p_class);
-				return ERR_PARSE_ERROR;
+				return Error::PARSE_ERROR;
 			}
 			GDScriptParser::IdentifierNode *id = p_class->extends[extends_index++];
 			const StringName &name = id->name;
@@ -431,11 +431,11 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 					Ref<GDScriptParserRef> base_parser = get_parser_for(base_path);
 					if (base_parser.is_null()) {
 						push_error(vformat(R"(Could not resolve super class "%s".)", name), id);
-						return ERR_PARSE_ERROR;
+						return Error::PARSE_ERROR;
 					}
 
 					Error err = base_parser->raise_status(GDScriptParserRef::INHERITANCE_SOLVED);
-					if (err != OK) {
+					if (err != Error::OK) {
 						push_error(vformat(R"(Could not resolve super class inheritance from "%s".)", name), id);
 						return err;
 					}
@@ -445,17 +445,17 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 				const ProjectSettings::AutoloadInfo &info = ProjectSettings::get_singleton()->get_autoload(name);
 				if (info.path.get_extension().to_lower() != GDScriptLanguage::get_singleton()->get_extension()) {
 					push_error(vformat(R"(Singleton %s is not a GDScript.)", info.name), id);
-					return ERR_PARSE_ERROR;
+					return Error::PARSE_ERROR;
 				}
 
 				Ref<GDScriptParserRef> info_parser = get_parser_for(info.path);
 				if (info_parser.is_null()) {
 					push_error(vformat(R"(Could not parse singleton from "%s".)", info.path), id);
-					return ERR_PARSE_ERROR;
+					return Error::PARSE_ERROR;
 				}
 
 				Error err = info_parser->raise_status(GDScriptParserRef::INHERITANCE_SOLVED);
-				if (err != OK) {
+				if (err != Error::OK) {
 					push_error(vformat(R"(Could not resolve super class inheritance from "%s".)", name), id);
 					return err;
 				}
@@ -463,7 +463,7 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 			} else if (class_exists(name)) {
 				if (Engine::get_singleton()->has_singleton(name)) {
 					push_error(vformat(R"(Cannot inherit native class "%s" because it is an engine singleton.)", name), id);
-					return ERR_PARSE_ERROR;
+					return Error::PARSE_ERROR;
 				}
 				base.kind = GDScriptParser::DataType::NATIVE;
 				base.builtin_type = Variant::OBJECT;
@@ -477,7 +477,7 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 					if (look_class->identifier && look_class->identifier->name == name) {
 						if (!look_class->get_datatype().is_set()) {
 							Error err = resolve_class_inheritance(look_class, id);
-							if (err) {
+							if (err != Error::OK) {
 								return err;
 							}
 						}
@@ -496,12 +496,12 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 							case GDScriptParser::ClassNode::Member::CONSTANT:
 								if (member_datatype.kind != GDScriptParser::DataType::SCRIPT && member_datatype.kind != GDScriptParser::DataType::CLASS) {
 									push_error(vformat(R"(Constant "%s" is not a preloaded script or class.)", name), id);
-									return ERR_PARSE_ERROR;
+									return Error::PARSE_ERROR;
 								}
 								break;
 							default:
 								push_error(vformat(R"(Cannot use %s "%s" in extends chain.)", member.get_type_name(), name), id);
-								return ERR_PARSE_ERROR;
+								return Error::PARSE_ERROR;
 						}
 
 						base = member_datatype;
@@ -512,7 +512,7 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 
 				if (!found) {
 					push_error(vformat(R"(Could not find base class "%s".)", name), id);
-					return ERR_PARSE_ERROR;
+					return Error::PARSE_ERROR;
 				}
 			}
 		}
@@ -522,7 +522,7 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 
 			if (base.kind != GDScriptParser::DataType::CLASS) {
 				push_error(vformat(R"(Cannot get nested types for extension from non-GDScript type "%s".)", base.to_string()), id);
-				return ERR_PARSE_ERROR;
+				return Error::PARSE_ERROR;
 			}
 
 			reduce_identifier_from_base(id, &base);
@@ -530,10 +530,10 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 
 			if (!id_type.is_set()) {
 				push_error(vformat(R"(Could not find nested type "%s".)", id->name), id);
-				return ERR_PARSE_ERROR;
+				return Error::PARSE_ERROR;
 			} else if (id_type.kind != GDScriptParser::DataType::SCRIPT && id_type.kind != GDScriptParser::DataType::CLASS) {
 				push_error(vformat(R"(Identifier "%s" is not a preloaded script or class.)", id->name), id);
-				return ERR_PARSE_ERROR;
+				return Error::PARSE_ERROR;
 			}
 
 			base = id_type;
@@ -545,7 +545,7 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 	if (!result.is_set() || result.has_no_type()) {
 		// TODO: More specific error messages.
 		push_error(vformat(R"(Could not resolve inheritance for class "%s".)", p_class->identifier == nullptr ? "<main>" : p_class->identifier->name), p_class);
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 
 	// Check for cyclic inheritance.
@@ -553,7 +553,7 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 	while (base_class) {
 		if (base_class->fqcn == p_class->fqcn) {
 			push_error("Cyclic inheritance.", p_class);
-			return ERR_PARSE_ERROR;
+			return Error::PARSE_ERROR;
 		}
 		base_class = base_class->base_type.class_type;
 	}
@@ -564,12 +564,12 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 
 	parser->current_class = previous_class;
 
-	return OK;
+	return Error::OK;
 }
 
 Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_class, bool p_recursive) {
 	Error err = resolve_class_inheritance(p_class);
-	if (err) {
+	if (err != Error::OK) {
 		return err;
 	}
 
@@ -577,14 +577,14 @@ Error GDScriptAnalyzer::resolve_class_inheritance(GDScriptParser::ClassNode *p_c
 		for (int i = 0; i < p_class->members.size(); i++) {
 			if (p_class->members[i].type == GDScriptParser::ClassNode::Member::CLASS) {
 				err = resolve_class_inheritance(p_class->members[i].m_class, true);
-				if (err) {
+				if (err != Error::OK) {
 					return err;
 				}
 			}
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 GDScriptParser::DataType GDScriptAnalyzer::resolve_datatype(GDScriptParser::TypeNode *p_type) {
@@ -639,7 +639,7 @@ GDScriptParser::DataType GDScriptAnalyzer::resolve_datatype(GDScriptParser::Type
 				Ref<GDScript> gdscript = local.constant->initializer->reduced_value;
 				if (gdscript.is_valid()) {
 					Ref<GDScriptParserRef> ref = get_parser_for(gdscript->get_script_path());
-					if (ref->raise_status(GDScriptParserRef::INHERITANCE_SOLVED) != OK) {
+					if (ref->raise_status(GDScriptParserRef::INHERITANCE_SOLVED) != Error::OK) {
 						push_error(vformat(R"(Could not parse script from "%s".)", gdscript->get_script_path()), first_id);
 						return bad_type;
 					}
@@ -705,7 +705,7 @@ GDScriptParser::DataType GDScriptAnalyzer::resolve_datatype(GDScriptParser::Type
 				String ext = path.get_extension();
 				if (ext == GDScriptLanguage::get_singleton()->get_extension()) {
 					Ref<GDScriptParserRef> ref = get_parser_for(path);
-					if (!ref.is_valid() || ref->raise_status(GDScriptParserRef::INHERITANCE_SOLVED) != OK) {
+					if (!ref.is_valid() || ref->raise_status(GDScriptParserRef::INHERITANCE_SOLVED) != Error::OK) {
 						push_error(vformat(R"(Could not parse global class "%s" from "%s".)", first, ScriptServer::get_global_class_path(first)), p_type);
 						return bad_type;
 					}
@@ -721,7 +721,7 @@ GDScriptParser::DataType GDScriptAnalyzer::resolve_datatype(GDScriptParser::Type
 				push_error(vformat(R"(The referenced autoload "%s" (from "%s") could not be loaded.)", first, autoload.path), p_type);
 				return bad_type;
 			}
-			if (ref->raise_status(GDScriptParserRef::INHERITANCE_SOLVED) != OK) {
+			if (ref->raise_status(GDScriptParserRef::INHERITANCE_SOLVED) != Error::OK) {
 				push_error(vformat(R"(Could not parse singleton "%s" from "%s".)", first, autoload.path), p_type);
 				return bad_type;
 			}
@@ -771,7 +771,7 @@ GDScriptParser::DataType GDScriptAnalyzer::resolve_datatype(GDScriptParser::Type
 								Ref<GDScript> gdscript = member.constant->initializer->reduced_value;
 								if (gdscript.is_valid()) {
 									Ref<GDScriptParserRef> ref = get_parser_for(gdscript->get_script_path());
-									if (ref->raise_status(GDScriptParserRef::INHERITANCE_SOLVED) != OK) {
+									if (ref->raise_status(GDScriptParserRef::INHERITANCE_SOLVED) != Error::OK) {
 										push_error(vformat(R"(Could not parse script from "%s".)", gdscript->get_script_path()), p_type);
 										return bad_type;
 									}
@@ -877,8 +877,8 @@ void GDScriptAnalyzer::resolve_class_member(GDScriptParser::ClassNode *p_class, 
 		}
 
 		Error err = parser_ref->raise_status(GDScriptParserRef::PARSED);
-		if (err) {
-			push_error(vformat(R"(Could not resolve script "%s": %s (While resolving "%s").)", script_path, error_names[err], member.get_name()), p_source);
+		if (err != Error::OK) {
+			push_error(vformat(R"(Could not resolve script "%s": %s (While resolving "%s").)", script_path, error_names[(int)err], member.get_name()), p_source);
 			return;
 		}
 
@@ -899,7 +899,7 @@ void GDScriptAnalyzer::resolve_class_member(GDScriptParser::ClassNode *p_class, 
 	// If it's already resolving, that's ok.
 	if (!p_class->base_type.is_resolving()) {
 		Error err = resolve_class_inheritance(p_class);
-		if (err) {
+		if (err != Error::OK) {
 			return;
 		}
 	}
@@ -1160,8 +1160,8 @@ void GDScriptAnalyzer::resolve_class_interface(GDScriptParser::ClassNode *p_clas
 			}
 
 			Error err = parser_ref->raise_status(GDScriptParserRef::PARSED);
-			if (err) {
-				push_error(vformat(R"(Could not resolve script "%s": %s.)", script_path, error_names[err]), p_source);
+			if (err != Error::OK) {
+				push_error(vformat(R"(Could not resolve script "%s": %s.)", script_path, error_names[(int)err]), p_source);
 				return;
 			}
 
@@ -1180,7 +1180,7 @@ void GDScriptAnalyzer::resolve_class_interface(GDScriptParser::ClassNode *p_clas
 		}
 		p_class->resolved_interface = true;
 
-		if (resolve_class_inheritance(p_class) != OK) {
+		if (resolve_class_inheritance(p_class) != Error::OK) {
 			return;
 		}
 
@@ -1249,8 +1249,8 @@ void GDScriptAnalyzer::resolve_class_body(GDScriptParser::ClassNode *p_class, co
 		}
 
 		Error err = parser_ref->raise_status(GDScriptParserRef::PARSED);
-		if (err) {
-			push_error(vformat(R"(Could not resolve script "%s": %s.)", script_path, error_names[err]), p_source);
+		if (err != Error::OK) {
+			push_error(vformat(R"(Could not resolve script "%s": %s.)", script_path, error_names[(int)err]), p_source);
 			return;
 		}
 
@@ -1431,7 +1431,7 @@ void GDScriptAnalyzer::resolve_node(GDScriptParser::Node *p_node, bool p_is_root
 		case GDScriptParser::Node::NONE:
 			break; // Unreachable.
 		case GDScriptParser::Node::CLASS:
-			if (OK == resolve_class_inheritance(static_cast<GDScriptParser::ClassNode *>(p_node), true)) {
+			if (Error::OK == resolve_class_inheritance(static_cast<GDScriptParser::ClassNode *>(p_node), true)) {
 				resolve_class_interface(static_cast<GDScriptParser::ClassNode *>(p_node), true);
 				resolve_class_body(static_cast<GDScriptParser::ClassNode *>(p_node), true);
 			}
@@ -3553,7 +3553,7 @@ GDScriptParser::DataType GDScriptAnalyzer::make_global_class_meta_type(const Str
 		}
 
 		Error err = ref->raise_status(GDScriptParserRef::INHERITANCE_SOLVED);
-		if (err) {
+		if (err != Error::OK) {
 			push_error(vformat(R"(Could not resolve class "%s", because of a parser error.)", p_class_name), p_source);
 			type.type_source = GDScriptParser::DataType::UNDETECTED;
 			type.kind = GDScriptParser::DataType::VARIANT;
@@ -3570,9 +3570,9 @@ void GDScriptAnalyzer::reduce_identifier_from_base_set_class(GDScriptParser::Ide
 	ERR_FAIL_NULL(p_identifier);
 
 	p_identifier->set_datatype(p_identifier_datatype);
-	Error err = OK;
+	Error err = Error::OK;
 	Ref<GDScript> scr = GDScriptCache::get_shallow_script(p_identifier_datatype.script_path, err, parser->script_path);
-	if (err) {
+	if (err != Error::OK) {
 		push_error(vformat(R"(Error while getting cache for script "%s".)", p_identifier_datatype.script_path), p_identifier);
 		return;
 	}
@@ -4060,7 +4060,7 @@ void GDScriptAnalyzer::reduce_identifier(GDScriptParser::IdentifierNode *p_ident
 				Ref<GDScriptParserRef> singl_parser = get_parser_for(autoload.path);
 				if (singl_parser.is_valid()) {
 					Error err = singl_parser->raise_status(GDScriptParserRef::INHERITANCE_SOLVED);
-					if (err == OK) {
+					if (err == Error::OK) {
 						result = type_from_metatype(singl_parser->get_parser()->head->get_datatype());
 					}
 				}
@@ -4074,7 +4074,7 @@ void GDScriptAnalyzer::reduce_identifier(GDScriptParser::IdentifierNode *p_ident
 							Ref<GDScriptParserRef> singl_parser = get_parser_for(scr->get_script_path());
 							if (singl_parser.is_valid()) {
 								Error err = singl_parser->raise_status(GDScriptParserRef::INHERITANCE_SOLVED);
-								if (err == OK) {
+								if (err == Error::OK) {
 									result = type_from_metatype(singl_parser->get_parser()->head->get_datatype());
 								}
 							}
@@ -4222,17 +4222,17 @@ void GDScriptAnalyzer::reduce_preload(GDScriptParser::PreloadNode *p_preload) {
 			// Must load GDScript and PackedScenes separately to permit cyclic references
 			// as ResourceLoader::load() detect and reject those.
 			if (ResourceLoader::get_resource_type(p_preload->resolved_path) == "GDScript") {
-				Error err = OK;
+				Error err = Error::OK;
 				Ref<GDScript> res = GDScriptCache::get_shallow_script(p_preload->resolved_path, err, parser->script_path);
 				p_preload->resource = res;
-				if (err != OK) {
+				if (err != Error::OK) {
 					push_error(vformat(R"(Could not preload resource script "%s".)", p_preload->resolved_path), p_preload->path);
 				}
 			} else if (ResourceLoader::get_resource_type(p_preload->resolved_path) == "PackedScene") {
-				Error err = OK;
+				Error err = Error::OK;
 				Ref<PackedScene> res = GDScriptCache::get_packed_scene(p_preload->resolved_path, err, parser->script_path);
 				p_preload->resource = res;
-				if (err != OK) {
+				if (err != Error::OK) {
 					push_error(vformat(R"(Could not preload resource scene "%s".)", p_preload->resolved_path), p_preload->path);
 				}
 			} else {
@@ -4764,9 +4764,9 @@ Array GDScriptAnalyzer::make_array_from_element_datatype(const GDScriptParser::D
 	if (p_element_datatype.builtin_type == Variant::OBJECT) {
 		Ref<Script> script_type = p_element_datatype.script_type;
 		if (p_element_datatype.kind == GDScriptParser::DataType::CLASS && script_type.is_null()) {
-			Error err = OK;
+			Error err = Error::OK;
 			Ref<GDScript> scr = GDScriptCache::get_shallow_script(p_element_datatype.script_path, err, parser->script_path);
-			if (err) {
+			if (err != Error::OK) {
 				push_error(vformat(R"(Error while getting cache for script "%s".)", p_element_datatype.script_path), p_source_node);
 				return array;
 			}
@@ -4860,13 +4860,13 @@ GDScriptParser::DataType GDScriptAnalyzer::type_from_variant(const Variant &p_va
 				}
 				Error err = ref->raise_status(GDScriptParserRef::INHERITANCE_SOLVED);
 				GDScriptParser::ClassNode *found = nullptr;
-				if (err == OK) {
+				if (err == Error::OK) {
 					found = ref->get_parser()->find_class(gds->fully_qualified_name);
 					if (found != nullptr) {
 						err = resolve_class_inheritance(found, p_source);
 					}
 				}
-				if (err || found == nullptr) {
+				if (err != Error::OK || found == nullptr) {
 					push_error(vformat(R"(Could not resolve script "%s".)", script_path), p_source);
 					GDScriptParser::DataType error_type;
 					error_type.kind = GDScriptParser::DataType::VARIANT;
@@ -5610,7 +5610,7 @@ Ref<GDScriptParserRef> GDScriptAnalyzer::get_parser_for(const String &p_path) {
 	if (depended_parsers.has(p_path)) {
 		ref = depended_parsers[p_path];
 	} else {
-		Error err = OK;
+		Error err = Error::OK;
 		ref = GDScriptCache::get_parser(p_path, GDScriptParserRef::EMPTY, err, parser->script_path);
 		if (ref.is_valid()) {
 			depended_parsers[p_path] = ref;
@@ -5626,31 +5626,31 @@ Error GDScriptAnalyzer::resolve_inheritance() {
 
 Error GDScriptAnalyzer::resolve_interface() {
 	resolve_class_interface(parser->head, true);
-	return parser->errors.is_empty() ? OK : ERR_PARSE_ERROR;
+	return parser->errors.is_empty() ? Error::OK : Error::PARSE_ERROR;
 }
 
 Error GDScriptAnalyzer::resolve_body() {
 	resolve_class_body(parser->head, true);
-	return parser->errors.is_empty() ? OK : ERR_PARSE_ERROR;
+	return parser->errors.is_empty() ? Error::OK : Error::PARSE_ERROR;
 }
 
 Error GDScriptAnalyzer::resolve_dependencies() {
 	for (KeyValue<String, Ref<GDScriptParserRef>> &K : depended_parsers) {
 		if (K.value.is_null()) {
-			return ERR_PARSE_ERROR;
+			return Error::PARSE_ERROR;
 		}
 		K.value->raise_status(GDScriptParserRef::INHERITANCE_SOLVED);
 	}
 
-	return parser->errors.is_empty() ? OK : ERR_PARSE_ERROR;
+	return parser->errors.is_empty() ? Error::OK : Error::PARSE_ERROR;
 }
 
 Error GDScriptAnalyzer::analyze() {
 	parser->errors.clear();
-	Error err = OK;
+	Error err = Error::OK;
 
 	err = resolve_inheritance();
-	if (err) {
+	if (err != Error::OK) {
 		return err;
 	}
 
@@ -5663,7 +5663,7 @@ Error GDScriptAnalyzer::analyze() {
 	resolve_interface();
 	resolve_body();
 	if (!parser->errors.is_empty()) {
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 
 	return resolve_dependencies();

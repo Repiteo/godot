@@ -60,7 +60,7 @@ Node *EditorSceneFormatImporterGLTF::import_scene(const String &p_path, uint32_t
 		state->set_handle_binary_image(enum_option);
 	}
 	Error err = gltf->append_from_file(p_path, state, p_flags);
-	if (err != OK) {
+	if (err != Error::OK) {
 		if (r_err) {
 			*r_err = err;
 		}

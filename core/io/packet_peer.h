@@ -50,7 +50,7 @@ class PacketPeer : public RefCounted {
 	Vector<uint8_t> _get_packet();
 	Error _get_packet_error() const;
 
-	mutable Error last_get_error = OK;
+	mutable Error last_get_error = Error::OK;
 
 	int encode_buffer_max_size = 8 * 1024 * 1024;
 	Vector<uint8_t> encode_buffer;

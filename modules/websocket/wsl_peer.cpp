@@ -112,7 +112,7 @@ void WSLPeer::Resolver::try_next_candidate(Ref<StreamPeerTCP> &p_tcp) {
 	// Keep trying next candidate.
 	while (ip_candidates.size()) {
 		Error err = p_tcp->connect_to_host(ip_candidates.pop_front(), port);
-		if (err == OK) {
+		if (err == Error::OK) {
 			return;
 		} else {
 			p_tcp->disconnect_from_host();
@@ -124,8 +124,8 @@ void WSLPeer::Resolver::try_next_candidate(Ref<StreamPeerTCP> &p_tcp) {
 /// Server functions
 ///
 Error WSLPeer::accept_stream(Ref<StreamPeer> p_stream) {
-	ERR_FAIL_COND_V(wsl_ctx || tcp.is_valid(), ERR_ALREADY_IN_USE);
-	ERR_FAIL_COND_V(p_stream.is_null(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(wsl_ctx || tcp.is_valid(), Error::ALREADY_IN_USE);
+	ERR_FAIL_COND_V(p_stream.is_null(), Error::INVALID_PARAMETER);
 
 	_clear();
 
@@ -135,17 +135,17 @@ Error WSLPeer::accept_stream(Ref<StreamPeer> p_stream) {
 		use_tls = false;
 	} else if (p_stream->is_class_ptr(StreamPeerTLS::get_class_ptr_static())) {
 		Ref<StreamPeer> base_stream = static_cast<Ref<StreamPeerTLS>>(p_stream)->get_stream();
-		ERR_FAIL_COND_V(base_stream.is_null() || !base_stream->is_class_ptr(StreamPeerTCP::get_class_ptr_static()), ERR_INVALID_PARAMETER);
+		ERR_FAIL_COND_V(base_stream.is_null() || !base_stream->is_class_ptr(StreamPeerTCP::get_class_ptr_static()), Error::INVALID_PARAMETER);
 		tcp = static_cast<Ref<StreamPeerTCP>>(base_stream);
 		connection = p_stream;
 		use_tls = true;
 	}
-	ERR_FAIL_COND_V(connection.is_null() || tcp.is_null(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(connection.is_null() || tcp.is_null(), Error::INVALID_PARAMETER);
 	is_server = true;
 	ready_state = STATE_CONNECTING;
 	handshake_buffer->resize(WSL_MAX_HEADER_SIZE);
 	handshake_buffer->seek(0);
-	return OK;
+	return Error::OK;
 }
 
 bool WSLPeer::_parse_client_request() {
@@ -215,33 +215,33 @@ Error WSLPeer::_do_server_handshake() {
 	if (use_tls) {
 		Ref<StreamPeerTLS> tls = static_cast<Ref<StreamPeerTLS>>(connection);
 		if (tls.is_null()) {
-			ERR_FAIL_V_MSG(ERR_BUG, "Couldn't get StreamPeerTLS for WebSocket handshake.");
+			ERR_FAIL_V_MSG(Error::BUG, "Couldn't get StreamPeerTLS for WebSocket handshake.");
 			close(-1);
-			return FAILED;
+			return Error::FAILED;
 		}
 		tls->poll();
 		if (tls->get_status() == StreamPeerTLS::STATUS_HANDSHAKING) {
-			return OK; // Pending handshake
+			return Error::OK; // Pending handshake
 		} else if (tls->get_status() != StreamPeerTLS::STATUS_CONNECTED) {
 			print_verbose(vformat("WebSocket SSL connection error during handshake (StreamPeerTLS status code %d).", tls->get_status()));
 			close(-1);
-			return FAILED;
+			return Error::FAILED;
 		}
 	}
 
 	if (pending_request) {
 		int read = 0;
 		while (true) {
-			ERR_FAIL_COND_V_MSG(handshake_buffer->get_available_bytes() < 1, ERR_OUT_OF_MEMORY, "WebSocket response headers are too big.");
+			ERR_FAIL_COND_V_MSG(handshake_buffer->get_available_bytes() < 1, Error::OUT_OF_MEMORY, "WebSocket response headers are too big.");
 			int pos = handshake_buffer->get_position();
 			uint8_t byte;
 			Error err = connection->get_partial_data(&byte, 1, read);
-			if (err != OK) { // Got an error
+			if (err != Error::OK) { // Got an error
 				print_verbose(vformat("WebSocket error while getting partial data (StreamPeer error code %d).", err));
 				close(-1);
-				return FAILED;
+				return Error::FAILED;
 			} else if (read != 1) { // Busy, wait next poll
-				return OK;
+				return Error::OK;
 			}
 			handshake_buffer->put_u8(byte);
 			const char *r = (const char *)handshake_buffer->get_data_array().ptr();
@@ -249,7 +249,7 @@ Error WSLPeer::_do_server_handshake() {
 			if (l > 3 && r[l] == '\n' && r[l - 1] == '\r' && r[l - 2] == '\n' && r[l - 3] == '\r') {
 				if (!_parse_client_request()) {
 					close(-1);
-					return FAILED;
+					return Error::FAILED;
 				}
 				String s = "HTTP/1.1 101 Switching Protocols\r\n";
 				s += "Upgrade: websocket\r\n";
@@ -273,7 +273,7 @@ Error WSLPeer::_do_server_handshake() {
 	}
 
 	if (pending_request) { // Still pending.
-		return OK;
+		return Error::OK;
 	}
 
 	int left = handshake_buffer->get_available_bytes();
@@ -282,7 +282,7 @@ Error WSLPeer::_do_server_handshake() {
 		int pos = handshake_buffer->get_position();
 		int sent = 0;
 		Error err = connection->put_partial_data(data.ptr() + pos, left, sent);
-		if (err != OK) {
+		if (err != Error::OK) {
 			print_verbose(vformat("WebSocket error while putting partial data (StreamPeer error code %d).", err));
 			close(-1);
 			return err;
@@ -300,7 +300,7 @@ Error WSLPeer::_do_server_handshake() {
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 ///
@@ -331,7 +331,7 @@ void WSLPeer::_do_client_handshake() {
 			// Start SSL handshake
 			tls = Ref<StreamPeerTLS>(StreamPeerTLS::create());
 			ERR_FAIL_COND(tls.is_null());
-			if (tls->connect_to_stream(tcp, requested_host, tls_options) != OK) {
+			if (tls->connect_to_stream(tcp, requested_host, tls_options) != Error::OK) {
 				close(-1);
 				return; // Error.
 			}
@@ -357,7 +357,7 @@ void WSLPeer::_do_client_handshake() {
 		int sent = 0;
 		Error err = connection->put_partial_data(data.ptr() + pos, left, sent);
 		// Sending handshake failed
-		if (err != OK) {
+		if (err != Error::OK) {
 			close(-1);
 			return; // Error.
 		}
@@ -381,7 +381,7 @@ void WSLPeer::_do_client_handshake() {
 
 			uint8_t byte;
 			Error err = connection->get_partial_data(&byte, 1, read);
-			if (err != OK) {
+			if (err != Error::OK) {
 				// Got some error.
 				close(-1);
 				return;
@@ -471,9 +471,9 @@ bool WSLPeer::_verify_server_response() {
 }
 
 Error WSLPeer::connect_to_url(const String &p_url, Ref<TLSOptions> p_options) {
-	ERR_FAIL_COND_V(wsl_ctx || tcp.is_valid(), ERR_ALREADY_IN_USE);
-	ERR_FAIL_COND_V(p_url.is_empty(), ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_options.is_valid() && p_options->is_server(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(wsl_ctx || tcp.is_valid(), Error::ALREADY_IN_USE);
+	ERR_FAIL_COND_V(p_url.is_empty(), Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_options.is_valid() && p_options->is_server(), Error::INVALID_PARAMETER);
 
 	_clear();
 
@@ -482,11 +482,11 @@ Error WSLPeer::connect_to_url(const String &p_url, Ref<TLSOptions> p_options) {
 	String scheme;
 	int port = 0;
 	Error err = p_url.parse_url(scheme, host, port, path);
-	ERR_FAIL_COND_V_MSG(err != OK, err, "Invalid URL: " + p_url);
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Invalid URL: " + p_url);
 	if (scheme.is_empty()) {
 		scheme = "ws://";
 	}
-	ERR_FAIL_COND_V_MSG(scheme != "ws://" && scheme != "wss://", ERR_INVALID_PARAMETER, vformat("Invalid protocol: \"%s\" (must be either \"ws://\" or \"wss://\").", scheme));
+	ERR_FAIL_COND_V_MSG(scheme != "ws://" && scheme != "wss://", Error::INVALID_PARAMETER, vformat("Invalid protocol: \"%s\" (must be either \"ws://\" or \"wss://\").", scheme));
 
 	use_tls = false;
 	if (scheme == "wss://") {
@@ -499,7 +499,7 @@ Error WSLPeer::connect_to_url(const String &p_url, Ref<TLSOptions> p_options) {
 		path = "/";
 	}
 
-	ERR_FAIL_COND_V_MSG(use_tls && !StreamPeerTLS::is_available(), ERR_UNAVAILABLE, "WSS is not available in this build.");
+	ERR_FAIL_COND_V_MSG(use_tls && !StreamPeerTLS::is_available(), Error::UNAVAILABLE, "WSS is not available in this build.");
 
 	requested_url = p_url;
 	requested_host = host;
@@ -517,7 +517,7 @@ Error WSLPeer::connect_to_url(const String &p_url, Ref<TLSOptions> p_options) {
 
 	if (tcp->get_status() != StreamPeerTCP::STATUS_CONNECTING && tcp->get_status() != StreamPeerTCP::STATUS_CONNECTED && !resolver.has_more_candidates()) {
 		_clear();
-		return FAILED;
+		return Error::FAILED;
 	}
 	connection = tcp;
 
@@ -552,7 +552,7 @@ Error WSLPeer::connect_to_url(const String &p_url, Ref<TLSOptions> p_options) {
 	handshake_buffer->seek(0);
 	ready_state = STATE_CONNECTING;
 	is_server = false;
-	return OK;
+	return Error::OK;
 }
 
 ///
@@ -567,8 +567,8 @@ ssize_t WSLPeer::_wsl_recv_callback(wslay_event_context_ptr ctx, uint8_t *data, 
 	}
 	int read = 0;
 	Error err = conn->get_partial_data(data, len, read);
-	if (err != OK) {
-		print_verbose("Websocket get data error: " + itos(err) + ", read (should be 0!): " + itos(read));
+	if (err != Error::OK) {
+		print_verbose("Websocket get data error: " + itos((int)err) + ", read (should be 0!): " + itos(read));
 		wslay_event_set_error(ctx, WSLAY_ERR_CALLBACK_FAILURE);
 		return -1;
 	}
@@ -588,7 +588,7 @@ ssize_t WSLPeer::_wsl_send_callback(wslay_event_context_ptr ctx, const uint8_t *
 	}
 	int sent = 0;
 	Error err = conn->put_partial_data(data, len, sent);
-	if (err != OK) {
+	if (err != Error::OK) {
 		wslay_event_set_error(ctx, WSLAY_ERR_CALLBACK_FAILURE);
 		return -1;
 	}
@@ -602,7 +602,7 @@ ssize_t WSLPeer::_wsl_send_callback(wslay_event_context_ptr ctx, const uint8_t *
 int WSLPeer::_wsl_genmask_callback(wslay_event_context_ptr ctx, uint8_t *buf, size_t len, void *user_data) {
 	ERR_FAIL_NULL_V(_static_rng, WSLAY_ERR_CALLBACK_FAILURE);
 	Error err = _static_rng->get_random_bytes(buf, len);
-	ERR_FAIL_COND_V(err != OK, WSLAY_ERR_CALLBACK_FAILURE);
+	ERR_FAIL_COND_V(err != Error::OK, WSLAY_ERR_CALLBACK_FAILURE);
 	return 0;
 }
 
@@ -680,7 +680,7 @@ void WSLPeer::poll() {
 		int err = 0;
 		if ((err = wslay_event_recv(wsl_ctx)) != 0 || (err = wslay_event_send(wsl_ctx)) != 0) {
 			// Error close.
-			print_verbose("Websocket (wslay) poll error: " + itos(err));
+			print_verbose("Websocket (wslay) poll error: " + itos((int)err));
 			wslay_event_context_free(wsl_ctx);
 			wsl_ctx = nullptr;
 			close(-1);
@@ -697,9 +697,9 @@ void WSLPeer::poll() {
 }
 
 Error WSLPeer::_send(const uint8_t *p_buffer, int p_buffer_size, wslay_opcode p_opcode) {
-	ERR_FAIL_COND_V(ready_state != STATE_OPEN, FAILED);
-	ERR_FAIL_COND_V(wslay_event_get_queued_msg_count(wsl_ctx) >= (uint32_t)max_queued_packets, ERR_OUT_OF_MEMORY);
-	ERR_FAIL_COND_V(outbound_buffer_size > 0 && (wslay_event_get_queued_msg_length(wsl_ctx) + p_buffer_size > (uint32_t)outbound_buffer_size), ERR_OUT_OF_MEMORY);
+	ERR_FAIL_COND_V(ready_state != STATE_OPEN, Error::FAILED);
+	ERR_FAIL_COND_V(wslay_event_get_queued_msg_count(wsl_ctx) >= (uint32_t)max_queued_packets, Error::OUT_OF_MEMORY);
+	ERR_FAIL_COND_V(outbound_buffer_size > 0 && (wslay_event_get_queued_msg_length(wsl_ctx) + p_buffer_size > (uint32_t)outbound_buffer_size), Error::OUT_OF_MEMORY);
 
 	struct wslay_event_msg msg;
 	msg.opcode = p_opcode;
@@ -709,9 +709,9 @@ Error WSLPeer::_send(const uint8_t *p_buffer, int p_buffer_size, wslay_opcode p_
 	// Queue & send message.
 	if (wslay_event_queue_msg(wsl_ctx, &msg) != 0 || wslay_event_send(wsl_ctx) != 0) {
 		close(-1);
-		return FAILED;
+		return Error::FAILED;
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error WSLPeer::send(const uint8_t *p_buffer, int p_buffer_size, WriteMode p_mode) {
@@ -726,10 +726,10 @@ Error WSLPeer::put_packet(const uint8_t *p_buffer, int p_buffer_size) {
 Error WSLPeer::get_packet(const uint8_t **r_buffer, int &r_buffer_size) {
 	r_buffer_size = 0;
 
-	ERR_FAIL_COND_V(ready_state != STATE_OPEN, FAILED);
+	ERR_FAIL_COND_V(ready_state != STATE_OPEN, Error::FAILED);
 
 	if (in_buffer.packets_left() == 0) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 
 	int read = 0;
@@ -739,7 +739,7 @@ Error WSLPeer::get_packet(const uint8_t **r_buffer, int &r_buffer_size) {
 	*r_buffer = rw;
 	r_buffer_size = read;
 
-	return OK;
+	return Error::OK;
 }
 
 int WSLPeer::get_available_packet_count() const {

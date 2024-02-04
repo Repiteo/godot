@@ -92,7 +92,7 @@ void EditorLayoutsDialog::_post_popup() {
 	Ref<ConfigFile> config;
 	config.instantiate();
 	Error err = config->load(EditorSettings::get_singleton()->get_editor_layouts_config());
-	if (err != OK) {
+	if (err != Error::OK) {
 		return;
 	}
 

@@ -594,7 +594,7 @@ Error SceneState::_parse_node(Node *p_owner, Node *p_node, int p_parent_idx, Has
 
 	//discard nodes that do not belong to be processed
 	if (p_node != p_owner && p_node->get_owner() != p_owner && !p_owner->is_editable_instance(p_node->get_owner())) {
-		return OK;
+		return Error::OK;
 	}
 
 	bool is_editable_instance = false;
@@ -644,7 +644,7 @@ Error SceneState::_parse_node(Node *p_owner, Node *p_node, int p_parent_idx, Has
 			//must instance ourselves
 			Ref<PackedScene> instance = ResourceLoader::load(p_node->get_scene_file_path());
 			if (!instance.is_valid()) {
-				return ERR_CANT_OPEN;
+				return Error::CANT_OPEN;
 			}
 
 			nd.instance = _vm_get_variant(instance, variant_map);
@@ -843,24 +843,24 @@ Error SceneState::_parse_node(Node *p_owner, Node *p_node, int p_parent_idx, Has
 	for (int i = 0; i < p_node->get_child_count(); i++) {
 		Node *c = p_node->get_child(i);
 		Error err = _parse_node(p_owner, c, parent_node, name_map, variant_map, node_map, nodepath_map);
-		if (err) {
+		if (err != Error::OK) {
 			return err;
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error SceneState::_parse_connections(Node *p_owner, Node *p_node, HashMap<StringName, int> &name_map, HashMap<Variant, int, VariantHasher, VariantComparator> &variant_map, HashMap<Node *, int> &node_map, HashMap<Node *, int> &nodepath_map) {
 	if (p_node != p_owner && p_node->get_owner() && p_node->get_owner() != p_owner && !p_owner->is_editable_instance(p_node->get_owner())) {
-		return OK;
+		return Error::OK;
 	}
 
 	List<MethodInfo> _signals;
 	p_node->get_signal_list(&_signals);
 	_signals.sort();
 
-	//ERR_FAIL_COND_V( !node_map.has(p_node), ERR_BUG);
+	//ERR_FAIL_COND_V( !node_map.has(p_node), BUG);
 	//NodeData &nd = nodes[node_map[p_node]];
 
 	for (const MethodInfo &E : _signals) {
@@ -1041,16 +1041,16 @@ Error SceneState::_parse_connections(Node *p_owner, Node *p_node, HashMap<String
 	for (int i = 0; i < p_node->get_child_count(); i++) {
 		Node *c = p_node->get_child(i);
 		Error err = _parse_connections(p_owner, c, name_map, variant_map, node_map, nodepath_map);
-		if (err) {
+		if (err != Error::OK) {
 			return err;
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error SceneState::pack(Node *p_scene) {
-	ERR_FAIL_NULL_V(p_scene, ERR_INVALID_PARAMETER);
+	ERR_FAIL_NULL_V(p_scene, Error::INVALID_PARAMETER);
 
 	clear();
 
@@ -1072,13 +1072,13 @@ Error SceneState::pack(Node *p_scene) {
 
 	// Instanced, only direct sub-scenes are supported of course.
 	Error err = _parse_node(scene, scene, -1, name_map, variant_map, node_map, nodepath_map);
-	if (err) {
+	if (err != Error::OK) {
 		clear();
 		ERR_FAIL_V(err);
 	}
 
 	err = _parse_connections(scene, scene, name_map, variant_map, node_map, nodepath_map);
-	if (err) {
+	if (err != Error::OK) {
 		clear();
 		ERR_FAIL_V(err);
 	}
@@ -1108,7 +1108,7 @@ Error SceneState::pack(Node *p_scene) {
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void SceneState::set_path(const String &p_path) {
@@ -1131,7 +1131,7 @@ void SceneState::clear() {
 }
 
 Error SceneState::copy_from(const Ref<SceneState> &p_scene_state) {
-	ERR_FAIL_COND_V(p_scene_state.is_null(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_scene_state.is_null(), Error::INVALID_PARAMETER);
 
 	clear();
 
@@ -1158,7 +1158,7 @@ Error SceneState::copy_from(const Ref<SceneState> &p_scene_state) {
 	}
 	base_scene_idx = p_scene_state->base_scene_idx;
 
-	return OK;
+	return Error::OK;
 }
 
 Ref<SceneState> SceneState::get_base_scene_state() const {

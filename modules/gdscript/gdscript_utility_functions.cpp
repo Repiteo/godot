@@ -132,7 +132,7 @@ struct GDScriptUtilityFunctionsDefinitions {
 					return;
 				}
 				Error err = arr.resize(count);
-				if (err != OK) {
+				if (err != Error::OK) {
 					*r_ret = RTR("Cannot resize array.");
 					r_error.error = Callable::CallError::CALL_ERROR_INVALID_METHOD;
 					return;
@@ -157,7 +157,7 @@ struct GDScriptUtilityFunctionsDefinitions {
 					return;
 				}
 				Error err = arr.resize(to - from);
-				if (err != OK) {
+				if (err != Error::OK) {
 					*r_ret = RTR("Cannot resize array.");
 					r_error.error = Callable::CallError::CALL_ERROR_INVALID_METHOD;
 					return;
@@ -201,7 +201,7 @@ struct GDScriptUtilityFunctionsDefinitions {
 
 				Error err = arr.resize(count);
 
-				if (err != OK) {
+				if (err != Error::OK) {
 					*r_ret = RTR("Cannot resize array.");
 					r_error.error = Callable::CallError::CALL_ERROR_INVALID_METHOD;
 					return;

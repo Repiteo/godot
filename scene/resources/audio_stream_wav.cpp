@@ -528,7 +528,7 @@ Vector<uint8_t> AudioStreamWAV::get_data() const {
 Error AudioStreamWAV::save_to_wav(const String &p_path) {
 	if (format == AudioStreamWAV::FORMAT_IMA_ADPCM) {
 		WARN_PRINT("Saving IMA_ADPC samples are not supported yet");
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 
 	int sub_chunk_2_size = data_bytes; //Subchunk2Size = Size of data in bytes
@@ -562,7 +562,7 @@ Error AudioStreamWAV::save_to_wav(const String &p_path) {
 
 	Ref<FileAccess> file = FileAccess::open(file_path, FileAccess::WRITE); //Overrides existing file if present
 
-	ERR_FAIL_COND_V(file.is_null(), ERR_FILE_CANT_WRITE);
+	ERR_FAIL_COND_V(file.is_null(), Error::FILE_CANT_WRITE);
 
 	// Create WAV Header
 	file->store_string("RIFF"); //ChunkID
@@ -600,7 +600,7 @@ Error AudioStreamWAV::save_to_wav(const String &p_path) {
 			break;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Ref<AudioStreamPlayback> AudioStreamWAV::instantiate_playback() {

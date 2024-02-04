@@ -74,7 +74,7 @@ int EGLManager::_get_gldisplay_id(void *p_display) {
 
 	Error err = _gldisplay_create_context(new_gldisplay);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		eglTerminate(new_gldisplay.egl_display);
 		ERR_FAIL_V(-1);
 	}
@@ -103,9 +103,9 @@ void EGLManager::_set_cache(const void *p_key, EGLsizeiANDROID p_key_size, const
 	String name = CryptoCore::b64_encode_str((const uint8_t *)p_key, p_key_size).replace("/", "_");
 	String path = shader_cache_dir.path_join(name) + ".cache";
 
-	Error err = OK;
+	Error err = Error::OK;
 	Ref<FileAccess> file = FileAccess::open(path, FileAccess::WRITE, &err);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return;
 	}
 	file->store_buffer((const uint8_t *)p_value, p_value_size);
@@ -115,9 +115,9 @@ EGLsizeiANDROID EGLManager::_get_cache(const void *p_key, EGLsizeiANDROID p_key_
 	String name = CryptoCore::b64_encode_str((const uint8_t *)p_key, p_key_size).replace("/", "_");
 	String path = shader_cache_dir.path_join(name) + ".cache";
 
-	Error err = OK;
+	Error err = Error::OK;
 	Ref<FileAccess> file = FileAccess::open(path, FileAccess::READ, &err);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return 0;
 	}
 	EGLsizeiANDROID len = file->get_length();
@@ -163,28 +163,28 @@ Error EGLManager::_gldisplay_create_context(GLDisplay &p_gldisplay) {
 		eglChooseConfig(p_gldisplay.egl_display, attribs, &p_gldisplay.egl_config, 1, &config_count);
 	}
 
-	ERR_FAIL_COND_V(eglGetError() != EGL_SUCCESS, ERR_BUG);
-	ERR_FAIL_COND_V(config_count == 0, ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(eglGetError() != EGL_SUCCESS, Error::BUG);
+	ERR_FAIL_COND_V(config_count == 0, Error::UNCONFIGURED);
 
 	Vector<EGLint> context_attribs = _get_platform_context_attribs();
 	p_gldisplay.egl_context = eglCreateContext(p_gldisplay.egl_display, p_gldisplay.egl_config, EGL_NO_CONTEXT, (context_attribs.size() > 0) ? context_attribs.ptr() : nullptr);
-	ERR_FAIL_COND_V_MSG(p_gldisplay.egl_context == EGL_NO_CONTEXT, ERR_CANT_CREATE, vformat("Can't create an EGL context. Error code: %d", eglGetError()));
+	ERR_FAIL_COND_V_MSG(p_gldisplay.egl_context == EGL_NO_CONTEXT, Error::CANT_CREATE, vformat("Can't create an EGL context. Error code: %d", eglGetError()));
 
-	return OK;
+	return Error::OK;
 }
 
 Error EGLManager::open_display(void *p_display) {
 	int gldisplay_id = _get_gldisplay_id(p_display);
 	if (gldisplay_id < 0) {
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	} else {
-		return OK;
+		return Error::OK;
 	}
 }
 
 int EGLManager::display_get_native_visual_id(void *p_display) {
 	int gldisplay_id = _get_gldisplay_id(p_display);
-	ERR_FAIL_COND_V(gldisplay_id < 0, ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(gldisplay_id < 0, (int)Error::CANT_CREATE);
 
 	GLDisplay gldisplay = displays[gldisplay_id];
 
@@ -199,7 +199,7 @@ int EGLManager::display_get_native_visual_id(void *p_display) {
 
 Error EGLManager::window_create(DisplayServer::WindowID p_window_id, void *p_display, void *p_native_window, int p_width, int p_height) {
 	int gldisplay_id = _get_gldisplay_id(p_display);
-	ERR_FAIL_COND_V(gldisplay_id < 0, ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(gldisplay_id < 0, Error::CANT_CREATE);
 
 	GLDisplay &gldisplay = displays[gldisplay_id];
 
@@ -220,14 +220,14 @@ Error EGLManager::window_create(DisplayServer::WindowID p_window_id, void *p_dis
 	}
 
 	if (glwindow.egl_surface == EGL_NO_SURFACE) {
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	glwindow.initialized = true;
 
 	window_make_current(p_window_id);
 
-	return OK;
+	return Error::OK;
 }
 
 void EGLManager::window_destroy(DisplayServer::WindowID p_window_id) {
@@ -348,23 +348,23 @@ Error EGLManager::initialize() {
 	// of what version is supported on this machine. Currently we're looking for
 	// 1.5, the latest at the time of writing, which is actually pretty old.
 	if (!gladLoaderLoadEGL(nullptr)) {
-		ERR_FAIL_V_MSG(ERR_UNAVAILABLE, "Can't load EGL.");
+		ERR_FAIL_V_MSG(Error::UNAVAILABLE, "Can't load EGL.");
 	}
 
 	// NOTE: EGL_DEFAULT_DISPLAY returns whatever the O.S. deems suitable. I have
 	// no idea if this may cause problems with multiple display servers and if we
 	// should handle different EGL contexts in another way.
 	EGLDisplay tmp_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-	ERR_FAIL_COND_V(tmp_display == EGL_NO_DISPLAY, ERR_UNAVAILABLE);
+	ERR_FAIL_COND_V(tmp_display == EGL_NO_DISPLAY, Error::UNAVAILABLE);
 
 	eglInitialize(tmp_display, nullptr, nullptr);
 
 	int version = gladLoaderLoadEGL(tmp_display);
 
-	ERR_FAIL_COND_V_MSG(!version, ERR_UNAVAILABLE, "Can't load EGL.");
+	ERR_FAIL_COND_V_MSG(!version, Error::UNAVAILABLE, "Can't load EGL.");
 	print_verbose(vformat("Loaded EGL %d.%d", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version)));
 
-	ERR_FAIL_COND_V_MSG(!GLAD_EGL_VERSION_1_4, ERR_UNAVAILABLE, "EGL version is too old!");
+	ERR_FAIL_COND_V_MSG(!GLAD_EGL_VERSION_1_4, Error::UNAVAILABLE, "EGL version is too old!");
 
 	eglTerminate(tmp_display);
 #endif
@@ -374,17 +374,17 @@ Error EGLManager::initialize() {
 	if (shader_cache_dir.is_empty()) {
 		shader_cache_dir = "user://";
 	}
-	Error err = OK;
+	Error err = Error::OK;
 	Ref<DirAccess> da = DirAccess::open(shader_cache_dir);
 	if (da.is_null()) {
 		ERR_PRINT("EGL: Can't create shader cache folder, no shader caching will happen: " + shader_cache_dir);
 		shader_cache_dir = String();
 	} else {
 		err = da->change_dir(String("shader_cache").path_join("EGL"));
-		if (err != OK) {
+		if (err != Error::OK) {
 			err = da->make_dir_recursive(String("shader_cache").path_join("EGL"));
 		}
-		if (err != OK) {
+		if (err != Error::OK) {
 			ERR_PRINT("EGL: Can't create shader cache folder, no shader caching will happen: " + shader_cache_dir);
 			shader_cache_dir = String();
 		} else {
@@ -395,14 +395,14 @@ Error EGLManager::initialize() {
 
 	String extensions_string = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
 	// The above method should always work. If it doesn't, something's very wrong.
-	ERR_FAIL_COND_V(eglGetError() != EGL_SUCCESS, ERR_BUG);
+	ERR_FAIL_COND_V(eglGetError() != EGL_SUCCESS, Error::BUG);
 
 	const char *platform = _get_platform_extension_name();
 	if (extensions_string.split(" ").find(platform) < 0) {
-		ERR_FAIL_V_MSG(ERR_UNAVAILABLE, vformat("EGL platform extension \"%s\" not found.", platform));
+		ERR_FAIL_V_MSG(Error::UNAVAILABLE, vformat("EGL platform extension \"%s\" not found.", platform));
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 EGLManager::EGLManager() {

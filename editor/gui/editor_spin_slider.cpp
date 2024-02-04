@@ -534,13 +534,13 @@ void EditorSpinSlider::_evaluate_input_text() {
 	text = TS->parse_number(text);
 
 	Error err = expr->parse(text);
-	if (err != OK) {
+	if (err != Error::OK) {
 		// If the expression failed try without converting commas to dots - they might have been for parameter separation.
 		text = value_input->get_text();
 		text = TS->parse_number(text);
 
 		err = expr->parse(text);
-		if (err != OK) {
+		if (err != Error::OK) {
 			return;
 		}
 	}

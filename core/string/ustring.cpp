@@ -145,7 +145,7 @@ void Char16String::copy_from(const char16_t *p_cstr) {
 
 	Error err = resize(++len); // include terminating null char
 
-	ERR_FAIL_COND_MSG(err != OK, "Failed to copy char16_t string.");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Failed to copy char16_t string.");
 
 	memcpy(ptrw(), p_cstr, len * sizeof(char16_t));
 }
@@ -212,7 +212,7 @@ void CharString::copy_from(const char *p_cstr) {
 
 	Error err = resize(++len); // include terminating null char
 
-	ERR_FAIL_COND_MSG(err != OK, "Failed to copy C-string.");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Failed to copy C-string.");
 
 	memcpy(ptrw(), p_cstr, len);
 }
@@ -250,14 +250,14 @@ Error String::parse_url(String &r_scheme, String &r_host, int &r_port, String &r
 		// Literal IPv6
 		pos = base.rfind("]");
 		if (pos == -1) {
-			return ERR_INVALID_PARAMETER;
+			return Error::INVALID_PARAMETER;
 		}
 		r_host = base.substr(1, pos - 1);
 		base = base.substr(pos + 1, base.length() - pos - 1);
 	} else {
 		// Anything else
 		if (base.get_slice_count(":") > 2) {
-			return ERR_INVALID_PARAMETER;
+			return Error::INVALID_PARAMETER;
 		}
 		pos = base.rfind(":");
 		if (pos == -1) {
@@ -269,21 +269,21 @@ Error String::parse_url(String &r_scheme, String &r_host, int &r_port, String &r
 		}
 	}
 	if (r_host.is_empty()) {
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 	r_host = r_host.to_lower();
 	// Port
 	if (base.begins_with(":")) {
 		base = base.substr(1, base.length() - 1);
 		if (!base.is_valid_int()) {
-			return ERR_INVALID_PARAMETER;
+			return Error::INVALID_PARAMETER;
 		}
 		r_port = base.to_int();
 		if (r_port < 1 || r_port > 65535) {
-			return ERR_INVALID_PARAMETER;
+			return Error::INVALID_PARAMETER;
 		}
 	}
-	return OK;
+	return Error::OK;
 }
 
 void String::copy_from(const char *p_cstr) {
@@ -1798,7 +1798,7 @@ String String::utf8(const char *p_utf8, int p_len) {
 
 Error String::parse_utf8(const char *p_utf8, int p_len, bool p_skip_cr) {
 	if (!p_utf8) {
-		return ERR_INVALID_DATA;
+		return Error::INVALID_DATA;
 	}
 
 	String aux;
@@ -1888,7 +1888,7 @@ Error String::parse_utf8(const char *p_utf8, int p_len, bool p_skip_cr) {
 
 	if (str_size == 0) {
 		clear();
-		return OK; // empty string
+		return Error::OK; // empty string
 	}
 
 	resize(str_size + 1);
@@ -1968,11 +1968,11 @@ Error String::parse_utf8(const char *p_utf8, int p_len, bool p_skip_cr) {
 	}
 
 	if (decode_failed) {
-		return ERR_INVALID_DATA;
+		return Error::INVALID_DATA;
 	} else if (decode_error) {
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	} else {
-		return OK;
+		return Error::OK;
 	}
 }
 
@@ -2069,7 +2069,7 @@ String String::utf16(const char16_t *p_utf16, int p_len) {
 
 Error String::parse_utf16(const char16_t *p_utf16, int p_len) {
 	if (!p_utf16) {
-		return ERR_INVALID_DATA;
+		return Error::INVALID_DATA;
 	}
 
 	String aux;
@@ -2137,7 +2137,7 @@ Error String::parse_utf16(const char16_t *p_utf16, int p_len) {
 
 	if (str_size == 0) {
 		clear();
-		return OK; // empty string
+		return Error::OK; // empty string
 	}
 
 	resize(str_size + 1);
@@ -2176,9 +2176,9 @@ Error String::parse_utf16(const char16_t *p_utf16, int p_len) {
 	}
 
 	if (decode_error) {
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	} else {
-		return OK;
+		return Error::OK;
 	}
 }
 

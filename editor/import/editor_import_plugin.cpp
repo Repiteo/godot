@@ -173,7 +173,7 @@ Error EditorImportPlugin::import(const String &p_source_file, const String &p_sa
 		++E;
 	}
 
-	Error err = OK;
+	Error err = Error::OK;
 	if (GDVIRTUAL_CALL(_import, p_source_file, p_save_path, options, platform_variants, gen_files, err)) {
 		for (int i = 0; i < platform_variants.size(); i++) {
 			r_platform_variants->push_back(platform_variants[i]);
@@ -183,7 +183,7 @@ Error EditorImportPlugin::import(const String &p_source_file, const String &p_sa
 		}
 		return err;
 	}
-	ERR_FAIL_V_MSG(ERR_METHOD_NOT_FOUND, "Unimplemented _import in add-on.");
+	ERR_FAIL_V_MSG(Error::METHOD_NOT_FOUND, "Unimplemented _import in add-on.");
 }
 
 bool EditorImportPlugin::can_import_threaded() const {

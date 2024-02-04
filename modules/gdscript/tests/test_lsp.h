@@ -85,9 +85,9 @@ const String root = "modules/gdscript/tests/scripts/";
  * * Call `GDScriptTests::::finish_language`.
  */
 GDScriptLanguageProtocol *initialize(const String &p_root) {
-	Error err = OK;
+	Error err = Error::OK;
 	Ref<DirAccess> dir(DirAccess::open(p_root, &err));
-	REQUIRE_MESSAGE(err == OK, "Could not open specified root directory");
+	REQUIRE_MESSAGE(err == Error::OK, "Could not open specified root directory");
 	String absolute_root = dir->get_current_dir();
 	init_language(absolute_root);
 
@@ -190,7 +190,7 @@ struct InlineTestData {
 Vector<InlineTestData> read_tests(const String &p_path) {
 	Error err;
 	String source = FileAccess::get_file_as_string(p_path, &err);
-	REQUIRE_MESSAGE(err == OK, vformat("Cannot read '%s'", p_path));
+	REQUIRE_MESSAGE(err == Error::OK, vformat("Cannot read '%s'", p_path));
 
 	// Format:
 	// ```gdscript
@@ -296,15 +296,15 @@ void test_resolve_symbols(const String &p_uri, const Vector<InlineTestData> &p_t
 void assert_no_errors_in(const String &p_path) {
 	Error err;
 	String source = FileAccess::get_file_as_string(p_path, &err);
-	REQUIRE_MESSAGE(err == OK, vformat("Cannot read '%s'", p_path));
+	REQUIRE_MESSAGE(err == Error::OK, vformat("Cannot read '%s'", p_path));
 
 	GDScriptParser parser;
 	err = parser.parse(source, p_path, true);
-	REQUIRE_MESSAGE(err == OK, vformat("Errors while parsing '%s'", p_path));
+	REQUIRE_MESSAGE(err == Error::OK, vformat("Errors while parsing '%s'", p_path));
 
 	GDScriptAnalyzer analyzer(&parser);
 	err = analyzer.analyze();
-	REQUIRE_MESSAGE(err == OK, vformat("Errors while analyzing '%s'", p_path));
+	REQUIRE_MESSAGE(err == Error::OK, vformat("Errors while analyzing '%s'", p_path));
 }
 
 inline lsp::Position lsp_pos(int line, int character) {

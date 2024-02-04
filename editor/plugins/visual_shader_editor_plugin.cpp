@@ -3741,7 +3741,7 @@ void VisualShaderEditor::_delete_nodes(int p_type, const List<int> &p_nodes) {
 				bool cancel = false;
 				for (List<VisualShader::Connection>::Element *R = used_conns.front(); R; R = R->next()) {
 					if (R->get().from_node == E.from_node && R->get().from_port == E.from_port && R->get().to_node == E.to_node && R->get().to_port == E.to_port) {
-						cancel = true; // to avoid ERR_ALREADY_EXISTS warning
+						cancel = true; // to avoid ALREADY_EXISTS warning
 						break;
 					}
 				}
@@ -5320,7 +5320,7 @@ void VisualShaderEditor::_update_preview() {
 		List<ShaderPreprocessor::FilePosition> err_positions;
 		ShaderPreprocessor preprocessor;
 		Error err = preprocessor.preprocess(code, path, preprocessed_code, &error_pp, &err_positions);
-		if (err != OK) {
+		if (err != Error::OK) {
 			ERR_FAIL_COND(err_positions.is_empty());
 
 			String file = err_positions.front()->get().file;
@@ -5337,7 +5337,7 @@ void VisualShaderEditor::_update_preview() {
 
 	ShaderLanguage sl;
 	Error err = sl.compile(preprocessed_code, info);
-	if (err != OK) {
+	if (err != Error::OK) {
 		int err_line;
 		String err_text;
 		Vector<ShaderLanguage::FilePosition> include_positions = sl.get_include_positions();

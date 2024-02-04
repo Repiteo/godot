@@ -60,7 +60,7 @@ void EditorFileServer::_scan_files_changed(EditorFileSystemDirectory *efd, const
 			cf.instantiate();
 			Error err = cf->load(f + ".import");
 
-			ERR_CONTINUE(err != OK);
+			ERR_CONTINUE(err != Error::OK);
 			{
 				uint64_t mt = FileAccess::get_modified_time(f + ".import");
 				_add_file(f + ".import", mt, files_to_send, cached_files);
@@ -124,7 +124,7 @@ void EditorFileServer::poll() {
 	print_verbose("EFS: Connecting taken!");
 	char header[4];
 	Error err = tcp_peer->get_data((uint8_t *)&header, 4);
-	ERR_FAIL_COND(err != OK);
+	ERR_FAIL_COND(err != Error::OK);
 	ERR_FAIL_COND(header[0] != 'G');
 	ERR_FAIL_COND(header[1] != 'R');
 	ERR_FAIL_COND(header[2] != 'F');
@@ -136,7 +136,7 @@ void EditorFileServer::poll() {
 	char cpassword[PASSWORD_LENGTH + 1];
 	err = tcp_peer->get_data((uint8_t *)cpassword, PASSWORD_LENGTH);
 	cpassword[PASSWORD_LENGTH] = 0;
-	ERR_FAIL_COND(err != OK);
+	ERR_FAIL_COND(err != Error::OK);
 	print_verbose("EFS: Got password: " + String(cpassword));
 	ERR_FAIL_COND_MSG(password != cpassword, "Client disconnected because password mismatch.");
 
@@ -173,7 +173,7 @@ void EditorFileServer::poll() {
 
 		pr.step(TTR("Decompressing remote file system"), 2, true);
 
-		ERR_FAIL_COND(err != OK);
+		ERR_FAIL_COND(err != Error::OK);
 		// Decompress the text with all the files
 		Compression::decompress(file_buffer_decompressed.ptr(), file_buffer_decompressed.size(), file_buffer.ptr(), file_buffer.size(), Compression::MODE_ZSTD);
 		String files_text = String::utf8((const char *)file_buffer_decompressed.ptr(), file_buffer_decompressed.size());
@@ -254,7 +254,7 @@ void EditorFileServer::start() {
 	port = EDITOR_GET("filesystem/file_server/port");
 	password = EDITOR_GET("filesystem/file_server/password");
 	Error err = server->listen(port);
-	ERR_FAIL_COND_MSG(err != OK, "EditorFileServer: Unable to listen on port " + itos(port));
+	ERR_FAIL_COND_MSG(err != Error::OK, "EditorFileServer: Unable to listen on port " + itos(port));
 	active = true;
 }
 

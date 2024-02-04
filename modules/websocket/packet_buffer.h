@@ -49,12 +49,12 @@ private:
 
 public:
 	Error write_packet(const uint8_t *p_payload, uint32_t p_size, const T *p_info) {
-		ERR_FAIL_COND_V_MSG(p_payload && (uint32_t)_payload.space_left() < p_size, ERR_OUT_OF_MEMORY, "Buffer payload full! Dropping data.");
-		ERR_FAIL_COND_V_MSG(p_info && _queued >= _packets.size(), ERR_OUT_OF_MEMORY, "Too many packets in queue! Dropping data.");
+		ERR_FAIL_COND_V_MSG(p_payload && (uint32_t)_payload.space_left() < p_size, Error::OUT_OF_MEMORY, "Buffer payload full! Dropping data.");
+		ERR_FAIL_COND_V_MSG(p_info && _queued >= _packets.size(), Error::OUT_OF_MEMORY, "Too many packets in queue! Dropping data.");
 
 		// If p_info is nullptr, only the payload is written
 		if (p_info) {
-			ERR_FAIL_COND_V(_write_pos > _packets.size(), ERR_OUT_OF_MEMORY);
+			ERR_FAIL_COND_V(_write_pos > _packets.size(), Error::OUT_OF_MEMORY);
 			_Packet p;
 			p.size = p_size;
 			p.info = *p_info;
@@ -71,11 +71,11 @@ public:
 			_payload.write((const uint8_t *)p_payload, p_size);
 		}
 
-		return OK;
+		return Error::OK;
 	}
 
 	Error read_packet(uint8_t *r_payload, int p_bytes, T *r_info, int &r_read) {
-		ERR_FAIL_COND_V(_queued < 1, ERR_UNAVAILABLE);
+		ERR_FAIL_COND_V(_queued < 1, Error::UNAVAILABLE);
 		_Packet p = _packets[_read_pos];
 		_read_pos += 1;
 		if (_read_pos >= _packets.size()) {
@@ -83,13 +83,13 @@ public:
 		}
 		_queued -= 1;
 
-		ERR_FAIL_COND_V(_payload.data_left() < (int)p.size, ERR_BUG);
-		ERR_FAIL_COND_V(p_bytes < (int)p.size, ERR_OUT_OF_MEMORY);
+		ERR_FAIL_COND_V(_payload.data_left() < (int)p.size, Error::BUG);
+		ERR_FAIL_COND_V(p_bytes < (int)p.size, Error::OUT_OF_MEMORY);
 
 		r_read = p.size;
 		memcpy(r_info, &p.info, sizeof(T));
 		_payload.read(r_payload, p.size);
-		return OK;
+		return Error::OK;
 	}
 
 	void resize(int p_buf_shift, int p_max_packets) {

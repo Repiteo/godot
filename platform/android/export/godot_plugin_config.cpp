@@ -118,7 +118,7 @@ PluginConfigAndroid PluginConfigAndroid::load_plugin_config(Ref<ConfigFile> conf
 
 	if (config_file.is_valid()) {
 		Error err = config_file->load(path);
-		if (err == OK) {
+		if (err == Error::OK) {
 			String config_base_dir = path.get_base_dir();
 
 			plugin_config.name = config_file->get_value(PluginConfigAndroid::CONFIG_SECTION, PluginConfigAndroid::CONFIG_NAME_KEY, String());

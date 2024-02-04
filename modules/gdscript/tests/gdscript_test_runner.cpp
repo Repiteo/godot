@@ -114,7 +114,7 @@ void init_language(const String &p_base_path) {
 	// Setup project settings since it's needed by the languages to get the global scripts.
 	// This also sets up the base resource path.
 	Error err = ProjectSettings::get_singleton()->setup(p_base_path, String(), true);
-	if (err) {
+	if (err != Error::OK) {
 		print_line("Could not load project settings.");
 		// Keep going since some scripts still work without this.
 	}
@@ -252,10 +252,10 @@ bool GDScriptTestRunner::generate_outputs() {
 }
 
 bool GDScriptTestRunner::make_tests_for_dir(const String &p_dir) {
-	Error err = OK;
+	Error err = Error::OK;
 	Ref<DirAccess> dir(DirAccess::open(p_dir, &err));
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		return false;
 	}
 
@@ -280,9 +280,9 @@ bool GDScriptTestRunner::make_tests_for_dir(const String &p_dir) {
 			} else if (next.get_extension().to_lower() == "gd") {
 #ifndef DEBUG_ENABLED
 				// On release builds, skip tests marked as debug only.
-				Error open_err = OK;
+				Error open_err = Error::OK;
 				Ref<FileAccess> script_file(FileAccess::open(current_dir.path_join(next), FileAccess::READ, &open_err));
-				if (open_err != OK) {
+				if (open_err != Error::OK) {
 					ERR_PRINT(vformat(R"(Couldn't open test file "%s".)", next));
 					next = dir->get_next();
 					continue;
@@ -312,10 +312,10 @@ bool GDScriptTestRunner::make_tests_for_dir(const String &p_dir) {
 }
 
 bool GDScriptTestRunner::make_tests() {
-	Error err = OK;
+	Error err = Error::OK;
 	Ref<DirAccess> dir(DirAccess::open(source_dir, &err));
 
-	ERR_FAIL_COND_V_MSG(err != OK, false, "Could not open specified test directory.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, false, "Could not open specified test directory.");
 
 	source_dir = dir->get_current_dir() + "/"; // Make it absolute path.
 	return make_tests_for_dir(dir->get_current_dir());
@@ -437,10 +437,10 @@ void GDScriptTest::error_handler(void *p_this, const char *p_function, const cha
 }
 
 bool GDScriptTest::check_output(const String &p_output) const {
-	Error err = OK;
+	Error err = Error::OK;
 	String expected = FileAccess::get_file_as_string(output_file, &err);
 
-	ERR_FAIL_COND_V_MSG(err != OK, false, "Error when opening the output file.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, false, "Error when opening the output file.");
 
 	String got = p_output.strip_edges(); // TODO: may be hacky.
 	got += "\n"; // Make sure to insert newline for CI static checks.
@@ -478,14 +478,14 @@ GDScriptTest::TestResult GDScriptTest::execute_test_code(bool p_is_generating) {
 	result.output = String();
 	result.passed = false;
 
-	Error err = OK;
+	Error err = Error::OK;
 
 	// Create script.
 	Ref<GDScript> script;
 	script.instantiate();
 	script->set_path(source_file);
 	err = script->load_source_code(source_file);
-	if (err != OK) {
+	if (err != Error::OK) {
 		enable_stdout();
 		result.status = GDTEST_LOAD_ERROR;
 		result.passed = false;
@@ -495,7 +495,7 @@ GDScriptTest::TestResult GDScriptTest::execute_test_code(bool p_is_generating) {
 	// Test parsing.
 	GDScriptParser parser;
 	err = parser.parse(script->get_source_code(), source_file, false);
-	if (err != OK) {
+	if (err != Error::OK) {
 		enable_stdout();
 		result.status = GDTEST_PARSER_ERROR;
 		result.output = get_text_for_status(result.status) + "\n";
@@ -514,7 +514,7 @@ GDScriptTest::TestResult GDScriptTest::execute_test_code(bool p_is_generating) {
 	// Test type-checking.
 	GDScriptAnalyzer analyzer(&parser);
 	err = analyzer.analyze();
-	if (err != OK) {
+	if (err != Error::OK) {
 		enable_stdout();
 		result.status = GDTEST_ANALYZER_ERROR;
 		result.output = get_text_for_status(result.status) + "\n";
@@ -549,7 +549,7 @@ GDScriptTest::TestResult GDScriptTest::execute_test_code(bool p_is_generating) {
 	// Test compiling.
 	GDScriptCompiler compiler;
 	err = compiler.compile(&parser, script.ptr(), false);
-	if (err != OK) {
+	if (err != Error::OK) {
 		enable_stdout();
 		result.status = GDTEST_COMPILER_ERROR;
 		result.output = get_text_for_status(result.status) + "\n";
@@ -636,9 +636,9 @@ bool GDScriptTest::generate_output() {
 		return false;
 	}
 
-	Error err = OK;
+	Error err = Error::OK;
 	Ref<FileAccess> out_file = FileAccess::open(output_file, FileAccess::WRITE, &err);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return false;
 	}
 

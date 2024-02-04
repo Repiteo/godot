@@ -75,23 +75,23 @@ Error FileAccessMemory::open_custom(const uint8_t *p_data, uint64_t p_len) {
 	data = (uint8_t *)p_data;
 	length = p_len;
 	pos = 0;
-	return OK;
+	return Error::OK;
 }
 
 Error FileAccessMemory::open_internal(const String &p_path, int p_mode_flags) {
-	ERR_FAIL_NULL_V(files, ERR_FILE_NOT_FOUND);
+	ERR_FAIL_NULL_V(files, Error::FILE_NOT_FOUND);
 
 	String name = fix_path(p_path);
 	//name = DirAccess::normalize_path(name);
 
 	HashMap<String, Vector<uint8_t>>::Iterator E = files->find(name);
-	ERR_FAIL_COND_V_MSG(!E, ERR_FILE_NOT_FOUND, "Can't find file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(!E, Error::FILE_NOT_FOUND, "Can't find file '" + p_path + "'.");
 
 	data = E->value.ptrw();
 	length = E->value.size();
 	pos = 0;
 
-	return OK;
+	return Error::OK;
 }
 
 bool FileAccessMemory::is_open() const {
@@ -150,7 +150,7 @@ uint64_t FileAccessMemory::get_buffer(uint8_t *p_dst, uint64_t p_length) const {
 }
 
 Error FileAccessMemory::get_error() const {
-	return pos >= length ? ERR_FILE_EOF : OK;
+	return pos >= length ? Error::FILE_EOF : Error::OK;
 }
 
 void FileAccessMemory::flush() {

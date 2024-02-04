@@ -51,7 +51,7 @@ bool ImageFormatLoader::recognize(const String &p_extension) const {
 }
 
 Error ImageFormatLoaderExtension::load_image(Ref<Image> p_image, Ref<FileAccess> p_fileaccess, BitField<ImageFormatLoader::LoaderFlags> p_flags, float p_scale) {
-	Error err = ERR_UNAVAILABLE;
+	Error err = Error::UNAVAILABLE;
 	GDVIRTUAL_CALL(_load_image, p_image, p_fileaccess, p_flags, p_scale, err);
 	return err;
 }
@@ -81,7 +81,7 @@ void ImageFormatLoaderExtension::_bind_methods() {
 }
 
 Error ImageLoader::load_image(String p_file, Ref<Image> p_image, Ref<FileAccess> p_custom, BitField<ImageFormatLoader::LoaderFlags> p_flags, float p_scale) {
-	ERR_FAIL_COND_V_MSG(p_image.is_null(), ERR_INVALID_PARAMETER, "It's not a reference to a valid Image object.");
+	ERR_FAIL_COND_V_MSG(p_image.is_null(), Error::INVALID_PARAMETER, "It's not a reference to a valid Image object.");
 
 	Ref<FileAccess> f = p_custom;
 	if (f.is_null()) {
@@ -97,16 +97,16 @@ Error ImageLoader::load_image(String p_file, Ref<Image> p_image, Ref<FileAccess>
 			continue;
 		}
 		Error err = loader.write[i]->load_image(p_image, f, p_flags, p_scale);
-		if (err != OK) {
+		if (err != Error::OK) {
 			ERR_PRINT("Error loading image: " + p_file);
 		}
 
-		if (err != ERR_FILE_UNRECOGNIZED) {
+		if (err != Error::FILE_UNRECOGNIZED) {
 			return err;
 		}
 	}
 
-	return ERR_FILE_UNRECOGNIZED;
+	return Error::FILE_UNRECOGNIZED;
 }
 
 void ImageLoader::get_recognized_extensions(List<String> *p_extensions) {
@@ -147,7 +147,7 @@ Ref<Resource> ResourceFormatLoaderImage::load(const String &p_path, const String
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
 	if (f.is_null()) {
 		if (r_error) {
-			*r_error = ERR_CANT_OPEN;
+			*r_error = Error::CANT_OPEN;
 		}
 		return Ref<Resource>();
 	}
@@ -158,7 +158,7 @@ Ref<Resource> ResourceFormatLoaderImage::load(const String &p_path, const String
 	bool unrecognized = header[0] != 'G' || header[1] != 'D' || header[2] != 'I' || header[3] != 'M';
 	if (unrecognized) {
 		if (r_error) {
-			*r_error = ERR_FILE_UNRECOGNIZED;
+			*r_error = Error::FILE_UNRECOGNIZED;
 		}
 		ERR_FAIL_V(Ref<Resource>());
 	}
@@ -176,7 +176,7 @@ Ref<Resource> ResourceFormatLoaderImage::load(const String &p_path, const String
 
 	if (idx == -1) {
 		if (r_error) {
-			*r_error = ERR_FILE_UNRECOGNIZED;
+			*r_error = Error::FILE_UNRECOGNIZED;
 		}
 		ERR_FAIL_V(Ref<Resource>());
 	}
@@ -186,7 +186,7 @@ Ref<Resource> ResourceFormatLoaderImage::load(const String &p_path, const String
 
 	Error err = ImageLoader::loader.write[idx]->load_image(image, f);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		if (r_error) {
 			*r_error = err;
 		}
@@ -194,7 +194,7 @@ Ref<Resource> ResourceFormatLoaderImage::load(const String &p_path, const String
 	}
 
 	if (r_error) {
-		*r_error = OK;
+		*r_error = Error::OK;
 	}
 
 	return image;

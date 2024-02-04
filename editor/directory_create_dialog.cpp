@@ -104,12 +104,12 @@ void DirectoryCreateDialog::ok_pressed() {
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_RESOURCES);
 
 	err = da->change_dir(base_dir);
-	ERR_FAIL_COND_MSG(err != OK, "Cannot open directory '" + base_dir + "'.");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Cannot open directory '" + base_dir + "'.");
 
 	print_verbose("Making folder " + path + " in " + base_dir);
 	err = da->make_dir_recursive(path);
 
-	if (err == OK) {
+	if (err == Error::OK) {
 		emit_signal(SNAME("dir_created"), base_dir.path_join(path));
 	} else {
 		EditorNode::get_singleton()->show_warning(TTR("Could not create folder."));

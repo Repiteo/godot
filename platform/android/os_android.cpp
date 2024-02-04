@@ -183,8 +183,8 @@ Error OS_Android::open_dynamic_library(const String p_path, void *&p_library_han
 			Ref<DirAccess> da_ref = DirAccess::create_for_path(p_path);
 			if (da_ref.is_valid()) {
 				Error create_dir_result = da_ref->make_dir_recursive(dynamic_library_path);
-				if (create_dir_result == OK || create_dir_result == ERR_ALREADY_EXISTS) {
-					internal_so_file_exists = da_ref->copy(path, internal_path) == OK;
+				if (create_dir_result == Error::OK || create_dir_result == Error::ALREADY_EXISTS) {
+					internal_so_file_exists = da_ref->copy(path, internal_path) == Error::OK;
 				}
 			}
 		}
@@ -197,13 +197,13 @@ Error OS_Android::open_dynamic_library(const String p_path, void *&p_library_han
 		}
 	}
 
-	ERR_FAIL_NULL_V_MSG(p_library_handle, ERR_CANT_OPEN, vformat("Can't open dynamic library: %s. Error: %s.", p_path, dlerror()));
+	ERR_FAIL_NULL_V_MSG(p_library_handle, Error::CANT_OPEN, vformat("Can't open dynamic library: %s. Error: %s.", p_path, dlerror()));
 
 	if (r_resolved_path != nullptr) {
 		*r_resolved_path = path;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 String OS_Android::get_name() const {
@@ -379,12 +379,12 @@ void OS_Android::_load_system_font_config() {
 	parser.instantiate();
 
 	Error err = parser->open(String(getenv("ANDROID_ROOT")).path_join("/etc/fonts.xml"));
-	if (err == OK) {
+	if (err == Error::OK) {
 		bool in_font_node = false;
 		String fb, fn;
 		FontInfo fi;
 
-		while (parser->read() == OK) {
+		while (parser->read() == Error::OK) {
 			if (parser->get_node_type() == XMLParser::NODE_ELEMENT) {
 				in_font_node = false;
 				if (parser->get_node_name() == "familyset") {
@@ -647,18 +647,18 @@ String OS_Android::get_system_dir(SystemDir p_dir, bool p_shared_storage) const 
 Error OS_Android::move_to_trash(const String &p_path) {
 	Ref<DirAccess> da_ref = DirAccess::create_for_path(p_path);
 	if (da_ref.is_null()) {
-		return FAILED;
+		return Error::FAILED;
 	}
 
 	// Check if it's a directory
 	if (da_ref->dir_exists(p_path)) {
 		Error err = da_ref->change_dir(p_path);
-		if (err) {
+		if (err != Error::OK) {
 			return err;
 		}
 		// This is directory, let's erase its contents
 		err = da_ref->erase_contents_recursive();
-		if (err) {
+		if (err != Error::OK) {
 			return err;
 		}
 		// Remove the top directory
@@ -667,7 +667,7 @@ Error OS_Android::move_to_trash(const String &p_path) {
 		// This is a file, let's remove it.
 		return da_ref->remove(p_path);
 	} else {
-		return FAILED;
+		return Error::FAILED;
 	}
 }
 
@@ -806,12 +806,12 @@ Error OS_Android::create_instance(const List<String> &p_arguments, ProcessID *r_
 	if (r_child_id) {
 		*r_child_id = instance_id;
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error OS_Android::kill(const ProcessID &p_pid) {
 	if (godot_java->force_quit(nullptr, p_pid)) {
-		return OK;
+		return Error::OK;
 	}
 	return OS_Unix::kill(p_pid);
 }
@@ -823,7 +823,7 @@ String OS_Android::get_system_ca_certificates() {
 Error OS_Android::setup_remote_filesystem(const String &p_server_host, int p_port, const String &p_password, String &r_project_path) {
 	r_project_path = get_user_data_dir();
 	Error err = OS_Unix::setup_remote_filesystem(p_server_host, p_port, p_password, r_project_path);
-	if (err == OK) {
+	if (err == Error::OK) {
 		remote_fs_dir = r_project_path;
 		FileAccess::make_default<FileAccessFilesystemJAndroid>(FileAccess::ACCESS_RESOURCES);
 	}

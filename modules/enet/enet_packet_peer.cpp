@@ -89,8 +89,8 @@ int ENetPacketPeer::get_available_packet_count() const {
 }
 
 Error ENetPacketPeer::get_packet(const uint8_t **r_buffer, int &r_buffer_size) {
-	ERR_FAIL_NULL_V(peer, ERR_UNCONFIGURED);
-	ERR_FAIL_COND_V(!packet_queue.size(), ERR_UNAVAILABLE);
+	ERR_FAIL_NULL_V(peer, Error::UNCONFIGURED);
+	ERR_FAIL_COND_V(!packet_queue.size(), Error::UNAVAILABLE);
 	if (last_packet) {
 		enet_packet_destroy(last_packet);
 		last_packet = nullptr;
@@ -99,13 +99,13 @@ Error ENetPacketPeer::get_packet(const uint8_t **r_buffer, int &r_buffer_size) {
 	packet_queue.pop_front();
 	*r_buffer = (const uint8_t *)(last_packet->data);
 	r_buffer_size = last_packet->dataLength;
-	return OK;
+	return Error::OK;
 }
 
 Error ENetPacketPeer::put_packet(const uint8_t *p_buffer, int p_buffer_size) {
-	ERR_FAIL_NULL_V(peer, ERR_UNCONFIGURED);
+	ERR_FAIL_NULL_V(peer, Error::UNCONFIGURED);
 	ENetPacket *packet = enet_packet_create(p_buffer, p_buffer_size, ENET_PACKET_FLAG_RELIABLE);
-	return send(0, packet) < 0 ? FAILED : OK;
+	return send(0, packet) < 0 ? Error::FAILED : Error::OK;
 }
 
 IPAddress ENetPacketPeer::get_remote_address() const {
@@ -188,11 +188,11 @@ void ENetPacketPeer::_queue_packet(ENetPacket *p_packet) {
 }
 
 Error ENetPacketPeer::_send(int p_channel, PackedByteArray p_packet, int p_flags) {
-	ERR_FAIL_NULL_V_MSG(peer, ERR_UNCONFIGURED, "Peer not connected.");
-	ERR_FAIL_COND_V_MSG(p_channel < 0 || p_channel > (int)peer->channelCount, ERR_INVALID_PARAMETER, "Invalid channel");
-	ERR_FAIL_COND_V_MSG(p_flags & ~FLAG_ALLOWED, ERR_INVALID_PARAMETER, "Invalid flags");
+	ERR_FAIL_NULL_V_MSG(peer, Error::UNCONFIGURED, "Peer not connected.");
+	ERR_FAIL_COND_V_MSG(p_channel < 0 || p_channel > (int)peer->channelCount, Error::INVALID_PARAMETER, "Invalid channel");
+	ERR_FAIL_COND_V_MSG(p_flags & ~FLAG_ALLOWED, Error::INVALID_PARAMETER, "Invalid flags");
 	ENetPacket *packet = enet_packet_create(p_packet.ptr(), p_packet.size(), p_flags);
-	return send(p_channel, packet) == 0 ? OK : FAILED;
+	return send(p_channel, packet) == 0 ? Error::OK : Error::FAILED;
 }
 
 void ENetPacketPeer::_bind_methods() {

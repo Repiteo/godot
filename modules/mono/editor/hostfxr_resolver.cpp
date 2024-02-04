@@ -217,10 +217,10 @@ bool get_default_installation_dir(String &r_dotnet_root) {
 }
 
 bool get_install_location_from_file(const String &p_file_path, String &r_dotnet_root) {
-	Error err = OK;
+	Error err = Error::OK;
 	Ref<FileAccess> f = FileAccess::open(p_file_path, FileAccess::READ, &err);
 
-	if (f.is_null() || err != OK) {
+	if (f.is_null() || err != Error::OK) {
 		return false;
 	}
 

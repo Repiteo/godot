@@ -80,10 +80,10 @@ Error AudioDriverCoreAudio::init() {
 	desc.componentManufacturer = kAudioUnitManufacturer_Apple;
 
 	AudioComponent comp = AudioComponentFindNext(nullptr, &desc);
-	ERR_FAIL_NULL_V(comp, FAILED);
+	ERR_FAIL_NULL_V(comp, Error::FAILED);
 
 	OSStatus result = AudioComponentInstanceNew(comp, &audio_unit);
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 
 #ifdef MACOS_ENABLED
 	AudioObjectPropertyAddress prop;
@@ -92,7 +92,7 @@ Error AudioDriverCoreAudio::init() {
 	prop.mElement = kAudioObjectPropertyElementMaster;
 
 	result = AudioObjectAddPropertyListener(kAudioObjectSystemObject, &prop, &output_device_address_cb, this);
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 #endif
 
 	AudioStreamBasicDescription strdesc;
@@ -100,7 +100,7 @@ Error AudioDriverCoreAudio::init() {
 	memset(&strdesc, 0, sizeof(strdesc));
 	UInt32 size = sizeof(strdesc);
 	result = AudioUnitGetProperty(audio_unit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, kOutputBus, &strdesc, &size);
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 
 	switch (strdesc.mChannelsPerFrame) {
 		case 2: // Stereo
@@ -129,7 +129,7 @@ Error AudioDriverCoreAudio::init() {
 	strdesc.mBytesPerPacket = strdesc.mBytesPerFrame * strdesc.mFramesPerPacket;
 
 	result = AudioUnitSetProperty(audio_unit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, kOutputBus, &strdesc, sizeof(strdesc));
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 
 	int latency = Engine::get_singleton()->get_audio_output_latency();
 	// Sample rate is independent of channels (ref: https://stackoverflow.com/questions/11048825/audio-sample-frequency-rely-on-channels)
@@ -137,7 +137,7 @@ Error AudioDriverCoreAudio::init() {
 
 #ifdef MACOS_ENABLED
 	result = AudioUnitSetProperty(audio_unit, kAudioDevicePropertyBufferFrameSize, kAudioUnitScope_Global, kOutputBus, &buffer_frames, sizeof(UInt32));
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 #endif
 
 	unsigned int buffer_size = buffer_frames * channels;
@@ -152,15 +152,15 @@ Error AudioDriverCoreAudio::init() {
 	callback.inputProc = &AudioDriverCoreAudio::output_callback;
 	callback.inputProcRefCon = this;
 	result = AudioUnitSetProperty(audio_unit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, kOutputBus, &callback, sizeof(callback));
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 
 	result = AudioUnitInitialize(audio_unit);
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 
 	if (GLOBAL_GET("audio/driver/enable_input")) {
 		return init_input_device();
 	}
-	return OK;
+	return Error::OK;
 }
 
 OSStatus AudioDriverCoreAudio::output_callback(void *inRefCon,
@@ -349,10 +349,10 @@ Error AudioDriverCoreAudio::init_input_device() {
 	desc.componentManufacturer = kAudioUnitManufacturer_Apple;
 
 	AudioComponent comp = AudioComponentFindNext(nullptr, &desc);
-	ERR_FAIL_NULL_V(comp, FAILED);
+	ERR_FAIL_NULL_V(comp, Error::FAILED);
 
 	OSStatus result = AudioComponentInstanceNew(comp, &input_unit);
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 
 #ifdef MACOS_ENABLED
 	AudioObjectPropertyAddress prop;
@@ -361,15 +361,15 @@ Error AudioDriverCoreAudio::init_input_device() {
 	prop.mElement = kAudioObjectPropertyElementMaster;
 
 	result = AudioObjectAddPropertyListener(kAudioObjectSystemObject, &prop, &input_device_address_cb, this);
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 #endif
 
 	UInt32 flag = 1;
 	result = AudioUnitSetProperty(input_unit, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Input, kInputBus, &flag, sizeof(flag));
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 	flag = 0;
 	result = AudioUnitSetProperty(input_unit, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Output, kOutputBus, &flag, sizeof(flag));
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 
 	UInt32 size;
 #ifdef MACOS_ENABLED
@@ -378,17 +378,17 @@ Error AudioDriverCoreAudio::init_input_device() {
 	AudioObjectPropertyAddress property = { kAudioHardwarePropertyDefaultInputDevice, kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
 
 	result = AudioObjectGetPropertyData(kAudioObjectSystemObject, &property, 0, nullptr, &size, &deviceId);
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 
 	result = AudioUnitSetProperty(input_unit, kAudioOutputUnitProperty_CurrentDevice, kAudioUnitScope_Global, 0, &deviceId, sizeof(AudioDeviceID));
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 #endif
 
 	AudioStreamBasicDescription strdesc;
 	memset(&strdesc, 0, sizeof(strdesc));
 	size = sizeof(strdesc);
 	result = AudioUnitGetProperty(input_unit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, kInputBus, &strdesc, &size);
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 
 	switch (strdesc.mChannelsPerFrame) {
 		case 1: // Mono
@@ -418,19 +418,19 @@ Error AudioDriverCoreAudio::init_input_device() {
 	strdesc.mBytesPerPacket = strdesc.mBytesPerFrame * strdesc.mFramesPerPacket;
 
 	result = AudioUnitSetProperty(input_unit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, kInputBus, &strdesc, sizeof(strdesc));
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 
 	AURenderCallbackStruct callback;
 	memset(&callback, 0, sizeof(AURenderCallbackStruct));
 	callback.inputProc = &AudioDriverCoreAudio::input_callback;
 	callback.inputProcRefCon = this;
 	result = AudioUnitSetProperty(input_unit, kAudioOutputUnitProperty_SetInputCallback, kAudioUnitScope_Global, kInputBus, &callback, sizeof(callback));
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 
 	result = AudioUnitInitialize(input_unit);
-	ERR_FAIL_COND_V(result != noErr, FAILED);
+	ERR_FAIL_COND_V(result != noErr, Error::FAILED);
 
-	return OK;
+	return Error::OK;
 }
 
 void AudioDriverCoreAudio::finish_input_device() {
@@ -479,7 +479,7 @@ Error AudioDriverCoreAudio::input_start() {
 		ERR_PRINT("AudioOutputUnitStart failed, code: " + itos(result));
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error AudioDriverCoreAudio::input_stop() {
@@ -490,7 +490,7 @@ Error AudioDriverCoreAudio::input_stop() {
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 #ifdef MACOS_ENABLED

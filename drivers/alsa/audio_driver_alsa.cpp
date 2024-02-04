@@ -69,7 +69,7 @@ Error AudioDriverALSA::init_output_device() {
 			snd_pcm_close(pcm_handle);                           \
 			pcm_handle = nullptr;                                \
 		}                                                        \
-		ERR_FAIL_COND_V(m_cond, ERR_CANT_OPEN);                  \
+		ERR_FAIL_COND_V(m_cond, Error::CANT_OPEN);                  \
 	}
 
 	//todo, add
@@ -87,7 +87,7 @@ Error AudioDriverALSA::init_output_device() {
 		status = snd_pcm_open(&pcm_handle, device.utf8().get_data(), SND_PCM_STREAM_PLAYBACK, SND_PCM_NONBLOCK);
 	}
 
-	ERR_FAIL_COND_V(status < 0, ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(status < 0, Error::CANT_OPEN);
 
 	snd_pcm_hw_params_alloca(&hwparams);
 
@@ -150,7 +150,7 @@ Error AudioDriverALSA::init_output_device() {
 	samples_in.resize(period_size * channels);
 	samples_out.resize(period_size * channels);
 
-	return OK;
+	return Error::OK;
 }
 
 Error AudioDriverALSA::init() {
@@ -167,7 +167,7 @@ Error AudioDriverALSA::init() {
 #endif
 
 	if (initialize_asound(dylibloader_verbose)) {
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 #endif
 	bool ver_ok = false;
@@ -179,14 +179,14 @@ Error AudioDriverALSA::init() {
 	print_verbose(vformat("ALSA %s detected.", version));
 	if (!ver_ok) {
 		print_verbose("Unsupported ALSA library version!");
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
 	active.clear();
 	exit_thread.clear();
 
 	Error err = init_output_device();
-	if (err == OK) {
+	if (err == Error::OK) {
 		thread.start(AudioDriverALSA::thread_func, this);
 	}
 
@@ -247,13 +247,13 @@ void AudioDriverALSA::thread_func(void *p_udata) {
 			ad->finish_output_device();
 
 			Error err = ad->init_output_device();
-			if (err != OK) {
+			if (err != Error::OK) {
 				ERR_PRINT("ALSA: init_output_device error");
 				ad->output_device_name = "Default";
 				ad->new_output_device = "Default";
 
 				err = ad->init_output_device();
-				if (err != OK) {
+				if (err != Error::OK) {
 					ad->active.clear();
 					ad->exit_thread.set();
 				}

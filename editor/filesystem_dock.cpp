@@ -1150,7 +1150,7 @@ void FileSystemDock::_select_file(const String &p_path, bool p_select_in_favorit
 			Ref<ConfigFile> config;
 			config.instantiate();
 			Error err = config->load(fpath + ".import");
-			if (err == OK) {
+			if (err == Error::OK) {
 				if (config->has_section_key("remap", "importer")) {
 					String importer = config->get_value("remap", "importer");
 					if (importer == "keep") {
@@ -1190,7 +1190,7 @@ void FileSystemDock::_select_file(const String &p_path, bool p_select_in_favorit
 			String name;
 			Error err = ResourceFormatImporter::get_singleton()->get_import_order_threads_and_importer(fpath, order, can_threads, name);
 			bool used_advanced_settings = false;
-			if (err == OK) {
+			if (err == Error::OK) {
 				Ref<ResourceImporter> importer = ResourceFormatImporter::get_singleton()->get_importer_by_name(name);
 				if (importer.is_valid() && importer->has_advanced_options()) {
 					importer->show_advanced_options(fpath);
@@ -1391,11 +1391,11 @@ void FileSystemDock::_try_move_item(const FileOrFolder &p_item, const String &p_
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_RESOURCES);
 	print_verbose("Moving " + old_path + " -> " + new_path);
 	Error err = da->rename(old_path, new_path);
-	if (err == OK) {
+	if (err == Error::OK) {
 		// Move/Rename any corresponding import settings too.
 		if (p_item.is_file && FileAccess::exists(old_path + ".import")) {
 			err = da->rename(old_path + ".import", new_path + ".import");
-			if (err != OK) {
+			if (err != Error::OK) {
 				EditorNode::get_singleton()->add_io_error(TTR("Error moving:") + "\n" + old_path + ".import\n");
 			}
 		}
@@ -1455,8 +1455,8 @@ void FileSystemDock::_try_duplicate_item(const FileOrFolder &p_item, const Strin
 
 		if (FileAccess::exists(old_path + ".import")) {
 			Error err = da->copy(old_path, new_path);
-			if (err != OK) {
-				EditorNode::get_singleton()->add_io_error(TTR("Error duplicating:") + "\n" + old_path + ": " + error_names[err] + "\n");
+			if (err != Error::OK) {
+				EditorNode::get_singleton()->add_io_error(TTR("Error duplicating:") + "\n" + old_path + ": " + error_names[(int)err] + "\n");
 				return;
 			}
 
@@ -1466,16 +1466,16 @@ void FileSystemDock::_try_duplicate_item(const FileOrFolder &p_item, const Strin
 			cfg->load(old_path + ".import");
 			cfg->erase_section_key("remap", "uid");
 			err = cfg->save(new_path + ".import");
-			if (err != OK) {
-				EditorNode::get_singleton()->add_io_error(TTR("Error duplicating:") + "\n" + old_path + ".import: " + error_names[err] + "\n");
+			if (err != Error::OK) {
+				EditorNode::get_singleton()->add_io_error(TTR("Error duplicating:") + "\n" + old_path + ".import: " + error_names[(int)err] + "\n");
 				return;
 			}
 		} else {
 			// Files which do not use an uid can just be copied.
 			if (ResourceLoader::get_resource_uid(old_path) == ResourceUID::INVALID_ID) {
 				Error err = da->copy(old_path, new_path);
-				if (err != OK) {
-					EditorNode::get_singleton()->add_io_error(TTR("Error duplicating:") + "\n" + old_path + ": " + error_names[err] + "\n");
+				if (err != Error::OK) {
+					EditorNode::get_singleton()->add_io_error(TTR("Error duplicating:") + "\n" + old_path + ": " + error_names[(int)err] + "\n");
 				}
 				return;
 			}
@@ -1483,15 +1483,15 @@ void FileSystemDock::_try_duplicate_item(const FileOrFolder &p_item, const Strin
 			// Load the resource and save it again in the new location (this generates a new UID).
 			Error err;
 			Ref<Resource> res = ResourceLoader::load(old_path, "", ResourceFormatLoader::CACHE_MODE_REUSE, &err);
-			if (err == OK && res.is_valid()) {
+			if (err == Error::OK && res.is_valid()) {
 				err = ResourceSaver::save(res, new_path, ResourceSaver::FLAG_COMPRESS);
-				if (err != OK) {
-					EditorNode::get_singleton()->add_io_error(TTR("Error duplicating:") + " " + vformat(TTR("Failed to save resource at %s: %s"), new_path, error_names[err]));
+				if (err != Error::OK) {
+					EditorNode::get_singleton()->add_io_error(TTR("Error duplicating:") + " " + vformat(TTR("Failed to save resource at %s: %s"), new_path, error_names[(int)err]));
 				}
-			} else if (err != OK) {
+			} else if (err != Error::OK) {
 				// When loading files like text files the error is OK but the resource is still null.
 				// We can ignore such files.
-				EditorNode::get_singleton()->add_io_error(TTR("Error duplicating:") + " " + vformat(TTR("Failed to load resource at %s: %s"), new_path, error_names[err]));
+				EditorNode::get_singleton()->add_io_error(TTR("Error duplicating:") + " " + vformat(TTR("Failed to load resource at %s: %s"), new_path, error_names[(int)err]));
 			}
 		}
 	} else {
@@ -1561,7 +1561,7 @@ void FileSystemDock::_update_dependencies_after_move(const HashMap<String, Strin
 		const String file = I ? I->value : E;
 		print_verbose("Remapping dependencies for: " + file);
 		const Error err = ResourceLoader::rename_dependencies(file, p_renames);
-		if (err == OK) {
+		if (err == Error::OK) {
 			if (ResourceLoader::get_resource_type(file) == "PackedScene") {
 				if (file == edited_scene_path) {
 					scenes_to_reload.push_front(file);
@@ -2144,10 +2144,10 @@ void FileSystemDock::_file_option(int p_option, const Vector<String> &p_selected
 				test_args.push_back("/dev/null");
 				int exit_code = 0;
 				const Error err = OS::get_singleton()->execute("command", test_args, nullptr, &exit_code);
-				if (err == OK && exit_code == EXIT_SUCCESS) {
+				if (err == Error::OK && exit_code == EXIT_SUCCESS) {
 					chosen_terminal_emulator = terminal_emulator;
 					break;
-				} else if (err == ERR_CANT_FORK) {
+				} else if (err == Error::CANT_FORK) {
 					ERR_PRINT_ED(vformat(TTR("Couldn't run external program to check for terminal emulator presence: command -v %s"), terminal_emulator));
 				}
 			}
@@ -2214,7 +2214,7 @@ void FileSystemDock::_file_option(int p_option, const Vector<String> &p_selected
 			}
 
 			const Error err = OS::get_singleton()->create_process(chosen_terminal_emulator, terminal_emulator_args, nullptr, true);
-			if (err != OK) {
+			if (err != Error::OK) {
 				String args_string;
 				for (int i = 0; i < terminal_emulator_args.size(); i++) {
 					args_string += terminal_emulator_args[i];
@@ -3538,7 +3538,7 @@ void FileSystemDock::_update_import_dock() {
 		Ref<ConfigFile> cf;
 		cf.instantiate();
 		Error err = cf->load(fpath + ".import");
-		if (err != OK) {
+		if (err != Error::OK) {
 			imports.clear();
 			break;
 		}

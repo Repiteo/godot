@@ -89,7 +89,7 @@ ResourceUID::ID ResourceUID::create_id() {
 		ID id = INVALID_ID;
 		MutexLock lock(mutex);
 		Error err = ((CryptoCore::RandomGenerator *)crypto)->get_random_bytes((uint8_t *)&id, sizeof(id));
-		ERR_FAIL_COND_V(err != OK, INVALID_ID);
+		ERR_FAIL_COND_V(err != Error::OK, INVALID_ID);
 		id &= 0x7FFFFFFFFFFFFFFF;
 		bool exists = unique_ids.has(id);
 		if (!exists) {
@@ -148,7 +148,7 @@ Error ResourceUID::save_to_cache() {
 
 	Ref<FileAccess> f = FileAccess::open(cache_file, FileAccess::WRITE);
 	if (f.is_null()) {
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
 	MutexLock l(mutex);
@@ -166,13 +166,13 @@ Error ResourceUID::save_to_cache() {
 	}
 
 	changed = false;
-	return OK;
+	return Error::OK;
 }
 
 Error ResourceUID::load_from_cache() {
 	Ref<FileAccess> f = FileAccess::open(get_cache_file(), FileAccess::READ);
 	if (f.is_null()) {
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
 	MutexLock l(mutex);
@@ -184,10 +184,10 @@ Error ResourceUID::load_from_cache() {
 		int32_t len = f->get_32();
 		Cache c;
 		c.cs.resize(len + 1);
-		ERR_FAIL_COND_V(c.cs.size() != len + 1, ERR_FILE_CORRUPT); // out of memory
+		ERR_FAIL_COND_V(c.cs.size() != len + 1, Error::FILE_CORRUPT); // out of memory
 		c.cs[len] = 0;
 		int32_t rl = f->get_buffer((uint8_t *)c.cs.ptrw(), len);
-		ERR_FAIL_COND_V(rl != len, ERR_FILE_CORRUPT);
+		ERR_FAIL_COND_V(rl != len, Error::FILE_CORRUPT);
 
 		c.saved_to_cache = true;
 		unique_ids[id] = c;
@@ -195,12 +195,12 @@ Error ResourceUID::load_from_cache() {
 
 	cache_entries = entry_count;
 	changed = false;
-	return OK;
+	return Error::OK;
 }
 
 Error ResourceUID::update_cache() {
 	if (!changed) {
-		return OK;
+		return Error::OK;
 	}
 
 	if (cache_entries == 0) {
@@ -214,7 +214,7 @@ Error ResourceUID::update_cache() {
 			if (f.is_null()) {
 				f = FileAccess::open(get_cache_file(), FileAccess::READ_WRITE); //append
 				if (f.is_null()) {
-					return ERR_CANT_OPEN;
+					return Error::CANT_OPEN;
 				}
 				f->seek_end();
 			}
@@ -234,7 +234,7 @@ Error ResourceUID::update_cache() {
 
 	changed = false;
 
-	return OK;
+	return Error::OK;
 }
 
 void ResourceUID::clear() {

@@ -43,7 +43,7 @@ class FileAccessWindows : public FileAccess {
 	int flags = 0;
 	void check_errors() const;
 	mutable int prev_op = 0;
-	mutable Error last_error = OK;
+	mutable Error last_error = Error::OK;
 	String path;
 	String path_src;
 	String save_path;

@@ -498,7 +498,7 @@ bool GDScript::_update_exports(bool *r_err, bool p_recursive_call, PlaceHolderSc
 		GDScriptAnalyzer analyzer(&parser);
 		Error err = parser.parse(source, path, false);
 
-		if (err == OK && analyzer.analyze() == OK) {
+		if (err == Error::OK && analyzer.analyze() == Error::OK) {
 			const GDScriptParser::ClassNode *c = parser.get_tree();
 
 			if (base_cache.is_valid()) {
@@ -509,7 +509,7 @@ bool GDScript::_update_exports(bool *r_err, bool p_recursive_call, PlaceHolderSc
 			GDScriptParser::DataType base_type = parser.get_tree()->base_type;
 			if (base_type.kind == GDScriptParser::DataType::CLASS) {
 				Ref<GDScript> bf = GDScriptCache::get_full_script(base_type.script_path, err, path);
-				if (err == OK) {
+				if (err == Error::OK) {
 					bf = Ref<GDScript>(bf->find_class(base_type.class_type->fqcn));
 					if (bf.is_valid()) {
 						base_cache = bf;
@@ -645,13 +645,13 @@ Error GDScript::_static_init() {
 		Callable::CallError call_err;
 		static_initializer->call(nullptr, nullptr, 0, call_err);
 		if (call_err.error != Callable::CallError::CALL_OK) {
-			return ERR_CANT_CREATE;
+			return Error::CANT_CREATE;
 		}
 	}
-	Error err = OK;
+	Error err = Error::OK;
 	for (KeyValue<StringName, Ref<GDScript>> &inner : subclasses) {
 		err = inner.value->_static_init();
-		if (err) {
+		if (err != Error::OK) {
 			break;
 		}
 	}
@@ -685,7 +685,7 @@ void GDScript::_restore_old_static_data() {
 
 Error GDScript::reload(bool p_keep_state) {
 	if (reloading) {
-		return OK;
+		return Error::OK;
 	}
 	reloading = true;
 
@@ -696,7 +696,7 @@ Error GDScript::reload(bool p_keep_state) {
 		has_instances = instances.size();
 	}
 
-	ERR_FAIL_COND_V(!p_keep_state && has_instances, ERR_ALREADY_IN_USE);
+	ERR_FAIL_COND_V(!p_keep_state && has_instances, Error::ALREADY_IN_USE);
 
 	String basedir = path;
 
@@ -712,7 +712,7 @@ Error GDScript::reload(bool p_keep_state) {
 #ifdef TOOLS_ENABLED
 	if (EditorPaths::get_singleton() && basedir.begins_with(EditorPaths::get_singleton()->get_project_script_templates_dir())) {
 		reloading = false;
-		return OK;
+		return Error::OK;
 	}
 #endif
 
@@ -739,20 +739,20 @@ Error GDScript::reload(bool p_keep_state) {
 	valid = false;
 	GDScriptParser parser;
 	Error err = parser.parse(source, path, false);
-	if (err) {
+	if (err != Error::OK) {
 		if (EngineDebugger::is_active()) {
 			GDScriptLanguage::get_singleton()->debug_break_parse(_get_debug_path(), parser.get_errors().front()->get().line, "Parser Error: " + parser.get_errors().front()->get().message);
 		}
 		// TODO: Show all error messages.
 		_err_print_error("GDScript::reload", path.is_empty() ? "built-in" : (const char *)path.utf8().get_data(), parser.get_errors().front()->get().line, ("Parse Error: " + parser.get_errors().front()->get().message).utf8().get_data(), false, ERR_HANDLER_SCRIPT);
 		reloading = false;
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 
 	GDScriptAnalyzer analyzer(&parser);
 	err = analyzer.analyze();
 
-	if (err) {
+	if (err != Error::OK) {
 		if (EngineDebugger::is_active()) {
 			GDScriptLanguage::get_singleton()->debug_break_parse(_get_debug_path(), parser.get_errors().front()->get().line, "Parser Error: " + parser.get_errors().front()->get().message);
 		}
@@ -763,7 +763,7 @@ Error GDScript::reload(bool p_keep_state) {
 			e = e->next();
 		}
 		reloading = false;
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 
 	can_run = ScriptServer::is_scripting_enabled() || parser.is_tool();
@@ -771,14 +771,14 @@ Error GDScript::reload(bool p_keep_state) {
 	GDScriptCompiler compiler;
 	err = compiler.compile(&parser, this, p_keep_state);
 
-	if (err) {
+	if (err != Error::OK) {
 		_err_print_error("GDScript::reload", path.is_empty() ? "built-in" : (const char *)path.utf8().get_data(), compiler.get_error_line(), ("Compile Error: " + compiler.get_error()).utf8().get_data(), false, ERR_HANDLER_SCRIPT);
 		if (can_run) {
 			if (EngineDebugger::is_active()) {
 				GDScriptLanguage::get_singleton()->debug_break_parse(_get_debug_path(), compiler.get_error_line(), "Parser Error: " + compiler.get_error());
 			}
 			reloading = false;
-			return ERR_COMPILATION_FAILED;
+			return Error::COMPILATION_FAILED;
 		} else {
 			reloading = false;
 			return err;
@@ -802,7 +802,7 @@ Error GDScript::reload(bool p_keep_state) {
 
 	if (can_run) {
 		err = _static_init();
-		if (err) {
+		if (err != Error::OK) {
 			return err;
 		}
 	}
@@ -814,7 +814,7 @@ Error GDScript::reload(bool p_keep_state) {
 #endif
 
 	reloading = false;
-	return OK;
+	return Error::OK;
 }
 
 ScriptLanguage *GDScript::get_language() const {
@@ -1009,32 +1009,32 @@ String GDScript::get_script_path() const {
 
 Error GDScript::load_source_code(const String &p_path) {
 	if (p_path.is_empty() || p_path.begins_with("gdscript://") || ResourceLoader::get_resource_type(p_path.get_slice("::", 0)) == "PackedScene") {
-		return OK;
+		return Error::OK;
 	}
 
 	Vector<uint8_t> sourcef;
 	Error err;
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ, &err);
-	if (err) {
+	if (err != Error::OK) {
 		const char *err_name;
-		if (err < 0 || err >= ERR_MAX) {
+		if (err < Error::OK || err >= Error::MAX) {
 			err_name = "(invalid error code)";
 		} else {
-			err_name = error_names[err];
+			err_name = error_names[(int)err];
 		}
-		ERR_FAIL_COND_V_MSG(err, err, "Attempt to open script '" + p_path + "' resulted in error '" + err_name + "'.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Attempt to open script '" + p_path + "' resulted in error '" + err_name + "'.");
 	}
 
 	uint64_t len = f->get_length();
 	sourcef.resize(len + 1);
 	uint8_t *w = sourcef.ptrw();
 	uint64_t r = f->get_buffer(w, len);
-	ERR_FAIL_COND_V(r != len, ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(r != len, Error::CANT_OPEN);
 	w[len] = 0;
 
 	String s;
-	if (s.parse_utf8((const char *)w) != OK) {
-		ERR_FAIL_V_MSG(ERR_INVALID_DATA, "Script '" + p_path + "' contains invalid unicode (UTF-8), so it was not loaded. Please ensure that scripts are saved in valid UTF-8 unicode.");
+	if (s.parse_utf8((const char *)w) != Error::OK) {
+		ERR_FAIL_V_MSG(Error::INVALID_DATA, "Script '" + p_path + "' contains invalid unicode (UTF-8), so it was not loaded. Please ensure that scripts are saved in valid UTF-8 unicode.");
 	}
 
 	source = s;
@@ -1045,7 +1045,7 @@ Error GDScript::load_source_code(const String &p_path) {
 	set_edited(false);
 	set_last_modified_time(FileAccess::get_modified_time(path));
 #endif // TOOLS_ENABLED
-	return OK;
+	return Error::OK;
 }
 
 const HashMap<StringName, GDScriptFunction *> &GDScript::debug_get_member_functions() const {
@@ -2595,7 +2595,7 @@ bool GDScriptLanguage::handles_global_class_type(const String &p_type) const {
 String GDScriptLanguage::get_global_class_name(const String &p_path, String *r_base_type, String *r_icon_path) const {
 	Error err;
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ, &err);
-	if (err) {
+	if (err != Error::OK) {
 		return String();
 	}
 
@@ -2651,7 +2651,7 @@ String GDScriptLanguage::get_global_class_name(const String &p_path, String *r_b
 							subpath = path.get_base_dir().path_join(subpath).simplify_path();
 						}
 
-						if (OK != subparser.parse(subsource, subpath, false)) {
+						if (Error::OK != subparser.parse(subsource, subpath, false)) {
 							break;
 						}
 						path = subpath;
@@ -2788,14 +2788,14 @@ Ref<Resource> ResourceFormatLoaderGDScript::load(const String &p_path, const Str
 	Error err;
 	Ref<GDScript> scr = GDScriptCache::get_full_script(p_path, err, "", p_cache_mode == CACHE_MODE_IGNORE);
 
-	if (err && scr.is_valid()) {
+	if (err != Error::OK && scr.is_valid()) {
 		// If !scr.is_valid(), the error was likely from scr->load_source_code(), which already generates an error.
-		ERR_PRINT_ED(vformat(R"(Failed to load script "%s" with error "%s".)", p_path, error_names[err]));
+		ERR_PRINT_ED(vformat(R"(Failed to load script "%s" with error "%s".)", p_path, error_names[(int)err]));
 	}
 
 	if (r_error) {
 		// Don't fail loading because of parsing error.
-		*r_error = scr.is_valid() ? OK : err;
+		*r_error = scr.is_valid() ? Error::OK : err;
 	}
 
 	return scr;
@@ -2827,7 +2827,7 @@ void ResourceFormatLoaderGDScript::get_dependencies(const String &p_path, List<S
 	}
 
 	GDScriptParser parser;
-	if (OK != parser.parse(source, p_path, false)) {
+	if (Error::OK != parser.parse(source, p_path, false)) {
 		return;
 	}
 
@@ -2838,7 +2838,7 @@ void ResourceFormatLoaderGDScript::get_dependencies(const String &p_path, List<S
 
 Error ResourceFormatSaverGDScript::save(const Ref<Resource> &p_resource, const String &p_path, uint32_t p_flags) {
 	Ref<GDScript> sqscr = p_resource;
-	ERR_FAIL_COND_V(sqscr.is_null(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(sqscr.is_null(), Error::INVALID_PARAMETER);
 
 	String source = sqscr->get_source_code();
 
@@ -2846,11 +2846,11 @@ Error ResourceFormatSaverGDScript::save(const Ref<Resource> &p_resource, const S
 		Error err;
 		Ref<FileAccess> file = FileAccess::open(p_path, FileAccess::WRITE, &err);
 
-		ERR_FAIL_COND_V_MSG(err, err, "Cannot save GDScript file '" + p_path + "'.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Cannot save GDScript file '" + p_path + "'.");
 
 		file->store_string(source);
-		if (file->get_error() != OK && file->get_error() != ERR_FILE_EOF) {
-			return ERR_CANT_CREATE;
+		if (file->get_error() != Error::OK && file->get_error() != Error::FILE_EOF) {
+			return Error::CANT_CREATE;
 		}
 	}
 
@@ -2858,7 +2858,7 @@ Error ResourceFormatSaverGDScript::save(const Ref<Resource> &p_resource, const S
 		GDScriptLanguage::get_singleton()->reload_tool_script(p_resource, true);
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void ResourceFormatSaverGDScript::get_recognized_extensions(const Ref<Resource> &p_resource, List<String> *p_extensions) const {

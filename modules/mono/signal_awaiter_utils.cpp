@@ -34,8 +34,8 @@
 #include "mono_gd/gd_mono_cache.h"
 
 Error gd_mono_connect_signal_awaiter(Object *p_source, const StringName &p_signal, Object *p_target, GCHandleIntPtr p_awaiter_handle_ptr) {
-	ERR_FAIL_NULL_V(p_source, ERR_INVALID_DATA);
-	ERR_FAIL_NULL_V(p_target, ERR_INVALID_DATA);
+	ERR_FAIL_NULL_V(p_source, Error::INVALID_DATA);
+	ERR_FAIL_NULL_V(p_target, Error::INVALID_DATA);
 
 	// TODO: Use pooling for ManagedCallable instances.
 	MonoGCHandleData awaiter_handle(p_awaiter_handle_ptr, gdmono::GCHandleType::STRONG_HANDLE);

@@ -50,10 +50,10 @@ Error GLManagerLegacy_MacOS::create_context(GLWindow &win) {
 	};
 
 	NSOpenGLPixelFormat *pixel_format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
-	ERR_FAIL_NULL_V(pixel_format, ERR_CANT_CREATE);
+	ERR_FAIL_NULL_V(pixel_format, Error::CANT_CREATE);
 
 	win.context = [[NSOpenGLContext alloc] initWithFormat:pixel_format shareContext:shared_context];
-	ERR_FAIL_NULL_V(win.context, ERR_CANT_CREATE);
+	ERR_FAIL_NULL_V(win.context, Error::CANT_CREATE);
 	if (shared_context == nullptr) {
 		shared_context = win.context;
 	}
@@ -61,21 +61,21 @@ Error GLManagerLegacy_MacOS::create_context(GLWindow &win) {
 	[win.context setView:win.window_view];
 	[win.context makeCurrentContext];
 
-	return OK;
+	return Error::OK;
 }
 
 Error GLManagerLegacy_MacOS::window_create(DisplayServer::WindowID p_window_id, id p_view, int p_width, int p_height) {
 	GLWindow win;
 	win.window_view = p_view;
 
-	if (create_context(win) != OK) {
-		return FAILED;
+	if (create_context(win) != Error::OK) {
+		return Error::FAILED;
 	}
 
 	windows[p_window_id] = win;
 	window_make_current(p_window_id);
 
-	return OK;
+	return Error::OK;
 }
 
 void GLManagerLegacy_MacOS::window_resize(DisplayServer::WindowID p_window_id, int p_width, int p_height) {
@@ -167,7 +167,7 @@ void GLManagerLegacy_MacOS::window_set_per_pixel_transparency_enabled(DisplaySer
 }
 
 Error GLManagerLegacy_MacOS::initialize() {
-	return OK;
+	return Error::OK;
 }
 
 void GLManagerLegacy_MacOS::set_use_vsync(bool p_use) {

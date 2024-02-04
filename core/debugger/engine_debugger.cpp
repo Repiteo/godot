@@ -106,7 +106,7 @@ bool EngineDebugger::has_capture(const StringName &p_name) {
 
 Error EngineDebugger::capture_parse(const StringName &p_name, const String &p_msg, const Array &p_args, bool &r_captured) {
 	r_captured = false;
-	ERR_FAIL_COND_V_MSG(!captures.has(p_name), ERR_UNCONFIGURED, "Capture not registered: " + p_name);
+	ERR_FAIL_COND_V_MSG(!captures.has(p_name), Error::UNCONFIGURED, "Capture not registered: " + p_name);
 	const Capture &cap = captures[p_name];
 	return cap.capture(cap.data, p_msg, p_args, r_captured);
 }

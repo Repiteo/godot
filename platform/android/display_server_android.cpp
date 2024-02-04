@@ -497,7 +497,7 @@ Vector<String> DisplayServerAndroid::get_rendering_drivers_func() {
 
 DisplayServer *DisplayServerAndroid::create_func(const String &p_rendering_driver, DisplayServer::WindowMode p_mode, DisplayServer::VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Error &r_error) {
 	DisplayServer *ds = memnew(DisplayServerAndroid(p_rendering_driver, p_mode, p_vsync_mode, p_flags, p_position, p_resolution, p_screen, r_error));
-	if (r_error != OK) {
+	if (r_error) {
 		if (p_rendering_driver == "vulkan") {
 			OS::get_singleton()->alert(
 					"Your device seems not to support the required Vulkan version.\n\n"
@@ -537,7 +537,7 @@ void DisplayServerAndroid::reset_window() {
 		}
 #endif
 
-		if (context_rd->window_create(MAIN_WINDOW_ID, last_vsync_mode, display_size.width, display_size.height, &wpd) != OK) {
+		if (context_rd->window_create(MAIN_WINDOW_ID, last_vsync_mode, display_size.width, display_size.height, &wpd) != Error::OK) {
 			memdelete(context_rd);
 			context_rd = nullptr;
 			ERR_FAIL_MSG(vformat("Failed to reset %s window.", context_rd->get_api_name()));
@@ -574,7 +574,7 @@ DisplayServerAndroid::DisplayServerAndroid(const String &p_rendering_driver, Dis
 #endif
 
 	if (context_rd) {
-		if (context_rd->initialize() != OK) {
+		if (context_rd->initialize() != Error::OK) {
 			memdelete(context_rd);
 			context_rd = nullptr;
 			ERR_FAIL_MSG(vformat("Failed to initialize %s context", context_rd->get_api_name()));
@@ -595,7 +595,7 @@ DisplayServerAndroid::DisplayServerAndroid(const String &p_rendering_driver, Dis
 		}
 #endif
 
-		if (context_rd->window_create(MAIN_WINDOW_ID, p_vsync_mode, display_size.width, display_size.height, &wpd) != OK) {
+		if (context_rd->window_create(MAIN_WINDOW_ID, p_vsync_mode, display_size.width, display_size.height, &wpd) != Error::OK) {
 			memdelete(context_rd);
 			context_rd = nullptr;
 			ERR_FAIL_MSG(vformat("Failed to create %s window.", context_rd->get_api_name()));
@@ -611,7 +611,7 @@ DisplayServerAndroid::DisplayServerAndroid(const String &p_rendering_driver, Dis
 	Input::get_singleton()->set_event_dispatch_function(_dispatch_input_events);
 	Input::get_singleton()->set_use_input_buffering(true); // Needed because events will come directly from the UI thread
 
-	r_error = OK;
+	r_error = Error::OK;
 }
 
 DisplayServerAndroid::~DisplayServerAndroid() {

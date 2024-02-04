@@ -1086,7 +1086,7 @@ void ProjectExportDialog::_export_project_to_path(const String &p_path) {
 	platform->clear_messages();
 	Error err = platform->export_project(current, export_debug->is_pressed(), current->get_export_path(), 0);
 	result_dialog_log->clear();
-	if (err != ERR_SKIP) {
+	if (err != Error::SKIP) {
 		if (platform->fill_log_messages(result_dialog_log, err)) {
 			result_dialog->popup_centered_ratio(0.5);
 		}
@@ -1134,7 +1134,7 @@ void ProjectExportDialog::_export_all(bool p_debug) {
 
 			platform->clear_messages();
 			Error err = platform->export_project(preset, p_debug, preset->get_export_path(), 0);
-			if (err == ERR_SKIP) {
+			if (err == Error::SKIP) {
 				exporting = false;
 				return;
 			}

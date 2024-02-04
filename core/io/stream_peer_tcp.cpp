@@ -36,44 +36,44 @@ Error StreamPeerTCP::poll() {
 	if (status == STATUS_CONNECTED) {
 		Error err;
 		err = _sock->poll(NetSocket::POLL_TYPE_IN, 0);
-		if (err == OK) {
+		if (err == Error::OK) {
 			// FIN received
 			if (_sock->get_available_bytes() == 0) {
 				disconnect_from_host();
-				return OK;
+				return Error::OK;
 			}
 		}
 		// Also poll write
 		err = _sock->poll(NetSocket::POLL_TYPE_IN_OUT, 0);
-		if (err != OK && err != ERR_BUSY) {
+		if (err != Error::OK && err != Error::BUSY) {
 			// Got an error
 			disconnect_from_host();
 			status = STATUS_ERROR;
 			return err;
 		}
 	} else if (status != STATUS_CONNECTING) {
-		return OK;
+		return Error::OK;
 	}
 
 	Error err = _sock->connect_to_host(peer_host, peer_port);
 
-	if (err == OK) {
+	if (err == Error::OK) {
 		status = STATUS_CONNECTED;
-		return OK;
-	} else if (err == ERR_BUSY) {
+		return Error::OK;
+	} else if (err == Error::BUSY) {
 		// Check for connect timeout
 		if (OS::get_singleton()->get_ticks_msec() > timeout) {
 			disconnect_from_host();
 			status = STATUS_ERROR;
-			return ERR_CONNECTION_ERROR;
+			return Error::CONNECTION_ERROR;
 		}
 		// Still trying to connect
-		return OK;
+		return Error::OK;
 	}
 
 	disconnect_from_host();
 	status = STATUS_ERROR;
-	return ERR_CONNECTION_ERROR;
+	return Error::CONNECTION_ERROR;
 }
 
 void StreamPeerTCP::accept_socket(Ref<NetSocket> p_sock, IPAddress p_host, uint16_t p_port) {
@@ -88,16 +88,16 @@ void StreamPeerTCP::accept_socket(Ref<NetSocket> p_sock, IPAddress p_host, uint1
 }
 
 Error StreamPeerTCP::bind(int p_port, const IPAddress &p_host) {
-	ERR_FAIL_COND_V(!_sock.is_valid(), ERR_UNAVAILABLE);
-	ERR_FAIL_COND_V(_sock->is_open(), ERR_ALREADY_IN_USE);
-	ERR_FAIL_COND_V_MSG(p_port < 0 || p_port > 65535, ERR_INVALID_PARAMETER, "The local port number must be between 0 and 65535 (inclusive).");
+	ERR_FAIL_COND_V(!_sock.is_valid(), Error::UNAVAILABLE);
+	ERR_FAIL_COND_V(_sock->is_open(), Error::ALREADY_IN_USE);
+	ERR_FAIL_COND_V_MSG(p_port < 0 || p_port > 65535, Error::INVALID_PARAMETER, "The local port number must be between 0 and 65535 (inclusive).");
 
 	IP::Type ip_type = p_host.is_ipv4() ? IP::TYPE_IPV4 : IP::TYPE_IPV6;
 	if (p_host.is_wildcard()) {
 		ip_type = IP::TYPE_ANY;
 	}
 	Error err = _sock->open(NetSocket::TYPE_TCP, ip_type);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 	_sock->set_blocking_enabled(false);
@@ -105,15 +105,15 @@ Error StreamPeerTCP::bind(int p_port, const IPAddress &p_host) {
 }
 
 Error StreamPeerTCP::connect_to_host(const IPAddress &p_host, int p_port) {
-	ERR_FAIL_COND_V(!_sock.is_valid(), ERR_UNAVAILABLE);
-	ERR_FAIL_COND_V(status != STATUS_NONE, ERR_ALREADY_IN_USE);
-	ERR_FAIL_COND_V(!p_host.is_valid(), ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V_MSG(p_port < 1 || p_port > 65535, ERR_INVALID_PARAMETER, "The remote port number must be between 1 and 65535 (inclusive).");
+	ERR_FAIL_COND_V(!_sock.is_valid(), Error::UNAVAILABLE);
+	ERR_FAIL_COND_V(status != STATUS_NONE, Error::ALREADY_IN_USE);
+	ERR_FAIL_COND_V(!p_host.is_valid(), Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V_MSG(p_port < 1 || p_port > 65535, Error::INVALID_PARAMETER, "The remote port number must be between 1 and 65535 (inclusive).");
 
 	if (!_sock->is_open()) {
 		IP::Type ip_type = p_host.is_ipv4() ? IP::TYPE_IPV4 : IP::TYPE_IPV6;
 		Error err = _sock->open(NetSocket::TYPE_TCP, ip_type);
-		if (err != OK) {
+		if (err != Error::OK) {
 			return err;
 		}
 		_sock->set_blocking_enabled(false);
@@ -122,27 +122,27 @@ Error StreamPeerTCP::connect_to_host(const IPAddress &p_host, int p_port) {
 	timeout = OS::get_singleton()->get_ticks_msec() + (((uint64_t)GLOBAL_GET("network/limits/tcp/connect_timeout_seconds")) * 1000);
 	Error err = _sock->connect_to_host(p_host, p_port);
 
-	if (err == OK) {
+	if (err == Error::OK) {
 		status = STATUS_CONNECTED;
-	} else if (err == ERR_BUSY) {
+	} else if (err == Error::BUSY) {
 		status = STATUS_CONNECTING;
 	} else {
 		ERR_PRINT("Connection to remote host failed!");
 		disconnect_from_host();
-		return FAILED;
+		return Error::FAILED;
 	}
 
 	peer_host = p_host;
 	peer_port = p_port;
 
-	return OK;
+	return Error::OK;
 }
 
 Error StreamPeerTCP::write(const uint8_t *p_data, int p_bytes, int &r_sent, bool p_block) {
-	ERR_FAIL_COND_V(!_sock.is_valid(), ERR_UNAVAILABLE);
+	ERR_FAIL_COND_V(!_sock.is_valid(), Error::UNAVAILABLE);
 
 	if (status != STATUS_CONNECTED) {
-		return FAILED;
+		return Error::FAILED;
 	}
 
 	Error err;
@@ -154,22 +154,22 @@ Error StreamPeerTCP::write(const uint8_t *p_data, int p_bytes, int &r_sent, bool
 		int sent_amount = 0;
 		err = _sock->send(offset, data_to_send, sent_amount);
 
-		if (err != OK) {
-			if (err != ERR_BUSY) {
+		if (err != Error::OK) {
+			if (err != Error::BUSY) {
 				disconnect_from_host();
-				return FAILED;
+				return Error::FAILED;
 			}
 
 			if (!p_block) {
 				r_sent = total_sent;
-				return OK;
+				return Error::OK;
 			}
 
 			// Block and wait for the socket to accept more data
 			err = _sock->poll(NetSocket::POLL_TYPE_OUT, -1);
-			if (err != OK) {
+			if (err != Error::OK) {
 				disconnect_from_host();
-				return FAILED;
+				return Error::FAILED;
 			}
 		} else {
 			data_to_send -= sent_amount;
@@ -180,12 +180,12 @@ Error StreamPeerTCP::write(const uint8_t *p_data, int p_bytes, int &r_sent, bool
 
 	r_sent = total_sent;
 
-	return OK;
+	return Error::OK;
 }
 
 Error StreamPeerTCP::read(uint8_t *p_buffer, int p_bytes, int &r_received, bool p_block) {
 	if (status != STATUS_CONNECTED) {
-		return FAILED;
+		return Error::FAILED;
 	}
 
 	Error err;
@@ -197,28 +197,28 @@ Error StreamPeerTCP::read(uint8_t *p_buffer, int p_bytes, int &r_received, bool 
 		int read = 0;
 		err = _sock->recv(p_buffer + total_read, to_read, read);
 
-		if (err != OK) {
-			if (err != ERR_BUSY) {
+		if (err != Error::OK) {
+			if (err != Error::BUSY) {
 				disconnect_from_host();
-				return FAILED;
+				return Error::FAILED;
 			}
 
 			if (!p_block) {
 				r_received = total_read;
-				return OK;
+				return Error::OK;
 			}
 
 			err = _sock->poll(NetSocket::POLL_TYPE_IN, -1);
 
-			if (err != OK) {
+			if (err != Error::OK) {
 				disconnect_from_host();
-				return FAILED;
+				return Error::FAILED;
 			}
 
 		} else if (read == 0) {
 			disconnect_from_host();
 			r_received = total_read;
-			return ERR_FILE_EOF;
+			return Error::FILE_EOF;
 
 		} else {
 			to_read -= read;
@@ -226,14 +226,14 @@ Error StreamPeerTCP::read(uint8_t *p_buffer, int p_bytes, int &r_received, bool 
 
 			if (!p_block) {
 				r_received = total_read;
-				return OK;
+				return Error::OK;
 			}
 		}
 	}
 
 	r_received = total_read;
 
-	return OK;
+	return Error::OK;
 }
 
 void StreamPeerTCP::set_no_delay(bool p_enabled) {
@@ -257,7 +257,7 @@ void StreamPeerTCP::disconnect_from_host() {
 }
 
 Error StreamPeerTCP::wait(NetSocket::PollType p_type, int p_timeout) {
-	ERR_FAIL_COND_V(_sock.is_null() || !_sock->is_open(), ERR_UNAVAILABLE);
+	ERR_FAIL_COND_V(_sock.is_null() || !_sock->is_open(), Error::UNAVAILABLE);
 	return _sock->poll(p_type, p_timeout);
 }
 
@@ -305,7 +305,7 @@ Error StreamPeerTCP::_connect(const String &p_address, int p_port) {
 	} else {
 		ip = IP::get_singleton()->resolve_hostname(p_address);
 		if (!ip.is_valid()) {
-			return ERR_CANT_RESOLVE;
+			return Error::CANT_RESOLVE;
 		}
 	}
 

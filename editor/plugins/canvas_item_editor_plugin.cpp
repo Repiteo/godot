@@ -5861,7 +5861,7 @@ void CanvasItemEditorViewport::_perform_drop_data() {
 			if (!target_node) {
 				// Without root node act the same as "Load Inherited Scene"
 				Error err = EditorNode::get_singleton()->load_scene(path, false, true);
-				if (err != OK) {
+				if (err != Error::OK) {
 					error_files.push_back(path);
 				}
 			} else {

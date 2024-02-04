@@ -269,16 +269,16 @@ StringName AnimationMixer::find_animation_library(const Ref<Animation> &p_animat
 }
 
 Error AnimationMixer::add_animation_library(const StringName &p_name, const Ref<AnimationLibrary> &p_animation_library) {
-	ERR_FAIL_COND_V(p_animation_library.is_null(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_animation_library.is_null(), Error::INVALID_PARAMETER);
 #ifdef DEBUG_ENABLED
-	ERR_FAIL_COND_V_MSG(String(p_name).contains("/") || String(p_name).contains(":") || String(p_name).contains(",") || String(p_name).contains("["), ERR_INVALID_PARAMETER, "Invalid animation name: " + String(p_name) + ".");
+	ERR_FAIL_COND_V_MSG(String(p_name).contains("/") || String(p_name).contains(":") || String(p_name).contains(",") || String(p_name).contains("["), Error::INVALID_PARAMETER, "Invalid animation name: " + String(p_name) + ".");
 #endif
 
 	int insert_pos = 0;
 
 	for (const AnimationLibraryData &lib : animation_libraries) {
-		ERR_FAIL_COND_V_MSG(lib.name == p_name, ERR_ALREADY_EXISTS, "Can't add animation library twice with name: " + String(p_name));
-		ERR_FAIL_COND_V_MSG(lib.library == p_animation_library, ERR_ALREADY_EXISTS, "Can't add animation library twice (adding as '" + p_name.operator String() + "', exists as '" + lib.name.operator String() + "'.");
+		ERR_FAIL_COND_V_MSG(lib.name == p_name, Error::ALREADY_EXISTS, "Can't add animation library twice with name: " + String(p_name));
+		ERR_FAIL_COND_V_MSG(lib.library == p_animation_library, Error::ALREADY_EXISTS, "Can't add animation library twice (adding as '" + p_name.operator String() + "', exists as '" + lib.name.operator String() + "'.");
 
 		if (lib.name.operator String() >= p_name.operator String()) {
 			break;
@@ -302,7 +302,7 @@ Error AnimationMixer::add_animation_library(const StringName &p_name, const Ref<
 
 	notify_property_list_changed();
 
-	return OK;
+	return Error::OK;
 }
 
 void AnimationMixer::remove_animation_library(const StringName &p_name) {
@@ -1128,7 +1128,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 						if (!backward) {
 							if (prev_time > time) {
 								Error err = a->try_position_track_interpolate(i, prev_time, &loc[0]);
-								if (err != OK) {
+								if (err != Error::OK) {
 									continue;
 								}
 								loc[0] = post_process_key_value(a, i, loc[0], t->object_id, t->bone_idx);
@@ -1140,7 +1140,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 						} else {
 							if (prev_time < time) {
 								Error err = a->try_position_track_interpolate(i, prev_time, &loc[0]);
-								if (err != OK) {
+								if (err != Error::OK) {
 									continue;
 								}
 								loc[0] = post_process_key_value(a, i, loc[0], t->object_id, t->bone_idx);
@@ -1151,7 +1151,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 							}
 						}
 						Error err = a->try_position_track_interpolate(i, prev_time, &loc[0]);
-						if (err != OK) {
+						if (err != Error::OK) {
 							continue;
 						}
 						loc[0] = post_process_key_value(a, i, loc[0], t->object_id, t->bone_idx);
@@ -1163,7 +1163,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 					{
 						Vector3 loc;
 						Error err = a->try_position_track_interpolate(i, time, &loc);
-						if (err != OK) {
+						if (err != Error::OK) {
 							continue;
 						}
 						loc = post_process_key_value(a, i, loc, t->object_id, t->bone_idx);
@@ -1216,7 +1216,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 						if (!backward) {
 							if (prev_time > time) {
 								Error err = a->try_rotation_track_interpolate(i, prev_time, &rot[0]);
-								if (err != OK) {
+								if (err != Error::OK) {
 									continue;
 								}
 								rot[0] = post_process_key_value(a, i, rot[0], t->object_id, t->bone_idx);
@@ -1228,7 +1228,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 						} else {
 							if (prev_time < time) {
 								Error err = a->try_rotation_track_interpolate(i, prev_time, &rot[0]);
-								if (err != OK) {
+								if (err != Error::OK) {
 									continue;
 								}
 								rot[0] = post_process_key_value(a, i, rot[0], t->object_id, t->bone_idx);
@@ -1238,7 +1238,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 							}
 						}
 						Error err = a->try_rotation_track_interpolate(i, prev_time, &rot[0]);
-						if (err != OK) {
+						if (err != Error::OK) {
 							continue;
 						}
 						rot[0] = post_process_key_value(a, i, rot[0], t->object_id, t->bone_idx);
@@ -1250,7 +1250,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 					{
 						Quaternion rot;
 						Error err = a->try_rotation_track_interpolate(i, time, &rot);
-						if (err != OK) {
+						if (err != Error::OK) {
 							continue;
 						}
 						rot = post_process_key_value(a, i, rot, t->object_id, t->bone_idx);
@@ -1303,7 +1303,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 						if (!backward) {
 							if (prev_time > time) {
 								Error err = a->try_scale_track_interpolate(i, prev_time, &scale[0]);
-								if (err != OK) {
+								if (err != Error::OK) {
 									continue;
 								}
 								scale[0] = post_process_key_value(a, i, scale[0], t->object_id, t->bone_idx);
@@ -1315,7 +1315,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 						} else {
 							if (prev_time < time) {
 								Error err = a->try_scale_track_interpolate(i, prev_time, &scale[0]);
-								if (err != OK) {
+								if (err != Error::OK) {
 									continue;
 								}
 								scale[0] = post_process_key_value(a, i, scale[0], t->object_id, t->bone_idx);
@@ -1326,7 +1326,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 							}
 						}
 						Error err = a->try_scale_track_interpolate(i, prev_time, &scale[0]);
-						if (err != OK) {
+						if (err != Error::OK) {
 							continue;
 						}
 						scale[0] = post_process_key_value(a, i, scale[0], t->object_id, t->bone_idx);
@@ -1338,7 +1338,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 					{
 						Vector3 scale;
 						Error err = a->try_scale_track_interpolate(i, time, &scale);
-						if (err != OK) {
+						if (err != Error::OK) {
 							continue;
 						}
 						scale = post_process_key_value(a, i, scale, t->object_id, t->bone_idx);
@@ -1355,7 +1355,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 					float value;
 					Error err = a->try_blend_shape_track_interpolate(i, time, &value);
 					//ERR_CONTINUE(err!=OK); //used for testing, should be removed
-					if (err != OK) {
+					if (err != Error::OK) {
 						continue;
 					}
 					value = post_process_key_value(a, i, value, t->object_id, t->shape_index);

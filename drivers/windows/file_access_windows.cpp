@@ -54,7 +54,7 @@ void FileAccessWindows::check_errors() const {
 	ERR_FAIL_NULL(f);
 
 	if (feof(f)) {
-		last_error = ERR_FILE_EOF;
+		last_error = Error::FILE_EOF;
 	}
 }
 
@@ -84,7 +84,7 @@ Error FileAccessWindows::open_internal(const String &p_path, int p_mode_flags) {
 			WARN_PRINT("The path :" + p_path + " is a reserved Windows system pipe, so it can't be used for creating files.");
 		}
 #endif
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 
 	_close();
@@ -103,7 +103,7 @@ Error FileAccessWindows::open_internal(const String &p_path, int p_mode_flags) {
 	} else if (p_mode_flags == WRITE_READ) {
 		mode_string = L"wb+";
 	} else {
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 
 	/* Pretty much every implementation that uses fopen as primary
@@ -112,7 +112,7 @@ Error FileAccessWindows::open_internal(const String &p_path, int p_mode_flags) {
 	struct _stat st;
 	if (_wstat((LPCWSTR)(path.utf16().get_data()), &st) == 0) {
 		if (!S_ISREG(st.st_mode)) {
-			return ERR_FILE_CANT_OPEN;
+			return Error::FILE_CANT_OPEN;
 		}
 	}
 
@@ -142,7 +142,7 @@ Error FileAccessWindows::open_internal(const String &p_path, int p_mode_flags) {
 		// Create a temporary file in the same directory as the target file.
 		WCHAR tmpFileName[MAX_PATH];
 		if (GetTempFileNameW((LPCWSTR)(path.get_base_dir().utf16().get_data()), (LPCWSTR)(path.get_file().utf16().get_data()), 0, tmpFileName) == 0) {
-			last_error = ERR_FILE_CANT_OPEN;
+			last_error = Error::FILE_CANT_OPEN;
 			return last_error;
 		}
 		path = tmpFileName;
@@ -153,17 +153,17 @@ Error FileAccessWindows::open_internal(const String &p_path, int p_mode_flags) {
 	if (f == nullptr) {
 		switch (errno) {
 			case ENOENT: {
-				last_error = ERR_FILE_NOT_FOUND;
+				last_error = Error::FILE_NOT_FOUND;
 			} break;
 			default: {
-				last_error = ERR_FILE_CANT_OPEN;
+				last_error = Error::FILE_CANT_OPEN;
 			} break;
 		}
 		return last_error;
 	} else {
-		last_error = OK;
+		last_error = Error::OK;
 		flags = p_mode_flags;
-		return OK;
+		return Error::OK;
 	}
 }
 
@@ -226,7 +226,7 @@ bool FileAccessWindows::is_open() const {
 void FileAccessWindows::seek(uint64_t p_position) {
 	ERR_FAIL_NULL(f);
 
-	last_error = OK;
+	last_error = Error::OK;
 	if (_fseeki64(f, p_position, SEEK_SET)) {
 		check_errors();
 	}
@@ -263,7 +263,7 @@ uint64_t FileAccessWindows::get_length() const {
 
 bool FileAccessWindows::eof_reached() const {
 	check_errors();
-	return last_error == ERR_FILE_EOF;
+	return last_error == Error::FILE_EOF;
 }
 
 uint8_t FileAccessWindows::get_8() const {
@@ -383,7 +383,7 @@ void FileAccessWindows::store_8(uint8_t p_dest) {
 
 	if (flags == READ_WRITE || flags == WRITE_READ) {
 		if (prev_op == READ) {
-			if (last_error != ERR_FILE_EOF) {
+			if (last_error != Error::FILE_EOF) {
 				fseek(f, 0, SEEK_CUR);
 			}
 		}
@@ -397,7 +397,7 @@ void FileAccessWindows::store_16(uint16_t p_dest) {
 
 	if (flags == READ_WRITE || flags == WRITE_READ) {
 		if (prev_op == READ) {
-			if (last_error != ERR_FILE_EOF) {
+			if (last_error != Error::FILE_EOF) {
 				fseek(f, 0, SEEK_CUR);
 			}
 		}
@@ -416,7 +416,7 @@ void FileAccessWindows::store_32(uint32_t p_dest) {
 
 	if (flags == READ_WRITE || flags == WRITE_READ) {
 		if (prev_op == READ) {
-			if (last_error != ERR_FILE_EOF) {
+			if (last_error != Error::FILE_EOF) {
 				fseek(f, 0, SEEK_CUR);
 			}
 		}
@@ -435,7 +435,7 @@ void FileAccessWindows::store_64(uint64_t p_dest) {
 
 	if (flags == READ_WRITE || flags == WRITE_READ) {
 		if (prev_op == READ) {
-			if (last_error != ERR_FILE_EOF) {
+			if (last_error != Error::FILE_EOF) {
 				fseek(f, 0, SEEK_CUR);
 			}
 		}
@@ -455,7 +455,7 @@ void FileAccessWindows::store_buffer(const uint8_t *p_src, uint64_t p_length) {
 
 	if (flags == READ_WRITE || flags == WRITE_READ) {
 		if (prev_op == READ) {
-			if (last_error != ERR_FILE_EOF) {
+			if (last_error != Error::FILE_EOF) {
 				fseek(f, 0, SEEK_CUR);
 			}
 		}
@@ -505,7 +505,7 @@ BitField<FileAccess::UnixPermissionFlags> FileAccessWindows::_get_unix_permissio
 }
 
 Error FileAccessWindows::_set_unix_permissions(const String &p_file, BitField<FileAccess::UnixPermissionFlags> p_permissions) {
-	return ERR_UNAVAILABLE;
+	return Error::UNAVAILABLE;
 }
 
 bool FileAccessWindows::_get_hidden_attribute(const String &p_file) {
@@ -520,16 +520,16 @@ Error FileAccessWindows::_set_hidden_attribute(const String &p_file, bool p_hidd
 	String file = fix_path(p_file);
 
 	DWORD attrib = GetFileAttributesW((LPCWSTR)file.utf16().get_data());
-	ERR_FAIL_COND_V_MSG(attrib == INVALID_FILE_ATTRIBUTES, FAILED, "Failed to get attributes for: " + p_file);
+	ERR_FAIL_COND_V_MSG(attrib == INVALID_FILE_ATTRIBUTES, Error::FAILED, "Failed to get attributes for: " + p_file);
 	BOOL ok;
 	if (p_hidden) {
 		ok = SetFileAttributesW((LPCWSTR)file.utf16().get_data(), attrib | FILE_ATTRIBUTE_HIDDEN);
 	} else {
 		ok = SetFileAttributesW((LPCWSTR)file.utf16().get_data(), attrib & ~FILE_ATTRIBUTE_HIDDEN);
 	}
-	ERR_FAIL_COND_V_MSG(!ok, FAILED, "Failed to set attributes for: " + p_file);
+	ERR_FAIL_COND_V_MSG(!ok, Error::FAILED, "Failed to set attributes for: " + p_file);
 
-	return OK;
+	return Error::OK;
 }
 
 bool FileAccessWindows::_get_read_only_attribute(const String &p_file) {
@@ -544,16 +544,16 @@ Error FileAccessWindows::_set_read_only_attribute(const String &p_file, bool p_r
 	String file = fix_path(p_file);
 
 	DWORD attrib = GetFileAttributesW((LPCWSTR)file.utf16().get_data());
-	ERR_FAIL_COND_V_MSG(attrib == INVALID_FILE_ATTRIBUTES, FAILED, "Failed to get attributes for: " + p_file);
+	ERR_FAIL_COND_V_MSG(attrib == INVALID_FILE_ATTRIBUTES, Error::FAILED, "Failed to get attributes for: " + p_file);
 	BOOL ok;
 	if (p_ro) {
 		ok = SetFileAttributesW((LPCWSTR)file.utf16().get_data(), attrib | FILE_ATTRIBUTE_READONLY);
 	} else {
 		ok = SetFileAttributesW((LPCWSTR)file.utf16().get_data(), attrib & ~FILE_ATTRIBUTE_READONLY);
 	}
-	ERR_FAIL_COND_V_MSG(!ok, FAILED, "Failed to set attributes for: " + p_file);
+	ERR_FAIL_COND_V_MSG(!ok, Error::FAILED, "Failed to set attributes for: " + p_file);
 
-	return OK;
+	return Error::OK;
 }
 
 void FileAccessWindows::close() {

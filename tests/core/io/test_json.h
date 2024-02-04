@@ -226,8 +226,8 @@ TEST_CASE("[JSON] Parsing escape sequences") {
 			// 		json.get_error_line() != 0,
 			// 		vformat("Parsing invalid escape sequence with ASCII value `%d` as JSON should fail to parse.", i));
 			CHECK_MESSAGE(
-					err == ERR_PARSE_ERROR,
-					vformat("Parsing invalid escape sequence with ASCII value `%d` as JSON should fail to parse with ERR_PARSE_ERROR.", i));
+					err == Error::PARSE_ERROR,
+					vformat("Parsing invalid escape sequence with ASCII value `%d` as JSON should fail to parse with Error::PARSE_ERROR.", i));
 		}
 		ERR_PRINT_ON
 	}

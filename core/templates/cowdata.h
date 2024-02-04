@@ -201,14 +201,14 @@ public:
 	}
 
 	Error insert(Size p_pos, const T &p_val) {
-		ERR_FAIL_INDEX_V(p_pos, size() + 1, ERR_INVALID_PARAMETER);
+		ERR_FAIL_INDEX_V(p_pos, size() + 1, Error::INVALID_PARAMETER);
 		resize(size() + 1);
 		for (Size i = (size() - 1); i > p_pos; i--) {
 			set(i, get(i - 1));
 		}
 		set(p_pos, p_val);
 
-		return OK;
+		return Error::OK;
 	}
 
 	Size find(const T &p_val, Size p_from = 0) const;
@@ -289,19 +289,19 @@ typename CowData<T>::USize CowData<T>::_copy_on_write() {
 template <class T>
 template <bool p_ensure_zero>
 Error CowData<T>::resize(Size p_size) {
-	ERR_FAIL_COND_V(p_size < 0, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_size < 0, Error::INVALID_PARAMETER);
 
 	Size current_size = size();
 
 	if (p_size == current_size) {
-		return OK;
+		return Error::OK;
 	}
 
 	if (p_size == 0) {
 		// wants to clean up
 		_unref(_ptr);
 		_ptr = nullptr;
-		return OK;
+		return Error::OK;
 	}
 
 	// possibly changing size, copy on write
@@ -309,7 +309,7 @@ Error CowData<T>::resize(Size p_size) {
 
 	USize current_alloc_size = _get_alloc_size(current_size);
 	USize alloc_size;
-	ERR_FAIL_COND_V(!_get_alloc_size_checked(p_size, &alloc_size), ERR_OUT_OF_MEMORY);
+	ERR_FAIL_COND_V(!_get_alloc_size_checked(p_size, &alloc_size), Error::OUT_OF_MEMORY);
 
 	if (p_size > current_size) {
 		if (alloc_size != current_alloc_size) {
@@ -317,7 +317,7 @@ Error CowData<T>::resize(Size p_size) {
 				// alloc from scratch
 				USize *ptr = (USize *)Memory::alloc_static(alloc_size + ALLOC_PAD, false);
 				ptr += 2;
-				ERR_FAIL_NULL_V(ptr, ERR_OUT_OF_MEMORY);
+				ERR_FAIL_NULL_V(ptr, Error::OUT_OF_MEMORY);
 				*(ptr - 1) = 0; //size, currently none
 				new (ptr - 2) SafeNumeric<USize>(1); //refcount
 
@@ -325,7 +325,7 @@ Error CowData<T>::resize(Size p_size) {
 
 			} else {
 				USize *_ptrnew = (USize *)Memory::realloc_static(((uint8_t *)_ptr) - ALLOC_PAD, alloc_size + ALLOC_PAD, false);
-				ERR_FAIL_NULL_V(_ptrnew, ERR_OUT_OF_MEMORY);
+				ERR_FAIL_NULL_V(_ptrnew, Error::OUT_OF_MEMORY);
 				_ptrnew += 2;
 				new (_ptrnew - 2) SafeNumeric<USize>(rc); //refcount
 
@@ -356,7 +356,7 @@ Error CowData<T>::resize(Size p_size) {
 
 		if (alloc_size != current_alloc_size) {
 			USize *_ptrnew = (USize *)Memory::realloc_static(((uint8_t *)_ptr) - ALLOC_PAD, alloc_size + ALLOC_PAD, false);
-			ERR_FAIL_NULL_V(_ptrnew, ERR_OUT_OF_MEMORY);
+			ERR_FAIL_NULL_V(_ptrnew, Error::OUT_OF_MEMORY);
 			_ptrnew += 2;
 			new (_ptrnew - 2) SafeNumeric<USize>(rc); //refcount
 
@@ -366,7 +366,7 @@ Error CowData<T>::resize(Size p_size) {
 		*_get_size() = p_size;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 template <class T>

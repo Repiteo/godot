@@ -79,7 +79,7 @@ public:
 
 	virtual bool is_link(String p_file) override { return false; };
 	virtual String read_link(String p_file) override { return p_file; };
-	virtual Error create_link(String p_source, String p_target) override { return FAILED; };
+	virtual Error create_link(String p_source, String p_target) override { return Error::FAILED; };
 
 	uint64_t get_space_left() override;
 

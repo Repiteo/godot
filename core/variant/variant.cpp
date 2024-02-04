@@ -3674,7 +3674,7 @@ String Variant::get_call_error_text(Object *p_base, const StringName &p_method, 
 	} else if (ce.error == Callable::CallError::CALL_ERROR_METHOD_NOT_CONST) {
 		err_text = "Method not const in const instance";
 	} else if (ce.error == Callable::CallError::CALL_OK) {
-		return "Call OK";
+		return "Call Error::OK";
 	}
 
 	String base_text;

@@ -542,7 +542,7 @@ void DisplayServerWeb::cursor_set_custom_image(const Ref<Resource> &p_cursor, Cu
 
 		if (image->is_compressed()) {
 			Error err = image->decompress();
-			ERR_FAIL_COND_MSG(err != OK, "Couldn't decompress VRAM-compressed custom mouse cursor image. Switch to a lossless compression mode in the Import dock.");
+			ERR_FAIL_COND_MSG(err != Error::OK, "Couldn't decompress VRAM-compressed custom mouse cursor image. Switch to a lossless compression mode in the Import dock.");
 		}
 
 		if (atlas_texture.is_valid()) {
@@ -924,7 +924,7 @@ void DisplayServerWeb::process_joypads() {
 	float s_axes[10];
 	for (int idx = 0; idx < pads; idx++) {
 		int err = godot_js_input_gamepad_sample_get(idx, s_btns, &s_btns_num, s_axes, &s_axes_num, &s_standard);
-		if (err) {
+		if (err != Error::OK) {
 			continue;
 		}
 		for (int b = 0; b < s_btns_num; b++) {
@@ -971,7 +971,7 @@ void DisplayServerWeb::_update_clipboard_callback(const String &p_text) {
 void DisplayServerWeb::clipboard_set(const String &p_text) {
 	clipboard = p_text;
 	int err = godot_js_display_clipboard_set(p_text.utf8().get_data());
-	ERR_FAIL_COND_MSG(err, "Clipboard API is not supported.");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Clipboard API is not supported.");
 }
 
 String DisplayServerWeb::clipboard_get() const {
@@ -1014,7 +1014,7 @@ void DisplayServerWeb::set_icon(const Ref<Image> &p_icon) {
 		Ref<Image> icon = p_icon;
 		if (icon->is_compressed()) {
 			icon = icon->duplicate();
-			ERR_FAIL_COND(icon->decompress() != OK);
+			ERR_FAIL_COND(icon->decompress() != Error::OK);
 		}
 		if (icon->get_format() != Image::FORMAT_RGBA8) {
 			if (icon == p_icon) {
@@ -1056,7 +1056,7 @@ DisplayServer *DisplayServerWeb::create_func(const String &p_rendering_driver, W
 }
 
 DisplayServerWeb::DisplayServerWeb(const String &p_rendering_driver, WindowMode p_window_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Point2i *p_position, const Size2i &p_resolution, int p_screen, Error &r_error) {
-	r_error = OK; // Always succeeds for now.
+	r_error = Error::OK; // Always succeeds for now.
 
 	tts = GLOBAL_GET("audio/general/text_to_speech");
 
@@ -1372,7 +1372,7 @@ DisplayServer::VSyncMode DisplayServerWeb::window_get_vsync_mode(WindowID p_vsyn
 
 void DisplayServerWeb::process_events() {
 	Input::get_singleton()->flush_buffered_events();
-	if (godot_js_input_gamepad_sample() == OK) {
+	if (godot_js_input_gamepad_sample() == Error::OK) {
 		process_joypads();
 		for (int i = 0; i < key_event_pos; i++) {
 			const DisplayServerWeb::KeyEvent &ke = key_event_buffer[i];

@@ -50,13 +50,13 @@ Error PacketPeer::get_packet_buffer(Vector<uint8_t> &r_buffer) {
 	const uint8_t *buffer;
 	int buffer_size;
 	Error err = get_packet(&buffer, buffer_size);
-	if (err) {
+	if (err != Error::OK) {
 		return err;
 	}
 
 	r_buffer.resize(buffer_size);
 	if (buffer_size == 0) {
-		return OK;
+		return Error::OK;
 	}
 
 	uint8_t *w = r_buffer.ptrw();
@@ -64,13 +64,13 @@ Error PacketPeer::get_packet_buffer(Vector<uint8_t> &r_buffer) {
 		w[i] = buffer[i];
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error PacketPeer::put_packet_buffer(const Vector<uint8_t> &p_buffer) {
 	int len = p_buffer.size();
 	if (len == 0) {
-		return OK;
+		return Error::OK;
 	}
 
 	const uint8_t *r = p_buffer.ptr();
@@ -81,7 +81,7 @@ Error PacketPeer::get_var(Variant &r_variant, bool p_allow_objects) {
 	const uint8_t *buffer;
 	int buffer_size;
 	Error err = get_packet(&buffer, buffer_size);
-	if (err) {
+	if (err != Error::OK) {
 		return err;
 	}
 
@@ -91,15 +91,15 @@ Error PacketPeer::get_var(Variant &r_variant, bool p_allow_objects) {
 Error PacketPeer::put_var(const Variant &p_packet, bool p_full_objects) {
 	int len;
 	Error err = encode_variant(p_packet, nullptr, len, p_full_objects); // compute len first
-	if (err) {
+	if (err != Error::OK) {
 		return err;
 	}
 
 	if (len == 0) {
-		return OK;
+		return Error::OK;
 	}
 
-	ERR_FAIL_COND_V_MSG(len > encode_buffer_max_size, ERR_OUT_OF_MEMORY, "Failed to encode variant, encode size is bigger then encode_buffer_max_size. Consider raising it via 'set_encode_buffer_max_size'.");
+	ERR_FAIL_COND_V_MSG(len > encode_buffer_max_size, Error::OUT_OF_MEMORY, "Failed to encode variant, encode size is bigger then encode_buffer_max_size. Consider raising it via 'set_encode_buffer_max_size'.");
 
 	if (unlikely(encode_buffer.size() < len)) {
 		encode_buffer.resize(0); // Avoid realloc
@@ -108,7 +108,7 @@ Error PacketPeer::put_var(const Variant &p_packet, bool p_full_objects) {
 
 	uint8_t *w = encode_buffer.ptrw();
 	err = encode_variant(p_packet, w, len, p_full_objects);
-	ERR_FAIL_COND_V_MSG(err != OK, err, "Error when trying to encode Variant.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Error when trying to encode Variant.");
 
 	return put_packet(w, len);
 }
@@ -117,7 +117,7 @@ Variant PacketPeer::_bnd_get_var(bool p_allow_objects) {
 	Variant var;
 	Error err = get_var(var, p_allow_objects);
 
-	ERR_FAIL_COND_V(err != OK, Variant());
+	ERR_FAIL_COND_V(err != Error::OK, Variant());
 	return var;
 }
 
@@ -158,7 +158,7 @@ Error PacketPeerExtension::get_packet(const uint8_t **r_buffer, int &r_buffer_si
 		return err;
 	}
 	WARN_PRINT_ONCE("PacketPeerExtension::_get_packet_native is unimplemented!");
-	return FAILED;
+	return Error::FAILED;
 }
 
 Error PacketPeerExtension::put_packet(const uint8_t *p_buffer, int p_buffer_size) {
@@ -167,7 +167,7 @@ Error PacketPeerExtension::put_packet(const uint8_t *p_buffer, int p_buffer_size
 		return err;
 	}
 	WARN_PRINT_ONCE("PacketPeerExtension::_put_packet_native is unimplemented!");
-	return FAILED;
+	return Error::FAILED;
 }
 
 void PacketPeerExtension::_bind_methods() {
@@ -193,22 +193,22 @@ void PacketPeerStream::_bind_methods() {
 }
 
 Error PacketPeerStream::_poll_buffer() const {
-	ERR_FAIL_COND_V(peer.is_null(), ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(peer.is_null(), Error::UNCONFIGURED);
 
 	int read = 0;
-	ERR_FAIL_COND_V(input_buffer.size() < ring_buffer.space_left(), ERR_UNAVAILABLE);
+	ERR_FAIL_COND_V(input_buffer.size() < ring_buffer.space_left(), Error::UNAVAILABLE);
 	Error err = peer->get_partial_data(input_buffer.ptrw(), ring_buffer.space_left(), read);
-	if (err) {
+	if (err != Error::OK) {
 		return err;
 	}
 	if (read == 0) {
-		return OK;
+		return Error::OK;
 	}
 
 	int w = ring_buffer.write(&input_buffer[0], read);
-	ERR_FAIL_COND_V(w != read, ERR_BUG);
+	ERR_FAIL_COND_V(w != read, Error::BUG);
 
-	return OK;
+	return Error::OK;
 }
 
 int PacketPeerStream::get_available_packet_count() const {
@@ -237,40 +237,40 @@ int PacketPeerStream::get_available_packet_count() const {
 }
 
 Error PacketPeerStream::get_packet(const uint8_t **r_buffer, int &r_buffer_size) {
-	ERR_FAIL_COND_V(peer.is_null(), ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(peer.is_null(), Error::UNCONFIGURED);
 	_poll_buffer();
 
 	int remaining = ring_buffer.data_left();
-	ERR_FAIL_COND_V(remaining < 4, ERR_UNAVAILABLE);
+	ERR_FAIL_COND_V(remaining < 4, Error::UNAVAILABLE);
 	uint8_t lbuf[4];
 	ring_buffer.copy(lbuf, 0, 4);
 	remaining -= 4;
 	uint32_t len = decode_uint32(lbuf);
-	ERR_FAIL_COND_V(remaining < (int)len, ERR_UNAVAILABLE);
+	ERR_FAIL_COND_V(remaining < (int)len, Error::UNAVAILABLE);
 
-	ERR_FAIL_COND_V(input_buffer.size() < (int)len, ERR_UNAVAILABLE);
+	ERR_FAIL_COND_V(input_buffer.size() < (int)len, Error::UNAVAILABLE);
 	ring_buffer.read(lbuf, 4); //get rid of first 4 bytes
 	ring_buffer.read(input_buffer.ptrw(), len); // read packet
 
 	*r_buffer = &input_buffer[0];
 	r_buffer_size = len;
-	return OK;
+	return Error::OK;
 }
 
 Error PacketPeerStream::put_packet(const uint8_t *p_buffer, int p_buffer_size) {
-	ERR_FAIL_COND_V(peer.is_null(), ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(peer.is_null(), Error::UNCONFIGURED);
 	Error err = _poll_buffer(); //won't hurt to poll here too
 
-	if (err) {
+	if (err != Error::OK) {
 		return err;
 	}
 
 	if (p_buffer_size == 0) {
-		return OK;
+		return Error::OK;
 	}
 
-	ERR_FAIL_COND_V(p_buffer_size < 0, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_buffer_size + 4 > output_buffer.size(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_buffer_size < 0, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_buffer_size + 4 > output_buffer.size(), Error::INVALID_PARAMETER);
 
 	encode_uint32(p_buffer_size, output_buffer.ptrw());
 	uint8_t *dst = &output_buffer.write[4];

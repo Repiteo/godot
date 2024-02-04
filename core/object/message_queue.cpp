@@ -87,7 +87,7 @@ Error CallQueue::push_set(Object *p_object, const StringName &p_prop, const Vari
 Error CallQueue::push_callablep(const Callable &p_callable, const Variant **p_args, int p_argcount, bool p_show_error) {
 	uint32_t room_needed = sizeof(Message) + sizeof(Variant) * p_argcount;
 
-	ERR_FAIL_COND_V_MSG(room_needed > uint32_t(PAGE_SIZE_BYTES), ERR_INVALID_PARAMETER, "Message is too large to fit on a page (" + itos(PAGE_SIZE_BYTES) + " bytes), consider passing less arguments.");
+	ERR_FAIL_COND_V_MSG(room_needed > uint32_t(PAGE_SIZE_BYTES), Error::INVALID_PARAMETER, "Message is too large to fit on a page (" + itos(PAGE_SIZE_BYTES) + " bytes), consider passing less arguments.");
 
 	LOCK_MUTEX;
 
@@ -98,7 +98,7 @@ Error CallQueue::push_callablep(const Callable &p_callable, const Variant **p_ar
 			fprintf(stderr, "Failed method: %s. Message queue out of memory. %s\n", String(p_callable).utf8().get_data(), error_text.utf8().get_data());
 			statistics();
 			UNLOCK_MUTEX;
-			return ERR_OUT_OF_MEMORY;
+			return Error::OUT_OF_MEMORY;
 		}
 		_add_page();
 	}
@@ -131,7 +131,7 @@ Error CallQueue::push_callablep(const Callable &p_callable, const Variant **p_ar
 
 	UNLOCK_MUTEX;
 
-	return OK;
+	return Error::OK;
 }
 
 Error CallQueue::push_set(ObjectID p_id, const StringName &p_prop, const Variant &p_value) {
@@ -150,7 +150,7 @@ Error CallQueue::push_set(ObjectID p_id, const StringName &p_prop, const Variant
 			statistics();
 
 			UNLOCK_MUTEX;
-			return ERR_OUT_OF_MEMORY;
+			return Error::OUT_OF_MEMORY;
 		}
 		_add_page();
 	}
@@ -171,11 +171,11 @@ Error CallQueue::push_set(ObjectID p_id, const StringName &p_prop, const Variant
 	page_bytes[pages_used - 1] += room_needed;
 	UNLOCK_MUTEX;
 
-	return OK;
+	return Error::OK;
 }
 
 Error CallQueue::push_notification(ObjectID p_id, int p_notification) {
-	ERR_FAIL_COND_V(p_notification < 0, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_notification < 0, Error::INVALID_PARAMETER);
 	LOCK_MUTEX;
 	uint32_t room_needed = sizeof(Message);
 
@@ -186,7 +186,7 @@ Error CallQueue::push_notification(ObjectID p_id, int p_notification) {
 			fprintf(stderr, "Failed notification: %s target ID: %s. Message queue out of memory. %s\n", itos(p_notification).utf8().get_data(), itos(p_id).utf8().get_data(), error_text.utf8().get_data());
 			statistics();
 			UNLOCK_MUTEX;
-			return ERR_OUT_OF_MEMORY;
+			return Error::OUT_OF_MEMORY;
 		}
 		_add_page();
 	}
@@ -204,7 +204,7 @@ Error CallQueue::push_notification(ObjectID p_id, int p_notification) {
 	page_bytes[pages_used - 1] += room_needed;
 	UNLOCK_MUTEX;
 
-	return OK;
+	return Error::OK;
 }
 
 void CallQueue::_call_function(const Callable &p_callable, const Variant *p_args, int p_argcount, bool p_show_error) {
@@ -226,7 +226,7 @@ void CallQueue::_call_function(const Callable &p_callable, const Variant *p_args
 
 Error CallQueue::_transfer_messages_to_main_queue() {
 	if (pages.size() == 0) {
-		return OK;
+		return Error::OK;
 	}
 
 	CallQueue *mq = MessageQueue::main_singleton;
@@ -259,7 +259,7 @@ Error CallQueue::_transfer_messages_to_main_queue() {
 		ERR_PRINT("Failed appending thread queue. Message queue out of memory. " + mq->error_text);
 		mq->statistics();
 		mq->mutex.unlock();
-		return ERR_OUT_OF_MEMORY;
+		return Error::OUT_OF_MEMORY;
 	}
 
 	for (; src_page < pages_used; src_page++) {
@@ -273,7 +273,7 @@ Error CallQueue::_transfer_messages_to_main_queue() {
 	page_bytes[0] = 0;
 	pages_used = 1;
 
-	return OK;
+	return Error::OK;
 }
 
 Error CallQueue::flush() {
@@ -287,12 +287,12 @@ Error CallQueue::flush() {
 	if (pages.size() == 0) {
 		// Never allocated
 		UNLOCK_MUTEX;
-		return OK; // Do nothing.
+		return Error::OK; // Do nothing.
 	}
 
 	if (flushing) {
 		UNLOCK_MUTEX;
-		return ERR_BUSY;
+		return Error::BUSY;
 	}
 
 	flushing = true;
@@ -360,7 +360,7 @@ Error CallQueue::flush() {
 
 	flushing = false;
 	UNLOCK_MUTEX;
-	return OK;
+	return Error::OK;
 }
 
 void CallQueue::clear() {

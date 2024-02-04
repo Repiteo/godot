@@ -652,7 +652,7 @@ Ref<Resource> ResourceFormatLoaderTheora::load(const String &p_path, const Strin
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
 	if (f.is_null()) {
 		if (r_error) {
-			*r_error = ERR_CANT_OPEN;
+			*r_error = Error::CANT_OPEN;
 		}
 		return Ref<Resource>();
 	}
@@ -663,7 +663,7 @@ Ref<Resource> ResourceFormatLoaderTheora::load(const String &p_path, const Strin
 	Ref<VideoStreamTheora> ogv_stream = Ref<VideoStreamTheora>(stream);
 
 	if (r_error) {
-		*r_error = OK;
+		*r_error = Error::OK;
 	}
 
 	return ogv_stream;

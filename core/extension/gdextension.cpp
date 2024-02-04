@@ -688,7 +688,7 @@ Error GDExtension::open_library(const String &p_path, const String &p_entry_symb
 	if (Engine::get_singleton()->is_editor_hint()) {
 		if (!FileAccess::exists(abs_path)) {
 			ERR_PRINT("GDExtension library not found: " + library_path);
-			return ERR_FILE_NOT_FOUND;
+			return Error::FILE_NOT_FOUND;
 		}
 
 		// Copy the file to the same directory as the original with a prefix in the name.
@@ -701,9 +701,9 @@ Error GDExtension::open_library(const String &p_path, const String &p_entry_symb
 		}
 
 		Error copy_err = DirAccess::copy_absolute(abs_path, copy_path);
-		if (copy_err) {
+		if (copy_err != Error::OK) {
 			ERR_PRINT("Error copying GDExtension library: " + library_path);
-			return ERR_CANT_CREATE;
+			return Error::CANT_CREATE;
 		}
 		FileAccess::set_hidden_attribute(copy_path, true);
 		library_copied = true;
@@ -717,8 +717,8 @@ Error GDExtension::open_library(const String &p_path, const String &p_entry_symb
 #endif
 
 	Error err = OS::get_singleton()->open_dynamic_library(abs_path, library, true, &library_path);
-	ERR_FAIL_COND_V_MSG(err == ERR_FILE_NOT_FOUND, err, "GDExtension dynamic library not found: " + abs_path);
-	ERR_FAIL_COND_V_MSG(err != OK, err, "Can't open GDExtension dynamic library: " + abs_path);
+	ERR_FAIL_COND_V_MSG(err == Error::FILE_NOT_FOUND, err, "GDExtension dynamic library not found: " + abs_path);
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Can't open GDExtension dynamic library: " + abs_path);
 
 #if defined(WINDOWS_ENABLED) && defined(TOOLS_ENABLED)
 	// If we copied the file, let's change the library path to point at the original,
@@ -732,7 +732,7 @@ Error GDExtension::open_library(const String &p_path, const String &p_entry_symb
 
 	err = OS::get_singleton()->get_dynamic_library_symbol_handle(library, p_entry_symbol, entry_funcptr, false);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		ERR_PRINT("GDExtension entry point '" + p_entry_symbol + "' not found in library " + abs_path);
 		OS::get_singleton()->close_dynamic_library(library);
 		return err;
@@ -743,11 +743,11 @@ Error GDExtension::open_library(const String &p_path, const String &p_entry_symb
 
 	if (ret) {
 		level_initialized = -1;
-		return OK;
+		return Error::OK;
 	} else {
 		ERR_PRINT("GDExtension initialization function '" + p_entry_symbol + "' returned an error.");
 		OS::get_singleton()->close_dynamic_library(library);
-		return FAILED;
+		return Error::FAILED;
 	}
 }
 
@@ -849,21 +849,21 @@ void GDExtension::finalize_gdextensions() {
 }
 
 Error GDExtensionResourceLoader::load_gdextension_resource(const String &p_path, Ref<GDExtension> &p_extension) {
-	ERR_FAIL_COND_V_MSG(p_extension.is_valid() && p_extension->is_library_open(), ERR_ALREADY_IN_USE, "Cannot load GDExtension resource into already opened library.");
+	ERR_FAIL_COND_V_MSG(p_extension.is_valid() && p_extension->is_library_open(), Error::ALREADY_IN_USE, "Cannot load GDExtension resource into already opened library.");
 
 	Ref<ConfigFile> config;
 	config.instantiate();
 
 	Error err = config->load(p_path);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		ERR_PRINT("Error loading GDExtension configuration file: " + p_path);
 		return err;
 	}
 
 	if (!config->has_section_key("configuration", "entry_symbol")) {
 		ERR_PRINT("GDExtension configuration file must contain a \"configuration/entry_symbol\" key: " + p_path);
-		return ERR_INVALID_DATA;
+		return Error::INVALID_DATA;
 	}
 
 	String entry_symbol = config->get_value("configuration", "entry_symbol");
@@ -882,12 +882,12 @@ Error GDExtensionResourceLoader::load_gdextension_resource(const String &p_path,
 		}
 	} else {
 		ERR_PRINT("GDExtension configuration file must contain a \"configuration/compatibility_minimum\" key: " + p_path);
-		return ERR_INVALID_DATA;
+		return Error::INVALID_DATA;
 	}
 
 	if (compatibility_minimum[0] < 4 || (compatibility_minimum[0] == 4 && compatibility_minimum[1] == 0)) {
 		ERR_PRINT(vformat("GDExtension's compatibility_minimum (%d.%d.%d) must be at least 4.1.0: %s", compatibility_minimum[0], compatibility_minimum[1], compatibility_minimum[2], p_path));
-		return ERR_INVALID_DATA;
+		return Error::INVALID_DATA;
 	}
 
 	bool compatible = true;
@@ -901,7 +901,7 @@ Error GDExtensionResourceLoader::load_gdextension_resource(const String &p_path,
 	}
 	if (!compatible) {
 		ERR_PRINT(vformat("GDExtension only compatible with Godot version %d.%d.%d or later: %s", compatibility_minimum[0], compatibility_minimum[1], compatibility_minimum[2], p_path));
-		return ERR_INVALID_DATA;
+		return Error::INVALID_DATA;
 	}
 
 	String library_path = GDExtension::find_extension_library(p_path, config, [](String p_feature) { return OS::get_singleton()->has_feature(p_feature); });
@@ -909,7 +909,7 @@ Error GDExtensionResourceLoader::load_gdextension_resource(const String &p_path,
 	if (library_path.is_empty()) {
 		const String os_arch = OS::get_singleton()->get_name().to_lower() + "." + Engine::get_singleton()->get_architecture_name();
 		ERR_PRINT(vformat("No GDExtension library found for current OS and architecture (%s) in configuration file: %s", os_arch, p_path));
-		return ERR_FILE_NOT_FOUND;
+		return Error::FILE_NOT_FOUND;
 	}
 
 	bool is_static_library = library_path.ends_with(".a") || library_path.ends_with(".xcframework");
@@ -931,7 +931,7 @@ Error GDExtensionResourceLoader::load_gdextension_resource(const String &p_path,
 #endif
 
 	err = p_extension->open_library(is_static_library ? String() : library_path, entry_symbol);
-	if (err != OK) {
+	if (err != Error::OK) {
 #if defined(WINDOWS_ENABLED) && defined(TOOLS_ENABLED)
 		// If the DLL fails to load, make sure that temporary DLL copies are cleaned up.
 		if (Engine::get_singleton()->is_editor_hint()) {
@@ -960,7 +960,7 @@ Error GDExtensionResourceLoader::load_gdextension_resource(const String &p_path,
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Ref<Resource> GDExtensionResourceLoader::load(const String &p_path, const String &p_original_path, Error *r_error, bool p_use_sub_threads, float *r_progress, CacheMode p_cache_mode) {
@@ -975,7 +975,7 @@ Ref<Resource> GDExtensionResourceLoader::load(const String &p_path, const String
 
 	Ref<GDExtension> lib;
 	Error err = load_gdextension_resource(p_path, lib);
-	if (err != OK && r_error) {
+	if (err != Error::OK && r_error) {
 		// Errors already logged in load_gdextension_resource().
 		*r_error = err;
 	}

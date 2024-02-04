@@ -845,7 +845,7 @@ void ScriptTextEditor::_code_complete_script(const String &p_code, List<ScriptLa
 	String hint;
 	Error err = script->get_language()->complete_code(p_code, script->get_path(), base, r_options, r_force, hint);
 
-	if (err == OK) {
+	if (err == Error::OK) {
 		code_editor->get_text_editor()->set_code_hint(hint);
 	}
 }
@@ -920,7 +920,7 @@ void ScriptTextEditor::_lookup_symbol(const String &p_symbol, int p_row, int p_c
 			EditorNode::get_singleton()->load_resource(symbol);
 		}
 
-	} else if (lc_error == OK) {
+	} else if (lc_error == Error::OK) {
 		_goto_line(p_row);
 
 		switch (result.type) {
@@ -1044,7 +1044,7 @@ void ScriptTextEditor::_validate_symbol(const String &p_symbol) {
 	String lc_text = code_editor->get_text_editor()->get_text_for_symbol_lookup();
 	Error lc_error = script->get_language()->lookup_code(lc_text, p_symbol, script->get_path(), base, result);
 	bool is_singleton = ProjectSettings::get_singleton()->has_autoload(p_symbol) && ProjectSettings::get_singleton()->get_autoload(p_symbol).is_singleton;
-	if (lc_error == OK || is_singleton || ScriptServer::is_global_class(p_symbol) || p_symbol.is_resource_file() || p_symbol.begins_with("uid://")) {
+	if (lc_error == Error::OK || is_singleton || ScriptServer::is_global_class(p_symbol) || p_symbol.is_resource_file() || p_symbol.begins_with("uid://")) {
 		text_edit->set_symbol_lookup_word_as_valid(true);
 	} else if (p_symbol.is_relative_path()) {
 		String path = _get_absolute_path(p_symbol);
@@ -1413,7 +1413,7 @@ void ScriptTextEditor::_edit_option(int p_op) {
 				for (int i = 0; i < lines.size(); i++) {
 					const String &line = lines[i];
 					String whitespace = line.substr(0, line.size() - line.strip_edges(true, false).size()); // Extract the whitespace at the beginning.
-					if (expression.parse(line) == OK) {
+					if (expression.parse(line) == Error::OK) {
 						Variant result = expression.execute(Array(), Variant(), false, true);
 						if (expression.get_error_text().is_empty()) {
 							results.push_back(whitespace + result.get_construct_string());
@@ -2010,7 +2010,7 @@ void ScriptTextEditor::_text_edit_gui_input(const Ref<InputEvent> &ev) {
 				base = _find_node_for_script(base, base, script);
 			}
 			ScriptLanguage::LookupResult result;
-			if (script->get_language()->lookup_code(tx->get_text_for_symbol_lookup(), word_at_pos, script->get_path(), base, result) == OK) {
+			if (script->get_language()->lookup_code(tx->get_text_for_symbol_lookup(), word_at_pos, script->get_path(), base, result) == Error::OK) {
 				open_docs = true;
 			}
 		}

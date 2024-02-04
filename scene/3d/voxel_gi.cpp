@@ -59,7 +59,7 @@ void VoxelGIData::_set_data(const Dictionary &p_data) {
 		Ref<Image> img;
 		img.instantiate();
 		Error err = img->load_png_from_buffer(octree_df_png);
-		ERR_FAIL_COND(err != OK);
+		ERR_FAIL_COND(err != Error::OK);
 		ERR_FAIL_COND(img->get_format() != Image::FORMAT_L8);
 		octree_df = img->get_data();
 	}

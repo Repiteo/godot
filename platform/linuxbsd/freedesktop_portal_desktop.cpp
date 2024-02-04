@@ -363,10 +363,10 @@ bool FreeDesktopPortalDesktop::file_chooser_parse_response(DBusMessageIter *p_it
 
 Error FreeDesktopPortalDesktop::file_dialog_show(DisplayServer::WindowID p_window_id, const String &p_xid, const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, DisplayServer::FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback, bool p_options_in_cb) {
 	if (unsupported) {
-		return FAILED;
+		return Error::FAILED;
 	}
 
-	ERR_FAIL_INDEX_V(int(p_mode), DisplayServer::FILE_DIALOG_MODE_SAVE_MAX, FAILED);
+	ERR_FAIL_INDEX_V(int(p_mode), DisplayServer::FILE_DIALOG_MODE_SAVE_MAX, Error::FAILED);
 
 	Vector<String> filter_names;
 	Vector<String> filter_exts;
@@ -401,7 +401,7 @@ Error FreeDesktopPortalDesktop::file_dialog_show(DisplayServer::WindowID p_windo
 	fd.opt_in_cb = p_options_in_cb;
 
 	CryptoCore::RandomGenerator rng;
-	ERR_FAIL_COND_V_MSG(rng.init(), FAILED, "Failed to initialize random number generator.");
+	ERR_FAIL_COND_V_MSG(rng.init(), Error::FAILED, "Failed to initialize random number generator.");
 	uint8_t uuid[64];
 	Error rng_err = rng.get_random_bytes(uuid, 64);
 	ERR_FAIL_COND_V_MSG(rng_err, rng_err, "Failed to generate unique token.");
@@ -411,7 +411,7 @@ Error FreeDesktopPortalDesktop::file_dialog_show(DisplayServer::WindowID p_windo
 		ERR_PRINT(vformat("Failed to open DBus connection: %s", err.message));
 		dbus_error_free(&err);
 		unsupported = true;
-		return FAILED;
+		return Error::FAILED;
 	}
 
 	String dbus_unique_name = String::utf8(dbus_bus_get_unique_name(fd.connection));
@@ -424,7 +424,7 @@ Error FreeDesktopPortalDesktop::file_dialog_show(DisplayServer::WindowID p_windo
 		ERR_PRINT(vformat("Failed to add DBus match: %s", err.message));
 		dbus_error_free(&err);
 		dbus_connection_unref(fd.connection);
-		return FAILED;
+		return Error::FAILED;
 	}
 
 	// Generate FileChooser message.
@@ -468,7 +468,7 @@ Error FreeDesktopPortalDesktop::file_dialog_show(DisplayServer::WindowID p_windo
 		dbus_error_free(&err);
 		dbus_bus_remove_match(fd.connection, fd.path.utf8().get_data(), &err);
 		dbus_connection_unref(fd.connection);
-		return FAILED;
+		return Error::FAILED;
 	}
 
 	// Update signal path.
@@ -484,7 +484,7 @@ Error FreeDesktopPortalDesktop::file_dialog_show(DisplayServer::WindowID p_windo
 						ERR_PRINT(vformat("Failed to remove DBus match: %s", err.message));
 						dbus_error_free(&err);
 						dbus_connection_unref(fd.connection);
-						return FAILED;
+						return Error::FAILED;
 					}
 					fd.path = String::utf8(new_path);
 					dbus_bus_add_match(fd.connection, fd.path.utf8().get_data(), &err);
@@ -492,7 +492,7 @@ Error FreeDesktopPortalDesktop::file_dialog_show(DisplayServer::WindowID p_windo
 						ERR_PRINT(vformat("Failed to add DBus match: %s", err.message));
 						dbus_error_free(&err);
 						dbus_connection_unref(fd.connection);
-						return FAILED;
+						return Error::FAILED;
 					}
 				}
 			}
@@ -503,7 +503,7 @@ Error FreeDesktopPortalDesktop::file_dialog_show(DisplayServer::WindowID p_windo
 	MutexLock lock(file_dialog_mutex);
 	file_dialogs.push_back(fd);
 
-	return OK;
+	return Error::OK;
 }
 
 void FreeDesktopPortalDesktop::_file_dialog_callback(const Callable &p_callable, const Variant &p_status, const Variant &p_list, const Variant &p_index, const Variant &p_options, bool p_opt_in_cb) {

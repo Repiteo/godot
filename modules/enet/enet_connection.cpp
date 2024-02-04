@@ -43,8 +43,8 @@ void ENetConnection::broadcast(enet_uint8 p_channel, ENetPacket *p_packet) {
 }
 
 Error ENetConnection::create_host_bound(const IPAddress &p_bind_address, int p_port, int p_max_peers, int p_max_channels, int p_in_bandwidth, int p_out_bandwidth) {
-	ERR_FAIL_COND_V_MSG(!p_bind_address.is_valid() && !p_bind_address.is_wildcard(), ERR_INVALID_PARAMETER, "Invalid bind IP.");
-	ERR_FAIL_COND_V_MSG(p_port < 0 || p_port > 65535, ERR_INVALID_PARAMETER, "The local port number must be between 0 and 65535 (inclusive).");
+	ERR_FAIL_COND_V_MSG(!p_bind_address.is_valid() && !p_bind_address.is_wildcard(), Error::INVALID_PARAMETER, "Invalid bind IP.");
+	ERR_FAIL_COND_V_MSG(p_port < 0 || p_port > 65535, Error::INVALID_PARAMETER, "The local port number must be between 0 and 65535 (inclusive).");
 
 	ENetAddress address;
 	memset(&address, 0, sizeof(address));
@@ -59,7 +59,7 @@ Error ENetConnection::create_host_bound(const IPAddress &p_bind_address, int p_p
 	if (p_bind_address.is_wildcard()) {
 		address.host = 0;
 	} else {
-		ERR_FAIL_COND_V(!p_bind_address.is_ipv4(), ERR_INVALID_PARAMETER);
+		ERR_FAIL_COND_V(!p_bind_address.is_ipv4(), Error::INVALID_PARAMETER);
 		address.host = *(uint32_t *)p_bind_address.get_ipv4();
 	}
 #endif
@@ -275,11 +275,11 @@ TypedArray<ENetPacketPeer> ENetConnection::_get_peers() {
 
 Error ENetConnection::dtls_server_setup(const Ref<TLSOptions> &p_options) {
 #ifdef GODOT_ENET
-	ERR_FAIL_NULL_V_MSG(host, ERR_UNCONFIGURED, "The ENetConnection instance isn't currently active.");
-	ERR_FAIL_COND_V(p_options.is_null() || !p_options->is_server(), ERR_INVALID_PARAMETER);
-	return enet_host_dtls_server_setup(host, const_cast<TLSOptions *>(p_options.ptr())) ? FAILED : OK;
+	ERR_FAIL_NULL_V_MSG(host, Error::UNCONFIGURED, "The ENetConnection instance isn't currently active.");
+	ERR_FAIL_COND_V(p_options.is_null() || !p_options->is_server(), Error::INVALID_PARAMETER);
+	return enet_host_dtls_server_setup(host, const_cast<TLSOptions *>(p_options.ptr())) ? Error::FAILED : Error::OK;
 #else
-	ERR_FAIL_V_MSG(ERR_UNAVAILABLE, "ENet DTLS support not available in this build.");
+	ERR_FAIL_V_MSG(Error::UNAVAILABLE, "ENet DTLS support not available in this build.");
 #endif
 }
 
@@ -294,20 +294,20 @@ void ENetConnection::refuse_new_connections(bool p_refuse) {
 
 Error ENetConnection::dtls_client_setup(const String &p_hostname, const Ref<TLSOptions> &p_options) {
 #ifdef GODOT_ENET
-	ERR_FAIL_NULL_V_MSG(host, ERR_UNCONFIGURED, "The ENetConnection instance isn't currently active.");
-	ERR_FAIL_COND_V(p_options.is_null() || p_options->is_server(), ERR_INVALID_PARAMETER);
-	return enet_host_dtls_client_setup(host, p_hostname.utf8().get_data(), const_cast<TLSOptions *>(p_options.ptr())) ? FAILED : OK;
+	ERR_FAIL_NULL_V_MSG(host, Error::UNCONFIGURED, "The ENetConnection instance isn't currently active.");
+	ERR_FAIL_COND_V(p_options.is_null() || p_options->is_server(), Error::INVALID_PARAMETER);
+	return enet_host_dtls_client_setup(host, p_hostname.utf8().get_data(), const_cast<TLSOptions *>(p_options.ptr())) ? Error::FAILED : Error::OK;
 #else
-	ERR_FAIL_V_MSG(ERR_UNAVAILABLE, "ENet DTLS support not available in this build.");
+	ERR_FAIL_V_MSG(Error::UNAVAILABLE, "ENet DTLS support not available in this build.");
 #endif
 }
 
 Error ENetConnection::_create(ENetAddress *p_address, int p_max_peers, int p_max_channels, int p_in_bandwidth, int p_out_bandwidth) {
-	ERR_FAIL_COND_V_MSG(host != nullptr, ERR_ALREADY_IN_USE, "The ENetConnection instance is already active.");
-	ERR_FAIL_COND_V_MSG(p_max_peers < 1 || p_max_peers > 4095, ERR_INVALID_PARAMETER, "The number of clients must be set between 1 and 4095 (inclusive).");
-	ERR_FAIL_COND_V_MSG(p_max_channels < 0 || p_max_channels > ENET_PROTOCOL_MAXIMUM_CHANNEL_COUNT, ERR_INVALID_PARAMETER, "Invalid channel count. Must be between 0 and 255 (0 means maximum, i.e. 255)");
-	ERR_FAIL_COND_V_MSG(p_in_bandwidth < 0, ERR_INVALID_PARAMETER, "The incoming bandwidth limit must be greater than or equal to 0 (0 disables the limit).");
-	ERR_FAIL_COND_V_MSG(p_out_bandwidth < 0, ERR_INVALID_PARAMETER, "The outgoing bandwidth limit must be greater than or equal to 0 (0 disables the limit).");
+	ERR_FAIL_COND_V_MSG(host != nullptr, Error::ALREADY_IN_USE, "The ENetConnection instance is already active.");
+	ERR_FAIL_COND_V_MSG(p_max_peers < 1 || p_max_peers > 4095, Error::INVALID_PARAMETER, "The number of clients must be set between 1 and 4095 (inclusive).");
+	ERR_FAIL_COND_V_MSG(p_max_channels < 0 || p_max_channels > ENET_PROTOCOL_MAXIMUM_CHANNEL_COUNT, Error::INVALID_PARAMETER, "Invalid channel count. Must be between 0 and 255 (0 means maximum, i.e. 255)");
+	ERR_FAIL_COND_V_MSG(p_in_bandwidth < 0, Error::INVALID_PARAMETER, "The incoming bandwidth limit must be greater than or equal to 0 (0 disables the limit).");
+	ERR_FAIL_COND_V_MSG(p_out_bandwidth < 0, Error::INVALID_PARAMETER, "The outgoing bandwidth limit must be greater than or equal to 0 (0 disables the limit).");
 
 	host = enet_host_create(p_address /* the address to bind the server host to */,
 			p_max_peers /* allow up to p_max_peers connections */,
@@ -315,8 +315,8 @@ Error ENetConnection::_create(ENetAddress *p_address, int p_max_peers, int p_max
 			p_in_bandwidth /* limit incoming bandwidth if > 0 */,
 			p_out_bandwidth /* limit outgoing bandwidth if > 0 */);
 
-	ERR_FAIL_NULL_V_MSG(host, ERR_CANT_CREATE, "Couldn't create an ENet host.");
-	return OK;
+	ERR_FAIL_NULL_V_MSG(host, Error::CANT_CREATE, "Couldn't create an ENet host.");
+	return Error::OK;
 }
 
 Array ENetConnection::_service(int p_timeout) {

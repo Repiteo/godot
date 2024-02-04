@@ -51,7 +51,7 @@ Error AudioDriverDummy::init() {
 		thread.start(AudioDriverDummy::thread_func, this);
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void AudioDriverDummy::thread_func(void *p_udata) {

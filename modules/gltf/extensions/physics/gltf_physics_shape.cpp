@@ -170,7 +170,7 @@ Ref<GLTFPhysicsShape> GLTFPhysicsShape::from_node(const CollisionShape3D *p_godo
 		// Convert the convex hull points into an array of faces.
 		Geometry3D::MeshData md;
 		Error err = ConvexHullComputer::convex_hull(hull_points, md);
-		ERR_FAIL_COND_V_MSG(err != OK, gltf_shape, "GLTFPhysicsShape: Failed to compute convex hull.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, gltf_shape, "GLTFPhysicsShape: Failed to compute convex hull.");
 		Vector<Vector3> face_vertices;
 		for (uint32_t i = 0; i < md.faces.size(); i++) {
 			uint32_t index_count = md.faces[i].indices.size();

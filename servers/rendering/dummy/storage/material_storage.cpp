@@ -87,7 +87,7 @@ void MaterialStorage::shader_set_code(RID p_shader, const String &p_code) {
 	ShaderCompiler::GeneratedCode gen_code;
 
 	Error err = MaterialStorage::get_singleton()->dummy_compiler.compile(new_mode, p_code, &actions, "", gen_code);
-	ERR_FAIL_COND_MSG(err != OK, "Shader compilation failed.");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Shader compilation failed.");
 }
 
 void MaterialStorage::get_shader_parameter_list(RID p_shader, List<PropertyInfo> *p_param_list) const {

@@ -419,7 +419,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 			case RS::ARRAY_VERTEX: {
 				if (p_format & RS::ARRAY_FLAG_USE_2D_VERTICES) {
 					Vector<Vector2> array = p_arrays[ai];
-					ERR_FAIL_COND_V(array.size() != p_vertex_array_len, ERR_INVALID_PARAMETER);
+					ERR_FAIL_COND_V(array.size() != p_vertex_array_len, Error::INVALID_PARAMETER);
 
 					const Vector2 *src = array.ptr();
 
@@ -444,7 +444,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 
 				} else {
 					Vector<Vector3> array = p_arrays[ai];
-					ERR_FAIL_COND_V(array.size() != p_vertex_array_len, ERR_INVALID_PARAMETER);
+					ERR_FAIL_COND_V(array.size() != p_vertex_array_len, Error::INVALID_PARAMETER);
 
 					const Vector3 *src = array.ptr();
 
@@ -477,19 +477,19 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 						}
 
 						// Validate normal and tangent arrays.
-						ERR_FAIL_COND_V(p_arrays[RS::ARRAY_NORMAL].get_type() != Variant::PACKED_VECTOR3_ARRAY, ERR_INVALID_PARAMETER);
+						ERR_FAIL_COND_V(p_arrays[RS::ARRAY_NORMAL].get_type() != Variant::PACKED_VECTOR3_ARRAY, Error::INVALID_PARAMETER);
 
 						Vector<Vector3> normal_array = p_arrays[RS::ARRAY_NORMAL];
-						ERR_FAIL_COND_V(normal_array.size() != p_vertex_array_len, ERR_INVALID_PARAMETER);
+						ERR_FAIL_COND_V(normal_array.size() != p_vertex_array_len, Error::INVALID_PARAMETER);
 						const Vector3 *normal_src = normal_array.ptr();
 
 						Variant::Type tangent_type = p_arrays[RS::ARRAY_TANGENT].get_type();
-						ERR_FAIL_COND_V(tangent_type != Variant::PACKED_FLOAT32_ARRAY && tangent_type != Variant::PACKED_FLOAT64_ARRAY && tangent_type != Variant::NIL, ERR_INVALID_PARAMETER);
+						ERR_FAIL_COND_V(tangent_type != Variant::PACKED_FLOAT32_ARRAY && tangent_type != Variant::PACKED_FLOAT64_ARRAY && tangent_type != Variant::NIL, Error::INVALID_PARAMETER);
 
 						// We need a different version if using double precision tangents.
 						if (tangent_type == Variant::PACKED_FLOAT32_ARRAY) {
 							Vector<float> tangent_array = p_arrays[RS::ARRAY_TANGENT];
-							ERR_FAIL_COND_V(tangent_array.size() != p_vertex_array_len * 4, ERR_INVALID_PARAMETER);
+							ERR_FAIL_COND_V(tangent_array.size() != p_vertex_array_len * 4, Error::INVALID_PARAMETER);
 							const float *tangent_src = tangent_array.ptr();
 
 							// Set data for vertex, normal, and tangent.
@@ -525,7 +525,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 							}
 						} else if (tangent_type == Variant::PACKED_FLOAT64_ARRAY) {
 							Vector<double> tangent_array = p_arrays[RS::ARRAY_TANGENT];
-							ERR_FAIL_COND_V(tangent_array.size() != p_vertex_array_len * 4, ERR_INVALID_PARAMETER);
+							ERR_FAIL_COND_V(tangent_array.size() != p_vertex_array_len * 4, Error::INVALID_PARAMETER);
 							const double *tangent_src = tangent_array.ptr();
 
 							// Set data for vertex, normal, and tangent.
@@ -613,10 +613,10 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 			case RS::ARRAY_NORMAL: {
 				// If using compression we store normal while storing vertices.
 				if (!(p_format & RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES)) {
-					ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_VECTOR3_ARRAY, ERR_INVALID_PARAMETER);
+					ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_VECTOR3_ARRAY, Error::INVALID_PARAMETER);
 
 					Vector<Vector3> array = p_arrays[ai];
-					ERR_FAIL_COND_V(array.size() != p_vertex_array_len, ERR_INVALID_PARAMETER);
+					ERR_FAIL_COND_V(array.size() != p_vertex_array_len, Error::INVALID_PARAMETER);
 
 					const Vector3 *src = array.ptr();
 					for (int i = 0; i < p_vertex_array_len; i++) {
@@ -635,11 +635,11 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 				// If using compression we store tangent while storing vertices.
 				if (!(p_format & RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES)) {
 					Variant::Type type = p_arrays[ai].get_type();
-					ERR_FAIL_COND_V(type != Variant::PACKED_FLOAT32_ARRAY && type != Variant::PACKED_FLOAT64_ARRAY && type != Variant::NIL, ERR_INVALID_PARAMETER);
+					ERR_FAIL_COND_V(type != Variant::PACKED_FLOAT32_ARRAY && type != Variant::PACKED_FLOAT64_ARRAY && type != Variant::NIL, Error::INVALID_PARAMETER);
 
 					if (type == Variant::PACKED_FLOAT32_ARRAY) {
 						Vector<float> array = p_arrays[ai];
-						ERR_FAIL_COND_V(array.size() != p_vertex_array_len * 4, ERR_INVALID_PARAMETER);
+						ERR_FAIL_COND_V(array.size() != p_vertex_array_len * 4, Error::INVALID_PARAMETER);
 						const float *src_ptr = array.ptr();
 
 						for (int i = 0; i < p_vertex_array_len; i++) {
@@ -660,7 +660,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 						}
 					} else if (type == Variant::PACKED_FLOAT64_ARRAY) {
 						Vector<double> array = p_arrays[ai];
-						ERR_FAIL_COND_V(array.size() != p_vertex_array_len * 4, ERR_INVALID_PARAMETER);
+						ERR_FAIL_COND_V(array.size() != p_vertex_array_len * 4, Error::INVALID_PARAMETER);
 						const double *src_ptr = array.ptr();
 
 						for (int i = 0; i < p_vertex_array_len; i++) {
@@ -680,10 +680,10 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 							memcpy(&vw[p_offsets[ai] + i * p_normal_stride], vector, 4);
 						}
 					} else { // No tangent array.
-						ERR_FAIL_COND_V(p_arrays[RS::ARRAY_NORMAL].get_type() != Variant::PACKED_VECTOR3_ARRAY, ERR_INVALID_PARAMETER);
+						ERR_FAIL_COND_V(p_arrays[RS::ARRAY_NORMAL].get_type() != Variant::PACKED_VECTOR3_ARRAY, Error::INVALID_PARAMETER);
 
 						Vector<Vector3> normal_array = p_arrays[RS::ARRAY_NORMAL];
-						ERR_FAIL_COND_V(normal_array.size() != p_vertex_array_len, ERR_INVALID_PARAMETER);
+						ERR_FAIL_COND_V(normal_array.size() != p_vertex_array_len, Error::INVALID_PARAMETER);
 						const Vector3 *normal_src = normal_array.ptr();
 						// Set data for tangent.
 						for (int i = 0; i < p_vertex_array_len; i++) {
@@ -707,11 +707,11 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 				}
 			} break;
 			case RS::ARRAY_COLOR: {
-				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_COLOR_ARRAY, ERR_INVALID_PARAMETER);
+				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_COLOR_ARRAY, Error::INVALID_PARAMETER);
 
 				Vector<Color> array = p_arrays[ai];
 
-				ERR_FAIL_COND_V(array.size() != p_vertex_array_len, ERR_INVALID_PARAMETER);
+				ERR_FAIL_COND_V(array.size() != p_vertex_array_len, Error::INVALID_PARAMETER);
 
 				const Color *src = array.ptr();
 				for (int i = 0; i < p_vertex_array_len; i++) {
@@ -725,11 +725,11 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 				}
 			} break;
 			case RS::ARRAY_TEX_UV: {
-				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_VECTOR3_ARRAY && p_arrays[ai].get_type() != Variant::PACKED_VECTOR2_ARRAY, ERR_INVALID_PARAMETER);
+				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_VECTOR3_ARRAY && p_arrays[ai].get_type() != Variant::PACKED_VECTOR2_ARRAY, Error::INVALID_PARAMETER);
 
 				Vector<Vector2> array = p_arrays[ai];
 
-				ERR_FAIL_COND_V(array.size() != p_vertex_array_len, ERR_INVALID_PARAMETER);
+				ERR_FAIL_COND_V(array.size() != p_vertex_array_len, Error::INVALID_PARAMETER);
 
 				const Vector2 *src = array.ptr();
 				if (p_format & RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES) {
@@ -752,11 +752,11 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 			} break;
 
 			case RS::ARRAY_TEX_UV2: {
-				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_VECTOR3_ARRAY && p_arrays[ai].get_type() != Variant::PACKED_VECTOR2_ARRAY, ERR_INVALID_PARAMETER);
+				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_VECTOR3_ARRAY && p_arrays[ai].get_type() != Variant::PACKED_VECTOR2_ARRAY, Error::INVALID_PARAMETER);
 
 				Vector<Vector2> array = p_arrays[ai];
 
-				ERR_FAIL_COND_V(array.size() != p_vertex_array_len, ERR_INVALID_PARAMETER);
+				ERR_FAIL_COND_V(array.size() != p_vertex_array_len, Error::INVALID_PARAMETER);
 
 				const Vector2 *src = array.ptr();
 
@@ -787,11 +787,11 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 					case ARRAY_CUSTOM_RGBA8_SNORM:
 					case ARRAY_CUSTOM_RG_HALF: {
 						// Size 4
-						ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_BYTE_ARRAY, ERR_INVALID_PARAMETER);
+						ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_BYTE_ARRAY, Error::INVALID_PARAMETER);
 
 						Vector<uint8_t> array = p_arrays[ai];
 
-						ERR_FAIL_COND_V(array.size() != p_vertex_array_len * 4, ERR_INVALID_PARAMETER);
+						ERR_FAIL_COND_V(array.size() != p_vertex_array_len * 4, Error::INVALID_PARAMETER);
 
 						const uint8_t *src = array.ptr();
 
@@ -802,11 +802,11 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 					} break;
 					case ARRAY_CUSTOM_RGBA_HALF: {
 						// Size 8
-						ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_BYTE_ARRAY, ERR_INVALID_PARAMETER);
+						ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_BYTE_ARRAY, Error::INVALID_PARAMETER);
 
 						Vector<uint8_t> array = p_arrays[ai];
 
-						ERR_FAIL_COND_V(array.size() != p_vertex_array_len * 8, ERR_INVALID_PARAMETER);
+						ERR_FAIL_COND_V(array.size() != p_vertex_array_len * 8, Error::INVALID_PARAMETER);
 
 						const uint8_t *src = array.ptr();
 
@@ -819,12 +819,12 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 					case ARRAY_CUSTOM_RGB_FLOAT:
 					case ARRAY_CUSTOM_RGBA_FLOAT: {
 						// RF
-						ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_FLOAT32_ARRAY, ERR_INVALID_PARAMETER);
+						ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_FLOAT32_ARRAY, Error::INVALID_PARAMETER);
 
 						Vector<float> array = p_arrays[ai];
 						int32_t s = type - ARRAY_CUSTOM_R_FLOAT + 1;
 
-						ERR_FAIL_COND_V(array.size() != p_vertex_array_len * s, ERR_INVALID_PARAMETER);
+						ERR_FAIL_COND_V(array.size() != p_vertex_array_len * s, Error::INVALID_PARAMETER);
 
 						const float *src = array.ptr();
 
@@ -839,11 +839,11 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 			} break;
 			case RS::ARRAY_WEIGHTS: {
 				Variant::Type type = p_arrays[ai].get_type();
-				ERR_FAIL_COND_V(type != Variant::PACKED_FLOAT32_ARRAY && type != Variant::PACKED_FLOAT64_ARRAY, ERR_INVALID_PARAMETER);
+				ERR_FAIL_COND_V(type != Variant::PACKED_FLOAT32_ARRAY && type != Variant::PACKED_FLOAT64_ARRAY, Error::INVALID_PARAMETER);
 				uint32_t bone_count = (p_format & ARRAY_FLAG_USE_8_BONE_WEIGHTS) ? 8 : 4;
 				if (type == Variant::PACKED_FLOAT32_ARRAY) {
 					Vector<float> array = p_arrays[ai];
-					ERR_FAIL_COND_V(array.size() != (int32_t)(p_vertex_array_len * bone_count), ERR_INVALID_PARAMETER);
+					ERR_FAIL_COND_V(array.size() != (int32_t)(p_vertex_array_len * bone_count), Error::INVALID_PARAMETER);
 					const float *src = array.ptr();
 					{
 						uint16_t data[8];
@@ -857,7 +857,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 					}
 				} else { // PACKED_FLOAT64_ARRAY
 					Vector<double> array = p_arrays[ai];
-					ERR_FAIL_COND_V(array.size() != (int32_t)(p_vertex_array_len * bone_count), ERR_INVALID_PARAMETER);
+					ERR_FAIL_COND_V(array.size() != (int32_t)(p_vertex_array_len * bone_count), Error::INVALID_PARAMETER);
 					const double *src = array.ptr();
 					{
 						uint16_t data[8];
@@ -872,13 +872,13 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 				}
 			} break;
 			case RS::ARRAY_BONES: {
-				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_INT32_ARRAY && p_arrays[ai].get_type() != Variant::PACKED_FLOAT32_ARRAY, ERR_INVALID_PARAMETER);
+				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_INT32_ARRAY && p_arrays[ai].get_type() != Variant::PACKED_FLOAT32_ARRAY, Error::INVALID_PARAMETER);
 
 				Vector<int> array = p_arrays[ai];
 
 				uint32_t bone_count = (p_format & ARRAY_FLAG_USE_8_BONE_WEIGHTS) ? 8 : 4;
 
-				ERR_FAIL_COND_V(array.size() != (int32_t)(p_vertex_array_len * bone_count), ERR_INVALID_PARAMETER);
+				ERR_FAIL_COND_V(array.size() != (int32_t)(p_vertex_array_len * bone_count), Error::INVALID_PARAMETER);
 
 				const int *src = array.ptr();
 
@@ -896,13 +896,13 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 			} break;
 
 			case RS::ARRAY_INDEX: {
-				ERR_FAIL_NULL_V(iw, ERR_INVALID_DATA);
-				ERR_FAIL_COND_V(p_index_array_len <= 0, ERR_INVALID_DATA);
-				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_INT32_ARRAY, ERR_INVALID_PARAMETER);
+				ERR_FAIL_NULL_V(iw, Error::INVALID_DATA);
+				ERR_FAIL_COND_V(p_index_array_len <= 0, Error::INVALID_DATA);
+				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_INT32_ARRAY, Error::INVALID_PARAMETER);
 
 				Vector<int> indices = p_arrays[ai];
-				ERR_FAIL_COND_V(indices.size() == 0, ERR_INVALID_PARAMETER);
-				ERR_FAIL_COND_V(indices.size() != p_index_array_len, ERR_INVALID_PARAMETER);
+				ERR_FAIL_COND_V(indices.size() == 0, Error::INVALID_PARAMETER);
+				ERR_FAIL_COND_V(indices.size() != p_index_array_len, Error::INVALID_PARAMETER);
 
 				/* determine whether using 16 or 32 bits indices */
 
@@ -921,7 +921,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 				}
 			} break;
 			default: {
-				ERR_FAIL_V(ERR_INVALID_DATA);
+				ERR_FAIL_V(Error::INVALID_DATA);
 			}
 		}
 	}
@@ -964,7 +964,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 					if (w == 0) {
 						continue; //break;
 					}
-					ERR_FAIL_INDEX_V(idx, total_bones, ERR_INVALID_DATA);
+					ERR_FAIL_INDEX_V(idx, total_bones, Error::INVALID_DATA);
 
 					if (bptr[idx].size.x < 0) {
 						// First
@@ -981,7 +981,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 			r_bone_aabb.clear();
 		}
 	}
-	return OK;
+	return Error::OK;
 }
 
 uint32_t RenderingServer::mesh_surface_get_format_offset(BitField<ArrayFormat> p_format, int p_vertex_len, int p_array_index) const {
@@ -1164,8 +1164,8 @@ void RenderingServer::mesh_surface_make_offsets_from_format(uint64_t p_format, i
 }
 
 Error RenderingServer::mesh_create_surface_data_from_arrays(SurfaceData *r_surface_data, PrimitiveType p_primitive, const Array &p_arrays, const Array &p_blend_shapes, const Dictionary &p_lods, uint64_t p_compress_format) {
-	ERR_FAIL_INDEX_V(p_primitive, RS::PRIMITIVE_MAX, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_arrays.size() != RS::ARRAY_MAX, ERR_INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_primitive, RS::PRIMITIVE_MAX, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_arrays.size() != RS::ARRAY_MAX, Error::INVALID_PARAMETER);
 
 	uint64_t format = 0;
 
@@ -1188,15 +1188,15 @@ Error RenderingServer::mesh_create_surface_data_from_arrays(SurfaceData *r_surfa
 					format |= ARRAY_FLAG_USE_2D_VERTICES;
 				} break;
 				case Variant::PACKED_VECTOR3_ARRAY: {
-					ERR_FAIL_COND_V(p_compress_format & ARRAY_FLAG_USE_2D_VERTICES, ERR_INVALID_PARAMETER);
+					ERR_FAIL_COND_V(p_compress_format & ARRAY_FLAG_USE_2D_VERTICES, Error::INVALID_PARAMETER);
 					Vector<Vector3> v3 = p_arrays[i];
 					array_len = v3.size();
 				} break;
 				default: {
-					ERR_FAIL_V_MSG(ERR_INVALID_DATA, "Vertex array must be a PackedVector2Array or PackedVector3Array.");
+					ERR_FAIL_V_MSG(Error::INVALID_DATA, "Vertex array must be a PackedVector2Array or PackedVector3Array.");
 				} break;
 			}
-			ERR_FAIL_COND_V(array_len == 0, ERR_INVALID_DATA);
+			ERR_FAIL_COND_V(array_len == 0, Error::INVALID_DATA);
 		} else if (i == RS::ARRAY_NORMAL) {
 			if (p_arrays[RS::ARRAY_TANGENT].get_type() == Variant::NIL) {
 				// We must use tangents if using normals.
@@ -1214,7 +1214,7 @@ Error RenderingServer::mesh_create_surface_data_from_arrays(SurfaceData *r_surfa
 					}
 				} break;
 				default: {
-					ERR_FAIL_V_MSG(ERR_INVALID_DATA, "Bones array must be a PackedInt32Array.");
+					ERR_FAIL_V_MSG(Error::INVALID_DATA, "Bones array must be a PackedInt32Array.");
 				} break;
 			}
 		} else if (i == RS::ARRAY_INDEX) {
@@ -1233,7 +1233,7 @@ Error RenderingServer::mesh_create_surface_data_from_arrays(SurfaceData *r_surfa
 				}
 			}
 
-			ERR_FAIL_COND_V_MSG(bsformat != (format & RS::ARRAY_FORMAT_BLEND_SHAPE_MASK), ERR_INVALID_PARAMETER, "Blend shape format must match the main array format for Vertex, Normal and Tangent arrays.");
+			ERR_FAIL_COND_V_MSG(bsformat != (format & RS::ARRAY_FORMAT_BLEND_SHAPE_MASK), Error::INVALID_PARAMETER, "Blend shape format must match the main array format for Vertex, Normal and Tangent arrays.");
 		}
 	}
 
@@ -1268,8 +1268,8 @@ Error RenderingServer::mesh_create_surface_data_from_arrays(SurfaceData *r_surfa
 
 	if ((format & RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES) && ((format & RS::ARRAY_FORMAT_NORMAL) || (format & RS::ARRAY_FORMAT_TANGENT))) {
 		// If using normals or tangents, then we need all three.
-		ERR_FAIL_COND_V_MSG(!(format & RS::ARRAY_FORMAT_VERTEX), ERR_INVALID_PARAMETER, "Can't use compression flag 'ARRAY_FLAG_COMPRESS_ATTRIBUTES' while using normals or tangents without vertex array.");
-		ERR_FAIL_COND_V_MSG(!(format & RS::ARRAY_FORMAT_NORMAL), ERR_INVALID_PARAMETER, "Can't use compression flag 'ARRAY_FLAG_COMPRESS_ATTRIBUTES' while using tangents without normal array.");
+		ERR_FAIL_COND_V_MSG(!(format & RS::ARRAY_FORMAT_VERTEX), Error::INVALID_PARAMETER, "Can't use compression flag 'ARRAY_FLAG_COMPRESS_ATTRIBUTES' while using normals or tangents without vertex array.");
+		ERR_FAIL_COND_V_MSG(!(format & RS::ARRAY_FORMAT_NORMAL), Error::INVALID_PARAMETER, "Can't use compression flag 'ARRAY_FLAG_COMPRESS_ATTRIBUTES' while using tangents without normal array.");
 	}
 
 	int vertex_array_size = (vertex_element_size + normal_element_size) * array_len;
@@ -1295,7 +1295,7 @@ Error RenderingServer::mesh_create_surface_data_from_arrays(SurfaceData *r_surfa
 	Vector4 uv_scale = Vector4(0.0, 0.0, 0.0, 0.0);
 
 	Error err = _surface_set_data(p_arrays, format, offsets, vertex_element_size, normal_element_size, attrib_element_size, skin_element_size, vertex_array, attrib_array, skin_array, array_len, index_array, index_array_len, aabb, bone_aabb, uv_scale);
-	ERR_FAIL_COND_V_MSG(err != OK, ERR_INVALID_DATA, "Invalid array format for surface.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Error::INVALID_DATA, "Invalid array format for surface.");
 
 	Vector<uint8_t> blend_shape_data;
 
@@ -1312,7 +1312,7 @@ Error RenderingServer::mesh_create_surface_data_from_arrays(SurfaceData *r_surfa
 			Vector4 bone_uv_scale; // Not used.
 			Error err2 = _surface_set_data(p_blend_shapes[i], bs_format, offsets, vertex_element_size, normal_element_size, 0, 0, vertex_array_shape, noattrib, noskin, array_len, noindex, 0, laabb, bone_aabb, bone_uv_scale);
 			aabb.merge_with(laabb);
-			ERR_FAIL_COND_V_MSG(err2 != OK, ERR_INVALID_DATA, "Invalid blend shape array format for surface.");
+			ERR_FAIL_COND_V_MSG(err2 != Error::OK, Error::INVALID_DATA, "Invalid blend shape array format for surface.");
 
 			blend_shape_data.append_array(vertex_array_shape);
 		}
@@ -1373,13 +1373,13 @@ Error RenderingServer::mesh_create_surface_data_from_arrays(SurfaceData *r_surfa
 	surface_data.lods = lods;
 	surface_data.uv_scale = uv_scale;
 
-	return OK;
+	return Error::OK;
 }
 
 void RenderingServer::mesh_add_surface_from_arrays(RID p_mesh, PrimitiveType p_primitive, const Array &p_arrays, const Array &p_blend_shapes, const Dictionary &p_lods, BitField<ArrayFormat> p_compress_format) {
 	SurfaceData sd;
 	Error err = mesh_create_surface_data_from_arrays(&sd, p_primitive, p_arrays, p_blend_shapes, p_lods, p_compress_format);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return;
 	}
 	mesh_add_surface(p_mesh, sd);

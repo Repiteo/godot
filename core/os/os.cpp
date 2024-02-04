@@ -299,7 +299,7 @@ String OS::get_system_dir(SystemDir p_dir, bool p_shared_storage) const {
 }
 
 Error OS::shell_open(String p_uri) {
-	return ERR_UNAVAILABLE;
+	return Error::UNAVAILABLE;
 }
 
 Error OS::shell_show_in_file_manager(String p_path, bool p_open_folder) {
@@ -324,7 +324,7 @@ uint64_t OS::get_static_memory_peak_usage() const {
 }
 
 Error OS::set_cwd(const String &p_cwd) {
-	return ERR_CANT_OPEN;
+	return Error::CANT_OPEN;
 }
 
 Dictionary OS::get_memory_info() const {
@@ -349,7 +349,7 @@ void OS::ensure_user_data_dir() {
 
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 	Error err = da->make_dir_recursive(dd);
-	ERR_FAIL_COND_MSG(err != OK, "Error attempting to create data dir: " + dd + ".");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Error attempting to create data dir: " + dd + ".");
 }
 
 String OS::get_model_name() const {

@@ -104,7 +104,7 @@ void GDScriptTextDocument::didSave(const Variant &p_param) {
 
 	String path = GDScriptLanguageProtocol::get_singleton()->get_workspace()->get_file_path(doc.uri);
 	Ref<GDScript> scr = ResourceLoader::load(path);
-	if (scr.is_valid() && (scr->load_source_code(path) == OK)) {
+	if (scr.is_valid() && (scr->load_source_code(path) == Error::OK)) {
 		if (scr->is_tool()) {
 			scr->get_language()->reload_tool_script(scr, true);
 		} else {
@@ -471,7 +471,7 @@ Variant GDScriptTextDocument::signatureHelp(const Dictionary &p_params) {
 	params.load(p_params);
 
 	lsp::SignatureHelp s;
-	if (OK == GDScriptLanguageProtocol::get_singleton()->get_workspace()->resolve_signature(params, s)) {
+	if (Error::OK == GDScriptLanguageProtocol::get_singleton()->get_workspace()->resolve_signature(params, s)) {
 		ret = s.to_json();
 	}
 

@@ -88,7 +88,7 @@ void GDScriptLanguageServer::start() {
 	host = String(_EDITOR_GET("network/language_server/remote_host"));
 	port = (GDScriptLanguageServer::port_override > -1) ? GDScriptLanguageServer::port_override : (int)_EDITOR_GET("network/language_server/remote_port");
 	use_thread = (bool)_EDITOR_GET("network/language_server/use_thread");
-	if (protocol.start(port, IPAddress(host)) == OK) {
+	if (protocol.start(port, IPAddress(host)) == Error::OK) {
 		EditorNode::get_log()->add_message("--- GDScript language server started on port " + itos(port) + " ---", EditorLog::MSG_TYPE_EDITOR);
 		if (use_thread) {
 			thread_running = true;

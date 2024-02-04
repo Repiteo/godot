@@ -50,11 +50,11 @@ Error HTTPRequest::_parse_url(const String &p_url) {
 
 	String scheme;
 	Error err = p_url.parse_url(scheme, url, port, request_string);
-	ERR_FAIL_COND_V_MSG(err != OK, err, "Error parsing URL: " + p_url + ".");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Error parsing URL: " + p_url + ".");
 	if (scheme == "https://") {
 		use_tls = true;
 	} else if (scheme != "http://") {
-		ERR_FAIL_V_MSG(ERR_INVALID_PARAMETER, "Invalid URL scheme: " + scheme + ".");
+		ERR_FAIL_V_MSG(Error::INVALID_PARAMETER, "Invalid URL scheme: " + scheme + ".");
 	}
 	if (port == 0) {
 		port = use_tls ? 443 : 80;
@@ -62,7 +62,7 @@ Error HTTPRequest::_parse_url(const String &p_url) {
 	if (request_string.is_empty()) {
 		request_string = "/";
 	}
-	return OK;
+	return Error::OK;
 }
 
 bool HTTPRequest::has_header(const PackedStringArray &p_headers, const String &p_header_name) {
@@ -112,8 +112,8 @@ Error HTTPRequest::request(const String &p_url, const Vector<String> &p_custom_h
 }
 
 Error HTTPRequest::request_raw(const String &p_url, const Vector<String> &p_custom_headers, HTTPClient::Method p_method, const Vector<uint8_t> &p_request_data_raw) {
-	ERR_FAIL_COND_V(!is_inside_tree(), ERR_UNCONFIGURED);
-	ERR_FAIL_COND_V_MSG(requesting, ERR_BUSY, "HTTPRequest is processing a request. Wait for completion or cancel it before attempting a new one.");
+	ERR_FAIL_COND_V(!is_inside_tree(), Error::UNCONFIGURED);
+	ERR_FAIL_COND_V_MSG(requesting, Error::BUSY, "HTTPRequest is processing a request. Wait for completion or cancel it before attempting a new one.");
 
 	if (timeout > 0) {
 		timer->stop();
@@ -123,7 +123,7 @@ Error HTTPRequest::request_raw(const String &p_url, const Vector<String> &p_cust
 	method = p_method;
 
 	Error err = _parse_url(p_url);
-	if (err) {
+	if (err != Error::OK) {
 		return err;
 	}
 
@@ -148,15 +148,15 @@ Error HTTPRequest::request_raw(const String &p_url, const Vector<String> &p_cust
 	} else {
 		client->set_blocking_mode(false);
 		err = _request();
-		if (err != OK) {
+		if (err != Error::OK) {
 			_defer_done(RESULT_CANT_CONNECT, 0, PackedStringArray(), PackedByteArray());
-			return ERR_CANT_CONNECT;
+			return Error::CANT_CONNECT;
 		}
 
 		set_process_internal(true);
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void HTTPRequest::_thread_func(void *p_userdata) {
@@ -164,7 +164,7 @@ void HTTPRequest::_thread_func(void *p_userdata) {
 
 	Error err = hr->_request();
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		hr->_defer_done(RESULT_CANT_CONNECT, 0, PackedStringArray(), PackedByteArray());
 	} else {
 		while (!hr->thread_request_quit.is_set()) {
@@ -255,7 +255,7 @@ bool HTTPRequest::_handle_response(bool *ret_value) {
 			}
 
 			err = _request();
-			if (err == OK) {
+			if (err == Error::OK) {
 				request_sent = false;
 				got_response = false;
 				body_len = -1;
@@ -339,7 +339,7 @@ bool HTTPRequest::_update_connection() {
 
 				int size = request_data.size();
 				Error err = client->request(method, request_string, headers, size > 0 ? request_data.ptr() : nullptr, size);
-				if (err != OK) {
+				if (err != Error::OK) {
 					_defer_done(RESULT_CONNECTION_ERROR, 0, PackedStringArray(), PackedByteArray());
 					return true;
 				}
@@ -405,13 +405,13 @@ bool HTTPRequest::_update_connection() {
 				while (left) {
 					int w = 0;
 					Error err = decompressor->put_partial_data(compressed.ptr() + pos, left, w);
-					if (err == OK) {
+					if (err == Error::OK) {
 						PackedByteArray dc;
 						dc.resize(decompressor->get_available_bytes());
 						err = decompressor->get_data(dc.ptrw(), dc.size());
 						chunk.append_array(dc);
 					}
-					if (err != OK) {
+					if (err != Error::OK) {
 						_defer_done(RESULT_BODY_DECOMPRESS_FAILED, response_code, response_headers, PackedByteArray());
 						return true;
 					}
@@ -435,7 +435,7 @@ bool HTTPRequest::_update_connection() {
 				if (file.is_valid()) {
 					const uint8_t *r = chunk.ptr();
 					file->store_buffer(r, chunk.size());
-					if (file->get_error() != OK) {
+					if (file->get_error() != Error::OK) {
 						_defer_done(RESULT_DOWNLOAD_FILE_WRITE_ERROR, response_code, response_headers, PackedByteArray());
 						return true;
 					}

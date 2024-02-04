@@ -77,13 +77,13 @@ Error MultiplayerDebugger::_capture(void *p_user, const String &p_msg, const Arr
 				out.push_back(obj->get_class());
 				out.push_back(String(((Node *)obj)->get_path()));
 			} else {
-				ERR_FAIL_V(FAILED);
+				ERR_FAIL_V(Error::FAILED);
 			}
 		}
 		EngineDebugger::get_singleton()->send_message("multiplayer:cache", out);
-		return OK;
+		return Error::OK;
 	}
-	ERR_FAIL_V(FAILED);
+	ERR_FAIL_V(Error::FAILED);
 }
 
 // BandwidthProfiler

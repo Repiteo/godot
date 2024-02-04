@@ -143,9 +143,9 @@ PackedByteArray Crypto::hmac_digest(HashingContext::HashType p_hash_type, Packed
 	Ref<HMACContext> ctx = Ref<HMACContext>(HMACContext::create());
 	ERR_FAIL_COND_V_MSG(ctx.is_null(), PackedByteArray(), "HMAC is not available without mbedtls module.");
 	Error err = ctx->start(p_hash_type, p_key);
-	ERR_FAIL_COND_V(err != OK, PackedByteArray());
+	ERR_FAIL_COND_V(err != Error::OK, PackedByteArray());
 	err = ctx->update(p_msg);
-	ERR_FAIL_COND_V(err != OK, PackedByteArray());
+	ERR_FAIL_COND_V(err != Error::OK, PackedByteArray());
 	return ctx->finish();
 }
 
@@ -236,10 +236,10 @@ Error ResourceFormatSaverCrypto::save(const Ref<Resource> &p_resource, const Str
 		String el = p_path.get_extension().to_lower();
 		err = key->save(p_path, el == "pub");
 	} else {
-		ERR_FAIL_V(ERR_INVALID_PARAMETER);
+		ERR_FAIL_V(Error::INVALID_PARAMETER);
 	}
-	ERR_FAIL_COND_V_MSG(err != OK, err, "Cannot save Crypto resource to file '" + p_path + "'.");
-	return OK;
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Cannot save Crypto resource to file '" + p_path + "'.");
+	return Error::OK;
 }
 
 void ResourceFormatSaverCrypto::get_recognized_extensions(const Ref<Resource> &p_resource, List<String> *p_extensions) const {

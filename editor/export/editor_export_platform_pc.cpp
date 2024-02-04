@@ -117,10 +117,10 @@ Error EditorExportPlatformPC::export_project(const Ref<EditorExportPreset> &p_pr
 	ExportNotifier notifier(*this, p_preset, p_debug, p_path, p_flags);
 
 	Error err = prepare_template(p_preset, p_debug, p_path, p_flags);
-	if (err == OK) {
+	if (err == Error::OK) {
 		err = modify_template(p_preset, p_debug, p_path, p_flags);
 	}
-	if (err == OK) {
+	if (err == Error::OK) {
 		err = export_project_data(p_preset, p_debug, p_path, p_flags);
 	}
 
@@ -130,7 +130,7 @@ Error EditorExportPlatformPC::export_project(const Ref<EditorExportPreset> &p_pr
 Error EditorExportPlatformPC::prepare_template(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, int p_flags) {
 	if (!DirAccess::exists(p_path.get_base_dir())) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Prepare Template"), TTR("The given export path doesn't exist."));
-		return ERR_FILE_BAD_PATH;
+		return Error::FILE_BAD_PATH;
 	}
 
 	String custom_debug = p_preset->get("custom_template/debug");
@@ -146,7 +146,7 @@ Error EditorExportPlatformPC::prepare_template(const Ref<EditorExportPreset> &p_
 
 	if (!template_path.is_empty() && !FileAccess::exists(template_path)) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Prepare Template"), vformat(TTR("Template file not found: \"%s\"."), template_path));
-		return ERR_FILE_NOT_FOUND;
+		return Error::FILE_NOT_FOUND;
 	}
 
 	String wrapper_template_path = template_path.get_basename() + "_console.exe";
@@ -156,10 +156,10 @@ Error EditorExportPlatformPC::prepare_template(const Ref<EditorExportPreset> &p_
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 	da->make_dir_recursive(p_path.get_base_dir());
 	Error err = da->copy(template_path, p_path, get_chmod_flags());
-	if (err == OK && copy_wrapper && FileAccess::exists(wrapper_template_path)) {
+	if (err == Error::OK && copy_wrapper && FileAccess::exists(wrapper_template_path)) {
 		err = da->copy(wrapper_template_path, p_path.get_basename() + ".console.exe", get_chmod_flags());
 	}
-	if (err != OK) {
+	if (err != Error::OK) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Prepare Template"), TTR("Failed to copy export template."));
 		return err;
 	}
@@ -180,19 +180,19 @@ Error EditorExportPlatformPC::export_project_data(const Ref<EditorExportPreset> 
 	int64_t embedded_pos;
 	int64_t embedded_size;
 	Error err = save_pack(p_preset, p_debug, pck_path, &so_files, p_preset->get("binary_format/embed_pck"), &embedded_pos, &embedded_size);
-	if (err == OK && p_preset->get("binary_format/embed_pck")) {
+	if (err == Error::OK && p_preset->get("binary_format/embed_pck")) {
 		if (embedded_size >= 0x100000000 && String(p_preset->get("binary_format/architecture")).contains("32")) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("PCK Embedding"), TTR("On 32-bit exports the embedded PCK cannot be bigger than 4 GiB."));
-			return ERR_INVALID_PARAMETER;
+			return Error::INVALID_PARAMETER;
 		}
 
 		err = fixup_embedded_pck(p_path, embedded_pos, embedded_size);
 	}
 
-	if (err == OK && !so_files.is_empty()) {
+	if (err == Error::OK && !so_files.is_empty()) {
 		// If shared object files, copy them.
 		Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
-		for (int i = 0; i < so_files.size() && err == OK; i++) {
+		for (int i = 0; i < so_files.size() && err == Error::OK; i++) {
 			String src_path = ProjectSettings::get_singleton()->globalize_path(so_files[i].path);
 			String target_path;
 			if (so_files[i].target.is_empty()) {
@@ -205,12 +205,12 @@ Error EditorExportPlatformPC::export_project_data(const Ref<EditorExportPreset> 
 
 			if (da->dir_exists(src_path)) {
 				err = da->make_dir_recursive(target_path);
-				if (err == OK) {
+				if (err == Error::OK) {
 					err = da->copy_dir(src_path, target_path, -1, true);
 				}
 			} else {
 				err = da->copy(src_path, target_path);
-				if (err == OK) {
+				if (err == Error::OK) {
 					err = sign_shared_object(p_preset, p_debug, target_path);
 				}
 			}
@@ -221,7 +221,7 @@ Error EditorExportPlatformPC::export_project_data(const Ref<EditorExportPreset> 
 }
 
 Error EditorExportPlatformPC::sign_shared_object(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path) {
-	return OK;
+	return Error::OK;
 }
 
 void EditorExportPlatformPC::set_name(const String &p_name) {

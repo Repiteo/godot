@@ -78,7 +78,7 @@ Error ResourceImporterBitMap::import(const String &p_source_file, const String &
 	Ref<Image> image;
 	image.instantiate();
 	Error err = ImageLoader::load_image(p_source_file, image);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 

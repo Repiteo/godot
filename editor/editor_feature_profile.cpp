@@ -204,33 +204,33 @@ Error EditorFeatureProfile::save_to_file(const String &p_path) {
 	data["disabled_features"] = dis_features;
 
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::WRITE);
-	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_CANT_CREATE, "Cannot create file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(f.is_null(), Error::CANT_CREATE, "Cannot create file '" + p_path + "'.");
 
 	JSON json;
 	String text = json.stringify(data, "\t");
 	f->store_string(text);
-	return OK;
+	return Error::OK;
 }
 
 Error EditorFeatureProfile::load_from_file(const String &p_path) {
 	Error err;
 	String text = FileAccess::get_file_as_string(p_path, &err);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 
 	JSON json;
 	err = json.parse(text);
-	if (err != OK) {
+	if (err != Error::OK) {
 		ERR_PRINT("Error parsing '" + p_path + "' on line " + itos(json.get_error_line()) + ": " + json.get_error_message());
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 
 	Dictionary data = json.get_data();
 
 	if (!data.has("type") || String(data["type"]) != "feature_profile") {
 		ERR_PRINT("Error parsing '" + p_path + "', it's not a feature profile.");
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 
 	disabled_classes.clear();
@@ -278,7 +278,7 @@ Error EditorFeatureProfile::load_from_file(const String &p_path) {
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void EditorFeatureProfile::_bind_methods() {
@@ -325,7 +325,7 @@ void EditorFeatureProfileManager::_notification(int p_what) {
 			if (!current_profile.is_empty()) {
 				current.instantiate();
 				Error err = current->load_from_file(EditorPaths::get_singleton()->get_feature_profiles_dir().path_join(current_profile + ".profile"));
-				if (err != OK) {
+				if (err != Error::OK) {
 					ERR_PRINT("Error loading default feature profile: " + current_profile);
 					current_profile = String();
 					current.unref();
@@ -755,7 +755,7 @@ void EditorFeatureProfileManager::_update_selected_profile() {
 		//reload edited, if different from current
 		edited.instantiate();
 		Error err = edited->load_from_file(EditorPaths::get_singleton()->get_feature_profiles_dir().path_join(profile + ".profile"));
-		ERR_FAIL_COND_MSG(err != OK, "Error when loading editor feature profile from file '" + EditorPaths::get_singleton()->get_feature_profiles_dir().path_join(profile + ".profile") + "'.");
+		ERR_FAIL_COND_MSG(err != Error::OK, "Error when loading editor feature profile from file '" + EditorPaths::get_singleton()->get_feature_profiles_dir().path_join(profile + ".profile") + "'.");
 	}
 
 	updating_features = true;
@@ -805,7 +805,7 @@ void EditorFeatureProfileManager::_import_profiles(const Vector<String> &p_paths
 		profile.instantiate();
 		Error err = profile->load_from_file(p_paths[i]);
 		String basefile = p_paths[i].get_file();
-		if (err != OK) {
+		if (err != Error::OK) {
 			EditorNode::get_singleton()->show_warning(vformat(TTR("File '%s' format is invalid, import aborted."), basefile));
 			return;
 		}
@@ -823,7 +823,7 @@ void EditorFeatureProfileManager::_import_profiles(const Vector<String> &p_paths
 		Ref<EditorFeatureProfile> profile;
 		profile.instantiate();
 		Error err = profile->load_from_file(p_paths[i]);
-		ERR_CONTINUE(err != OK);
+		ERR_CONTINUE(err != Error::OK);
 		String basefile = p_paths[i].get_file();
 		String dst_file = EditorPaths::get_singleton()->get_feature_profiles_dir().path_join(basefile);
 		profile->save_to_file(dst_file);
@@ -839,7 +839,7 @@ void EditorFeatureProfileManager::_import_profiles(const Vector<String> &p_paths
 void EditorFeatureProfileManager::_export_profile(const String &p_path) {
 	ERR_FAIL_COND(edited.is_null());
 	Error err = edited->save_to_file(p_path);
-	if (err != OK) {
+	if (err != Error::OK) {
 		EditorNode::get_singleton()->show_warning(vformat(TTR("Error saving profile to path: '%s'."), p_path));
 	}
 }

@@ -69,7 +69,7 @@ void SceneMultiplayer::_update_status() {
 Error SceneMultiplayer::poll() {
 	_update_status();
 	if (last_connection_status == MultiplayerPeer::CONNECTION_DISCONNECTED) {
-		return OK;
+		return Error::OK;
 	}
 
 	multiplayer_peer->poll();
@@ -77,7 +77,7 @@ Error SceneMultiplayer::poll() {
 	_update_status();
 	if (last_connection_status != MultiplayerPeer::CONNECTION_CONNECTED) {
 		// We might be still connecting, or polling might have resulted in a disconnection.
-		return OK;
+		return Error::OK;
 	}
 
 	while (multiplayer_peer->get_available_packet_count()) {
@@ -89,7 +89,7 @@ Error SceneMultiplayer::poll() {
 		MultiplayerPeer::TransferMode mode = multiplayer_peer->get_packet_mode();
 
 		Error err = multiplayer_peer->get_packet(&packet, len);
-		ERR_FAIL_COND_V_MSG(err != OK, err, vformat("Error getting packet! %d", err));
+		ERR_FAIL_COND_V_MSG(err != Error::OK, err, vformat("Error getting packet! %d", err));
 
 #ifdef DEBUG_ENABLED
 		_profile_bandwidth("in", len);
@@ -146,7 +146,7 @@ Error SceneMultiplayer::poll() {
 
 		_update_status();
 		if (last_connection_status != MultiplayerPeer::CONNECTION_CONNECTED) { // It's possible that processing a packet might have resulted in a disconnection, so check here.
-			return OK;
+			return Error::OK;
 		}
 	}
 	if (pending_peers.size() && auth_timeout) {
@@ -167,11 +167,11 @@ Error SceneMultiplayer::poll() {
 
 	_update_status();
 	if (last_connection_status != MultiplayerPeer::CONNECTION_CONNECTED) { // Signals might have triggered disconnection.
-		return OK;
+		return Error::OK;
 	}
 
 	replicator->on_network_process();
-	return OK;
+	return Error::OK;
 }
 
 void SceneMultiplayer::clear() {
@@ -278,7 +278,7 @@ Error SceneMultiplayer::send_command(int p_to, const uint8_t *p_packet, int p_pa
 		return _send(data.ptr(), relay_buffer->get_position());
 	}
 	if (p_to > 0) {
-		ERR_FAIL_COND_V(!connected_peers.has(p_to), ERR_BUG);
+		ERR_FAIL_COND_V(!connected_peers.has(p_to), Error::BUG);
 		multiplayer_peer->set_target_peer(p_to);
 		return _send(p_packet, p_packet_len);
 	} else {
@@ -289,7 +289,7 @@ Error SceneMultiplayer::send_command(int p_to, const uint8_t *p_packet, int p_pa
 			multiplayer_peer->set_target_peer(pid);
 			_send(p_packet, p_packet_len);
 		}
-		return OK;
+		return Error::OK;
 	}
 }
 
@@ -440,9 +440,9 @@ void SceneMultiplayer::disconnect_peer(int p_id) {
 }
 
 Error SceneMultiplayer::send_bytes(Vector<uint8_t> p_data, int p_to, MultiplayerPeer::TransferMode p_mode, int p_channel) {
-	ERR_FAIL_COND_V_MSG(p_data.size() < 1, ERR_INVALID_DATA, "Trying to send an empty raw packet.");
-	ERR_FAIL_COND_V_MSG(!multiplayer_peer.is_valid(), ERR_UNCONFIGURED, "Trying to send a raw packet while no multiplayer peer is active.");
-	ERR_FAIL_COND_V_MSG(multiplayer_peer->get_connection_status() != MultiplayerPeer::CONNECTION_CONNECTED, ERR_UNCONFIGURED, "Trying to send a raw packet via a multiplayer peer which is not connected.");
+	ERR_FAIL_COND_V_MSG(p_data.size() < 1, Error::INVALID_DATA, "Trying to send an empty raw packet.");
+	ERR_FAIL_COND_V_MSG(!multiplayer_peer.is_valid(), Error::UNCONFIGURED, "Trying to send a raw packet while no multiplayer peer is active.");
+	ERR_FAIL_COND_V_MSG(multiplayer_peer->get_connection_status() != MultiplayerPeer::CONNECTION_CONNECTED, Error::UNCONFIGURED, "Trying to send a raw packet via a multiplayer peer which is not connected.");
 
 	if (packet_cache.size() < p_data.size() + 1) {
 		packet_cache.resize(p_data.size() + 1);
@@ -458,11 +458,11 @@ Error SceneMultiplayer::send_bytes(Vector<uint8_t> p_data, int p_to, Multiplayer
 }
 
 Error SceneMultiplayer::send_auth(int p_to, Vector<uint8_t> p_data) {
-	ERR_FAIL_COND_V(multiplayer_peer.is_null() || multiplayer_peer->get_connection_status() != MultiplayerPeer::CONNECTION_CONNECTED, ERR_UNCONFIGURED);
-	ERR_FAIL_COND_V(!pending_peers.has(p_to), ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_data.size() < 1, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V_MSG(pending_peers[p_to].local, ERR_FILE_CANT_WRITE, "The authentication session was previously marked as completed, no more authentication data can be sent.");
-	ERR_FAIL_COND_V_MSG(pending_peers[p_to].remote, ERR_FILE_CANT_WRITE, "The remote peer notified that the authentication session was completed, no more authentication data can be sent.");
+	ERR_FAIL_COND_V(multiplayer_peer.is_null() || multiplayer_peer->get_connection_status() != MultiplayerPeer::CONNECTION_CONNECTED, Error::UNCONFIGURED);
+	ERR_FAIL_COND_V(!pending_peers.has(p_to), Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_data.size() < 1, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V_MSG(pending_peers[p_to].local, Error::FILE_CANT_WRITE, "The authentication session was previously marked as completed, no more authentication data can be sent.");
+	ERR_FAIL_COND_V_MSG(pending_peers[p_to].remote, Error::FILE_CANT_WRITE, "The remote peer notified that the authentication session was completed, no more authentication data can be sent.");
 
 	if (packet_cache.size() < p_data.size() + 2) {
 		packet_cache.resize(p_data.size() + 2);
@@ -479,9 +479,9 @@ Error SceneMultiplayer::send_auth(int p_to, Vector<uint8_t> p_data) {
 }
 
 Error SceneMultiplayer::complete_auth(int p_peer) {
-	ERR_FAIL_COND_V(multiplayer_peer.is_null() || multiplayer_peer->get_connection_status() != MultiplayerPeer::CONNECTION_CONNECTED, ERR_UNCONFIGURED);
-	ERR_FAIL_COND_V(!pending_peers.has(p_peer), ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V_MSG(pending_peers[p_peer].local, ERR_FILE_CANT_WRITE, "The authentication session was already marked as completed.");
+	ERR_FAIL_COND_V(multiplayer_peer.is_null() || multiplayer_peer->get_connection_status() != MultiplayerPeer::CONNECTION_CONNECTED, Error::UNCONFIGURED);
+	ERR_FAIL_COND_V(!pending_peers.has(p_peer), Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V_MSG(pending_peers[p_peer].local, Error::FILE_CANT_WRITE, "The authentication session was already marked as completed.");
 	pending_peers[p_peer].local = true;
 
 	// Notify the remote peer that the authentication has completed.
@@ -585,7 +585,7 @@ Error SceneMultiplayer::rpcp(Object *p_obj, int p_peer_id, const StringName &p_m
 Error SceneMultiplayer::object_configuration_add(Object *p_obj, Variant p_config) {
 	if (p_obj == nullptr && p_config.get_type() == Variant::NODE_PATH) {
 		set_root_path(p_config);
-		return OK;
+		return Error::OK;
 	}
 	MultiplayerSpawner *spawner = Object::cast_to<MultiplayerSpawner>(p_config.get_validated_object());
 	MultiplayerSynchronizer *sync = Object::cast_to<MultiplayerSynchronizer>(p_config.get_validated_object());
@@ -594,14 +594,14 @@ Error SceneMultiplayer::object_configuration_add(Object *p_obj, Variant p_config
 	} else if (sync) {
 		return replicator->on_replication_start(p_obj, p_config);
 	}
-	return ERR_INVALID_PARAMETER;
+	return Error::INVALID_PARAMETER;
 }
 
 Error SceneMultiplayer::object_configuration_remove(Object *p_obj, Variant p_config) {
 	if (p_obj == nullptr && p_config.get_type() == Variant::NODE_PATH) {
-		ERR_FAIL_COND_V(root_path != p_config.operator NodePath(), ERR_INVALID_PARAMETER);
+		ERR_FAIL_COND_V(root_path != p_config.operator NodePath(), Error::INVALID_PARAMETER);
 		set_root_path(NodePath());
-		return OK;
+		return Error::OK;
 	}
 	MultiplayerSpawner *spawner = Object::cast_to<MultiplayerSpawner>(p_config.get_validated_object());
 	MultiplayerSynchronizer *sync = Object::cast_to<MultiplayerSynchronizer>(p_config.get_validated_object());
@@ -611,7 +611,7 @@ Error SceneMultiplayer::object_configuration_remove(Object *p_obj, Variant p_con
 	if (sync) {
 		return replicator->on_replication_stop(p_obj, p_config);
 	}
-	return ERR_INVALID_PARAMETER;
+	return Error::INVALID_PARAMETER;
 }
 
 void SceneMultiplayer::set_server_relay_enabled(bool p_enabled) {

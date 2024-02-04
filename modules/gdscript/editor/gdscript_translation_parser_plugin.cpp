@@ -47,7 +47,7 @@ Error GDScriptEditorTranslationParserPlugin::parse_file(const String &p_path, Ve
 
 	Error err;
 	Ref<Resource> loaded_res = ResourceLoader::load(p_path, "", ResourceFormatLoader::CACHE_MODE_REUSE, &err);
-	ERR_FAIL_COND_V_MSG(err, err, "Failed to load " + p_path);
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Failed to load " + p_path);
 
 	ids = r_ids;
 	ids_ctx_plural = r_ids_ctx_plural;
@@ -56,17 +56,17 @@ Error GDScriptEditorTranslationParserPlugin::parse_file(const String &p_path, Ve
 
 	GDScriptParser parser;
 	err = parser.parse(source_code, p_path, false);
-	ERR_FAIL_COND_V_MSG(err, err, "Failed to parse GDScript with GDScriptParser.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Failed to parse GDScript with GDScriptParser.");
 
 	GDScriptAnalyzer analyzer(&parser);
 	err = analyzer.analyze();
-	ERR_FAIL_COND_V_MSG(err, err, "Failed to analyze GDScript with GDScriptAnalyzer.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Failed to analyze GDScript with GDScriptAnalyzer.");
 
 	// Traverse through the parsed tree from GDScriptParser.
 	GDScriptParser::ClassNode *c = parser.get_tree();
 	_traverse_class(c);
 
-	return OK;
+	return Error::OK;
 }
 
 bool GDScriptEditorTranslationParserPlugin::_is_constant_string(const GDScriptParser::ExpressionNode *p_expression) {

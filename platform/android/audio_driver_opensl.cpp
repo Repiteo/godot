@@ -86,12 +86,12 @@ Error AudioDriverOpenSL::init() {
 		{ (SLuint32)SL_ENGINEOPTION_THREADSAFE, (SLuint32)SL_BOOLEAN_TRUE }
 	};
 	res = slCreateEngine(&sl, 1, EngineOption, 0, nullptr, nullptr);
-	ERR_FAIL_COND_V_MSG(res != SL_RESULT_SUCCESS, ERR_INVALID_PARAMETER, "Could not initialize OpenSL.");
+	ERR_FAIL_COND_V_MSG(res != SL_RESULT_SUCCESS, Error::INVALID_PARAMETER, "Could not initialize OpenSL.");
 
 	res = (*sl)->Realize(sl, SL_BOOLEAN_FALSE);
-	ERR_FAIL_COND_V_MSG(res != SL_RESULT_SUCCESS, ERR_INVALID_PARAMETER, "Could not realize OpenSL.");
+	ERR_FAIL_COND_V_MSG(res != SL_RESULT_SUCCESS, Error::INVALID_PARAMETER, "Could not realize OpenSL.");
 
-	return OK;
+	return Error::OK;
 }
 
 void AudioDriverOpenSL::start() {
@@ -228,30 +228,30 @@ Error AudioDriverOpenSL::init_input_device() {
 	const SLboolean req[2] = { SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE };
 
 	SLresult res = (*EngineItf)->CreateAudioRecorder(EngineItf, &recorder, &recSource, &recSnk, 2, ids, req);
-	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, Error::CANT_OPEN);
 
 	res = (*recorder)->Realize(recorder, SL_BOOLEAN_FALSE);
-	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, Error::CANT_OPEN);
 
 	res = (*recorder)->GetInterface(recorder, SL_IID_RECORD, (void *)&recordItf);
-	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, Error::CANT_OPEN);
 
 	res = (*recorder)->GetInterface(recorder, SL_IID_ANDROIDSIMPLEBUFFERQUEUE, (void *)&recordBufferQueueItf);
-	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, Error::CANT_OPEN);
 
 	res = (*recordBufferQueueItf)->RegisterCallback(recordBufferQueueItf, _record_buffer_callbacks, this);
-	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, Error::CANT_OPEN);
 
 	SLuint32 state;
 	res = (*recordItf)->GetRecordState(recordItf, &state);
-	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, Error::CANT_OPEN);
 
 	if (state != SL_RECORDSTATE_STOPPED) {
 		res = (*recordItf)->SetRecordState(recordItf, SL_RECORDSTATE_STOPPED);
-		ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, ERR_CANT_OPEN);
+		ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, Error::CANT_OPEN);
 
 		res = (*recordBufferQueueItf)->Clear(recordBufferQueueItf);
-		ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, ERR_CANT_OPEN);
+		ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, Error::CANT_OPEN);
 	}
 
 	const int rec_buffer_frames = 2048;
@@ -259,12 +259,12 @@ Error AudioDriverOpenSL::init_input_device() {
 	input_buffer_init(rec_buffer_frames);
 
 	res = (*recordBufferQueueItf)->Enqueue(recordBufferQueueItf, rec_buffer.ptrw(), rec_buffer.size() * sizeof(int16_t));
-	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, Error::CANT_OPEN);
 
 	res = (*recordItf)->SetRecordState(recordItf, SL_RECORDSTATE_RECORDING);
-	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, Error::CANT_OPEN);
 
-	return OK;
+	return Error::OK;
 }
 
 Error AudioDriverOpenSL::input_start() {
@@ -273,23 +273,23 @@ Error AudioDriverOpenSL::input_start() {
 	}
 
 	WARN_PRINT("Unable to start audio capture - No RECORD_AUDIO permission");
-	return ERR_UNAUTHORIZED;
+	return Error::UNAUTHORIZED;
 }
 
 Error AudioDriverOpenSL::input_stop() {
 	SLuint32 state;
 	SLresult res = (*recordItf)->GetRecordState(recordItf, &state);
-	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, Error::CANT_OPEN);
 
 	if (state != SL_RECORDSTATE_STOPPED) {
 		res = (*recordItf)->SetRecordState(recordItf, SL_RECORDSTATE_STOPPED);
-		ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, ERR_CANT_OPEN);
+		ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, Error::CANT_OPEN);
 
 		res = (*recordBufferQueueItf)->Clear(recordBufferQueueItf);
-		ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, ERR_CANT_OPEN);
+		ERR_FAIL_COND_V(res != SL_RESULT_SUCCESS, Error::CANT_OPEN);
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 int AudioDriverOpenSL::get_mix_rate() const {

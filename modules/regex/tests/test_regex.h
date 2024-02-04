@@ -53,7 +53,7 @@ TEST_CASE("[RegEx] Initialization") {
 
 	RegEx re2;
 	CHECK(re2.is_valid() == false);
-	CHECK(re2.compile(pattern) == OK);
+	CHECK(re2.compile(pattern) == Error::OK);
 	CHECK(re2.is_valid());
 
 	CHECK(re1.get_pattern() == re2.get_pattern());
@@ -103,7 +103,7 @@ TEST_CASE("[RegEx] Searching") {
 	REQUIRE(match != nullptr);
 	CHECK(match->get_string(0) == "i");
 
-	CHECK(re.compile(numerics) == OK);
+	CHECK(re.compile(numerics) == Error::OK);
 	CHECK(re.is_valid());
 	CHECK(re.search(s) == nullptr);
 	CHECK(re.search_all(s).size() == 0);
@@ -168,7 +168,7 @@ TEST_CASE("[RegEx] Empty pattern") {
 	const String s = "Godot";
 
 	RegEx re;
-	CHECK(re.compile("") == OK);
+	CHECK(re.compile("") == Error::OK);
 	CHECK(re.is_valid());
 }
 

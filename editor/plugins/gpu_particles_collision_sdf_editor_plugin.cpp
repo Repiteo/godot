@@ -166,7 +166,7 @@ void GPUParticlesCollisionSDF3DEditorPlugin::_sdf_save_path_and_bake(const Strin
 		config->save(p_path + ".import");
 
 		Error err = bake_img->save_exr(p_path, false);
-		ERR_FAIL_COND(err);
+		ERR_FAIL_COND(err != Error::OK);
 		ResourceLoader::import(p_path);
 		Ref<Texture> t = ResourceLoader::load(p_path); //if already loaded, it will be updated on refocus?
 		ERR_FAIL_COND(t.is_null());

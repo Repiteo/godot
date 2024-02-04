@@ -388,7 +388,7 @@ void Polygon2D::_notification(int p_what) {
 				}
 
 				Error err = RS::get_singleton()->mesh_create_surface_data_from_arrays(&sd, RS::PRIMITIVE_TRIANGLES, arr, Array(), Dictionary(), RS::ARRAY_FLAG_USE_2D_VERTICES);
-				if (err != OK) {
+				if (err != Error::OK) {
 					return;
 				}
 

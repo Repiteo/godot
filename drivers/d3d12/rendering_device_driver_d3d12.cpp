@@ -329,8 +329,8 @@ const RenderingDeviceDriverD3D12::D3D12Format RenderingDeviceDriverD3D12::RD_TO_
 };
 
 Error RenderingDeviceDriverD3D12::DescriptorsHeap::allocate(ID3D12Device *p_device, D3D12_DESCRIPTOR_HEAP_TYPE p_type, uint32_t p_descriptor_count, bool p_for_gpu) {
-	ERR_FAIL_COND_V(heap, ERR_ALREADY_EXISTS);
-	ERR_FAIL_COND_V(p_descriptor_count == 0, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(heap, Error::ALREADY_EXISTS);
+	ERR_FAIL_COND_V(p_descriptor_count == 0, Error::INVALID_PARAMETER);
 
 	handle_size = p_device->GetDescriptorHandleIncrementSize(p_type);
 
@@ -338,9 +338,9 @@ Error RenderingDeviceDriverD3D12::DescriptorsHeap::allocate(ID3D12Device *p_devi
 	desc.NumDescriptors = p_descriptor_count;
 	desc.Flags = p_for_gpu ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	HRESULT res = p_device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(heap.GetAddressOf()));
-	ERR_FAIL_COND_V_MSG(!SUCCEEDED(res), ERR_CANT_CREATE, "CreateDescriptorHeap failed with error " + vformat("0x%08ux", (uint64_t)res) + ".");
+	ERR_FAIL_COND_V_MSG(!SUCCEEDED(res), Error::CANT_CREATE, "CreateDescriptorHeap failed with error " + vformat("0x%08ux", (uint64_t)res) + ".");
 
-	return OK;
+	return Error::OK;
 }
 
 RenderingDeviceDriverD3D12::DescriptorsHeap::Walker RenderingDeviceDriverD3D12::DescriptorsHeap::make_walker() const {
@@ -1992,7 +1992,7 @@ RDD::FramebufferID RenderingDeviceDriverD3D12::framebuffer_create(RenderPassID p
 
 	if (num_color) {
 		Error err = fb_info->rtv_heap.allocate(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, num_color, false);
-		if (err) {
+		if (err != Error::OK) {
 			VersatileResource::free(resources_allocator, fb_info);
 			ERR_FAIL_V(FramebufferID());
 		}
@@ -2001,7 +2001,7 @@ RDD::FramebufferID RenderingDeviceDriverD3D12::framebuffer_create(RenderPassID p
 
 	if (num_depth_stencil) {
 		Error err = fb_info->dsv_heap.allocate(device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, num_depth_stencil, false);
-		if (err) {
+		if (err != Error::OK) {
 			VersatileResource::free(resources_allocator, fb_info);
 			ERR_FAIL_V(FramebufferID());
 		}
@@ -2224,7 +2224,7 @@ bool RenderingDeviceDriverD3D12::_shader_sign_dxil_bytecode(ShaderStage p_stage,
 	char *err = nullptr;
 	bool res = dxil_validate_module(validator, r_dxil_blob.ptrw(), r_dxil_blob.size(), &err);
 	if (!res) {
-		if (err) {
+		if (err != Error::OK) {
 			ERR_FAIL_COND_V_MSG(!res, false, "Shader signing invocation at stage " + String(SHADER_STAGE_NAMES[p_stage]) + " failed:\n" + String(err));
 		} else {
 			ERR_FAIL_COND_V_MSG(!res, false, "Shader signing invocation at stage " + String(SHADER_STAGE_NAMES[p_stage]) + " failed.");
@@ -2240,7 +2240,7 @@ String RenderingDeviceDriverD3D12::shader_get_binary_cache_key() {
 
 Vector<uint8_t> RenderingDeviceDriverD3D12::shader_compile_binary_from_spirv(VectorView<ShaderStageSPIRVData> p_spirv, const String &p_shader_name) {
 	ShaderReflection shader_refl;
-	if (_reflect_spirv(p_spirv, shader_refl) != OK) {
+	if (_reflect_spirv(p_spirv, shader_refl) != Error::OK) {
 		return Vector<uint8_t>();
 	}
 
@@ -3102,14 +3102,14 @@ RDD::UniformSetID RenderingDeviceDriverD3D12::uniform_set_create(VectorView<Boun
 
 	if (num_resource_descs) {
 		Error err = uniform_set_info->desc_heaps.resources.allocate(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, num_resource_descs, false);
-		if (err) {
+		if (err != Error::OK) {
 			VersatileResource::free(resources_allocator, uniform_set_info);
 			ERR_FAIL_V(UniformSetID());
 		}
 	}
 	if (num_sampler_descs) {
 		Error err = uniform_set_info->desc_heaps.samplers.allocate(device, D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, num_sampler_descs, false);
-		if (err) {
+		if (err != Error::OK) {
 			VersatileResource::free(resources_allocator, uniform_set_info);
 			ERR_FAIL_V(UniformSetID());
 		}
@@ -5452,13 +5452,13 @@ RenderingDeviceDriverD3D12::RenderingDeviceDriverD3D12(D3D12Context *p_context, 
 		frames.resize(p_frame_count);
 		for (uint32_t i = 0; i < frames.size(); i++) {
 			Error err = frames[i].desc_heaps.resources.allocate(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, resource_descriptors_per_frame, true);
-			ERR_FAIL_COND_MSG(err, "Creating the frame's RESOURCE descriptors heap failed.");
+			ERR_FAIL_COND_MSG(err != Error::OK, "Creating the frame's RESOURCE descriptors heap failed.");
 			err = frames[i].desc_heaps.samplers.allocate(device, D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, sampler_descriptors_per_frame, true);
-			ERR_FAIL_COND_MSG(err, "Creating the frame's SAMPLER descriptors heap failed.");
+			ERR_FAIL_COND_MSG(err != Error::OK, "Creating the frame's SAMPLER descriptors heap failed.");
 			err = frames[i].desc_heaps.aux.allocate(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, misc_descriptors_per_frame, false);
-			ERR_FAIL_COND_MSG(err, "Creating the frame's AUX descriptors heap failed.");
+			ERR_FAIL_COND_MSG(err != Error::OK, "Creating the frame's AUX descriptors heap failed.");
 			err = frames[i].desc_heaps.rtv.allocate(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, misc_descriptors_per_frame, false);
-			ERR_FAIL_COND_MSG(err, "Creating the frame's RENDER TARGET descriptors heap failed.");
+			ERR_FAIL_COND_MSG(err != Error::OK, "Creating the frame's RENDER TARGET descriptors heap failed.");
 
 			frames[i].desc_heap_walkers.resources = frames[i].desc_heaps.resources.make_walker();
 			frames[i].desc_heap_walkers.samplers = frames[i].desc_heaps.samplers.make_walker();

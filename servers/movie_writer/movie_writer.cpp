@@ -64,13 +64,13 @@ AudioServer::SpeakerMode MovieWriter::get_audio_speaker_mode() const {
 }
 
 Error MovieWriter::write_begin(const Size2i &p_movie_size, uint32_t p_fps, const String &p_base_path) {
-	Error ret = ERR_UNCONFIGURED;
+	Error ret = Error::UNCONFIGURED;
 	GDVIRTUAL_REQUIRED_CALL(_write_begin, p_movie_size, p_fps, p_base_path, ret);
 	return ret;
 }
 
 Error MovieWriter::write_frame(const Ref<Image> &p_image, const int32_t *p_audio_data) {
-	Error ret = ERR_UNCONFIGURED;
+	Error ret = Error::UNCONFIGURED;
 	GDVIRTUAL_REQUIRED_CALL(_write_frame, p_image, p_audio_data, ret);
 	return ret;
 }

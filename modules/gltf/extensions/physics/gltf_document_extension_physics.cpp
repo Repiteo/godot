@@ -35,7 +35,7 @@
 // Import process.
 Error GLTFDocumentExtensionPhysics::import_preflight(Ref<GLTFState> p_state, Vector<String> p_extensions) {
 	if (!p_extensions.has("OMI_collider") && !p_extensions.has("OMI_physics_body") && !p_extensions.has("OMI_physics_shape")) {
-		return ERR_SKIP;
+		return Error::SKIP;
 	}
 	Dictionary state_json = p_state->get_json();
 	if (state_json.has("extensions")) {
@@ -68,7 +68,7 @@ Error GLTFDocumentExtensionPhysics::import_preflight(Ref<GLTFState> p_state, Vec
 #endif // DISABLE_DEPRECATED
 		}
 	}
-	return OK;
+	return Error::OK;
 }
 
 Vector<String> GLTFDocumentExtensionPhysics::get_supported_extensions() {
@@ -87,7 +87,7 @@ Error GLTFDocumentExtensionPhysics::parse_node_extensions(Ref<GLTFState> p_state
 			// "collider" is the index of the collider in the state colliders array.
 			int node_collider_index = node_collider_ext["collider"];
 			Array state_colliders = p_state->get_additional_data(StringName("GLTFPhysicsShapes"));
-			ERR_FAIL_INDEX_V_MSG(node_collider_index, state_colliders.size(), Error::ERR_FILE_CORRUPT, "GLTF Physics: On node " + p_gltf_node->get_name() + ", the collider index " + itos(node_collider_index) + " is not in the state colliders (size: " + itos(state_colliders.size()) + ").");
+			ERR_FAIL_INDEX_V_MSG(node_collider_index, state_colliders.size(), Error::FILE_CORRUPT, "GLTF Physics: On node " + p_gltf_node->get_name() + ", the collider index " + itos(node_collider_index) + " is not in the state colliders (size: " + itos(state_colliders.size()) + ").");
 			p_gltf_node->set_additional_data(StringName("GLTFPhysicsShape"), state_colliders[node_collider_index]);
 		} else {
 			p_gltf_node->set_additional_data(StringName("GLTFPhysicsShape"), GLTFPhysicsShape::from_dictionary(node_collider_ext));
@@ -102,7 +102,7 @@ Error GLTFDocumentExtensionPhysics::parse_node_extensions(Ref<GLTFState> p_state
 			int node_shape_index = node_collider.get("shape", -1);
 			if (node_shape_index != -1) {
 				Array state_shapes = p_state->get_additional_data(StringName("GLTFPhysicsShapes"));
-				ERR_FAIL_INDEX_V_MSG(node_shape_index, state_shapes.size(), Error::ERR_FILE_CORRUPT, "GLTF Physics: On node " + p_gltf_node->get_name() + ", the shape index " + itos(node_shape_index) + " is not in the state shapes (size: " + itos(state_shapes.size()) + ").");
+				ERR_FAIL_INDEX_V_MSG(node_shape_index, state_shapes.size(), Error::FILE_CORRUPT, "GLTF Physics: On node " + p_gltf_node->get_name() + ", the shape index " + itos(node_shape_index) + " is not in the state shapes (size: " + itos(state_shapes.size()) + ").");
 				p_gltf_node->set_additional_data(StringName("GLTFPhysicsColliderShape"), state_shapes[node_shape_index]);
 			} else {
 				// If this node is a collider but does not have a collider
@@ -116,7 +116,7 @@ Error GLTFDocumentExtensionPhysics::parse_node_extensions(Ref<GLTFState> p_state
 			int node_shape_index = node_trigger.get("shape", -1);
 			if (node_shape_index != -1) {
 				Array state_shapes = p_state->get_additional_data(StringName("GLTFPhysicsShapes"));
-				ERR_FAIL_INDEX_V_MSG(node_shape_index, state_shapes.size(), Error::ERR_FILE_CORRUPT, "GLTF Physics: On node " + p_gltf_node->get_name() + ", the shape index " + itos(node_shape_index) + " is not in the state shapes (size: " + itos(state_shapes.size()) + ").");
+				ERR_FAIL_INDEX_V_MSG(node_shape_index, state_shapes.size(), Error::FILE_CORRUPT, "GLTF Physics: On node " + p_gltf_node->get_name() + ", the shape index " + itos(node_shape_index) + " is not in the state shapes (size: " + itos(state_shapes.size()) + ").");
 				p_gltf_node->set_additional_data(StringName("GLTFPhysicsTriggerShape"), state_shapes[node_shape_index]);
 			} else {
 				// If this node is a trigger but does not have a trigger shape,
@@ -131,7 +131,7 @@ Error GLTFDocumentExtensionPhysics::parse_node_extensions(Ref<GLTFState> p_state
 			p_gltf_node->set_additional_data(StringName("GLTFPhysicsBody"), GLTFPhysicsBody::from_dictionary(physics_body_ext));
 		}
 	}
-	return OK;
+	return Error::OK;
 }
 
 void _setup_shape_mesh_resource_from_index_if_needed(Ref<GLTFState> p_state, Ref<GLTFPhysicsShape> p_gltf_shape) {
@@ -434,5 +434,5 @@ Error GLTFDocumentExtensionPhysics::export_node(Ref<GLTFState> p_state, Ref<GLTF
 		node_extensions["OMI_physics_body"] = physics_body_ext;
 		p_state->add_used_extension("OMI_physics_body");
 	}
-	return OK;
+	return Error::OK;
 }

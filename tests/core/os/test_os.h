@@ -133,8 +133,8 @@ TEST_CASE("[OS] Execute") {
 	int exit_code;
 	const Error err = OS::get_singleton()->execute("cmd", arguments, nullptr, &exit_code);
 	CHECK_MESSAGE(
-			err == OK,
-			"(Running the command `cmd /C \"dir > NUL\"` returns the expected Godot error code (OK).");
+			err == Error::OK,
+			"(Running the command `cmd /C \"dir > NUL\"` returns the expected Godot error code (Error::OK).");
 	CHECK_MESSAGE(
 			exit_code == 0,
 			"Running the command `cmd /C \"dir > NUL\"` returns a zero (successful) exit code.");
@@ -145,8 +145,8 @@ TEST_CASE("[OS] Execute") {
 	int exit_code;
 	const Error err = OS::get_singleton()->execute("sh", arguments, nullptr, &exit_code);
 	CHECK_MESSAGE(
-			err == OK,
-			"(Running the command `sh -c \"ls > /dev/null\"` returns the expected Godot error code (OK).");
+			err == Error::OK,
+			"(Running the command `sh -c \"ls > /dev/null\"` returns the expected Godot error code (Error::OK).");
 	CHECK_MESSAGE(
 			exit_code == 0,
 			"Running the command `sh -c \"ls > /dev/null\"` returns a zero (successful) exit code.");

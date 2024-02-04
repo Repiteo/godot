@@ -631,7 +631,7 @@ void SceneImportSettingsDialog::open_settings(const String &p_path, bool p_for_a
 		Ref<ConfigFile> config;
 		config.instantiate();
 		Error err = config->load(p_path + ".import");
-		if (err == OK) {
+		if (err == Error::OK) {
 			List<String> keys;
 			config->get_section_keys("params", &keys);
 			for (const String &E : keys) {
@@ -1405,7 +1405,7 @@ void SceneImportSettingsDialog::_save_dir_confirm() {
 				MaterialData &md = material_map[id];
 
 				Error err = ResourceSaver::save(md.material, path);
-				if (err != OK) {
+				if (err != Error::OK) {
 					EditorNode::get_singleton()->add_io_error(TTR("Can't make material external to file, write error:") + "\n\t" + path);
 					continue;
 				}

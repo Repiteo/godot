@@ -40,7 +40,7 @@ Error ImageLoaderPNG::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField
 	const uint64_t buffer_size = f->get_length();
 	Vector<uint8_t> file_buffer;
 	Error err = file_buffer.resize(buffer_size);
-	if (err) {
+	if (err != Error::OK) {
 		return err;
 	}
 	{
@@ -61,7 +61,7 @@ Ref<Image> ImageLoaderPNG::load_mem_png(const uint8_t *p_png, int p_size) {
 
 	// the value of p_force_linear does not matter since it only applies to 16 bit
 	Error err = PNGDriverCommon::png_to_image(p_png, p_size, false, img);
-	ERR_FAIL_COND_V(err, Ref<Image>());
+	ERR_FAIL_COND_V(err != Error::OK, Ref<Image>());
 
 	return img;
 }
@@ -80,7 +80,7 @@ Vector<uint8_t> ImageLoaderPNG::lossless_pack_png(const Ref<Image> &p_image) {
 	Vector<uint8_t> out_buffer;
 
 	// add Godot's own "PNG " prefix
-	if (out_buffer.resize(4) != OK) {
+	if (out_buffer.resize(4) != Error::OK) {
 		ERR_FAIL_V(Vector<uint8_t>());
 	}
 
@@ -92,7 +92,7 @@ Vector<uint8_t> ImageLoaderPNG::lossless_pack_png(const Ref<Image> &p_image) {
 	}
 
 	Error err = PNGDriverCommon::image_to_png(p_image, out_buffer);
-	if (err) {
+	if (err != Error::OK) {
 		ERR_FAIL_V(Vector<uint8_t>());
 	}
 

@@ -49,7 +49,7 @@ Error EditorExportPlatformLinuxBSD::_export_debug_script(const Ref<EditorExportP
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::WRITE);
 	if (f.is_null()) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Debug Script Export"), vformat(TTR("Could not open file \"%s\"."), p_path));
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	f->store_line("#!/bin/sh");
@@ -57,7 +57,7 @@ Error EditorExportPlatformLinuxBSD::_export_debug_script(const Ref<EditorExportP
 	f->store_line("base_path=\"$(dirname \"$(realpath \"$0\")\")\"");
 	f->store_line("\"$base_path/" + p_pkg_name + "\" \"$@\"");
 
-	return OK;
+	return Error::OK;
 }
 
 Error EditorExportPlatformLinuxBSD::export_project(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, int p_flags) {
@@ -80,10 +80,10 @@ Error EditorExportPlatformLinuxBSD::export_project(const Ref<EditorExportPreset>
 	if (export_as_zip) {
 		if (tmp_app_dir.is_null()) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("Prepare Templates"), vformat(TTR("Could not create and open the directory: \"%s\""), tmp_dir_path));
-			return ERR_CANT_CREATE;
+			return Error::CANT_CREATE;
 		}
 		if (DirAccess::exists(tmp_dir_path)) {
-			if (tmp_app_dir->change_dir(tmp_dir_path) == OK) {
+			if (tmp_app_dir->change_dir(tmp_dir_path) == Error::OK) {
 				tmp_app_dir->erase_contents_recursive();
 			}
 		}
@@ -93,7 +93,7 @@ Error EditorExportPlatformLinuxBSD::export_project(const Ref<EditorExportPreset>
 
 	// Export project.
 	Error err = EditorExportPlatformPC::export_project(p_preset, p_debug, path, p_flags);
-	if (err != OK) {
+	if (err != Error::OK) {
 		// Message is supplied by the subroutine method.
 		return err;
 	}
@@ -104,7 +104,7 @@ Error EditorExportPlatformLinuxBSD::export_project(const Ref<EditorExportPreset>
 		String scr_path = path.get_basename() + ".sh";
 		err = _export_debug_script(p_preset, pkg_name, path.get_file(), scr_path);
 		FileAccess::set_unix_permissions(scr_path, 0755);
-		if (err != OK) {
+		if (err != Error::OK) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("Debug Console Export"), TTR("Could not create console wrapper."));
 		}
 	}
@@ -123,7 +123,7 @@ Error EditorExportPlatformLinuxBSD::export_project(const Ref<EditorExportPreset>
 
 		zipClose(zip, nullptr);
 
-		if (tmp_app_dir->change_dir(tmp_dir_path) == OK) {
+		if (tmp_app_dir->change_dir(tmp_dir_path) == Error::OK) {
 			tmp_app_dir->erase_contents_recursive();
 			tmp_app_dir->change_dir("..");
 			tmp_app_dir->remove(pkg_name);
@@ -204,7 +204,7 @@ Error EditorExportPlatformLinuxBSD::fixup_embedded_pck(const String &p_path, int
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ_WRITE);
 	if (f.is_null()) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("PCK Embedding"), vformat(TTR("Failed to open executable file \"%s\"."), p_path));
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
 	// Read and check ELF magic number
@@ -212,7 +212,7 @@ Error EditorExportPlatformLinuxBSD::fixup_embedded_pck(const String &p_path, int
 		uint32_t magic = f->get_32();
 		if (magic != 0x464c457f) { // 0x7F + "ELF"
 			add_message(EXPORT_MESSAGE_ERROR, TTR("PCK Embedding"), TTR("Executable file header corrupted."));
-			return ERR_FILE_CORRUPT;
+			return Error::FILE_CORRUPT;
 		}
 	}
 
@@ -265,7 +265,7 @@ Error EditorExportPlatformLinuxBSD::fixup_embedded_pck(const String &p_path, int
 		f->seek(string_data_pos);
 		strings = (uint8_t *)memalloc(string_data_size);
 		if (!strings) {
-			return ERR_OUT_OF_MEMORY;
+			return Error::OUT_OF_MEMORY;
 		}
 		f->get_buffer(strings, string_data_size);
 	}
@@ -300,9 +300,9 @@ Error EditorExportPlatformLinuxBSD::fixup_embedded_pck(const String &p_path, int
 
 	if (!found) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("PCK Embedding"), TTR("Executable \"pck\" section not found."));
-		return ERR_FILE_CORRUPT;
+		return Error::FILE_CORRUPT;
 	}
-	return OK;
+	return Error::OK;
 }
 
 Ref<Texture2D> EditorExportPlatformLinuxBSD::get_run_icon() const {
@@ -372,7 +372,7 @@ void EditorExportPlatformLinuxBSD::cleanup() {
 Error EditorExportPlatformLinuxBSD::run(const Ref<EditorExportPreset> &p_preset, int p_device, int p_debug_flags) {
 	cleanup();
 	if (p_device) { // Stop command, cleanup only.
-		return OK;
+		return Error::OK;
 	}
 
 	EditorProgress ep("run", TTR("Running..."), 5);
@@ -381,7 +381,7 @@ Error EditorExportPlatformLinuxBSD::run(const Ref<EditorExportPreset> &p_preset,
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 	if (!da->dir_exists(dest)) {
 		Error err = da->make_dir_recursive(dest);
-		if (err != OK) {
+		if (err != Error::OK) {
 			EditorNode::get_singleton()->show_warning(TTR("Could not create temp directory:") + "\n" + dest);
 			return err;
 		}
@@ -413,10 +413,10 @@ Error EditorExportPlatformLinuxBSD::run(const Ref<EditorExportPreset> &p_preset,
 	((void)0)
 
 	if (ep.step(TTR("Exporting project..."), 1)) {
-		return ERR_SKIP;
+		return Error::SKIP;
 	}
 	Error err = export_project(p_preset, true, basepath + ".zip", p_debug_flags);
-	if (err != OK) {
+	if (err != Error::OK) {
 		DirAccess::remove_file_or_error(basepath + ".zip");
 		return err;
 	}
@@ -440,14 +440,14 @@ Error EditorExportPlatformLinuxBSD::run(const Ref<EditorExportPreset> &p_preset,
 	ep.step(TTR("Creating temporary directory..."), 2);
 	String temp_dir;
 	err = ssh_run_on_remote(host, port, extra_args_ssh, "mktemp -d", &temp_dir);
-	if (err != OK || temp_dir.is_empty()) {
+	if (err != Error::OK || temp_dir.is_empty()) {
 		CLEANUP_AND_RETURN(err);
 	}
 
 	print_line("Uploading archive...");
 	ep.step(TTR("Uploading archive..."), 3);
 	err = ssh_push_to_remote(host, port, extra_args_scp, basepath + ".zip", temp_dir);
-	if (err != OK) {
+	if (err != Error::OK) {
 		CLEANUP_AND_RETURN(err);
 	}
 
@@ -484,26 +484,26 @@ Error EditorExportPlatformLinuxBSD::run(const Ref<EditorExportPreset> &p_preset,
 	print_line("Uploading scripts...");
 	ep.step(TTR("Uploading scripts..."), 4);
 	err = ssh_push_to_remote(host, port, extra_args_scp, basepath + "_start.sh", temp_dir);
-	if (err != OK) {
+	if (err != Error::OK) {
 		CLEANUP_AND_RETURN(err);
 	}
 	err = ssh_run_on_remote(host, port, extra_args_ssh, vformat("chmod +x \"%s/%s\"", temp_dir, basepath.get_file() + "_start.sh"));
-	if (err != OK || temp_dir.is_empty()) {
+	if (err != Error::OK || temp_dir.is_empty()) {
 		CLEANUP_AND_RETURN(err);
 	}
 	err = ssh_push_to_remote(host, port, extra_args_scp, basepath + "_clean.sh", temp_dir);
-	if (err != OK) {
+	if (err != Error::OK) {
 		CLEANUP_AND_RETURN(err);
 	}
 	err = ssh_run_on_remote(host, port, extra_args_ssh, vformat("chmod +x \"%s/%s\"", temp_dir, basepath.get_file() + "_clean.sh"));
-	if (err != OK || temp_dir.is_empty()) {
+	if (err != Error::OK || temp_dir.is_empty()) {
 		CLEANUP_AND_RETURN(err);
 	}
 
 	print_line("Starting project...");
 	ep.step(TTR("Starting project..."), 5);
 	err = ssh_run_on_remote_no_wait(host, port, extra_args_ssh, vformat("\"%s/%s\"", temp_dir, basepath.get_file() + "_start.sh"), &ssh_pid, (use_remote) ? dbg_port : -1);
-	if (err != OK) {
+	if (err != Error::OK) {
 		CLEANUP_AND_RETURN(err);
 	}
 
@@ -512,7 +512,7 @@ Error EditorExportPlatformLinuxBSD::run(const Ref<EditorExportPreset> &p_preset,
 
 	print_line("Project started.");
 
-	CLEANUP_AND_RETURN(OK);
+	CLEANUP_AND_RETURN(Error::OK);
 #undef CLEANUP_AND_RETURN
 }
 

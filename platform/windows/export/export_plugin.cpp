@@ -61,7 +61,7 @@ Error EditorExportPlatformWindows::_process_icon(const Ref<EditorExportPreset> &
 
 	if (p_src_path.get_extension() == "ico") {
 		Ref<FileAccess> f = FileAccess::open(p_src_path, FileAccess::READ, &err);
-		if (err != OK) {
+		if (err != Error::OK) {
 			return err;
 		}
 
@@ -69,7 +69,7 @@ Error EditorExportPlatformWindows::_process_icon(const Ref<EditorExportPreset> &
 		f->get_16(); // Reserved.
 		uint16_t icon_type = f->get_16(); // Image type: 1 - ICO.
 		uint16_t icon_count = f->get_16(); // Number of images.
-		ERR_FAIL_COND_V(icon_type != 1, ERR_CANT_OPEN);
+		ERR_FAIL_COND_V(icon_type != 1, Error::CANT_OPEN);
 
 		for (uint16_t i = 0; i < icon_count; i++) {
 			// Read ICONDIRENTRY.
@@ -99,12 +99,12 @@ Error EditorExportPlatformWindows::_process_icon(const Ref<EditorExportPreset> &
 		Ref<Image> src_image;
 		src_image.instantiate();
 		err = ImageLoader::load_image(p_src_path, src_image);
-		ERR_FAIL_COND_V(err != OK || src_image->is_empty(), ERR_CANT_OPEN);
+		ERR_FAIL_COND_V(err != Error::OK || src_image->is_empty(), Error::CANT_OPEN);
 		for (size_t i = 0; i < sizeof(icon_size) / sizeof(icon_size[0]); ++i) {
 			int size = (icon_size[i] == 0) ? 256 : icon_size[i];
 
 			Ref<Image> res_image = src_image->duplicate();
-			ERR_FAIL_COND_V(res_image.is_null() || res_image->is_empty(), ERR_CANT_OPEN);
+			ERR_FAIL_COND_V(res_image.is_null() || res_image->is_empty(), Error::CANT_OPEN);
 			res_image->resize(size, size, (Image::Interpolation)(p_preset->get("application/icon_interpolation").operator int()));
 			images[icon_size[i]].data = res_image->save_png_to_buffer();
 		}
@@ -119,10 +119,10 @@ Error EditorExportPlatformWindows::_process_icon(const Ref<EditorExportPreset> &
 			add_message(EXPORT_MESSAGE_WARNING, TTR("Resources Modification"), vformat(TTR("Icon size \"%d\" is missing."), size));
 		}
 	}
-	ERR_FAIL_COND_V(valid_icon_count == 0, ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(valid_icon_count == 0, Error::CANT_OPEN);
 
 	Ref<FileAccess> fw = FileAccess::open(p_dst_path, FileAccess::WRITE, &err);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 
@@ -156,14 +156,14 @@ Error EditorExportPlatformWindows::_process_icon(const Ref<EditorExportPreset> &
 			fw->store_buffer(di.data.ptr(), di.data.size());
 		}
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error EditorExportPlatformWindows::sign_shared_object(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path) {
 	if (p_preset->get("codesign/enable")) {
 		return _code_sign(p_preset, p_path);
 	} else {
-		return OK;
+		return Error::OK;
 	}
 }
 
@@ -175,7 +175,7 @@ Error EditorExportPlatformWindows::modify_template(const Ref<EditorExportPreset>
 			_rcedit_add_data(p_preset, wrapper_path, true);
 		}
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error EditorExportPlatformWindows::export_project(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, int p_flags) {
@@ -227,10 +227,10 @@ Error EditorExportPlatformWindows::export_project(const Ref<EditorExportPreset> 
 	if (export_as_zip) {
 		if (tmp_app_dir.is_null()) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("Prepare Templates"), vformat(TTR("Could not create and open the directory: \"%s\""), tmp_dir_path));
-			return ERR_CANT_CREATE;
+			return Error::CANT_CREATE;
 		}
 		if (DirAccess::exists(tmp_dir_path)) {
-			if (tmp_app_dir->change_dir(tmp_dir_path) == OK) {
+			if (tmp_app_dir->change_dir(tmp_dir_path) == Error::OK) {
 				tmp_app_dir->erase_contents_recursive();
 			}
 		}
@@ -245,7 +245,7 @@ Error EditorExportPlatformWindows::export_project(const Ref<EditorExportPreset> 
 	}
 
 	Error err = EditorExportPlatformPC::export_project(p_preset, p_debug, pck_path, p_flags);
-	if (err != OK) {
+	if (err != Error::OK) {
 		// Message is supplied by the subroutine method.
 		return err;
 	}
@@ -261,7 +261,7 @@ Error EditorExportPlatformWindows::export_project(const Ref<EditorExportPreset> 
 	if (embedded) {
 		Ref<DirAccess> tmp_dir = DirAccess::create_for_path(p_path.get_base_dir());
 		err = tmp_dir->rename(pck_path, p_path);
-		if (err != OK) {
+		if (err != Error::OK) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("PCK Embedding"), vformat(TTR("Failed to rename temporary file \"%s\"."), pck_path));
 		}
 	}
@@ -280,7 +280,7 @@ Error EditorExportPlatformWindows::export_project(const Ref<EditorExportPreset> 
 
 		zipClose(zip, nullptr);
 
-		if (tmp_app_dir->change_dir(tmp_dir_path) == OK) {
+		if (tmp_app_dir->change_dir(tmp_dir_path) == Error::OK) {
 			tmp_app_dir->erase_contents_recursive();
 			tmp_app_dir->change_dir("..");
 			tmp_app_dir->remove(pkg_name);
@@ -417,7 +417,7 @@ Error EditorExportPlatformWindows::_rcedit_add_data(const Ref<EditorExportPreset
 
 	if (rcedit_path != String() && !FileAccess::exists(rcedit_path)) {
 		add_message(EXPORT_MESSAGE_WARNING, TTR("Resources Modification"), vformat(TTR("Could not find rcedit executable at \"%s\"."), rcedit_path));
-		return ERR_FILE_NOT_FOUND;
+		return Error::FILE_NOT_FOUND;
 	}
 
 	if (rcedit_path == String()) {
@@ -430,7 +430,7 @@ Error EditorExportPlatformWindows::_rcedit_add_data(const Ref<EditorExportPreset
 
 	if (!wine_path.is_empty() && !FileAccess::exists(wine_path)) {
 		add_message(EXPORT_MESSAGE_WARNING, TTR("Resources Modification"), vformat(TTR("Could not find wine executable at \"%s\"."), wine_path));
-		return ERR_FILE_NOT_FOUND;
+		return Error::FILE_NOT_FOUND;
 	}
 
 	if (wine_path.is_empty()) {
@@ -457,7 +457,7 @@ Error EditorExportPlatformWindows::_rcedit_add_data(const Ref<EditorExportPreset
 
 	String tmp_icon_path = EditorPaths::get_singleton()->get_cache_dir().path_join("_rcedit.ico");
 	if (!icon_path.is_empty()) {
-		if (_process_icon(p_preset, icon_path, tmp_icon_path) != OK) {
+		if (_process_icon(p_preset, icon_path, tmp_icon_path) != Error::OK) {
 			add_message(EXPORT_MESSAGE_WARNING, TTR("Resources Modification"), vformat(TTR("Invalid icon file \"%s\"."), icon_path));
 			icon_path = String();
 		}
@@ -525,7 +525,7 @@ Error EditorExportPlatformWindows::_rcedit_add_data(const Ref<EditorExportPreset
 		DirAccess::remove_file_or_error(tmp_icon_path);
 	}
 
-	if (err != OK || (str.find("not found") != -1) || (str.find("not recognized") != -1)) {
+	if (err != Error::OK || (str.find("not found") != -1) || (str.find("not recognized") != -1)) {
 		add_message(EXPORT_MESSAGE_WARNING, TTR("Resources Modification"), TTR("Could not start rcedit executable. Configure rcedit path in the Editor Settings (Export > Windows > rcedit), or disable \"Application > Modify Resources\" in the export preset."));
 		return err;
 	}
@@ -533,10 +533,10 @@ Error EditorExportPlatformWindows::_rcedit_add_data(const Ref<EditorExportPreset
 
 	if (str.find("Fatal error") != -1) {
 		add_message(EXPORT_MESSAGE_WARNING, TTR("Resources Modification"), vformat(TTR("rcedit failed to modify executable: %s."), str));
-		return FAILED;
+		return Error::FAILED;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error EditorExportPlatformWindows::_code_sign(const Ref<EditorExportPreset> &p_preset, const String &p_path) {
@@ -546,7 +546,7 @@ Error EditorExportPlatformWindows::_code_sign(const Ref<EditorExportPreset> &p_p
 	String signtool_path = EDITOR_GET("export/windows/signtool");
 	if (!signtool_path.is_empty() && !FileAccess::exists(signtool_path)) {
 		add_message(EXPORT_MESSAGE_WARNING, TTR("Code Signing"), vformat(TTR("Could not find signtool executable at \"%s\"."), signtool_path));
-		return ERR_FILE_NOT_FOUND;
+		return Error::FILE_NOT_FOUND;
 	}
 	if (signtool_path.is_empty()) {
 		signtool_path = "signtool"; // try to run signtool from PATH
@@ -555,7 +555,7 @@ Error EditorExportPlatformWindows::_code_sign(const Ref<EditorExportPreset> &p_p
 	String signtool_path = EDITOR_GET("export/windows/osslsigncode");
 	if (!signtool_path.is_empty() && !FileAccess::exists(signtool_path)) {
 		add_message(EXPORT_MESSAGE_WARNING, TTR("Code Signing"), vformat(TTR("Could not find osslsigncode executable at \"%s\"."), signtool_path));
-		return ERR_FILE_NOT_FOUND;
+		return Error::FILE_NOT_FOUND;
 	}
 	if (signtool_path.is_empty()) {
 		signtool_path = "osslsigncode"; // try to run signtool from PATH
@@ -575,7 +575,7 @@ Error EditorExportPlatformWindows::_code_sign(const Ref<EditorExportPreset> &p_p
 			args.push_back(p_preset->get_or_env("codesign/identity", ENV_WIN_CODESIGN_ID));
 		} else {
 			add_message(EXPORT_MESSAGE_WARNING, TTR("Code Signing"), TTR("No identity found."));
-			return FAILED;
+			return Error::FAILED;
 		}
 	} else if (id_type == 2) { //Windows certificate store
 		if (p_preset->get_or_env("codesign/identity", ENV_WIN_CODESIGN_ID) != "") {
@@ -583,11 +583,11 @@ Error EditorExportPlatformWindows::_code_sign(const Ref<EditorExportPreset> &p_p
 			args.push_back(p_preset->get_or_env("codesign/identity", ENV_WIN_CODESIGN_ID));
 		} else {
 			add_message(EXPORT_MESSAGE_WARNING, TTR("Code Signing"), TTR("No identity found."));
-			return FAILED;
+			return Error::FAILED;
 		}
 	} else {
 		add_message(EXPORT_MESSAGE_WARNING, TTR("Code Signing"), TTR("Invalid identity type."));
-		return FAILED;
+		return Error::FAILED;
 	}
 #else
 	int id_type = 1;
@@ -596,7 +596,7 @@ Error EditorExportPlatformWindows::_code_sign(const Ref<EditorExportPreset> &p_p
 		args.push_back(p_preset->get_or_env("codesign/identity", ENV_WIN_CODESIGN_ID));
 	} else {
 		add_message(EXPORT_MESSAGE_WARNING, TTR("Code Signing"), TTR("No identity found."));
-		return FAILED;
+		return Error::FAILED;
 	}
 #endif
 
@@ -628,7 +628,7 @@ Error EditorExportPlatformWindows::_code_sign(const Ref<EditorExportPreset> &p_p
 #endif
 		} else {
 			add_message(EXPORT_MESSAGE_WARNING, TTR("Code Signing"), TTR("Invalid timestamp server."));
-			return FAILED;
+			return Error::FAILED;
 		}
 	}
 
@@ -674,7 +674,7 @@ Error EditorExportPlatformWindows::_code_sign(const Ref<EditorExportPreset> &p_p
 
 	String str;
 	Error err = OS::get_singleton()->execute(signtool_path, args, &str, nullptr, true);
-	if (err != OK || (str.find("not found") != -1) || (str.find("not recognized") != -1)) {
+	if (err != Error::OK || (str.find("not found") != -1) || (str.find("not recognized") != -1)) {
 #ifdef WINDOWS_ENABLED
 		add_message(EXPORT_MESSAGE_WARNING, TTR("Code Signing"), TTR("Could not start signtool executable. Configure signtool path in the Editor Settings (Export > Windows > signtool), or disable \"Codesign\" in the export preset."));
 #else
@@ -690,26 +690,26 @@ Error EditorExportPlatformWindows::_code_sign(const Ref<EditorExportPreset> &p_p
 	if (str.find("Failed") != -1) {
 #endif
 		add_message(EXPORT_MESSAGE_WARNING, TTR("Code Signing"), vformat(TTR("Signtool failed to sign executable: %s."), str));
-		return FAILED;
+		return Error::FAILED;
 	}
 
 #ifndef WINDOWS_ENABLED
 	Ref<DirAccess> tmp_dir = DirAccess::create_for_path(p_path.get_base_dir());
 
 	err = tmp_dir->remove(p_path);
-	if (err != OK) {
+	if (err != Error::OK) {
 		add_message(EXPORT_MESSAGE_WARNING, TTR("Code Signing"), vformat(TTR("Failed to remove temporary file \"%s\"."), p_path));
 		return err;
 	}
 
 	err = tmp_dir->rename(p_path + "_signed", p_path);
-	if (err != OK) {
+	if (err != Error::OK) {
 		add_message(EXPORT_MESSAGE_WARNING, TTR("Code Signing"), vformat(TTR("Failed to rename temporary file \"%s\"."), p_path + "_signed"));
 		return err;
 	}
 #endif
 
-	return OK;
+	return Error::OK;
 }
 
 bool EditorExportPlatformWindows::has_valid_export_configuration(const Ref<EditorExportPreset> &p_preset, String &r_error, bool &r_missing_templates, bool p_debug) const {
@@ -758,13 +758,13 @@ Error EditorExportPlatformWindows::fixup_embedded_pck(const String &p_path, int6
 
 	if (p_embedded_size + p_embedded_start >= 0x100000000) { // Check for total executable size
 		add_message(EXPORT_MESSAGE_ERROR, TTR("PCK Embedding"), TTR("Windows executables cannot be >= 4 GiB."));
-		return ERR_INVALID_DATA;
+		return Error::INVALID_DATA;
 	}
 
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ_WRITE);
 	if (f.is_null()) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("PCK Embedding"), vformat(TTR("Failed to open executable file \"%s\"."), p_path));
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
 	// Jump to the PE header and check the magic number
@@ -776,7 +776,7 @@ Error EditorExportPlatformWindows::fixup_embedded_pck(const String &p_path, int6
 		uint32_t magic = f->get_32();
 		if (magic != 0x00004550) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("PCK Embedding"), TTR("Executable file header corrupted."));
-			return ERR_FILE_CORRUPT;
+			return Error::FILE_CORRUPT;
 		}
 	}
 
@@ -827,9 +827,9 @@ Error EditorExportPlatformWindows::fixup_embedded_pck(const String &p_path, int6
 
 	if (!found) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("PCK Embedding"), TTR("Executable \"pck\" section not found."));
-		return ERR_FILE_CORRUPT;
+		return Error::FILE_CORRUPT;
 	}
-	return OK;
+	return Error::OK;
 }
 
 Ref<Texture2D> EditorExportPlatformWindows::get_run_icon() const {
@@ -899,7 +899,7 @@ void EditorExportPlatformWindows::cleanup() {
 Error EditorExportPlatformWindows::run(const Ref<EditorExportPreset> &p_preset, int p_device, int p_debug_flags) {
 	cleanup();
 	if (p_device) { // Stop command, cleanup only.
-		return OK;
+		return Error::OK;
 	}
 
 	EditorProgress ep("run", TTR("Running..."), 5);
@@ -908,7 +908,7 @@ Error EditorExportPlatformWindows::run(const Ref<EditorExportPreset> &p_preset, 
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 	if (!da->dir_exists(dest)) {
 		Error err = da->make_dir_recursive(dest);
-		if (err != OK) {
+		if (err != Error::OK) {
 			EditorNode::get_singleton()->show_warning(TTR("Could not create temp directory:") + "\n" + dest);
 			return err;
 		}
@@ -940,10 +940,10 @@ Error EditorExportPlatformWindows::run(const Ref<EditorExportPreset> &p_preset, 
 	((void)0)
 
 	if (ep.step(TTR("Exporting project..."), 1)) {
-		return ERR_SKIP;
+		return Error::SKIP;
 	}
 	Error err = export_project(p_preset, true, basepath + ".zip", p_debug_flags);
-	if (err != OK) {
+	if (err != Error::OK) {
 		DirAccess::remove_file_or_error(basepath + ".zip");
 		return err;
 	}
@@ -971,14 +971,14 @@ Error EditorExportPlatformWindows::run(const Ref<EditorExportPreset> &p_preset, 
 #else
 	err = ssh_run_on_remote(host, port, extra_args_ssh, "powershell -command \"$tmp = Join-Path $Env:Temp $(New-Guid); New-Item -Type Directory -Path $tmp ^| Out-Null; Write-Output $tmp\"", &temp_dir);
 #endif
-	if (err != OK || temp_dir.is_empty()) {
+	if (err != Error::OK || temp_dir.is_empty()) {
 		CLEANUP_AND_RETURN(err);
 	}
 
 	print_line("Uploading archive...");
 	ep.step(TTR("Uploading archive..."), 3);
 	err = ssh_push_to_remote(host, port, extra_args_scp, basepath + ".zip", temp_dir);
-	if (err != OK) {
+	if (err != Error::OK) {
 		CLEANUP_AND_RETURN(err);
 	}
 
@@ -1019,18 +1019,18 @@ Error EditorExportPlatformWindows::run(const Ref<EditorExportPreset> &p_preset, 
 	print_line("Uploading scripts...");
 	ep.step(TTR("Uploading scripts..."), 4);
 	err = ssh_push_to_remote(host, port, extra_args_scp, basepath + "_start.ps1", temp_dir);
-	if (err != OK) {
+	if (err != Error::OK) {
 		CLEANUP_AND_RETURN(err);
 	}
 	err = ssh_push_to_remote(host, port, extra_args_scp, basepath + "_clean.ps1", temp_dir);
-	if (err != OK) {
+	if (err != Error::OK) {
 		CLEANUP_AND_RETURN(err);
 	}
 
 	print_line("Starting project...");
 	ep.step(TTR("Starting project..."), 5);
 	err = ssh_run_on_remote_no_wait(host, port, extra_args_ssh, vformat("powershell -file \"%s\\%s\"", temp_dir, basepath.get_file() + "_start.ps1"), &ssh_pid, (use_remote) ? dbg_port : -1);
-	if (err != OK) {
+	if (err != Error::OK) {
 		CLEANUP_AND_RETURN(err);
 	}
 
@@ -1039,7 +1039,7 @@ Error EditorExportPlatformWindows::run(const Ref<EditorExportPreset> &p_preset, 
 
 	print_line("Project started.");
 
-	CLEANUP_AND_RETURN(OK);
+	CLEANUP_AND_RETURN(Error::OK);
 #undef CLEANUP_AND_RETURN
 }
 

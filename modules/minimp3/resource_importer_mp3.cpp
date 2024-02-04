@@ -124,7 +124,7 @@ Error ResourceImporterMP3::import(const String &p_source_file, const String &p_s
 
 	Ref<AudioStreamMP3> mp3_stream = import_mp3(p_source_file);
 	if (mp3_stream.is_null()) {
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 	mp3_stream->set_loop(loop);
 	mp3_stream->set_loop_offset(loop_offset);

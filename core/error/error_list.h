@@ -31,8 +31,8 @@
 #ifndef ERROR_LIST_H
 #define ERROR_LIST_H
 
-/** Error List. Please never compare an error against FAILED
- * Either do result != OK , or !result. This way, Error fail
+/** Error List. Please never compare an error against Error::FAILED
+ * Either do result != Error::OK , or !result. This way, Error fail
  * values can be more detailed in the future.
  *
  * This is a generic error list, mainly for organizing a language of returning errors.
@@ -43,57 +43,57 @@
  * - Are bound with BIND_CORE_ENUM_CONSTANT() in core/core_constants.cpp
  */
 
-enum Error {
+enum class Error {
 	OK, // (0)
 	FAILED, ///< Generic fail error
-	ERR_UNAVAILABLE, ///< What is requested is unsupported/unavailable
-	ERR_UNCONFIGURED, ///< The object being used hasn't been properly set up yet
-	ERR_UNAUTHORIZED, ///< Missing credentials for requested resource
-	ERR_PARAMETER_RANGE_ERROR, ///< Parameter given out of range (5)
-	ERR_OUT_OF_MEMORY, ///< Out of memory
-	ERR_FILE_NOT_FOUND,
-	ERR_FILE_BAD_DRIVE,
-	ERR_FILE_BAD_PATH,
-	ERR_FILE_NO_PERMISSION, // (10)
-	ERR_FILE_ALREADY_IN_USE,
-	ERR_FILE_CANT_OPEN,
-	ERR_FILE_CANT_WRITE,
-	ERR_FILE_CANT_READ,
-	ERR_FILE_UNRECOGNIZED, // (15)
-	ERR_FILE_CORRUPT,
-	ERR_FILE_MISSING_DEPENDENCIES,
-	ERR_FILE_EOF,
-	ERR_CANT_OPEN, ///< Can't open a resource/socket/file
-	ERR_CANT_CREATE, // (20)
-	ERR_QUERY_FAILED,
-	ERR_ALREADY_IN_USE,
-	ERR_LOCKED, ///< resource is locked
-	ERR_TIMEOUT,
-	ERR_CANT_CONNECT, // (25)
-	ERR_CANT_RESOLVE,
-	ERR_CONNECTION_ERROR,
-	ERR_CANT_ACQUIRE_RESOURCE,
-	ERR_CANT_FORK,
-	ERR_INVALID_DATA, ///< Data passed is invalid (30)
-	ERR_INVALID_PARAMETER, ///< Parameter passed is invalid
-	ERR_ALREADY_EXISTS, ///< When adding, item already exists
-	ERR_DOES_NOT_EXIST, ///< When retrieving/erasing, if item does not exist
-	ERR_DATABASE_CANT_READ, ///< database is full
-	ERR_DATABASE_CANT_WRITE, ///< database is full (35)
-	ERR_COMPILATION_FAILED,
-	ERR_METHOD_NOT_FOUND,
-	ERR_LINK_FAILED,
-	ERR_SCRIPT_FAILED,
-	ERR_CYCLIC_LINK, // (40)
-	ERR_INVALID_DECLARATION,
-	ERR_DUPLICATE_SYMBOL,
-	ERR_PARSE_ERROR,
-	ERR_BUSY,
-	ERR_SKIP, // (45)
-	ERR_HELP, ///< user requested help!!
-	ERR_BUG, ///< a bug in the software certainly happened, due to a double check failing or unexpected behavior.
-	ERR_PRINTER_ON_FIRE, /// the parallel port printer is engulfed in flames
-	ERR_MAX, // Not being returned, value represents the number of errors
+	UNAVAILABLE, ///< What is requested is unsupported/unavailable
+	UNCONFIGURED, ///< The object being used hasn't been properly set up yet
+	UNAUTHORIZED, ///< Missing credentials for requested resource
+	PARAMETER_RANGE_ERROR, ///< Parameter given out of range (5)
+	OUT_OF_MEMORY, ///< Out of memory
+	FILE_NOT_FOUND,
+	FILE_BAD_DRIVE,
+	FILE_BAD_PATH,
+	FILE_NO_PERMISSION, // (10)
+	FILE_ALREADY_IN_USE,
+	FILE_CANT_OPEN,
+	FILE_CANT_WRITE,
+	FILE_CANT_READ,
+	FILE_UNRECOGNIZED, // (15)
+	FILE_CORRUPT,
+	FILE_MISSING_DEPENDENCIES,
+	FILE_EOF,
+	CANT_OPEN, ///< Can't open a resource/socket/file
+	CANT_CREATE, // (20)
+	QUERY_FAILED,
+	ALREADY_IN_USE,
+	LOCKED, ///< resource is locked
+	TIMEOUT,
+	CANT_CONNECT, // (25)
+	CANT_RESOLVE,
+	CONNECTION_ERROR,
+	CANT_ACQUIRE_RESOURCE,
+	CANT_FORK,
+	INVALID_DATA, ///< Data passed is invalid (30)
+	INVALID_PARAMETER, ///< Parameter passed is invalid
+	ALREADY_EXISTS, ///< When adding, item already exists
+	DOES_NOT_EXIST, ///< When retrieving/erasing, if item does not exist
+	DATABASE_CANT_READ, ///< database is full
+	DATABASE_CANT_WRITE, ///< database is full (35)
+	COMPILATION_FAILED,
+	METHOD_NOT_FOUND,
+	LINK_FAILED,
+	SCRIPT_FAILED,
+	CYCLIC_LINK, // (40)
+	INVALID_DECLARATION,
+	DUPLICATE_SYMBOL,
+	PARSE_ERROR,
+	BUSY,
+	SKIP, // (45)
+	HELP, ///< user requested help!!
+	BUG, ///< a bug in the software certainly happened, due to a double check failing or unexpected behavior.
+	PRINTER_ON_FIRE, /// the parallel port printer is engulfed in flames
+	MAX, // Not being returned, value represents the number of errors
 };
 
 extern const char *error_names[];

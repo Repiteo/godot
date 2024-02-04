@@ -257,7 +257,7 @@ Error CallableCustomUnbind::rpc(int p_peer_id, const Variant **p_arguments, int 
 	if (p_argcount < argcount) {
 		r_call_error.error = Callable::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 		r_call_error.expected = argcount;
-		return ERR_UNCONFIGURED;
+		return Error::UNCONFIGURED;
 	}
 	return callable.rpcp(p_peer_id, p_arguments, p_argcount - argcount, r_call_error);
 }

@@ -44,7 +44,7 @@ class FileAccessUnix : public FileAccess {
 	FILE *f = nullptr;
 	int flags = 0;
 	void check_errors() const;
-	mutable Error last_error = OK;
+	mutable Error last_error = Error::OK;
 	String save_path;
 	String path;
 	String path_src;

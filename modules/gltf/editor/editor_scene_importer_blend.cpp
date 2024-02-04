@@ -65,7 +65,7 @@ static bool _get_blender_version(const String &p_path, int &r_major, int &r_mino
 	args.push_back("--version");
 	String pipe;
 	Error err = OS::get_singleton()->execute(p_path, args, &pipe);
-	if (err != OK) {
+	if (err != Error::OK) {
 		if (r_err) {
 			*r_err = TTR("Can't execute Blender binary.");
 		}
@@ -268,9 +268,9 @@ Node *EditorSceneFormatImporterBlend::import_scene(const String &p_path, uint32_
 
 	// Run Blender and export glTF.
 	Error err = EditorImportBlendRunner::get_singleton()->do_import(request_options);
-	if (err != OK) {
+	if (err != Error::OK) {
 		if (r_err) {
-			*r_err = ERR_SCRIPT_FAILED;
+			*r_err = Error::SCRIPT_FAILED;
 		}
 		return nullptr;
 	}
@@ -289,9 +289,9 @@ Node *EditorSceneFormatImporterBlend::import_scene(const String &p_path, uint32_
 	}
 	state->set_scene_name(blend_basename);
 	err = gltf->append_from_file(sink.get_basename() + ".gltf", state, p_flags, base_dir);
-	if (err != OK) {
+	if (err != Error::OK) {
 		if (r_err) {
-			*r_err = FAILED;
+			*r_err = Error::FAILED;
 		}
 		return nullptr;
 	}
@@ -414,7 +414,7 @@ bool EditorFileSystemImportFormatSupportQueryBlend::_autodetect_path() {
 
 		String output;
 		Error err = OS::get_singleton()->execute("mdfind", mdfind_args, &output);
-		if (err == OK) {
+		if (err == Error::OK) {
 			for (const String &find_path : output.split("\n")) {
 				find_paths.push_back(find_path.path_join("Contents/MacOS/Blender"));
 			}

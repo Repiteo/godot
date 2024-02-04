@@ -164,13 +164,13 @@ int widechar_main(int argc, wchar_t **argv) {
 
 	Error err = Main::setup(argv_utf8[0], argc - 1, &argv_utf8[1]);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		for (int i = 0; i < argc; ++i) {
 			delete[] argv_utf8[i];
 		}
 		delete[] argv_utf8;
 
-		if (err == ERR_HELP) { // Returned by --help and --version, so success.
+		if (err == Error::HELP) { // Returned by --help and --version, so success.
 			return 0;
 		}
 		return 255;

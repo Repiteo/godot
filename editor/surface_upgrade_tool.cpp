@@ -142,7 +142,7 @@ void SurfaceUpgradeTool::finish_upgrade() {
 		Ref<ConfigFile> config;
 		config.instantiate();
 		Error err = config->load(file_path);
-		if (err != OK) {
+		if (err != Error::OK) {
 			ERR_PRINT("Could not open " + file_path + " for upgrade.");
 			continue;
 		}
@@ -157,7 +157,7 @@ void SurfaceUpgradeTool::finish_upgrade() {
 		String path = OS::get_singleton()->get_resource_dir() + remap_path.replace_first("res://", "/");
 		print_verbose("Moving to trash: " + path);
 		err = OS::get_singleton()->move_to_trash(path);
-		if (err != OK) {
+		if (err != Error::OK) {
 			EditorNode::get_singleton()->add_io_error(TTR("Cannot remove:") + "\n" + remap_path + "\n");
 		}
 	}

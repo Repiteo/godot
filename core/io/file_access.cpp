@@ -43,7 +43,7 @@ FileAccess::CreateFunc FileAccess::create_func[ACCESS_MAX] = {};
 FileAccess::FileCloseFailNotify FileAccess::close_fail_notify = nullptr;
 
 bool FileAccess::backup_save = false;
-thread_local Error FileAccess::last_file_open_error = OK;
+thread_local Error FileAccess::last_file_open_error = Error::OK;
 
 Ref<FileAccess> FileAccess::create(AccessType p_access) {
 	ERR_FAIL_INDEX_V(p_access, ACCESS_MAX, nullptr);
@@ -95,7 +95,7 @@ Ref<FileAccess> FileAccess::open(const String &p_path, int p_mode_flags, Error *
 		ret = PackedData::get_singleton()->try_open_path(p_path);
 		if (ret.is_valid()) {
 			if (r_error) {
-				*r_error = OK;
+				*r_error = Error::OK;
 			}
 			return ret;
 		}
@@ -107,7 +107,7 @@ Ref<FileAccess> FileAccess::open(const String &p_path, int p_mode_flags, Error *
 	if (r_error) {
 		*r_error = err;
 	}
-	if (err != OK) {
+	if (err != Error::OK) {
 		ret.unref();
 	}
 
@@ -115,10 +115,10 @@ Ref<FileAccess> FileAccess::open(const String &p_path, int p_mode_flags, Error *
 }
 
 Ref<FileAccess> FileAccess::_open(const String &p_path, ModeFlags p_mode_flags) {
-	Error err = OK;
+	Error err = Error::OK;
 	Ref<FileAccess> fa = open(p_path, p_mode_flags, &err);
 	last_file_open_error = err;
-	if (err) {
+	if (err != Error::OK) {
 		return Ref<FileAccess>();
 	}
 	return fa;
@@ -134,7 +134,7 @@ Ref<FileAccess> FileAccess::open_encrypted(const String &p_path, ModeFlags p_mod
 	fae.instantiate();
 	Error err = fae->open_and_parse(fa, p_key, (p_mode_flags == WRITE) ? FileAccessEncrypted::MODE_WRITE_AES256 : FileAccessEncrypted::MODE_READ);
 	last_file_open_error = err;
-	if (err) {
+	if (err != Error::OK) {
 		return Ref<FileAccess>();
 	}
 	return fae;
@@ -150,7 +150,7 @@ Ref<FileAccess> FileAccess::open_encrypted_pass(const String &p_path, ModeFlags 
 	fae.instantiate();
 	Error err = fae->open_and_parse_password(fa, p_pass, (p_mode_flags == WRITE) ? FileAccessEncrypted::MODE_WRITE_AES256 : FileAccessEncrypted::MODE_READ);
 	last_file_open_error = err;
-	if (err) {
+	if (err != Error::OK) {
 		return Ref<FileAccess>();
 	}
 	return fae;
@@ -162,7 +162,7 @@ Ref<FileAccess> FileAccess::open_compressed(const String &p_path, ModeFlags p_mo
 	fac->configure("GCPF", (Compression::Mode)p_compress_mode);
 	Error err = fac->open_internal(p_path, p_mode_flags);
 	last_file_open_error = err;
-	if (err) {
+	if (err != Error::OK) {
 		return Ref<FileAccess>();
 	}
 
@@ -298,7 +298,7 @@ Variant FileAccess::get_var(bool p_allow_objects) const {
 
 	Variant v;
 	Error err = decode_variant(v, &r[0], len, nullptr, p_allow_objects);
-	ERR_FAIL_COND_V_MSG(err != OK, Variant(), "Error when trying to encode Variant.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Variant(), "Error when trying to encode Variant.");
 
 	return v;
 }
@@ -337,7 +337,7 @@ class CharBuffer {
 	int written = 0;
 
 	bool grow() {
-		if (vector.resize(next_power_of_2(1 + written)) != OK) {
+		if (vector.resize(next_power_of_2(1 + written)) != Error::OK) {
 			return false;
 		}
 
@@ -482,7 +482,7 @@ Vector<uint8_t> FileAccess::get_buffer(int64_t p_length) const {
 	}
 
 	Error err = data.resize(p_length);
-	ERR_FAIL_COND_V_MSG(err != OK, data, "Can't resize data to " + itos(p_length) + " elements.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, data, "Can't resize data to " + itos(p_length) + " elements.");
 
 	uint8_t *w = data.ptrw();
 	int64_t len = get_buffer(&w[0], p_length);
@@ -596,11 +596,11 @@ BitField<FileAccess::UnixPermissionFlags> FileAccess::get_unix_permissions(const
 
 Error FileAccess::set_unix_permissions(const String &p_file, BitField<FileAccess::UnixPermissionFlags> p_permissions) {
 	if (PackedData::get_singleton() && !PackedData::get_singleton()->is_disabled() && (PackedData::get_singleton()->has_path(p_file) || PackedData::get_singleton()->has_directory(p_file))) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 
 	Ref<FileAccess> fa = create_for_path(p_file);
-	ERR_FAIL_COND_V_MSG(fa.is_null(), ERR_CANT_CREATE, "Cannot create FileAccess for path '" + p_file + "'.");
+	ERR_FAIL_COND_V_MSG(fa.is_null(), Error::CANT_CREATE, "Cannot create FileAccess for path '" + p_file + "'.");
 
 	Error err = fa->_set_unix_permissions(p_file, p_permissions);
 	return err;
@@ -619,11 +619,11 @@ bool FileAccess::get_hidden_attribute(const String &p_file) {
 
 Error FileAccess::set_hidden_attribute(const String &p_file, bool p_hidden) {
 	if (PackedData::get_singleton() && !PackedData::get_singleton()->is_disabled() && (PackedData::get_singleton()->has_path(p_file) || PackedData::get_singleton()->has_directory(p_file))) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 
 	Ref<FileAccess> fa = create_for_path(p_file);
-	ERR_FAIL_COND_V_MSG(fa.is_null(), ERR_CANT_CREATE, "Cannot create FileAccess for path '" + p_file + "'.");
+	ERR_FAIL_COND_V_MSG(fa.is_null(), Error::CANT_CREATE, "Cannot create FileAccess for path '" + p_file + "'.");
 
 	Error err = fa->_set_hidden_attribute(p_file, p_hidden);
 	return err;
@@ -642,11 +642,11 @@ bool FileAccess::get_read_only_attribute(const String &p_file) {
 
 Error FileAccess::set_read_only_attribute(const String &p_file, bool p_ro) {
 	if (PackedData::get_singleton() && !PackedData::get_singleton()->is_disabled() && (PackedData::get_singleton()->has_path(p_file) || PackedData::get_singleton()->has_directory(p_file))) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 
 	Ref<FileAccess> fa = create_for_path(p_file);
-	ERR_FAIL_COND_V_MSG(fa.is_null(), ERR_CANT_CREATE, "Cannot create FileAccess for path '" + p_file + "'.");
+	ERR_FAIL_COND_V_MSG(fa.is_null(), Error::CANT_CREATE, "Cannot create FileAccess for path '" + p_file + "'.");
 
 	Error err = fa->_set_read_only_attribute(p_file, p_ro);
 	return err;
@@ -726,14 +726,14 @@ void FileAccess::store_buffer(const Vector<uint8_t> &p_buffer) {
 void FileAccess::store_var(const Variant &p_var, bool p_full_objects) {
 	int len;
 	Error err = encode_variant(p_var, nullptr, len, p_full_objects);
-	ERR_FAIL_COND_MSG(err != OK, "Error when trying to encode Variant.");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Error when trying to encode Variant.");
 
 	Vector<uint8_t> buff;
 	buff.resize(len);
 
 	uint8_t *w = buff.ptrw();
 	err = encode_variant(p_var, &w[0], len, p_full_objects);
-	ERR_FAIL_COND_MSG(err != OK, "Error when trying to encode Variant.");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Error when trying to encode Variant.");
 
 	store_32(len);
 	store_buffer(buff);
@@ -759,7 +759,7 @@ String FileAccess::get_file_as_string(const String &p_path, Error *r_error) {
 	if (r_error) {
 		*r_error = err;
 	}
-	if (err != OK) {
+	if (err != Error::OK) {
 		if (r_error) {
 			return String();
 		}

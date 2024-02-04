@@ -45,7 +45,7 @@ TEST_CASE("[PackedScene] Pack Scene and Retrieve State") {
 	// Pack the scene.
 	PackedScene packed_scene;
 	const Error err = packed_scene.pack(scene);
-	CHECK(err == OK);
+	CHECK(err == Error::OK);
 
 	// Retrieve the packed state.
 	Ref<SceneState> state = packed_scene.get_state();

@@ -768,9 +768,9 @@ void ShaderGLES3::initialize(const String &p_general_defines, int p_base_texture
 
 		Ref<DirAccess> d = DirAccess::open(shader_cache_dir);
 		ERR_FAIL_COND(d.is_null());
-		if (d->change_dir(name) != OK) {
+		if (d->change_dir(name) != Error::OK) {
 			Error err = d->make_dir(name);
-			ERR_FAIL_COND(err != OK);
+			ERR_FAIL_COND(err != Error::OK);
 			d->change_dir(name);
 		}
 
@@ -778,9 +778,9 @@ void ShaderGLES3::initialize(const String &p_general_defines, int p_base_texture
 		if (shader_cache_cleanup_on_start) {
 		}
 		//
-		if (d->change_dir(base_sha256) != OK) {
+		if (d->change_dir(base_sha256) != Error::OK) {
 			Error err = d->make_dir(base_sha256);
-			ERR_FAIL_COND(err != OK);
+			ERR_FAIL_COND(err != Error::OK);
 		}
 		shader_cache_dir_valid = true;
 

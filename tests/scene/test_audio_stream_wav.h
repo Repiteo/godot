@@ -142,11 +142,11 @@ void run_test(String file_name, AudioStreamWAV::Format data_format, bool stereo,
 	}
 
 	SUBCASE("Stream can be saved as .wav") {
-		REQUIRE(stream->save_to_wav(save_path) == OK);
+		REQUIRE(stream->save_to_wav(save_path) == Error::OK);
 
 		Error error;
 		Ref<FileAccess> wav_file = FileAccess::open(save_path, FileAccess::READ, &error);
-		REQUIRE(error == OK);
+		REQUIRE(error == Error::OK);
 
 #ifdef TOOLS_ENABLED
 		// The WAV importer can be used if enabled to check that the saved file is valid.
@@ -160,11 +160,11 @@ void run_test(String file_name, AudioStreamWAV::Format data_format, bool stereo,
 			options_map[E.option.name] = E.default_value;
 		}
 
-		REQUIRE(wav_importer->import(save_path, save_path, options_map, nullptr) == OK);
+		REQUIRE(wav_importer->import(save_path, save_path, options_map, nullptr) == Error::OK);
 
 		String load_path = save_path + "." + wav_importer->get_save_extension();
 		Ref<AudioStreamWAV> loaded_stream = ResourceLoader::load(load_path, "AudioStreamWAV", ResourceFormatImporter::CACHE_MODE_IGNORE, &error);
-		REQUIRE(error == OK);
+		REQUIRE(error == Error::OK);
 
 		CHECK(loaded_stream->get_format() == stream->get_format());
 		CHECK(loaded_stream->get_loop_mode() == stream->get_loop_mode());
@@ -205,10 +205,10 @@ TEST_CASE("[AudioStreamWAV] save_to_wav() adds '.wav' file extension automatical
 	Ref<AudioStreamWAV> stream = memnew(AudioStreamWAV);
 	stream->set_data(test_data);
 
-	REQUIRE(stream->save_to_wav(save_path) == OK);
+	REQUIRE(stream->save_to_wav(save_path) == Error::OK);
 	Error error;
 	Ref<FileAccess> wav_file = FileAccess::open(save_path + ".wav", FileAccess::READ, &error);
-	CHECK(error == OK);
+	CHECK(error == Error::OK);
 }
 
 TEST_CASE("[AudioStreamWAV] Default values") {
@@ -234,7 +234,7 @@ TEST_CASE("[AudioStreamWAV] Saving IMA ADPCM is not supported") {
 	Ref<AudioStreamWAV> stream = memnew(AudioStreamWAV);
 	stream->set_format(AudioStreamWAV::FORMAT_IMA_ADPCM);
 	ERR_PRINT_OFF;
-	CHECK(stream->save_to_wav(save_path) == ERR_UNAVAILABLE);
+	CHECK(stream->save_to_wav(save_path) == Error::UNAVAILABLE);
 	ERR_PRINT_ON;
 }
 

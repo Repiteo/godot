@@ -46,39 +46,39 @@ Error Expression::_get_token(Token &r_token) {
 		switch (cchar) {
 			case 0: {
 				r_token.type = TK_EOF;
-				return OK;
+				return Error::OK;
 			}
 			case '{': {
 				r_token.type = TK_CURLY_BRACKET_OPEN;
-				return OK;
+				return Error::OK;
 			}
 			case '}': {
 				r_token.type = TK_CURLY_BRACKET_CLOSE;
-				return OK;
+				return Error::OK;
 			}
 			case '[': {
 				r_token.type = TK_BRACKET_OPEN;
-				return OK;
+				return Error::OK;
 			}
 			case ']': {
 				r_token.type = TK_BRACKET_CLOSE;
-				return OK;
+				return Error::OK;
 			}
 			case '(': {
 				r_token.type = TK_PARENTHESIS_OPEN;
-				return OK;
+				return Error::OK;
 			}
 			case ')': {
 				r_token.type = TK_PARENTHESIS_CLOSE;
-				return OK;
+				return Error::OK;
 			}
 			case ',': {
 				r_token.type = TK_COMMA;
-				return OK;
+				return Error::OK;
 			}
 			case ':': {
 				r_token.type = TK_COLON;
-				return OK;
+				return Error::OK;
 			}
 			case '$': {
 				r_token.type = TK_INPUT;
@@ -87,7 +87,7 @@ Error Expression::_get_token(Token &r_token) {
 					if (!is_digit(expression[str_ofs])) {
 						_set_error("Expected number after '$'");
 						r_token.type = TK_ERROR;
-						return ERR_PARSE_ERROR;
+						return Error::PARSE_ERROR;
 					}
 					index *= 10;
 					index += expression[str_ofs] - '0';
@@ -96,7 +96,7 @@ Error Expression::_get_token(Token &r_token) {
 				} while (is_digit(expression[str_ofs]));
 
 				r_token.value = index;
-				return OK;
+				return Error::OK;
 			}
 			case '=': {
 				cchar = GET_CHAR();
@@ -105,9 +105,9 @@ Error Expression::_get_token(Token &r_token) {
 				} else {
 					_set_error("Expected '='");
 					r_token.type = TK_ERROR;
-					return ERR_PARSE_ERROR;
+					return Error::PARSE_ERROR;
 				}
-				return OK;
+				return Error::OK;
 			}
 			case '!': {
 				if (expression[str_ofs] == '=') {
@@ -116,7 +116,7 @@ Error Expression::_get_token(Token &r_token) {
 				} else {
 					r_token.type = TK_OP_NOT;
 				}
-				return OK;
+				return Error::OK;
 			}
 			case '>': {
 				if (expression[str_ofs] == '=') {
@@ -128,7 +128,7 @@ Error Expression::_get_token(Token &r_token) {
 				} else {
 					r_token.type = TK_OP_GREATER;
 				}
-				return OK;
+				return Error::OK;
 			}
 			case '<': {
 				if (expression[str_ofs] == '=') {
@@ -140,19 +140,19 @@ Error Expression::_get_token(Token &r_token) {
 				} else {
 					r_token.type = TK_OP_LESS;
 				}
-				return OK;
+				return Error::OK;
 			}
 			case '+': {
 				r_token.type = TK_OP_ADD;
-				return OK;
+				return Error::OK;
 			}
 			case '-': {
 				r_token.type = TK_OP_SUB;
-				return OK;
+				return Error::OK;
 			}
 			case '/': {
 				r_token.type = TK_OP_DIV;
-				return OK;
+				return Error::OK;
 			}
 			case '*': {
 				if (expression[str_ofs] == '*') {
@@ -161,11 +161,11 @@ Error Expression::_get_token(Token &r_token) {
 				} else {
 					r_token.type = TK_OP_MUL;
 				}
-				return OK;
+				return Error::OK;
 			}
 			case '%': {
 				r_token.type = TK_OP_MOD;
-				return OK;
+				return Error::OK;
 			}
 			case '&': {
 				if (expression[str_ofs] == '&') {
@@ -174,7 +174,7 @@ Error Expression::_get_token(Token &r_token) {
 				} else {
 					r_token.type = TK_OP_BIT_AND;
 				}
-				return OK;
+				return Error::OK;
 			}
 			case '|': {
 				if (expression[str_ofs] == '|') {
@@ -183,17 +183,17 @@ Error Expression::_get_token(Token &r_token) {
 				} else {
 					r_token.type = TK_OP_BIT_OR;
 				}
-				return OK;
+				return Error::OK;
 			}
 			case '^': {
 				r_token.type = TK_OP_BIT_XOR;
 
-				return OK;
+				return Error::OK;
 			}
 			case '~': {
 				r_token.type = TK_OP_BIT_INVERT;
 
-				return OK;
+				return Error::OK;
 			}
 			case '\'':
 			case '"': {
@@ -205,7 +205,7 @@ Error Expression::_get_token(Token &r_token) {
 					if (ch == 0) {
 						_set_error("Unterminated String");
 						r_token.type = TK_ERROR;
-						return ERR_PARSE_ERROR;
+						return Error::PARSE_ERROR;
 					} else if (ch == cchar) {
 						// cchar contain a corresponding quote symbol
 						break;
@@ -216,7 +216,7 @@ Error Expression::_get_token(Token &r_token) {
 						if (next == 0) {
 							_set_error("Unterminated String");
 							r_token.type = TK_ERROR;
-							return ERR_PARSE_ERROR;
+							return Error::PARSE_ERROR;
 						}
 						char32_t res = 0;
 
@@ -246,12 +246,12 @@ Error Expression::_get_token(Token &r_token) {
 									if (c == 0) {
 										_set_error("Unterminated String");
 										r_token.type = TK_ERROR;
-										return ERR_PARSE_ERROR;
+										return Error::PARSE_ERROR;
 									}
 									if (!is_hex_digit(c)) {
 										_set_error("Malformed hex constant in string");
 										r_token.type = TK_ERROR;
-										return ERR_PARSE_ERROR;
+										return Error::PARSE_ERROR;
 									}
 									char32_t v;
 									if (is_digit(c)) {
@@ -285,13 +285,13 @@ Error Expression::_get_token(Token &r_token) {
 							} else {
 								_set_error("Invalid UTF-16 sequence in string, unpaired lead surrogate");
 								r_token.type = TK_ERROR;
-								return ERR_PARSE_ERROR;
+								return Error::PARSE_ERROR;
 							}
 						} else if ((res & 0xfffffc00) == 0xdc00) {
 							if (prev == 0) {
 								_set_error("Invalid UTF-16 sequence in string, unpaired trail surrogate");
 								r_token.type = TK_ERROR;
-								return ERR_PARSE_ERROR;
+								return Error::PARSE_ERROR;
 							} else {
 								res = (prev << 10UL) + res - ((0xd800 << 10UL) + 0xdc00 - 0x10000);
 								prev = 0;
@@ -300,14 +300,14 @@ Error Expression::_get_token(Token &r_token) {
 						if (prev != 0) {
 							_set_error("Invalid UTF-16 sequence in string, unpaired lead surrogate");
 							r_token.type = TK_ERROR;
-							return ERR_PARSE_ERROR;
+							return Error::PARSE_ERROR;
 						}
 						str += res;
 					} else {
 						if (prev != 0) {
 							_set_error("Invalid UTF-16 sequence in string, unpaired lead surrogate");
 							r_token.type = TK_ERROR;
-							return ERR_PARSE_ERROR;
+							return Error::PARSE_ERROR;
 						}
 						str += ch;
 					}
@@ -315,12 +315,12 @@ Error Expression::_get_token(Token &r_token) {
 				if (prev != 0) {
 					_set_error("Invalid UTF-16 sequence in string, unpaired lead surrogate");
 					r_token.type = TK_ERROR;
-					return ERR_PARSE_ERROR;
+					return Error::PARSE_ERROR;
 				}
 
 				r_token.type = TK_CONSTANT;
 				r_token.value = str;
-				return OK;
+				return Error::OK;
 
 			} break;
 			default: {
@@ -432,7 +432,7 @@ Error Expression::_get_token(Token &r_token) {
 					} else {
 						r_token.value = num.to_int();
 					}
-					return OK;
+					return Error::OK;
 
 				} else if (is_unicode_identifier_start(cchar)) {
 					String id = String::chr(cchar);
@@ -481,31 +481,31 @@ Error Expression::_get_token(Token &r_token) {
 							if (id == Variant::get_type_name(Variant::Type(i))) {
 								r_token.type = TK_BASIC_TYPE;
 								r_token.value = i;
-								return OK;
+								return Error::OK;
 							}
 						}
 
 						if (Variant::has_utility_function(id)) {
 							r_token.type = TK_BUILTIN_FUNC;
 							r_token.value = id;
-							return OK;
+							return Error::OK;
 						}
 
 						r_token.type = TK_IDENTIFIER;
 						r_token.value = id;
 					}
 
-					return OK;
+					return Error::OK;
 
 				} else if (cchar == '.') {
 					// Handled down there as we support '.[0-9]' as numbers above
 					r_token.type = TK_PERIOD;
-					return OK;
+					return Error::OK;
 
 				} else {
 					_set_error("Unexpected character.");
 					r_token.type = TK_ERROR;
-					return ERR_PARSE_ERROR;
+					return Error::PARSE_ERROR;
 				}
 			}
 		}
@@ -513,7 +513,7 @@ Error Expression::_get_token(Token &r_token) {
 	}
 
 	r_token.type = TK_ERROR;
-	return ERR_PARSE_ERROR;
+	return Error::PARSE_ERROR;
 }
 
 const char *Expression::token_name[TK_MAX] = {
@@ -1488,10 +1488,10 @@ Error Expression::parse(const String &p_expression, const Vector<String> &p_inpu
 			memdelete(nodes);
 		}
 		nodes = nullptr;
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Variant Expression::execute(Array p_inputs, Object *p_base, bool p_show_error, bool p_const_calls_only) {

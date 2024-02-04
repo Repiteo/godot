@@ -707,7 +707,7 @@ Error Main::test_setup() {
 
 	initialize_navigation_server();
 
-	ERR_FAIL_COND_V(TextServerManager::get_singleton()->get_interface_count() == 0, ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(TextServerManager::get_singleton()->get_interface_count() == 0, Error::CANT_CREATE);
 
 	/* Use one with the most features available. */
 	int max_features = 0;
@@ -730,14 +730,14 @@ Error Main::test_setup() {
 			ts->load_support_data("res://" + ts->get_support_data_filename());
 		}
 	} else {
-		ERR_FAIL_V_MSG(ERR_CANT_CREATE, "TextServer: Unable to create TextServer interface.");
+		ERR_FAIL_V_MSG(Error::CANT_CREATE, "TextServer: Unable to create TextServer interface.");
 	}
 
 	ClassDB::set_current_api(ClassDB::API_NONE);
 
 	_start_success = true;
 
-	return OK;
+	return Error::OK;
 }
 // The order is the same as in `Main::cleanup()`.
 void Main::test_cleanup() {
@@ -950,7 +950,7 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 #endif
 
 	// Default exit code, can be modified for certain errors.
-	Error exit_code = ERR_INVALID_PARAMETER;
+	Error exit_code = Error::INVALID_PARAMETER;
 
 	I = args.front();
 	while (I) {
@@ -1000,12 +1000,12 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 		} else if (I->get() == "-h" || I->get() == "--help" || I->get() == "/?") { // display help
 
 			show_help = true;
-			exit_code = ERR_HELP; // Hack to force an early exit in `main()` with a success code.
+			exit_code = Error::HELP; // Hack to force an early exit in `main()` with a success code.
 			goto error;
 
 		} else if (I->get() == "--version") {
 			print_line(get_full_version_string());
-			exit_code = ERR_HELP; // Hack to force an early exit in `main()` with a success code.
+			exit_code = Error::HELP; // Hack to force an early exit in `main()` with a success code.
 			goto error;
 
 		} else if (I->get() == "-v" || I->get() == "--verbose") { // verbose output
@@ -1457,7 +1457,7 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 
 			if (I->next()) {
 				String p = I->next()->get();
-				if (OS::get_singleton()->set_cwd(p) != OK) {
+				if (OS::get_singleton()->set_cwd(p) != Error::OK) {
 					OS::get_singleton()->print("Invalid project path specified: \"%s\", aborting.\n", p.utf8().get_data());
 					goto error;
 				}
@@ -1487,7 +1487,7 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 			} else {
 				path = file.substr(0, sep);
 			}
-			if (OS::get_singleton()->set_cwd(path) == OK) {
+			if (OS::get_singleton()->set_cwd(path) == Error::OK) {
 				// path already specified, don't override
 			} else {
 				project_path = path;
@@ -1690,13 +1690,13 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 		}
 		Error err = OS::get_singleton()->setup_remote_filesystem(remotefs, port, remotefs_pass, project_path);
 
-		if (err) {
+		if (err != Error::OK) {
 			OS::get_singleton()->printerr("Could not connect to remotefs: %s:%i.\n", remotefs.utf8().get_data(), port);
 			goto error;
 		}
 	}
 
-	if (globals->setup(project_path, main_pack, upwards, editor) == OK) {
+	if (globals->setup(project_path, main_pack, upwards, editor) == Error::OK) {
 #ifdef TOOLS_ENABLED
 		found_project = true;
 #endif
@@ -2339,7 +2339,7 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 	}
 
 	OS::get_singleton()->benchmark_end_measure("Startup", "Setup");
-	return OK;
+	return Error::OK;
 
 error:
 
@@ -2406,7 +2406,7 @@ Error _parse_resource_dummy(void *p_data, VariantParser::Stream *p_stream, Ref<R
 	VariantParser::get_token(p_stream, token, line, r_err_str);
 	if (token.type != VariantParser::TK_NUMBER && token.type != VariantParser::TK_STRING) {
 		r_err_str = "Expected number (old style sub-resource index) or String (ext-resource ID)";
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 
 	r_res.unref();
@@ -2414,10 +2414,10 @@ Error _parse_resource_dummy(void *p_data, VariantParser::Stream *p_stream, Ref<R
 	VariantParser::get_token(p_stream, token, line, r_err_str);
 	if (token.type != VariantParser::TK_PARENTHESIS_CLOSE) {
 		r_err_str = "Expected ')'";
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error Main::setup2() {
@@ -2436,7 +2436,7 @@ Error Main::setup2() {
 		// Editor setting class is not available, load config directly.
 		if (!init_use_custom_screen && (editor || project_manager) && EditorPaths::get_singleton()->are_paths_valid()) {
 			Ref<DirAccess> dir = DirAccess::open(EditorPaths::get_singleton()->get_config_dir());
-			ERR_FAIL_COND_V(dir.is_null(), FAILED);
+			ERR_FAIL_COND_V(dir.is_null(), Error::FAILED);
 
 			String config_file_name = "editor_settings-" + itos(VERSION_MAJOR) + ".tres";
 			String config_file_path = EditorPaths::get_singleton()->get_config_dir().path_join(config_file_name);
@@ -2483,11 +2483,11 @@ Error Main::setup2() {
 						next_tag.name = String();
 
 						err = VariantParser::parse_tag_assign_eof(&stream, lines, error_text, next_tag, assign, value, &rp_new, true);
-						if (err == ERR_FILE_EOF) {
+						if (err == Error::FILE_EOF) {
 							break;
 						}
 
-						if (err == OK && !assign.is_empty()) {
+						if (err == Error::OK && !assign.is_empty()) {
 							if (!screen_found && assign == screen_property) {
 								init_screen = value;
 								screen_found = true;
@@ -2512,7 +2512,7 @@ Error Main::setup2() {
 			if (ProjectSettings::get_singleton()->get_resource_path() == OS::get_singleton()->get_executable_path().get_base_dir()) {
 				ERR_PRINT("You are trying to run a self-contained editor at the same location as a project. This is not allowed, since editor files will mix with project files.");
 				OS::get_singleton()->set_exit_code(EXIT_FAILURE);
-				return FAILED;
+				return Error::FAILED;
 			}
 		}
 
@@ -2598,7 +2598,7 @@ Error Main::setup2() {
 		// rendering_driver now held in static global String in main and initialized in setup()
 		Error err;
 		display_server = DisplayServer::create(display_driver_idx, rendering_driver, window_mode, window_vsync_mode, window_flags, window_position, window_size, init_screen, err);
-		if (err != OK || display_server == nullptr) {
+		if (err != Error::OK || display_server == nullptr) {
 			// We can't use this display server, try other ones as fallback.
 			// Skip headless (always last registered) because that's not what users
 			// would expect if they didn't request it explicitly.
@@ -2607,13 +2607,13 @@ Error Main::setup2() {
 					continue; // Don't try the same twice.
 				}
 				display_server = DisplayServer::create(i, rendering_driver, window_mode, window_vsync_mode, window_flags, window_position, window_size, init_screen, err);
-				if (err == OK && display_server != nullptr) {
+				if (err == Error::OK && display_server != nullptr) {
 					break;
 				}
 			}
 		}
 
-		if (err != OK || display_server == nullptr) {
+		if (err != Error::OK || display_server == nullptr) {
 			ERR_PRINT("Unable to create DisplayServer, all display drivers failed.\nUse \"--headless\" command line argument to run the engine in headless mode if this is desired (e.g. for continuous integration).");
 			return err;
 		}
@@ -2782,7 +2782,7 @@ Error Main::setup2() {
 				if (!boot_logo_path.is_empty()) {
 					boot_logo.instantiate();
 					Error load_err = ImageLoader::load_image(boot_logo_path, boot_logo);
-					if (load_err) {
+					if (load_err != Error::OK) {
 						ERR_PRINT("Non-existing or invalid boot splash at '" + boot_logo_path + "'. Loading default splash.");
 					}
 				}
@@ -2942,7 +2942,7 @@ Error Main::setup2() {
 				ts->load_support_data("res://" + ts->get_support_data_filename());
 			}
 		} else {
-			ERR_FAIL_V_MSG(ERR_CANT_CREATE, "TextServer: Unable to create TextServer interface.");
+			ERR_FAIL_V_MSG(Error::CANT_CREATE, "TextServer: Unable to create TextServer interface.");
 		}
 
 		OS::get_singleton()->benchmark_end_measure("Startup", "Text Server");
@@ -3065,7 +3065,7 @@ Error Main::setup2() {
 
 	OS::get_singleton()->benchmark_end_measure("Startup", "Setup");
 
-	return OK;
+	return Error::OK;
 }
 
 String Main::get_rendering_driver_name() {
@@ -3247,11 +3247,11 @@ bool Main::start() {
 				// Create the module documentation directory if it doesn't exist
 				Ref<DirAccess> da = DirAccess::create_for_path(path);
 				err = da->make_dir_recursive(path);
-				ERR_FAIL_COND_V_MSG(err != OK, false, "Error: Can't create directory: " + path + ": " + itos(err));
+				ERR_FAIL_COND_V_MSG(err != Error::OK, false, "Error: Can't create directory: " + path + ": " + itos((int)err));
 
 				print_line("Loading docs from: " + path);
 				err = docsrc.load_classes(path);
-				ERR_FAIL_COND_V_MSG(err != OK, false, "Error loading docs from: " + path + ": " + itos(err));
+				ERR_FAIL_COND_V_MSG(err != Error::OK, false, "Error loading docs from: " + path + ": " + itos((int)err));
 			}
 		}
 
@@ -3259,11 +3259,11 @@ bool Main::start() {
 		// Create the main documentation directory if it doesn't exist
 		Ref<DirAccess> da = DirAccess::create_for_path(index_path);
 		err = da->make_dir_recursive(index_path);
-		ERR_FAIL_COND_V_MSG(err != OK, false, "Error: Can't create index directory: " + index_path + ": " + itos(err));
+		ERR_FAIL_COND_V_MSG(err != Error::OK, false, "Error: Can't create index directory: " + index_path + ": " + itos((int)err));
 
 		print_line("Loading classes from: " + index_path);
 		err = docsrc.load_classes(index_path);
-		ERR_FAIL_COND_V_MSG(err != OK, false, "Error loading classes from: " + index_path + ": " + itos(err));
+		ERR_FAIL_COND_V_MSG(err != Error::OK, false, "Error loading classes from: " + index_path + ": " + itos((int)err));
 		checked_paths.insert(index_path);
 
 		print_line("Merging docs...");
@@ -3272,12 +3272,12 @@ bool Main::start() {
 		for (const String &E : checked_paths) {
 			print_line("Erasing old docs at: " + E);
 			err = DocTools::erase_classes(E);
-			ERR_FAIL_COND_V_MSG(err != OK, false, "Error erasing old docs at: " + E + ": " + itos(err));
+			ERR_FAIL_COND_V_MSG(err != Error::OK, false, "Error erasing old docs at: " + E + ": " + itos((int)err));
 		}
 
 		print_line("Generating new docs...");
 		err = doc.save_classes(index_path, doc_data_classes);
-		ERR_FAIL_COND_V_MSG(err != OK, false, "Error saving new docs:" + itos(err));
+		ERR_FAIL_COND_V_MSG(err != Error::OK, false, "Error saving new docs:" + itos((int)err));
 
 		print_line("Deleting docs cache...");
 		if (FileAccess::exists(EditorHelp::get_cache_full_path())) {
@@ -3306,7 +3306,7 @@ bool Main::start() {
 
 		if (validate_extension_api) {
 			Engine::get_singleton()->set_editor_hint(true); // "extension_api.json" should always contains editor singletons.
-			bool valid = GDExtensionAPIDump::validate_extension_json_file(validate_extension_api_file) == OK;
+			bool valid = GDExtensionAPIDump::validate_extension_json_file(validate_extension_api_file) == Error::OK;
 			OS::get_singleton()->set_exit_code(valid ? EXIT_SUCCESS : EXIT_FAILURE);
 			return false;
 		}
@@ -3561,11 +3561,11 @@ bool Main::start() {
 
 			Ref<DirAccess> da = DirAccess::create_for_path(doc_tool_path);
 			err = da->make_dir_recursive(doc_tool_path);
-			ERR_FAIL_COND_V_MSG(err != OK, false, "Error: Can't create GDScript docs directory: " + doc_tool_path + ": " + itos(err));
+			ERR_FAIL_COND_V_MSG(err != Error::OK, false, "Error: Can't create GDScript docs directory: " + doc_tool_path + ": " + itos((int)err));
 
 			HashMap<String, String> doc_data_classes;
 			err = docs.save_classes(doc_tool_path, doc_data_classes, false);
-			ERR_FAIL_COND_V_MSG(err != OK, false, "Error saving GDScript docs:" + itos(err));
+			ERR_FAIL_COND_V_MSG(err != Error::OK, false, "Error saving GDScript docs:" + itos((int)err));
 
 			OS::get_singleton()->set_exit_code(EXIT_SUCCESS);
 			return false;
@@ -3703,7 +3703,7 @@ bool Main::start() {
 			if (editor) {
 				if (game_path != String(GLOBAL_GET("application/run/main_scene")) || !editor_node->has_scenes_in_session()) {
 					Error serr = editor_node->load_scene(local_game_path);
-					if (serr != OK) {
+					if (serr != Error::OK) {
 						ERR_PRINT("Failed to load scene");
 					}
 				}
@@ -3756,7 +3756,7 @@ bool Main::start() {
 				if ((!icon_path.is_empty()) && (!has_icon)) {
 					Ref<Image> icon;
 					icon.instantiate();
-					if (ImageLoader::load_image(icon_path, icon) == OK) {
+					if (ImageLoader::load_image(icon_path, icon) == Error::OK) {
 						DisplayServer::get_singleton()->set_icon(icon);
 						has_icon = true;
 					}

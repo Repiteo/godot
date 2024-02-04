@@ -216,7 +216,7 @@ bool CodeSignCodeResources::add_nested_file(const String &p_root, const String &
 	if (LipO::is_lipo(p_exepath)) {
 		String tmp_path_name = EditorPaths::get_singleton()->get_cache_dir().path_join("_lipo");
 		Error err = da->make_dir_recursive(tmp_path_name);
-		ERR_FAIL_COND_V_MSG(err != OK, false, vformat("CodeSign/CodeResources: Failed to create \"%s\" subfolder.", tmp_path_name));
+		ERR_FAIL_COND_V_MSG(err != Error::OK, false, vformat("CodeSign/CodeResources: Failed to create \"%s\" subfolder.", tmp_path_name));
 		LipO lip;
 		if (lip.open_file(p_exepath)) {
 			for (int i = 0; i < lip.get_arch_count(); i++) {
@@ -286,7 +286,7 @@ bool CodeSignCodeResources::add_folder_recursive(const String &p_root, const Str
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 	ERR_FAIL_COND_V(da.is_null(), false);
 	Error err = da->change_dir(p_root.path_join(p_path));
-	ERR_FAIL_COND_V(err != OK, false);
+	ERR_FAIL_COND_V(err != Error::OK, false);
 
 	bool ret = true;
 	da->list_dir_begin();
@@ -1206,7 +1206,7 @@ Error CodeSign::_codesign_file(bool p_use_hardened_runtime, bool p_force, const 
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 	if (da.is_null()) {
 		r_error_msg = TTR("Can't get filesystem access.");
-		ERR_FAIL_V_MSG(ERR_CANT_CREATE, "CodeSign: Can't get filesystem access.");
+		ERR_FAIL_V_MSG(Error::CANT_CREATE, "CodeSign: Can't get filesystem access.");
 	}
 
 	// Read Info.plist.
@@ -1218,25 +1218,25 @@ Error CodeSign::_codesign_file(bool p_use_hardened_runtime, bool p_force, const 
 			info_hash2 = file_hash_sha256(p_info);
 			if (info_hash1.is_empty() || info_hash2.is_empty()) {
 				r_error_msg = TTR("Failed to get Info.plist hash.");
-				ERR_FAIL_V_MSG(FAILED, "CodeSign: Failed to get Info.plist hash.");
+				ERR_FAIL_V_MSG(Error::FAILED, "CodeSign: Failed to get Info.plist hash.");
 			}
 
 			if (info_plist.get_root()->data_type == PList::PLNodeType::PL_NODE_TYPE_DICT && info_plist.get_root()->data_dict.has("CFBundleExecutable")) {
 				main_exe = p_exe_path.path_join(String::utf8(info_plist.get_root()->data_dict["CFBundleExecutable"]->data_string.get_data()));
 			} else {
 				r_error_msg = TTR("Invalid Info.plist, no exe name.");
-				ERR_FAIL_V_MSG(FAILED, "CodeSign: Invalid Info.plist, no exe name.");
+				ERR_FAIL_V_MSG(Error::FAILED, "CodeSign: Invalid Info.plist, no exe name.");
 			}
 
 			if (info_plist.get_root()->data_type == PList::PLNodeType::PL_NODE_TYPE_DICT && info_plist.get_root()->data_dict.has("CFBundleIdentifier")) {
 				id = info_plist.get_root()->data_dict["CFBundleIdentifier"]->data_string.get_data();
 			} else {
 				r_error_msg = TTR("Invalid Info.plist, no bundle id.");
-				ERR_FAIL_V_MSG(FAILED, "CodeSign: Invalid Info.plist, no bundle id.");
+				ERR_FAIL_V_MSG(Error::FAILED, "CodeSign: Invalid Info.plist, no bundle id.");
 			}
 		} else {
 			r_error_msg = TTR("Invalid Info.plist, can't load.");
-			ERR_FAIL_V_MSG(FAILED, "CodeSign: Invalid Info.plist, can't load.");
+			ERR_FAIL_V_MSG(Error::FAILED, "CodeSign: Invalid Info.plist, can't load.");
 		}
 	}
 
@@ -1246,9 +1246,9 @@ Error CodeSign::_codesign_file(bool p_use_hardened_runtime, bool p_force, const 
 		print_verbose(vformat("CodeSign: Executable is fat, extracting..."));
 		String tmp_path_name = EditorPaths::get_singleton()->get_cache_dir().path_join("_lipo");
 		Error err = da->make_dir_recursive(tmp_path_name);
-		if (err != OK) {
+		if (err != Error::OK) {
 			r_error_msg = vformat(TTR("Failed to create \"%s\" subfolder."), tmp_path_name);
-			ERR_FAIL_V_MSG(FAILED, vformat("CodeSign: Failed to create \"%s\" subfolder.", tmp_path_name));
+			ERR_FAIL_V_MSG(Error::FAILED, vformat("CodeSign: Failed to create \"%s\" subfolder.", tmp_path_name));
 		}
 		LipO lip;
 		if (lip.open_file(main_exe)) {
@@ -1256,7 +1256,7 @@ Error CodeSign::_codesign_file(bool p_use_hardened_runtime, bool p_force, const 
 				if (!lip.extract_arch(i, tmp_path_name.path_join("_exe_" + itos(i)))) {
 					CLEANUP();
 					r_error_msg = TTR("Failed to extract thin binary.");
-					ERR_FAIL_V_MSG(FAILED, "CodeSign: Failed to extract thin binary.");
+					ERR_FAIL_V_MSG(Error::FAILED, "CodeSign: Failed to extract thin binary.");
 				}
 				files_to_sign.push_back(tmp_path_name.path_join("_exe_" + itos(i)));
 			}
@@ -1266,7 +1266,7 @@ Error CodeSign::_codesign_file(bool p_use_hardened_runtime, bool p_force, const 
 		files_to_sign.push_back(main_exe);
 	} else {
 		r_error_msg = TTR("Invalid binary format.");
-		ERR_FAIL_V_MSG(FAILED, "CodeSign: Invalid binary format.");
+		ERR_FAIL_V_MSG(Error::FAILED, "CodeSign: Invalid binary format.");
 	}
 
 	// Check if it's already signed.
@@ -1277,7 +1277,7 @@ Error CodeSign::_codesign_file(bool p_use_hardened_runtime, bool p_force, const 
 			if (mh.is_signed()) {
 				CLEANUP();
 				r_error_msg = TTR("Already signed!");
-				ERR_FAIL_V_MSG(FAILED, "CodeSign: Already signed!");
+				ERR_FAIL_V_MSG(Error::FAILED, "CodeSign: Already signed!");
 			}
 		}
 	}
@@ -1336,13 +1336,13 @@ Error CodeSign::_codesign_file(bool p_use_hardened_runtime, bool p_force, const 
 		if (!cr.add_folder_recursive(p_bundle_path, "", main_exe)) {
 			CLEANUP();
 			r_error_msg = TTR("Failed to process nested resources.");
-			ERR_FAIL_V_MSG(FAILED, "CodeSign: Failed to process nested resources.");
+			ERR_FAIL_V_MSG(Error::FAILED, "CodeSign: Failed to process nested resources.");
 		}
 		Error err = da->make_dir_recursive(p_bundle_path.path_join("_CodeSignature"));
-		if (err != OK) {
+		if (err != Error::OK) {
 			CLEANUP();
 			r_error_msg = TTR("Failed to create _CodeSignature subfolder.");
-			ERR_FAIL_V_MSG(FAILED, "CodeSign: Failed to create _CodeSignature subfolder.");
+			ERR_FAIL_V_MSG(Error::FAILED, "CodeSign: Failed to create _CodeSignature subfolder.");
 		}
 		cr.save_to_file(p_bundle_path.path_join("_CodeSignature").path_join("CodeResources"));
 		res_hash1 = file_hash_sha1(p_bundle_path.path_join("_CodeSignature").path_join("CodeResources"));
@@ -1350,17 +1350,17 @@ Error CodeSign::_codesign_file(bool p_use_hardened_runtime, bool p_force, const 
 		if (res_hash1.is_empty() || res_hash2.is_empty()) {
 			CLEANUP();
 			r_error_msg = TTR("Failed to get CodeResources hash.");
-			ERR_FAIL_V_MSG(FAILED, "CodeSign: Failed to get CodeResources hash.");
+			ERR_FAIL_V_MSG(Error::FAILED, "CodeSign: Failed to get CodeResources hash.");
 		}
 	}
 
 	// Generate common signature structures.
 	if (id.is_empty()) {
 		CryptoCore::RandomGenerator rng;
-		ERR_FAIL_COND_V_MSG(rng.init(), FAILED, "Failed to initialize random number generator.");
+		ERR_FAIL_COND_V_MSG(rng.init() != Error::OK, Error::FAILED, "Failed to initialize random number generator.");
 		uint8_t uuid[16];
 		Error err = rng.get_random_bytes(uuid, 16);
-		ERR_FAIL_COND_V_MSG(err, err, "Failed to generate UUID.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Failed to generate UUID.");
 		id = (String("a-55554944") /*a-UUID*/ + String::hex_encode_buffer(uuid, 16));
 	}
 	CharString uuid_str = id.utf8();
@@ -1375,7 +1375,7 @@ Error CodeSign::_codesign_file(bool p_use_hardened_runtime, bool p_force, const 
 		if (entitlements.is_empty()) {
 			CLEANUP();
 			r_error_msg = TTR("Invalid entitlements file.");
-			ERR_FAIL_V_MSG(FAILED, "CodeSign: Invalid entitlements file.");
+			ERR_FAIL_V_MSG(Error::FAILED, "CodeSign: Invalid entitlements file.");
 		}
 		cet = Ref<CodeSignEntitlementsText>(memnew(CodeSignEntitlementsText(entitlements)));
 		ceb = Ref<CodeSignEntitlementsBinary>(memnew(CodeSignEntitlementsBinary(entitlements)));
@@ -1392,7 +1392,7 @@ Error CodeSign::_codesign_file(bool p_use_hardened_runtime, bool p_force, const 
 		if (!mh.open_file(files_to_sign[i])) {
 			CLEANUP();
 			r_error_msg = TTR("Invalid executable file.");
-			ERR_FAIL_V_MSG(FAILED, "CodeSign: Invalid executable file.");
+			ERR_FAIL_V_MSG(Error::FAILED, "CodeSign: Invalid executable file.");
 		}
 		print_verbose(vformat("CodeSign: Signing executable for cputype: %d ...", mh.get_cputype()));
 
@@ -1441,7 +1441,7 @@ Error CodeSign::_codesign_file(bool p_use_hardened_runtime, bool p_force, const 
 		if (!mh.set_signature_size(sign_size)) {
 			CLEANUP();
 			r_error_msg = TTR("Can't resize signature load command.");
-			ERR_FAIL_V_MSG(FAILED, "CodeSign: Can't resize signature load command.");
+			ERR_FAIL_V_MSG(Error::FAILED, "CodeSign: Can't resize signature load command.");
 		}
 
 		print_verbose("CodeSign: Calculating executable code hashes...");
@@ -1507,12 +1507,12 @@ Error CodeSign::_codesign_file(bool p_use_hardened_runtime, bool p_force, const 
 		if (!lip.create_file(main_exe, files_to_sign)) {
 			CLEANUP();
 			r_error_msg = TTR("Failed to create fat binary.");
-			ERR_FAIL_V_MSG(FAILED, "CodeSign: Failed to create fat binary.");
+			ERR_FAIL_V_MSG(Error::FAILED, "CodeSign: Failed to create fat binary.");
 		}
 		CLEANUP();
 	}
 	FileAccess::set_unix_permissions(main_exe, 0755); // Restore unix permissions.
-	return OK;
+	return Error::OK;
 #undef CLEANUP
 }
 
@@ -1520,7 +1520,7 @@ Error CodeSign::codesign(bool p_use_hardened_runtime, bool p_force, const String
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 	if (da.is_null()) {
 		r_error_msg = TTR("Can't get filesystem access.");
-		ERR_FAIL_V_MSG(ERR_CANT_CREATE, "CodeSign: Can't get filesystem access.");
+		ERR_FAIL_V_MSG(Error::CANT_CREATE, "CodeSign: Can't get filesystem access.");
 	}
 
 	if (da->dir_exists(p_path)) {
@@ -1551,13 +1551,13 @@ Error CodeSign::codesign(bool p_use_hardened_runtime, bool p_force, const String
 			return _codesign_file(p_use_hardened_runtime, p_force, info_path, main_exe, bundle_path, p_ent_path, ios_bundle, r_error_msg);
 		} else {
 			r_error_msg = TTR("Unknown bundle type.");
-			ERR_FAIL_V_MSG(FAILED, "CodeSign: Unknown bundle type.");
+			ERR_FAIL_V_MSG(Error::FAILED, "CodeSign: Unknown bundle type.");
 		}
 	} else if (da->file_exists(p_path)) {
 		return _codesign_file(p_use_hardened_runtime, p_force, "", p_path, "", p_ent_path, false, r_error_msg);
 	} else {
 		r_error_msg = TTR("Unknown object type.");
-		ERR_FAIL_V_MSG(FAILED, "CodeSign: Unknown object type.");
+		ERR_FAIL_V_MSG(Error::FAILED, "CodeSign: Unknown object type.");
 	}
 }
 

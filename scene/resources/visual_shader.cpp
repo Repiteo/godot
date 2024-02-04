@@ -1159,22 +1159,22 @@ void VisualShader::connect_nodes_forced(Type p_type, int p_from_node, int p_from
 }
 
 Error VisualShader::connect_nodes(Type p_type, int p_from_node, int p_from_port, int p_to_node, int p_to_port) {
-	ERR_FAIL_INDEX_V(p_type, TYPE_MAX, ERR_CANT_CONNECT);
+	ERR_FAIL_INDEX_V(p_type, TYPE_MAX, Error::CANT_CONNECT);
 	Graph *g = &graph[p_type];
 
-	ERR_FAIL_COND_V(!g->nodes.has(p_from_node), ERR_INVALID_PARAMETER);
-	ERR_FAIL_INDEX_V(p_from_port, g->nodes[p_from_node].node->get_expanded_output_port_count(), ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(!g->nodes.has(p_to_node), ERR_INVALID_PARAMETER);
-	ERR_FAIL_INDEX_V(p_to_port, g->nodes[p_to_node].node->get_input_port_count(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(!g->nodes.has(p_from_node), Error::INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_from_port, g->nodes[p_from_node].node->get_expanded_output_port_count(), Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(!g->nodes.has(p_to_node), Error::INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_to_port, g->nodes[p_to_node].node->get_input_port_count(), Error::INVALID_PARAMETER);
 
 	VisualShaderNode::PortType from_port_type = g->nodes[p_from_node].node->get_output_port_type(p_from_port);
 	VisualShaderNode::PortType to_port_type = g->nodes[p_to_node].node->get_input_port_type(p_to_port);
 
-	ERR_FAIL_COND_V_MSG(!is_port_types_compatible(from_port_type, to_port_type), ERR_INVALID_PARAMETER, "Incompatible port types (scalar/vec/bool) with transform.");
+	ERR_FAIL_COND_V_MSG(!is_port_types_compatible(from_port_type, to_port_type), Error::INVALID_PARAMETER, "Incompatible port types (scalar/vec/bool) with transform.");
 
 	for (const Connection &E : g->connections) {
 		if (E.from_node == p_from_node && E.from_port == p_from_port && E.to_node == p_to_node && E.to_port == p_to_port) {
-			ERR_FAIL_V(ERR_ALREADY_EXISTS);
+			ERR_FAIL_V(Error::ALREADY_EXISTS);
 		}
 	}
 
@@ -1190,7 +1190,7 @@ Error VisualShader::connect_nodes(Type p_type, int p_from_node, int p_from_port,
 	g->nodes[p_to_node].node->set_input_port_connected(p_to_port, true);
 
 	_queue_update();
-	return OK;
+	return Error::OK;
 }
 
 void VisualShader::disconnect_nodes(Type p_type, int p_from_node, int p_from_port, int p_to_node, int p_to_port) {
@@ -1367,7 +1367,7 @@ String VisualShader::generate_preview_shader(Type p_type, int p_node, int p_port
 
 	HashSet<int> processed;
 	Error err = _write_node(p_type, &global_code, &global_code_per_node, &global_code_per_func, shader_code, default_tex_params, input_connections, output_connections, p_node, processed, true, classes);
-	ERR_FAIL_COND_V(err != OK, String());
+	ERR_FAIL_COND_V(err != Error::OK, String());
 
 	switch (node->get_output_port_type(p_port)) {
 		case VisualShaderNode::PORT_TYPE_SCALAR: {
@@ -1762,7 +1762,7 @@ Error VisualShader::_write_node(Type type, StringBuilder *p_global_code, StringB
 	if (vsnode->is_disabled()) {
 		r_code += "// " + vsnode->get_caption() + ":" + itos(p_node) + "\n";
 		r_code += "	// Node is disabled and code is not generated.\n";
-		return OK;
+		return Error::OK;
 	}
 
 	//check inputs recursively first
@@ -1779,7 +1779,7 @@ Error VisualShader::_write_node(Type type, StringBuilder *p_global_code, StringB
 			}
 
 			Error err = _write_node(type, p_global_code, p_global_code_per_node, p_global_code_per_func, r_code, r_def_tex_params, p_input_connections, p_output_connections, from_node, r_processed, p_for_preview, r_classes);
-			if (err) {
+			if (err != Error::OK) {
 				return err;
 			}
 		}
@@ -1822,7 +1822,7 @@ Error VisualShader::_write_node(Type type, StringBuilder *p_global_code, StringB
 
 	if (!vsnode->is_code_generated()) { // just generate globals and ignore locals
 		r_processed.insert(p_node);
-		return OK;
+		return Error::OK;
 	}
 
 	String node_name = "// " + vsnode->get_caption() + ":" + itos(p_node) + "\n";
@@ -2304,7 +2304,7 @@ Error VisualShader::_write_node(Type type, StringBuilder *p_global_code, StringB
 
 	r_processed.insert(p_node);
 
-	return OK;
+	return Error::OK;
 }
 
 bool VisualShader::has_func_name(RenderingServer::ShaderMode p_mode, const String &p_func_name) const {
@@ -2582,19 +2582,19 @@ void VisualShader::_update_shader() const {
 		insertion_pos.insert(i, shader_code.get_string_length() + func_code.get_string_length());
 
 		Error err = _write_node(Type(i), &global_code, &global_code_per_node, &global_code_per_func, func_code, default_tex_params, input_connections, output_connections, NODE_ID_OUTPUT, processed, false, classes);
-		ERR_FAIL_COND(err != OK);
+		ERR_FAIL_COND(err != Error::OK);
 
 		if (varying_setters.has(i)) {
 			for (int &E : varying_setters[i]) {
 				err = _write_node(Type(i), &global_code, nullptr, nullptr, func_code, default_tex_params, input_connections, output_connections, E, processed, false, classes);
-				ERR_FAIL_COND(err != OK);
+				ERR_FAIL_COND(err != Error::OK);
 			}
 		}
 
 		if (emitters.has(i)) {
 			for (int &E : emitters[i]) {
 				err = _write_node(Type(i), &global_code, &global_code_per_node, &global_code_per_func, func_code, default_tex_params, input_connections, output_connections, E, processed, false, classes);
-				ERR_FAIL_COND(err != OK);
+				ERR_FAIL_COND(err != Error::OK);
 			}
 		}
 

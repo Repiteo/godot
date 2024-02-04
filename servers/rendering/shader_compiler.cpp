@@ -1464,7 +1464,7 @@ Error ShaderCompiler::compile(RS::ShaderMode p_mode, const String &p_code, Ident
 
 	Error err = parser.compile(p_code, info);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		Vector<ShaderLanguage::FilePosition> include_positions = parser.get_include_positions();
 
 		String current;
@@ -1560,7 +1560,7 @@ Error ShaderCompiler::compile(RS::ShaderMode p_mode, const String &p_code, Ident
 	function = nullptr;
 	_dump_node_code(shader, 1, r_gen_code, *p_actions, actions, false);
 
-	return OK;
+	return Error::OK;
 }
 
 void ShaderCompiler::initialize(DefaultIdentifierActions p_actions) {

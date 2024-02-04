@@ -176,7 +176,7 @@ public:
 
 	_FORCE_INLINE_ static bool is_main_thread() { return true; }
 
-	static Error set_name(const String &p_name) { return ERR_UNAVAILABLE; }
+	static Error set_name(const String &p_name) { return Error::UNAVAILABLE; }
 
 	void start(Thread::Callback p_callback, void *p_user, const Settings &p_settings = Settings()) {}
 	bool is_started() const { return false; }

@@ -41,7 +41,7 @@
 
 static Error set_name(const String &p_name) {
 #ifdef PTHREAD_NO_RENAME
-	return ERR_UNAVAILABLE;
+	return Error::UNAVAILABLE;
 
 #else
 
@@ -64,7 +64,7 @@ static Error set_name(const String &p_name) {
 
 #endif // PTHREAD_RENAME_SELF
 
-	return err == 0 ? OK : ERR_INVALID_PARAMETER;
+	return err == 0 ? Error::OK : Error::INVALID_PARAMETER;
 
 #endif // PTHREAD_NO_RENAME
 }

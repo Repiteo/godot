@@ -170,7 +170,7 @@ void ScriptEditorDebugger::_file_selected(const String &p_file) {
 			Error err;
 			Ref<FileAccess> file = FileAccess::open(p_file, FileAccess::WRITE, &err);
 
-			if (err != OK) {
+			if (err != Error::OK) {
 				ERR_PRINT("Failed to open " + p_file);
 				return;
 			}
@@ -215,7 +215,7 @@ void ScriptEditorDebugger::_file_selected(const String &p_file) {
 			Error err;
 			Ref<FileAccess> file = FileAccess::open(p_file, FileAccess::WRITE, &err);
 
-			if (err != OK) {
+			if (err != Error::OK) {
 				ERR_PRINT("Failed to open " + p_file);
 				return;
 			}

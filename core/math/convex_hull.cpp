@@ -2245,7 +2245,7 @@ Error ConvexHullComputer::convex_hull(const Vector<Vector3> &p_points, Geometry3
 	r_mesh = Geometry3D::MeshData(); // clear
 
 	if (p_points.size() == 0) {
-		return FAILED; // matches QuickHull
+		return Error::FAILED; // matches QuickHull
 	}
 
 	ConvexHullComputer ch;
@@ -2341,5 +2341,5 @@ Error ConvexHullComputer::convex_hull(const Vector<Vector3> &p_points, Geometry3
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }

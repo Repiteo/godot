@@ -579,7 +579,7 @@ void CollisionShape3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 			Vector<Vector3> varr = Variant(points);
 			Geometry3D::MeshData md;
 			Error err = ConvexHullComputer::convex_hull(varr, md);
-			if (err == OK) {
+			if (err == Error::OK) {
 				Vector<Vector3> points2;
 				points2.resize(md.edges.size() * 2);
 				for (uint32_t i = 0; i < md.edges.size(); i++) {

@@ -54,16 +54,16 @@ Error FileAccessAndroid::open_internal(const String &p_path, int p_mode_flags) {
 		path = path.substr(6, path.length());
 	}
 
-	ERR_FAIL_COND_V(p_mode_flags & FileAccess::WRITE, ERR_UNAVAILABLE); //can't write on android..
+	ERR_FAIL_COND_V(p_mode_flags & FileAccess::WRITE, Error::UNAVAILABLE); //can't write on android..
 	asset = AAssetManager_open(asset_manager, path.utf8().get_data(), AASSET_MODE_STREAMING);
 	if (!asset) {
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 	len = AAsset_getLength(asset);
 	pos = 0;
 	eof = false;
 
-	return OK;
+	return Error::OK;
 }
 
 void FileAccessAndroid::_close() {
@@ -209,7 +209,7 @@ uint64_t FileAccessAndroid::get_buffer(uint8_t *p_dst, uint64_t p_length) const 
 }
 
 Error FileAccessAndroid::get_error() const {
-	return eof ? ERR_FILE_EOF : OK; // not sure what else it may happen
+	return eof ? Error::FILE_EOF : Error::OK; // not sure what else it may happen
 }
 
 void FileAccessAndroid::flush() {

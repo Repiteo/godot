@@ -124,11 +124,11 @@ String _get_app_category_label(int category_index) {
 Error create_directory(const String &p_dir) {
 	if (!DirAccess::exists(p_dir)) {
 		Ref<DirAccess> filesystem_da = DirAccess::create(DirAccess::ACCESS_RESOURCES);
-		ERR_FAIL_COND_V_MSG(filesystem_da.is_null(), ERR_CANT_CREATE, "Cannot create directory '" + p_dir + "'.");
+		ERR_FAIL_COND_V_MSG(filesystem_da.is_null(), Error::CANT_CREATE, "Cannot create directory '" + p_dir + "'.");
 		Error err = filesystem_da->make_dir_recursive(p_dir);
-		ERR_FAIL_COND_V_MSG(err, ERR_CANT_CREATE, "Cannot create directory '" + p_dir + "'.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, Error::CANT_CREATE, "Cannot create directory '" + p_dir + "'.");
 	}
-	return OK;
+	return Error::OK;
 }
 
 // Writes p_data into a file at p_path, creating directories if necessary.
@@ -136,13 +136,13 @@ Error create_directory(const String &p_dir) {
 Error store_file_at_path(const String &p_path, const Vector<uint8_t> &p_data) {
 	String dir = p_path.get_base_dir();
 	Error err = create_directory(dir);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 	Ref<FileAccess> fa = FileAccess::open(p_path, FileAccess::WRITE);
-	ERR_FAIL_COND_V_MSG(fa.is_null(), ERR_CANT_CREATE, "Cannot create file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(fa.is_null(), Error::CANT_CREATE, "Cannot create file '" + p_path + "'.");
 	fa->store_buffer(p_data.ptr(), p_data.size());
-	return OK;
+	return Error::OK;
 }
 
 // Writes string p_data into a file at p_path, creating directories if necessary.
@@ -150,16 +150,16 @@ Error store_file_at_path(const String &p_path, const Vector<uint8_t> &p_data) {
 Error store_string_at_path(const String &p_path, const String &p_data) {
 	String dir = p_path.get_base_dir();
 	Error err = create_directory(dir);
-	if (err != OK) {
+	if (err != Error::OK) {
 		if (OS::get_singleton()->is_stdout_verbose()) {
 			print_error("Unable to write data into " + p_path);
 		}
 		return err;
 	}
 	Ref<FileAccess> fa = FileAccess::open(p_path, FileAccess::WRITE);
-	ERR_FAIL_COND_V_MSG(fa.is_null(), ERR_CANT_CREATE, "Cannot create file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(fa.is_null(), Error::CANT_CREATE, "Cannot create file '" + p_path + "'.");
 	fa->store_string(p_data);
-	return OK;
+	return Error::OK;
 }
 
 // Implementation of EditorExportSaveFunction.
@@ -203,7 +203,7 @@ Error _create_project_name_strings_files(const Ref<EditorExportPreset> &p_preset
 		if (OS::get_singleton()->is_stdout_verbose()) {
 			print_error("Unable to open Android resources directory.");
 		}
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 	da->list_dir_begin();
 	Dictionary appnames = GLOBAL_GET("application/config/name_localized");
@@ -229,7 +229,7 @@ Error _create_project_name_strings_files(const Ref<EditorExportPreset> &p_preset
 		}
 	}
 	da->list_dir_end();
-	return OK;
+	return Error::OK;
 }
 
 String bool_to_string(bool v) {

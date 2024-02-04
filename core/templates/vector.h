@@ -279,7 +279,7 @@ public:
 	_FORCE_INLINE_ Vector() {}
 	_FORCE_INLINE_ Vector(std::initializer_list<T> p_init) {
 		Error err = _cowdata.resize(p_init.size());
-		ERR_FAIL_COND(err);
+		ERR_FAIL_COND(err != Error::OK);
 
 		Size i = 0;
 		for (const T &element : p_init) {
@@ -315,7 +315,7 @@ void Vector<T>::append_array(Vector<T> p_other) {
 template <class T>
 bool Vector<T>::push_back(T p_elem) {
 	Error err = resize(size() + 1);
-	ERR_FAIL_COND_V(err, true);
+	ERR_FAIL_COND_V(err != Error::OK, true);
 	set(size() - 1, p_elem);
 
 	return false;

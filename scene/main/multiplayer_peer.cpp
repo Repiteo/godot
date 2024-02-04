@@ -134,11 +134,11 @@ Error MultiplayerPeerExtension::get_packet(const uint8_t **r_buffer, int &r_buff
 	}
 	if (GDVIRTUAL_IS_OVERRIDDEN(_get_packet_script)) {
 		if (!GDVIRTUAL_CALL(_get_packet_script, script_buffer)) {
-			return FAILED;
+			return Error::FAILED;
 		}
 
 		if (script_buffer.size() == 0) {
-			return Error::ERR_UNAVAILABLE;
+			return Error::UNAVAILABLE;
 		}
 
 		*r_buffer = script_buffer.ptr();
@@ -147,7 +147,7 @@ Error MultiplayerPeerExtension::get_packet(const uint8_t **r_buffer, int &r_buff
 		return Error::OK;
 	}
 	WARN_PRINT_ONCE("MultiplayerPeerExtension::_get_packet_native is unimplemented!");
-	return FAILED;
+	return Error::FAILED;
 }
 
 Error MultiplayerPeerExtension::put_packet(const uint8_t *p_buffer, int p_buffer_size) {
@@ -161,12 +161,12 @@ Error MultiplayerPeerExtension::put_packet(const uint8_t *p_buffer, int p_buffer
 		memcpy(a.ptrw(), p_buffer, p_buffer_size);
 
 		if (!GDVIRTUAL_CALL(_put_packet_script, a, err)) {
-			return FAILED;
+			return Error::FAILED;
 		}
 		return err;
 	}
 	WARN_PRINT_ONCE("MultiplayerPeerExtension::_put_packet_native is unimplemented!");
-	return FAILED;
+	return Error::FAILED;
 }
 
 void MultiplayerPeerExtension::set_refuse_new_connections(bool p_enable) {

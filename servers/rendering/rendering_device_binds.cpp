@@ -31,7 +31,7 @@
 #include "rendering_device_binds.h"
 
 Error RDShaderFile::parse_versions_from_text(const String &p_text, const String p_defines, OpenIncludeFunction p_include_func, void *p_include_func_userdata) {
-	ERR_FAIL_NULL_V(RenderingDevice::get_singleton(), ERR_UNAVAILABLE);
+	ERR_FAIL_NULL_V(RenderingDevice::get_singleton(), Error::UNAVAILABLE);
 
 	Vector<String> lines = p_text.split("\n");
 
@@ -162,7 +162,7 @@ Error RDShaderFile::parse_versions_from_text(const String &p_text, const String 
 
 	if (base_error.is_empty()) {
 		if (stage_found[RD::SHADER_STAGE_COMPUTE] && stages_found > 1) {
-			ERR_FAIL_V_MSG(ERR_PARSE_ERROR, "When writing compute shaders, [compute] mustbe the only stage present.");
+			ERR_FAIL_V_MSG(Error::PARSE_ERROR, "When writing compute shaders, [compute] mustbe the only stage present.");
 		}
 
 		if (version_texts.is_empty()) {
@@ -200,8 +200,8 @@ Error RDShaderFile::parse_versions_from_text(const String &p_text, const String 
 			set_bytecode(bytecode, E.key);
 		}
 
-		return errors_found ? ERR_PARSE_ERROR : OK;
+		return errors_found ? Error::PARSE_ERROR : Error::OK;
 	} else {
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 }

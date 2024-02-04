@@ -51,7 +51,7 @@ Error VulkanContextIOS::window_create(DisplayServer::WindowID p_window_id, Displ
 
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
 	VkResult err = vkCreateIOSSurfaceMVK(get_instance(), &createInfo, nullptr, &surface);
-	ERR_FAIL_COND_V(err, ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(err != Error::OK, Error::CANT_CREATE);
 
 	return _window_create(p_window_id, p_vsync_mode, surface, p_width, p_height);
 }

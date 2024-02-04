@@ -93,7 +93,7 @@ Error Thread::set_name(const String &p_name) {
 		return platform_functions.set_name(p_name);
 	}
 
-	return ERR_UNAVAILABLE;
+	return Error::UNAVAILABLE;
 }
 
 Thread::Thread() {

@@ -596,7 +596,7 @@ void EditorExportPlatformMacOS::_make_icon(const Ref<EditorExportPreset> &p_pres
 			// Encode PNG icon.
 			Vector<uint8_t> png_buffer;
 			Error err = PNGDriverCommon::image_to_png(copy, png_buffer);
-			if (err == OK) {
+			if (err == Error::OK) {
 				int ofs = data.size();
 				uint64_t len = png_buffer.size();
 				data.resize(data.size() + len + 8);
@@ -799,7 +799,7 @@ Error EditorExportPlatformMacOS::_notarize(const Ref<EditorExportPreset> &p_pres
 			int exitcode = 0;
 
 			Error err = OS::get_singleton()->execute(rcodesign, args, &str, &exitcode, true);
-			if (err != OK) {
+			if (err != Error::OK) {
 				add_message(EXPORT_MESSAGE_WARNING, TTR("Notarization"), TTR("Could not start rcodesign executable."));
 				return err;
 			}
@@ -883,7 +883,7 @@ Error EditorExportPlatformMacOS::_notarize(const Ref<EditorExportPreset> &p_pres
 			String str;
 			int exitcode = 0;
 			Error err = OS::get_singleton()->execute("xcrun", args, &str, &exitcode, true);
-			if (err != OK) {
+			if (err != Error::OK) {
 				add_message(EXPORT_MESSAGE_WARNING, TTR("Notarization"), TTR("Could not start xcrun executable."));
 				return err;
 			}
@@ -910,7 +910,7 @@ Error EditorExportPlatformMacOS::_notarize(const Ref<EditorExportPreset> &p_pres
 		default: {
 		};
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error EditorExportPlatformMacOS::_code_sign(const Ref<EditorExportPreset> &p_preset, const String &p_path, const String &p_ent_path, bool p_warn) {
@@ -921,7 +921,7 @@ Error EditorExportPlatformMacOS::_code_sign(const Ref<EditorExportPreset> &p_pre
 #ifdef MODULE_REGEX_ENABLED
 			String error_msg;
 			Error err = CodeSign::codesign(false, true, p_path, p_ent_path, error_msg);
-			if (err != OK) {
+			if (err != Error::OK) {
 				add_message(EXPORT_MESSAGE_WARNING, TTR("Code Signing"), vformat(TTR("Built-in CodeSign failed with error \"%s\"."), error_msg));
 				return Error::FAILED;
 			}
@@ -965,7 +965,7 @@ Error EditorExportPlatformMacOS::_code_sign(const Ref<EditorExportPreset> &p_pre
 			int exitcode = 0;
 
 			Error err = OS::get_singleton()->execute(rcodesign, args, &str, &exitcode, true);
-			if (err != OK) {
+			if (err != Error::OK) {
 				add_message(EXPORT_MESSAGE_WARNING, TTR("Code Signing"), TTR("Could not start rcodesign executable."));
 				return err;
 			}
@@ -1025,7 +1025,7 @@ Error EditorExportPlatformMacOS::_code_sign(const Ref<EditorExportPreset> &p_pre
 			int exitcode = 0;
 
 			Error err = OS::get_singleton()->execute("codesign", args, &str, &exitcode, true);
-			if (err != OK) {
+			if (err != Error::OK) {
 				add_message(EXPORT_MESSAGE_WARNING, TTR("Code Signing"), TTR("Could not start codesign executable, make sure Xcode command line tools are installed."));
 				return err;
 			}
@@ -1043,7 +1043,7 @@ Error EditorExportPlatformMacOS::_code_sign(const Ref<EditorExportPreset> &p_pre
 		};
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error EditorExportPlatformMacOS::_code_sign_directory(const Ref<EditorExportPreset> &p_preset, const String &p_path,
@@ -1059,7 +1059,7 @@ Error EditorExportPlatformMacOS::_code_sign_directory(const Ref<EditorExportPres
 	Error dir_access_error;
 	Ref<DirAccess> dir_access{ DirAccess::open(p_path, &dir_access_error) };
 
-	if (dir_access_error != OK) {
+	if (dir_access_error != Error::OK) {
 		return dir_access_error;
 	}
 
@@ -1075,7 +1075,7 @@ Error EditorExportPlatformMacOS::_code_sign_directory(const Ref<EditorExportPres
 
 		if (extensions_to_sign.find(current_file.get_extension()) > -1) {
 			Error code_sign_error{ _code_sign(p_preset, current_file_path, p_ent_path, false) };
-			if (code_sign_error != OK) {
+			if (code_sign_error != Error::OK) {
 				return code_sign_error;
 			}
 			if (is_executable(current_file_path)) {
@@ -1084,7 +1084,7 @@ Error EditorExportPlatformMacOS::_code_sign_directory(const Ref<EditorExportPres
 			}
 		} else if (dir_access->current_is_dir()) {
 			Error code_sign_error{ _code_sign_directory(p_preset, current_file_path, p_ent_path, p_should_error_on_non_code) };
-			if (code_sign_error != OK) {
+			if (code_sign_error != Error::OK) {
 				return code_sign_error;
 			}
 		} else if (p_should_error_on_non_code) {
@@ -1095,7 +1095,7 @@ Error EditorExportPlatformMacOS::_code_sign_directory(const Ref<EditorExportPres
 		current_file = dir_access->get_next();
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error EditorExportPlatformMacOS::_copy_and_sign_files(Ref<DirAccess> &dir_access, const String &p_src_path,
@@ -1110,21 +1110,21 @@ Error EditorExportPlatformMacOS::_copy_and_sign_files(Ref<DirAccess> &dir_access
 		extensions_to_sign.push_back("");
 	}
 
-	Error err{ OK };
+	Error err{ Error::OK };
 	if (dir_access->dir_exists(p_src_path)) {
 #ifndef UNIX_ENABLED
 		add_message(EXPORT_MESSAGE_INFO, TTR("Export"), vformat(TTR("Relative symlinks are not supported, exported \"%s\" might be broken!"), p_src_path.get_file()));
 #endif
 		print_verbose("export framework: " + p_src_path + " -> " + p_in_app_path);
 		err = dir_access->make_dir_recursive(p_in_app_path);
-		if (err == OK) {
+		if (err == Error::OK) {
 			err = dir_access->copy_dir(p_src_path, p_in_app_path, -1, true);
 		}
 	} else {
 		print_verbose("export dylib: " + p_src_path + " -> " + p_in_app_path);
 		err = dir_access->copy(p_src_path, p_in_app_path);
 	}
-	if (err == OK && p_sign_enabled) {
+	if (err == Error::OK && p_sign_enabled) {
 		if (dir_access->dir_exists(p_src_path) && p_src_path.get_extension().is_empty()) {
 			// If it is a directory, find and sign all dynamic libraries.
 			err = _code_sign_directory(p_preset, p_in_app_path, p_ent_path, p_should_error_on_non_code_sign);
@@ -1145,13 +1145,13 @@ Error EditorExportPlatformMacOS::_export_macos_plugins_for(Ref<EditorExportPlugi
 		const String &p_app_path_name, Ref<DirAccess> &dir_access,
 		bool p_sign_enabled, const Ref<EditorExportPreset> &p_preset,
 		const String &p_ent_path) {
-	Error error{ OK };
+	Error error{ Error::OK };
 	const Vector<String> &macos_plugins{ p_editor_export_plugin->get_macos_plugin_files() };
 	for (int i = 0; i < macos_plugins.size(); ++i) {
 		String src_path{ ProjectSettings::get_singleton()->globalize_path(macos_plugins[i]) };
 		String path_in_app{ p_app_path_name + "/Contents/PlugIns/" + src_path.get_file() };
 		error = _copy_and_sign_files(dir_access, src_path, path_in_app, p_sign_enabled, p_preset, p_ent_path, false);
-		if (error != OK) {
+		if (error != Error::OK) {
 			break;
 		}
 	}
@@ -1180,7 +1180,7 @@ Error EditorExportPlatformMacOS::_create_pkg(const Ref<EditorExportPreset> &p_pr
 
 	String str;
 	Error err = OS::get_singleton()->execute("xcrun", args, &str, nullptr, true);
-	if (err != OK) {
+	if (err != Error::OK) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("PKG Creation"), TTR("Could not start productbuild executable."));
 		return err;
 	}
@@ -1188,10 +1188,10 @@ Error EditorExportPlatformMacOS::_create_pkg(const Ref<EditorExportPreset> &p_pr
 	print_verbose("productbuild returned: " + str);
 	if (str.find("productbuild: error:") != -1) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("PKG Creation"), TTR("`productbuild` failed."));
-		return FAILED;
+		return Error::FAILED;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error EditorExportPlatformMacOS::_create_dmg(const String &p_dmg_path, const String &p_pkg_name, const String &p_app_path_name) {
@@ -1212,7 +1212,7 @@ Error EditorExportPlatformMacOS::_create_dmg(const String &p_dmg_path, const Str
 
 	String str;
 	Error err = OS::get_singleton()->execute("hdiutil", args, &str, nullptr, true);
-	if (err != OK) {
+	if (err != Error::OK) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("DMG Creation"), TTR("Could not start hdiutil executable."));
 		return err;
 	}
@@ -1224,10 +1224,10 @@ Error EditorExportPlatformMacOS::_create_dmg(const String &p_dmg_path, const Str
 		} else {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("DMG Creation"), TTR("`hdiutil create` failed."));
 		}
-		return FAILED;
+		return Error::FAILED;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 bool EditorExportPlatformMacOS::is_shebang(const String &p_path) const {
@@ -1245,7 +1245,7 @@ Error EditorExportPlatformMacOS::_export_debug_script(const Ref<EditorExportPres
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::WRITE);
 	if (f.is_null()) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Debug Script Export"), vformat(TTR("Could not open file \"%s\"."), p_path));
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	f->store_line("#!/bin/sh");
@@ -1265,7 +1265,7 @@ Error EditorExportPlatformMacOS::_export_debug_script(const Ref<EditorExportPres
 	f->store_line("\"$BASE_PATH/" + p_pkg_name + "\" \"$@\"");
 	f->store_line("");
 
-	return OK;
+	return Error::OK;
 }
 
 Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, int p_flags) {
@@ -1275,7 +1275,7 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 
 	if (!DirAccess::exists(base_dir)) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Target folder does not exist or is inaccessible: \"%s\""), base_dir));
-		return ERR_FILE_BAD_PATH;
+		return Error::FILE_BAD_PATH;
 	}
 
 	EditorProgress ep("export", TTR("Exporting for macOS"), 3, true);
@@ -1292,7 +1292,7 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 		src_pkg_name = find_export_template("macos.zip", &err);
 		if (src_pkg_name.is_empty()) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("Prepare Templates"), TTR("Export template not found.") + "\n" + err);
-			return ERR_FILE_NOT_FOUND;
+			return Error::FILE_NOT_FOUND;
 		}
 	}
 
@@ -1300,13 +1300,13 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 	zlib_filefunc_def io = zipio_create_io(&io_fa);
 
 	if (ep.step(TTR("Creating app bundle"), 0)) {
-		return ERR_SKIP;
+		return Error::SKIP;
 	}
 
 	unzFile src_pkg_zip = unzOpen2(src_pkg_name.utf8().get_data(), &io);
 	if (!src_pkg_zip) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Prepare Templates"), vformat(TTR("Could not find template app to export: \"%s\"."), src_pkg_name));
-		return ERR_FILE_NOT_FOUND;
+		return Error::FILE_NOT_FOUND;
 	}
 
 	int ret = unzGoToFirstFile(src_pkg_zip);
@@ -1335,7 +1335,7 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 #endif
 	} else {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), TTR("Invalid export format."));
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	// Create our application bundle.
@@ -1355,12 +1355,12 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 
 	print_verbose("Exporting to " + tmp_app_path_name);
 
-	Error err = OK;
+	Error err = Error::OK;
 
 	Ref<DirAccess> tmp_app_dir = DirAccess::create_for_path(tmp_base_path_name);
 	if (tmp_app_dir.is_null()) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not create directory: \"%s\"."), tmp_base_path_name));
-		err = ERR_CANT_CREATE;
+		err = Error::CANT_CREATE;
 	}
 
 	if (FileAccess::exists(scr_path)) {
@@ -1368,7 +1368,7 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 	}
 	if (DirAccess::exists(tmp_app_path_name)) {
 		String old_dir = tmp_app_dir->get_current_dir();
-		if (tmp_app_dir->change_dir(tmp_app_path_name) == OK) {
+		if (tmp_app_dir->change_dir(tmp_app_path_name) == Error::OK) {
 			tmp_app_dir->erase_contents_recursive();
 			tmp_app_dir->change_dir(old_dir);
 		}
@@ -1377,34 +1377,34 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 	Array helpers = p_preset->get("codesign/entitlements/app_sandbox/helper_executables");
 
 	// Create our folder structure.
-	if (err == OK) {
+	if (err == Error::OK) {
 		print_verbose("Creating " + tmp_app_path_name + "/Contents/MacOS");
 		err = tmp_app_dir->make_dir_recursive(tmp_app_path_name + "/Contents/MacOS");
-		if (err != OK) {
+		if (err != Error::OK) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not create directory \"%s\"."), tmp_app_path_name + "/Contents/MacOS"));
 		}
 	}
 
-	if (err == OK) {
+	if (err == Error::OK) {
 		print_verbose("Creating " + tmp_app_path_name + "/Contents/Frameworks");
 		err = tmp_app_dir->make_dir_recursive(tmp_app_path_name + "/Contents/Frameworks");
-		if (err != OK) {
+		if (err != Error::OK) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not create directory \"%s\"."), tmp_app_path_name + "/Contents/Frameworks"));
 		}
 	}
 
-	if ((err == OK) && helpers.size() > 0) {
+	if ((err == Error::OK) && helpers.size() > 0) {
 		print_line("Creating " + tmp_app_path_name + "/Contents/Helpers");
 		err = tmp_app_dir->make_dir_recursive(tmp_app_path_name + "/Contents/Helpers");
-		if (err != OK) {
+		if (err != Error::OK) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not create directory \"%s\"."), tmp_app_path_name + "/Contents/Helpers"));
 		}
 	}
 
-	if (err == OK) {
+	if (err == Error::OK) {
 		print_verbose("Creating " + tmp_app_path_name + "/Contents/Resources");
 		err = tmp_app_dir->make_dir_recursive(tmp_app_path_name + "/Contents/Resources");
-		if (err != OK) {
+		if (err != Error::OK) {
 			add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not create directory \"%s\"."), tmp_app_path_name + "/Contents/Resources"));
 		}
 	}
@@ -1535,7 +1535,7 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 		include_angle_libs = true;
 	}
 
-	while (ret == UNZ_OK && err == OK) {
+	while (ret == UNZ_OK && err == Error::OK) {
 		// Get filename.
 		unz_file_info info;
 		char fname[16384];
@@ -1563,16 +1563,16 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 #endif
 			// Handle symlinks in the archive.
 			file = tmp_app_path_name.path_join(file);
-			if (err == OK) {
+			if (err == Error::OK) {
 				err = tmp_app_dir->make_dir_recursive(file.get_base_dir());
-				if (err != OK) {
+				if (err != Error::OK) {
 					add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not create directory \"%s\"."), file.get_base_dir()));
 				}
 			}
-			if (err == OK) {
+			if (err == Error::OK) {
 				String lnk_data = String::utf8((const char *)data.ptr(), data.size());
 				err = tmp_app_dir->create_link(lnk_data, file);
-				if (err != OK) {
+				if (err != Error::OK) {
 					add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not created symlink \"%s\" -> \"%s\"."), lnk_data, file));
 				}
 				print_verbose(vformat("ADDING SYMLINK %s => %s\n", file, lnk_data));
@@ -1631,7 +1631,7 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 					Ref<Image> icon;
 					icon.instantiate();
 					err = ImageLoader::load_image(icon_path, icon);
-					if (err == OK && !icon->is_empty()) {
+					if (err == Error::OK && !icon->is_empty()) {
 						_make_icon(p_preset, icon, data);
 					}
 				}
@@ -1643,13 +1643,13 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 
 			// Write it into our application bundle.
 			file = tmp_app_path_name.path_join(file);
-			if (err == OK) {
+			if (err == Error::OK) {
 				err = tmp_app_dir->make_dir_recursive(file.get_base_dir());
-				if (err != OK) {
+				if (err != Error::OK) {
 					add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not create directory \"%s\"."), file.get_base_dir()));
 				}
 			}
-			if (err == OK) {
+			if (err == Error::OK) {
 				Ref<FileAccess> f = FileAccess::open(file, FileAccess::WRITE);
 				if (f.is_valid()) {
 					f->store_buffer(data.ptr(), data.size());
@@ -1660,7 +1660,7 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 					}
 				} else {
 					add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Could not open \"%s\"."), file));
-					err = ERR_CANT_CREATE;
+					err = Error::CANT_CREATE;
 				}
 			}
 		}
@@ -1673,24 +1673,24 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 
 	if (!found_binary) {
 		add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), vformat(TTR("Requested template binary \"%s\" not found. It might be missing from your template archive."), binary_to_use));
-		err = ERR_FILE_NOT_FOUND;
+		err = Error::FILE_NOT_FOUND;
 	}
 
 	// Save console wrapper.
-	if (err == OK) {
+	if (err == Error::OK) {
 		int con_scr = p_preset->get("debug/export_console_wrapper");
 		if ((con_scr == 1 && p_debug) || (con_scr == 2)) {
 			err = _export_debug_script(p_preset, pkg_name, tmp_app_path_name.get_file() + "/Contents/MacOS/" + pkg_name, scr_path);
 			FileAccess::set_unix_permissions(scr_path, 0755);
-			if (err != OK) {
+			if (err != Error::OK) {
 				add_message(EXPORT_MESSAGE_ERROR, TTR("Export"), TTR("Could not create console wrapper."));
 			}
 		}
 	}
 
-	if (err == OK) {
+	if (err == Error::OK) {
 		if (ep.step(TTR("Making PKG"), 1)) {
-			return ERR_SKIP;
+			return Error::SKIP;
 		}
 
 		// See if we can code sign our new package.
@@ -1877,10 +1877,10 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 				ent_f->store_line("</plist>");
 			} else {
 				add_message(EXPORT_MESSAGE_ERROR, TTR("Code Signing"), TTR("Could not create entitlements file."));
-				err = ERR_CANT_CREATE;
+				err = Error::CANT_CREATE;
 			}
 
-			if ((err == OK) && helpers.size() > 0) {
+			if ((err == Error::OK) && helpers.size() > 0) {
 				ent_f = FileAccess::open(hlp_ent_path, FileAccess::WRITE);
 				if (ent_f.is_valid()) {
 					ent_f->store_line("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -1895,24 +1895,24 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 					ent_f->store_line("</plist>");
 				} else {
 					add_message(EXPORT_MESSAGE_ERROR, TTR("Code Signing"), TTR("Could not create helper entitlements file."));
-					err = ERR_CANT_CREATE;
+					err = Error::CANT_CREATE;
 				}
 			}
 		}
 
-		if ((err == OK) && helpers.size() > 0) {
+		if ((err == Error::OK) && helpers.size() > 0) {
 			Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 			for (int i = 0; i < helpers.size(); i++) {
 				String hlp_path = helpers[i];
 				err = da->copy(hlp_path, tmp_app_path_name + "/Contents/Helpers/" + hlp_path.get_file());
-				if (err == OK && sign_enabled) {
+				if (err == Error::OK && sign_enabled) {
 					err = _code_sign(p_preset, tmp_app_path_name + "/Contents/Helpers/" + hlp_path.get_file(), hlp_ent_path, false);
 				}
 				FileAccess::set_unix_permissions(tmp_app_path_name + "/Contents/Helpers/" + hlp_path.get_file(), 0755);
 			}
 		}
 
-		if (err == OK) {
+		if (err == Error::OK) {
 			Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 			for (int i = 0; i < shared_objects.size(); i++) {
 				String src_path = ProjectSettings::get_singleton()->globalize_path(shared_objects[i].path);
@@ -1924,7 +1924,7 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 					tmp_app_dir->make_dir_recursive(path_in_app);
 					err = _copy_and_sign_files(da, src_path, path_in_app.path_join(src_path.get_file()), sign_enabled, p_preset, ent_path, false);
 				}
-				if (err != OK) {
+				if (err != Error::OK) {
 					break;
 				}
 			}
@@ -1932,13 +1932,13 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 			Vector<Ref<EditorExportPlugin>> export_plugins{ EditorExport::get_singleton()->get_export_plugins() };
 			for (int i = 0; i < export_plugins.size(); ++i) {
 				err = _export_macos_plugins_for(export_plugins[i], tmp_app_path_name, da, sign_enabled, p_preset, ent_path);
-				if (err != OK) {
+				if (err != Error::OK) {
 					break;
 				}
 			}
 		}
 
-		if (err == OK && sign_enabled) {
+		if (err == Error::OK && sign_enabled) {
 			int dist_type = p_preset->get("export/distribution_type");
 			if (dist_type == 2) {
 				String pprof = p_preset->get_or_env("codesign/provisioning_profile", ENV_MAC_CODESIGN_PROFILE).operator String();
@@ -1949,39 +1949,39 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 			}
 
 			if (ep.step(TTR("Code signing bundle"), 2)) {
-				return ERR_SKIP;
+				return Error::SKIP;
 			}
 			err = _code_sign(p_preset, tmp_app_path_name, ent_path);
 		}
 
 		if (export_format == "dmg") {
 			// Create a DMG.
-			if (err == OK) {
+			if (err == Error::OK) {
 				if (ep.step(TTR("Making DMG"), 3)) {
-					return ERR_SKIP;
+					return Error::SKIP;
 				}
 				err = _create_dmg(p_path, pkg_name, tmp_base_path_name);
 			}
 			// Sign DMG.
-			if (err == OK && sign_enabled && !ad_hoc) {
+			if (err == Error::OK && sign_enabled && !ad_hoc) {
 				if (ep.step(TTR("Code signing DMG"), 3)) {
-					return ERR_SKIP;
+					return Error::SKIP;
 				}
 				err = _code_sign(p_preset, p_path, ent_path, false);
 			}
 		} else if (export_format == "pkg") {
 			// Create a Installer.
-			if (err == OK) {
+			if (err == Error::OK) {
 				if (ep.step(TTR("Making PKG installer"), 3)) {
-					return ERR_SKIP;
+					return Error::SKIP;
 				}
 				err = _create_pkg(p_preset, p_path, tmp_app_path_name);
 			}
 		} else if (export_format == "zip") {
 			// Create ZIP.
-			if (err == OK) {
+			if (err == Error::OK) {
 				if (ep.step(TTR("Making ZIP"), 3)) {
-					return ERR_SKIP;
+					return Error::SKIP;
 				}
 				if (FileAccess::exists(p_path)) {
 					OS::get_singleton()->move_to_trash(p_path);
@@ -1998,12 +1998,12 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 		}
 
 		bool noto_enabled = (p_preset->get("notarization/notarization").operator int() > 0);
-		if (err == OK && noto_enabled) {
+		if (err == Error::OK && noto_enabled) {
 			if (export_format == "app" || export_format == "pkg") {
 				add_message(EXPORT_MESSAGE_INFO, TTR("Notarization"), TTR("Notarization requires the app to be archived first, select the DMG or ZIP export format instead."));
 			} else {
 				if (ep.step(TTR("Sending archive for notarization"), 4)) {
-					return ERR_SKIP;
+					return Error::SKIP;
 				}
 				err = _notarize(p_preset, p_path);
 			}
@@ -2019,7 +2019,7 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 			tmp_app_dir->remove(ent_path);
 		}
 		if (export_format != "app") {
-			if (tmp_app_dir->change_dir(tmp_base_path_name) == OK) {
+			if (tmp_app_dir->change_dir(tmp_base_path_name) == Error::OK) {
 				tmp_app_dir->erase_contents_recursive();
 				tmp_app_dir->change_dir("..");
 				tmp_app_dir->remove(pkg_name);
@@ -2247,7 +2247,7 @@ void EditorExportPlatformMacOS::cleanup() {
 Error EditorExportPlatformMacOS::run(const Ref<EditorExportPreset> &p_preset, int p_device, int p_debug_flags) {
 	cleanup();
 	if (p_device) { // Stop command, cleanup only.
-		return OK;
+		return Error::OK;
 	}
 
 	EditorProgress ep("run", TTR("Running..."), 5);
@@ -2256,7 +2256,7 @@ Error EditorExportPlatformMacOS::run(const Ref<EditorExportPreset> &p_preset, in
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 	if (!da->dir_exists(dest)) {
 		Error err = da->make_dir_recursive(dest);
-		if (err != OK) {
+		if (err != Error::OK) {
 			EditorNode::get_singleton()->show_warning(TTR("Could not create temp directory:") + "\n" + dest);
 			return err;
 		}
@@ -2296,10 +2296,10 @@ Error EditorExportPlatformMacOS::run(const Ref<EditorExportPreset> &p_preset, in
 	((void)0)
 
 	if (ep.step(TTR("Exporting project..."), 1)) {
-		return ERR_SKIP;
+		return Error::SKIP;
 	}
 	Error err = export_project(p_preset, true, basepath + ".zip", p_debug_flags);
-	if (err != OK) {
+	if (err != Error::OK) {
 		DirAccess::remove_file_or_error(basepath + ".zip");
 		return err;
 	}
@@ -2323,14 +2323,14 @@ Error EditorExportPlatformMacOS::run(const Ref<EditorExportPreset> &p_preset, in
 	ep.step(TTR("Creating temporary directory..."), 2);
 	String temp_dir;
 	err = ssh_run_on_remote(host, port, extra_args_ssh, "mktemp -d", &temp_dir);
-	if (err != OK || temp_dir.is_empty()) {
+	if (err != Error::OK || temp_dir.is_empty()) {
 		CLEANUP_AND_RETURN(err);
 	}
 
 	print_line("Uploading archive...");
 	ep.step(TTR("Uploading archive..."), 3);
 	err = ssh_push_to_remote(host, port, extra_args_scp, basepath + ".zip", temp_dir);
-	if (err != OK) {
+	if (err != Error::OK) {
 		CLEANUP_AND_RETURN(err);
 	}
 
@@ -2367,26 +2367,26 @@ Error EditorExportPlatformMacOS::run(const Ref<EditorExportPreset> &p_preset, in
 	print_line("Uploading scripts...");
 	ep.step(TTR("Uploading scripts..."), 4);
 	err = ssh_push_to_remote(host, port, extra_args_scp, basepath + "_start.sh", temp_dir);
-	if (err != OK) {
+	if (err != Error::OK) {
 		CLEANUP_AND_RETURN(err);
 	}
 	err = ssh_run_on_remote(host, port, extra_args_ssh, vformat("chmod +x \"%s/%s\"", temp_dir, basepath.get_file() + "_start.sh"));
-	if (err != OK || temp_dir.is_empty()) {
+	if (err != Error::OK || temp_dir.is_empty()) {
 		CLEANUP_AND_RETURN(err);
 	}
 	err = ssh_push_to_remote(host, port, extra_args_scp, basepath + "_clean.sh", temp_dir);
-	if (err != OK) {
+	if (err != Error::OK) {
 		CLEANUP_AND_RETURN(err);
 	}
 	err = ssh_run_on_remote(host, port, extra_args_ssh, vformat("chmod +x \"%s/%s\"", temp_dir, basepath.get_file() + "_clean.sh"));
-	if (err != OK || temp_dir.is_empty()) {
+	if (err != Error::OK || temp_dir.is_empty()) {
 		CLEANUP_AND_RETURN(err);
 	}
 
 	print_line("Starting project...");
 	ep.step(TTR("Starting project..."), 5);
 	err = ssh_run_on_remote_no_wait(host, port, extra_args_ssh, vformat("\"%s/%s\"", temp_dir, basepath.get_file() + "_start.sh"), &ssh_pid, (use_remote) ? dbg_port : -1);
-	if (err != OK) {
+	if (err != Error::OK) {
 		CLEANUP_AND_RETURN(err);
 	}
 
@@ -2395,7 +2395,7 @@ Error EditorExportPlatformMacOS::run(const Ref<EditorExportPreset> &p_preset, in
 
 	print_line("Project started.");
 
-	CLEANUP_AND_RETURN(OK);
+	CLEANUP_AND_RETURN(Error::OK);
 #undef CLEANUP_AND_RETURN
 }
 

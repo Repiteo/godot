@@ -584,12 +584,12 @@ void DocTools::generate(BitField<GenerateFlags> p_flags) {
 
 				Vector<Error> errs = ClassDB::get_method_error_return_values(name, E.name);
 				if (errs.size()) {
-					if (!errs.has(OK)) {
-						errs.insert(0, OK);
+					if (!errs.has(Error::OK)) {
+						errs.insert(0, Error::OK);
 					}
 					for (int i = 0; i < errs.size(); i++) {
-						if (!method.errors_returned.has(errs[i])) {
-							method.errors_returned.push_back(errs[i]);
+						if (!method.errors_returned.has((int)errs[i])) {
+							method.errors_returned.push_back((int)errs[i]);
 						}
 					}
 				}
@@ -1052,11 +1052,11 @@ static Error _parse_methods(Ref<XMLParser> &parser, Vector<DocData::MethodDoc> &
 	String section = parser->get_node_name();
 	String element = section.substr(0, section.length() - 1);
 
-	while (parser->read() == OK) {
+	while (parser->read() == Error::OK) {
 		if (parser->get_node_type() == XMLParser::NODE_ELEMENT) {
 			if (parser->get_node_name() == element) {
 				DocData::MethodDoc method;
-				ERR_FAIL_COND_V(!parser->has_attribute("name"), ERR_FILE_CORRUPT);
+				ERR_FAIL_COND_V(!parser->has_attribute("name"), Error::FILE_CORRUPT);
 				method.name = parser->get_named_attribute_value("name");
 				if (parser->has_attribute("qualifiers")) {
 					method.qualifiers = parser->get_named_attribute_value("qualifiers");
@@ -1068,11 +1068,11 @@ static Error _parse_methods(Ref<XMLParser> &parser, Vector<DocData::MethodDoc> &
 					method.is_experimental = parser->get_named_attribute_value("is_experimental").to_lower() == "true";
 				}
 
-				while (parser->read() == OK) {
+				while (parser->read() == Error::OK) {
 					if (parser->get_node_type() == XMLParser::NODE_ELEMENT) {
 						String name = parser->get_node_name();
 						if (name == "return") {
-							ERR_FAIL_COND_V(!parser->has_attribute("type"), ERR_FILE_CORRUPT);
+							ERR_FAIL_COND_V(!parser->has_attribute("type"), Error::FILE_CORRUPT);
 							method.return_type = parser->get_named_attribute_value("type");
 							if (parser->has_attribute("enum")) {
 								method.return_enum = parser->get_named_attribute_value("enum");
@@ -1081,13 +1081,13 @@ static Error _parse_methods(Ref<XMLParser> &parser, Vector<DocData::MethodDoc> &
 								}
 							}
 						} else if (name == "returns_error") {
-							ERR_FAIL_COND_V(!parser->has_attribute("number"), ERR_FILE_CORRUPT);
+							ERR_FAIL_COND_V(!parser->has_attribute("number"), Error::FILE_CORRUPT);
 							method.errors_returned.push_back(parser->get_named_attribute_value("number").to_int());
 						} else if (name == "param") {
 							DocData::ArgumentDoc argument;
-							ERR_FAIL_COND_V(!parser->has_attribute("name"), ERR_FILE_CORRUPT);
+							ERR_FAIL_COND_V(!parser->has_attribute("name"), Error::FILE_CORRUPT);
 							argument.name = parser->get_named_attribute_value("name");
-							ERR_FAIL_COND_V(!parser->has_attribute("type"), ERR_FILE_CORRUPT);
+							ERR_FAIL_COND_V(!parser->has_attribute("type"), Error::FILE_CORRUPT);
 							argument.type = parser->get_named_attribute_value("type");
 							if (parser->has_attribute("enum")) {
 								argument.enumeration = parser->get_named_attribute_value("enum");
@@ -1113,7 +1113,7 @@ static Error _parse_methods(Ref<XMLParser> &parser, Vector<DocData::MethodDoc> &
 				methods.push_back(method);
 
 			} else {
-				ERR_FAIL_V_MSG(ERR_FILE_CORRUPT, "Invalid tag in doc file: " + parser->get_node_name() + ", expected " + element + ".");
+				ERR_FAIL_V_MSG(Error::FILE_CORRUPT, "Invalid tag in doc file: " + parser->get_node_name() + ", expected " + element + ".");
 			}
 
 		} else if (parser->get_node_type() == XMLParser::NODE_ELEMENT_END && parser->get_node_name() == section) {
@@ -1121,7 +1121,7 @@ static Error _parse_methods(Ref<XMLParser> &parser, Vector<DocData::MethodDoc> &
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error DocTools::load_classes(const String &p_dir) {
@@ -1138,7 +1138,7 @@ Error DocTools::load_classes(const String &p_dir) {
 		if (!da->current_is_dir() && path.ends_with("xml")) {
 			Ref<XMLParser> parser = memnew(XMLParser);
 			Error err2 = parser->open(p_dir.path_join(path));
-			if (err2) {
+			if (err2 != Error::OK) {
 				return err2;
 			}
 
@@ -1149,7 +1149,7 @@ Error DocTools::load_classes(const String &p_dir) {
 
 	da->list_dir_end();
 
-	return OK;
+	return Error::OK;
 }
 
 Error DocTools::erase_classes(const String &p_dir) {
@@ -1177,13 +1177,13 @@ Error DocTools::erase_classes(const String &p_dir) {
 		to_erase.pop_front();
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error DocTools::_load(Ref<XMLParser> parser) {
-	Error err = OK;
+	Error err = Error::OK;
 
-	while ((err = parser->read()) == OK) {
+	while ((err = parser->read()) == Error::OK) {
 		if (parser->get_node_type() == XMLParser::NODE_ELEMENT && parser->get_node_name() == "?xml") {
 			parser->skip_section();
 		}
@@ -1192,9 +1192,9 @@ Error DocTools::_load(Ref<XMLParser> parser) {
 			continue; //no idea what this may be, but skipping anyway
 		}
 
-		ERR_FAIL_COND_V(parser->get_node_name() != "class", ERR_FILE_CORRUPT);
+		ERR_FAIL_COND_V(parser->get_node_name() != "class", Error::FILE_CORRUPT);
 
-		ERR_FAIL_COND_V(!parser->has_attribute("name"), ERR_FILE_CORRUPT);
+		ERR_FAIL_COND_V(!parser->has_attribute("name"), Error::FILE_CORRUPT);
 		String name = parser->get_named_attribute_value("name");
 		class_list[name] = DocData::ClassDoc();
 		DocData::ClassDoc &c = class_list[name];
@@ -1214,7 +1214,7 @@ Error DocTools::_load(Ref<XMLParser> parser) {
 			c.is_experimental = parser->get_named_attribute_value("is_experimental").to_lower() == "true";
 		}
 
-		while (parser->read() == OK) {
+		while (parser->read() == Error::OK) {
 			if (parser->get_node_type() == XMLParser::NODE_ELEMENT) {
 				String name2 = parser->get_node_name();
 
@@ -1230,7 +1230,7 @@ Error DocTools::_load(Ref<XMLParser> parser) {
 						c.description = parser->get_node_data();
 					}
 				} else if (name2 == "tutorials") {
-					while (parser->read() == OK) {
+					while (parser->read() == Error::OK) {
 						if (parser->get_node_type() == XMLParser::NODE_ELEMENT) {
 							String name3 = parser->get_node_name();
 
@@ -1245,7 +1245,7 @@ Error DocTools::_load(Ref<XMLParser> parser) {
 									c.tutorials.push_back(tutorial);
 								}
 							} else {
-								ERR_FAIL_V_MSG(ERR_FILE_CORRUPT, "Invalid tag in doc file: " + name3 + ".");
+								ERR_FAIL_V_MSG(Error::FILE_CORRUPT, "Invalid tag in doc file: " + name3 + ".");
 							}
 						} else if (parser->get_node_type() == XMLParser::NODE_ELEMENT_END && parser->get_node_name() == "tutorials") {
 							break; // End of <tutorials>.
@@ -1253,30 +1253,30 @@ Error DocTools::_load(Ref<XMLParser> parser) {
 					}
 				} else if (name2 == "constructors") {
 					Error err2 = _parse_methods(parser, c.constructors);
-					ERR_FAIL_COND_V(err2, err2);
+					ERR_FAIL_COND_V(err2 != Error::OK, err2);
 				} else if (name2 == "methods") {
 					Error err2 = _parse_methods(parser, c.methods);
-					ERR_FAIL_COND_V(err2, err2);
+					ERR_FAIL_COND_V(err2 != Error::OK, err2);
 				} else if (name2 == "operators") {
 					Error err2 = _parse_methods(parser, c.operators);
-					ERR_FAIL_COND_V(err2, err2);
+					ERR_FAIL_COND_V(err2 != Error::OK, err2);
 				} else if (name2 == "signals") {
 					Error err2 = _parse_methods(parser, c.signals);
-					ERR_FAIL_COND_V(err2, err2);
+					ERR_FAIL_COND_V(err2 != Error::OK, err2);
 				} else if (name2 == "annotations") {
 					Error err2 = _parse_methods(parser, c.annotations);
-					ERR_FAIL_COND_V(err2, err2);
+					ERR_FAIL_COND_V(err2 != Error::OK, err2);
 				} else if (name2 == "members") {
-					while (parser->read() == OK) {
+					while (parser->read() == Error::OK) {
 						if (parser->get_node_type() == XMLParser::NODE_ELEMENT) {
 							String name3 = parser->get_node_name();
 
 							if (name3 == "member") {
 								DocData::PropertyDoc prop2;
 
-								ERR_FAIL_COND_V(!parser->has_attribute("name"), ERR_FILE_CORRUPT);
+								ERR_FAIL_COND_V(!parser->has_attribute("name"), Error::FILE_CORRUPT);
 								prop2.name = parser->get_named_attribute_value("name");
-								ERR_FAIL_COND_V(!parser->has_attribute("type"), ERR_FILE_CORRUPT);
+								ERR_FAIL_COND_V(!parser->has_attribute("type"), Error::FILE_CORRUPT);
 								prop2.type = parser->get_named_attribute_value("type");
 								if (parser->has_attribute("setter")) {
 									prop2.setter = parser->get_named_attribute_value("setter");
@@ -1304,7 +1304,7 @@ Error DocTools::_load(Ref<XMLParser> parser) {
 								}
 								c.properties.push_back(prop2);
 							} else {
-								ERR_FAIL_V_MSG(ERR_FILE_CORRUPT, "Invalid tag in doc file: " + name3 + ".");
+								ERR_FAIL_V_MSG(Error::FILE_CORRUPT, "Invalid tag in doc file: " + name3 + ".");
 							}
 
 						} else if (parser->get_node_type() == XMLParser::NODE_ELEMENT_END && parser->get_node_name() == "members") {
@@ -1313,18 +1313,18 @@ Error DocTools::_load(Ref<XMLParser> parser) {
 					}
 
 				} else if (name2 == "theme_items") {
-					while (parser->read() == OK) {
+					while (parser->read() == Error::OK) {
 						if (parser->get_node_type() == XMLParser::NODE_ELEMENT) {
 							String name3 = parser->get_node_name();
 
 							if (name3 == "theme_item") {
 								DocData::ThemeItemDoc prop2;
 
-								ERR_FAIL_COND_V(!parser->has_attribute("name"), ERR_FILE_CORRUPT);
+								ERR_FAIL_COND_V(!parser->has_attribute("name"), Error::FILE_CORRUPT);
 								prop2.name = parser->get_named_attribute_value("name");
-								ERR_FAIL_COND_V(!parser->has_attribute("type"), ERR_FILE_CORRUPT);
+								ERR_FAIL_COND_V(!parser->has_attribute("type"), Error::FILE_CORRUPT);
 								prop2.type = parser->get_named_attribute_value("type");
-								ERR_FAIL_COND_V(!parser->has_attribute("data_type"), ERR_FILE_CORRUPT);
+								ERR_FAIL_COND_V(!parser->has_attribute("data_type"), Error::FILE_CORRUPT);
 								prop2.data_type = parser->get_named_attribute_value("data_type");
 								if (!parser->is_empty()) {
 									parser->read();
@@ -1334,7 +1334,7 @@ Error DocTools::_load(Ref<XMLParser> parser) {
 								}
 								c.theme_properties.push_back(prop2);
 							} else {
-								ERR_FAIL_V_MSG(ERR_FILE_CORRUPT, "Invalid tag in doc file: " + name3 + ".");
+								ERR_FAIL_V_MSG(Error::FILE_CORRUPT, "Invalid tag in doc file: " + name3 + ".");
 							}
 
 						} else if (parser->get_node_type() == XMLParser::NODE_ELEMENT_END && parser->get_node_name() == "theme_items") {
@@ -1343,15 +1343,15 @@ Error DocTools::_load(Ref<XMLParser> parser) {
 					}
 
 				} else if (name2 == "constants") {
-					while (parser->read() == OK) {
+					while (parser->read() == Error::OK) {
 						if (parser->get_node_type() == XMLParser::NODE_ELEMENT) {
 							String name3 = parser->get_node_name();
 
 							if (name3 == "constant") {
 								DocData::ConstantDoc constant2;
-								ERR_FAIL_COND_V(!parser->has_attribute("name"), ERR_FILE_CORRUPT);
+								ERR_FAIL_COND_V(!parser->has_attribute("name"), Error::FILE_CORRUPT);
 								constant2.name = parser->get_named_attribute_value("name");
-								ERR_FAIL_COND_V(!parser->has_attribute("value"), ERR_FILE_CORRUPT);
+								ERR_FAIL_COND_V(!parser->has_attribute("value"), Error::FILE_CORRUPT);
 								constant2.value = parser->get_named_attribute_value("value");
 								constant2.is_value_valid = true;
 								if (parser->has_attribute("enum")) {
@@ -1374,7 +1374,7 @@ Error DocTools::_load(Ref<XMLParser> parser) {
 								}
 								c.constants.push_back(constant2);
 							} else {
-								ERR_FAIL_V_MSG(ERR_FILE_CORRUPT, "Invalid tag in doc file: " + name3 + ".");
+								ERR_FAIL_V_MSG(Error::FILE_CORRUPT, "Invalid tag in doc file: " + name3 + ".");
 							}
 
 						} else if (parser->get_node_type() == XMLParser::NODE_ELEMENT_END && parser->get_node_name() == "constants") {
@@ -1383,7 +1383,7 @@ Error DocTools::_load(Ref<XMLParser> parser) {
 					}
 
 				} else {
-					ERR_FAIL_V_MSG(ERR_FILE_CORRUPT, "Invalid tag in doc file: " + name2 + ".");
+					ERR_FAIL_V_MSG(Error::FILE_CORRUPT, "Invalid tag in doc file: " + name2 + ".");
 				}
 
 			} else if (parser->get_node_type() == XMLParser::NODE_ELEMENT_END && parser->get_node_name() == "class") {
@@ -1392,7 +1392,7 @@ Error DocTools::_load(Ref<XMLParser> parser) {
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 static void _write_string(Ref<FileAccess> f, int p_tablevel, const String &p_string) {
@@ -1485,7 +1485,7 @@ Error DocTools::save_classes(const String &p_default_path, const HashMap<String,
 		String save_file = save_path.path_join(c.name.replace("\"", "").replace("/", "--") + ".xml");
 		Ref<FileAccess> f = FileAccess::open(save_file, FileAccess::WRITE, &err);
 
-		ERR_CONTINUE_MSG(err != OK, "Can't write doc file: " + save_file + ".");
+		ERR_CONTINUE_MSG(err != Error::OK, "Can't write doc file: " + save_file + ".");
 
 		_write_string(f, 0, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
 
@@ -1632,35 +1632,35 @@ Error DocTools::save_classes(const String &p_default_path, const HashMap<String,
 		_write_string(f, 0, "</class>");
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error DocTools::load_compressed(const uint8_t *p_data, int p_compressed_size, int p_uncompressed_size) {
 	Vector<uint8_t> data;
 	data.resize(p_uncompressed_size);
 	int ret = Compression::decompress(data.ptrw(), p_uncompressed_size, p_data, p_compressed_size, Compression::MODE_DEFLATE);
-	ERR_FAIL_COND_V_MSG(ret == -1, ERR_FILE_CORRUPT, "Compressed file is corrupt.");
+	ERR_FAIL_COND_V_MSG(ret == -1, Error::FILE_CORRUPT, "Compressed file is corrupt.");
 	class_list.clear();
 
 	Ref<XMLParser> parser = memnew(XMLParser);
 	Error err = parser->open_buffer(data);
-	if (err) {
+	if (err != Error::OK) {
 		return err;
 	}
 
 	_load(parser);
 
-	return OK;
+	return Error::OK;
 }
 
 Error DocTools::load_xml(const uint8_t *p_data, int p_size) {
 	Ref<XMLParser> parser = memnew(XMLParser);
 	Error err = parser->_open_buffer(p_data, p_size);
-	if (err) {
+	if (err != Error::OK) {
 		return err;
 	}
 
 	_load(parser);
 
-	return OK;
+	return Error::OK;
 }

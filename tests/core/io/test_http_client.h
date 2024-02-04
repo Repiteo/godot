@@ -73,20 +73,20 @@ TEST_CASE("[HTTPClient] verify_headers") {
 	Vector<String> headers = { "Accept: text/html", "Content-Type: application/json", "Authorization: Bearer abc123" };
 
 	Error err = client->verify_headers(headers);
-	CHECK_MESSAGE(err == OK, "Expected OK for valid headers");
+	CHECK_MESSAGE(err == Error::OK, "Expected Error::OK for valid headers");
 
 	ERR_PRINT_OFF;
 	Vector<String> empty_header = { "" };
 	err = client->verify_headers(empty_header);
-	CHECK_MESSAGE(err == ERR_INVALID_PARAMETER, "Expected ERR_INVALID_PARAMETER for empty header");
+	CHECK_MESSAGE(err == Error::INVALID_PARAMETER, "Expected Error::INVALID_PARAMETER for empty header");
 
 	Vector<String> invalid_header = { "InvalidHeader", "Header: " };
 	err = client->verify_headers(invalid_header);
-	CHECK_MESSAGE(err == ERR_INVALID_PARAMETER, "Expected ERR_INVALID_PARAMETER for header with no colon");
+	CHECK_MESSAGE(err == Error::INVALID_PARAMETER, "Expected Error::INVALID_PARAMETER for header with no colon");
 
 	Vector<String> invalid_header_b = { ":", "Header: " };
 	err = client->verify_headers(invalid_header_b);
-	CHECK_MESSAGE(err == ERR_INVALID_PARAMETER, "Expected ERR_INVALID_PARAMETER for header with colon in first position");
+	CHECK_MESSAGE(err == Error::INVALID_PARAMETER, "Expected Error::INVALID_PARAMETER for header with colon in first position");
 	ERR_PRINT_ON;
 }
 
@@ -98,7 +98,7 @@ TEST_CASE("[HTTPClient] connect_to_host") {
 
 	// Connect to host.
 	Error err = client->connect_to_host(host, port, tls_options);
-	CHECK_MESSAGE(err == OK, "Expected OK for successful connection");
+	CHECK_MESSAGE(err == Error::OK, "Expected Error::OK for successful connection");
 }
 
 } // namespace TestHTTPClient

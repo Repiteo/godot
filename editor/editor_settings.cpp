@@ -445,7 +445,7 @@ void EditorSettings::_load_defaults(Ref<ConfigFile> p_extra_config) {
 	_initial_set("interface/editor/mouse_extra_buttons_navigate_history", true);
 	_initial_set("interface/editor/save_each_scene_on_quit", true); // Regression
 	EDITOR_SETTING_USAGE(Variant::INT, PROPERTY_HINT_ENUM, "interface/editor/accept_dialog_cancel_ok_buttons", 0,
-			vformat("Auto (%s),Cancel First,OK First", DisplayServer::get_singleton()->get_swap_cancel_ok() ? "OK First" : "Cancel First"),
+			vformat("Auto (%s),Cancel First,Error::OK First", DisplayServer::get_singleton()->get_swap_cancel_ok() ? "OK First" : "Cancel First"),
 			PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_RESTART_IF_CHANGED);
 #ifdef DEV_ENABLED
 	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_ENUM, "interface/editor/show_internal_errors_in_toast_notifications", 0, "Auto (Enabled),Enabled,Disabled")
@@ -891,7 +891,7 @@ bool EditorSettings::_save_text_editor_theme(String p_file) {
 
 	Error err = cf->save(p_file);
 
-	return err == OK;
+	return err == Error::OK;
 }
 
 bool EditorSettings::_is_default_text_editor_theme(String p_theme_name) {
@@ -928,7 +928,7 @@ void EditorSettings::create() {
 
 	if (EditorPaths::get_singleton()->is_self_contained()) {
 		Error err = extra_config->load(EditorPaths::get_singleton()->get_self_contained_file());
-		if (err != OK) {
+		if (err != Error::OK) {
 			ERR_PRINT("Can't load extra config from path: " + EditorPaths::get_singleton()->get_self_contained_file());
 		}
 	}
@@ -953,7 +953,7 @@ void EditorSettings::create() {
 
 		singleton->save_changed_setting = true;
 
-		print_verbose("EditorSettings: Load OK!");
+		print_verbose("EditorSettings: Load Error::OK!");
 
 		singleton->setup_language();
 		singleton->setup_network();
@@ -1040,11 +1040,11 @@ void EditorSettings::save() {
 
 	Error err = ResourceSaver::save(singleton);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		ERR_PRINT("Error saving editor settings to " + singleton->get_path());
 	} else {
 		singleton->changed_settings.clear();
-		print_verbose("EditorSettings: Save OK!");
+		print_verbose("EditorSettings: Save Error::OK!");
 	}
 }
 
@@ -1195,14 +1195,14 @@ void EditorSettings::set_project_metadata(const String &p_section, const String 
 		project_metadata.instantiate();
 
 		Error err = project_metadata->load(path);
-		if (err != OK && err != ERR_FILE_NOT_FOUND) {
+		if (err != Error::OK && err != Error::FILE_NOT_FOUND) {
 			ERR_PRINT("Cannot load project metadata from file '" + path + "'.");
 		}
 	}
 	project_metadata->set_value(p_section, p_key, p_data);
 
 	Error err = project_metadata->save(path);
-	ERR_FAIL_COND_MSG(err != OK, "Cannot save project metadata to file '" + path + "'.");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Cannot save project metadata to file '" + path + "'.");
 }
 
 Variant EditorSettings::get_project_metadata(const String &p_section, const String &p_key, Variant p_default) const {
@@ -1211,7 +1211,7 @@ Variant EditorSettings::get_project_metadata(const String &p_section, const Stri
 
 		const String path = _get_project_metadata_path();
 		Error err = project_metadata->load(path);
-		ERR_FAIL_COND_V_MSG(err != OK && err != ERR_FILE_NOT_FOUND, p_default, "Cannot load project metadata from file '" + path + "'.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK && err != Error::FILE_NOT_FOUND, p_default, "Cannot load project metadata from file '" + path + "'.");
 	}
 	return project_metadata->get_value(p_section, p_key, p_default);
 }
@@ -1324,7 +1324,7 @@ void EditorSettings::load_text_editor_theme() {
 	Ref<ConfigFile> cf = memnew(ConfigFile);
 	Error err = cf->load(theme_path);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		return;
 	}
 

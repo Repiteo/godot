@@ -70,19 +70,19 @@ Error MovieWriterPNGWAV::write_begin(const Size2i &p_movie_size, uint32_t p_fps,
 		//Remove existing files before writing anew
 		uint32_t idx = 0;
 		Ref<DirAccess> d = DirAccess::open(base_path.get_base_dir());
-		ERR_FAIL_COND_V(d.is_null(), FAILED);
+		ERR_FAIL_COND_V(d.is_null(), Error::FAILED);
 
 		String file = base_path.get_file();
 		while (true) {
 			String path = file + zeros_str(idx) + ".png";
-			if (d->remove(path) != OK) {
+			if (d->remove(path) != Error::OK) {
 				break;
 			}
 		}
 	}
 
 	f_wav = FileAccess::open(base_path + ".wav", FileAccess::WRITE_READ);
-	ERR_FAIL_COND_V(f_wav.is_null(), ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(f_wav.is_null(), Error::CANT_OPEN);
 
 	fps = p_fps;
 
@@ -136,11 +136,11 @@ Error MovieWriterPNGWAV::write_begin(const Size2i &p_movie_size, uint32_t p_fps,
 	f_wav->store_32(0); //data size... wooh
 	wav_data_size_pos = f_wav->get_position();
 
-	return OK;
+	return Error::OK;
 }
 
 Error MovieWriterPNGWAV::write_frame(const Ref<Image> &p_image, const int32_t *p_audio_data) {
-	ERR_FAIL_COND_V(!f_wav.is_valid(), ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(!f_wav.is_valid(), Error::UNCONFIGURED);
 
 	Vector<uint8_t> png_buffer = p_image->save_png_to_buffer();
 
@@ -150,7 +150,7 @@ Error MovieWriterPNGWAV::write_frame(const Ref<Image> &p_image, const int32_t *p
 
 	frame_count++;
 
-	return OK;
+	return Error::OK;
 }
 
 void MovieWriterPNGWAV::write_end() {

@@ -392,7 +392,7 @@ void AudioStreamPlaybackMicrophone::start(double p_from_pos) {
 
 	input_ofs = 0;
 
-	if (AudioDriver::get_singleton()->input_start() == OK) {
+	if (AudioDriver::get_singleton()->input_start() == Error::OK) {
 		active = true;
 		begin_resample();
 	}

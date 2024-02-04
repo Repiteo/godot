@@ -237,7 +237,7 @@ public:
 	};
 
 	virtual void cleanup() {}
-	virtual Error run(const Ref<EditorExportPreset> &p_preset, int p_device, int p_debug_flags) { return OK; }
+	virtual Error run(const Ref<EditorExportPreset> &p_preset, int p_device, int p_debug_flags) { return Error::OK; }
 	virtual Ref<Texture2D> get_run_icon() const { return get_logo(); }
 
 	bool can_export(const Ref<EditorExportPreset> &p_preset, String &r_error, bool &r_missing_templates, bool p_debug = false) const;

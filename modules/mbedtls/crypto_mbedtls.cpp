@@ -54,11 +54,11 @@ CryptoKey *CryptoKeyMbedTLS::create() {
 }
 
 Error CryptoKeyMbedTLS::load(String p_path, bool p_public_only) {
-	ERR_FAIL_COND_V_MSG(locks, ERR_ALREADY_IN_USE, "Key is in use");
+	ERR_FAIL_COND_V_MSG(locks, Error::ALREADY_IN_USE, "Key is in use");
 
 	PackedByteArray out;
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
-	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_INVALID_PARAMETER, "Cannot open CryptoKeyMbedTLS file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(f.is_null(), Error::INVALID_PARAMETER, "Cannot open CryptoKeyMbedTLS file '" + p_path + "'.");
 
 	uint64_t flen = f->get_length();
 	out.resize(flen + 1);
@@ -73,15 +73,15 @@ Error CryptoKeyMbedTLS::load(String p_path, bool p_public_only) {
 	}
 	// We MUST zeroize the memory for safety!
 	mbedtls_platform_zeroize(out.ptrw(), out.size());
-	ERR_FAIL_COND_V_MSG(ret, FAILED, "Error parsing key '" + itos(ret) + "'.");
+	ERR_FAIL_COND_V_MSG(ret, Error::FAILED, "Error parsing key '" + itos(ret) + "'.");
 
 	public_only = p_public_only;
-	return OK;
+	return Error::OK;
 }
 
 Error CryptoKeyMbedTLS::save(String p_path, bool p_public_only) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::WRITE);
-	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_INVALID_PARAMETER, "Cannot save CryptoKeyMbedTLS file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(f.is_null(), Error::INVALID_PARAMETER, "Cannot save CryptoKeyMbedTLS file '" + p_path + "'.");
 
 	unsigned char w[16000];
 	memset(w, 0, sizeof(w));
@@ -94,13 +94,13 @@ Error CryptoKeyMbedTLS::save(String p_path, bool p_public_only) {
 	}
 	if (ret != 0) {
 		mbedtls_platform_zeroize(w, sizeof(w)); // Zeroize anything we might have written.
-		ERR_FAIL_V_MSG(FAILED, "Error writing key '" + itos(ret) + "'.");
+		ERR_FAIL_V_MSG(Error::FAILED, "Error writing key '" + itos(ret) + "'.");
 	}
 
 	size_t len = strlen((char *)w);
 	f->store_buffer(w, len);
 	mbedtls_platform_zeroize(w, sizeof(w)); // Zeroize temporary buffer.
-	return OK;
+	return Error::OK;
 }
 
 Error CryptoKeyMbedTLS::load_from_string(String p_string_key, bool p_public_only) {
@@ -110,10 +110,10 @@ Error CryptoKeyMbedTLS::load_from_string(String p_string_key, bool p_public_only
 	} else {
 		ret = mbedtls_pk_parse_key(&pkey, (unsigned char *)p_string_key.utf8().get_data(), p_string_key.utf8().size(), nullptr, 0);
 	}
-	ERR_FAIL_COND_V_MSG(ret, FAILED, "Error parsing key '" + itos(ret) + "'.");
+	ERR_FAIL_COND_V_MSG(ret, Error::FAILED, "Error parsing key '" + itos(ret) + "'.");
 
 	public_only = p_public_only;
-	return OK;
+	return Error::OK;
 }
 
 String CryptoKeyMbedTLS::save_to_string(bool p_public_only) {
@@ -139,11 +139,11 @@ X509Certificate *X509CertificateMbedTLS::create() {
 }
 
 Error X509CertificateMbedTLS::load(String p_path) {
-	ERR_FAIL_COND_V_MSG(locks, ERR_ALREADY_IN_USE, "Certificate is already in use.");
+	ERR_FAIL_COND_V_MSG(locks, Error::ALREADY_IN_USE, "Certificate is already in use.");
 
 	PackedByteArray out;
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
-	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_INVALID_PARAMETER, vformat("Cannot open X509CertificateMbedTLS file '%s'.", p_path));
+	ERR_FAIL_COND_V_MSG(f.is_null(), Error::INVALID_PARAMETER, vformat("Cannot open X509CertificateMbedTLS file '%s'.", p_path));
 
 	uint64_t flen = f->get_length();
 	out.resize(flen + 1);
@@ -151,28 +151,28 @@ Error X509CertificateMbedTLS::load(String p_path) {
 	out.write[flen] = 0; // string terminator
 
 	int ret = mbedtls_x509_crt_parse(&cert, out.ptr(), out.size());
-	ERR_FAIL_COND_V_MSG(ret < 0, FAILED, vformat("Error parsing X509 certificates from file '%s': %d.", p_path, ret));
+	ERR_FAIL_COND_V_MSG(ret < 0, Error::FAILED, vformat("Error parsing X509 certificates from file '%s': %d.", p_path, ret));
 	if (ret > 0) { // Some certs parsed fine, don't error.
 		print_verbose(vformat("MbedTLS: Some X509 certificates could not be parsed from file '%s' (%d certificates skipped).", p_path, ret));
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error X509CertificateMbedTLS::load_from_memory(const uint8_t *p_buffer, int p_len) {
-	ERR_FAIL_COND_V_MSG(locks, ERR_ALREADY_IN_USE, "Certificate is already in use.");
+	ERR_FAIL_COND_V_MSG(locks, Error::ALREADY_IN_USE, "Certificate is already in use.");
 
 	int ret = mbedtls_x509_crt_parse(&cert, p_buffer, p_len);
-	ERR_FAIL_COND_V_MSG(ret < 0, FAILED, vformat("Error parsing X509 certificates: %d.", ret));
+	ERR_FAIL_COND_V_MSG(ret < 0, Error::FAILED, vformat("Error parsing X509 certificates: %d.", ret));
 	if (ret > 0) { // Some certs parsed fine, don't error.
 		print_verbose(vformat("MbedTLS: Some X509 certificates could not be parsed (%d certificates skipped).", ret));
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error X509CertificateMbedTLS::save(String p_path) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::WRITE);
-	ERR_FAIL_COND_V_MSG(f.is_null(), ERR_INVALID_PARAMETER, vformat("Cannot save X509CertificateMbedTLS file '%s'.", p_path));
+	ERR_FAIL_COND_V_MSG(f.is_null(), Error::INVALID_PARAMETER, vformat("Cannot save X509CertificateMbedTLS file '%s'.", p_path));
 
 	mbedtls_x509_crt *crt = &cert;
 	while (crt) {
@@ -180,13 +180,13 @@ Error X509CertificateMbedTLS::save(String p_path) {
 		size_t wrote = 0;
 		int ret = mbedtls_pem_write_buffer(PEM_BEGIN_CRT, PEM_END_CRT, cert.raw.p, cert.raw.len, w, sizeof(w), &wrote);
 		if (ret != 0 || wrote == 0) {
-			ERR_FAIL_V_MSG(FAILED, "Error writing certificate '" + itos(ret) + "'.");
+			ERR_FAIL_V_MSG(Error::FAILED, "Error writing certificate '" + itos(ret) + "'.");
 		}
 
 		f->store_buffer(w, wrote - 1); // don't write the string terminator
 		crt = crt->next;
 	}
-	return OK;
+	return Error::OK;
 }
 
 String X509CertificateMbedTLS::save_to_string() {
@@ -209,16 +209,16 @@ String X509CertificateMbedTLS::save_to_string() {
 }
 
 Error X509CertificateMbedTLS::load_from_string(const String &p_string_key) {
-	ERR_FAIL_COND_V_MSG(locks, ERR_ALREADY_IN_USE, "Certificate is already in use.");
+	ERR_FAIL_COND_V_MSG(locks, Error::ALREADY_IN_USE, "Certificate is already in use.");
 	CharString cs = p_string_key.utf8();
 
 	int ret = mbedtls_x509_crt_parse(&cert, (const unsigned char *)cs.get_data(), cs.size());
-	ERR_FAIL_COND_V_MSG(ret < 0, FAILED, vformat("Error parsing X509 certificates: %d.", ret));
+	ERR_FAIL_COND_V_MSG(ret < 0, Error::FAILED, vformat("Error parsing X509 certificates: %d.", ret));
 	if (ret > 0) { // Some certs parsed fine, don't error.
 		print_verbose(vformat("MbedTLS: Some X509 certificates could not be parsed (%d certificates skipped).", ret));
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 bool HMACContextMbedTLS::is_md_type_allowed(mbedtls_md_type_t p_md_type) {
@@ -236,32 +236,32 @@ HMACContext *HMACContextMbedTLS::create() {
 }
 
 Error HMACContextMbedTLS::start(HashingContext::HashType p_hash_type, PackedByteArray p_key) {
-	ERR_FAIL_COND_V_MSG(ctx != nullptr, ERR_FILE_ALREADY_IN_USE, "HMACContext already started.");
+	ERR_FAIL_COND_V_MSG(ctx != nullptr, Error::FILE_ALREADY_IN_USE, "HMACContext already started.");
 
 	// HMAC keys can be any size.
-	ERR_FAIL_COND_V_MSG(p_key.is_empty(), ERR_INVALID_PARAMETER, "Key must not be empty.");
+	ERR_FAIL_COND_V_MSG(p_key.is_empty(), Error::INVALID_PARAMETER, "Key must not be empty.");
 
 	hash_type = p_hash_type;
 	mbedtls_md_type_t ht = CryptoMbedTLS::md_type_from_hashtype(p_hash_type, hash_len);
 
 	bool allowed = HMACContextMbedTLS::is_md_type_allowed(ht);
-	ERR_FAIL_COND_V_MSG(!allowed, ERR_INVALID_PARAMETER, "Unsupported hash type.");
+	ERR_FAIL_COND_V_MSG(!allowed, Error::INVALID_PARAMETER, "Unsupported hash type.");
 
 	ctx = memalloc(sizeof(mbedtls_md_context_t));
 	mbedtls_md_init((mbedtls_md_context_t *)ctx);
 
 	mbedtls_md_setup((mbedtls_md_context_t *)ctx, mbedtls_md_info_from_type((mbedtls_md_type_t)ht), 1);
 	int ret = mbedtls_md_hmac_starts((mbedtls_md_context_t *)ctx, (const uint8_t *)p_key.ptr(), (size_t)p_key.size());
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 Error HMACContextMbedTLS::update(PackedByteArray p_data) {
-	ERR_FAIL_NULL_V_MSG(ctx, ERR_INVALID_DATA, "Start must be called before update.");
+	ERR_FAIL_NULL_V_MSG(ctx, Error::INVALID_DATA, "Start must be called before update.");
 
-	ERR_FAIL_COND_V_MSG(p_data.is_empty(), ERR_INVALID_PARAMETER, "Src must not be empty.");
+	ERR_FAIL_COND_V_MSG(p_data.is_empty(), Error::INVALID_PARAMETER, "Src must not be empty.");
 
 	int ret = mbedtls_md_hmac_update((mbedtls_md_context_t *)ctx, (const uint8_t *)p_data.ptr(), (size_t)p_data.size());
-	return ret ? FAILED : OK;
+	return ret ? Error::FAILED : Error::OK;
 }
 
 PackedByteArray HMACContextMbedTLS::finish() {

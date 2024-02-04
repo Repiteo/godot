@@ -195,7 +195,7 @@ private:
 				// 3. Extract the data to a temporary location to load from there.
 				Ref<DirAccess> da = DirAccess::create_for_path(packed_path);
 				ERR_FAIL_NULL(da);
-				ERR_FAIL_COND(da->copy_dir(packed_path, data_dir_root) != OK);
+				ERR_FAIL_COND(da->copy_dir(packed_path, data_dir_root) != Error::OK);
 			}
 			api_assemblies_dir = data_dir_root;
 		} else {

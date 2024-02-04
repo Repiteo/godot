@@ -1096,7 +1096,7 @@ Vector3 GodotConvexPolygonShape3D::get_moment_of_inertia(real_t p_mass) const {
 
 void GodotConvexPolygonShape3D::_setup(const Vector<Vector3> &p_vertices) {
 	Error err = ConvexHullComputer::convex_hull(p_vertices, mesh);
-	if (err != OK) {
+	if (err != Error::OK) {
 		ERR_PRINT("Failed to build convex hull");
 	}
 	extreme_vertices.resize(0);

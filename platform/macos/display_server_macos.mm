@@ -207,18 +207,18 @@ DisplayServerMacOS::WindowID DisplayServerMacOS::_create_window(WindowMode p_mod
 			}
 #endif
 			Error err = context_rd->window_create(window_id_counter, p_vsync_mode, p_rect.size.width, p_rect.size.height, &wpd);
-			ERR_FAIL_COND_V_MSG(err != OK, INVALID_WINDOW_ID, vformat("Can't create a %s context", context_rd->get_api_name()));
+			ERR_FAIL_COND_V_MSG(err != Error::OK, INVALID_WINDOW_ID, vformat("Can't create a %s context", context_rd->get_api_name()));
 		}
 #endif
 #if defined(GLES3_ENABLED)
 		if (gl_manager_legacy) {
 			Error err = gl_manager_legacy->window_create(window_id_counter, wd.window_view, p_rect.size.width, p_rect.size.height);
-			ERR_FAIL_COND_V_MSG(err != OK, INVALID_WINDOW_ID, "Can't create an OpenGL context.");
+			ERR_FAIL_COND_V_MSG(err != Error::OK, INVALID_WINDOW_ID, "Can't create an OpenGL context.");
 		}
 		if (gl_manager_angle) {
 			CALayer *layer = [(NSView *)wd.window_view layer];
 			Error err = gl_manager_angle->window_create(window_id_counter, nullptr, (__bridge void *)layer, p_rect.size.width, p_rect.size.height);
-			ERR_FAIL_COND_V_MSG(err != OK, INVALID_WINDOW_ID, "Can't create an OpenGL context.");
+			ERR_FAIL_COND_V_MSG(err != Error::OK, INVALID_WINDOW_ID, "Can't create an OpenGL context.");
 		}
 		window_set_vsync_mode(p_vsync_mode, window_id_counter);
 #endif
@@ -2084,7 +2084,7 @@ Error DisplayServerMacOS::dialog_show(String p_title, String p_description, Vect
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error DisplayServerMacOS::file_dialog_show(const String &p_title, const String &p_current_directory, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const Callable &p_callback) {
@@ -2098,7 +2098,7 @@ Error DisplayServerMacOS::file_dialog_with_options_show(const String &p_title, c
 Error DisplayServerMacOS::_file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback, bool p_options_in_cb) {
 	_THREAD_SAFE_METHOD_
 
-	ERR_FAIL_INDEX_V(int(p_mode), FILE_DIALOG_MODE_SAVE_MAX, FAILED);
+	ERR_FAIL_INDEX_V(int(p_mode), FILE_DIALOG_MODE_SAVE_MAX, Error::FAILED);
 
 	NSString *url = [NSString stringWithUTF8String:p_current_directory.utf8().get_data()];
 	WindowID prev_focus = last_focused_window;
@@ -2333,7 +2333,7 @@ Error DisplayServerMacOS::_file_dialog_with_options_show(const String &p_title, 
 					  }];
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error DisplayServerMacOS::dialog_input_text(String p_title, String p_description, String p_partial, const Callable &p_callback) {
@@ -2369,7 +2369,7 @@ Error DisplayServerMacOS::dialog_input_text(String p_title, String p_description
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void DisplayServerMacOS::mouse_set_mode(MouseMode p_mode) {
@@ -3976,7 +3976,7 @@ void DisplayServerMacOS::cursor_set_custom_image(const Ref<Resource> &p_cursor, 
 		if (image->is_compressed()) {
 			image = image->duplicate(true);
 			Error err = image->decompress();
-			ERR_FAIL_COND_MSG(err != OK, "Couldn't decompress VRAM-compressed custom mouse cursor image. Switch to a lossless compression mode in the Import dock.");
+			ERR_FAIL_COND_MSG(err != Error::OK, "Couldn't decompress VRAM-compressed custom mouse cursor image. Switch to a lossless compression mode in the Import dock.");
 		}
 
 		NSBitmapImageRep *imgrep = [[NSBitmapImageRep alloc]
@@ -4292,7 +4292,7 @@ void DisplayServerMacOS::set_icon(const Ref<Image> &p_icon) {
 
 DisplayServer *DisplayServerMacOS::create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Error &r_error) {
 	DisplayServer *ds = memnew(DisplayServerMacOS(p_rendering_driver, p_mode, p_vsync_mode, p_flags, p_position, p_resolution, p_screen, r_error));
-	if (r_error != OK) {
+	if (r_error) {
 		if (p_rendering_driver == "vulkan") {
 			String executable_command;
 			if (OS::get_singleton()->get_bundle_resource_dir() == OS::get_singleton()->get_executable_path().get_base_dir()) {
@@ -4481,7 +4481,7 @@ DisplayServerMacOS::DisplayServerMacOS(const String &p_rendering_driver, WindowM
 
 	Input::get_singleton()->set_event_dispatch_function(_dispatch_input_events);
 
-	r_error = OK;
+	r_error = Error::OK;
 
 	memset(cursors, 0, sizeof(cursors));
 
@@ -4605,7 +4605,7 @@ DisplayServerMacOS::DisplayServerMacOS(const String &p_rendering_driver, WindowM
 #if defined(GLES3_ENABLED)
 	if (rendering_driver == "opengl3_angle") {
 		gl_manager_angle = memnew(GLManagerANGLE_MacOS);
-		if (gl_manager_angle->initialize() != OK || gl_manager_angle->open_display(nullptr) != OK) {
+		if (gl_manager_angle->initialize() != Error::OK || gl_manager_angle->open_display(nullptr) != Error::OK) {
 			memdelete(gl_manager_angle);
 			gl_manager_angle = nullptr;
 			bool fallback = GLOBAL_GET("rendering/gl_compatibility/fallback_to_native");
@@ -4613,7 +4613,7 @@ DisplayServerMacOS::DisplayServerMacOS(const String &p_rendering_driver, WindowM
 				WARN_PRINT("Your video card drivers seem not to support the required Metal version, switching to native OpenGL.");
 				rendering_driver = "opengl3";
 			} else {
-				r_error = ERR_UNAVAILABLE;
+				r_error = Error::UNAVAILABLE;
 				ERR_FAIL_MSG("Could not initialize ANGLE OpenGL.");
 			}
 		}
@@ -4621,10 +4621,10 @@ DisplayServerMacOS::DisplayServerMacOS(const String &p_rendering_driver, WindowM
 
 	if (rendering_driver == "opengl3") {
 		gl_manager_legacy = memnew(GLManagerLegacy_MacOS);
-		if (gl_manager_legacy->initialize() != OK) {
+		if (gl_manager_legacy->initialize() != Error::OK) {
 			memdelete(gl_manager_legacy);
 			gl_manager_legacy = nullptr;
-			r_error = ERR_UNAVAILABLE;
+			r_error = Error::UNAVAILABLE;
 			ERR_FAIL_MSG("Could not initialize native OpenGL.");
 		}
 	}
@@ -4637,10 +4637,10 @@ DisplayServerMacOS::DisplayServerMacOS(const String &p_rendering_driver, WindowM
 #endif
 
 	if (context_rd) {
-		if (context_rd->initialize() != OK) {
+		if (context_rd->initialize() != Error::OK) {
 			memdelete(context_rd);
 			context_rd = nullptr;
-			r_error = ERR_CANT_CREATE;
+			r_error = Error::CANT_CREATE;
 			ERR_FAIL_MSG("Could not initialize Vulkan");
 		}
 	}

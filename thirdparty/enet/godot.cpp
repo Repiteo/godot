@@ -105,7 +105,7 @@ public:
 
 	Error recvfrom(uint8_t *p_buffer, int p_len, int &r_read, IPAddress &r_ip, uint16_t &r_port) {
 		Error err = sock->poll(NetSocket::POLL_TYPE_IN, 0);
-		if (err != OK) {
+		if (err != Error::OK) {
 			return err;
 		}
 		return sock->recvfrom(p_buffer, p_len, r_read, r_ip, r_port);
@@ -193,26 +193,26 @@ public:
 
 	Error get_socket_address(IPAddress *r_ip, uint16_t *r_port) {
 		if (!udp->is_bound()) {
-			return ERR_UNCONFIGURED;
+			return Error::UNCONFIGURED;
 		}
 		*r_ip = local_address;
 		*r_port = udp->get_local_port();
-		return OK;
+		return Error::OK;
 	}
 
 	Error sendto(const uint8_t *p_buffer, int p_len, int &r_sent, IPAddress p_ip, uint16_t p_port) {
 		if (!connected) {
 			udp->connect_to_host(p_ip, p_port);
-			if (dtls->connect_to_peer(udp, for_hostname, tls_options)) {
-				return FAILED;
+			if (dtls->connect_to_peer(udp, for_hostname, tls_options) != Error::OK) {
+				return Error::FAILED;
 			}
 			connected = true;
 		}
 		dtls->poll();
 		if (dtls->get_status() == PacketPeerDTLS::STATUS_HANDSHAKING) {
-			return ERR_BUSY;
+			return Error::BUSY;
 		} else if (dtls->get_status() != PacketPeerDTLS::STATUS_CONNECTED) {
-			return FAILED;
+			return Error::FAILED;
 		}
 		r_sent = p_len;
 		return dtls->put_packet(p_buffer, p_len);
@@ -221,22 +221,22 @@ public:
 	Error recvfrom(uint8_t *p_buffer, int p_len, int &r_read, IPAddress &r_ip, uint16_t &r_port) {
 		dtls->poll();
 		if (dtls->get_status() == PacketPeerDTLS::STATUS_HANDSHAKING) {
-			return ERR_BUSY;
+			return Error::BUSY;
 		}
 		if (dtls->get_status() != PacketPeerDTLS::STATUS_CONNECTED) {
-			return FAILED;
+			return Error::FAILED;
 		}
 		int pc = dtls->get_available_packet_count();
 		if (pc == 0) {
-			return ERR_BUSY;
+			return Error::BUSY;
 		} else if (pc < 0) {
-			return FAILED;
+			return Error::FAILED;
 		}
 
 		const uint8_t *buffer;
 		Error err = dtls->get_packet(&buffer, r_read);
-		ERR_FAIL_COND_V(err != OK, err);
-		ERR_FAIL_COND_V(p_len < r_read, ERR_OUT_OF_MEMORY);
+		ERR_FAIL_COND_V(err != Error::OK, err);
+		ERR_FAIL_COND_V(p_len < r_read, Error::OUT_OF_MEMORY);
 
 		memcpy(p_buffer, buffer, r_read);
 		r_ip = udp->get_packet_address();
@@ -290,21 +290,21 @@ public:
 
 	Error get_socket_address(IPAddress *r_ip, uint16_t *r_port) {
 		if (!udp_server->is_listening()) {
-			return ERR_UNCONFIGURED;
+			return Error::UNCONFIGURED;
 		}
 		*r_ip = local_address;
 		*r_port = udp_server->get_local_port();
-		return OK;
+		return Error::OK;
 	}
 
 	Error sendto(const uint8_t *p_buffer, int p_len, int &r_sent, IPAddress p_ip, uint16_t p_port) {
 		String key = String(p_ip) + ":" + itos(p_port);
-		ERR_FAIL_COND_V(!peers.has(key), ERR_UNAVAILABLE);
+		ERR_FAIL_COND_V(!peers.has(key), Error::UNAVAILABLE);
 		Ref<PacketPeerDTLS> peer = peers[key];
 		Error err = peer->put_packet(p_buffer, p_len);
-		if (err == OK) {
+		if (err == Error::OK) {
 			r_sent = p_len;
-		} else if (err == ERR_BUSY) {
+		} else if (err == Error::BUSY) {
 			r_sent = 0;
 		} else {
 			r_sent = -1;
@@ -328,10 +328,10 @@ public:
 		}
 
 		List<String> remove;
-		Error err = ERR_BUSY;
+		Error err = Error::BUSY;
 		// TODO this needs to be fair!
 
-		for (KeyValue<String, Ref<PacketPeerDTLS>> & E : peers) {
+		for (KeyValue<String, Ref<PacketPeerDTLS>> &E : peers) {
 			Ref<PacketPeerDTLS> peer = E.value;
 			peer->poll();
 
@@ -346,10 +346,10 @@ public:
 			if (peer->get_available_packet_count() > 0) {
 				const uint8_t *buffer;
 				err = peer->get_packet(&buffer, r_read);
-				if (err != OK || p_len < r_read) {
+				if (err != Error::OK || p_len < r_read) {
 					// Something wrong with this peer, removing it.
 					remove.push_back(E.key);
-					err = FAILED;
+					err = Error::FAILED;
 					continue;
 				}
 
@@ -359,7 +359,7 @@ public:
 				memcpy(p_buffer, buffer, r_read);
 				r_ip = s[0];
 				r_port = s[1].to_int();
-				break; // err = OK
+				break; // err = Error::OK
 			}
 		}
 
@@ -368,7 +368,7 @@ public:
 			peers.erase(E);
 		}
 
-		return err; // OK, ERR_BUSY, or possibly an error.
+		return err; // OK, BUSY, or possibly an error.
 	}
 
 	int set_option(ENetSocketOption p_option, int p_value) {
@@ -471,7 +471,7 @@ int enet_socket_bind(ENetSocket socket, const ENetAddress *address) {
 	}
 
 	ENetGodotSocket *sock = (ENetGodotSocket *)socket;
-	if (sock->bind(ip, address->port) != OK) {
+	if (sock->bind(ip, address->port) != Error::OK) {
 		return -1;
 	}
 	return 0;
@@ -511,8 +511,8 @@ int enet_socket_send(ENetSocket socket, const ENetAddress *address, const ENetBu
 
 	int sent = 0;
 	err = sock->sendto((const uint8_t *)&w[0], size, sent, dest, address->port);
-	if (err != OK) {
-		if (err == ERR_BUSY) { // Blocking call
+	if (err != Error::OK) {
+		if (err == Error::BUSY) { // Blocking call
 			return 0;
 		}
 
@@ -532,15 +532,15 @@ int enet_socket_receive(ENetSocket socket, ENetAddress *address, ENetBuffer *buf
 	IPAddress ip;
 
 	Error err = sock->recvfrom((uint8_t *)buffers[0].data, buffers[0].dataLength, read, ip, address->port);
-	if (err == ERR_BUSY) {
+	if (err == Error::BUSY) {
 		return 0;
 	}
-	if (err == ERR_OUT_OF_MEMORY) {
+	if (err == Error::OUT_OF_MEMORY) {
 		// A packet above the ENET_PROTOCOL_MAXIMUM_MTU was received.
 		return -2;
 	}
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		return -1;
 	}
 
@@ -549,12 +549,12 @@ int enet_socket_receive(ENetSocket socket, ENetAddress *address, ENetBuffer *buf
 	return read;
 }
 
-int enet_socket_get_address (ENetSocket socket, ENetAddress * address) {
+int enet_socket_get_address(ENetSocket socket, ENetAddress *address) {
 	IPAddress ip;
 	uint16_t port;
 	ENetGodotSocket *sock = (ENetGodotSocket *)socket;
 
-	if (sock->get_socket_address(&ip, &port) != OK) {
+	if (sock->get_socket_address(&ip, &port) != Error::OK) {
 		return -1;
 	}
 

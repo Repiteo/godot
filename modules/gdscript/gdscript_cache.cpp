@@ -59,9 +59,9 @@ GDScriptAnalyzer *GDScriptParserRef::get_analyzer() {
 }
 
 Error GDScriptParserRef::raise_status(Status p_new_status) {
-	ERR_FAIL_NULL_V(parser, ERR_INVALID_DATA);
+	ERR_FAIL_NULL_V(parser, Error::INVALID_DATA);
 
-	if (result != OK) {
+	if (result != Error::OK) {
 		return result;
 	}
 
@@ -74,21 +74,21 @@ Error GDScriptParserRef::raise_status(Status p_new_status) {
 			case PARSED: {
 				status = INHERITANCE_SOLVED;
 				Error inheritance_result = get_analyzer()->resolve_inheritance();
-				if (result == OK) {
+				if (result == Error::OK) {
 					result = inheritance_result;
 				}
 			} break;
 			case INHERITANCE_SOLVED: {
 				status = INTERFACE_SOLVED;
 				Error interface_result = get_analyzer()->resolve_interface();
-				if (result == OK) {
+				if (result == Error::OK) {
 					result = interface_result;
 				}
 			} break;
 			case INTERFACE_SOLVED: {
 				status = FULLY_SOLVED;
 				Error body_result = get_analyzer()->resolve_body();
-				if (result == OK) {
+				if (result == Error::OK) {
 					result = body_result;
 				}
 			} break;
@@ -96,7 +96,7 @@ Error GDScriptParserRef::raise_status(Status p_new_status) {
 				return result;
 			}
 		}
-		if (result != OK) {
+		if (result != Error::OK) {
 			return result;
 		}
 	}
@@ -201,12 +201,12 @@ Ref<GDScriptParserRef> GDScriptCache::get_parser(const String &p_path, GDScriptP
 	if (singleton->parser_map.has(p_path)) {
 		ref = Ref<GDScriptParserRef>(singleton->parser_map[p_path]);
 		if (ref.is_null()) {
-			r_error = ERR_INVALID_DATA;
+			r_error = Error::INVALID_DATA;
 			return ref;
 		}
 	} else {
 		if (!FileAccess::exists(p_path)) {
-			r_error = ERR_FILE_NOT_FOUND;
+			r_error = Error::FILE_NOT_FOUND;
 			return ref;
 		}
 		GDScriptParser *parser = memnew(GDScriptParser);
@@ -224,7 +224,7 @@ String GDScriptCache::get_source_code(const String &p_path) {
 	Vector<uint8_t> source_file;
 	Error err;
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ, &err);
-	ERR_FAIL_COND_V(err, "");
+	ERR_FAIL_COND_V(err != Error::OK, "");
 
 	uint64_t len = f->get_length();
 	source_file.resize(len + 1);
@@ -233,7 +233,7 @@ String GDScriptCache::get_source_code(const String &p_path) {
 	source_file.write[len] = 0;
 
 	String source;
-	if (source.parse_utf8((const char *)source_file.ptr()) != OK) {
+	if (source.parse_utf8((const char *)source_file.ptr()) != Error::OK) {
 		ERR_FAIL_V_MSG("", "Script '" + p_path + "' contains invalid unicode (UTF-8), so it was not loaded. Please ensure that scripts are saved in valid UTF-8 unicode.");
 	}
 	return source;
@@ -256,12 +256,12 @@ Ref<GDScript> GDScriptCache::get_shallow_script(const String &p_path, Error &r_e
 	script->set_path(p_path, true);
 	r_error = script->load_source_code(p_path);
 
-	if (r_error) {
+	if (r_error != Error::OK) {
 		return Ref<GDScript>(); // Returns null and does not cache when the script fails to load.
 	}
 
 	Ref<GDScriptParserRef> parser_ref = get_parser(p_path, GDScriptParserRef::PARSED, r_error);
-	if (r_error == OK) {
+	if (r_error == Error::OK) {
 		GDScriptCompiler::make_scripts(script.ptr(), parser_ref->get_parser()->get_tree(), true);
 	}
 
@@ -277,7 +277,7 @@ Ref<GDScript> GDScriptCache::get_full_script(const String &p_path, Error &r_erro
 	}
 
 	Ref<GDScript> script;
-	r_error = OK;
+	r_error = Error::OK;
 	if (singleton->full_gdscript_cache.has(p_path)) {
 		script = singleton->full_gdscript_cache[p_path];
 		if (!p_update_from_disk) {
@@ -295,13 +295,13 @@ Ref<GDScript> GDScriptCache::get_full_script(const String &p_path, Error &r_erro
 
 	if (p_update_from_disk) {
 		r_error = script->load_source_code(p_path);
-		if (r_error) {
+		if (r_error != Error::OK) {
 			return script;
 		}
 	}
 
 	r_error = script->reload(true);
-	if (r_error) {
+	if (r_error != Error::OK) {
 		return script;
 	}
 
@@ -335,13 +335,13 @@ Error GDScriptCache::finish_compiling(const String &p_owner) {
 
 	HashSet<String> depends = singleton->dependencies[p_owner];
 
-	Error err = OK;
+	Error err = Error::OK;
 	for (const String &E : depends) {
-		Error this_err = OK;
+		Error this_err = Error::OK;
 		// No need to save the script. We assume it's already referenced in the owner.
 		get_full_script(E, this_err);
 
-		if (this_err != OK) {
+		if (this_err != Error::OK) {
 			err = this_err;
 		}
 	}
@@ -382,9 +382,9 @@ Ref<PackedScene> GDScriptCache::get_packed_scene(const String &p_path, Error &r_
 	}
 	scene.instantiate();
 
-	r_error = OK;
+	r_error = Error::OK;
 	if (path.is_empty()) {
-		r_error = ERR_FILE_BAD_PATH;
+		r_error = Error::FILE_BAD_PATH;
 		return scene;
 	}
 

@@ -153,37 +153,37 @@ Error JSON::_get_token(const char32_t *p_str, int &index, int p_len, Token &r_to
 			}
 			case 0: {
 				r_token.type = TK_EOF;
-				return OK;
+				return Error::OK;
 			} break;
 			case '{': {
 				r_token.type = TK_CURLY_BRACKET_OPEN;
 				index++;
-				return OK;
+				return Error::OK;
 			}
 			case '}': {
 				r_token.type = TK_CURLY_BRACKET_CLOSE;
 				index++;
-				return OK;
+				return Error::OK;
 			}
 			case '[': {
 				r_token.type = TK_BRACKET_OPEN;
 				index++;
-				return OK;
+				return Error::OK;
 			}
 			case ']': {
 				r_token.type = TK_BRACKET_CLOSE;
 				index++;
-				return OK;
+				return Error::OK;
 			}
 			case ':': {
 				r_token.type = TK_COLON;
 				index++;
-				return OK;
+				return Error::OK;
 			}
 			case ',': {
 				r_token.type = TK_COMMA;
 				index++;
-				return OK;
+				return Error::OK;
 			}
 			case '"': {
 				index++;
@@ -191,7 +191,7 @@ Error JSON::_get_token(const char32_t *p_str, int &index, int p_len, Token &r_to
 				while (true) {
 					if (p_str[index] == 0) {
 						r_err_str = "Unterminated String";
-						return ERR_PARSE_ERROR;
+						return Error::PARSE_ERROR;
 					} else if (p_str[index] == '"') {
 						index++;
 						break;
@@ -201,7 +201,7 @@ Error JSON::_get_token(const char32_t *p_str, int &index, int p_len, Token &r_to
 						char32_t next = p_str[index];
 						if (next == 0) {
 							r_err_str = "Unterminated String";
-							return ERR_PARSE_ERROR;
+							return Error::PARSE_ERROR;
 						}
 						char32_t res = 0;
 
@@ -227,11 +227,11 @@ Error JSON::_get_token(const char32_t *p_str, int &index, int p_len, Token &r_to
 									char32_t c = p_str[index + j + 1];
 									if (c == 0) {
 										r_err_str = "Unterminated String";
-										return ERR_PARSE_ERROR;
+										return Error::PARSE_ERROR;
 									}
 									if (!is_hex_digit(c)) {
 										r_err_str = "Malformed hex constant in string";
-										return ERR_PARSE_ERROR;
+										return Error::PARSE_ERROR;
 									}
 									char32_t v;
 									if (is_digit(c)) {
@@ -255,7 +255,7 @@ Error JSON::_get_token(const char32_t *p_str, int &index, int p_len, Token &r_to
 								if ((res & 0xfffffc00) == 0xd800) {
 									if (p_str[index + 1] != '\\' || p_str[index + 2] != 'u') {
 										r_err_str = "Invalid UTF-16 sequence in string, unpaired lead surrogate";
-										return ERR_PARSE_ERROR;
+										return Error::PARSE_ERROR;
 									}
 									index += 2;
 									char32_t trail = 0;
@@ -263,11 +263,11 @@ Error JSON::_get_token(const char32_t *p_str, int &index, int p_len, Token &r_to
 										char32_t c = p_str[index + j + 1];
 										if (c == 0) {
 											r_err_str = "Unterminated String";
-											return ERR_PARSE_ERROR;
+											return Error::PARSE_ERROR;
 										}
 										if (!is_hex_digit(c)) {
 											r_err_str = "Malformed hex constant in string";
-											return ERR_PARSE_ERROR;
+											return Error::PARSE_ERROR;
 										}
 										char32_t v;
 										if (is_digit(c)) {
@@ -291,11 +291,11 @@ Error JSON::_get_token(const char32_t *p_str, int &index, int p_len, Token &r_to
 										index += 4; //will add at the end anyway
 									} else {
 										r_err_str = "Invalid UTF-16 sequence in string, unpaired lead surrogate";
-										return ERR_PARSE_ERROR;
+										return Error::PARSE_ERROR;
 									}
 								} else if ((res & 0xfffffc00) == 0xdc00) {
 									r_err_str = "Invalid UTF-16 sequence in string, unpaired trail surrogate";
-									return ERR_PARSE_ERROR;
+									return Error::PARSE_ERROR;
 								}
 
 							} break;
@@ -306,7 +306,7 @@ Error JSON::_get_token(const char32_t *p_str, int &index, int p_len, Token &r_to
 							} break;
 							default: {
 								r_err_str = "Invalid escape sequence.";
-								return ERR_PARSE_ERROR;
+								return Error::PARSE_ERROR;
 							}
 						}
 
@@ -323,7 +323,7 @@ Error JSON::_get_token(const char32_t *p_str, int &index, int p_len, Token &r_to
 
 				r_token.type = TK_STRING;
 				r_token.value = str;
-				return OK;
+				return Error::OK;
 
 			} break;
 			default: {
@@ -339,7 +339,7 @@ Error JSON::_get_token(const char32_t *p_str, int &index, int p_len, Token &r_to
 					index += (rptr - &p_str[index]);
 					r_token.type = TK_NUMBER;
 					r_token.value = number;
-					return OK;
+					return Error::OK;
 
 				} else if (is_ascii_char(p_str[index])) {
 					String id;
@@ -351,35 +351,35 @@ Error JSON::_get_token(const char32_t *p_str, int &index, int p_len, Token &r_to
 
 					r_token.type = TK_IDENTIFIER;
 					r_token.value = id;
-					return OK;
+					return Error::OK;
 				} else {
 					r_err_str = "Unexpected character.";
-					return ERR_PARSE_ERROR;
+					return Error::PARSE_ERROR;
 				}
 			}
 		}
 	}
 
-	return ERR_PARSE_ERROR;
+	return Error::PARSE_ERROR;
 }
 
 Error JSON::_parse_value(Variant &value, Token &token, const char32_t *p_str, int &index, int p_len, int &line, int p_depth, String &r_err_str) {
 	if (p_depth > Variant::MAX_RECURSION_DEPTH) {
 		r_err_str = "JSON structure is too deep. Bailing.";
-		return ERR_OUT_OF_MEMORY;
+		return Error::OUT_OF_MEMORY;
 	}
 
 	if (token.type == TK_CURLY_BRACKET_OPEN) {
 		Dictionary d;
 		Error err = _parse_object(d, p_str, index, p_len, line, p_depth + 1, r_err_str);
-		if (err) {
+		if (err != Error::OK) {
 			return err;
 		}
 		value = d;
 	} else if (token.type == TK_BRACKET_OPEN) {
 		Array a;
 		Error err = _parse_array(a, p_str, index, p_len, line, p_depth + 1, r_err_str);
-		if (err) {
+		if (err != Error::OK) {
 			return err;
 		}
 		value = a;
@@ -393,7 +393,7 @@ Error JSON::_parse_value(Variant &value, Token &token, const char32_t *p_str, in
 			value = Variant();
 		} else {
 			r_err_str = "Expected 'true','false' or 'null', got '" + id + "'.";
-			return ERR_PARSE_ERROR;
+			return Error::PARSE_ERROR;
 		}
 	} else if (token.type == TK_NUMBER) {
 		value = token.value;
@@ -401,10 +401,10 @@ Error JSON::_parse_value(Variant &value, Token &token, const char32_t *p_str, in
 		value = token.value;
 	} else {
 		r_err_str = "Expected value, got " + String(tk_name[token.type]) + ".";
-		return ERR_PARSE_ERROR;
+		return Error::PARSE_ERROR;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error JSON::_parse_array(Array &array, const char32_t *p_str, int &index, int p_len, int &line, int p_depth, String &r_err_str) {
@@ -413,18 +413,18 @@ Error JSON::_parse_array(Array &array, const char32_t *p_str, int &index, int p_
 
 	while (index < p_len) {
 		Error err = _get_token(p_str, index, p_len, token, line, r_err_str);
-		if (err != OK) {
+		if (err != Error::OK) {
 			return err;
 		}
 
 		if (token.type == TK_BRACKET_CLOSE) {
-			return OK;
+			return Error::OK;
 		}
 
 		if (need_comma) {
 			if (token.type != TK_COMMA) {
 				r_err_str = "Expected ','";
-				return ERR_PARSE_ERROR;
+				return Error::PARSE_ERROR;
 			} else {
 				need_comma = false;
 				continue;
@@ -433,7 +433,7 @@ Error JSON::_parse_array(Array &array, const char32_t *p_str, int &index, int p_
 
 		Variant v;
 		err = _parse_value(v, token, p_str, index, p_len, line, p_depth, r_err_str);
-		if (err) {
+		if (err != Error::OK) {
 			return err;
 		}
 
@@ -442,7 +442,7 @@ Error JSON::_parse_array(Array &array, const char32_t *p_str, int &index, int p_
 	}
 
 	r_err_str = "Expected ']'";
-	return ERR_PARSE_ERROR;
+	return Error::PARSE_ERROR;
 }
 
 Error JSON::_parse_object(Dictionary &object, const char32_t *p_str, int &index, int p_len, int &line, int p_depth, String &r_err_str) {
@@ -454,18 +454,18 @@ Error JSON::_parse_object(Dictionary &object, const char32_t *p_str, int &index,
 	while (index < p_len) {
 		if (at_key) {
 			Error err = _get_token(p_str, index, p_len, token, line, r_err_str);
-			if (err != OK) {
+			if (err != Error::OK) {
 				return err;
 			}
 
 			if (token.type == TK_CURLY_BRACKET_CLOSE) {
-				return OK;
+				return Error::OK;
 			}
 
 			if (need_comma) {
 				if (token.type != TK_COMMA) {
 					r_err_str = "Expected '}' or ','";
-					return ERR_PARSE_ERROR;
+					return Error::PARSE_ERROR;
 				} else {
 					need_comma = false;
 					continue;
@@ -474,28 +474,28 @@ Error JSON::_parse_object(Dictionary &object, const char32_t *p_str, int &index,
 
 			if (token.type != TK_STRING) {
 				r_err_str = "Expected key";
-				return ERR_PARSE_ERROR;
+				return Error::PARSE_ERROR;
 			}
 
 			key = token.value;
 			err = _get_token(p_str, index, p_len, token, line, r_err_str);
-			if (err != OK) {
+			if (err != Error::OK) {
 				return err;
 			}
 			if (token.type != TK_COLON) {
 				r_err_str = "Expected ':'";
-				return ERR_PARSE_ERROR;
+				return Error::PARSE_ERROR;
 			}
 			at_key = false;
 		} else {
 			Error err = _get_token(p_str, index, p_len, token, line, r_err_str);
-			if (err != OK) {
+			if (err != Error::OK) {
 				return err;
 			}
 
 			Variant v;
 			err = _parse_value(v, token, p_str, index, p_len, line, p_depth, r_err_str);
-			if (err) {
+			if (err != Error::OK) {
 				return err;
 			}
 			object[key] = v;
@@ -505,7 +505,7 @@ Error JSON::_parse_object(Dictionary &object, const char32_t *p_str, int &index,
 	}
 
 	r_err_str = "Expected '}'";
-	return ERR_PARSE_ERROR;
+	return Error::PARSE_ERROR;
 }
 
 void JSON::set_data(const Variant &p_data) {
@@ -522,7 +522,7 @@ Error JSON::_parse_string(const String &p_json, Variant &r_ret, String &r_err_st
 	String aux_key;
 
 	Error err = _get_token(str, idx, len, token, r_err_line, r_err_str);
-	if (err) {
+	if (err != Error::OK) {
 		return err;
 	}
 
@@ -530,14 +530,14 @@ Error JSON::_parse_string(const String &p_json, Variant &r_ret, String &r_err_st
 
 	// Check if EOF is reached
 	// or it's a type of the next token.
-	if (err == OK && idx < len) {
+	if (err == Error::OK && idx < len) {
 		err = _get_token(str, idx, len, token, r_err_line, r_err_str);
 
-		if (err || token.type != TK_EOF) {
+		if (err != Error::OK || token.type != TK_EOF) {
 			r_err_str = "Expected 'EOF'";
 			// Reset return value to empty `Variant`
 			r_ret = Variant();
-			return ERR_PARSE_ERROR;
+			return Error::PARSE_ERROR;
 		}
 	}
 
@@ -594,11 +594,11 @@ void JSON::_bind_methods() {
 
 Ref<Resource> ResourceFormatLoaderJSON::load(const String &p_path, const String &p_original_path, Error *r_error, bool p_use_sub_threads, float *r_progress, CacheMode p_cache_mode) {
 	if (r_error) {
-		*r_error = ERR_FILE_CANT_OPEN;
+		*r_error = Error::FILE_CANT_OPEN;
 	}
 
 	if (!FileAccess::exists(p_path)) {
-		*r_error = ERR_FILE_NOT_FOUND;
+		*r_error = Error::FILE_NOT_FOUND;
 		return Ref<Resource>();
 	}
 
@@ -606,7 +606,7 @@ Ref<Resource> ResourceFormatLoaderJSON::load(const String &p_path, const String 
 	json.instantiate();
 
 	Error err = json->parse(FileAccess::get_file_as_string(p_path), Engine::get_singleton()->is_editor_hint());
-	if (err != OK) {
+	if (err != Error::OK) {
 		String err_text = "Error parsing JSON file at '" + p_path + "', on line " + itos(json->get_error_line()) + ": " + json->get_error_message();
 
 		if (Engine::get_singleton()->is_editor_hint()) {
@@ -622,7 +622,7 @@ Ref<Resource> ResourceFormatLoaderJSON::load(const String &p_path, const String 
 	}
 
 	if (r_error) {
-		*r_error = OK;
+		*r_error = Error::OK;
 	}
 
 	return json;
@@ -646,21 +646,21 @@ String ResourceFormatLoaderJSON::get_resource_type(const String &p_path) const {
 
 Error ResourceFormatSaverJSON::save(const Ref<Resource> &p_resource, const String &p_path, uint32_t p_flags) {
 	Ref<JSON> json = p_resource;
-	ERR_FAIL_COND_V(json.is_null(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(json.is_null(), Error::INVALID_PARAMETER);
 
 	String source = json->get_parsed_text().is_empty() ? JSON::stringify(json->get_data(), "\t", false, true) : json->get_parsed_text();
 
 	Error err;
 	Ref<FileAccess> file = FileAccess::open(p_path, FileAccess::WRITE, &err);
 
-	ERR_FAIL_COND_V_MSG(err, err, "Cannot save json '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Cannot save json '" + p_path + "'.");
 
 	file->store_string(source);
-	if (file->get_error() != OK && file->get_error() != ERR_FILE_EOF) {
-		return ERR_CANT_CREATE;
+	if (file->get_error() != Error::OK && file->get_error() != Error::FILE_EOF) {
+		return Error::CANT_CREATE;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void ResourceFormatSaverJSON::get_recognized_extensions(const Ref<Resource> &p_resource, List<String> *p_extensions) const {

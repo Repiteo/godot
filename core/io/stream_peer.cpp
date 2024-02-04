@@ -35,7 +35,7 @@
 Error StreamPeer::_put_data(const Vector<uint8_t> &p_data) {
 	int len = p_data.size();
 	if (len == 0) {
-		return OK;
+		return Error::OK;
 	}
 	const uint8_t *r = p_data.ptr();
 	return put_data(&r[0], len);
@@ -46,7 +46,7 @@ Array StreamPeer::_put_partial_data(const Vector<uint8_t> &p_data) {
 
 	int len = p_data.size();
 	if (len == 0) {
-		ret.push_back(OK);
+		ret.push_back(Error::OK);
 		ret.push_back(0);
 		return ret;
 	}
@@ -55,7 +55,7 @@ Array StreamPeer::_put_partial_data(const Vector<uint8_t> &p_data) {
 	int sent;
 	Error err = put_partial_data(&r[0], len, sent);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		sent = 0;
 	}
 	ret.push_back(err);
@@ -69,7 +69,7 @@ Array StreamPeer::_get_data(int p_bytes) {
 	Vector<uint8_t> data;
 	data.resize(p_bytes);
 	if (data.size() != p_bytes) {
-		ret.push_back(ERR_OUT_OF_MEMORY);
+		ret.push_back(Error::OUT_OF_MEMORY);
 		ret.push_back(Vector<uint8_t>());
 		return ret;
 	}
@@ -88,7 +88,7 @@ Array StreamPeer::_get_partial_data(int p_bytes) {
 	Vector<uint8_t> data;
 	data.resize(p_bytes);
 	if (data.size() != p_bytes) {
-		ret.push_back(ERR_OUT_OF_MEMORY);
+		ret.push_back(Error::OUT_OF_MEMORY);
 		ret.push_back(Vector<uint8_t>());
 		return ret;
 	}
@@ -97,7 +97,7 @@ Array StreamPeer::_get_partial_data(int p_bytes) {
 	int received;
 	Error err = get_partial_data(&w[0], p_bytes, received);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		data.clear();
 	} else if (received != data.size()) {
 		data.resize(received);
@@ -326,9 +326,9 @@ String StreamPeer::get_string(int p_bytes) {
 
 	Vector<char> buf;
 	Error err = buf.resize(p_bytes + 1);
-	ERR_FAIL_COND_V(err != OK, String());
+	ERR_FAIL_COND_V(err != Error::OK, String());
 	err = get_data((uint8_t *)&buf[0], p_bytes);
-	ERR_FAIL_COND_V(err != OK, String());
+	ERR_FAIL_COND_V(err != Error::OK, String());
 	buf.write[p_bytes] = 0;
 	return buf.ptr();
 }
@@ -341,9 +341,9 @@ String StreamPeer::get_utf8_string(int p_bytes) {
 
 	Vector<uint8_t> buf;
 	Error err = buf.resize(p_bytes);
-	ERR_FAIL_COND_V(err != OK, String());
+	ERR_FAIL_COND_V(err != Error::OK, String());
 	err = get_data(buf.ptrw(), p_bytes);
-	ERR_FAIL_COND_V(err != OK, String());
+	ERR_FAIL_COND_V(err != Error::OK, String());
 
 	String ret;
 	ret.parse_utf8((const char *)buf.ptr(), buf.size());
@@ -354,13 +354,13 @@ Variant StreamPeer::get_var(bool p_allow_objects) {
 	int len = get_32();
 	Vector<uint8_t> var;
 	Error err = var.resize(len);
-	ERR_FAIL_COND_V(err != OK, Variant());
+	ERR_FAIL_COND_V(err != Error::OK, Variant());
 	err = get_data(var.ptrw(), len);
-	ERR_FAIL_COND_V(err != OK, Variant());
+	ERR_FAIL_COND_V(err != Error::OK, Variant());
 
 	Variant ret;
 	err = decode_variant(ret, var.ptr(), len, nullptr, p_allow_objects);
-	ERR_FAIL_COND_V_MSG(err != OK, Variant(), "Error when trying to decode Variant.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Variant(), "Error when trying to decode Variant.");
 
 	return ret;
 }
@@ -417,7 +417,7 @@ Error StreamPeerExtension::get_data(uint8_t *r_buffer, int p_bytes) {
 		return err;
 	}
 	WARN_PRINT_ONCE("StreamPeerExtension::_get_data is unimplemented!");
-	return FAILED;
+	return Error::FAILED;
 }
 
 Error StreamPeerExtension::get_partial_data(uint8_t *r_buffer, int p_bytes, int &r_received) {
@@ -426,7 +426,7 @@ Error StreamPeerExtension::get_partial_data(uint8_t *r_buffer, int p_bytes, int 
 		return err;
 	}
 	WARN_PRINT_ONCE("StreamPeerExtension::_get_partial_data is unimplemented!");
-	return FAILED;
+	return Error::FAILED;
 }
 
 Error StreamPeerExtension::put_data(const uint8_t *p_data, int p_bytes) {
@@ -436,7 +436,7 @@ Error StreamPeerExtension::put_data(const uint8_t *p_data, int p_bytes) {
 		return err;
 	}
 	WARN_PRINT_ONCE("StreamPeerExtension::_put_data is unimplemented!");
-	return FAILED;
+	return Error::FAILED;
 }
 
 Error StreamPeerExtension::put_partial_data(const uint8_t *p_data, int p_bytes, int &r_sent) {
@@ -445,7 +445,7 @@ Error StreamPeerExtension::put_partial_data(const uint8_t *p_data, int p_bytes, 
 		return err;
 	}
 	WARN_PRINT_ONCE("StreamPeerExtension::_put_partial_data is unimplemented!");
-	return FAILED;
+	return Error::FAILED;
 }
 
 void StreamPeerExtension::_bind_methods() {
@@ -473,7 +473,7 @@ void StreamPeerBuffer::_bind_methods() {
 
 Error StreamPeerBuffer::put_data(const uint8_t *p_data, int p_bytes) {
 	if (p_bytes <= 0) {
-		return OK;
+		return Error::OK;
 	}
 
 	if (pointer + p_bytes > data.size()) {
@@ -484,7 +484,7 @@ Error StreamPeerBuffer::put_data(const uint8_t *p_data, int p_bytes) {
 	memcpy(&w[pointer], p_data, p_bytes);
 
 	pointer += p_bytes;
-	return OK;
+	return Error::OK;
 }
 
 Error StreamPeerBuffer::put_partial_data(const uint8_t *p_data, int p_bytes, int &r_sent) {
@@ -496,10 +496,10 @@ Error StreamPeerBuffer::get_data(uint8_t *p_buffer, int p_bytes) {
 	int recv;
 	get_partial_data(p_buffer, p_bytes, recv);
 	if (recv != p_bytes) {
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error StreamPeerBuffer::get_partial_data(uint8_t *p_buffer, int p_bytes, int &r_received) {
@@ -507,7 +507,7 @@ Error StreamPeerBuffer::get_partial_data(uint8_t *p_buffer, int p_bytes, int &r_
 		r_received = data.size() - pointer;
 		if (r_received <= 0) {
 			r_received = 0;
-			return OK; //you got 0
+			return Error::OK; //you got 0
 		}
 	} else {
 		r_received = p_bytes;
@@ -519,7 +519,7 @@ Error StreamPeerBuffer::get_partial_data(uint8_t *p_buffer, int p_bytes, int &r_
 	pointer += r_received;
 	// FIXME: return what? OK or ERR_*
 	// return OK for now so we don't maybe return garbage
-	return OK;
+	return Error::OK;
 }
 
 int StreamPeerBuffer::get_available_bytes() const {

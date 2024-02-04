@@ -753,9 +753,9 @@ void ShaderRD::_initialize_cache() {
 
 		Ref<DirAccess> d = DirAccess::open(shader_cache_dir);
 		ERR_FAIL_COND(d.is_null());
-		if (d->change_dir(name) != OK) {
+		if (d->change_dir(name) != Error::OK) {
 			Error err = d->make_dir(name);
-			ERR_FAIL_COND(err != OK);
+			ERR_FAIL_COND(err != Error::OK);
 			d->change_dir(name);
 		}
 
@@ -763,9 +763,9 @@ void ShaderRD::_initialize_cache() {
 		if (shader_cache_cleanup_on_start) {
 		}
 		//
-		if (d->change_dir(group_sha256[E.key]) != OK) {
+		if (d->change_dir(group_sha256[E.key]) != Error::OK) {
 			Error err = d->make_dir(group_sha256[E.key]);
-			ERR_FAIL_COND(err != OK);
+			ERR_FAIL_COND(err != Error::OK);
 		}
 		shader_cache_dir_valid = true;
 

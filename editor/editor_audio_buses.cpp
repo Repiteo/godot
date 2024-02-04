@@ -1262,7 +1262,7 @@ void EditorAudioBuses::_file_dialog_callback(const String &p_string) {
 
 		Error err = ResourceSaver::save(AudioServer::get_singleton()->generate_bus_layout(), p_string);
 
-		if (err != OK) {
+		if (err != Error::OK) {
 			EditorNode::get_singleton()->show_warning(vformat(TTR("Error saving file: %s"), p_string));
 			return;
 		}

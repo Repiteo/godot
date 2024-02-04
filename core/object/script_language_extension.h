@@ -382,7 +382,7 @@ public:
 		Dictionary ret;
 		GDVIRTUAL_REQUIRED_CALL(_complete_code, p_code, p_path, p_owner, ret);
 		if (!ret.has("result")) {
-			return ERR_UNAVAILABLE;
+			return Error::UNAVAILABLE;
 		}
 
 		if (r_options != nullptr && ret.has("options")) {
@@ -415,11 +415,11 @@ public:
 			}
 		}
 
-		ERR_FAIL_COND_V(!ret.has("force"), ERR_UNAVAILABLE);
+		ERR_FAIL_COND_V(!ret.has("force"), Error::UNAVAILABLE);
 		r_force = ret["force"];
-		ERR_FAIL_COND_V(!ret.has("call_hint"), ERR_UNAVAILABLE);
+		ERR_FAIL_COND_V(!ret.has("call_hint"), Error::UNAVAILABLE);
 		r_call_hint = ret["call_hint"];
-		ERR_FAIL_COND_V(!ret.has("result"), ERR_UNAVAILABLE);
+		ERR_FAIL_COND_V(!ret.has("result"), Error::UNAVAILABLE);
 		Error result = Error(int(ret["result"]));
 
 		return result;
@@ -431,18 +431,18 @@ public:
 		Dictionary ret;
 		GDVIRTUAL_REQUIRED_CALL(_lookup_code, p_code, p_symbol, p_path, p_owner, ret);
 		if (!ret.has("result")) {
-			return ERR_UNAVAILABLE;
+			return Error::UNAVAILABLE;
 		}
 
-		ERR_FAIL_COND_V(!ret.has("type"), ERR_UNAVAILABLE);
+		ERR_FAIL_COND_V(!ret.has("type"), Error::UNAVAILABLE);
 		r_result.type = LookupResultType(int(ret["type"]));
-		ERR_FAIL_COND_V(!ret.has("script"), ERR_UNAVAILABLE);
+		ERR_FAIL_COND_V(!ret.has("script"), Error::UNAVAILABLE);
 		r_result.script = ret["script"];
-		ERR_FAIL_COND_V(!ret.has("class_name"), ERR_UNAVAILABLE);
+		ERR_FAIL_COND_V(!ret.has("class_name"), Error::UNAVAILABLE);
 		r_result.class_name = ret["class_name"];
-		ERR_FAIL_COND_V(!ret.has("class_path"), ERR_UNAVAILABLE);
+		ERR_FAIL_COND_V(!ret.has("class_path"), Error::UNAVAILABLE);
 		r_result.class_path = ret["class_path"];
-		ERR_FAIL_COND_V(!ret.has("location"), ERR_UNAVAILABLE);
+		ERR_FAIL_COND_V(!ret.has("location"), Error::UNAVAILABLE);
 		r_result.location = ret["location"];
 
 		Error result = Error(int(ret["result"]));

@@ -36,16 +36,16 @@
 Error ImageLoaderHDR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField<ImageFormatLoader::LoaderFlags> p_flags, float p_scale) {
 	String header = f->get_token();
 
-	ERR_FAIL_COND_V_MSG(header != "#?RADIANCE" && header != "#?RGBE", ERR_FILE_UNRECOGNIZED, "Unsupported header information in HDR: " + header + ".");
+	ERR_FAIL_COND_V_MSG(header != "#?RADIANCE" && header != "#?RGBE", Error::FILE_UNRECOGNIZED, "Unsupported header information in HDR: " + header + ".");
 
 	while (true) {
 		String line = f->get_line();
-		ERR_FAIL_COND_V(f->eof_reached(), ERR_FILE_UNRECOGNIZED);
+		ERR_FAIL_COND_V(f->eof_reached(), Error::FILE_UNRECOGNIZED);
 		if (line.is_empty()) { // empty line indicates end of header
 			break;
 		}
 		if (line.begins_with("FORMAT=")) { // leave option to implement other commands
-			ERR_FAIL_COND_V_MSG(line != "FORMAT=32-bit_rle_rgbe", ERR_FILE_UNRECOGNIZED, "Only 32-bit_rle_rgbe is supported for HDR files.");
+			ERR_FAIL_COND_V_MSG(line != "FORMAT=32-bit_rle_rgbe", Error::FILE_UNRECOGNIZED, "Only 32-bit_rle_rgbe is supported for HDR files.");
 		} else if (!line.begins_with("#")) { // not comment
 			WARN_PRINT("Ignoring unsupported header information in HDR: " + line + ".");
 		}
@@ -53,13 +53,13 @@ Error ImageLoaderHDR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField
 
 	String token = f->get_token();
 
-	ERR_FAIL_COND_V(token != "-Y", ERR_FILE_CORRUPT);
+	ERR_FAIL_COND_V(token != "-Y", Error::FILE_CORRUPT);
 
 	int height = f->get_token().to_int();
 
 	token = f->get_token();
 
-	ERR_FAIL_COND_V(token != "+X", ERR_FILE_CORRUPT);
+	ERR_FAIL_COND_V(token != "+X", Error::FILE_CORRUPT);
 
 	int width = f->get_line().to_int();
 
@@ -98,7 +98,7 @@ Error ImageLoaderHDR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField
 				len <<= 8;
 				len |= f->get_8();
 
-				ERR_FAIL_COND_V_MSG(len != width, ERR_FILE_CORRUPT, "Invalid decoded scanline length, corrupt HDR.");
+				ERR_FAIL_COND_V_MSG(len != width, Error::FILE_CORRUPT, "Invalid decoded scanline length, corrupt HDR.");
 
 				for (int k = 0; k < 4; ++k) {
 					int i = 0;
@@ -142,7 +142,7 @@ Error ImageLoaderHDR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField
 
 	p_image->set_data(width, height, false, Image::FORMAT_RGBE9995, imgdata);
 
-	return OK;
+	return Error::OK;
 }
 
 void ImageLoaderHDR::get_recognized_extensions(List<String> *p_extensions) const {

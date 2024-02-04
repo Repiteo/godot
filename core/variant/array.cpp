@@ -282,11 +282,11 @@ void Array::append_array(const Array &p_array) {
 }
 
 Error Array::resize(int p_new_size) {
-	ERR_FAIL_COND_V_MSG(_p->read_only, ERR_LOCKED, "Array is in read-only state.");
+	ERR_FAIL_COND_V_MSG(_p->read_only, Error::LOCKED, "Array is in read-only state.");
 	Variant::Type &variant_type = _p->typed.type;
 	int old_size = _p->array.size();
 	Error err = _p->array.resize_zeroed(p_new_size);
-	if (!err && variant_type != Variant::NIL && variant_type != Variant::OBJECT) {
+	if (err == Error::OK && variant_type != Variant::NIL && variant_type != Variant::OBJECT) {
 		for (int i = old_size; i < p_new_size; i++) {
 			VariantInternal::initialize(&_p->array.write[i], variant_type);
 		}
@@ -295,9 +295,9 @@ Error Array::resize(int p_new_size) {
 }
 
 Error Array::insert(int p_pos, const Variant &p_value) {
-	ERR_FAIL_COND_V_MSG(_p->read_only, ERR_LOCKED, "Array is in read-only state.");
+	ERR_FAIL_COND_V_MSG(_p->read_only, Error::LOCKED, "Array is in read-only state.");
 	Variant value = p_value;
-	ERR_FAIL_COND_V(!_p->typed.validate(value, "insert"), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(!_p->typed.validate(value, "insert"), Error::INVALID_PARAMETER);
 	return _p->array.insert(p_pos, value);
 }
 

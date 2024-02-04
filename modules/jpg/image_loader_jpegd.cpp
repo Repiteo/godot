@@ -44,18 +44,18 @@ Error jpeg_load_image_from_buffer(Image *p_image, const uint8_t *p_buffer, int p
 	jpgd::jpeg_decoder decoder(&mem_stream);
 
 	if (decoder.get_error_code() != jpgd::JPGD_SUCCESS) {
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
 	const int image_width = decoder.get_width();
 	const int image_height = decoder.get_height();
 	const int comps = decoder.get_num_components();
 	if (comps != 1 && comps != 3) {
-		return ERR_FILE_CORRUPT;
+		return Error::FILE_CORRUPT;
 	}
 
 	if (decoder.begin_decoding() != jpgd::JPGD_SUCCESS) {
-		return ERR_FILE_CORRUPT;
+		return Error::FILE_CORRUPT;
 	}
 
 	const int dst_bpl = image_width * comps;
@@ -72,7 +72,7 @@ Error jpeg_load_image_from_buffer(Image *p_image, const uint8_t *p_buffer, int p
 		const jpgd::uint8 *pScan_line;
 		jpgd::uint scan_line_len;
 		if (decoder.decode((const void **)&pScan_line, &scan_line_len) != jpgd::JPGD_SUCCESS) {
-			return ERR_FILE_CORRUPT;
+			return Error::FILE_CORRUPT;
 		}
 
 		jpgd::uint8 *pDst = pImage_data + y * dst_bpl;
@@ -102,13 +102,13 @@ Error jpeg_load_image_from_buffer(Image *p_image, const uint8_t *p_buffer, int p
 
 	p_image->set_data(image_width, image_height, false, fmt, data);
 
-	return OK;
+	return Error::OK;
 }
 
 Error ImageLoaderJPG::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField<ImageFormatLoader::LoaderFlags> p_flags, float p_scale) {
 	Vector<uint8_t> src_image;
 	uint64_t src_image_len = f->get_length();
-	ERR_FAIL_COND_V(src_image_len == 0, ERR_FILE_CORRUPT);
+	ERR_FAIL_COND_V(src_image_len == 0, Error::FILE_CORRUPT);
 	src_image.resize(src_image_len);
 
 	uint8_t *w = src_image.ptrw();
@@ -129,7 +129,7 @@ static Ref<Image> _jpegd_mem_loader_func(const uint8_t *p_png, int p_size) {
 	Ref<Image> img;
 	img.instantiate();
 	Error err = jpeg_load_image_from_buffer(img.ptr(), p_png, p_size);
-	ERR_FAIL_COND_V(err, Ref<Image>());
+	ERR_FAIL_COND_V(err != Error::OK, Ref<Image>());
 	return img;
 }
 
@@ -155,11 +155,11 @@ public:
 };
 
 static Error _jpgd_save_to_output_stream(jpge::output_stream *p_output_stream, const Ref<Image> &p_img, float p_quality) {
-	ERR_FAIL_COND_V(p_img.is_null() || p_img->is_empty(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_img.is_null() || p_img->is_empty(), Error::INVALID_PARAMETER);
 	Ref<Image> image = p_img->duplicate();
 	if (image->is_compressed()) {
 		Error error = image->decompress();
-		ERR_FAIL_COND_V_MSG(error != OK, error, "Couldn't decompress image.");
+		ERR_FAIL_COND_V_MSG(error != Error::OK, error, "Couldn't decompress image.");
 	}
 	if (image->get_format() != Image::FORMAT_RGB8) {
 		image = p_img->duplicate();
@@ -175,14 +175,14 @@ static Error _jpgd_save_to_output_stream(jpge::output_stream *p_output_stream, c
 	const uint8_t *src_data = image->get_data().ptr();
 	for (int i = 0; i < image->get_height(); i++) {
 		if (!enc.process_scanline(&src_data[i * image->get_width() * 3])) {
-			return FAILED;
+			return Error::FAILED;
 		}
 	}
 
 	if (enc.process_scanline(nullptr)) {
-		return OK;
+		return Error::OK;
 	} else {
-		return FAILED;
+		return Error::FAILED;
 	}
 }
 
@@ -190,7 +190,7 @@ static Vector<uint8_t> _jpgd_buffer_save_func(const Ref<Image> &p_img, float p_q
 	Vector<uint8_t> output;
 	ImageLoaderJPGOSBuffer ob;
 	ob.buffer = &output;
-	if (_jpgd_save_to_output_stream(&ob, p_img, p_quality) != OK) {
+	if (_jpgd_save_to_output_stream(&ob, p_img, p_quality) != Error::OK) {
 		return Vector<uint8_t>();
 	}
 	return output;
@@ -199,7 +199,7 @@ static Vector<uint8_t> _jpgd_buffer_save_func(const Ref<Image> &p_img, float p_q
 static Error _jpgd_save_func(const String &p_path, const Ref<Image> &p_img, float p_quality) {
 	Error err;
 	Ref<FileAccess> file = FileAccess::open(p_path, FileAccess::WRITE, &err);
-	ERR_FAIL_COND_V_MSG(err, err, vformat("Can't save JPG at path: '%s'.", p_path));
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, vformat("Can't save JPG at path: '%s'.", p_path));
 	ImageLoaderJPGOSFile ob;
 	ob.f = file;
 	return _jpgd_save_to_output_stream(&ob, p_img, p_quality);

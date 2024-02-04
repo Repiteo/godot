@@ -195,7 +195,7 @@ Error WebRTCMultiplayerPeer::create_server(Array p_channels_config) {
 }
 
 Error WebRTCMultiplayerPeer::create_client(int p_self_id, Array p_channels_config) {
-	ERR_FAIL_COND_V_MSG(p_self_id == 1, ERR_INVALID_PARAMETER, "Clients cannot have ID 1.");
+	ERR_FAIL_COND_V_MSG(p_self_id == 1, Error::INVALID_PARAMETER, "Clients cannot have ID 1.");
 	return _initialize(p_self_id, MODE_CLIENT, p_channels_config);
 }
 
@@ -204,14 +204,14 @@ Error WebRTCMultiplayerPeer::create_mesh(int p_self_id, Array p_channels_config)
 }
 
 Error WebRTCMultiplayerPeer::_initialize(int p_self_id, NetworkMode p_mode, Array p_channels_config) {
-	ERR_FAIL_COND_V(p_self_id < 1 || p_self_id > ~(1 << 31), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_self_id < 1 || p_self_id > ~(1 << 31), Error::INVALID_PARAMETER);
 	channels_config.clear();
 	channels_modes.clear();
 	channels_modes.push_back(TRANSFER_MODE_RELIABLE);
 	channels_modes.push_back(TRANSFER_MODE_UNRELIABLE_ORDERED);
 	channels_modes.push_back(TRANSFER_MODE_UNRELIABLE);
 	for (int i = 0; i < p_channels_config.size(); i++) {
-		ERR_FAIL_COND_V_MSG(p_channels_config[i].get_type() != Variant::INT, ERR_INVALID_PARAMETER, "The 'channels_config' array must contain only enum values from 'MultiplayerPeer.TransferMode'");
+		ERR_FAIL_COND_V_MSG(p_channels_config[i].get_type() != Variant::INT, Error::INVALID_PARAMETER, "The 'channels_config' array must contain only enum values from 'MultiplayerPeer.TransferMode'");
 		int mode = p_channels_config[i].operator int();
 		// Initialize data channel configurations.
 		Dictionary cfg;
@@ -230,7 +230,7 @@ Error WebRTCMultiplayerPeer::_initialize(int p_self_id, NetworkMode p_mode, Arra
 			case TRANSFER_MODE_RELIABLE:
 				break;
 			default:
-				ERR_FAIL_V_MSG(ERR_INVALID_PARAMETER, vformat("The 'channels_config' array must contain only enum values from 'MultiplayerPeer.TransferMode'. Got: %d", mode));
+				ERR_FAIL_V_MSG(Error::INVALID_PARAMETER, vformat("The 'channels_config' array must contain only enum values from 'MultiplayerPeer.TransferMode'. Got: %d", mode));
 		}
 		channels_config.push_back(cfg);
 		channels_modes.push_back((TransferMode)mode);
@@ -245,7 +245,7 @@ Error WebRTCMultiplayerPeer::_initialize(int p_self_id, NetworkMode p_mode, Arra
 	} else {
 		connection_status = CONNECTION_CONNECTING;
 	}
-	return OK;
+	return Error::OK;
 }
 
 bool WebRTCMultiplayerPeer::is_server_relay_supported() const {
@@ -289,15 +289,15 @@ Dictionary WebRTCMultiplayerPeer::get_peers() {
 }
 
 Error WebRTCMultiplayerPeer::add_peer(Ref<WebRTCPeerConnection> p_peer, int p_peer_id, int p_unreliable_lifetime) {
-	ERR_FAIL_COND_V(network_mode == MODE_NONE, ERR_UNCONFIGURED);
-	ERR_FAIL_COND_V(network_mode == MODE_CLIENT && p_peer_id != 1, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(network_mode == MODE_SERVER && p_peer_id == 1, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_peer_id < 1 || p_peer_id > ~(1 << 31), ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_unreliable_lifetime < 0, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(is_refusing_new_connections(), ERR_UNAUTHORIZED);
+	ERR_FAIL_COND_V(network_mode == MODE_NONE, Error::UNCONFIGURED);
+	ERR_FAIL_COND_V(network_mode == MODE_CLIENT && p_peer_id != 1, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(network_mode == MODE_SERVER && p_peer_id == 1, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_peer_id < 1 || p_peer_id > ~(1 << 31), Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_unreliable_lifetime < 0, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(is_refusing_new_connections(), Error::UNAUTHORIZED);
 	// Peer must be valid, and in new state (to create data channels)
-	ERR_FAIL_COND_V(!p_peer.is_valid(), ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(p_peer->get_connection_state() != WebRTCPeerConnection::STATE_NEW, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(!p_peer.is_valid(), Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_peer->get_connection_state() != WebRTCPeerConnection::STATE_NEW, Error::INVALID_PARAMETER);
 
 	Ref<ConnectedPeer> peer = memnew(ConnectedPeer);
 	peer->connection = p_peer;
@@ -309,27 +309,27 @@ Error WebRTCMultiplayerPeer::add_peer(Ref<WebRTCPeerConnection> p_peer, int p_pe
 
 	cfg["id"] = 1;
 	peer->channels[CH_RELIABLE] = p_peer->create_data_channel("reliable", cfg);
-	ERR_FAIL_COND_V(peer->channels[CH_RELIABLE].is_null(), FAILED);
+	ERR_FAIL_COND_V(peer->channels[CH_RELIABLE].is_null(), Error::FAILED);
 
 	cfg["id"] = 2;
 	cfg["maxPacketLifetime"] = p_unreliable_lifetime;
 	peer->channels[CH_ORDERED] = p_peer->create_data_channel("ordered", cfg);
-	ERR_FAIL_COND_V(peer->channels[CH_ORDERED].is_null(), FAILED);
+	ERR_FAIL_COND_V(peer->channels[CH_ORDERED].is_null(), Error::FAILED);
 
 	cfg["id"] = 3;
 	cfg["ordered"] = false;
 	peer->channels[CH_UNRELIABLE] = p_peer->create_data_channel("unreliable", cfg);
-	ERR_FAIL_COND_V(peer->channels[CH_UNRELIABLE].is_null(), FAILED);
+	ERR_FAIL_COND_V(peer->channels[CH_UNRELIABLE].is_null(), Error::FAILED);
 
 	for (const Dictionary &dict : channels_config) {
 		Ref<WebRTCDataChannel> ch = p_peer->create_data_channel(String::num_int64(dict["id"]), dict);
-		ERR_FAIL_COND_V(ch.is_null(), FAILED);
+		ERR_FAIL_COND_V(ch.is_null(), Error::FAILED);
 		peer->channels.push_back(ch);
 	}
 
 	peer_map[p_peer_id] = peer; // add the new peer connection to the peer_map
 
-	return OK;
+	return Error::OK;
 }
 
 void WebRTCMultiplayerPeer::remove_peer(int p_peer_id) {
@@ -361,7 +361,7 @@ Error WebRTCMultiplayerPeer::get_packet(const uint8_t **r_buffer, int &r_buffer_
 	// Peer not available
 	if (next_packet_peer == 0 || !peer_map.has(next_packet_peer)) {
 		_find_next_peer();
-		ERR_FAIL_V(ERR_UNAVAILABLE);
+		ERR_FAIL_V(Error::UNAVAILABLE);
 	}
 	for (Ref<WebRTCDataChannel> &E : peer_map[next_packet_peer]->channels) {
 		if (E->get_available_packet_count()) {
@@ -372,11 +372,11 @@ Error WebRTCMultiplayerPeer::get_packet(const uint8_t **r_buffer, int &r_buffer_
 	}
 	// Channels for that peer were empty. Bug?
 	_find_next_peer();
-	ERR_FAIL_V(ERR_BUG);
+	ERR_FAIL_V(Error::BUG);
 }
 
 Error WebRTCMultiplayerPeer::put_packet(const uint8_t *p_buffer, int p_buffer_size) {
-	ERR_FAIL_COND_V(connection_status == CONNECTION_DISCONNECTED, ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(connection_status == CONNECTION_DISCONNECTED, Error::UNCONFIGURED);
 
 	int ch = get_transfer_channel();
 	if (ch == 0) {
@@ -397,10 +397,10 @@ Error WebRTCMultiplayerPeer::put_packet(const uint8_t *p_buffer, int p_buffer_si
 
 	if (target_peer > 0) {
 		HashMap<int, Ref<ConnectedPeer>>::Iterator E = peer_map.find(target_peer);
-		ERR_FAIL_COND_V_MSG(!E, ERR_INVALID_PARAMETER, "Invalid target peer: " + itos(target_peer) + ".");
+		ERR_FAIL_COND_V_MSG(!E, Error::INVALID_PARAMETER, "Invalid target peer: " + itos(target_peer) + ".");
 
-		ERR_FAIL_COND_V_MSG(E->value->channels.size() <= ch, ERR_INVALID_PARAMETER, vformat("Unable to send packet on channel %d, max channels: %d", ch, E->value->channels.size()));
-		ERR_FAIL_COND_V(E->value->channels[ch].is_null(), ERR_BUG);
+		ERR_FAIL_COND_V_MSG(E->value->channels.size() <= ch, Error::INVALID_PARAMETER, vformat("Unable to send packet on channel %d, max channels: %d", ch, E->value->channels.size()));
+		ERR_FAIL_COND_V(E->value->channels[ch].is_null(), Error::BUG);
 		return E->value->channels[ch]->put_packet(p_buffer, p_buffer_size);
 
 	} else {
@@ -417,7 +417,7 @@ Error WebRTCMultiplayerPeer::put_packet(const uint8_t *p_buffer, int p_buffer_si
 			F.value->channels[ch]->put_packet(p_buffer, p_buffer_size);
 		}
 	}
-	return OK;
+	return Error::OK;
 }
 
 int WebRTCMultiplayerPeer::get_available_packet_count() const {

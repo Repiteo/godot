@@ -94,7 +94,7 @@ FT_Error tvg_svg_in_ot_preset_slot(FT_GlyphSlot p_slot, FT_Bool p_cache, FT_Poin
 
 		float aspect = 1.0f;
 		String xml_body;
-		while (parser->read() == OK) {
+		while (parser->read() == Error::OK) {
 			if (parser->has_attribute("id")) {
 				const String &gl_name = parser->get_named_attribute_value("id");
 				if (gl_name.begins_with("glyph")) {

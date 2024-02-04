@@ -244,7 +244,7 @@ Vector<float> Collada::AnimationTrack::get_value_at_time(float p_time) const {
 }
 
 void Collada::_parse_asset(XMLParser &p_parser) {
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			String name = p_parser.get_node_name();
 
@@ -292,7 +292,7 @@ void Collada::_parse_image(XMLParser &p_parser) {
 			image.path = ProjectSettings::get_singleton()->localize_path(state.local_path.get_base_dir().path_join(path.uri_decode()));
 		}
 	} else {
-		while (p_parser.read() == OK) {
+		while (p_parser.read() == Error::OK) {
 			if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 				String name = p_parser.get_node_name();
 
@@ -346,7 +346,7 @@ void Collada::_parse_material(XMLParser &p_parser) {
 		/* <1.4 */
 		ERR_PRINT("Collada Materials < 1.4 are not supported (yet)");
 	} else {
-		while (p_parser.read() == OK) {
+		while (p_parser.read() == Error::OK) {
 			if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT && p_parser.get_node_name() == "instance_effect") {
 				material.instance_effect = _uri_to_id(p_parser.get_named_attribute_value("url"));
 			} else if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT_END && p_parser.get_node_name() == "material") {
@@ -371,7 +371,7 @@ Vector<float> Collada::_read_float_array(XMLParser &p_parser) {
 	splitters.push_back("\t");
 
 	Vector<float> array;
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		// TODO: check for comments inside the element
 		// and ignore them.
 
@@ -394,7 +394,7 @@ Vector<String> Collada::_read_string_array(XMLParser &p_parser) {
 	}
 
 	Vector<String> array;
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		// TODO: check for comments inside the element
 		// and ignore them.
 
@@ -416,7 +416,7 @@ Transform3D Collada::_read_transform(XMLParser &p_parser) {
 	}
 
 	Vector<String> array;
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		// TODO: check for comments inside the element
 		// and ignore them.
 
@@ -446,7 +446,7 @@ String Collada::_read_empty_draw_type(XMLParser &p_parser) {
 		return empty_draw_type;
 	}
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_TEXT) {
 			empty_draw_type = p_parser.get_node_data();
 		} else if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT_END) {
@@ -464,7 +464,7 @@ Variant Collada::_parse_param(XMLParser &p_parser) {
 	String from = p_parser.get_node_name();
 	Variant data;
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			if (p_parser.get_node_name() == "float") {
 				p_parser.read();
@@ -490,7 +490,7 @@ Variant Collada::_parse_param(XMLParser &p_parser) {
 					data = Color(v4[0], v4[1], v4[2], v4[3]);
 				}
 			} else if (p_parser.get_node_name() == "sampler2D") {
-				while (p_parser.read() == OK) {
+				while (p_parser.read() == Error::OK) {
 					if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 						if (p_parser.get_node_name() == "source") {
 							p_parser.read();
@@ -504,7 +504,7 @@ Variant Collada::_parse_param(XMLParser &p_parser) {
 					}
 				}
 			} else if (p_parser.get_node_name() == "surface") {
-				while (p_parser.read() == OK) {
+				while (p_parser.read() == Error::OK) {
 					if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 						if (p_parser.get_node_name() == "init_from") {
 							p_parser.read();
@@ -536,7 +536,7 @@ void Collada::_parse_effect_material(XMLParser &p_parser, Effect &p_effect, Stri
 		return;
 	}
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			// first come the tags we descend, but ignore the top-levels
 
@@ -559,7 +559,7 @@ void Collada::_parse_effect_material(XMLParser &p_parser, Effect &p_effect, Stri
 					p_parser.get_node_name() == "phong" ||
 					p_parser.get_node_name() == "blinn") {
 				COLLADA_PRINT("shade model: " + p_parser.get_node_name());
-				while (p_parser.read() == OK) {
+				while (p_parser.read() == Error::OK) {
 					if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 						String what = p_parser.get_node_name();
 
@@ -568,7 +568,7 @@ void Collada::_parse_effect_material(XMLParser &p_parser, Effect &p_effect, Stri
 								what == "specular" ||
 								what == "reflective") {
 							// color or texture types
-							while (p_parser.read() == OK) {
+							while (p_parser.read() == Error::OK) {
 								if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 									if (p_parser.get_node_name() == "color") {
 										Vector<float> colorarr = _read_float_array(p_parser);
@@ -651,7 +651,7 @@ void Collada::_parse_effect_material(XMLParser &p_parser, Effect &p_effect, Stri
 				p_effect.unshaded = p_parser.get_node_data().to_int();
 			} else if (p_parser.get_node_name() == "bump") {
 				// color or texture types
-				while (p_parser.read() == OK) {
+				while (p_parser.read() == Error::OK) {
 					if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 						if (p_parser.get_node_name() == "texture") {
 							String sampler = p_parser.get_named_attribute_value("texture");
@@ -729,7 +729,7 @@ void Collada::_parse_camera(XMLParser &p_parser) {
 	state.camera_data_map[id] = CameraData();
 	CameraData &camera = state.camera_data_map[id];
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			String name = p_parser.get_node_name();
 
@@ -785,7 +785,7 @@ void Collada::_parse_light(XMLParser &p_parser) {
 	state.light_data_map[id] = LightData();
 	LightData &light = state.light_data_map[id];
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			String name = p_parser.get_node_name();
 
@@ -860,7 +860,7 @@ void Collada::_parse_curve_geometry(XMLParser &p_parser, String p_id, String p_n
 		return;
 	}
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			String section = p_parser.get_node_name();
 
@@ -892,7 +892,7 @@ void Collada::_parse_curve_geometry(XMLParser &p_parser, String p_id, String p_n
 					COLLADA_PRINT("section: " + current_source + " stride " + itos(curvedata.sources[current_source].stride));
 				}
 			} else if (section == "control_vertices") {
-				while (p_parser.read() == OK) {
+				while (p_parser.read() == Error::OK) {
 					if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 						if (p_parser.get_node_name() == "input") {
 							String semantic = p_parser.get_named_attribute_value("semantic");
@@ -940,7 +940,7 @@ void Collada::_parse_mesh_geometry(XMLParser &p_parser, String p_id, String p_na
 		return;
 	}
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			String section = p_parser.get_node_name();
 
@@ -969,7 +969,7 @@ void Collada::_parse_mesh_geometry(XMLParser &p_parser, String p_id, String p_na
 				String id = p_parser.get_named_attribute_value("id");
 				int last_ref = 0;
 
-				while (p_parser.read() == OK) {
+				while (p_parser.read() == Error::OK) {
 					if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 						if (p_parser.get_node_name() == "input") {
 							String semantic = p_parser.get_named_attribute_value("semantic");
@@ -1004,7 +1004,7 @@ void Collada::_parse_mesh_geometry(XMLParser &p_parser, String p_id, String p_na
 				prim.vertex_size = 0;
 				int last_ref = 0;
 
-				while (p_parser.read() == OK) {
+				while (p_parser.read() == Error::OK) {
 					if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 						if (p_parser.get_node_name() == "input") {
 							String semantic = p_parser.get_named_attribute_value("semantic");
@@ -1078,7 +1078,7 @@ void Collada::_parse_skin_controller(XMLParser &p_parser, String p_id) {
 
 	String current_source;
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			String section = p_parser.get_node_name();
 
@@ -1135,7 +1135,7 @@ void Collada::_parse_skin_controller(XMLParser &p_parser, String p_id) {
 			} else if (section == "joints") {
 				SkinControllerData::Joints joint;
 
-				while (p_parser.read() == OK) {
+				while (p_parser.read() == Error::OK) {
 					if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 						if (p_parser.get_node_name() == "input") {
 							String semantic = p_parser.get_named_attribute_value("semantic");
@@ -1157,7 +1157,7 @@ void Collada::_parse_skin_controller(XMLParser &p_parser, String p_id) {
 
 				weights.count = p_parser.get_named_attribute_value("count").to_int();
 
-				while (p_parser.read() == OK) {
+				while (p_parser.read() == Error::OK) {
 					if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 						if (p_parser.get_node_name() == "input") {
 							String semantic = p_parser.get_named_attribute_value("semantic");
@@ -1232,7 +1232,7 @@ void Collada::_parse_morph_controller(XMLParser &p_parser, String p_id) {
 	morphdata.mode = p_parser.get_named_attribute_value("method");
 	String current_source;
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			String section = p_parser.get_node_name();
 
@@ -1269,7 +1269,7 @@ void Collada::_parse_morph_controller(XMLParser &p_parser, String p_id) {
 				}
 
 			} else if (section == "targets") {
-				while (p_parser.read() == OK) {
+				while (p_parser.read() == Error::OK) {
 					if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 						if (p_parser.get_node_name() == "input") {
 							String semantic = p_parser.get_named_attribute_value("semantic");
@@ -1301,7 +1301,7 @@ void Collada::_parse_controller(XMLParser &p_parser) {
 		return;
 	}
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			String section = p_parser.get_node_name();
 
@@ -1326,7 +1326,7 @@ Collada::Node *Collada::_parse_visual_instance_geometry(XMLParser &p_parser) {
 		return geom;
 	}
 	// try to find also many materials and skeletons!
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			if (p_parser.get_node_name() == "instance_material") {
 				String symbol = p_parser.get_named_attribute_value("symbol");
@@ -1380,7 +1380,7 @@ Collada::Node *Collada::_parse_visual_instance_camera(XMLParser &p_parser) {
 		return cam;
 	}
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT_END && p_parser.get_node_name() == "instance_camera") {
 			break;
 		}
@@ -1401,7 +1401,7 @@ Collada::Node *Collada::_parse_visual_instance_light(XMLParser &p_parser) {
 		return cam;
 	}
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT_END && p_parser.get_node_name() == "instance_light") {
 			break;
 		}
@@ -1425,7 +1425,7 @@ Collada::Node *Collada::_parse_visual_node_instance_data(XMLParser &p_parser) {
 		return nullptr;
 	}
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT_END && p_parser.get_node_name() == instance_type) {
 			break;
 		}
@@ -1483,7 +1483,7 @@ Collada::Node *Collada::_parse_visual_scene_node(XMLParser &p_parser) {
 		node = joint;
 	}
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			String section = p_parser.get_node_name();
 
@@ -1622,7 +1622,7 @@ void Collada::_parse_visual_scene(XMLParser &p_parser) {
 		vscene.name = p_parser.get_named_attribute_value("name");
 	}
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			String section = p_parser.get_node_name();
 
@@ -1664,7 +1664,7 @@ void Collada::_parse_animation(XMLParser &p_parser) {
 	Vector<String> channel_sources;
 	Vector<String> channel_targets;
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			String name = p_parser.get_node_name();
 			if (name == "source") {
@@ -1868,7 +1868,7 @@ void Collada::_parse_animation_clip(XMLParser &p_parser) {
 		clip.end = p_parser.get_named_attribute_value("end").to_float();
 	}
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			String name = p_parser.get_node_name();
 			if (name == "instance_animation") {
@@ -1889,7 +1889,7 @@ void Collada::_parse_scene(XMLParser &p_parser) {
 		return;
 	}
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			String name = p_parser.get_node_name();
 
@@ -1910,7 +1910,7 @@ void Collada::_parse_library(XMLParser &p_parser) {
 		return;
 	}
 
-	while (p_parser.read() == OK) {
+	while (p_parser.read() == Error::OK) {
 		if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			String name = p_parser.get_node_name();
 			COLLADA_PRINT("library name is: " + name);
@@ -1927,7 +1927,7 @@ void Collada::_parse_library(XMLParser &p_parser) {
 			} else if (name == "geometry") {
 				String id = p_parser.get_named_attribute_value("id");
 				String name2 = p_parser.get_named_attribute_value_safe("name");
-				while (p_parser.read() == OK) {
+				while (p_parser.read() == Error::OK) {
 					if (p_parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 						if (p_parser.get_node_name() == "mesh") {
 							state.mesh_name_map[id] = (!name2.is_empty()) ? name2 : id;
@@ -2325,12 +2325,12 @@ Error Collada::load(const String &p_path, int p_flags) {
 	Ref<XMLParser> parserr = memnew(XMLParser);
 	XMLParser &parser = *parserr.ptr();
 	Error err = parser.open(p_path);
-	ERR_FAIL_COND_V_MSG(err, err, "Cannot open Collada file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Cannot open Collada file '" + p_path + "'.");
 
 	state.local_path = ProjectSettings::get_singleton()->localize_path(p_path);
 	state.import_flags = p_flags;
 	/* Skip headers */
-	while ((err = parser.read()) == OK) {
+	while ((err = parser.read()) == Error::OK) {
 		if (parser.get_node_type() == XMLParser::NODE_ELEMENT) {
 			if (parser.get_node_name() == "COLLADA") {
 				break;
@@ -2340,7 +2340,7 @@ Error Collada::load(const String &p_path, int p_flags) {
 		}
 	}
 
-	ERR_FAIL_COND_V_MSG(err != OK, ERR_FILE_CORRUPT, "Corrupted Collada file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Error::FILE_CORRUPT, "Corrupted Collada file '" + p_path + "'.");
 
 	/* Start loading Collada */
 
@@ -2353,7 +2353,7 @@ Error Collada::load(const String &p_path, int p_flags) {
 		COLLADA_PRINT("Collada VERSION: " + version);
 	}
 
-	while ((err = parser.read()) == OK) {
+	while ((err = parser.read()) == Error::OK) {
 		/* Read all the main sections.. */
 
 		if (parser.get_node_type() != XMLParser::NODE_ELEMENT) {
@@ -2377,7 +2377,7 @@ Error Collada::load(const String &p_path, int p_flags) {
 	}
 
 	_optimize();
-	return OK;
+	return Error::OK;
 }
 
 Collada::Collada() {

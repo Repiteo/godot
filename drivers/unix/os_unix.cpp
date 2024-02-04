@@ -189,24 +189,24 @@ Error OS_Unix::get_entropy(uint8_t *r_buffer, int p_bytes) {
 	int ofs = 0;
 	do {
 		int chunk = MIN(left, 256);
-		ERR_FAIL_COND_V(getentropy(r_buffer + ofs, chunk), FAILED);
+		ERR_FAIL_COND_V(getentropy(r_buffer + ofs, chunk), Error::FAILED);
 		left -= chunk;
 		ofs += chunk;
 	} while (left > 0);
 // Define this yourself if you don't want to fall back to /dev/urandom.
 #elif !defined(NO_URANDOM)
 	int r = open("/dev/urandom", O_RDONLY);
-	ERR_FAIL_COND_V(r < 0, FAILED);
+	ERR_FAIL_COND_V(r < 0, Error::FAILED);
 	int left = p_bytes;
 	do {
 		ssize_t ret = read(r, r_buffer, p_bytes);
-		ERR_FAIL_COND_V(ret <= 0, FAILED);
+		ERR_FAIL_COND_V(ret <= 0, Error::FAILED);
 		left -= ret;
 	} while (left > 0);
 #else
-	return ERR_UNAVAILABLE;
+	return Error::UNAVAILABLE;
 #endif
-	return OK;
+	return Error::OK;
 }
 
 String OS_Unix::get_name() const {
@@ -493,7 +493,7 @@ Error OS_Unix::execute(const String &p_path, const List<String> &p_arguments, St
 #ifdef __EMSCRIPTEN__
 	// Don't compile this code at all to avoid undefined references.
 	// Actual virtual call goes to OS_Web.
-	ERR_FAIL_V(ERR_BUG);
+	ERR_FAIL_V(Error::BUG);
 #else
 	if (r_pipe) {
 		String command = "\"" + p_path + "\"";
@@ -507,14 +507,14 @@ Error OS_Unix::execute(const String &p_path, const List<String> &p_arguments, St
 		}
 
 		FILE *f = popen(command.utf8().get_data(), "r");
-		ERR_FAIL_NULL_V_MSG(f, ERR_CANT_OPEN, "Cannot create pipe from command: " + command + ".");
+		ERR_FAIL_NULL_V_MSG(f, Error::CANT_OPEN, "Cannot create pipe from command: " + command + ".");
 		char buf[65535];
 		while (fgets(buf, 65535, f)) {
 			if (p_pipe_mutex) {
 				p_pipe_mutex->lock();
 			}
 			String pipe_out;
-			if (pipe_out.parse_utf8(buf) == OK) {
+			if (pipe_out.parse_utf8(buf) == Error::OK) {
 				(*r_pipe) += pipe_out;
 			} else {
 				(*r_pipe) += String(buf); // If not valid UTF-8 try decode as Latin-1
@@ -528,11 +528,11 @@ Error OS_Unix::execute(const String &p_path, const List<String> &p_arguments, St
 		if (r_exitcode) {
 			*r_exitcode = WEXITSTATUS(rv);
 		}
-		return OK;
+		return Error::OK;
 	}
 
 	pid_t pid = fork();
-	ERR_FAIL_COND_V(pid < 0, ERR_CANT_FORK);
+	ERR_FAIL_COND_V(pid < 0, Error::CANT_FORK);
 
 	if (pid == 0) {
 		// The child process
@@ -559,7 +559,7 @@ Error OS_Unix::execute(const String &p_path, const List<String> &p_arguments, St
 	if (r_exitcode) {
 		*r_exitcode = WIFEXITED(status) ? WEXITSTATUS(status) : status;
 	}
-	return OK;
+	return Error::OK;
 #endif
 }
 
@@ -567,10 +567,10 @@ Error OS_Unix::create_process(const String &p_path, const List<String> &p_argume
 #ifdef __EMSCRIPTEN__
 	// Don't compile this code at all to avoid undefined references.
 	// Actual virtual call goes to OS_Web.
-	ERR_FAIL_V(ERR_BUG);
+	ERR_FAIL_V(Error::BUG);
 #else
 	pid_t pid = fork();
-	ERR_FAIL_COND_V(pid < 0, ERR_CANT_FORK);
+	ERR_FAIL_COND_V(pid < 0, Error::CANT_FORK);
 
 	if (pid == 0) {
 		// The new process
@@ -599,7 +599,7 @@ Error OS_Unix::create_process(const String &p_path, const List<String> &p_argume
 	if (r_child_id) {
 		*r_child_id = pid;
 	}
-	return OK;
+	return Error::OK;
 #endif
 }
 
@@ -610,7 +610,7 @@ Error OS_Unix::kill(const ProcessID &p_pid) {
 		int st;
 		::waitpid(p_pid, &st, 0);
 	}
-	return ret ? ERR_INVALID_PARAMETER : OK;
+	return ret ? Error::INVALID_PARAMETER : Error::OK;
 }
 
 int OS_Unix::get_process_id() const {
@@ -658,23 +658,23 @@ Error OS_Unix::open_dynamic_library(const String p_path, void *&p_library_handle
 		path = get_executable_path().get_base_dir().path_join("../lib").path_join(p_path.get_file());
 	}
 
-	ERR_FAIL_COND_V(!FileAccess::exists(path), ERR_FILE_NOT_FOUND);
+	ERR_FAIL_COND_V(!FileAccess::exists(path), Error::FILE_NOT_FOUND);
 
 	p_library_handle = dlopen(path.utf8().get_data(), GODOT_DLOPEN_MODE);
-	ERR_FAIL_NULL_V_MSG(p_library_handle, ERR_CANT_OPEN, vformat("Can't open dynamic library: %s. Error: %s.", p_path, dlerror()));
+	ERR_FAIL_NULL_V_MSG(p_library_handle, Error::CANT_OPEN, vformat("Can't open dynamic library: %s. Error: %s.", p_path, dlerror()));
 
 	if (r_resolved_path != nullptr) {
 		*r_resolved_path = path;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error OS_Unix::close_dynamic_library(void *p_library_handle) {
 	if (dlclose(p_library_handle)) {
-		return FAILED;
+		return Error::FAILED;
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error OS_Unix::get_dynamic_library_symbol_handle(void *p_library_handle, const String p_name, void *&p_symbol_handle, bool p_optional) {
@@ -685,19 +685,19 @@ Error OS_Unix::get_dynamic_library_symbol_handle(void *p_library_handle, const S
 
 	error = dlerror();
 	if (error != nullptr) {
-		ERR_FAIL_COND_V_MSG(!p_optional, ERR_CANT_RESOLVE, "Can't resolve symbol " + p_name + ". Error: " + error + ".");
+		ERR_FAIL_COND_V_MSG(!p_optional, Error::CANT_RESOLVE, "Can't resolve symbol " + p_name + ". Error: " + error + ".");
 
-		return ERR_CANT_RESOLVE;
+		return Error::CANT_RESOLVE;
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error OS_Unix::set_cwd(const String &p_cwd) {
 	if (chdir(p_cwd.utf8().get_data()) != 0) {
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 bool OS_Unix::has_environment(const String &p_var) const {

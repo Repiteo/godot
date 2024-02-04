@@ -38,8 +38,8 @@ void GLTFDocumentExtensionConvertImporterMesh::_bind_methods() {
 }
 
 Error GLTFDocumentExtensionConvertImporterMesh::import_post(Ref<GLTFState> p_state, Node *p_root) {
-	ERR_FAIL_NULL_V(p_root, ERR_INVALID_PARAMETER);
-	ERR_FAIL_NULL_V(p_state, ERR_INVALID_PARAMETER);
+	ERR_FAIL_NULL_V(p_root, Error::INVALID_PARAMETER);
+	ERR_FAIL_NULL_V(p_state, Error::INVALID_PARAMETER);
 	List<Node *> queue;
 	queue.push_back(p_root);
 	List<Node *> delete_queue;
@@ -76,5 +76,5 @@ Error GLTFDocumentExtensionConvertImporterMesh::import_post(Ref<GLTFState> p_sta
 		memdelete(node);
 		delete_queue.pop_front();
 	}
-	return OK;
+	return Error::OK;
 }

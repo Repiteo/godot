@@ -81,7 +81,7 @@ void EditorRunNative::_notification(int p_what) {
 
 Error EditorRunNative::start_run_native(int p_id) {
 	if (p_id < 0) {
-		return OK;
+		return Error::OK;
 	}
 
 	int platform = p_id / 10000;
@@ -89,11 +89,11 @@ Error EditorRunNative::start_run_native(int p_id) {
 
 	if (!EditorNode::get_singleton()->ensure_main_scene(true)) {
 		resume_id = p_id;
-		return OK;
+		return Error::OK;
 	}
 
 	Ref<EditorExportPlatform> eep = EditorExport::get_singleton()->get_export_platform(platform);
-	ERR_FAIL_COND_V(eep.is_null(), ERR_UNAVAILABLE);
+	ERR_FAIL_COND_V(eep.is_null(), Error::UNAVAILABLE);
 
 	Ref<EditorExportPreset> preset;
 
@@ -107,7 +107,7 @@ Error EditorRunNative::start_run_native(int p_id) {
 
 	if (preset.is_null()) {
 		EditorNode::get_singleton()->show_warning(TTR("No runnable export preset found for this platform.\nPlease add a runnable preset in the Export menu or define an existing preset as runnable."));
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 
 	emit_signal(SNAME("native_run"), preset);

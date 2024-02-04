@@ -39,7 +39,7 @@ Vector<Vector3> ConvexPolygonShape3D::get_debug_mesh_lines() const {
 		Vector<Vector3> varr = Variant(poly_points);
 		Geometry3D::MeshData md;
 		Error err = ConvexHullComputer::convex_hull(varr, md);
-		if (err == OK) {
+		if (err == Error::OK) {
 			Vector<Vector3> lines;
 			lines.resize(md.edges.size() * 2);
 			for (uint32_t i = 0; i < md.edges.size(); i++) {

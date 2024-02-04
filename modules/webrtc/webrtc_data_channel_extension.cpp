@@ -62,7 +62,7 @@ Error WebRTCDataChannelExtension::get_packet(const uint8_t **r_buffer, int &r_bu
 		return err;
 	}
 	WARN_PRINT_ONCE("WebRTCDataChannelExtension::_get_packet_native is unimplemented!");
-	return FAILED;
+	return Error::FAILED;
 }
 
 Error WebRTCDataChannelExtension::put_packet(const uint8_t *p_buffer, int p_buffer_size) {
@@ -71,5 +71,5 @@ Error WebRTCDataChannelExtension::put_packet(const uint8_t *p_buffer, int p_buff
 		return err;
 	}
 	WARN_PRINT_ONCE("WebRTCDataChannelExtension::_put_packet_native is unimplemented!");
-	return FAILED;
+	return Error::FAILED;
 }

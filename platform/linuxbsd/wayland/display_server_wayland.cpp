@@ -153,7 +153,7 @@ void DisplayServerWayland::_show_window() {
 			}
 #endif
 			Error err = context_rd->window_create(wd.id, wd.vsync_mode, wd.rect.size.width, wd.rect.size.height, &wpd);
-			ERR_FAIL_COND_MSG(err != OK, vformat("Can't create a %s window", context_rd->get_api_name()));
+			ERR_FAIL_COND_MSG(err != Error::OK, vformat("Can't create a %s window", context_rd->get_api_name()));
 
 			emulate_vsync = (context_rd->get_vsync_mode(wd.id) == DisplayServer::VSYNC_ENABLED);
 
@@ -170,7 +170,7 @@ void DisplayServerWayland::_show_window() {
 			wd.wl_egl_window = wl_egl_window_create(wl_surface, wd.rect.size.width, wd.rect.size.height);
 
 			Error err = egl_manager->window_create(MAIN_WINDOW_ID, wayland_thread.get_wl_display(), wd.wl_egl_window, wd.rect.size.width, wd.rect.size.height);
-			ERR_FAIL_COND_MSG(err == ERR_CANT_CREATE, "Can't show a GLES3 window.");
+			ERR_FAIL_COND_MSG(err == Error::CANT_CREATE, "Can't show a GLES3 window.");
 
 			window_set_vsync_mode(wd.vsync_mode, MAIN_WINDOW_ID);
 		}
@@ -407,7 +407,7 @@ Ref<Image> DisplayServerWayland::clipboard_get_image() const {
 	Ref<Image> image;
 	image.instantiate();
 
-	Error err = OK;
+	Error err = Error::OK;
 
 	// TODO: Fallback to next media type on missing module or parse error.
 	if (wayland_thread.selection_has_mime("image/png")) {
@@ -428,7 +428,7 @@ Ref<Image> DisplayServerWayland::clipboard_get_image() const {
 		err = image->load_ktx_from_buffer(wayland_thread.selection_get_mime("image/ktx"));
 	}
 
-	ERR_FAIL_COND_V(err != OK, Ref<Image>());
+	ERR_FAIL_COND_V(err != Error::OK, Ref<Image>());
 
 	return image;
 }
@@ -1011,7 +1011,7 @@ void DisplayServerWayland::cursor_set_custom_image(const Ref<Resource> &p_cursor
 		if (image->is_compressed()) {
 			image = image->duplicate(true);
 			Error err = image->decompress();
-			ERR_FAIL_COND_MSG(err != OK, "Couldn't decompress VRAM-compressed custom mouse cursor image. Switch to a lossless compression mode in the Import dock.");
+			ERR_FAIL_COND_MSG(err != Error::OK, "Couldn't decompress VRAM-compressed custom mouse cursor image. Switch to a lossless compression mode in the Import dock.");
 		}
 
 		CustomCursor &cursor = custom_cursors[p_shape];
@@ -1194,7 +1194,7 @@ Vector<String> DisplayServerWayland::get_rendering_drivers_func() {
 
 DisplayServer *DisplayServerWayland::create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Point2i *p_position, const Size2i &p_resolution, int p_screen, Error &r_error) {
 	DisplayServer *ds = memnew(DisplayServerWayland(p_rendering_driver, p_mode, p_vsync_mode, p_flags, p_resolution, r_error));
-	if (r_error != OK) {
+	if (r_error) {
 		ERR_PRINT("Can't create the Wayland display server.");
 		memdelete(ds);
 
@@ -1214,11 +1214,11 @@ DisplayServerWayland::DisplayServerWayland(const String &p_rendering_driver, Win
 #endif // SOWRAP_ENABLED
 #endif // GLES3_ENABLED
 
-	r_error = ERR_UNAVAILABLE;
+	r_error = Error::UNAVAILABLE;
 
 	Error thread_err = wayland_thread.init();
 
-	if (thread_err != OK) {
+	if (thread_err != Error::OK) {
 		r_error = thread_err;
 		ERR_FAIL_MSG("Could not initialize the Wayland thread.");
 	}
@@ -1241,11 +1241,11 @@ DisplayServerWayland::DisplayServerWayland(const String &p_rendering_driver, Win
 #endif
 
 	if (context_rd) {
-		if (context_rd->initialize() != OK) {
+		if (context_rd->initialize() != Error::OK) {
 			ERR_PRINT(vformat("Could not initialize %s", context_rd->get_api_name()));
 			memdelete(context_rd);
 			context_rd = nullptr;
-			r_error = ERR_CANT_CREATE;
+			r_error = Error::CANT_CREATE;
 			return;
 		}
 	}
@@ -1304,10 +1304,10 @@ DisplayServerWayland::DisplayServerWayland(const String &p_rendering_driver, Win
 		}
 #endif // SOWRAP_ENABLED
 
-		if (egl_manager->initialize() != OK) {
+		if (egl_manager->initialize() != Error::OK) {
 			memdelete(egl_manager);
 			egl_manager = nullptr;
-			r_error = ERR_CANT_CREATE;
+			r_error = Error::CANT_CREATE;
 			ERR_FAIL_MSG("Could not initialize GLES3.");
 		}
 
@@ -1344,7 +1344,7 @@ DisplayServerWayland::DisplayServerWayland(const String &p_rendering_driver, Win
 
 	screen_set_keep_on(GLOBAL_GET("display/window/energy_saving/keep_screen_on"));
 
-	r_error = OK;
+	r_error = Error::OK;
 }
 
 DisplayServerWayland::~DisplayServerWayland() {

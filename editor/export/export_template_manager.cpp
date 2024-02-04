@@ -52,11 +52,11 @@ void ExportTemplateManager::_update_template_status() {
 	const String &templates_dir = EditorPaths::get_singleton()->get_export_templates_dir();
 
 	Error err = da->change_dir(templates_dir);
-	ERR_FAIL_COND_MSG(err != OK, "Could not access templates directory at '" + templates_dir + "'.");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Could not access templates directory at '" + templates_dir + "'.");
 
 	RBSet<String> templates;
 	da->list_dir_begin();
-	if (err == OK) {
+	if (err == Error::OK) {
 		String c = da->get_next();
 		while (!c.is_empty()) {
 			if (da->current_is_dir() && !c.begins_with(".")) {
@@ -157,7 +157,7 @@ void ExportTemplateManager::_download_template(const String &p_url, bool p_skip_
 	download_templates->set_https_proxy(proxy_host, proxy_port);
 
 	Error err = download_templates->request(p_url);
-	if (err != OK) {
+	if (err != Error::OK) {
 		_set_current_progress_status(TTR("Error requesting URL:") + " " + p_url, true);
 		return;
 	}
@@ -200,7 +200,7 @@ void ExportTemplateManager::_download_template_completed(int p_status, int p_cod
 					// Clean up downloaded file.
 					Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 					Error err = da->remove(path);
-					if (err != OK) {
+					if (err != Error::OK) {
 						EditorNode::get_singleton()->add_io_error(TTR("Cannot remove temporary file:") + "\n" + path + "\n");
 					}
 				} else {
@@ -253,7 +253,7 @@ void ExportTemplateManager::_refresh_mirrors_completed(int p_status, int p_code,
 
 	JSON json;
 	Error err = json.parse(response_json);
-	if (err != OK) {
+	if (err != Error::OK) {
 		EditorNode::get_singleton()->show_warning(TTR("Error parsing JSON with the list of mirrors. Please report this issue!"));
 		is_refreshing_mirrors = false;
 		if (is_downloading_templates) {
@@ -444,7 +444,7 @@ bool ExportTemplateManager::_install_file_selected(const String &p_file, bool p_
 	Ref<DirAccess> d = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 	String template_path = EditorPaths::get_singleton()->get_export_templates_dir().path_join(version);
 	Error err = d->make_dir_recursive(template_path);
-	if (err != OK) {
+	if (err != Error::OK) {
 		EditorNode::get_singleton()->show_warning(TTR("Error creating path for extracting templates:") + "\n" + template_path);
 		unzClose(pkg);
 		return false;
@@ -504,7 +504,7 @@ bool ExportTemplateManager::_install_file_selected(const String &p_file, bool p_
 
 			if (!DirAccess::exists(output_dir)) {
 				Error mkdir_err = da->make_dir_recursive(output_dir);
-				ERR_CONTINUE(mkdir_err != OK);
+				ERR_CONTINUE(mkdir_err != Error::OK);
 			}
 		}
 
@@ -552,16 +552,16 @@ void ExportTemplateManager::_uninstall_template_confirmed() {
 	const String &templates_dir = EditorPaths::get_singleton()->get_export_templates_dir();
 
 	Error err = da->change_dir(templates_dir);
-	ERR_FAIL_COND_MSG(err != OK, "Could not access templates directory at '" + templates_dir + "'.");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Could not access templates directory at '" + templates_dir + "'.");
 	err = da->change_dir(uninstall_version);
-	ERR_FAIL_COND_MSG(err != OK, "Could not access templates directory at '" + templates_dir.path_join(uninstall_version) + "'.");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Could not access templates directory at '" + templates_dir.path_join(uninstall_version) + "'.");
 
 	err = da->erase_contents_recursive();
-	ERR_FAIL_COND_MSG(err != OK, "Could not remove all templates in '" + templates_dir.path_join(uninstall_version) + "'.");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Could not remove all templates in '" + templates_dir.path_join(uninstall_version) + "'.");
 
 	da->change_dir("..");
 	err = da->remove(uninstall_version);
-	ERR_FAIL_COND_MSG(err != OK, "Could not remove templates directory at '" + templates_dir.path_join(uninstall_version) + "'.");
+	ERR_FAIL_COND_MSG(err != Error::OK, "Could not remove templates directory at '" + templates_dir.path_join(uninstall_version) + "'.");
 
 	_update_template_status();
 }
@@ -658,7 +658,7 @@ bool ExportTemplateManager::can_install_android_template() {
 Error ExportTemplateManager::install_android_template() {
 	const String &templates_path = EditorPaths::get_singleton()->get_export_templates_dir().path_join(VERSION_FULL_CONFIG);
 	const String &source_zip = templates_path.path_join("android_source.zip");
-	ERR_FAIL_COND_V(!FileAccess::exists(source_zip), ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(!FileAccess::exists(source_zip), Error::CANT_OPEN);
 	return install_android_template_from_file(source_zip);
 }
 Error ExportTemplateManager::install_android_template_from_file(const String &p_file) {
@@ -666,24 +666,24 @@ Error ExportTemplateManager::install_android_template_from_file(const String &p_
 	// from android_source.zip to the project's res://android folder.
 
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_RESOURCES);
-	ERR_FAIL_COND_V(da.is_null(), ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(da.is_null(), Error::CANT_CREATE);
 
 	// Make res://android dir (if it does not exist).
 	da->make_dir("android");
 	{
 		// Add version, to ensure building won't work if template and Godot version don't match.
 		Ref<FileAccess> f = FileAccess::open("res://android/.build_version", FileAccess::WRITE);
-		ERR_FAIL_COND_V(f.is_null(), ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(f.is_null(), Error::CANT_CREATE);
 		f->store_line(VERSION_FULL_CONFIG);
 	}
 
 	// Create the android build directory.
 	Error err = da->make_dir_recursive("android/build");
-	ERR_FAIL_COND_V(err != OK, err);
+	ERR_FAIL_COND_V(err != Error::OK, err);
 	{
 		// Add an empty .gdignore file to avoid scan.
 		Ref<FileAccess> f = FileAccess::open("res://android/build/.gdignore", FileAccess::WRITE);
-		ERR_FAIL_COND_V(f.is_null(), ERR_CANT_CREATE);
+		ERR_FAIL_COND_V(f.is_null(), Error::CANT_CREATE);
 		f->store_line("");
 	}
 
@@ -693,7 +693,7 @@ Error ExportTemplateManager::install_android_template_from_file(const String &p_
 	zlib_filefunc_def io = zipio_create_io(&io_fa);
 
 	unzFile pkg = unzOpen2(p_file.utf8().get_data(), &io);
-	ERR_FAIL_NULL_V_MSG(pkg, ERR_CANT_OPEN, "Android sources not in ZIP format.");
+	ERR_FAIL_NULL_V_MSG(pkg, Error::CANT_OPEN, "Android sources not in ZIP format.");
 
 	int ret = unzGoToFirstFile(pkg);
 	int total_files = 0;
@@ -756,7 +756,7 @@ Error ExportTemplateManager::install_android_template_from_file(const String &p_
 	ProgressDialog::get_singleton()->end_task("uncompress_src");
 	unzClose(pkg);
 
-	return OK;
+	return Error::OK;
 }
 
 void ExportTemplateManager::_notification(int p_what) {

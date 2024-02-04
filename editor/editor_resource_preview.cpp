@@ -290,14 +290,14 @@ void EditorResourcePreview::_iterate() {
 			Ref<Image> small_img;
 			small_img.instantiate();
 
-			if (img->load(cache_base + ".png") != OK) {
+			if (img->load(cache_base + ".png") != Error::OK) {
 				cache_valid = false;
 			} else {
 				texture.instantiate();
 				texture->set_image(img);
 
 				if (has_small_texture) {
-					if (small_img->load(cache_base + "_small.png") != OK) {
+					if (small_img->load(cache_base + "_small.png") != Error::OK) {
 						cache_valid = false;
 					} else {
 						small_texture.instantiate();

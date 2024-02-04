@@ -89,7 +89,7 @@ void NetSocketAndroid::close() {
 
 Error NetSocketAndroid::set_broadcasting_enabled(bool p_enabled) {
 	Error err = NetSocketPosix::set_broadcasting_enabled(p_enabled);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 
@@ -103,12 +103,12 @@ Error NetSocketAndroid::set_broadcasting_enabled(bool p_enabled) {
 		wants_broadcast = p_enabled;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error NetSocketAndroid::join_multicast_group(const IPAddress &p_multi_address, String p_if_name) {
 	Error err = NetSocketPosix::join_multicast_group(p_multi_address, p_if_name);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 
@@ -117,21 +117,21 @@ Error NetSocketAndroid::join_multicast_group(const IPAddress &p_multi_address, S
 	}
 	multicast_groups++;
 
-	return OK;
+	return Error::OK;
 }
 
 Error NetSocketAndroid::leave_multicast_group(const IPAddress &p_multi_address, String p_if_name) {
 	Error err = NetSocketPosix::leave_multicast_group(p_multi_address, p_if_name);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 
-	ERR_FAIL_COND_V(multicast_groups == 0, ERR_BUG);
+	ERR_FAIL_COND_V(multicast_groups == 0, Error::BUG);
 
 	multicast_groups--;
 	if (!multicast_groups) {
 		multicast_lock_release();
 	}
 
-	return OK;
+	return Error::OK;
 }

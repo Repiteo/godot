@@ -171,7 +171,7 @@ private:
 		float max_reported_progress = 0.0f;
 		ThreadLoadStatus status = THREAD_LOAD_IN_PROGRESS;
 		ResourceFormatLoader::CacheMode cache_mode = ResourceFormatLoader::CACHE_MODE_REUSE;
-		Error error = OK;
+		Error error = Error::OK;
 		Ref<Resource> resource;
 		bool xl_remapped = false;
 		bool use_sub_threads = false;

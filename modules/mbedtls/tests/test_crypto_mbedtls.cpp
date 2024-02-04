@@ -51,11 +51,11 @@ void hmac_context_digest_test(HashingContext::HashType ht, String expected_hex) 
 	PackedByteArray msg1 = String("Return of ").to_utf8_buffer();
 	PackedByteArray msg2 = String("the MAC!").to_utf8_buffer();
 	Error err = ctx.start(ht, key);
-	CHECK(err == OK);
+	CHECK(err == Error::OK);
 	err = ctx.update(msg1);
-	CHECK(err == OK);
+	CHECK(err == Error::OK);
 	err = ctx.update(msg2);
-	CHECK(err == OK);
+	CHECK(err == Error::OK);
 	PackedByteArray digest = ctx.finish();
 	String hex = String::hex_encode_buffer(digest.ptr(), digest.size());
 	CHECK(hex == expected_hex);

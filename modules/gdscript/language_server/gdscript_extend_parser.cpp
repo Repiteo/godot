@@ -762,7 +762,7 @@ const lsp::DocumentSymbol *ExtendGDScriptParser::search_symbol_defined_at_line(i
 }
 
 Error ExtendGDScriptParser::get_left_function_call(const lsp::Position &p_position, lsp::Position &r_func_pos, int &r_arg_index) const {
-	ERR_FAIL_INDEX_V(p_position.line, lines.size(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_position.line, lines.size(), Error::INVALID_PARAMETER);
 
 	int bracket_stack = 0;
 	int index = 0;
@@ -798,11 +798,11 @@ Error ExtendGDScriptParser::get_left_function_call(const lsp::Position &p_positi
 		if (found) {
 			r_func_pos.line = l;
 			r_arg_index = index;
-			return OK;
+			return Error::OK;
 		}
 	}
 
-	return ERR_METHOD_NOT_FOUND;
+	return Error::METHOD_NOT_FOUND;
 }
 
 const lsp::DocumentSymbol *ExtendGDScriptParser::get_symbol_defined_at_line(int p_line, const String &p_symbol_name) const {
@@ -1020,7 +1020,7 @@ Error ExtendGDScriptParser::parse(const String &p_code, const String &p_path) {
 	Error err = GDScriptParser::parse(p_code, p_path, false);
 	GDScriptAnalyzer analyzer(this);
 
-	if (err == OK) {
+	if (err == Error::OK) {
 		err = analyzer.analyze();
 	}
 	update_diagnostics();

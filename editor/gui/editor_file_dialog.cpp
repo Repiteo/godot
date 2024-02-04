@@ -1215,7 +1215,7 @@ void EditorFileDialog::_make_dir_confirm() {
 	}
 
 	Error err = dir_access->make_dir(stripped_dirname);
-	if (err == OK) {
+	if (err == Error::OK) {
 		dir_access->change_dir(stripped_dirname);
 		invalidate();
 		update_filters();
@@ -1332,7 +1332,7 @@ void EditorFileDialog::_update_icons() {
 
 void EditorFileDialog::_favorite_selected(int p_idx) {
 	Error change_dir_result = dir_access->change_dir(favorites->get_item_metadata(p_idx));
-	if (change_dir_result != OK) {
+	if (change_dir_result != Error::OK) {
 		error_dialog->set_text(TTR("Favorited folder does not exist anymore and will be removed."));
 		error_dialog->popup_centered(Size2(250, 50) * EDSCALE);
 

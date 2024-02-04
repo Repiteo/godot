@@ -170,7 +170,7 @@ String ProjectSettings::localize_path(const String &p_path) const {
 
 	Ref<DirAccess> dir = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 
-	if (dir->change_dir(path) == OK) {
+	if (dir->change_dir(path) == Error::OK) {
 		String cwd = dir->get_current_dir();
 		cwd = cwd.replace("\\", "/");
 
@@ -471,7 +471,7 @@ bool ProjectSettings::_load_resource_pack(const String &p_pack, bool p_replace_f
 		return false;
 	}
 
-	bool ok = PackedData::get_singleton()->add_pack(p_pack, p_replace_files, p_offset) == OK;
+	bool ok = PackedData::get_singleton()->add_pack(p_pack, p_replace_files, p_offset) == Error::OK;
 
 	if (!ok) {
 		return false;
@@ -539,10 +539,10 @@ Error ProjectSettings::_setup(const String &p_path, const String &p_main_pack, b
 
 	if (!p_main_pack.is_empty()) {
 		bool ok = _load_resource_pack(p_main_pack);
-		ERR_FAIL_COND_V_MSG(!ok, ERR_CANT_OPEN, "Cannot open resource pack '" + p_main_pack + "'.");
+		ERR_FAIL_COND_V_MSG(!ok, Error::CANT_OPEN, "Cannot open resource pack '" + p_main_pack + "'.");
 
 		Error err = _load_settings_text_or_binary("res://project.godot", "res://project.binary");
-		if (err == OK && !p_ignore_override) {
+		if (err == Error::OK && !p_ignore_override) {
 			// Load override from location of the main pack
 			// Optional, we don't mind if it fails
 			_load_settings_text(p_main_pack.get_base_dir().path_join("override.cfg"));
@@ -592,7 +592,7 @@ Error ProjectSettings::_setup(const String &p_path, const String &p_main_pack, b
 		// If we opened our package, try and load our project.
 		if (found) {
 			Error err = _load_settings_text_or_binary("res://project.godot", "res://project.binary");
-			if (err == OK && !p_ignore_override) {
+			if (err == Error::OK && !p_ignore_override) {
 				// Load overrides from the PCK and the executable location.
 				// Optional, we don't mind if either fails.
 				_load_settings_text("res://override.cfg");
@@ -607,7 +607,7 @@ Error ProjectSettings::_setup(const String &p_path, const String &p_main_pack, b
 
 	if (!OS::get_singleton()->get_resource_dir().is_empty()) {
 		Error err = _load_settings_text_or_binary("res://project.godot", "res://project.binary");
-		if (err == OK && !p_ignore_override) {
+		if (err == Error::OK && !p_ignore_override) {
 			// Optional, we don't mind if it fails.
 			_load_settings_text("res://override.cfg");
 		}
@@ -618,7 +618,7 @@ Error ProjectSettings::_setup(const String &p_path, const String &p_main_pack, b
 	// or, if requested (`p_upwards`) in parent directories.
 
 	Ref<DirAccess> d = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
-	ERR_FAIL_COND_V_MSG(d.is_null(), ERR_CANT_CREATE, "Cannot create DirAccess for path '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(d.is_null(), Error::CANT_CREATE, "Cannot create DirAccess for path '" + p_path + "'.");
 	d->change_dir(p_path);
 
 	String current_dir = d->get_current_dir();
@@ -630,7 +630,7 @@ Error ProjectSettings::_setup(const String &p_path, const String &p_main_pack, b
 		resource_path = current_dir;
 		resource_path = resource_path.replace("\\", "/"); // Windows path to Unix path just in case.
 		err = _load_settings_text_or_binary(current_dir.path_join("project.godot"), current_dir.path_join("project.binary"));
-		if (err == OK && !p_ignore_override) {
+		if (err == Error::OK && !p_ignore_override) {
 			// Optional, we don't mind if it fails.
 			_load_settings_text(current_dir.path_join("override.cfg"));
 			found = true;
@@ -657,12 +657,12 @@ Error ProjectSettings::_setup(const String &p_path, const String &p_main_pack, b
 		resource_path = resource_path.substr(0, resource_path.length() - 1); // Chop end.
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error ProjectSettings::setup(const String &p_path, const String &p_main_pack, bool p_upwards, bool p_ignore_override) {
 	Error err = _setup(p_path, p_main_pack, p_upwards, p_ignore_override);
-	if (err == OK && !p_ignore_override) {
+	if (err == Error::OK && !p_ignore_override) {
 		String custom_settings = GLOBAL_GET("application/config/project_settings_override");
 		if (!custom_settings.is_empty()) {
 			_load_settings_text(custom_settings);
@@ -684,7 +684,7 @@ Error ProjectSettings::setup(const String &p_path, const String &p_main_pack, bo
 
 	load_scene_groups_cache();
 
-	project_loaded = err == OK;
+	project_loaded = err == Error::OK;
 	return err;
 }
 
@@ -697,13 +697,13 @@ bool ProjectSettings::has_setting(String p_var) const {
 Error ProjectSettings::_load_settings_binary(const String &p_path) {
 	Error err;
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ, &err);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 
 	uint8_t hdr[4];
 	f->get_buffer(hdr, 4);
-	ERR_FAIL_COND_V_MSG((hdr[0] != 'E' || hdr[1] != 'C' || hdr[2] != 'F' || hdr[3] != 'G'), ERR_FILE_CORRUPT, "Corrupted header in binary project.binary (not ECFG).");
+	ERR_FAIL_COND_V_MSG((hdr[0] != 'E' || hdr[1] != 'C' || hdr[2] != 'F' || hdr[3] != 'G'), Error::FILE_CORRUPT, "Corrupted header in binary project.binary (not ECFG).");
 
 	uint32_t count = f->get_32();
 
@@ -722,11 +722,11 @@ Error ProjectSettings::_load_settings_binary(const String &p_path) {
 		f->get_buffer(d.ptrw(), vlen);
 		Variant value;
 		err = decode_variant(value, d.ptr(), d.size(), nullptr, true);
-		ERR_CONTINUE_MSG(err != OK, "Error decoding property: " + key + ".");
+		ERR_CONTINUE_MSG(err != Error::OK, "Error decoding property: " + key + ".");
 		set(key, value);
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error ProjectSettings::_load_settings_text(const String &p_path) {
@@ -734,9 +734,9 @@ Error ProjectSettings::_load_settings_text(const String &p_path) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ, &err);
 
 	if (f.is_null()) {
-		// FIXME: Above 'err' error code is ERR_FILE_CANT_OPEN if the file is missing
+		// FIXME: Above 'err' error code is FILE_CANT_OPEN if the file is missing
 		// This needs to be streamlined if we want decent error reporting
-		return ERR_FILE_NOT_FOUND;
+		return Error::FILE_NOT_FOUND;
 	}
 
 	VariantParser::StreamFile stream;
@@ -757,19 +757,19 @@ Error ProjectSettings::_load_settings_text(const String &p_path) {
 		next_tag.name = String();
 
 		err = VariantParser::parse_tag_assign_eof(&stream, lines, error_text, next_tag, assign, value, nullptr, true);
-		if (err == ERR_FILE_EOF) {
+		if (err == Error::FILE_EOF) {
 			// If we're loading a project.godot from source code, we can operate some
 			// ProjectSettings conversions if need be.
 			_convert_to_last_version(config_version);
 			last_save_time = FileAccess::get_modified_time(get_resource_path().path_join("project.godot"));
-			return OK;
+			return Error::OK;
 		}
-		ERR_FAIL_COND_V_MSG(err != OK, err, "Error parsing " + p_path + " at line " + itos(lines) + ": " + error_text + " File might be corrupted.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Error parsing " + p_path + " at line " + itos(lines) + ": " + error_text + " File might be corrupted.");
 
 		if (!assign.is_empty()) {
 			if (section.is_empty() && assign == "config_version") {
 				config_version = value;
-				ERR_FAIL_COND_V_MSG(config_version > CONFIG_VERSION, ERR_FILE_CANT_OPEN, vformat("Can't open project at '%s', its `config_version` (%d) is from a more recent and incompatible version of the engine. Expected config version: %d.", p_path, config_version, CONFIG_VERSION));
+				ERR_FAIL_COND_V_MSG(config_version > CONFIG_VERSION, Error::FILE_CANT_OPEN, vformat("Can't open project at '%s', its `config_version` (%d) is from a more recent and incompatible version of the engine. Expected config version: %d.", p_path, config_version, CONFIG_VERSION));
 			} else {
 				if (section.is_empty()) {
 					set(assign, value);
@@ -786,19 +786,19 @@ Error ProjectSettings::_load_settings_text(const String &p_path) {
 Error ProjectSettings::_load_settings_text_or_binary(const String &p_text_path, const String &p_bin_path) {
 	// Attempt first to load the binary project.godot file.
 	Error err = _load_settings_binary(p_bin_path);
-	if (err == OK) {
-		return OK;
-	} else if (err != ERR_FILE_NOT_FOUND) {
+	if (err == Error::OK) {
+		return Error::OK;
+	} else if (err != Error::FILE_NOT_FOUND) {
 		// If the file exists but can't be loaded, we want to know it.
-		ERR_PRINT("Couldn't load file '" + p_bin_path + "', error code " + itos(err) + ".");
+		ERR_PRINT("Couldn't load file '" + p_bin_path + "', error code " + itos((int)err) + ".");
 	}
 
 	// Fallback to text-based project.godot file if binary was not found.
 	err = _load_settings_text(p_text_path);
-	if (err == OK) {
-		return OK;
-	} else if (err != ERR_FILE_NOT_FOUND) {
-		ERR_PRINT("Couldn't load file '" + p_text_path + "', error code " + itos(err) + ".");
+	if (err == Error::OK) {
+		return Error::OK;
+	} else if (err != Error::FILE_NOT_FOUND) {
+		ERR_PRINT("Couldn't load file '" + p_text_path + "', error code " + itos((int)err) + ".");
 	}
 
 	return err;
@@ -841,7 +841,7 @@ void ProjectSettings::clear(const String &p_name) {
 
 Error ProjectSettings::save() {
 	Error error = save_custom(get_resource_path().path_join("project.godot"));
-	if (error == OK) {
+	if (error == Error::OK) {
 		last_save_time = FileAccess::get_modified_time(get_resource_path().path_join("project.godot"));
 	}
 	return error;
@@ -850,7 +850,7 @@ Error ProjectSettings::save() {
 Error ProjectSettings::_save_settings_binary(const String &p_file, const RBMap<String, List<String>> &p_props, const CustomMap &p_custom, const String &p_custom_features) {
 	Error err;
 	Ref<FileAccess> file = FileAccess::open(p_file, FileAccess::WRITE, &err);
-	ERR_FAIL_COND_V_MSG(err != OK, err, "Couldn't save project.binary at " + p_file + ".");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Couldn't save project.binary at " + p_file + ".");
 
 	uint8_t hdr[4] = { 'E', 'C', 'F', 'G' };
 	file->store_buffer(hdr, 4);
@@ -869,13 +869,13 @@ Error ProjectSettings::_save_settings_binary(const String &p_file, const RBMap<S
 
 		int len;
 		err = encode_variant(p_custom_features, nullptr, len, false);
-		ERR_FAIL_COND_V(err != OK, err);
+		ERR_FAIL_COND_V(err != Error::OK, err);
 
 		Vector<uint8_t> buff;
 		buff.resize(len);
 
 		err = encode_variant(p_custom_features, buff.ptrw(), len, false);
-		ERR_FAIL_COND_V(err != OK, err);
+		ERR_FAIL_COND_V(err != Error::OK, err);
 		file->store_32(len);
 		file->store_buffer(buff.ptr(), buff.size());
 
@@ -901,26 +901,26 @@ Error ProjectSettings::_save_settings_binary(const String &p_file, const RBMap<S
 
 			int len;
 			err = encode_variant(value, nullptr, len, true);
-			ERR_FAIL_COND_V_MSG(err != OK, ERR_INVALID_DATA, "Error when trying to encode Variant.");
+			ERR_FAIL_COND_V_MSG(err != Error::OK, Error::INVALID_DATA, "Error when trying to encode Variant.");
 
 			Vector<uint8_t> buff;
 			buff.resize(len);
 
 			err = encode_variant(value, buff.ptrw(), len, true);
-			ERR_FAIL_COND_V_MSG(err != OK, ERR_INVALID_DATA, "Error when trying to encode Variant.");
+			ERR_FAIL_COND_V_MSG(err != Error::OK, Error::INVALID_DATA, "Error when trying to encode Variant.");
 			file->store_32(len);
 			file->store_buffer(buff.ptr(), buff.size());
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error ProjectSettings::_save_settings_text(const String &p_file, const RBMap<String, List<String>> &p_props, const CustomMap &p_custom, const String &p_custom_features) {
 	Error err;
 	Ref<FileAccess> file = FileAccess::open(p_file, FileAccess::WRITE, &err);
 
-	ERR_FAIL_COND_V_MSG(err != OK, err, "Couldn't save project.godot - " + p_file + ".");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Couldn't save project.godot - " + p_file + ".");
 
 	file->store_line("; Engine configuration file.");
 	file->store_line("; It's best edited using the editor UI and not directly,");
@@ -963,7 +963,7 @@ Error ProjectSettings::_save_settings_text(const String &p_file, const RBMap<Str
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error ProjectSettings::_save_custom_bnd(const String &p_file) { // add other params as dictionary and array?
@@ -989,7 +989,7 @@ bool _csproj_exists(String p_root_dir) {
 #endif // TOOLS_ENABLED
 
 Error ProjectSettings::save_custom(const String &p_path, const CustomMap &p_custom, const Vector<String> &p_custom_features, bool p_merge_with_current) {
-	ERR_FAIL_COND_V_MSG(p_path.is_empty(), ERR_INVALID_PARAMETER, "Project settings save path cannot be empty.");
+	ERR_FAIL_COND_V_MSG(p_path.is_empty(), Error::INVALID_PARAMETER, "Project settings save path cannot be empty.");
 
 #ifdef TOOLS_ENABLED
 	PackedStringArray project_features = get_setting("application/config/features");
@@ -1093,7 +1093,7 @@ Error ProjectSettings::save_custom(const String &p_path, const CustomMap &p_cust
 	} else if (p_path.ends_with(".binary")) {
 		return _save_settings_binary(p_path, save_props, p_custom, save_features);
 	} else {
-		ERR_FAIL_V_MSG(ERR_FILE_UNRECOGNIZED, "Unknown config file format: " + p_path + ".");
+		ERR_FAIL_V_MSG(Error::FILE_UNRECOGNIZED, "Unknown config file format: " + p_path + ".");
 	}
 }
 
@@ -1195,7 +1195,7 @@ TypedArray<Dictionary> ProjectSettings::get_global_class_list() {
 
 	Ref<ConfigFile> cf;
 	cf.instantiate();
-	if (cf->load(get_global_class_list_path()) == OK) {
+	if (cf->load(get_global_class_list_path()) == Error::OK) {
 		global_class_list = cf->get_value("", "list", Array());
 	} else {
 #ifndef TOOLS_ENABLED
@@ -1300,7 +1300,7 @@ String ProjectSettings::get_scene_groups_cache_path() const {
 void ProjectSettings::load_scene_groups_cache() {
 	Ref<ConfigFile> cf;
 	cf.instantiate();
-	if (cf->load(get_scene_groups_cache_path()) == OK) {
+	if (cf->load(get_scene_groups_cache_path()) == Error::OK) {
 		List<String> scene_paths;
 		cf->get_sections(&scene_paths);
 		for (const String &E : scene_paths) {

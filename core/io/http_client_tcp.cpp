@@ -59,9 +59,9 @@ Error HTTPClientTCP::connect_to_host(const String &p_host, int p_port, Ref<TLSOp
 		conn_host = conn_host.substr(8, conn_host.length() - 8);
 	}
 
-	ERR_FAIL_COND_V(tls_options.is_valid() && tls_options->is_server(), ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V_MSG(tls_options.is_valid() && !StreamPeerTLS::is_available(), ERR_UNAVAILABLE, "HTTPS is not available in this build.");
-	ERR_FAIL_COND_V(conn_host.length() < HOST_MIN_LEN, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(tls_options.is_valid() && tls_options->is_server(), Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V_MSG(tls_options.is_valid() && !StreamPeerTLS::is_available(), Error::UNAVAILABLE, "HTTPS is not available in this build.");
+	ERR_FAIL_COND_V(conn_host.length() < HOST_MIN_LEN, Error::INVALID_PARAMETER);
 
 	if (conn_port < 0) {
 		if (tls_options.is_valid()) {
@@ -88,7 +88,7 @@ Error HTTPClientTCP::connect_to_host(const String &p_host, int p_port, Ref<TLSOp
 	if (server_host.is_valid_ip_address()) {
 		// Host contains valid IP.
 		Error err = tcp_connection->connect_to_host(IPAddress(server_host), server_port);
-		if (err) {
+		if (err != Error::OK) {
 			status = STATUS_CANT_CONNECT;
 			return err;
 		}
@@ -99,12 +99,12 @@ Error HTTPClientTCP::connect_to_host(const String &p_host, int p_port, Ref<TLSOp
 		resolving = IP::get_singleton()->resolve_hostname_queue_item(server_host);
 		if (resolving == IP::RESOLVER_INVALID_ID) {
 			status = STATUS_CANT_RESOLVE;
-			return ERR_CANT_RESOLVE;
+			return Error::CANT_RESOLVE;
 		}
 		status = STATUS_RESOLVING;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void HTTPClientTCP::set_connection(const Ref<StreamPeer> &p_connection) {
@@ -148,13 +148,13 @@ static bool _check_request_url(HTTPClientTCP::Method p_method, const String &p_u
 }
 
 Error HTTPClientTCP::request(Method p_method, const String &p_url, const Vector<String> &p_headers, const uint8_t *p_body, int p_body_size) {
-	ERR_FAIL_INDEX_V(p_method, METHOD_MAX, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(!_check_request_url(p_method, p_url), ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(status != STATUS_CONNECTED, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(connection.is_null(), ERR_INVALID_DATA);
+	ERR_FAIL_INDEX_V(p_method, METHOD_MAX, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(!_check_request_url(p_method, p_url), Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(status != STATUS_CONNECTED, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(connection.is_null(), Error::INVALID_DATA);
 
 	Error err = verify_headers(p_headers);
-	if (err) {
+	if (err != Error::OK) {
 		return err;
 	}
 
@@ -214,7 +214,7 @@ Error HTTPClientTCP::request(Method p_method, const String &p_url, const Vector<
 	status = STATUS_REQUESTING;
 	head_request = p_method == METHOD_HEAD;
 
-	return OK;
+	return Error::OK;
 }
 
 bool HTTPClientTCP::has_response() const {
@@ -231,7 +231,7 @@ int HTTPClientTCP::get_response_code() const {
 
 Error HTTPClientTCP::get_response_headers(List<String> *r_response) {
 	if (!response_headers.size()) {
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 
 	for (int i = 0; i < response_headers.size(); i++) {
@@ -240,7 +240,7 @@ Error HTTPClientTCP::get_response_headers(List<String> *r_response) {
 
 	response_headers.clear();
 
-	return OK;
+	return Error::OK;
 }
 
 void HTTPClientTCP::close() {
@@ -276,26 +276,26 @@ Error HTTPClientTCP::poll() {
 	}
 	switch (status) {
 		case STATUS_RESOLVING: {
-			ERR_FAIL_COND_V(resolving == IP::RESOLVER_INVALID_ID, ERR_BUG);
+			ERR_FAIL_COND_V(resolving == IP::RESOLVER_INVALID_ID, Error::BUG);
 
 			IP::ResolverStatus rstatus = IP::get_singleton()->get_resolve_item_status(resolving);
 			switch (rstatus) {
 				case IP::RESOLVER_STATUS_WAITING:
-					return OK; // Still resolving.
+					return Error::OK; // Still resolving.
 
 				case IP::RESOLVER_STATUS_DONE: {
 					ip_candidates = IP::get_singleton()->get_resolve_item_addresses(resolving);
 					IP::get_singleton()->erase_resolve_item(resolving);
 					resolving = IP::RESOLVER_INVALID_ID;
 
-					Error err = ERR_BUG; // Should be at least one entry.
+					Error err = Error::BUG; // Should be at least one entry.
 					while (ip_candidates.size() > 0) {
 						err = tcp_connection->connect_to_host(ip_candidates.pop_front(), server_port);
-						if (err == OK) {
+						if (err == Error::OK) {
 							break;
 						}
 					}
-					if (err) {
+					if (err != Error::OK) {
 						status = STATUS_CANT_CONNECT;
 						return err;
 					}
@@ -308,7 +308,7 @@ Error HTTPClientTCP::poll() {
 					resolving = IP::RESOLVER_INVALID_ID;
 					close();
 					status = STATUS_CANT_RESOLVE;
-					return ERR_CANT_RESOLVE;
+					return Error::CANT_RESOLVE;
 				} break;
 			}
 		} break;
@@ -316,48 +316,48 @@ Error HTTPClientTCP::poll() {
 			StreamPeerTCP::Status s = tcp_connection->get_status();
 			switch (s) {
 				case StreamPeerTCP::STATUS_CONNECTING: {
-					return OK;
+					return Error::OK;
 				} break;
 				case StreamPeerTCP::STATUS_CONNECTED: {
 					if (tls_options.is_valid() && proxy_client.is_valid()) {
 						Error err = proxy_client->poll();
-						if (err == ERR_UNCONFIGURED) {
+						if (err == Error::UNCONFIGURED) {
 							proxy_client->set_connection(tcp_connection);
 							const Vector<String> headers;
 							err = proxy_client->request(METHOD_CONNECT, vformat("%s:%d", conn_host, conn_port), headers, nullptr, 0);
-							if (err != OK) {
+							if (err != Error::OK) {
 								status = STATUS_CANT_CONNECT;
 								return err;
 							}
-						} else if (err != OK) {
+						} else if (err != Error::OK) {
 							status = STATUS_CANT_CONNECT;
 							return err;
 						}
 						switch (proxy_client->get_status()) {
 							case STATUS_REQUESTING: {
-								return OK;
+								return Error::OK;
 							} break;
 							case STATUS_BODY: {
 								proxy_client->read_response_body_chunk();
-								return OK;
+								return Error::OK;
 							} break;
 							case STATUS_CONNECTED: {
 								if (proxy_client->get_response_code() != RESPONSE_OK) {
 									status = STATUS_CANT_CONNECT;
-									return ERR_CANT_CONNECT;
+									return Error::CANT_CONNECT;
 								}
 								proxy_client.unref();
-								return OK;
+								return Error::OK;
 							}
 							case STATUS_DISCONNECTED:
 							case STATUS_RESOLVING:
 							case STATUS_CONNECTING: {
 								status = STATUS_CANT_CONNECT;
-								ERR_FAIL_V(ERR_BUG);
+								ERR_FAIL_V(Error::BUG);
 							} break;
 							default: {
 								status = STATUS_CANT_CONNECT;
-								return ERR_CANT_CONNECT;
+								return Error::CANT_CONNECT;
 							} break;
 						}
 					} else if (tls_options.is_valid()) {
@@ -366,10 +366,10 @@ Error HTTPClientTCP::poll() {
 							// Connect the StreamPeerTLS and start handshaking.
 							tls_conn = Ref<StreamPeerTLS>(StreamPeerTLS::create());
 							Error err = tls_conn->connect_to_stream(tcp_connection, conn_host, tls_options);
-							if (err != OK) {
+							if (err != Error::OK) {
 								close();
 								status = STATUS_TLS_HANDSHAKE_ERROR;
-								return ERR_CANT_CONNECT;
+								return Error::CANT_CONNECT;
 							}
 							connection = tls_conn;
 							handshaking = true;
@@ -379,7 +379,7 @@ Error HTTPClientTCP::poll() {
 							if (tls_conn.is_null()) {
 								close();
 								status = STATUS_TLS_HANDSHAKE_ERROR;
-								return ERR_CANT_CONNECT;
+								return Error::CANT_CONNECT;
 							}
 
 							tls_conn->poll(); // Try to finish the handshake.
@@ -390,28 +390,28 @@ Error HTTPClientTCP::poll() {
 							handshaking = false;
 							ip_candidates.clear();
 							status = STATUS_CONNECTED;
-							return OK;
+							return Error::OK;
 						} else if (tls_conn->get_status() != StreamPeerTLS::STATUS_HANDSHAKING) {
 							// Handshake has failed.
 							close();
 							status = STATUS_TLS_HANDSHAKE_ERROR;
-							return ERR_CANT_CONNECT;
+							return Error::CANT_CONNECT;
 						}
 						// ... we will need to poll more for handshake to finish.
 					} else {
 						ip_candidates.clear();
 						status = STATUS_CONNECTED;
 					}
-					return OK;
+					return Error::OK;
 				} break;
 				case StreamPeerTCP::STATUS_ERROR:
 				case StreamPeerTCP::STATUS_NONE: {
-					Error err = ERR_CANT_CONNECT;
+					Error err = Error::CANT_CONNECT;
 					while (ip_candidates.size() > 0) {
 						tcp_connection->disconnect_from_host();
 						err = tcp_connection->connect_to_host(ip_candidates.pop_front(), server_port);
-						if (err == OK) {
-							return OK;
+						if (err == Error::OK) {
+							return Error::OK;
 						}
 					}
 					close();
@@ -428,14 +428,14 @@ Error HTTPClientTCP::poll() {
 				tmp->poll();
 				if (tmp->get_status() != StreamPeerTLS::STATUS_CONNECTED) {
 					status = STATUS_CONNECTION_ERROR;
-					return ERR_CONNECTION_ERROR;
+					return Error::CONNECTION_ERROR;
 				}
 			} else if (tcp_connection->get_status() != StreamPeerTCP::STATUS_CONNECTED) {
 				status = STATUS_CONNECTION_ERROR;
-				return ERR_CONNECTION_ERROR;
+				return Error::CONNECTION_ERROR;
 			}
 			// Connection established, requests can now be made.
-			return OK;
+			return Error::OK;
 		} break;
 		case STATUS_REQUESTING: {
 			if (request_buffer->get_available_bytes()) {
@@ -450,15 +450,15 @@ Error HTTPClientTCP::poll() {
 				} else {
 					err = connection->put_partial_data(data.ptr() + pos, avail, wrote);
 				}
-				if (err != OK) {
+				if (err != Error::OK) {
 					close();
 					status = STATUS_CONNECTION_ERROR;
-					return ERR_CONNECTION_ERROR;
+					return Error::CONNECTION_ERROR;
 				}
 				pos += wrote;
 				request_buffer->seek(pos);
 				if (avail - wrote > 0) {
-					return OK;
+					return Error::OK;
 				}
 				request_buffer->clear();
 			}
@@ -466,14 +466,14 @@ Error HTTPClientTCP::poll() {
 				uint8_t byte;
 				int rec = 0;
 				Error err = _get_http_data(&byte, 1, rec);
-				if (err != OK) {
+				if (err != Error::OK) {
 					close();
 					status = STATUS_CONNECTION_ERROR;
-					return ERR_CONNECTION_ERROR;
+					return Error::CONNECTION_ERROR;
 				}
 
 				if (rec == 0) {
-					return OK; // Still requesting, keep trying!
+					return Error::OK; // Still requesting, keep trying!
 				}
 
 				response_str.push_back(byte);
@@ -542,26 +542,26 @@ Error HTTPClientTCP::poll() {
 					} else {
 						status = STATUS_CONNECTED;
 					}
-					return OK;
+					return Error::OK;
 				}
 			}
 		} break;
 		case STATUS_DISCONNECTED: {
-			return ERR_UNCONFIGURED;
+			return Error::UNCONFIGURED;
 		} break;
 		case STATUS_CONNECTION_ERROR:
 		case STATUS_TLS_HANDSHAKE_ERROR: {
-			return ERR_CONNECTION_ERROR;
+			return Error::CONNECTION_ERROR;
 		} break;
 		case STATUS_CANT_CONNECT: {
-			return ERR_CANT_CONNECT;
+			return Error::CANT_CONNECT;
 		} break;
 		case STATUS_CANT_RESOLVE: {
-			return ERR_CANT_RESOLVE;
+			return Error::CANT_RESOLVE;
 		} break;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 int64_t HTTPClientTCP::get_response_body_length() const {
@@ -572,7 +572,7 @@ PackedByteArray HTTPClientTCP::read_response_body_chunk() {
 	ERR_FAIL_COND_V(status != STATUS_BODY, PackedByteArray());
 
 	PackedByteArray ret;
-	Error err = OK;
+	Error err = Error::OK;
 
 	if (chunked) {
 		while (true) {
@@ -698,17 +698,17 @@ PackedByteArray HTTPClientTCP::read_response_body_chunk() {
 					body_left -= rec;
 				}
 			}
-			if (err != OK) {
+			if (err != Error::OK) {
 				ret.resize(_offset);
 				break;
 			}
 		}
 	}
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		close();
 
-		if (err == ERR_FILE_EOF) {
+		if (err == Error::FILE_EOF) {
 			status = STATUS_DISCONNECTED; // Server disconnected.
 		} else {
 			status = STATUS_CONNECTION_ERROR;
@@ -736,15 +736,15 @@ Error HTTPClientTCP::_get_http_data(uint8_t *p_buffer, int p_bytes, int &r_recei
 	if (blocking) {
 		// We can't use StreamPeer.get_data, since when reaching EOF we will get an
 		// error without knowing how many bytes we received.
-		Error err = ERR_FILE_EOF;
+		Error err = Error::FILE_EOF;
 		int read = 0;
 		int left = p_bytes;
 		r_received = 0;
 		while (left > 0) {
 			err = connection->get_partial_data(p_buffer + r_received, left, read);
-			if (err == OK) {
+			if (err == Error::OK) {
 				r_received += read;
-			} else if (err == ERR_FILE_EOF) {
+			} else if (err == Error::FILE_EOF) {
 				r_received += read;
 				return err;
 			} else {

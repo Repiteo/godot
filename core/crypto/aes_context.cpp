@@ -31,14 +31,14 @@
 #include "core/crypto/aes_context.h"
 
 Error AESContext::start(Mode p_mode, PackedByteArray p_key, PackedByteArray p_iv) {
-	ERR_FAIL_COND_V_MSG(mode != MODE_MAX, ERR_ALREADY_IN_USE, "AESContext already started. Call 'finish' before starting a new one.");
-	ERR_FAIL_COND_V_MSG(p_mode < 0 || p_mode >= MODE_MAX, ERR_INVALID_PARAMETER, "Invalid mode requested.");
+	ERR_FAIL_COND_V_MSG(mode != MODE_MAX, Error::ALREADY_IN_USE, "AESContext already started. Call 'finish' before starting a new one.");
+	ERR_FAIL_COND_V_MSG(p_mode < 0 || p_mode >= MODE_MAX, Error::INVALID_PARAMETER, "Invalid mode requested.");
 	// Key check.
 	int key_bits = p_key.size() << 3;
-	ERR_FAIL_COND_V_MSG(key_bits != 128 && key_bits != 256, ERR_INVALID_PARAMETER, "AES key must be either 16 or 32 bytes");
+	ERR_FAIL_COND_V_MSG(key_bits != 128 && key_bits != 256, Error::INVALID_PARAMETER, "AES key must be either 16 or 32 bytes");
 	// Initialization vector.
 	if (p_mode == MODE_CBC_ENCRYPT || p_mode == MODE_CBC_DECRYPT) {
-		ERR_FAIL_COND_V_MSG(p_iv.size() != 16, ERR_INVALID_PARAMETER, "The initialization vector (IV) must be exactly 16 bytes.");
+		ERR_FAIL_COND_V_MSG(p_iv.size() != 16, Error::INVALID_PARAMETER, "The initialization vector (IV) must be exactly 16 bytes.");
 		iv.resize(0);
 		iv.append_array(p_iv);
 	}
@@ -49,7 +49,7 @@ Error AESContext::start(Mode p_mode, PackedByteArray p_key, PackedByteArray p_iv
 		ctx.set_decode_key(p_key.ptr(), key_bits);
 	}
 	mode = p_mode;
-	return OK;
+	return Error::OK;
 }
 
 PackedByteArray AESContext::update(PackedByteArray p_src) {
@@ -64,22 +64,22 @@ PackedByteArray AESContext::update(PackedByteArray p_src) {
 		case MODE_ECB_ENCRYPT: {
 			for (int i = 0; i < len; i += 16) {
 				Error err = ctx.encrypt_ecb(src_ptr + i, out_ptr + i);
-				ERR_FAIL_COND_V(err != OK, PackedByteArray());
+				ERR_FAIL_COND_V(err != Error::OK, PackedByteArray());
 			}
 		} break;
 		case MODE_ECB_DECRYPT: {
 			for (int i = 0; i < len; i += 16) {
 				Error err = ctx.decrypt_ecb(src_ptr + i, out_ptr + i);
-				ERR_FAIL_COND_V(err != OK, PackedByteArray());
+				ERR_FAIL_COND_V(err != Error::OK, PackedByteArray());
 			}
 		} break;
 		case MODE_CBC_ENCRYPT: {
 			Error err = ctx.encrypt_cbc(len, iv.ptrw(), p_src.ptr(), out.ptrw());
-			ERR_FAIL_COND_V(err != OK, PackedByteArray());
+			ERR_FAIL_COND_V(err != Error::OK, PackedByteArray());
 		} break;
 		case MODE_CBC_DECRYPT: {
 			Error err = ctx.decrypt_cbc(len, iv.ptrw(), p_src.ptr(), out.ptrw());
-			ERR_FAIL_COND_V(err != OK, PackedByteArray());
+			ERR_FAIL_COND_V(err != Error::OK, PackedByteArray());
 		} break;
 		default:
 			ERR_FAIL_V_MSG(PackedByteArray(), "Bug!");

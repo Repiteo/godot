@@ -44,9 +44,9 @@ void UDPServer::_bind_methods() {
 }
 
 Error UDPServer::poll() {
-	ERR_FAIL_COND_V(!_sock.is_valid(), ERR_UNAVAILABLE);
+	ERR_FAIL_COND_V(!_sock.is_valid(), Error::UNAVAILABLE);
 	if (!_sock->is_open()) {
-		return ERR_UNCONFIGURED;
+		return Error::UNCONFIGURED;
 	}
 	Error err;
 	int read;
@@ -54,11 +54,11 @@ Error UDPServer::poll() {
 	uint16_t port;
 	while (true) {
 		err = _sock->recvfrom(recv_buffer, sizeof(recv_buffer), read, ip, port);
-		if (err != OK) {
-			if (err == ERR_BUSY) {
+		if (err != Error::OK) {
+			if (err == Error::BUSY) {
 				break;
 			}
-			return FAILED;
+			return Error::FAILED;
 		}
 		Peer p;
 		p.ip = ip;
@@ -84,13 +84,13 @@ Error UDPServer::poll() {
 			pending.push_back(peer);
 		}
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error UDPServer::listen(uint16_t p_port, const IPAddress &p_bind_address) {
-	ERR_FAIL_COND_V(!_sock.is_valid(), ERR_UNAVAILABLE);
-	ERR_FAIL_COND_V(_sock->is_open(), ERR_ALREADY_IN_USE);
-	ERR_FAIL_COND_V(!p_bind_address.is_valid() && !p_bind_address.is_wildcard(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(!_sock.is_valid(), Error::UNAVAILABLE);
+	ERR_FAIL_COND_V(_sock->is_open(), Error::ALREADY_IN_USE);
+	ERR_FAIL_COND_V(!p_bind_address.is_valid() && !p_bind_address.is_wildcard(), Error::INVALID_PARAMETER);
 
 	Error err;
 	IP::Type ip_type = IP::TYPE_ANY;
@@ -101,19 +101,19 @@ Error UDPServer::listen(uint16_t p_port, const IPAddress &p_bind_address) {
 
 	err = _sock->open(NetSocket::TYPE_UDP, ip_type);
 
-	if (err != OK) {
-		return ERR_CANT_CREATE;
+	if (err != Error::OK) {
+		return Error::CANT_CREATE;
 	}
 
 	_sock->set_blocking_enabled(false);
 	_sock->set_reuse_address_enabled(true);
 	err = _sock->bind(p_bind_address, p_port);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		stop();
 		return err;
 	}
-	return OK;
+	return Error::OK;
 }
 
 int UDPServer::get_local_port() const {

@@ -52,7 +52,7 @@ Error VulkanContextAndroid::window_create(DisplayServer::WindowID p_window_id, D
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
 	VkResult err = vkCreateAndroidSurfaceKHR(get_instance(), &createInfo, nullptr, &surface);
 	if (err != VK_SUCCESS) {
-		ERR_FAIL_V_MSG(ERR_CANT_CREATE, "vkCreateAndroidSurfaceKHR failed with error " + itos(err));
+		ERR_FAIL_V_MSG(Error::CANT_CREATE, "vkCreateAndroidSurfaceKHR failed with error " + itos((int)err));
 	}
 
 	return _window_create(DisplayServer::MAIN_WINDOW_ID, p_vsync_mode, surface, p_width, p_height);

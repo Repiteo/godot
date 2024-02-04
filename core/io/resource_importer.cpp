@@ -70,9 +70,9 @@ Error ResourceFormatImporter::_get_path_and_type(const String &p_path, PathAndTy
 		next_tag.name = String();
 
 		err = VariantParser::parse_tag_assign_eof(&stream, lines, error_text, next_tag, assign, value, nullptr, true);
-		if (err == ERR_FILE_EOF) {
-			return OK;
-		} else if (err != OK) {
+		if (err == Error::FILE_EOF) {
+			return Error::OK;
+		} else if (err != Error::OK) {
 			ERR_PRINT("ResourceFormatImporter::load - " + p_path + ".import:" + itos(lines) + " error: " + error_text);
 			return err;
 		}
@@ -119,16 +119,16 @@ Error ResourceFormatImporter::_get_path_and_type(const String &p_path, PathAndTy
 #endif
 
 	if (r_path_and_type.path.is_empty() || r_path_and_type.type.is_empty()) {
-		return ERR_FILE_CORRUPT;
+		return Error::FILE_CORRUPT;
 	}
-	return OK;
+	return Error::OK;
 }
 
 Ref<Resource> ResourceFormatImporter::load(const String &p_path, const String &p_original_path, Error *r_error, bool p_use_sub_threads, float *r_progress, CacheMode p_cache_mode) {
 	PathAndType pat;
 	Error err = _get_path_and_type(p_path, pat);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		if (r_error) {
 			*r_error = err;
 		}
@@ -211,7 +211,7 @@ Error ResourceFormatImporter::get_import_order_threads_and_importer(const String
 		PathAndType pat;
 		Error err = _get_path_and_type(p_path, pat);
 
-		if (err == OK) {
+		if (err == Error::OK) {
 			importer = get_importer_by_name(pat.importer);
 		}
 	} else {
@@ -222,9 +222,9 @@ Error ResourceFormatImporter::get_import_order_threads_and_importer(const String
 		r_order = importer->get_import_order();
 		r_importer = importer->get_importer_name();
 		r_can_threads = importer->can_import_threaded();
-		return OK;
+		return Error::OK;
 	} else {
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 }
 
@@ -235,7 +235,7 @@ int ResourceFormatImporter::get_import_order(const String &p_path) const {
 		PathAndType pat;
 		Error err = _get_path_and_type(p_path, pat);
 
-		if (err == OK) {
+		if (err == Error::OK) {
 			importer = get_importer_by_name(pat.importer);
 		}
 	} else {
@@ -267,7 +267,7 @@ String ResourceFormatImporter::get_internal_resource_path(const String &p_path) 
 	PathAndType pat;
 	Error err = _get_path_and_type(p_path, pat);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		return String();
 	}
 
@@ -297,9 +297,9 @@ void ResourceFormatImporter::get_internal_resource_path_list(const String &p_pat
 		next_tag.name = String();
 
 		err = VariantParser::parse_tag_assign_eof(&stream, lines, error_text, next_tag, assign, value, nullptr, true);
-		if (err == ERR_FILE_EOF) {
+		if (err == Error::FILE_EOF) {
 			return;
-		} else if (err != OK) {
+		} else if (err != Error::OK) {
 			ERR_PRINT("ResourceFormatImporter::get_internal_resource_path_list - " + p_path + ".import:" + itos(lines) + " error: " + error_text);
 			return;
 		}
@@ -334,7 +334,7 @@ String ResourceFormatImporter::get_resource_type(const String &p_path) const {
 	PathAndType pat;
 	Error err = _get_path_and_type(p_path, pat);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		return "";
 	}
 
@@ -345,7 +345,7 @@ ResourceUID::ID ResourceFormatImporter::get_resource_uid(const String &p_path) c
 	PathAndType pat;
 	Error err = _get_path_and_type(p_path, pat);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		return ResourceUID::INVALID_ID;
 	}
 
@@ -356,7 +356,7 @@ Variant ResourceFormatImporter::get_resource_metadata(const String &p_path) cons
 	PathAndType pat;
 	Error err = _get_path_and_type(p_path, pat);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		return Variant();
 	}
 
@@ -366,7 +366,7 @@ void ResourceFormatImporter::get_classes_used(const String &p_path, HashSet<Stri
 	PathAndType pat;
 	Error err = _get_path_and_type(p_path, pat);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		return;
 	}
 
@@ -377,7 +377,7 @@ void ResourceFormatImporter::get_dependencies(const String &p_path, List<String>
 	PathAndType pat;
 	Error err = _get_path_and_type(p_path, pat);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		return;
 	}
 
@@ -494,11 +494,11 @@ Error ResourceFormatImporterSaver::set_uid(const String &p_path, ResourceUID::ID
 	Ref<ConfigFile> cf;
 	cf.instantiate();
 	Error err = cf->load(p_path + ".import");
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 	cf->set_value("remap", "uid", ResourceUID::get_singleton()->id_to_text(p_uid));
 	cf->save(p_path + ".import");
 
-	return OK;
+	return Error::OK;
 }

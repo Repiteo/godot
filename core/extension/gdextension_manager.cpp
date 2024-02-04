@@ -118,7 +118,7 @@ GDExtensionManager::LoadStatus GDExtensionManager::reload_extension(const String
 	}
 
 	Error err = GDExtensionResourceLoader::load_gdextension_resource(p_path, extension);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return LOAD_STATUS_FAILED;
 	}
 

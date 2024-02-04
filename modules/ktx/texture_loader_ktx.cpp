@@ -502,7 +502,7 @@ static Ref<Image> load_from_file_access(Ref<FileAccess> f, Error *r_error) {
 	}
 
 	if (r_error) {
-		*r_error = OK;
+		*r_error = Error::OK;
 	}
 
 	ktxTexture_Destroy(ktx_texture);
@@ -511,7 +511,7 @@ static Ref<Image> load_from_file_access(Ref<FileAccess> f, Error *r_error) {
 
 Ref<Resource> ResourceFormatKTX::load(const String &p_path, const String &p_original_path, Error *r_error, bool p_use_sub_threads, float *r_progress, CacheMode p_cache_mode) {
 	if (r_error) {
-		*r_error = ERR_CANT_OPEN;
+		*r_error = Error::CANT_OPEN;
 	}
 
 	Error err;
@@ -522,10 +522,10 @@ Ref<Resource> ResourceFormatKTX::load(const String &p_path, const String &p_orig
 
 	Ref<FileAccess> fref(f);
 	if (r_error) {
-		*r_error = ERR_FILE_CORRUPT;
+		*r_error = Error::FILE_CORRUPT;
 	}
 
-	ERR_FAIL_COND_V_MSG(err != OK, Ref<Resource>(), "Unable to open KTX texture file '" + p_path + "'.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Ref<Resource>(), "Unable to open KTX texture file '" + p_path + "'.");
 	Ref<Image> img = load_from_file_access(f, r_error);
 	Ref<ImageTexture> texture = ImageTexture::create_from_image(img);
 	return texture;
@@ -537,7 +537,7 @@ static Ref<Image> _ktx_mem_loader_func(const uint8_t *p_ktx, int p_size) {
 	f->open_custom(p_ktx, p_size);
 	Error err;
 	Ref<Image> img = load_from_file_access(f, &err);
-	ERR_FAIL_COND_V(err, Ref<Image>());
+	ERR_FAIL_COND_V(err != Error::OK, Ref<Image>());
 	return img;
 }
 

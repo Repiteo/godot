@@ -94,7 +94,7 @@ void POTGenerator::generate_pot(const String &p_file) {
 void POTGenerator::_write_to_pot(const String &p_file) {
 	Error err;
 	Ref<FileAccess> file = FileAccess::open(p_file, FileAccess::WRITE, &err);
-	if (err != OK) {
+	if (err != Error::OK) {
 		ERR_PRINT("Failed to open " + p_file);
 		return;
 	}

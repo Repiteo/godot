@@ -367,7 +367,7 @@ Error DisplayServerWindows::file_dialog_with_options_show(const String &p_title,
 Error DisplayServerWindows::_file_dialog_with_options_show(const String &p_title, const String &p_current_directory, const String &p_root, const String &p_filename, bool p_show_hidden, FileDialogMode p_mode, const Vector<String> &p_filters, const TypedArray<Dictionary> &p_options, const Callable &p_callback, bool p_options_in_cb) {
 	_THREAD_SAFE_METHOD_
 
-	ERR_FAIL_INDEX_V(int(p_mode), FILE_DIALOG_MODE_SAVE_MAX, FAILED);
+	ERR_FAIL_INDEX_V(int(p_mode), FILE_DIALOG_MODE_SAVE_MAX, Error::FAILED);
 
 	Vector<Char16String> filter_names;
 	Vector<Char16String> filter_exts;
@@ -588,9 +588,9 @@ Error DisplayServerWindows::_file_dialog_with_options_show(const String &p_title
 			callable_mp(DisplayServer::get_singleton(), &DisplayServer::window_move_to_foreground).call_deferred(prev_focus);
 		}
 
-		return OK;
+		return Error::OK;
 	} else {
-		return ERR_CANT_OPEN;
+		return Error::CANT_OPEN;
 	}
 }
 
@@ -2367,7 +2367,7 @@ void DisplayServerWindows::cursor_set_custom_image(const Ref<Resource> &p_cursor
 		if (image->is_compressed()) {
 			image = image->duplicate(true);
 			Error err = image->decompress();
-			ERR_FAIL_COND_MSG(err != OK, "Couldn't decompress VRAM-compressed custom mouse cursor image. Switch to a lossless compression mode in the Import dock.");
+			ERR_FAIL_COND_MSG(err != Error::OK, "Couldn't decompress VRAM-compressed custom mouse cursor image. Switch to a lossless compression mode in the Import dock.");
 		}
 
 		UINT image_size = texture_size.width * texture_size.height;
@@ -2755,11 +2755,11 @@ void DisplayServerWindows::set_native_icon(const String &p_filename) {
 
 	SendMessage(windows[MAIN_WINDOW_ID].hWnd, WM_SETICON, ICON_SMALL, (LPARAM)icon_small);
 	err = GetLastError();
-	ERR_FAIL_COND_MSG(err, "Error setting ICON_SMALL: " + format_error_message(err) + ".");
+	ERR_FAIL_COND_MSG(err != (int)Error::OK, "Error setting ICON_SMALL: " + format_error_message(err) + ".");
 
 	SendMessage(windows[MAIN_WINDOW_ID].hWnd, WM_SETICON, ICON_BIG, (LPARAM)icon_big);
 	err = GetLastError();
-	ERR_FAIL_COND_MSG(err, "Error setting ICON_BIG: " + format_error_message(err) + ".");
+	ERR_FAIL_COND_MSG(err != (int)Error::OK, "Error setting ICON_BIG: " + format_error_message(err) + ".");
 
 	memdelete(icon_dir);
 }
@@ -2872,9 +2872,9 @@ void DisplayServerWindows::set_context(Context p_context) {
 #define SIGNATURE_MASK 0xFFFFFF00
 // Keeping the name suggested by Microsoft, but this macro really answers:
 // Is this mouse event emulated from touch or pen input?
-#define IsPenEvent(dw) (((dw)&SIGNATURE_MASK) == MI_WP_SIGNATURE)
+#define IsPenEvent(dw) (((dw) & SIGNATURE_MASK) == MI_WP_SIGNATURE)
 // This one tells whether the event comes from touchscreen (and not from pen).
-#define IsTouchEvent(dw) (IsPenEvent(dw) && ((dw)&0x80))
+#define IsTouchEvent(dw) (IsPenEvent(dw) && ((dw) & 0x80))
 
 void DisplayServerWindows::_touch_event(WindowID p_window, bool p_pressed, float p_x, float p_y, int idx) {
 	if (touch_state.has(idx) == p_pressed) {
@@ -4570,8 +4570,8 @@ DisplayServer::WindowID DisplayServerWindows::_create_window(WindowMode p_mode, 
 				dwExStyle,
 				L"Engine", L"",
 				dwStyle,
-				//				(GetSystemMetrics(SM_CXSCREEN) - WindowRect.right) / 2,
-				//				(GetSystemMetrics(SM_CYSCREEN) - WindowRect.bottom) / 2,
+				//              (GetSystemMetrics(SM_CXSCREEN) - WindowRect.right) / 2,
+				//              (GetSystemMetrics(SM_CYSCREEN) - WindowRect.bottom) / 2,
 				WindowRect.left,
 				WindowRect.top,
 				WindowRect.right - WindowRect.left,
@@ -4624,7 +4624,7 @@ DisplayServer::WindowID DisplayServerWindows::_create_window(WindowMode p_mode, 
 				wpd.d3d12.window = wd.hWnd;
 			}
 #endif
-			if (context_rd->window_create(id, p_vsync_mode, WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top, &wpd) != OK) {
+			if (context_rd->window_create(id, p_vsync_mode, WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top, &wpd) != Error::OK) {
 				memdelete(context_rd);
 				context_rd = nullptr;
 				windows.erase(id);
@@ -4636,7 +4636,7 @@ DisplayServer::WindowID DisplayServerWindows::_create_window(WindowMode p_mode, 
 
 #ifdef GLES3_ENABLED
 		if (gl_manager_native) {
-			if (gl_manager_native->window_create(id, wd.hWnd, hInstance, WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top) != OK) {
+			if (gl_manager_native->window_create(id, wd.hWnd, hInstance, WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top) != Error::OK) {
 				memdelete(gl_manager_native);
 				gl_manager_native = nullptr;
 				windows.erase(id);
@@ -4646,7 +4646,7 @@ DisplayServer::WindowID DisplayServerWindows::_create_window(WindowMode p_mode, 
 		}
 
 		if (gl_manager_angle) {
-			if (gl_manager_angle->window_create(id, nullptr, wd.hWnd, WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top) != OK) {
+			if (gl_manager_angle->window_create(id, nullptr, wd.hWnd, WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top) != Error::OK) {
 				memdelete(gl_manager_angle);
 				gl_manager_angle = nullptr;
 				windows.erase(id);
@@ -4931,7 +4931,7 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Win
 
 	if (!RegisterClassExW(&wc)) {
 		MessageBoxW(nullptr, L"Failed To Register The Window Class.", L"ERROR", MB_OK | MB_ICONEXCLAMATION);
-		r_error = ERR_UNAVAILABLE;
+		r_error = Error::UNAVAILABLE;
 		return;
 	}
 
@@ -4950,10 +4950,10 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Win
 #endif
 
 	if (context_rd) {
-		if (context_rd->initialize() != OK) {
+		if (context_rd->initialize() != Error::OK) {
 			memdelete(context_rd);
 			context_rd = nullptr;
-			r_error = ERR_UNAVAILABLE;
+			r_error = Error::UNAVAILABLE;
 			return;
 		}
 	}
@@ -4992,10 +4992,10 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Win
 	if (rendering_driver == "opengl3") {
 		gl_manager_native = memnew(GLManagerNative_Windows);
 
-		if (gl_manager_native->initialize() != OK) {
+		if (gl_manager_native->initialize() != Error::OK) {
 			memdelete(gl_manager_native);
 			gl_manager_native = nullptr;
-			r_error = ERR_UNAVAILABLE;
+			r_error = Error::UNAVAILABLE;
 			return;
 		}
 
@@ -5004,10 +5004,10 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Win
 	if (rendering_driver == "opengl3_angle") {
 		gl_manager_angle = memnew(GLManagerANGLE_Windows);
 
-		if (gl_manager_angle->initialize() != OK) {
+		if (gl_manager_angle->initialize() != Error::OK) {
 			memdelete(gl_manager_angle);
 			gl_manager_angle = nullptr;
-			r_error = ERR_UNAVAILABLE;
+			r_error = Error::UNAVAILABLE;
 			return;
 		}
 
@@ -5071,7 +5071,7 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Win
 
 	_update_real_mouse_position(MAIN_WINDOW_ID);
 
-	r_error = OK;
+	r_error = Error::OK;
 
 	static_cast<OS_Windows *>(OS::get_singleton())->set_main_window(windows[MAIN_WINDOW_ID].hWnd);
 	Input::get_singleton()->set_event_dispatch_function(_dispatch_input_events);
@@ -5096,7 +5096,7 @@ Vector<String> DisplayServerWindows::get_rendering_drivers_func() {
 
 DisplayServer *DisplayServerWindows::create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Error &r_error) {
 	DisplayServer *ds = memnew(DisplayServerWindows(p_rendering_driver, p_mode, p_vsync_mode, p_flags, p_position, p_resolution, p_screen, r_error));
-	if (r_error != OK) {
+	if (r_error != Error::OK) {
 		if (p_rendering_driver == "vulkan") {
 			String executable_name = OS::get_singleton()->get_executable_path().get_file();
 			OS::get_singleton()->alert(

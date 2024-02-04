@@ -65,8 +65,8 @@ Error png_to_image(const uint8_t *p_source, size_t p_size, bool p_force_linear, 
 
 	// fetch image properties
 	int success = png_image_begin_read_from_memory(&png_img, p_source, p_size);
-	ERR_FAIL_COND_V_MSG(check_error(png_img), ERR_FILE_CORRUPT, png_img.message);
-	ERR_FAIL_COND_V(!success, ERR_FILE_CORRUPT);
+	ERR_FAIL_COND_V_MSG(check_error(png_img), Error::FILE_CORRUPT, png_img.message);
+	ERR_FAIL_COND_V(!success, Error::FILE_CORRUPT);
 
 	// flags to be masked out of input format to give target format
 	const png_uint_32 format_mask = ~(
@@ -96,7 +96,7 @@ Error png_to_image(const uint8_t *p_source, size_t p_size, bool p_force_linear, 
 		default:
 			png_image_free(&png_img); // only required when we return before finish_read
 			ERR_PRINT("Unsupported png format.");
-			return ERR_UNAVAILABLE;
+			return Error::UNAVAILABLE;
 	}
 
 	if (!p_force_linear) {
@@ -107,7 +107,7 @@ Error png_to_image(const uint8_t *p_source, size_t p_size, bool p_force_linear, 
 	const png_uint_32 stride = PNG_IMAGE_ROW_STRIDE(png_img);
 	Vector<uint8_t> buffer;
 	Error err = buffer.resize(PNG_IMAGE_BUFFER_SIZE(png_img, stride));
-	if (err) {
+	if (err != Error::OK) {
 		png_image_free(&png_img); // only required when we return before finish_read
 		return err;
 	}
@@ -115,13 +115,13 @@ Error png_to_image(const uint8_t *p_source, size_t p_size, bool p_force_linear, 
 
 	// read image data to buffer and release libpng resources
 	success = png_image_finish_read(&png_img, nullptr, writer, stride, nullptr);
-	ERR_FAIL_COND_V_MSG(check_error(png_img), ERR_FILE_CORRUPT, png_img.message);
-	ERR_FAIL_COND_V(!success, ERR_FILE_CORRUPT);
+	ERR_FAIL_COND_V_MSG(check_error(png_img), Error::FILE_CORRUPT, png_img.message);
+	ERR_FAIL_COND_V(!success, Error::FILE_CORRUPT);
 
 	//print_line("png width: "+itos(png_img.width)+" height: "+itos(png_img.height));
 	p_image->set_data(png_img.width, png_img.height, false, dest_format, buffer);
 
-	return OK;
+	return Error::OK;
 }
 
 Error image_to_png(const Ref<Image> &p_image, Vector<uint8_t> &p_buffer) {
@@ -131,7 +131,7 @@ Error image_to_png(const Ref<Image> &p_image, Vector<uint8_t> &p_buffer) {
 		source_image->decompress();
 	}
 
-	ERR_FAIL_COND_V(source_image->is_compressed(), FAILED);
+	ERR_FAIL_COND_V(source_image->is_compressed(), Error::FAILED);
 
 	png_image png_img;
 	memset(&png_img, 0, sizeof(png_img));
@@ -175,32 +175,32 @@ Error image_to_png(const Ref<Image> &p_image, Vector<uint8_t> &p_buffer) {
 	int success = 0;
 	{ // scope writer lifetime
 		Error err = p_buffer.resize(buffer_offset + png_size_estimate);
-		ERR_FAIL_COND_V(err, err);
+		ERR_FAIL_COND_V(err != Error::OK, err);
 
 		uint8_t *writer = p_buffer.ptrw();
 		success = png_image_write_to_memory(&png_img, &writer[buffer_offset],
 				&compressed_size, 0, reader, 0, nullptr);
-		ERR_FAIL_COND_V_MSG(check_error(png_img), FAILED, png_img.message);
+		ERR_FAIL_COND_V_MSG(check_error(png_img), Error::FAILED, png_img.message);
 	}
 	if (!success) {
 		// buffer was big enough, must be some other error
-		ERR_FAIL_COND_V(compressed_size <= png_size_estimate, FAILED);
+		ERR_FAIL_COND_V(compressed_size <= png_size_estimate, Error::FAILED);
 
 		// write failed due to buffer size, resize and retry
 		Error err = p_buffer.resize(buffer_offset + compressed_size);
-		ERR_FAIL_COND_V(err, err);
+		ERR_FAIL_COND_V(err != Error::OK, err);
 
 		uint8_t *writer = p_buffer.ptrw();
 		success = png_image_write_to_memory(&png_img, &writer[buffer_offset],
 				&compressed_size, 0, reader, 0, nullptr);
-		ERR_FAIL_COND_V_MSG(check_error(png_img), FAILED, png_img.message);
-		ERR_FAIL_COND_V(!success, FAILED);
+		ERR_FAIL_COND_V_MSG(check_error(png_img), Error::FAILED, png_img.message);
+		ERR_FAIL_COND_V(!success, Error::FAILED);
 	}
 
 	// trim buffer size to content
 	Error err = p_buffer.resize(buffer_offset + compressed_size);
-	ERR_FAIL_COND_V(err, err);
+	ERR_FAIL_COND_V(err != Error::OK, err);
 
-	return OK;
+	return Error::OK;
 }
 } // namespace PNGDriverCommon

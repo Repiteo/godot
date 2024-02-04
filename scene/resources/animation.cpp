@@ -1090,43 +1090,43 @@ int Animation::position_track_insert_key(int p_track, double p_time, const Vecto
 }
 
 Error Animation::position_track_get_key(int p_track, int p_key, Vector3 *r_position) const {
-	ERR_FAIL_INDEX_V(p_track, tracks.size(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_track, tracks.size(), Error::INVALID_PARAMETER);
 	Track *t = tracks[p_track];
 
 	PositionTrack *tt = static_cast<PositionTrack *>(t);
-	ERR_FAIL_COND_V(t->type != TYPE_POSITION_3D, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(t->type != TYPE_POSITION_3D, Error::INVALID_PARAMETER);
 
 	if (tt->compressed_track >= 0) {
 		Vector3i key;
 		double time;
 		bool fetch_success = _fetch_compressed_by_index<3>(tt->compressed_track, p_key, key, time);
 		if (!fetch_success) {
-			return ERR_INVALID_PARAMETER;
+			return Error::INVALID_PARAMETER;
 		}
 
 		*r_position = _uncompress_pos_scale(tt->compressed_track, key);
-		return OK;
+		return Error::OK;
 	}
 
-	ERR_FAIL_INDEX_V(p_key, tt->positions.size(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_key, tt->positions.size(), Error::INVALID_PARAMETER);
 
 	*r_position = tt->positions[p_key].value;
 
-	return OK;
+	return Error::OK;
 }
 
 Error Animation::try_position_track_interpolate(int p_track, double p_time, Vector3 *r_interpolation) const {
-	ERR_FAIL_INDEX_V(p_track, tracks.size(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_track, tracks.size(), Error::INVALID_PARAMETER);
 	Track *t = tracks[p_track];
-	ERR_FAIL_COND_V(t->type != TYPE_POSITION_3D, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(t->type != TYPE_POSITION_3D, Error::INVALID_PARAMETER);
 
 	PositionTrack *tt = static_cast<PositionTrack *>(t);
 
 	if (tt->compressed_track >= 0) {
 		if (_pos_scale_interpolate_compressed(tt->compressed_track, p_time, *r_interpolation)) {
-			return OK;
+			return Error::OK;
 		} else {
-			return ERR_UNAVAILABLE;
+			return Error::UNAVAILABLE;
 		}
 	}
 
@@ -1135,17 +1135,17 @@ Error Animation::try_position_track_interpolate(int p_track, double p_time, Vect
 	Vector3 tk = _interpolate(tt->positions, p_time, tt->interpolation, tt->loop_wrap, &ok);
 
 	if (!ok) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 	*r_interpolation = tk;
-	return OK;
+	return Error::OK;
 }
 
 Vector3 Animation::position_track_interpolate(int p_track, double p_time) const {
 	Vector3 ret = Vector3(0, 0, 0);
 	ERR_FAIL_INDEX_V(p_track, tracks.size(), ret);
-	bool err = try_position_track_interpolate(p_track, p_time, &ret);
-	ERR_FAIL_COND_V_MSG(err, ret, "3D Position Track: '" + tracks[p_track]->path + "' is unavailable.");
+	Error err = try_position_track_interpolate(p_track, p_time, &ret);
+	ERR_FAIL_COND_V_MSG(err != Error::OK, ret, "3D Position Track: '" + tracks[p_track]->path + "' is unavailable.");
 	return ret;
 }
 
@@ -1170,43 +1170,43 @@ int Animation::rotation_track_insert_key(int p_track, double p_time, const Quate
 }
 
 Error Animation::rotation_track_get_key(int p_track, int p_key, Quaternion *r_rotation) const {
-	ERR_FAIL_INDEX_V(p_track, tracks.size(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_track, tracks.size(), Error::INVALID_PARAMETER);
 	Track *t = tracks[p_track];
 
 	RotationTrack *rt = static_cast<RotationTrack *>(t);
-	ERR_FAIL_COND_V(t->type != TYPE_ROTATION_3D, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(t->type != TYPE_ROTATION_3D, Error::INVALID_PARAMETER);
 
 	if (rt->compressed_track >= 0) {
 		Vector3i key;
 		double time;
 		bool fetch_success = _fetch_compressed_by_index<3>(rt->compressed_track, p_key, key, time);
 		if (!fetch_success) {
-			return ERR_INVALID_PARAMETER;
+			return Error::INVALID_PARAMETER;
 		}
 
 		*r_rotation = _uncompress_quaternion(key);
-		return OK;
+		return Error::OK;
 	}
 
-	ERR_FAIL_INDEX_V(p_key, rt->rotations.size(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_key, rt->rotations.size(), Error::INVALID_PARAMETER);
 
 	*r_rotation = rt->rotations[p_key].value;
 
-	return OK;
+	return Error::OK;
 }
 
 Error Animation::try_rotation_track_interpolate(int p_track, double p_time, Quaternion *r_interpolation) const {
-	ERR_FAIL_INDEX_V(p_track, tracks.size(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_track, tracks.size(), Error::INVALID_PARAMETER);
 	Track *t = tracks[p_track];
-	ERR_FAIL_COND_V(t->type != TYPE_ROTATION_3D, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(t->type != TYPE_ROTATION_3D, Error::INVALID_PARAMETER);
 
 	RotationTrack *rt = static_cast<RotationTrack *>(t);
 
 	if (rt->compressed_track >= 0) {
 		if (_rotation_interpolate_compressed(rt->compressed_track, p_time, *r_interpolation)) {
-			return OK;
+			return Error::OK;
 		} else {
-			return ERR_UNAVAILABLE;
+			return Error::UNAVAILABLE;
 		}
 	}
 
@@ -1215,17 +1215,17 @@ Error Animation::try_rotation_track_interpolate(int p_track, double p_time, Quat
 	Quaternion tk = _interpolate(rt->rotations, p_time, rt->interpolation, rt->loop_wrap, &ok);
 
 	if (!ok) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 	*r_interpolation = tk;
-	return OK;
+	return Error::OK;
 }
 
 Quaternion Animation::rotation_track_interpolate(int p_track, double p_time) const {
 	Quaternion ret = Quaternion(0, 0, 0, 1);
 	ERR_FAIL_INDEX_V(p_track, tracks.size(), ret);
-	bool err = try_rotation_track_interpolate(p_track, p_time, &ret);
-	ERR_FAIL_COND_V_MSG(err, ret, "3D Rotation Track: '" + tracks[p_track]->path + "' is unavailable.");
+	Error err = try_rotation_track_interpolate(p_track, p_time, &ret);
+	ERR_FAIL_COND_V_MSG(err != Error::OK, ret, "3D Rotation Track: '" + tracks[p_track]->path + "' is unavailable.");
 	return ret;
 }
 
@@ -1250,43 +1250,43 @@ int Animation::scale_track_insert_key(int p_track, double p_time, const Vector3 
 }
 
 Error Animation::scale_track_get_key(int p_track, int p_key, Vector3 *r_scale) const {
-	ERR_FAIL_INDEX_V(p_track, tracks.size(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_track, tracks.size(), Error::INVALID_PARAMETER);
 	Track *t = tracks[p_track];
 
 	ScaleTrack *st = static_cast<ScaleTrack *>(t);
-	ERR_FAIL_COND_V(t->type != TYPE_SCALE_3D, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(t->type != TYPE_SCALE_3D, Error::INVALID_PARAMETER);
 
 	if (st->compressed_track >= 0) {
 		Vector3i key;
 		double time;
 		bool fetch_success = _fetch_compressed_by_index<3>(st->compressed_track, p_key, key, time);
 		if (!fetch_success) {
-			return ERR_INVALID_PARAMETER;
+			return Error::INVALID_PARAMETER;
 		}
 
 		*r_scale = _uncompress_pos_scale(st->compressed_track, key);
-		return OK;
+		return Error::OK;
 	}
 
-	ERR_FAIL_INDEX_V(p_key, st->scales.size(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_key, st->scales.size(), Error::INVALID_PARAMETER);
 
 	*r_scale = st->scales[p_key].value;
 
-	return OK;
+	return Error::OK;
 }
 
 Error Animation::try_scale_track_interpolate(int p_track, double p_time, Vector3 *r_interpolation) const {
-	ERR_FAIL_INDEX_V(p_track, tracks.size(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_track, tracks.size(), Error::INVALID_PARAMETER);
 	Track *t = tracks[p_track];
-	ERR_FAIL_COND_V(t->type != TYPE_SCALE_3D, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(t->type != TYPE_SCALE_3D, Error::INVALID_PARAMETER);
 
 	ScaleTrack *st = static_cast<ScaleTrack *>(t);
 
 	if (st->compressed_track >= 0) {
 		if (_pos_scale_interpolate_compressed(st->compressed_track, p_time, *r_interpolation)) {
-			return OK;
+			return Error::OK;
 		} else {
-			return ERR_UNAVAILABLE;
+			return Error::UNAVAILABLE;
 		}
 	}
 
@@ -1295,17 +1295,17 @@ Error Animation::try_scale_track_interpolate(int p_track, double p_time, Vector3
 	Vector3 tk = _interpolate(st->scales, p_time, st->interpolation, st->loop_wrap, &ok);
 
 	if (!ok) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 	*r_interpolation = tk;
-	return OK;
+	return Error::OK;
 }
 
 Vector3 Animation::scale_track_interpolate(int p_track, double p_time) const {
 	Vector3 ret = Vector3(1, 1, 1);
 	ERR_FAIL_INDEX_V(p_track, tracks.size(), ret);
-	bool err = try_scale_track_interpolate(p_track, p_time, &ret);
-	ERR_FAIL_COND_V_MSG(err, ret, "3D Scale Track: '" + tracks[p_track]->path + "' is unavailable.");
+	Error err = try_scale_track_interpolate(p_track, p_time, &ret);
+	ERR_FAIL_COND_V_MSG(err != Error::OK, ret, "3D Scale Track: '" + tracks[p_track]->path + "' is unavailable.");
 	return ret;
 }
 
@@ -1330,43 +1330,43 @@ int Animation::blend_shape_track_insert_key(int p_track, double p_time, float p_
 }
 
 Error Animation::blend_shape_track_get_key(int p_track, int p_key, float *r_blend_shape) const {
-	ERR_FAIL_INDEX_V(p_track, tracks.size(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_track, tracks.size(), Error::INVALID_PARAMETER);
 	Track *t = tracks[p_track];
 
 	BlendShapeTrack *bst = static_cast<BlendShapeTrack *>(t);
-	ERR_FAIL_COND_V(t->type != TYPE_BLEND_SHAPE, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(t->type != TYPE_BLEND_SHAPE, Error::INVALID_PARAMETER);
 
 	if (bst->compressed_track >= 0) {
 		Vector3i key;
 		double time;
 		bool fetch_success = _fetch_compressed_by_index<1>(bst->compressed_track, p_key, key, time);
 		if (!fetch_success) {
-			return ERR_INVALID_PARAMETER;
+			return Error::INVALID_PARAMETER;
 		}
 
 		*r_blend_shape = _uncompress_blend_shape(key);
-		return OK;
+		return Error::OK;
 	}
 
-	ERR_FAIL_INDEX_V(p_key, bst->blend_shapes.size(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_key, bst->blend_shapes.size(), Error::INVALID_PARAMETER);
 
 	*r_blend_shape = bst->blend_shapes[p_key].value;
 
-	return OK;
+	return Error::OK;
 }
 
 Error Animation::try_blend_shape_track_interpolate(int p_track, double p_time, float *r_interpolation) const {
-	ERR_FAIL_INDEX_V(p_track, tracks.size(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_track, tracks.size(), Error::INVALID_PARAMETER);
 	Track *t = tracks[p_track];
-	ERR_FAIL_COND_V(t->type != TYPE_BLEND_SHAPE, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(t->type != TYPE_BLEND_SHAPE, Error::INVALID_PARAMETER);
 
 	BlendShapeTrack *bst = static_cast<BlendShapeTrack *>(t);
 
 	if (bst->compressed_track >= 0) {
 		if (_blend_shape_interpolate_compressed(bst->compressed_track, p_time, *r_interpolation)) {
-			return OK;
+			return Error::OK;
 		} else {
-			return ERR_UNAVAILABLE;
+			return Error::UNAVAILABLE;
 		}
 	}
 
@@ -1375,17 +1375,17 @@ Error Animation::try_blend_shape_track_interpolate(int p_track, double p_time, f
 	float tk = _interpolate(bst->blend_shapes, p_time, bst->interpolation, bst->loop_wrap, &ok);
 
 	if (!ok) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 	*r_interpolation = tk;
-	return OK;
+	return Error::OK;
 }
 
 float Animation::blend_shape_track_interpolate(int p_track, double p_time) const {
 	float ret = 0;
 	ERR_FAIL_INDEX_V(p_track, tracks.size(), ret);
-	bool err = try_blend_shape_track_interpolate(p_track, p_time, &ret);
-	ERR_FAIL_COND_V_MSG(err, ret, "Blend Shape Track: '" + tracks[p_track]->path + "' is unavailable.");
+	Error err = try_blend_shape_track_interpolate(p_track, p_time, &ret);
+	ERR_FAIL_COND_V_MSG(err != Error::OK, ret, "Blend Shape Track: '" + tracks[p_track]->path + "' is unavailable.");
 	return ret;
 }
 

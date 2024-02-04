@@ -784,9 +784,9 @@ Error LightmapperRD::_store_pfm(RenderingDevice *p_rd, RID p_atlas_tex, int p_in
 	img->convert(Image::FORMAT_RGBF);
 	Vector<uint8_t> data_float = img->get_data();
 
-	Error err = OK;
+	Error err = Error::OK;
 	Ref<FileAccess> file = FileAccess::open(p_name, FileAccess::WRITE, &err);
-	ERR_FAIL_COND_V_MSG(err, err, vformat("Can't save PFN at path: '%s'.", p_name));
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, vformat("Can't save PFN at path: '%s'.", p_name));
 	file->store_line("PF");
 	file->store_line(vformat("%d %d", img->get_width(), img->get_height()));
 #ifdef BIG_ENDIAN_ENABLED
@@ -797,13 +797,13 @@ Error LightmapperRD::_store_pfm(RenderingDevice *p_rd, RID p_atlas_tex, int p_in
 	file->store_buffer(data_float);
 	file->close();
 
-	return OK;
+	return Error::OK;
 }
 
 Ref<Image> LightmapperRD::_read_pfm(const String &p_name) {
-	Error err = OK;
+	Error err = Error::OK;
 	Ref<FileAccess> file = FileAccess::open(p_name, FileAccess::READ, &err);
-	ERR_FAIL_COND_V_MSG(err, Ref<Image>(), vformat("Can't load PFM at path: '%s'.", p_name));
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Ref<Image>(), vformat("Can't load PFM at path: '%s'.", p_name));
 	ERR_FAIL_COND_V(file->get_line() != "PF", Ref<Image>());
 
 	Vector<String> new_size = file->get_line().split(" ");
@@ -874,7 +874,7 @@ LightmapperRD::BakeError LightmapperRD::_denoise_oidn(RenderingDevice *p_rd, RID
 
 			da->remove(fname_light_in);
 
-			if (err != OK || exitcode != 0) {
+			if (err != Error::OK || exitcode != 0) {
 				da->remove(fname_out);
 				print_verbose(str);
 				ERR_FAIL_V_MSG(BAKE_ERROR_LIGHTMAP_CANT_PRE_BAKE_MESHES, vformat("OIDN denoiser failed, return code: %d", exitcode));
@@ -1188,7 +1188,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 	Ref<RDShaderFile> raster_shader;
 	raster_shader.instantiate();
 	Error err = raster_shader->parse_versions_from_text(lm_raster_shader_glsl);
-	if (err != OK) {
+	if (err != Error::OK) {
 		raster_shader->print_errors("raster_shader");
 
 		FREE_TEXTURES
@@ -1196,7 +1196,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 
 		memdelete(rd);
 	}
-	ERR_FAIL_COND_V(err != OK, BAKE_ERROR_LIGHTMAP_CANT_PRE_BAKE_MESHES);
+	ERR_FAIL_COND_V(err != Error::OK, BAKE_ERROR_LIGHTMAP_CANT_PRE_BAKE_MESHES);
 
 	RID rasterize_shader = rd->shader_create_from_spirv(raster_shader->get_spirv_stages());
 
@@ -1362,14 +1362,14 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 
 	compute_shader.instantiate();
 	err = compute_shader->parse_versions_from_text(lm_compute_shader_glsl, defines);
-	if (err != OK) {
+	if (err != Error::OK) {
 		FREE_TEXTURES
 		FREE_BUFFERS
 		FREE_RASTER_RESOURCES
 		memdelete(rd);
 		compute_shader->print_errors("compute_shader");
 	}
-	ERR_FAIL_COND_V(err != OK, BAKE_ERROR_LIGHTMAP_CANT_PRE_BAKE_MESHES);
+	ERR_FAIL_COND_V(err != Error::OK, BAKE_ERROR_LIGHTMAP_CANT_PRE_BAKE_MESHES);
 
 	// Unoccluder
 	RID compute_shader_unocclude = rd->shader_create_from_spirv(compute_shader->get_spirv_stages("unocclude"));
@@ -1783,7 +1783,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 	Ref<RDShaderFile> blendseams_shader;
 	blendseams_shader.instantiate();
 	err = blendseams_shader->parse_versions_from_text(lm_blendseams_shader_glsl);
-	if (err != OK) {
+	if (err != Error::OK) {
 		FREE_TEXTURES
 		FREE_BUFFERS
 		FREE_RASTER_RESOURCES
@@ -1791,7 +1791,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 		memdelete(rd);
 		blendseams_shader->print_errors("blendseams_shader");
 	}
-	ERR_FAIL_COND_V(err != OK, BAKE_ERROR_LIGHTMAP_CANT_PRE_BAKE_MESHES);
+	ERR_FAIL_COND_V(err != Error::OK, BAKE_ERROR_LIGHTMAP_CANT_PRE_BAKE_MESHES);
 
 	RID blendseams_line_raster_shader = rd->shader_create_from_spirv(blendseams_shader->get_spirv_stages("lines"));
 

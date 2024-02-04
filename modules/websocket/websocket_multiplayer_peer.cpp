@@ -115,7 +115,7 @@ int WebSocketMultiplayerPeer::get_available_packet_count() const {
 }
 
 Error WebSocketMultiplayerPeer::get_packet(const uint8_t **r_buffer, int &r_buffer_size) {
-	ERR_FAIL_COND_V(get_connection_status() != CONNECTION_CONNECTED, ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(get_connection_status() != CONNECTION_CONNECTED, Error::UNCONFIGURED);
 
 	r_buffer_size = 0;
 
@@ -124,7 +124,7 @@ Error WebSocketMultiplayerPeer::get_packet(const uint8_t **r_buffer, int &r_buff
 		current_packet.data = nullptr;
 	}
 
-	ERR_FAIL_COND_V(incoming_packets.size() == 0, ERR_UNAVAILABLE);
+	ERR_FAIL_COND_V(incoming_packets.size() == 0, Error::UNAVAILABLE);
 
 	current_packet = incoming_packets.front()->get();
 	incoming_packets.pop_front();
@@ -132,15 +132,15 @@ Error WebSocketMultiplayerPeer::get_packet(const uint8_t **r_buffer, int &r_buff
 	*r_buffer = current_packet.data;
 	r_buffer_size = current_packet.size;
 
-	return OK;
+	return Error::OK;
 }
 
 Error WebSocketMultiplayerPeer::put_packet(const uint8_t *p_buffer, int p_buffer_size) {
-	ERR_FAIL_COND_V(get_connection_status() != CONNECTION_CONNECTED, ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(get_connection_status() != CONNECTION_CONNECTED, Error::UNCONFIGURED);
 
 	if (is_server()) {
 		if (target_peer > 0) {
-			ERR_FAIL_COND_V_MSG(!peers_map.has(target_peer), ERR_INVALID_PARAMETER, "Peer not found: " + itos(target_peer));
+			ERR_FAIL_COND_V_MSG(!peers_map.has(target_peer), Error::INVALID_PARAMETER, "Peer not found: " + itos(target_peer));
 			get_peer(target_peer)->put_packet(p_buffer, p_buffer_size);
 		} else {
 			for (KeyValue<int, Ref<WebSocketPeer>> &E : peers_map) {
@@ -150,7 +150,7 @@ Error WebSocketMultiplayerPeer::put_packet(const uint8_t *p_buffer, int p_buffer
 				E.value->put_packet(p_buffer, p_buffer_size);
 			}
 		}
-		return OK;
+		return Error::OK;
 	} else {
 		return get_peer(1)->put_packet(p_buffer, p_buffer_size);
 	}
@@ -178,28 +178,28 @@ int WebSocketMultiplayerPeer::get_max_packet_size() const {
 }
 
 Error WebSocketMultiplayerPeer::create_server(int p_port, IPAddress p_bind_ip, Ref<TLSOptions> p_options) {
-	ERR_FAIL_COND_V(get_connection_status() != CONNECTION_DISCONNECTED, ERR_ALREADY_IN_USE);
-	ERR_FAIL_COND_V(p_options.is_valid() && !p_options->is_server(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(get_connection_status() != CONNECTION_DISCONNECTED, Error::ALREADY_IN_USE);
+	ERR_FAIL_COND_V(p_options.is_valid() && !p_options->is_server(), Error::INVALID_PARAMETER);
 	_clear();
 	tcp_server.instantiate();
 	Error err = tcp_server->listen(p_port, p_bind_ip);
-	if (err != OK) {
+	if (err != Error::OK) {
 		tcp_server.unref();
 		return err;
 	}
 	unique_id = 1;
 	connection_status = CONNECTION_CONNECTED;
 	tls_server_options = p_options;
-	return OK;
+	return Error::OK;
 }
 
 Error WebSocketMultiplayerPeer::create_client(const String &p_url, Ref<TLSOptions> p_options) {
-	ERR_FAIL_COND_V(get_connection_status() != CONNECTION_DISCONNECTED, ERR_ALREADY_IN_USE);
-	ERR_FAIL_COND_V(p_options.is_valid() && p_options->is_server(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(get_connection_status() != CONNECTION_DISCONNECTED, Error::ALREADY_IN_USE);
+	ERR_FAIL_COND_V(p_options.is_valid() && p_options->is_server(), Error::INVALID_PARAMETER);
 	_clear();
 	Ref<WebSocketPeer> peer = _create_peer();
 	Error err = peer->connect_to_url(p_url, p_options);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 	PendingPeer pending;
@@ -207,7 +207,7 @@ Error WebSocketMultiplayerPeer::create_client(const String &p_url, Ref<TLSOption
 	pending_peers[1] = pending;
 	peers_map[1] = peer;
 	connection_status = CONNECTION_CONNECTING;
-	return OK;
+	return Error::OK;
 }
 
 bool WebSocketMultiplayerPeer::is_server() const {
@@ -226,7 +226,7 @@ void WebSocketMultiplayerPeer::_poll_client() {
 				const uint8_t *in_buffer;
 				int size = 0;
 				Error err = peer->get_packet(&in_buffer, size);
-				if (err != OK || size != 4) {
+				if (err != Error::OK || size != 4) {
 					peer->close(); // Will cause connection error on next poll.
 					ERR_FAIL_MSG("Invalid ID received from server");
 				}
@@ -246,7 +246,7 @@ void WebSocketMultiplayerPeer::_poll_client() {
 			const uint8_t *in_buffer;
 			int size = 0;
 			Error err = peer->get_packet(&in_buffer, size);
-			ERR_FAIL_COND(err != OK);
+			ERR_FAIL_COND(err != Error::OK);
 			ERR_FAIL_COND(size <= 0);
 			Packet packet;
 			packet.data = (uint8_t *)memalloc(size);
@@ -311,7 +311,7 @@ void WebSocketMultiplayerPeer::_poll_server() {
 				}
 				int32_t peer_id = id;
 				Error err = peer.ws->put_packet((const uint8_t *)&peer_id, sizeof(peer_id));
-				if (err == OK) {
+				if (err == Error::OK) {
 					peers_map[id] = peer.ws;
 					emit_signal("peer_connected", id);
 				} else {
@@ -336,7 +336,7 @@ void WebSocketMultiplayerPeer::_poll_server() {
 			if (peer.connection == peer.tcp) {
 				Ref<StreamPeerTLS> tls = Ref<StreamPeerTLS>(StreamPeerTLS::create());
 				Error err = tls->accept_stream(peer.tcp, tls_server_options);
-				if (err != OK) {
+				if (err != Error::OK) {
 					to_remove.insert(id);
 					continue;
 				}
@@ -379,7 +379,7 @@ void WebSocketMultiplayerPeer::_poll_server() {
 			const uint8_t *in_buffer;
 			int size = 0;
 			Error err = ws->get_packet(&in_buffer, size);
-			if (err != OK || size <= 0) {
+			if (err != Error::OK || size <= 0) {
 				break;
 			}
 			Packet packet;

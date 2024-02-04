@@ -97,7 +97,7 @@ static int godot_close(voidpf opaque, voidpf stream) {
 
 static int godot_testerror(voidpf opaque, voidpf stream) {
 	ZipData *zd = (ZipData *)stream;
-	return zd->f->get_error() != OK ? 1 : 0;
+	return zd->f->get_error() != Error::OK ? 1 : 0;
 }
 
 static voidpf godot_alloc(voidpf opaque, uInt items, uInt size) {
@@ -237,16 +237,16 @@ ZipArchive::~ZipArchive() {
 Error FileAccessZip::open_internal(const String &p_path, int p_mode_flags) {
 	_close();
 
-	ERR_FAIL_COND_V(p_mode_flags & FileAccess::WRITE, FAILED);
+	ERR_FAIL_COND_V(p_mode_flags & FileAccess::WRITE, Error::FAILED);
 	ZipArchive *arch = ZipArchive::get_singleton();
-	ERR_FAIL_NULL_V(arch, FAILED);
+	ERR_FAIL_NULL_V(arch, Error::FAILED);
 	zfile = arch->get_file_handle(p_path);
-	ERR_FAIL_NULL_V(zfile, FAILED);
+	ERR_FAIL_NULL_V(zfile, Error::FAILED);
 
 	int err = unzGetCurrentFileInfo64(zfile, &file_info, nullptr, 0, nullptr, 0, nullptr, 0);
-	ERR_FAIL_COND_V(err != UNZ_OK, FAILED);
+	ERR_FAIL_COND_V(err != UNZ_OK, Error::FAILED);
 
-	return OK;
+	return Error::OK;
 }
 
 void FileAccessZip::_close() {
@@ -315,13 +315,13 @@ uint64_t FileAccessZip::get_buffer(uint8_t *p_dst, uint64_t p_length) const {
 
 Error FileAccessZip::get_error() const {
 	if (!zfile) {
-		return ERR_UNCONFIGURED;
+		return Error::UNCONFIGURED;
 	}
 	if (eof_reached()) {
-		return ERR_FILE_EOF;
+		return Error::FILE_EOF;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void FileAccessZip::flush() {

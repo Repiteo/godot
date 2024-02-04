@@ -80,7 +80,7 @@ void FBXImporterManager::_validate_path(const String &p_path) {
 		int exitcode;
 		Error err = OS::get_singleton()->execute(p_path, args, nullptr, &exitcode);
 
-		if (err == OK && exitcode == 0) {
+		if (err == Error::OK && exitcode == 0) {
 			success = true;
 		} else {
 			error = TTR("Error executing this file (wrong version or architecture).");

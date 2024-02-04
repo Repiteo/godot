@@ -48,7 +48,7 @@ void GDExtensionExportPlugin::_export_file(const String &p_path, const String &p
 	config.instantiate();
 
 	Error err = config->load(p_path);
-	ERR_FAIL_COND_MSG(err, "Failed to load GDExtension file: " + p_path);
+	ERR_FAIL_COND_MSG(err != Error::OK, "Failed to load GDExtension file: " + p_path);
 
 	// Check whether this GDExtension should be exported.
 	bool android_aar_plugin = config->get_value("configuration", "android_aar_plugin", false);

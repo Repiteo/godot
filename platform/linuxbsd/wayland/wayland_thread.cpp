@@ -3421,24 +3421,24 @@ Error WaylandThread::init() {
 
 	if (initialize_wayland_client(dylibloader_verbose) != 0) {
 		WARN_PRINT("Can't load the Wayland client library.");
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	if (initialize_wayland_cursor(dylibloader_verbose) != 0) {
 		WARN_PRINT("Can't load the Wayland cursor library.");
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	if (initialize_xkbcommon(dylibloader_verbose) != 0) {
 		WARN_PRINT("Can't load the XKBcommon library.");
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 #endif // SOWRAP_ENABLED
 
 	KeyMappingXKB::initialize();
 
 	wl_display = wl_display_connect(nullptr);
-	ERR_FAIL_NULL_V_MSG(wl_display, ERR_CANT_CREATE, "Can't connect to a Wayland display.");
+	ERR_FAIL_NULL_V_MSG(wl_display, Error::CANT_CREATE, "Can't connect to a Wayland display.");
 
 	thread_data.wl_display = wl_display;
 
@@ -3446,7 +3446,7 @@ Error WaylandThread::init() {
 
 	wl_registry = wl_display_get_registry(wl_display);
 
-	ERR_FAIL_NULL_V_MSG(wl_registry, ERR_UNAVAILABLE, "Can't obtain the Wayland registry global.");
+	ERR_FAIL_NULL_V_MSG(wl_registry, Error::UNAVAILABLE, "Can't obtain the Wayland registry global.");
 
 	registry.wayland_thread = this;
 
@@ -3455,12 +3455,12 @@ Error WaylandThread::init() {
 	// Wait for registry to get notified from the compositor.
 	wl_display_roundtrip(wl_display);
 
-	ERR_FAIL_NULL_V_MSG(registry.wl_shm, ERR_UNAVAILABLE, "Can't obtain the Wayland shared memory global.");
-	ERR_FAIL_NULL_V_MSG(registry.wl_compositor, ERR_UNAVAILABLE, "Can't obtain the Wayland compositor global.");
-	ERR_FAIL_NULL_V_MSG(registry.wl_subcompositor, ERR_UNAVAILABLE, "Can't obtain the Wayland subcompositor global.");
-	ERR_FAIL_NULL_V_MSG(registry.wl_data_device_manager, ERR_UNAVAILABLE, "Can't obtain the Wayland data device manager global.");
-	ERR_FAIL_NULL_V_MSG(registry.wp_pointer_constraints, ERR_UNAVAILABLE, "Can't obtain the Wayland pointer constraints global.");
-	ERR_FAIL_NULL_V_MSG(registry.xdg_wm_base, ERR_UNAVAILABLE, "Can't obtain the Wayland XDG shell global.");
+	ERR_FAIL_NULL_V_MSG(registry.wl_shm, Error::UNAVAILABLE, "Can't obtain the Wayland shared memory global.");
+	ERR_FAIL_NULL_V_MSG(registry.wl_compositor, Error::UNAVAILABLE, "Can't obtain the Wayland compositor global.");
+	ERR_FAIL_NULL_V_MSG(registry.wl_subcompositor, Error::UNAVAILABLE, "Can't obtain the Wayland subcompositor global.");
+	ERR_FAIL_NULL_V_MSG(registry.wl_data_device_manager, Error::UNAVAILABLE, "Can't obtain the Wayland data device manager global.");
+	ERR_FAIL_NULL_V_MSG(registry.wp_pointer_constraints, Error::UNAVAILABLE, "Can't obtain the Wayland pointer constraints global.");
+	ERR_FAIL_NULL_V_MSG(registry.xdg_wm_base, Error::UNAVAILABLE, "Can't obtain the Wayland XDG shell global.");
 
 	if (!registry.xdg_decoration_manager) {
 #ifdef LIBDECOR_ENABLED
@@ -3511,14 +3511,14 @@ Error WaylandThread::init() {
 	bool cursor_theme_loaded = _load_cursor_theme(unscaled_cursor_size * cursor_scale);
 
 	if (!cursor_theme_loaded) {
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	// Update the cursor.
 	cursor_set_shape(DisplayServer::CURSOR_ARROW);
 
 	initialized = true;
-	return OK;
+	return Error::OK;
 }
 
 void WaylandThread::cursor_hide() {

@@ -79,7 +79,7 @@ Node *EditorSceneFormatImporterFBX::import_scene(const String &p_path, uint32_t 
 
 	if (ret != 0) {
 		if (r_err) {
-			*r_err = ERR_SCRIPT_FAILED;
+			*r_err = Error::SCRIPT_FAILED;
 		}
 		ERR_PRINT(vformat("FBX conversion to glTF failed with error: %d.", ret));
 		return nullptr;
@@ -94,9 +94,9 @@ Node *EditorSceneFormatImporterFBX::import_scene(const String &p_path, uint32_t 
 	state.instantiate();
 	print_verbose(vformat("glTF path: %s", sink));
 	Error err = gltf->append_from_file(sink, state, p_flags, p_path.get_base_dir());
-	if (err != OK) {
+	if (err != Error::OK) {
 		if (r_err) {
-			*r_err = FAILED;
+			*r_err = Error::FAILED;
 		}
 		return nullptr;
 	}

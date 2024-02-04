@@ -1019,7 +1019,7 @@ Ref<ConvexPolygonShape3D> ImporterMesh::create_convex_shape(bool p_clean, bool p
 	if (p_clean) {
 		Geometry3D::MeshData md;
 		Error err = ConvexHullComputer::convex_hull(vertices, md);
-		if (err == OK) {
+		if (err == Error::OK) {
 			shape->set_points(md.vertices);
 			return shape;
 		} else {
@@ -1110,8 +1110,8 @@ struct EditorSceneFormatImporterMeshLightmapSurface {
 static const uint32_t custom_shift[RS::ARRAY_CUSTOM_COUNT] = { Mesh::ARRAY_FORMAT_CUSTOM0_SHIFT, Mesh::ARRAY_FORMAT_CUSTOM1_SHIFT, Mesh::ARRAY_FORMAT_CUSTOM2_SHIFT, Mesh::ARRAY_FORMAT_CUSTOM3_SHIFT };
 
 Error ImporterMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, float p_texel_size, const Vector<uint8_t> &p_src_cache, Vector<uint8_t> &r_dst_cache) {
-	ERR_FAIL_NULL_V(array_mesh_lightmap_unwrap_callback, ERR_UNCONFIGURED);
-	ERR_FAIL_COND_V_MSG(blend_shapes.size() != 0, ERR_UNAVAILABLE, "Can't unwrap mesh with blend shapes.");
+	ERR_FAIL_NULL_V(array_mesh_lightmap_unwrap_callback, Error::UNCONFIGURED);
+	ERR_FAIL_COND_V_MSG(blend_shapes.size() != 0, Error::UNAVAILABLE, "Can't unwrap mesh with blend shapes.");
 
 	LocalVector<float> vertices;
 	LocalVector<float> normals;
@@ -1134,7 +1134,7 @@ Error ImporterMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, 
 		EditorSceneFormatImporterMeshLightmapSurface s;
 		s.primitive = get_surface_primitive_type(i);
 
-		ERR_FAIL_COND_V_MSG(s.primitive != Mesh::PRIMITIVE_TRIANGLES, ERR_UNAVAILABLE, "Only triangles are supported for lightmap unwrap.");
+		ERR_FAIL_COND_V_MSG(s.primitive != Mesh::PRIMITIVE_TRIANGLES, Error::UNAVAILABLE, "Only triangles are supported for lightmap unwrap.");
 		Array arrays = get_surface_arrays(i);
 		s.material = get_surface_material(i);
 		s.name = get_surface_name(i);
@@ -1190,9 +1190,9 @@ Error ImporterMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, 
 
 		} else {
 			for (int j = 0; j < ic / 3; j++) {
-				ERR_FAIL_INDEX_V(rindices[j * 3 + 0], rvertices.size(), ERR_INVALID_DATA);
-				ERR_FAIL_INDEX_V(rindices[j * 3 + 1], rvertices.size(), ERR_INVALID_DATA);
-				ERR_FAIL_INDEX_V(rindices[j * 3 + 2], rvertices.size(), ERR_INVALID_DATA);
+				ERR_FAIL_INDEX_V(rindices[j * 3 + 0], rvertices.size(), Error::INVALID_DATA);
+				ERR_FAIL_INDEX_V(rindices[j * 3 + 1], rvertices.size(), Error::INVALID_DATA);
+				ERR_FAIL_INDEX_V(rindices[j * 3 + 2], rvertices.size(), Error::INVALID_DATA);
 				Vector3 p0 = transform.xform(rvertices[rindices[j * 3 + 0]]);
 				Vector3 p1 = transform.xform(rvertices[rindices[j * 3 + 1]]);
 				Vector3 p2 = transform.xform(rvertices[rindices[j * 3 + 2]]);
@@ -1226,7 +1226,7 @@ Error ImporterMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, 
 	bool ok = array_mesh_lightmap_unwrap_callback(p_texel_size, vertices.ptr(), normals.ptr(), vertices.size() / 3, indices.ptr(), indices.size(), p_src_cache.ptr(), &use_cache, &gen_cache, &gen_cache_size, &gen_uvs, &gen_vertices, &gen_vertex_count, &gen_indices, &gen_index_count, &size_x, &size_y);
 
 	if (!ok) {
-		return ERR_CANT_CREATE;
+		return Error::CANT_CREATE;
 	}
 
 	//create surfacetools for each surface..
@@ -1253,11 +1253,11 @@ Error ImporterMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, 
 
 	//go through all indices
 	for (int i = 0; i < gen_index_count; i += 3) {
-		ERR_FAIL_INDEX_V(gen_vertices[gen_indices[i + 0]], (int)uv_indices.size(), ERR_BUG);
-		ERR_FAIL_INDEX_V(gen_vertices[gen_indices[i + 1]], (int)uv_indices.size(), ERR_BUG);
-		ERR_FAIL_INDEX_V(gen_vertices[gen_indices[i + 2]], (int)uv_indices.size(), ERR_BUG);
+		ERR_FAIL_INDEX_V(gen_vertices[gen_indices[i + 0]], (int)uv_indices.size(), Error::BUG);
+		ERR_FAIL_INDEX_V(gen_vertices[gen_indices[i + 1]], (int)uv_indices.size(), Error::BUG);
+		ERR_FAIL_INDEX_V(gen_vertices[gen_indices[i + 2]], (int)uv_indices.size(), Error::BUG);
 
-		ERR_FAIL_COND_V(uv_indices[gen_vertices[gen_indices[i + 0]]].first != uv_indices[gen_vertices[gen_indices[i + 1]]].first || uv_indices[gen_vertices[gen_indices[i + 0]]].first != uv_indices[gen_vertices[gen_indices[i + 2]]].first, ERR_BUG);
+		ERR_FAIL_COND_V(uv_indices[gen_vertices[gen_indices[i + 0]]].first != uv_indices[gen_vertices[gen_indices[i + 1]]].first || uv_indices[gen_vertices[gen_indices[i + 0]]].first != uv_indices[gen_vertices[gen_indices[i + 2]]].first, Error::BUG);
 
 		int surface = uv_indices[gen_vertices[gen_indices[i + 0]]].first;
 
@@ -1329,7 +1329,7 @@ Error ImporterMesh::lightmap_unwrap_cached(const Transform3D &p_base_transform, 
 		memfree(gen_uvs);
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void ImporterMesh::set_lightmap_size_hint(const Size2i &p_size) {

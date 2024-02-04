@@ -40,9 +40,9 @@ void TCPServer::_bind_methods() {
 }
 
 Error TCPServer::listen(uint16_t p_port, const IPAddress &p_bind_address) {
-	ERR_FAIL_COND_V(!_sock.is_valid(), ERR_UNAVAILABLE);
-	ERR_FAIL_COND_V(_sock->is_open(), ERR_ALREADY_IN_USE);
-	ERR_FAIL_COND_V(!p_bind_address.is_valid() && !p_bind_address.is_wildcard(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(!_sock.is_valid(), Error::UNAVAILABLE);
+	ERR_FAIL_COND_V(_sock->is_open(), Error::ALREADY_IN_USE);
+	ERR_FAIL_COND_V(!p_bind_address.is_valid() && !p_bind_address.is_wildcard(), Error::INVALID_PARAMETER);
 
 	Error err;
 	IP::Type ip_type = IP::TYPE_ANY;
@@ -54,25 +54,25 @@ Error TCPServer::listen(uint16_t p_port, const IPAddress &p_bind_address) {
 
 	err = _sock->open(NetSocket::TYPE_TCP, ip_type);
 
-	ERR_FAIL_COND_V(err != OK, ERR_CANT_CREATE);
+	ERR_FAIL_COND_V(err != Error::OK, Error::CANT_CREATE);
 
 	_sock->set_blocking_enabled(false);
 	_sock->set_reuse_address_enabled(true);
 
 	err = _sock->bind(p_bind_address, p_port);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		_sock->close();
-		return ERR_ALREADY_IN_USE;
+		return Error::ALREADY_IN_USE;
 	}
 
 	err = _sock->listen(MAX_PENDING_CONNECTIONS);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		_sock->close();
-		return FAILED;
+		return Error::FAILED;
 	}
-	return OK;
+	return Error::OK;
 }
 
 int TCPServer::get_local_port() const {
@@ -95,7 +95,7 @@ bool TCPServer::is_connection_available() const {
 	}
 
 	Error err = _sock->poll(NetSocket::POLL_TYPE_IN, 0);
-	return (err == OK);
+	return (err == Error::OK);
 }
 
 Ref<StreamPeerTCP> TCPServer::take_connection() {

@@ -79,10 +79,10 @@ static void to_dict_list(Variant p_variant, List<Dictionary> &p_list) {
 }
 
 static void test_directory(const String &p_dir) {
-	Error err = OK;
+	Error err = Error::OK;
 	Ref<DirAccess> dir = DirAccess::open(p_dir, &err);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		FAIL("Invalid test directory.");
 		return;
 	}
@@ -102,7 +102,7 @@ static void test_directory(const String &p_dir) {
 		} else if (next.ends_with(".gd") && !next.ends_with(".notest.gd")) {
 			Ref<FileAccess> acc = FileAccess::open(path.path_join(next), FileAccess::READ, &err);
 
-			if (err != OK) {
+			if (err != Error::OK) {
 				next = dir->get_next();
 				continue;
 			}
@@ -114,7 +114,7 @@ static void test_directory(const String &p_dir) {
 			CHECK(code.find_char(0xFFFF) != -1);
 
 			ConfigFile conf;
-			if (conf.load(path.path_join(next.get_basename() + ".cfg")) != OK) {
+			if (conf.load(path.path_join(next.get_basename() + ".cfg")) != Error::OK) {
 				FAIL("No config file found.");
 			}
 

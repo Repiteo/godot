@@ -38,8 +38,8 @@
 Error ResourceSaverPNG::save(const Ref<Resource> &p_resource, const String &p_path, uint32_t p_flags) {
 	Ref<ImageTexture> texture = p_resource;
 
-	ERR_FAIL_COND_V_MSG(!texture.is_valid(), ERR_INVALID_PARAMETER, "Can't save invalid texture as PNG.");
-	ERR_FAIL_COND_V_MSG(!texture->get_width(), ERR_INVALID_PARAMETER, "Can't save empty texture as PNG.");
+	ERR_FAIL_COND_V_MSG(!texture.is_valid(), Error::INVALID_PARAMETER, "Can't save invalid texture as PNG.");
+	ERR_FAIL_COND_V_MSG(!texture->get_width(), Error::INVALID_PARAMETER, "Can't save empty texture as PNG.");
 
 	Ref<Image> img = texture->get_image();
 
@@ -51,24 +51,24 @@ Error ResourceSaverPNG::save(const Ref<Resource> &p_resource, const String &p_pa
 Error ResourceSaverPNG::save_image(const String &p_path, const Ref<Image> &p_img) {
 	Vector<uint8_t> buffer;
 	Error err = PNGDriverCommon::image_to_png(p_img, buffer);
-	ERR_FAIL_COND_V_MSG(err, err, "Can't convert image to PNG.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Can't convert image to PNG.");
 	Ref<FileAccess> file = FileAccess::open(p_path, FileAccess::WRITE, &err);
-	ERR_FAIL_COND_V_MSG(err, err, vformat("Can't save PNG at path: '%s'.", p_path));
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, vformat("Can't save PNG at path: '%s'.", p_path));
 
 	const uint8_t *reader = buffer.ptr();
 
 	file->store_buffer(reader, buffer.size());
-	if (file->get_error() != OK && file->get_error() != ERR_FILE_EOF) {
-		return ERR_CANT_CREATE;
+	if (file->get_error() != Error::OK && file->get_error() != Error::FILE_EOF) {
+		return Error::CANT_CREATE;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Vector<uint8_t> ResourceSaverPNG::save_image_to_buffer(const Ref<Image> &p_img) {
 	Vector<uint8_t> buffer;
 	Error err = PNGDriverCommon::image_to_png(p_img, buffer);
-	ERR_FAIL_COND_V_MSG(err, Vector<uint8_t>(), "Can't convert image to PNG.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Vector<uint8_t>(), "Can't convert image to PNG.");
 	return buffer;
 }
 

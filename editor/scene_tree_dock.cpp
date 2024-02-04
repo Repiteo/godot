@@ -2946,7 +2946,7 @@ void SceneTreeDock::_new_scene_from(String p_file) {
 		Error err = sdata->pack(copy);
 		memdelete(copy);
 
-		if (err != OK) {
+		if (err != Error::OK) {
 			accept->set_text(TTR("Couldn't save new scene. Likely dependencies (instances) couldn't be satisfied."));
 			accept->popup_centered();
 			return;
@@ -2958,7 +2958,7 @@ void SceneTreeDock::_new_scene_from(String p_file) {
 		}
 
 		err = ResourceSaver::save(sdata, p_file, flg);
-		if (err != OK) {
+		if (err != Error::OK) {
 			accept->set_text(TTR("Error saving scene."));
 			accept->popup_centered();
 			return;

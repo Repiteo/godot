@@ -162,7 +162,7 @@ TEST_CASE("[TranslationCSV] CSV import") {
 
 	Error result = import_csv_translation->import(TestUtils::get_data_path("translations.csv"),
 			"", options, nullptr, &gen_files);
-	CHECK(result == OK);
+	CHECK(result == Error::OK);
 	CHECK(gen_files.size() == 4);
 
 	TranslationServer *ts = TranslationServer::get_singleton();

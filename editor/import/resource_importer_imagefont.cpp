@@ -104,16 +104,16 @@ Error ResourceImporterImageFont::import(const String &p_source_file, const Strin
 	Ref<Image> img;
 	img.instantiate();
 	Error err = ImageLoader::load_image(p_source_file, img);
-	ERR_FAIL_COND_V_MSG(err != OK, ERR_FILE_CANT_READ, vformat("Can't load font texture: \"%s\".", p_source_file));
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Error::FILE_CANT_READ, vformat("Can't load font texture: \"%s\".", p_source_file));
 
 	int count = columns * rows;
 	int chr_cell_width = (img->get_width() - img_margin.position.x - img_margin.size.x) / columns;
 	int chr_cell_height = (img->get_height() - img_margin.position.y - img_margin.size.y) / rows;
-	ERR_FAIL_COND_V_MSG(chr_cell_width <= 0 || chr_cell_height <= 0, ERR_FILE_CANT_READ, "Image margin too big.");
+	ERR_FAIL_COND_V_MSG(chr_cell_width <= 0 || chr_cell_height <= 0, Error::FILE_CANT_READ, "Image margin too big.");
 
 	int chr_width = chr_cell_width - char_margin.position.x - char_margin.size.x;
 	int chr_height = chr_cell_height - char_margin.position.y - char_margin.size.y;
-	ERR_FAIL_COND_V_MSG(chr_width <= 0 || chr_height <= 0, ERR_FILE_CANT_READ, "Character margin too big.");
+	ERR_FAIL_COND_V_MSG(chr_width <= 0 || chr_height <= 0, Error::FILE_CANT_READ, "Character margin too big.");
 
 	Ref<FontFile> font;
 	font.instantiate();
@@ -150,7 +150,7 @@ Error ResourceImporterImageFont::import(const String &p_source_file, const Strin
 			continue;
 		}
 		for (int32_t idx = start; idx <= end; idx++) {
-			ERR_FAIL_COND_V_MSG(pos >= count, ERR_CANT_CREATE, "Too many characters in range, should be " + itos(columns * rows));
+			ERR_FAIL_COND_V_MSG(pos >= count, Error::CANT_CREATE, "Too many characters in range, should be " + itos(columns * rows));
 			int x = pos % columns;
 			int y = pos / columns;
 			font->set_glyph_advance(0, chr_height, idx, Vector2(chr_width, 0));
@@ -171,9 +171,9 @@ Error ResourceImporterImageFont::import(const String &p_source_file, const Strin
 
 	print_verbose("Saving to: " + p_save_path + ".fontdata");
 	err = ResourceSaver::save(font, p_save_path + ".fontdata", flg);
-	ERR_FAIL_COND_V_MSG(err != OK, err, "Cannot save font to file \"" + p_save_path + ".res\".");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, err, "Cannot save font to file \"" + p_save_path + ".res\".");
 	print_verbose("Done saving to: " + p_save_path + ".fontdata");
-	return OK;
+	return Error::OK;
 }
 
 ResourceImporterImageFont::ResourceImporterImageFont() {

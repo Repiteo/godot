@@ -231,7 +231,7 @@ String ScriptCreateDialog::_validate_path(const String &p_path, bool p_file_must
 
 	{
 		Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_RESOURCES);
-		if (da->change_dir(p.get_base_dir()) != OK) {
+		if (da->change_dir(p.get_base_dir()) != Error::OK) {
 			return TTR("Base path is invalid.");
 		}
 	}
@@ -355,7 +355,7 @@ void ScriptCreateDialog::_create_new() {
 		String lpath = ProjectSettings::get_singleton()->localize_path(file_path->get_text());
 		scr->set_path(lpath);
 		Error err = ResourceSaver::save(scr, lpath, ResourceSaver::FLAG_CHANGE_PATH);
-		if (err != OK) {
+		if (err != Error::OK) {
 			alert->set_text(TTR("Error - Could not create script in filesystem."));
 			alert->popup_centered();
 			return;
@@ -770,7 +770,7 @@ ScriptLanguage::ScriptTemplate ScriptCreateDialog::_parse_template(const ScriptL
 	// Parse file for meta-information and script content
 	Error err;
 	Ref<FileAccess> file = FileAccess::open(p_path.path_join(p_filename), FileAccess::READ, &err);
-	if (!err) {
+	if (err == Error::OK) {
 		while (!file->eof_reached()) {
 			String line = file->get_line();
 			if (line.begins_with(meta_prefix)) {

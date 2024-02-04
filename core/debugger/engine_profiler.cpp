@@ -51,7 +51,7 @@ void EngineProfiler::tick(double p_frame_time, double p_process_time, double p_p
 }
 
 Error EngineProfiler::bind(const String &p_name) {
-	ERR_FAIL_COND_V(is_bound(), ERR_ALREADY_IN_USE);
+	ERR_FAIL_COND_V(is_bound(), Error::ALREADY_IN_USE);
 	EngineDebugger::Profiler prof(
 			this,
 			[](void *p_user, bool p_enable, const Array &p_opts) {
@@ -65,14 +65,14 @@ Error EngineProfiler::bind(const String &p_name) {
 			});
 	registration = p_name;
 	EngineDebugger::register_profiler(p_name, prof);
-	return OK;
+	return Error::OK;
 }
 
 Error EngineProfiler::unbind() {
-	ERR_FAIL_COND_V(!is_bound(), ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(!is_bound(), Error::UNCONFIGURED);
 	EngineDebugger::unregister_profiler(registration);
 	registration.clear();
-	return OK;
+	return Error::OK;
 }
 
 EngineProfiler::~EngineProfiler() {

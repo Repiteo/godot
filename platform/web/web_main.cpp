@@ -108,9 +108,9 @@ extern EMSCRIPTEN_KEEPALIVE int godot_web_main(int argc, char *argv[]) {
 	Error err = Main::setup(argv[0], argc - 1, &argv[1]);
 
 	// Proper shutdown in case of setup failure.
-	if (err != OK) {
+	if (err != Error::OK) {
 		int exit_code = (int)err;
-		if (err == ERR_HELP) {
+		if (err == Error::HELP) {
 			exit_code = 0; // Called with --help.
 		}
 		os->set_exit_code(exit_code);

@@ -153,7 +153,7 @@ Ref<Resource> ResourceFormatLoader::load(const String &p_path, const String &p_o
 			return Ref<Resource>();
 		} else { // Success, pass on result.
 			if (r_error) {
-				*r_error = OK;
+				*r_error = Error::OK;
 			}
 			return res;
 		}
@@ -178,7 +178,7 @@ Error ResourceFormatLoader::rename_dependencies(const String &p_path, const Hash
 		deps_dict[E.key] = E.value;
 	}
 
-	Error err = OK;
+	Error err = Error::OK;
 	GDVIRTUAL_CALL(_rename_dependencies, p_path, deps_dict, err);
 	return err;
 }
@@ -326,7 +326,7 @@ void ResourceLoader::_thread_load_function(void *p_userdata) {
 	load_task.resource = res;
 
 	load_task.progress = 1.0; //it was fully loaded at this point, so force progress to 1.0
-	if (load_task.error != OK) {
+	if (load_task.error != Error::OK) {
 		load_task.status = THREAD_LOAD_FAILED;
 	} else {
 		load_task.status = THREAD_LOAD_LOADED;
@@ -390,7 +390,7 @@ Error ResourceLoader::load_threaded_request(const String &p_path, const String &
 		print_verbose("load_threaded_request(): Another threaded load for resource path '" + p_path + "' has been initiated. Not an error.");
 		user_load_tokens[p_path]->reference(); // Additional request.
 		thread_load_mutex.unlock();
-		return OK;
+		return Error::OK;
 	}
 	user_load_tokens[p_path] = nullptr;
 	thread_load_mutex.unlock();
@@ -403,21 +403,21 @@ Error ResourceLoader::load_threaded_request(const String &p_path, const String &
 		user_load_tokens[p_path] = token.ptr();
 		print_lt("REQUEST: user load tokens: " + itos(user_load_tokens.size()));
 		thread_load_mutex.unlock();
-		return OK;
+		return Error::OK;
 	} else {
-		return FAILED;
+		return Error::FAILED;
 	}
 }
 
 Ref<Resource> ResourceLoader::load(const String &p_path, const String &p_type_hint, ResourceFormatLoader::CacheMode p_cache_mode, Error *r_error) {
 	if (r_error) {
-		*r_error = OK;
+		*r_error = Error::OK;
 	}
 
 	Ref<LoadToken> load_token = _load_start(p_path, p_type_hint, LOAD_THREAD_FROM_CURRENT, p_cache_mode);
 	if (!load_token.is_valid()) {
 		if (r_error) {
-			*r_error = FAILED;
+			*r_error = Error::FAILED;
 		}
 		return Ref<Resource>();
 	}
@@ -557,7 +557,7 @@ ResourceLoader::ThreadLoadStatus ResourceLoader::load_threaded_get_status(const 
 
 Ref<Resource> ResourceLoader::load_threaded_get(const String &p_path, Error *r_error) {
 	if (r_error) {
-		*r_error = OK;
+		*r_error = Error::OK;
 	}
 
 	Ref<Resource> res;
@@ -567,7 +567,7 @@ Ref<Resource> ResourceLoader::load_threaded_get(const String &p_path, Error *r_e
 		if (!user_load_tokens.has(p_path)) {
 			print_verbose("load_threaded_get(): No threaded load for resource path '" + p_path + "' has been initiated or its result has already been collected.");
 			if (r_error) {
-				*r_error = ERR_INVALID_PARAMETER;
+				*r_error = Error::INVALID_PARAMETER;
 			}
 			return Ref<Resource>();
 		}
@@ -576,7 +576,7 @@ Ref<Resource> ResourceLoader::load_threaded_get(const String &p_path, Error *r_e
 		if (!load_token) {
 			// This happens if requested from one thread and rapidly querying from another.
 			if (r_error) {
-				*r_error = ERR_BUSY;
+				*r_error = Error::BUSY;
 			}
 			return Ref<Resource>();
 		}
@@ -598,7 +598,7 @@ Ref<Resource> ResourceLoader::_load_complete(LoadToken &p_load_token, Error *r_e
 
 Ref<Resource> ResourceLoader::_load_complete_inner(LoadToken &p_load_token, Error *r_error, MutexLock<SafeBinaryMutex<BINARY_MUTEX_TAG>> &p_thread_load_lock) {
 	if (r_error) {
-		*r_error = OK;
+		*r_error = Error::OK;
 	}
 
 	if (!p_load_token.local_path.is_empty()) {
@@ -608,7 +608,7 @@ Ref<Resource> ResourceLoader::_load_complete_inner(LoadToken &p_load_token, Erro
 #endif
 			// On non-dev, be defensive and at least avoid crashing (at this point at least).
 			if (r_error) {
-				*r_error = ERR_BUG;
+				*r_error = Error::BUG;
 			}
 			return Ref<Resource>();
 		}
@@ -623,7 +623,7 @@ Ref<Resource> ResourceLoader::_load_complete_inner(LoadToken &p_load_token, Erro
 				// Load is in progress, but it's precisely this thread the one in charge.
 				// That means this is a cyclic load.
 				if (r_error) {
-					*r_error = ERR_BUSY;
+					*r_error = Error::BUSY;
 				}
 				return Ref<Resource>();
 			}
@@ -632,7 +632,7 @@ Ref<Resource> ResourceLoader::_load_complete_inner(LoadToken &p_load_token, Erro
 				// Loading thread is in the worker pool.
 				thread_load_mutex.unlock();
 				Error err = WorkerThreadPool::get_singleton()->wait_for_task_completion(load_task.task_id);
-				if (err == ERR_BUSY) {
+				if (err == Error::BUSY) {
 					// The WorkerThreadPool has reported that the current task wants to await on an older one.
 					// That't not allowed for safety, to avoid deadlocks. Fortunately, though, in the context of
 					// resource loading that means that the task to wait for can be restarted here to break the
@@ -651,7 +651,7 @@ Ref<Resource> ResourceLoader::_load_complete_inner(LoadToken &p_load_token, Erro
 					thread_load_mutex.lock();
 					return resource;
 				} else {
-					DEV_ASSERT(err == OK);
+					DEV_ASSERT(err == Error::OK);
 					thread_load_mutex.lock();
 					load_task.awaited = true;
 				}
@@ -669,7 +669,7 @@ Ref<Resource> ResourceLoader::_load_complete_inner(LoadToken &p_load_token, Erro
 
 		if (cleaning_tasks) {
 			load_task.resource = Ref<Resource>();
-			load_task.error = FAILED;
+			load_task.error = Error::FAILED;
 		}
 
 		Ref<Resource> resource = load_task.resource;
@@ -683,7 +683,7 @@ Ref<Resource> ResourceLoader::_load_complete_inner(LoadToken &p_load_token, Erro
 		Ref<Resource> resource = p_load_token.res_if_unregistered;
 		if (!resource.is_valid()) {
 			if (r_error) {
-				*r_error = FAILED;
+				*r_error = Error::FAILED;
 			}
 		}
 		return resource;
@@ -829,7 +829,7 @@ Error ResourceLoader::rename_dependencies(const String &p_path, const HashMap<St
 		return loader[i]->rename_dependencies(local_path, p_map);
 	}
 
-	return OK; // ??
+	return Error::OK; // ??
 }
 
 void ResourceLoader::get_classes_used(const String &p_path, HashSet<StringName> *r_classes) {
@@ -950,9 +950,9 @@ String ResourceLoader::_path_remap(const String &p_path, bool *r_translation_rem
 				next_tag.name = String();
 
 				err = VariantParser::parse_tag_assign_eof(&stream, lines, error_text, next_tag, assign, value, nullptr, true);
-				if (err == ERR_FILE_EOF) {
+				if (err == Error::FILE_EOF) {
 					break;
-				} else if (err != OK) {
+				} else if (err != Error::OK) {
 					ERR_PRINT("Parse error: " + p_path + ".remap:" + itos(lines) + " error: " + error_text + ".");
 					break;
 				}

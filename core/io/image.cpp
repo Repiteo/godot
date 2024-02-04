@@ -1818,11 +1818,11 @@ void Image::normalize() {
 }
 
 Error Image::generate_mipmaps(bool p_renormalize) {
-	ERR_FAIL_COND_V_MSG(!_can_modify(format), ERR_UNAVAILABLE, "Cannot generate mipmaps in compressed or custom image formats.");
+	ERR_FAIL_COND_V_MSG(!_can_modify(format), Error::UNAVAILABLE, "Cannot generate mipmaps in compressed or custom image formats.");
 
-	ERR_FAIL_COND_V_MSG(format == FORMAT_RGBA4444, ERR_UNAVAILABLE, "Cannot generate mipmaps from RGBA4444 format.");
+	ERR_FAIL_COND_V_MSG(format == FORMAT_RGBA4444, Error::UNAVAILABLE, "Cannot generate mipmaps from RGBA4444 format.");
 
-	ERR_FAIL_COND_V_MSG(width == 0 || height == 0, ERR_UNCONFIGURED, "Cannot generate mipmaps with width or height equal to 0.");
+	ERR_FAIL_COND_V_MSG(width == 0 || height == 0, Error::UNCONFIGURED, "Cannot generate mipmaps with width or height equal to 0.");
 
 	int mmcount;
 
@@ -1927,14 +1927,14 @@ Error Image::generate_mipmaps(bool p_renormalize) {
 
 	mipmaps = true;
 
-	return OK;
+	return Error::OK;
 }
 
 Error Image::generate_mipmap_roughness(RoughnessChannel p_roughness_channel, const Ref<Image> &p_normal_map) {
 	LocalVector<double> normal_sat_vec; //summed area table
 	int normal_w = 0, normal_h = 0;
 
-	ERR_FAIL_COND_V_MSG(p_normal_map.is_null() || p_normal_map->is_empty(), ERR_INVALID_PARAMETER, "Must provide a valid normal map for roughness mipmaps");
+	ERR_FAIL_COND_V_MSG(p_normal_map.is_null() || p_normal_map->is_empty(), Error::INVALID_PARAMETER, "Must provide a valid normal map for roughness mipmaps");
 
 	Ref<Image> nm = p_normal_map->duplicate();
 	if (nm->is_compressed()) {
@@ -2119,7 +2119,7 @@ Error Image::generate_mipmap_roughness(RoughnessChannel p_roughness_channel, con
 #endif
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 void Image::clear_mipmaps() {
@@ -2508,7 +2508,7 @@ Ref<Image> Image::load_from_file(const String &p_path) {
 	Ref<Image> image;
 	image.instantiate();
 	Error err = ImageLoader::load_image(p_path, image);
-	if (err != OK) {
+	if (err != Error::OK) {
 		ERR_FAIL_V_MSG(Ref<Image>(), vformat("Failed to load image. Error %d", err));
 	}
 	return image;
@@ -2516,7 +2516,7 @@ Ref<Image> Image::load_from_file(const String &p_path) {
 
 Error Image::save_png(const String &p_path) const {
 	if (save_png_func == nullptr) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 
 	return save_png_func(p_path, Ref<Image>((Image *)this));
@@ -2524,7 +2524,7 @@ Error Image::save_png(const String &p_path) const {
 
 Error Image::save_jpg(const String &p_path, float p_quality) const {
 	if (save_jpg_func == nullptr) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 
 	return save_jpg_func(p_path, Ref<Image>((Image *)this), p_quality);
@@ -2548,7 +2548,7 @@ Vector<uint8_t> Image::save_jpg_to_buffer(float p_quality) const {
 
 Error Image::save_exr(const String &p_path, bool p_grayscale) const {
 	if (save_exr_func == nullptr) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 
 	return save_exr_func(p_path, Ref<Image>((Image *)this), p_grayscale);
@@ -2563,9 +2563,9 @@ Vector<uint8_t> Image::save_exr_to_buffer(bool p_grayscale) const {
 
 Error Image::save_webp(const String &p_path, const bool p_lossy, const float p_quality) const {
 	if (save_webp_func == nullptr) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
-	ERR_FAIL_COND_V_MSG(p_lossy && !(0.0f <= p_quality && p_quality <= 1.0f), ERR_INVALID_PARAMETER, "The WebP lossy quality was set to " + rtos(p_quality) + ", which is not valid. WebP lossy quality must be between 0.0 and 1.0 (inclusive).");
+	ERR_FAIL_COND_V_MSG(p_lossy && !(0.0f <= p_quality && p_quality <= 1.0f), Error::INVALID_PARAMETER, "The WebP lossy quality was set to " + rtos(p_quality) + ", which is not valid. WebP lossy quality must be between 0.0 and 1.0 (inclusive).");
 
 	return save_webp_func(p_path, Ref<Image>((Image *)this), p_lossy, p_quality);
 }
@@ -2631,47 +2631,47 @@ Error Image::decompress() {
 	} else if (format >= FORMAT_ASTC_4x4 && format <= FORMAT_ASTC_8x8_HDR && _image_decompress_astc) {
 		_image_decompress_astc(this);
 	} else {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error Image::compress(CompressMode p_mode, CompressSource p_source, ASTCFormat p_astc_format) {
-	ERR_FAIL_INDEX_V_MSG(p_mode, COMPRESS_MAX, ERR_INVALID_PARAMETER, "Invalid compress mode.");
-	ERR_FAIL_INDEX_V_MSG(p_source, COMPRESS_SOURCE_MAX, ERR_INVALID_PARAMETER, "Invalid compress source.");
+	ERR_FAIL_INDEX_V_MSG(p_mode, COMPRESS_MAX, Error::INVALID_PARAMETER, "Invalid compress mode.");
+	ERR_FAIL_INDEX_V_MSG(p_source, COMPRESS_SOURCE_MAX, Error::INVALID_PARAMETER, "Invalid compress source.");
 	return compress_from_channels(p_mode, detect_used_channels(p_source), p_astc_format);
 }
 
 Error Image::compress_from_channels(CompressMode p_mode, UsedChannels p_channels, ASTCFormat p_astc_format) {
-	ERR_FAIL_COND_V(data.is_empty(), ERR_INVALID_DATA);
+	ERR_FAIL_COND_V(data.is_empty(), Error::INVALID_DATA);
 
 	switch (p_mode) {
 		case COMPRESS_S3TC: {
-			ERR_FAIL_NULL_V(_image_compress_bc_func, ERR_UNAVAILABLE);
+			ERR_FAIL_NULL_V(_image_compress_bc_func, Error::UNAVAILABLE);
 			_image_compress_bc_func(this, p_channels);
 		} break;
 		case COMPRESS_ETC: {
-			ERR_FAIL_NULL_V(_image_compress_etc1_func, ERR_UNAVAILABLE);
+			ERR_FAIL_NULL_V(_image_compress_etc1_func, Error::UNAVAILABLE);
 			_image_compress_etc1_func(this);
 		} break;
 		case COMPRESS_ETC2: {
-			ERR_FAIL_NULL_V(_image_compress_etc2_func, ERR_UNAVAILABLE);
+			ERR_FAIL_NULL_V(_image_compress_etc2_func, Error::UNAVAILABLE);
 			_image_compress_etc2_func(this, p_channels);
 		} break;
 		case COMPRESS_BPTC: {
-			ERR_FAIL_NULL_V(_image_compress_bptc_func, ERR_UNAVAILABLE);
+			ERR_FAIL_NULL_V(_image_compress_bptc_func, Error::UNAVAILABLE);
 			_image_compress_bptc_func(this, p_channels);
 		} break;
 		case COMPRESS_ASTC: {
-			ERR_FAIL_NULL_V(_image_compress_astc_func, ERR_UNAVAILABLE);
+			ERR_FAIL_NULL_V(_image_compress_astc_func, Error::UNAVAILABLE);
 			_image_compress_astc_func(this, p_astc_format);
 		} break;
 		case COMPRESS_MAX: {
-			ERR_FAIL_V(ERR_INVALID_PARAMETER);
+			ERR_FAIL_V(Error::INVALID_PARAMETER);
 		} break;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Image::Image(const char **p_xpm) {
@@ -3833,7 +3833,7 @@ Error Image::load_webp_from_buffer(const Vector<uint8_t> &p_array) {
 Error Image::load_tga_from_buffer(const Vector<uint8_t> &p_array) {
 	ERR_FAIL_NULL_V_MSG(
 			_tga_mem_loader_func,
-			ERR_UNAVAILABLE,
+			Error::UNAVAILABLE,
 			"The TGA module isn't enabled. Recompile the Godot editor or export template binary with the `module_tga_enabled=yes` SCons option.");
 	return _load_from_buffer(p_array, _tga_mem_loader_func);
 }
@@ -3841,7 +3841,7 @@ Error Image::load_tga_from_buffer(const Vector<uint8_t> &p_array) {
 Error Image::load_bmp_from_buffer(const Vector<uint8_t> &p_array) {
 	ERR_FAIL_NULL_V_MSG(
 			_bmp_mem_loader_func,
-			ERR_UNAVAILABLE,
+			Error::UNAVAILABLE,
 			"The BMP module isn't enabled. Recompile the Godot editor or export template binary with the `module_bmp_enabled=yes` SCons option.");
 	return _load_from_buffer(p_array, _bmp_mem_loader_func);
 }
@@ -3849,19 +3849,19 @@ Error Image::load_bmp_from_buffer(const Vector<uint8_t> &p_array) {
 Error Image::load_svg_from_buffer(const Vector<uint8_t> &p_array, float scale) {
 	ERR_FAIL_NULL_V_MSG(
 			_svg_scalable_mem_loader_func,
-			ERR_UNAVAILABLE,
+			Error::UNAVAILABLE,
 			"The SVG module isn't enabled. Recompile the Godot editor or export template binary with the `module_svg_enabled=yes` SCons option.");
 
 	int buffer_size = p_array.size();
 
-	ERR_FAIL_COND_V(buffer_size == 0, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(buffer_size == 0, Error::INVALID_PARAMETER);
 
 	Ref<Image> image = _svg_scalable_mem_loader_func(p_array.ptr(), buffer_size, scale);
-	ERR_FAIL_COND_V(!image.is_valid(), ERR_PARSE_ERROR);
+	ERR_FAIL_COND_V(!image.is_valid(), Error::PARSE_ERROR);
 
 	copy_internals_from(image);
 
-	return OK;
+	return Error::OK;
 }
 
 Error Image::load_svg_from_string(const String &p_svg_str, float scale) {
@@ -3871,7 +3871,7 @@ Error Image::load_svg_from_string(const String &p_svg_str, float scale) {
 Error Image::load_ktx_from_buffer(const Vector<uint8_t> &p_array) {
 	ERR_FAIL_NULL_V_MSG(
 			_ktx_mem_loader_func,
-			ERR_UNAVAILABLE,
+			Error::UNAVAILABLE,
 			"The KTX module isn't enabled. Recompile the Godot editor or export template binary with the `module_ktx_enabled=yes` SCons option.");
 	return _load_from_buffer(p_array, _ktx_mem_loader_func);
 }
@@ -3918,17 +3918,17 @@ void Image::convert_rgba8_to_bgra8() {
 Error Image::_load_from_buffer(const Vector<uint8_t> &p_array, ImageMemLoadFunc p_loader) {
 	int buffer_size = p_array.size();
 
-	ERR_FAIL_COND_V(buffer_size == 0, ERR_INVALID_PARAMETER);
-	ERR_FAIL_NULL_V(p_loader, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(buffer_size == 0, Error::INVALID_PARAMETER);
+	ERR_FAIL_NULL_V(p_loader, Error::INVALID_PARAMETER);
 
 	const uint8_t *r = p_array.ptr();
 
 	Ref<Image> image = p_loader(r, buffer_size);
-	ERR_FAIL_COND_V(!image.is_valid(), ERR_PARSE_ERROR);
+	ERR_FAIL_COND_V(!image.is_valid(), Error::PARSE_ERROR);
 
 	copy_internals_from(image);
 
-	return OK;
+	return Error::OK;
 }
 
 void Image::average_4_uint8(uint8_t &p_out, const uint8_t &p_a, const uint8_t &p_b, const uint8_t &p_c, const uint8_t &p_d) {
@@ -4038,19 +4038,19 @@ Dictionary Image::compute_image_metrics(const Ref<Image> p_compared_image, bool 
 	result["peak_snr"] = 0.0f;
 
 	ERR_FAIL_NULL_V(p_compared_image, result);
-	Error err = OK;
+	Error err = Error::OK;
 	Ref<Image> compared_image = duplicate(true);
 	if (compared_image->is_compressed()) {
 		err = compared_image->decompress();
 	}
-	ERR_FAIL_COND_V(err != OK, result);
+	ERR_FAIL_COND_V(err != Error::OK, result);
 	Ref<Image> source_image = p_compared_image->duplicate(true);
 	if (source_image->is_compressed()) {
 		err = source_image->decompress();
 	}
-	ERR_FAIL_COND_V(err != OK, result);
+	ERR_FAIL_COND_V(err != Error::OK, result);
 
-	ERR_FAIL_COND_V(err != OK, result);
+	ERR_FAIL_COND_V(err != Error::OK, result);
 
 	ERR_FAIL_COND_V_MSG((compared_image->get_format() >= Image::FORMAT_RH) && (compared_image->get_format() <= Image::FORMAT_RGBE9995), result, "Metrics on HDR images are not supported.");
 	ERR_FAIL_COND_V_MSG((source_image->get_format() >= Image::FORMAT_RH) && (source_image->get_format() <= Image::FORMAT_RGBE9995), result, "Metrics on HDR images are not supported.");

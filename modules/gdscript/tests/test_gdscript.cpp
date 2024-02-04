@@ -111,7 +111,7 @@ static void test_parser(const String &p_code, const String &p_script_path, const
 	GDScriptParser parser;
 	Error err = parser.parse(p_code, p_script_path, false);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		const List<GDScriptParser::ParserError> &errors = parser.get_errors();
 		for (const GDScriptParser::ParserError &error : errors) {
 			print_line(vformat("%02d:%02d: %s", error.line, error.column, error.message));
@@ -121,7 +121,7 @@ static void test_parser(const String &p_code, const String &p_script_path, const
 	GDScriptAnalyzer analyzer(&parser);
 	analyzer.analyze();
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		const List<GDScriptParser::ParserError> &errors = parser.get_errors();
 		for (const GDScriptParser::ParserError &error : errors) {
 			print_line(vformat("%02d:%02d: %s", error.line, error.column, error.message));
@@ -167,7 +167,7 @@ static void test_compiler(const String &p_code, const String &p_script_path, con
 	GDScriptParser parser;
 	Error err = parser.parse(p_code, p_script_path, false);
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		print_line("Error in parser:");
 		const List<GDScriptParser::ParserError> &errors = parser.get_errors();
 		for (const GDScriptParser::ParserError &error : errors) {
@@ -179,7 +179,7 @@ static void test_compiler(const String &p_code, const String &p_script_path, con
 	GDScriptAnalyzer analyzer(&parser);
 	err = analyzer.analyze();
 
-	if (err != OK) {
+	if (err != Error::OK) {
 		print_line("Error in analyzer:");
 		const List<GDScriptParser::ParserError> &errors = parser.get_errors();
 		for (const GDScriptParser::ParserError &error : errors) {
@@ -195,7 +195,7 @@ static void test_compiler(const String &p_code, const String &p_script_path, con
 
 	err = compiler.compile(&parser, script.ptr(), false);
 
-	if (err) {
+	if (err != Error::OK) {
 		print_line("Error in compiler:");
 		print_line(vformat("%02d:%02d: %s", compiler.get_error_line(), compiler.get_error_column(), compiler.get_error()));
 		return;

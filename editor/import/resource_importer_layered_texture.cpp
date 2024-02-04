@@ -331,7 +331,7 @@ Error ResourceImporterLayeredTexture::import(const String &p_source_file, const 
 	Ref<Image> image;
 	image.instantiate();
 	Error err = ImageLoader::load_image(p_source_file, image);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 
@@ -408,7 +408,7 @@ Error ResourceImporterLayeredTexture::import(const String &p_source_file, const 
 		*r_metadata = meta;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 const char *ResourceImporterLayeredTexture::compression_formats[] = {

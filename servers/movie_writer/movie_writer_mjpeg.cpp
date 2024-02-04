@@ -60,7 +60,7 @@ Error MovieWriterMJPEG::write_begin(const Size2i &p_movie_size, uint32_t p_fps, 
 
 	fps = p_fps;
 
-	ERR_FAIL_COND_V(f.is_null(), ERR_CANT_OPEN);
+	ERR_FAIL_COND_V(f.is_null(), Error::CANT_OPEN);
 
 	f->store_buffer((const uint8_t *)"RIFF", 4);
 	f->store_32(0); // Total length (update later)
@@ -187,11 +187,11 @@ Error MovieWriterMJPEG::write_begin(const Size2i &p_movie_size, uint32_t p_fps, 
 	f->store_32(0); // Number of frames (to be updated later)
 	f->store_buffer((const uint8_t *)"movi", 4);
 
-	return OK;
+	return Error::OK;
 }
 
 Error MovieWriterMJPEG::write_frame(const Ref<Image> &p_image, const int32_t *p_audio_data) {
-	ERR_FAIL_COND_V(!f.is_valid(), ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(!f.is_valid(), Error::UNCONFIGURED);
 
 	Vector<uint8_t> jpg_buffer = p_image->save_jpg_to_buffer(quality);
 	uint32_t s = jpg_buffer.size();
@@ -211,7 +211,7 @@ Error MovieWriterMJPEG::write_frame(const Ref<Image> &p_image, const int32_t *p_
 
 	frame_count++;
 
-	return OK;
+	return Error::OK;
 }
 
 void MovieWriterMJPEG::write_end() {

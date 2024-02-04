@@ -3083,7 +3083,7 @@ void DisplayServerX11::cursor_set_custom_image(const Ref<Resource> &p_cursor, Cu
 		if (image->is_compressed()) {
 			image = image->duplicate(true);
 			Error err = image->decompress();
-			ERR_FAIL_COND_MSG(err != OK, "Couldn't decompress VRAM-compressed custom mouse cursor image. Switch to a lossless compression mode in the Import dock.");
+			ERR_FAIL_COND_MSG(err != Error::OK, "Couldn't decompress VRAM-compressed custom mouse cursor image. Switch to a lossless compression mode in the Import dock.");
 		}
 
 		// Create the cursor structure
@@ -5346,7 +5346,7 @@ Vector<String> DisplayServerX11::get_rendering_drivers_func() {
 
 DisplayServer *DisplayServerX11::create_func(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Error &r_error) {
 	DisplayServer *ds = memnew(DisplayServerX11(p_rendering_driver, p_mode, p_vsync_mode, p_flags, p_position, p_resolution, p_screen, r_error));
-	if (r_error != OK) {
+	if (r_error) {
 		if (p_rendering_driver == "vulkan") {
 			String executable_name = OS::get_singleton()->get_executable_path().get_file();
 			OS::get_singleton()->alert(
@@ -5378,7 +5378,7 @@ DisplayServerX11::WindowID DisplayServerX11::_create_window(WindowMode p_mode, V
 	if (gl_manager) {
 		Error err;
 		visualInfo = gl_manager->get_vi(x11_display, err);
-		ERR_FAIL_COND_V_MSG(err != OK, INVALID_WINDOW_ID, "Can't acquire visual info from display.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, INVALID_WINDOW_ID, "Can't acquire visual info from display.");
 		vi_selected = true;
 	}
 	if (gl_manager_egl) {
@@ -5672,17 +5672,17 @@ DisplayServerX11::WindowID DisplayServerX11::_create_window(WindowMode p_mode, V
 			}
 #endif
 			Error err = context_rd->window_create(id, p_vsync_mode, win_rect.size.width, win_rect.size.height, &wpd);
-			ERR_FAIL_COND_V_MSG(err != OK, INVALID_WINDOW_ID, vformat("Can't create a %s window", context_rd->get_api_name()));
+			ERR_FAIL_COND_V_MSG(err != Error::OK, INVALID_WINDOW_ID, vformat("Can't create a %s window", context_rd->get_api_name()));
 		}
 #endif
 #ifdef GLES3_ENABLED
 		if (gl_manager) {
 			Error err = gl_manager->window_create(id, wd.x11_window, x11_display, win_rect.size.width, win_rect.size.height);
-			ERR_FAIL_COND_V_MSG(err != OK, INVALID_WINDOW_ID, "Can't create an OpenGL window");
+			ERR_FAIL_COND_V_MSG(err != Error::OK, INVALID_WINDOW_ID, "Can't create an OpenGL window");
 		}
 		if (gl_manager_egl) {
 			Error err = gl_manager_egl->window_create(id, x11_display, &wd.x11_window, win_rect.size.width, win_rect.size.height);
-			ERR_FAIL_COND_V_MSG(err != OK, INVALID_WINDOW_ID, "Failed to create an OpenGLES window.");
+			ERR_FAIL_COND_V_MSG(err != Error::OK, INVALID_WINDOW_ID, "Failed to create an OpenGLES window.");
 		}
 		window_set_vsync_mode(p_vsync_mode, id);
 #endif
@@ -5784,12 +5784,12 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 	int dylibloader_verbose = 0;
 #endif
 	if (initialize_xlib(dylibloader_verbose) != 0) {
-		r_error = ERR_UNAVAILABLE;
+		r_error = Error::UNAVAILABLE;
 		ERR_FAIL_MSG("Can't load Xlib dynamically.");
 	}
 
 	if (initialize_xcursor(dylibloader_verbose) != 0) {
-		r_error = ERR_UNAVAILABLE;
+		r_error = Error::UNAVAILABLE;
 		ERR_FAIL_MSG("Can't load XCursor dynamically.");
 	}
 #ifdef XKB_ENABLED
@@ -5806,7 +5806,7 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 	}
 #endif
 	if (initialize_xext(dylibloader_verbose) != 0) {
-		r_error = ERR_UNAVAILABLE;
+		r_error = Error::UNAVAILABLE;
 		ERR_FAIL_MSG("Can't load Xext dynamically.");
 	}
 
@@ -5819,12 +5819,12 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 	}
 
 	if (initialize_xrender(dylibloader_verbose) != 0) {
-		r_error = ERR_UNAVAILABLE;
+		r_error = Error::UNAVAILABLE;
 		ERR_FAIL_MSG("Can't load Xrender dynamically.");
 	}
 
 	if (initialize_xinput2(dylibloader_verbose) != 0) {
-		r_error = ERR_UNAVAILABLE;
+		r_error = Error::UNAVAILABLE;
 		ERR_FAIL_MSG("Can't load Xinput2 dynamically.");
 	}
 #else
@@ -5856,14 +5856,14 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 
 	Input::get_singleton()->set_event_dispatch_function(_dispatch_input_events);
 
-	r_error = OK;
+	r_error = Error::OK;
 
 #ifdef SOWRAP_ENABLED
 	{
 		if (!XcursorImageCreate || !XcursorImageLoadCursor || !XcursorImageDestroy || !XcursorGetDefaultSize || !XcursorGetTheme || !XcursorLibraryLoadImage) {
 			// There's no API to check version, check if functions are available instead.
 			ERR_PRINT("Unsupported Xcursor library version.");
-			r_error = ERR_UNAVAILABLE;
+			r_error = Error::UNAVAILABLE;
 			return;
 		}
 	}
@@ -5881,7 +5881,7 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 
 	if (!x11_display) {
 		ERR_PRINT("X11 Display is not available");
-		r_error = ERR_UNAVAILABLE;
+		r_error = Error::UNAVAILABLE;
 		return;
 	}
 
@@ -5925,7 +5925,7 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 		print_verbose(vformat("Xrender %d.%d detected.", version_major, version_minor));
 		if (rc != 1 || (version_major == 0 && version_minor < 11)) {
 			ERR_PRINT("Unsupported Xrender library version.");
-			r_error = ERR_UNAVAILABLE;
+			r_error = Error::UNAVAILABLE;
 			XCloseDisplay(x11_display);
 			return;
 		}
@@ -5938,7 +5938,7 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 		print_verbose(vformat("Xinput %d.%d detected.", version_major, version_minor));
 		if (rc != Success || (version_major < 2)) {
 			ERR_PRINT("Unsupported Xinput2 library version.");
-			r_error = ERR_UNAVAILABLE;
+			r_error = Error::UNAVAILABLE;
 			XCloseDisplay(x11_display);
 			return;
 		}
@@ -6004,7 +6004,7 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 		OS::get_singleton()->alert("Your system does not support XInput 2.\n"
 								   "Please upgrade your distribution.",
 				"Unable to initialize XInput");
-		r_error = ERR_UNAVAILABLE;
+		r_error = Error::UNAVAILABLE;
 		return;
 	}
 
@@ -6079,10 +6079,10 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 #endif
 
 	if (context_rd) {
-		if (context_rd->initialize() != OK) {
+		if (context_rd->initialize() != Error::OK) {
 			memdelete(context_rd);
 			context_rd = nullptr;
-			r_error = ERR_CANT_CREATE;
+			r_error = Error::CANT_CREATE;
 			ERR_FAIL_MSG(vformat("Could not initialize %s", context_rd->get_api_name()));
 		}
 		driver_found = true;
@@ -6134,7 +6134,7 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 	}
 	if (rendering_driver == "opengl3") {
 		gl_manager = memnew(GLManager_X11(p_resolution, GLManager_X11::GLES_3_0_COMPATIBLE));
-		if (gl_manager->initialize(x11_display) != OK || gl_manager->open_display(x11_display) != OK) {
+		if (gl_manager->initialize(x11_display) != Error::OK || gl_manager->open_display(x11_display) != Error::OK) {
 			memdelete(gl_manager);
 			gl_manager = nullptr;
 			bool fallback = GLOBAL_GET("rendering/gl_compatibility/fallback_to_gles");
@@ -6142,7 +6142,7 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 				WARN_PRINT("Your video card drivers seem not to support the required OpenGL version, switching to OpenGLES.");
 				rendering_driver = "opengl3_es";
 			} else {
-				r_error = ERR_UNAVAILABLE;
+				r_error = Error::UNAVAILABLE;
 				ERR_FAIL_MSG("Could not initialize OpenGL.");
 			}
 		} else {
@@ -6153,10 +6153,10 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 
 	if (rendering_driver == "opengl3_es") {
 		gl_manager_egl = memnew(GLManagerEGL_X11);
-		if (gl_manager_egl->initialize() != OK) {
+		if (gl_manager_egl->initialize() != Error::OK) {
 			memdelete(gl_manager_egl);
 			gl_manager_egl = nullptr;
-			r_error = ERR_UNAVAILABLE;
+			r_error = Error::UNAVAILABLE;
 			ERR_FAIL_MSG("Could not initialize OpenGLES.");
 		}
 		driver_found = true;
@@ -6165,7 +6165,7 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 
 #endif
 	if (!driver_found) {
-		r_error = ERR_UNAVAILABLE;
+		r_error = Error::UNAVAILABLE;
 		ERR_FAIL_MSG("Video driver not found");
 	}
 
@@ -6182,7 +6182,7 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 
 	WindowID main_window = _create_window(p_mode, p_vsync_mode, p_flags, Rect2i(window_position, p_resolution));
 	if (main_window == INVALID_WINDOW_ID) {
-		r_error = ERR_CANT_CREATE;
+		r_error = Error::CANT_CREATE;
 		return;
 	}
 	for (int i = 0; i < WINDOW_FLAG_MAX; i++) {
@@ -6355,7 +6355,7 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 #endif
 	XSetErrorHandler(&default_window_error_handler);
 
-	r_error = OK;
+	r_error = Error::OK;
 }
 
 DisplayServerX11::~DisplayServerX11() {

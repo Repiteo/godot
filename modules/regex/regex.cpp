@@ -196,9 +196,9 @@ Error RegEx::compile(const String &p_pattern) {
 		pcre2_get_error_message_32(err, buf, 256);
 		String message = String::num(offset) + ": " + String((const char32_t *)buf);
 		ERR_PRINT(message.utf8());
-		return FAILED;
+		return Error::FAILED;
 	}
-	return OK;
+	return Error::OK;
 }
 
 Ref<RegExMatch> RegEx::search(const String &p_subject, int p_offset, int p_end) const {

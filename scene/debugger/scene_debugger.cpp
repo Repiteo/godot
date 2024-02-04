@@ -81,11 +81,11 @@ void SceneDebugger::deinitialize() {
 Error SceneDebugger::parse_message(void *p_user, const String &p_msg, const Array &p_args, bool &r_captured) {
 	SceneTree *scene_tree = SceneTree::get_singleton();
 	if (!scene_tree) {
-		return ERR_UNCONFIGURED;
+		return Error::UNCONFIGURED;
 	}
 	LiveEditor *live_editor = LiveEditor::get_singleton();
 	if (!live_editor) {
-		return ERR_UNCONFIGURED;
+		return Error::UNCONFIGURED;
 	}
 
 	r_captured = true;
@@ -93,34 +93,34 @@ Error SceneDebugger::parse_message(void *p_user, const String &p_msg, const Arra
 		live_editor->_send_tree();
 
 	} else if (p_msg == "save_node") { // Save node.
-		ERR_FAIL_COND_V(p_args.size() < 2, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 2, Error::INVALID_DATA);
 		_save_node(p_args[0], p_args[1]);
 		Array arr;
 		arr.append(p_args[1]);
 		EngineDebugger::get_singleton()->send_message("filesystem:update_file", { arr });
 
 	} else if (p_msg == "inspect_object") { // Object Inspect
-		ERR_FAIL_COND_V(p_args.size() < 1, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 1, Error::INVALID_DATA);
 		ObjectID id = p_args[0];
 		_send_object_id(id);
 
 	} else if (p_msg == "override_camera_2D:set") { // Camera
-		ERR_FAIL_COND_V(p_args.size() < 1, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 1, Error::INVALID_DATA);
 		bool enforce = p_args[0];
 		scene_tree->get_root()->enable_canvas_transform_override(enforce);
 
 	} else if (p_msg == "override_camera_2D:transform") {
-		ERR_FAIL_COND_V(p_args.size() < 1, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 1, Error::INVALID_DATA);
 		Transform2D transform = p_args[0];
 		scene_tree->get_root()->set_canvas_transform_override(transform);
 #ifndef _3D_DISABLED
 	} else if (p_msg == "override_camera_3D:set") {
-		ERR_FAIL_COND_V(p_args.size() < 1, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 1, Error::INVALID_DATA);
 		bool enable = p_args[0];
 		scene_tree->get_root()->enable_camera_3d_override(enable);
 
 	} else if (p_msg == "override_camera_3D:transform") {
-		ERR_FAIL_COND_V(p_args.size() < 5, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 5, Error::INVALID_DATA);
 		Transform3D transform = p_args[0];
 		bool is_perspective = p_args[1];
 		float size_or_fov = p_args[2];
@@ -134,41 +134,41 @@ Error SceneDebugger::parse_message(void *p_user, const String &p_msg, const Arra
 		scene_tree->get_root()->set_camera_3d_override_transform(transform);
 #endif // _3D_DISABLED
 	} else if (p_msg == "set_object_property") {
-		ERR_FAIL_COND_V(p_args.size() < 3, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 3, Error::INVALID_DATA);
 		_set_object_property(p_args[0], p_args[1], p_args[2]);
 
 	} else if (!p_msg.begins_with("live_")) { // Live edits below.
-		return ERR_SKIP;
+		return Error::SKIP;
 	} else if (p_msg == "live_set_root") {
-		ERR_FAIL_COND_V(p_args.size() < 2, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 2, Error::INVALID_DATA);
 		live_editor->_root_func(p_args[0], p_args[1]);
 
 	} else if (p_msg == "live_node_path") {
-		ERR_FAIL_COND_V(p_args.size() < 2, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 2, Error::INVALID_DATA);
 		live_editor->_node_path_func(p_args[0], p_args[1]);
 
 	} else if (p_msg == "live_res_path") {
-		ERR_FAIL_COND_V(p_args.size() < 2, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 2, Error::INVALID_DATA);
 		live_editor->_res_path_func(p_args[0], p_args[1]);
 
 	} else if (p_msg == "live_node_prop_res") {
-		ERR_FAIL_COND_V(p_args.size() < 3, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 3, Error::INVALID_DATA);
 		live_editor->_node_set_res_func(p_args[0], p_args[1], p_args[2]);
 
 	} else if (p_msg == "live_node_prop") {
-		ERR_FAIL_COND_V(p_args.size() < 3, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 3, Error::INVALID_DATA);
 		live_editor->_node_set_func(p_args[0], p_args[1], p_args[2]);
 
 	} else if (p_msg == "live_res_prop_res") {
-		ERR_FAIL_COND_V(p_args.size() < 3, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 3, Error::INVALID_DATA);
 		live_editor->_res_set_res_func(p_args[0], p_args[1], p_args[2]);
 
 	} else if (p_msg == "live_res_prop") {
-		ERR_FAIL_COND_V(p_args.size() < 3, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 3, Error::INVALID_DATA);
 		live_editor->_res_set_func(p_args[0], p_args[1], p_args[2]);
 
 	} else if (p_msg == "live_node_call") {
-		ERR_FAIL_COND_V(p_args.size() < 2, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 2, Error::INVALID_DATA);
 		LocalVector<Variant> args;
 		LocalVector<Variant *> argptrs;
 		args.resize(p_args.size() - 2);
@@ -180,7 +180,7 @@ Error SceneDebugger::parse_message(void *p_user, const String &p_msg, const Arra
 		live_editor->_node_call_func(p_args[0], p_args[1], argptrs.size() ? (const Variant **)argptrs.ptr() : nullptr, argptrs.size());
 
 	} else if (p_msg == "live_res_call") {
-		ERR_FAIL_COND_V(p_args.size() < 2, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 2, Error::INVALID_DATA);
 		LocalVector<Variant> args;
 		LocalVector<Variant *> argptrs;
 		args.resize(p_args.size() - 2);
@@ -192,36 +192,36 @@ Error SceneDebugger::parse_message(void *p_user, const String &p_msg, const Arra
 		live_editor->_res_call_func(p_args[0], p_args[1], argptrs.size() ? (const Variant **)argptrs.ptr() : nullptr, argptrs.size());
 
 	} else if (p_msg == "live_create_node") {
-		ERR_FAIL_COND_V(p_args.size() < 3, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 3, Error::INVALID_DATA);
 		live_editor->_create_node_func(p_args[0], p_args[1], p_args[2]);
 
 	} else if (p_msg == "live_instantiate_node") {
-		ERR_FAIL_COND_V(p_args.size() < 3, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 3, Error::INVALID_DATA);
 		live_editor->_instance_node_func(p_args[0], p_args[1], p_args[2]);
 
 	} else if (p_msg == "live_remove_node") {
-		ERR_FAIL_COND_V(p_args.size() < 1, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 1, Error::INVALID_DATA);
 		live_editor->_remove_node_func(p_args[0]);
 
 	} else if (p_msg == "live_remove_and_keep_node") {
-		ERR_FAIL_COND_V(p_args.size() < 2, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 2, Error::INVALID_DATA);
 		live_editor->_remove_and_keep_node_func(p_args[0], p_args[1]);
 
 	} else if (p_msg == "live_restore_node") {
-		ERR_FAIL_COND_V(p_args.size() < 3, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 3, Error::INVALID_DATA);
 		live_editor->_restore_node_func(p_args[0], p_args[1], p_args[2]);
 
 	} else if (p_msg == "live_duplicate_node") {
-		ERR_FAIL_COND_V(p_args.size() < 2, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 2, Error::INVALID_DATA);
 		live_editor->_duplicate_node_func(p_args[0], p_args[1]);
 
 	} else if (p_msg == "live_reparent_node") {
-		ERR_FAIL_COND_V(p_args.size() < 4, ERR_INVALID_DATA);
+		ERR_FAIL_COND_V(p_args.size() < 4, Error::INVALID_DATA);
 		live_editor->_reparent_node_func(p_args[0], p_args[1], p_args[2], p_args[3]);
 	} else {
 		r_captured = false;
 	}
-	return OK;
+	return Error::OK;
 }
 
 void SceneDebugger::_save_node(ObjectID id, const String &p_path) {

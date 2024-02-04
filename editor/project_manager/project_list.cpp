@@ -388,7 +388,7 @@ ProjectList::Item ProjectList::load_project_data(const String &p_path, bool p_fa
 
 	int config_version = 0;
 	String project_name = TTR("Unnamed Project");
-	if (cf_err == OK) {
+	if (cf_err == Error::OK) {
 		String cf_project_name = cf->get_value("application", "config/name", "");
 		if (!cf_project_name.is_empty()) {
 			project_name = cf_project_name.xml_unescape();
@@ -410,7 +410,7 @@ ProjectList::Item ProjectList::load_project_data(const String &p_path, bool p_fa
 	PackedStringArray unsupported_features = ProjectSettings::get_unsupported_features(project_features);
 
 	uint64_t last_edited = 0;
-	if (cf_err == OK) {
+	if (cf_err == Error::OK) {
 		// The modification date marks the date the project was last edited.
 		// This is because the `project.godot` file will always be modified
 		// when editing a project (but not when running it).
@@ -450,7 +450,7 @@ void ProjectList::_load_project_icon(int p_index) {
 		Ref<Image> img;
 		img.instantiate();
 		Error err = img->load(item.icon.replace_first("res://", item.path + "/"));
-		if (err == OK) {
+		if (err == Error::OK) {
 			img->resize(default_icon->get_width(), default_icon->get_height(), Image::INTERPOLATE_LANCZOS);
 			icon = ImageTexture::create_from_image(img);
 		}
@@ -596,7 +596,7 @@ void ProjectList::find_projects_multiple(const PackedStringArray &p_paths) {
 void ProjectList::_scan_folder_recursive(const String &p_path, List<String> *r_projects) {
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 	Error error = da->change_dir(p_path);
-	ERR_FAIL_COND_MSG(error != OK, vformat("Failed to open the path \"%s\" for scanning (code %d).", p_path, error));
+	ERR_FAIL_COND_MSG(error != Error::OK, vformat("Failed to open the path \"%s\" for scanning (code %d).", p_path, error));
 
 	da->list_dir_begin();
 	String n = da->get_next();

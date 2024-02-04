@@ -76,30 +76,30 @@ void WebRTCPeerConnectionJS::close() {
 }
 
 Error WebRTCPeerConnectionJS::create_offer() {
-	ERR_FAIL_COND_V(_conn_state != STATE_NEW, FAILED);
+	ERR_FAIL_COND_V(_conn_state != STATE_NEW, Error::FAILED);
 
 	_conn_state = STATE_CONNECTING;
 	godot_js_rtc_pc_offer_create(_js_id, this, &_on_session_created, &_on_error);
-	return OK;
+	return Error::OK;
 }
 
 Error WebRTCPeerConnectionJS::set_local_description(String type, String sdp) {
 	godot_js_rtc_pc_local_description_set(_js_id, type.utf8().get_data(), sdp.utf8().get_data(), this, &_on_error);
-	return OK;
+	return Error::OK;
 }
 
 Error WebRTCPeerConnectionJS::set_remote_description(String type, String sdp) {
 	if (type == "offer") {
-		ERR_FAIL_COND_V(_conn_state != STATE_NEW, FAILED);
+		ERR_FAIL_COND_V(_conn_state != STATE_NEW, Error::FAILED);
 		_conn_state = STATE_CONNECTING;
 	}
 	godot_js_rtc_pc_remote_description_set(_js_id, type.utf8().get_data(), sdp.utf8().get_data(), this, &_on_session_created, &_on_error);
-	return OK;
+	return Error::OK;
 }
 
 Error WebRTCPeerConnectionJS::add_ice_candidate(String sdpMidName, int sdpMlineIndexName, String sdpName) {
 	godot_js_rtc_pc_ice_candidate_add(_js_id, sdpMidName.utf8().get_data(), sdpMlineIndexName, sdpName.utf8().get_data());
-	return OK;
+	return Error::OK;
 }
 
 Error WebRTCPeerConnectionJS::initialize(Dictionary p_config) {
@@ -111,7 +111,7 @@ Error WebRTCPeerConnectionJS::initialize(Dictionary p_config) {
 
 	String config = Variant(p_config).to_json_string();
 	_js_id = godot_js_rtc_pc_create(config.utf8().get_data(), this, &_on_connection_state_changed, &_on_gathering_state_changed, &_on_signaling_state_changed, &_on_ice_candidate, &_on_data_channel);
-	return _js_id ? OK : FAILED;
+	return _js_id ? Error::OK : Error::FAILED;
 }
 
 Ref<WebRTCDataChannel> WebRTCPeerConnectionJS::create_data_channel(String p_channel, Dictionary p_channel_config) {
@@ -124,7 +124,7 @@ Ref<WebRTCDataChannel> WebRTCPeerConnectionJS::create_data_channel(String p_chan
 }
 
 Error WebRTCPeerConnectionJS::poll() {
-	return OK;
+	return Error::OK;
 }
 
 WebRTCPeerConnection::GatheringState WebRTCPeerConnectionJS::get_gathering_state() const {

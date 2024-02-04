@@ -177,9 +177,9 @@ EditorPaths::EditorPaths() {
 
 	// Data dir.
 	{
-		if (dir->change_dir(data_dir) != OK) {
+		if (dir->change_dir(data_dir) != Error::OK) {
 			dir->make_dir_recursive(data_dir);
-			if (dir->change_dir(data_dir) != OK) {
+			if (dir->change_dir(data_dir) != Error::OK) {
 				ERR_PRINT("Could not create editor data directory: " + data_dir);
 				paths_valid = false;
 			}
@@ -192,9 +192,9 @@ EditorPaths::EditorPaths() {
 
 	// Config dir.
 	{
-		if (dir->change_dir(config_dir) != OK) {
+		if (dir->change_dir(config_dir) != Error::OK) {
 			dir->make_dir_recursive(config_dir);
-			if (dir->change_dir(config_dir) != OK) {
+			if (dir->change_dir(config_dir) != Error::OK) {
 				ERR_PRINT("Could not create editor config directory: " + config_dir);
 				paths_valid = false;
 			}
@@ -213,9 +213,9 @@ EditorPaths::EditorPaths() {
 
 	// Cache dir.
 	{
-		if (dir->change_dir(cache_dir) != OK) {
+		if (dir->change_dir(cache_dir) != Error::OK) {
 			dir->make_dir_recursive(cache_dir);
-			if (dir->change_dir(cache_dir) != OK) {
+			if (dir->change_dir(cache_dir) != Error::OK) {
 				ERR_PRINT("Could not create editor cache directory: " + cache_dir);
 				paths_valid = false;
 			}
@@ -229,9 +229,9 @@ EditorPaths::EditorPaths() {
 		Engine::get_singleton()->set_shader_cache_path(data_dir);
 	} else {
 		Ref<DirAccess> dir_res = DirAccess::create(DirAccess::ACCESS_RESOURCES);
-		if (dir_res->change_dir(project_data_dir) != OK) {
+		if (dir_res->change_dir(project_data_dir) != Error::OK) {
 			dir_res->make_dir_recursive(project_data_dir);
-			if (dir_res->change_dir(project_data_dir) != OK) {
+			if (dir_res->change_dir(project_data_dir) != Error::OK) {
 				ERR_PRINT("Could not create project data directory (" + project_data_dir + ") in: " + dir_res->get_current_dir());
 				paths_valid = false;
 			}

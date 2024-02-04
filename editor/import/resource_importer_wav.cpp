@@ -99,7 +99,7 @@ Error ResourceImporterWAV::import(const String &p_source_file, const String &p_s
 	Error err;
 	Ref<FileAccess> file = FileAccess::open(p_source_file, FileAccess::READ, &err);
 
-	ERR_FAIL_COND_V_MSG(err != OK, ERR_CANT_OPEN, "Cannot open file '" + p_source_file + "'.");
+	ERR_FAIL_COND_V_MSG(err != Error::OK, Error::CANT_OPEN, "Cannot open file '" + p_source_file + "'.");
 
 	/* CHECK RIFF */
 	char riff[5];
@@ -107,7 +107,7 @@ Error ResourceImporterWAV::import(const String &p_source_file, const String &p_s
 	file->get_buffer((uint8_t *)&riff, 4); //RIFF
 
 	if (riff[0] != 'R' || riff[1] != 'I' || riff[2] != 'F' || riff[3] != 'F') {
-		ERR_FAIL_V_MSG(ERR_FILE_UNRECOGNIZED, vformat("Not a WAV file. File should start with 'RIFF', but found '%s', in file of size %d bytes", riff, file->get_length()));
+		ERR_FAIL_V_MSG(Error::FILE_UNRECOGNIZED, vformat("Not a WAV file. File should start with 'RIFF', but found '%s', in file of size %d bytes", riff, file->get_length()));
 	}
 
 	/* GET FILESIZE */
@@ -120,7 +120,7 @@ Error ResourceImporterWAV::import(const String &p_source_file, const String &p_s
 	file->get_buffer((uint8_t *)&wave, 4); //WAVE
 
 	if (wave[0] != 'W' || wave[1] != 'A' || wave[2] != 'V' || wave[3] != 'E') {
-		ERR_FAIL_V_MSG(ERR_FILE_UNRECOGNIZED, vformat("Not a WAV file. Header should contain 'WAVE', but found '%s', in file of size %d bytes", wave, file->get_length()));
+		ERR_FAIL_V_MSG(Error::FILE_UNRECOGNIZED, vformat("Not a WAV file. Header should contain 'WAVE', but found '%s', in file of size %d bytes", wave, file->get_length()));
 	}
 
 	// Let users override potential loop points from the WAV.
@@ -162,12 +162,12 @@ Error ResourceImporterWAV::import(const String &p_source_file, const String &p_s
 			//Consider revision for engine version 3.0
 			compression_code = file->get_16();
 			if (compression_code != 1 && compression_code != 3) {
-				ERR_FAIL_V_MSG(ERR_INVALID_DATA, "Format not supported for WAVE file (not PCM). Save WAVE files as uncompressed PCM or IEEE float instead.");
+				ERR_FAIL_V_MSG(Error::INVALID_DATA, "Format not supported for WAVE file (not PCM). Save WAVE files as uncompressed PCM or IEEE float instead.");
 			}
 
 			format_channels = file->get_16();
 			if (format_channels != 1 && format_channels != 2) {
-				ERR_FAIL_V_MSG(ERR_INVALID_DATA, "Format not supported for WAVE file (not stereo or mono).");
+				ERR_FAIL_V_MSG(Error::INVALID_DATA, "Format not supported for WAVE file (not stereo or mono).");
 			}
 
 			format_freq = file->get_32(); //sampling rate
@@ -177,11 +177,11 @@ Error ResourceImporterWAV::import(const String &p_source_file, const String &p_s
 			format_bits = file->get_16(); // bits per sample
 
 			if (format_bits % 8 || format_bits == 0) {
-				ERR_FAIL_V_MSG(ERR_INVALID_DATA, "Invalid amount of bits in the sample (should be one of 8, 16, 24 or 32).");
+				ERR_FAIL_V_MSG(Error::INVALID_DATA, "Invalid amount of bits in the sample (should be one of 8, 16, 24 or 32).");
 			}
 
 			if (compression_code == 3 && format_bits % 32) {
-				ERR_FAIL_V_MSG(ERR_INVALID_DATA, "Invalid amount of bits in the IEEE float sample (should be 32 or 64).");
+				ERR_FAIL_V_MSG(Error::INVALID_DATA, "Invalid amount of bits in the IEEE float sample (should be 32 or 64).");
 			}
 
 			/* Don't need anything else, continue */
@@ -200,7 +200,7 @@ Error ResourceImporterWAV::import(const String &p_source_file, const String &p_s
 			frames = chunksize;
 
 			if (format_channels == 0) {
-				ERR_FAIL_COND_V(format_channels == 0, ERR_INVALID_DATA);
+				ERR_FAIL_COND_V(format_channels == 0, Error::INVALID_DATA);
 			}
 			frames /= format_channels;
 			frames /= (format_bits >> 3);
@@ -256,7 +256,7 @@ Error ResourceImporterWAV::import(const String &p_source_file, const String &p_s
 			}
 
 			if (file->eof_reached()) {
-				ERR_FAIL_V_MSG(ERR_FILE_CORRUPT, "Premature end of file.");
+				ERR_FAIL_V_MSG(Error::FILE_CORRUPT, "Premature end of file.");
 			}
 		}
 
@@ -535,7 +535,7 @@ Error ResourceImporterWAV::import(const String &p_source_file, const String &p_s
 
 	ResourceSaver::save(sample, p_save_path + ".sample");
 
-	return OK;
+	return Error::OK;
 }
 
 ResourceImporterWAV::ResourceImporterWAV() {

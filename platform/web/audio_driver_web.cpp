@@ -113,7 +113,7 @@ Error AudioDriverWeb::init() {
 	channel_count = audio_context.channel_count;
 	buffer_length = closest_power_of_2((latency * mix_rate / 1000));
 	Error err = create(buffer_length, channel_count);
-	if (err != OK) {
+	if (err != Error::OK) {
 		return err;
 	}
 	if (output_rb) {
@@ -122,16 +122,16 @@ Error AudioDriverWeb::init() {
 	const size_t array_size = buffer_length * (size_t)channel_count;
 	output_rb = memnew_arr(float, array_size);
 	if (!output_rb) {
-		return ERR_OUT_OF_MEMORY;
+		return Error::OUT_OF_MEMORY;
 	}
 	if (input_rb) {
 		memdelete_arr(input_rb);
 	}
 	input_rb = memnew_arr(float, array_size);
 	if (!input_rb) {
-		return ERR_OUT_OF_MEMORY;
+		return Error::OUT_OF_MEMORY;
 	}
-	return OK;
+	return Error::OK;
 }
 
 void AudioDriverWeb::start() {
@@ -173,9 +173,9 @@ Error AudioDriverWeb::input_start() {
 	input_buffer_init(buffer_length);
 	unlock();
 	if (godot_audio_input_start()) {
-		return FAILED;
+		return Error::FAILED;
 	}
-	return OK;
+	return Error::OK;
 }
 
 Error AudioDriverWeb::input_stop() {
@@ -183,7 +183,7 @@ Error AudioDriverWeb::input_stop() {
 	lock();
 	input_buffer.clear();
 	unlock();
-	return OK;
+	return Error::OK;
 }
 
 #ifdef THREADS_ENABLED
@@ -227,7 +227,7 @@ void AudioDriverWorklet::_audio_thread_func(void *p_data) {
 
 Error AudioDriverWorklet::create(int &p_buffer_size, int p_channels) {
 	if (!godot_audio_has_worklet()) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 	return (Error)godot_audio_worklet_create(p_channels);
 }
@@ -257,7 +257,7 @@ AudioDriverWorklet *AudioDriverWorklet::singleton = nullptr;
 
 Error AudioDriverWorklet::create(int &p_buffer_size, int p_channels) {
 	if (!godot_audio_has_worklet()) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 	return (Error)godot_audio_worklet_create(p_channels);
 }
@@ -287,7 +287,7 @@ void AudioDriverScriptProcessor::_process_callback() {
 
 Error AudioDriverScriptProcessor::create(int &p_buffer_samples, int p_channels) {
 	if (!godot_audio_has_script_processor()) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 	return (Error)godot_audio_script_create(&p_buffer_samples, p_channels);
 }

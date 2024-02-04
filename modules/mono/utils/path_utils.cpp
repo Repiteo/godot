@@ -105,7 +105,7 @@ String cwd() {
 	}
 
 	String result;
-	if (result.parse_utf8(buffer) != OK) {
+	if (result.parse_utf8(buffer) != Error::OK) {
 		return ".";
 	}
 
@@ -163,7 +163,7 @@ String realpath(const String &p_path) {
 	Error parse_ok = result.parse_utf8(resolved_path);
 	::free(resolved_path);
 
-	if (parse_ok != OK) {
+	if (parse_ok != Error::OK) {
 		return p_path;
 	}
 

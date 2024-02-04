@@ -91,7 +91,7 @@ void WebRTCDataChannelJS::close() {
 }
 
 Error WebRTCDataChannelJS::poll() {
-	return OK;
+	return Error::OK;
 }
 
 WebRTCDataChannelJS::ChannelState WebRTCDataChannelJS::get_ready_state() const {
@@ -103,10 +103,10 @@ int WebRTCDataChannelJS::get_available_packet_count() const {
 }
 
 Error WebRTCDataChannelJS::get_packet(const uint8_t **r_buffer, int &r_buffer_size) {
-	ERR_FAIL_COND_V(get_ready_state() != STATE_OPEN, ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(get_ready_state() != STATE_OPEN, Error::UNCONFIGURED);
 
 	if (queue_count == 0) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 
 	uint32_t to_read = 0;
@@ -120,7 +120,7 @@ Error WebRTCDataChannelJS::get_packet(const uint8_t **r_buffer, int &r_buffer_si
 
 	if (left < to_read + 1) {
 		in_buffer.advance_read(left);
-		return FAILED;
+		return Error::FAILED;
 	}
 
 	in_buffer.read(&is_string, 1);
@@ -129,15 +129,15 @@ Error WebRTCDataChannelJS::get_packet(const uint8_t **r_buffer, int &r_buffer_si
 	*r_buffer = packet_buffer;
 	r_buffer_size = to_read;
 
-	return OK;
+	return Error::OK;
 }
 
 Error WebRTCDataChannelJS::put_packet(const uint8_t *p_buffer, int p_buffer_size) {
-	ERR_FAIL_COND_V(get_ready_state() != STATE_OPEN, ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(get_ready_state() != STATE_OPEN, Error::UNCONFIGURED);
 
 	int is_bin = _write_mode == WebRTCDataChannel::WRITE_MODE_BINARY ? 1 : 0;
 	godot_js_rtc_datachannel_send(_js_id, p_buffer, p_buffer_size, is_bin);
-	return OK;
+	return Error::OK;
 }
 
 int WebRTCDataChannelJS::get_max_packet_size() const {

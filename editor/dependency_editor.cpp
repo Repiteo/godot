@@ -608,7 +608,7 @@ void DependencyRemoveDialog::ok_pressed() {
 		String path = OS::get_singleton()->get_resource_dir() + files_to_delete[i].replace_first("res://", "/");
 		print_verbose("Moving to trash: " + path);
 		Error err = OS::get_singleton()->move_to_trash(path);
-		if (err != OK) {
+		if (err != Error::OK) {
 			EditorNode::get_singleton()->add_io_error(TTR("Cannot remove:") + "\n" + files_to_delete[i] + "\n");
 		} else {
 			emit_signal(SNAME("file_removed"), files_to_delete[i]);
@@ -625,7 +625,7 @@ void DependencyRemoveDialog::ok_pressed() {
 			String path = OS::get_singleton()->get_resource_dir() + dirs_to_delete[i].replace_first("res://", "/");
 			print_verbose("Moving to trash: " + path);
 			Error err = OS::get_singleton()->move_to_trash(path);
-			if (err != OK) {
+			if (err != Error::OK) {
 				EditorNode::get_singleton()->add_io_error(TTR("Cannot remove:") + "\n" + dirs_to_delete[i] + "\n");
 			} else {
 				emit_signal(SNAME("folder_removed"), dirs_to_delete[i]);

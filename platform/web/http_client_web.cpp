@@ -38,7 +38,7 @@ void HTTPClientWeb::_parse_headers(int p_len, const char **p_headers, void *p_re
 }
 
 Error HTTPClientWeb::connect_to_host(const String &p_host, int p_port, Ref<TLSOptions> p_tls_options) {
-	ERR_FAIL_COND_V(p_tls_options.is_valid() && p_tls_options->is_server(), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(p_tls_options.is_valid() && p_tls_options->is_server(), Error::INVALID_PARAMETER);
 
 	close();
 
@@ -56,7 +56,7 @@ Error HTTPClientWeb::connect_to_host(const String &p_host, int p_port, Ref<TLSOp
 		host = host.substr(8, host.length() - 8);
 	}
 
-	ERR_FAIL_COND_V(host.length() < HOST_MIN_LEN, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(host.length() < HOST_MIN_LEN, Error::INVALID_PARAMETER);
 
 	if (port < 0) {
 		if (use_tls) {
@@ -68,7 +68,7 @@ Error HTTPClientWeb::connect_to_host(const String &p_host, int p_port, Ref<TLSOp
 
 	status = host.is_valid_ip_address() ? STATUS_CONNECTING : STATUS_RESOLVING;
 
-	return OK;
+	return Error::OK;
 }
 
 void HTTPClientWeb::set_connection(const Ref<StreamPeer> &p_connection) {
@@ -80,15 +80,15 @@ Ref<StreamPeer> HTTPClientWeb::get_connection() const {
 }
 
 Error HTTPClientWeb::request(Method p_method, const String &p_url, const Vector<String> &p_headers, const uint8_t *p_body, int p_body_len) {
-	ERR_FAIL_INDEX_V(p_method, METHOD_MAX, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V_MSG(p_method == METHOD_TRACE || p_method == METHOD_CONNECT, ERR_UNAVAILABLE, "HTTP methods TRACE and CONNECT are not supported for the Web platform.");
-	ERR_FAIL_COND_V(status != STATUS_CONNECTED, ERR_INVALID_PARAMETER);
-	ERR_FAIL_COND_V(host.is_empty(), ERR_UNCONFIGURED);
-	ERR_FAIL_COND_V(port < 0, ERR_UNCONFIGURED);
-	ERR_FAIL_COND_V(!p_url.begins_with("/"), ERR_INVALID_PARAMETER);
+	ERR_FAIL_INDEX_V(p_method, METHOD_MAX, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V_MSG(p_method == METHOD_TRACE || p_method == METHOD_CONNECT, Error::UNAVAILABLE, "HTTP methods TRACE and CONNECT are not supported for the Web platform.");
+	ERR_FAIL_COND_V(status != STATUS_CONNECTED, Error::INVALID_PARAMETER);
+	ERR_FAIL_COND_V(host.is_empty(), Error::UNCONFIGURED);
+	ERR_FAIL_COND_V(port < 0, Error::UNCONFIGURED);
+	ERR_FAIL_COND_V(!p_url.begins_with("/"), Error::INVALID_PARAMETER);
 
 	Error err = verify_headers(p_headers);
-	if (err) {
+	if (err != Error::OK) {
 		return err;
 	}
 
@@ -104,7 +104,7 @@ Error HTTPClientWeb::request(Method p_method, const String &p_url, const Vector<
 	}
 	js_id = godot_js_fetch_create(_methods[p_method], url.utf8().get_data(), c_strings.ptrw(), c_strings.size(), p_body, p_body_len);
 	status = STATUS_REQUESTING;
-	return OK;
+	return Error::OK;
 }
 
 void HTTPClientWeb::close() {
@@ -139,13 +139,13 @@ int HTTPClientWeb::get_response_code() const {
 
 Error HTTPClientWeb::get_response_headers(List<String> *r_response) {
 	if (!response_headers.size()) {
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 	for (int i = 0; i < response_headers.size(); i++) {
 		r_response->push_back(response_headers[i]);
 	}
 	response_headers.clear();
-	return OK;
+	return Error::OK;
 }
 
 int64_t HTTPClientWeb::get_response_body_length() const {
@@ -204,18 +204,18 @@ int HTTPClientWeb::get_read_chunk_size() const {
 Error HTTPClientWeb::poll() {
 	switch (status) {
 		case STATUS_DISCONNECTED:
-			return ERR_UNCONFIGURED;
+			return Error::UNCONFIGURED;
 
 		case STATUS_RESOLVING:
 			status = STATUS_CONNECTING;
-			return OK;
+			return Error::OK;
 
 		case STATUS_CONNECTING:
 			status = STATUS_CONNECTED;
-			return OK;
+			return Error::OK;
 
 		case STATUS_CONNECTED:
-			return OK;
+			return Error::OK;
 
 		case STATUS_BODY: {
 			godot_js_fetch_state_t state = godot_js_fetch_state_get(js_id);
@@ -223,13 +223,13 @@ Error HTTPClientWeb::poll() {
 				status = STATUS_DISCONNECTED;
 			} else if (state != GODOT_JS_FETCH_STATE_BODY) {
 				status = STATUS_CONNECTION_ERROR;
-				return ERR_CONNECTION_ERROR;
+				return Error::CONNECTION_ERROR;
 			}
-			return OK;
+			return Error::OK;
 		}
 
 		case STATUS_CONNECTION_ERROR:
-			return ERR_CONNECTION_ERROR;
+			return Error::CONNECTION_ERROR;
 
 		case STATUS_REQUESTING: {
 #ifdef DEBUG_ENABLED
@@ -245,25 +245,25 @@ Error HTTPClientWeb::poll() {
 			polled_response_code = godot_js_fetch_http_status_get(js_id);
 			godot_js_fetch_state_t js_state = godot_js_fetch_state_get(js_id);
 			if (js_state == GODOT_JS_FETCH_STATE_REQUESTING) {
-				return OK;
+				return Error::OK;
 			} else if (js_state == GODOT_JS_FETCH_STATE_ERROR) {
 				// Fetch is in error state.
 				status = STATUS_CONNECTION_ERROR;
-				return ERR_CONNECTION_ERROR;
+				return Error::CONNECTION_ERROR;
 			}
 			if (godot_js_fetch_read_headers(js_id, &_parse_headers, this)) {
 				// Failed to parse headers.
 				status = STATUS_CONNECTION_ERROR;
-				return ERR_CONNECTION_ERROR;
+				return Error::CONNECTION_ERROR;
 			}
 			status = STATUS_BODY;
 			break;
 		}
 
 		default:
-			ERR_FAIL_V(ERR_BUG);
+			ERR_FAIL_V(Error::BUG);
 	}
-	return OK;
+	return Error::OK;
 }
 
 HTTPClient *HTTPClientWeb::_create_func() {

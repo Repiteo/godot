@@ -46,14 +46,14 @@ static Ref<Image> _webp_mem_loader_func(const uint8_t *p_webp_data, int p_size) 
 	Ref<Image> img;
 	img.instantiate();
 	Error err = WebPCommon::webp_load_image_from_buffer(img.ptr(), p_webp_data, p_size);
-	ERR_FAIL_COND_V(err, Ref<Image>());
+	ERR_FAIL_COND_V(err != Error::OK, Ref<Image>());
 	return img;
 }
 
 Error ImageLoaderWebP::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField<ImageFormatLoader::LoaderFlags> p_flags, float p_scale) {
 	Vector<uint8_t> src_image;
 	uint64_t src_image_len = f->get_length();
-	ERR_FAIL_COND_V(src_image_len == 0, ERR_FILE_CORRUPT);
+	ERR_FAIL_COND_V(src_image_len == 0, Error::FILE_CORRUPT);
 	src_image.resize(src_image_len);
 
 	uint8_t *w = src_image.ptrw();

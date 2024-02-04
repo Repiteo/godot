@@ -350,7 +350,7 @@ Error WorkerThreadPool::wait_for_task_completion(TaskID p_task_id) {
 	Task **taskp = tasks.getptr(p_task_id);
 	if (!taskp) {
 		task_mutex.unlock();
-		ERR_FAIL_V_MSG(ERR_INVALID_PARAMETER, "Invalid Task ID"); // Invalid task
+		ERR_FAIL_V_MSG(Error::INVALID_PARAMETER, "Invalid Task ID"); // Invalid task
 	}
 	Task *task = *taskp;
 
@@ -360,7 +360,7 @@ Error WorkerThreadPool::wait_for_task_completion(TaskID p_task_id) {
 			task_allocator.free(task);
 		}
 		task_mutex.unlock();
-		return OK;
+		return Error::OK;
 	}
 
 	ThreadData *caller_pool_thread = thread_ids.has(Thread::get_caller_id()) ? &threads[thread_ids[Thread::get_caller_id()]] : nullptr;
@@ -377,7 +377,7 @@ Error WorkerThreadPool::wait_for_task_completion(TaskID p_task_id) {
 		// with the current design, we just simply reject attempts to await on older tasks,
 		// with a specific error code that signals the situation so the caller can handle it.
 		task_mutex.unlock();
-		return ERR_BUSY;
+		return Error::BUSY;
 	}
 
 	if (caller_pool_thread) {
@@ -465,7 +465,7 @@ Error WorkerThreadPool::wait_for_task_completion(TaskID p_task_id) {
 		task_mutex.unlock();
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 WorkerThreadPool::GroupID WorkerThreadPool::_add_group_task(const Callable &p_callable, void (*p_func)(void *, uint32_t), void *p_userdata, BaseTemplateUserdata *p_template_userdata, int p_elements, int p_tasks, bool p_high_priority, const String &p_description) {

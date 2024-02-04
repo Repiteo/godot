@@ -232,7 +232,7 @@ struct GodotTestCaseListener : public doctest::IReporter {
 			memnew(Input);
 			Input::get_singleton()->set_use_accumulated_input(false);
 
-			Error err = OK;
+			Error err = Error::OK;
 			OS::get_singleton()->set_has_server_feature_callback(nullptr);
 			for (int i = 0; i < DisplayServer::get_create_function_count(); i++) {
 				if (String("mock") == DisplayServer::get_create_function_name(i)) {

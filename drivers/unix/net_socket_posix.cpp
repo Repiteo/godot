@@ -207,7 +207,7 @@ NetSocketPosix::NetError NetSocketPosix::_get_socket_error() const {
 	if (err == WSAEMSGSIZE || err == WSAENOBUFS) {
 		return ERR_NET_BUFFER_TOO_SMALL;
 	}
-	print_verbose("Socket error: " + itos(err));
+	print_verbose("Socket error: " + itos((int)err));
 	return ERR_NET_OTHER;
 #else
 	if (errno == EISCONN) {
@@ -249,8 +249,8 @@ bool NetSocketPosix::_can_use_ip(const IPAddress &p_ip, const bool p_for_bind) c
 }
 
 _FORCE_INLINE_ Error NetSocketPosix::_change_multicast_group(IPAddress p_ip, String p_if_name, bool p_add) {
-	ERR_FAIL_COND_V(!is_open(), ERR_UNCONFIGURED);
-	ERR_FAIL_COND_V(!_can_use_ip(p_ip, false), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(!is_open(), Error::UNCONFIGURED);
+	ERR_FAIL_COND_V(!_can_use_ip(p_ip, false), Error::INVALID_PARAMETER);
 
 	// Need to force level and af_family to IP(v4) when using dual stacking and provided multicast group is IPv4
 	IP::Type type = _ip_type == IP::TYPE_ANY && p_ip.is_ipv4() ? IP::TYPE_IPV4 : _ip_type;
@@ -284,7 +284,7 @@ _FORCE_INLINE_ Error NetSocketPosix::_change_multicast_group(IPAddress p_ip, Str
 	}
 
 	if (level == IPPROTO_IP) {
-		ERR_FAIL_COND_V(!if_ip.is_valid(), ERR_INVALID_PARAMETER);
+		ERR_FAIL_COND_V(!if_ip.is_valid(), Error::INVALID_PARAMETER);
 		struct ip_mreq greq;
 		int sock_opt = p_add ? IP_ADD_MEMBERSHIP : IP_DROP_MEMBERSHIP;
 		memcpy(&greq.imr_multiaddr, p_ip.get_ipv4(), 4);
@@ -297,9 +297,9 @@ _FORCE_INLINE_ Error NetSocketPosix::_change_multicast_group(IPAddress p_ip, Str
 		greq.ipv6mr_interface = if_v6id;
 		ret = setsockopt(_sock, level, sock_opt, (const char *)&greq, sizeof(greq));
 	}
-	ERR_FAIL_COND_V(ret != 0, FAILED);
+	ERR_FAIL_COND_V(ret != 0, Error::FAILED);
 
-	return OK;
+	return Error::OK;
 }
 
 void NetSocketPosix::_set_socket(SOCKET_TYPE p_sock, IP::Type p_ip_type, bool p_is_stream) {
@@ -319,8 +319,8 @@ void NetSocketPosix::_set_close_exec_enabled(bool p_enabled) {
 }
 
 Error NetSocketPosix::open(Type p_sock_type, IP::Type &ip_type) {
-	ERR_FAIL_COND_V(is_open(), ERR_ALREADY_IN_USE);
-	ERR_FAIL_COND_V(ip_type > IP::TYPE_ANY || ip_type < IP::TYPE_NONE, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(is_open(), Error::ALREADY_IN_USE);
+	ERR_FAIL_COND_V(ip_type > IP::TYPE_ANY || ip_type < IP::TYPE_NONE, Error::INVALID_PARAMETER);
 
 #if defined(__OpenBSD__)
 	// OpenBSD does not support dual stacking, fallback to IPv4 only.
@@ -342,7 +342,7 @@ Error NetSocketPosix::open(Type p_sock_type, IP::Type &ip_type) {
 		_sock = socket(family, type, protocol);
 	}
 
-	ERR_FAIL_COND_V(_sock == SOCK_EMPTY, FAILED);
+	ERR_FAIL_COND_V(_sock == SOCK_EMPTY, Error::FAILED);
 	_ip_type = ip_type;
 
 	if (family == AF_INET6) {
@@ -382,7 +382,7 @@ Error NetSocketPosix::open(Type p_sock_type, IP::Type &ip_type) {
 		print_verbose("Unable to turn off SIGPIPE on socket");
 	}
 #endif
-	return OK;
+	return Error::OK;
 }
 
 void NetSocketPosix::close() {
@@ -396,38 +396,38 @@ void NetSocketPosix::close() {
 }
 
 Error NetSocketPosix::bind(IPAddress p_addr, uint16_t p_port) {
-	ERR_FAIL_COND_V(!is_open(), ERR_UNCONFIGURED);
-	ERR_FAIL_COND_V(!_can_use_ip(p_addr, true), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(!is_open(), Error::UNCONFIGURED);
+	ERR_FAIL_COND_V(!_can_use_ip(p_addr, true), Error::INVALID_PARAMETER);
 
 	sockaddr_storage addr;
 	size_t addr_size = _set_addr_storage(&addr, p_addr, p_port, _ip_type);
 
 	if (::bind(_sock, (struct sockaddr *)&addr, addr_size) != 0) {
 		NetError err = _get_socket_error();
-		print_verbose("Failed to bind socket. Error: " + itos(err));
+		print_verbose("Failed to bind socket. Error: " + itos((int)err));
 		close();
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error NetSocketPosix::listen(int p_max_pending) {
-	ERR_FAIL_COND_V(!is_open(), ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(!is_open(), Error::UNCONFIGURED);
 
 	if (::listen(_sock, p_max_pending) != 0) {
 		_get_socket_error();
 		print_verbose("Failed to listen from socket.");
 		close();
-		return FAILED;
+		return Error::FAILED;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error NetSocketPosix::connect_to_host(IPAddress p_host, uint16_t p_port) {
-	ERR_FAIL_COND_V(!is_open(), ERR_UNCONFIGURED);
-	ERR_FAIL_COND_V(!_can_use_ip(p_host, false), ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(!is_open(), Error::UNCONFIGURED);
+	ERR_FAIL_COND_V(!_can_use_ip(p_host, false), Error::INVALID_PARAMETER);
 
 	struct sockaddr_storage addr;
 	size_t addr_size = _set_addr_storage(&addr, p_host, p_port, _ip_type);
@@ -438,23 +438,23 @@ Error NetSocketPosix::connect_to_host(IPAddress p_host, uint16_t p_port) {
 		switch (err) {
 			// We are already connected
 			case ERR_NET_IS_CONNECTED:
-				return OK;
+				return Error::OK;
 			// Still waiting to connect, try again in a while
 			case ERR_NET_WOULD_BLOCK:
 			case ERR_NET_IN_PROGRESS:
-				return ERR_BUSY;
+				return Error::BUSY;
 			default:
 				print_verbose("Connection to remote host failed!");
 				close();
-				return FAILED;
+				return Error::FAILED;
 		}
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error NetSocketPosix::poll(PollType p_type, int p_timeout) const {
-	ERR_FAIL_COND_V(!is_open(), ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(!is_open(), Error::UNCONFIGURED);
 
 #if defined(WINDOWS_ENABLED)
 	bool ready = false;
@@ -491,17 +491,17 @@ Error NetSocketPosix::poll(PollType p_type, int p_timeout) const {
 	int ret = select(1, rdp, wrp, &ex, tp);
 
 	if (ret == SOCKET_ERROR) {
-		return FAILED;
+		return Error::FAILED;
 	}
 
 	if (ret == 0) {
-		return ERR_BUSY;
+		return Error::BUSY;
 	}
 
 	if (FD_ISSET(_sock, &ex)) {
 		_get_socket_error();
 		print_verbose("Exception when polling socket.");
-		return FAILED;
+		return Error::FAILED;
 	}
 
 	if (rdp && FD_ISSET(_sock, rdp)) {
@@ -511,7 +511,7 @@ Error NetSocketPosix::poll(PollType p_type, int p_timeout) const {
 		ready = true;
 	}
 
-	return ready ? OK : ERR_BUSY;
+	return ready ? Error::OK : Error::BUSY;
 #else
 	struct pollfd pfd;
 	pfd.fd = _sock;
@@ -534,40 +534,40 @@ Error NetSocketPosix::poll(PollType p_type, int p_timeout) const {
 	if (ret < 0 || pfd.revents & POLLERR) {
 		_get_socket_error();
 		print_verbose("Error when polling socket.");
-		return FAILED;
+		return Error::FAILED;
 	}
 
 	if (ret == 0) {
-		return ERR_BUSY;
+		return Error::BUSY;
 	}
 
-	return OK;
+	return Error::OK;
 #endif
 }
 
 Error NetSocketPosix::recv(uint8_t *p_buffer, int p_len, int &r_read) {
-	ERR_FAIL_COND_V(!is_open(), ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(!is_open(), Error::UNCONFIGURED);
 
 	r_read = ::recv(_sock, SOCK_BUF(p_buffer), p_len, 0);
 
 	if (r_read < 0) {
 		NetError err = _get_socket_error();
 		if (err == ERR_NET_WOULD_BLOCK) {
-			return ERR_BUSY;
+			return Error::BUSY;
 		}
 
 		if (err == ERR_NET_BUFFER_TOO_SMALL) {
-			return ERR_OUT_OF_MEMORY;
+			return Error::OUT_OF_MEMORY;
 		}
 
-		return FAILED;
+		return Error::FAILED;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error NetSocketPosix::recvfrom(uint8_t *p_buffer, int p_len, int &r_read, IPAddress &r_ip, uint16_t &r_port, bool p_peek) {
-	ERR_FAIL_COND_V(!is_open(), ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(!is_open(), Error::UNCONFIGURED);
 
 	struct sockaddr_storage from;
 	socklen_t len = sizeof(struct sockaddr_storage);
@@ -578,14 +578,14 @@ Error NetSocketPosix::recvfrom(uint8_t *p_buffer, int p_len, int &r_read, IPAddr
 	if (r_read < 0) {
 		NetError err = _get_socket_error();
 		if (err == ERR_NET_WOULD_BLOCK) {
-			return ERR_BUSY;
+			return Error::BUSY;
 		}
 
 		if (err == ERR_NET_BUFFER_TOO_SMALL) {
-			return ERR_OUT_OF_MEMORY;
+			return Error::OUT_OF_MEMORY;
 		}
 
-		return FAILED;
+		return Error::FAILED;
 	}
 
 	if (from.ss_family == AF_INET) {
@@ -598,14 +598,14 @@ Error NetSocketPosix::recvfrom(uint8_t *p_buffer, int p_len, int &r_read, IPAddr
 		r_port = ntohs(s6_from->sin6_port);
 	} else {
 		// Unsupported socket family, should never happen.
-		ERR_FAIL_V(FAILED);
+		ERR_FAIL_V(Error::FAILED);
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error NetSocketPosix::send(const uint8_t *p_buffer, int p_len, int &r_sent) {
-	ERR_FAIL_COND_V(!is_open(), ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(!is_open(), Error::UNCONFIGURED);
 
 	int flags = 0;
 #ifdef MSG_NOSIGNAL
@@ -618,20 +618,20 @@ Error NetSocketPosix::send(const uint8_t *p_buffer, int p_len, int &r_sent) {
 	if (r_sent < 0) {
 		NetError err = _get_socket_error();
 		if (err == ERR_NET_WOULD_BLOCK) {
-			return ERR_BUSY;
+			return Error::BUSY;
 		}
 		if (err == ERR_NET_BUFFER_TOO_SMALL) {
-			return ERR_OUT_OF_MEMORY;
+			return Error::OUT_OF_MEMORY;
 		}
 
-		return FAILED;
+		return Error::FAILED;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error NetSocketPosix::sendto(const uint8_t *p_buffer, int p_len, int &r_sent, IPAddress p_ip, uint16_t p_port) {
-	ERR_FAIL_COND_V(!is_open(), ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(!is_open(), Error::UNCONFIGURED);
 
 	struct sockaddr_storage addr;
 	size_t addr_size = _set_addr_storage(&addr, p_ip, p_port, _ip_type);
@@ -640,31 +640,31 @@ Error NetSocketPosix::sendto(const uint8_t *p_buffer, int p_len, int &r_sent, IP
 	if (r_sent < 0) {
 		NetError err = _get_socket_error();
 		if (err == ERR_NET_WOULD_BLOCK) {
-			return ERR_BUSY;
+			return Error::BUSY;
 		}
 		if (err == ERR_NET_BUFFER_TOO_SMALL) {
-			return ERR_OUT_OF_MEMORY;
+			return Error::OUT_OF_MEMORY;
 		}
 
-		return FAILED;
+		return Error::FAILED;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error NetSocketPosix::set_broadcasting_enabled(bool p_enabled) {
-	ERR_FAIL_COND_V(!is_open(), ERR_UNCONFIGURED);
+	ERR_FAIL_COND_V(!is_open(), Error::UNCONFIGURED);
 	// IPv6 has no broadcast support.
 	if (_ip_type == IP::TYPE_IPV6) {
-		return ERR_UNAVAILABLE;
+		return Error::UNAVAILABLE;
 	}
 
 	int par = p_enabled ? 1 : 0;
 	if (setsockopt(_sock, SOL_SOCKET, SO_BROADCAST, SOCK_CBUF(&par), sizeof(int)) != 0) {
 		WARN_PRINT("Unable to change broadcast setting");
-		return FAILED;
+		return Error::FAILED;
 	}
-	return OK;
+	return Error::OK;
 }
 
 void NetSocketPosix::set_blocking_enabled(bool p_enabled) {
@@ -753,17 +753,17 @@ int NetSocketPosix::get_available_bytes() const {
 }
 
 Error NetSocketPosix::get_socket_address(IPAddress *r_ip, uint16_t *r_port) const {
-	ERR_FAIL_COND_V(!is_open(), FAILED);
+	ERR_FAIL_COND_V(!is_open(), Error::FAILED);
 
 	struct sockaddr_storage saddr;
 	socklen_t len = sizeof(saddr);
 	if (getsockname(_sock, (struct sockaddr *)&saddr, &len) != 0) {
 		_get_socket_error();
 		print_verbose("Error when reading local socket address.");
-		return FAILED;
+		return Error::FAILED;
 	}
 	_set_ip_port(&saddr, r_ip, r_port);
-	return OK;
+	return Error::OK;
 }
 
 Ref<NetSocket> NetSocketPosix::accept(IPAddress &r_ip, uint16_t &r_port) {

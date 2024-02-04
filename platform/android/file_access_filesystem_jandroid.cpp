@@ -69,7 +69,7 @@ Error FileAccessFilesystemJAndroid::open_internal(const String &p_path, int p_mo
 
 	if (_file_open) {
 		JNIEnv *env = get_jni_env();
-		ERR_FAIL_NULL_V(env, ERR_UNCONFIGURED);
+		ERR_FAIL_NULL_V(env, Error::UNCONFIGURED);
 
 		String path = fix_path(p_path).simplify_path();
 		jstring js = env->NewStringUTF(path.utf8().get_data());
@@ -80,19 +80,19 @@ Error FileAccessFilesystemJAndroid::open_internal(const String &p_path, int p_mo
 			switch (res) {
 				case 0:
 				default:
-					return ERR_FILE_CANT_OPEN;
+					return Error::FILE_CANT_OPEN;
 
 				case -1:
-					return ERR_FILE_NOT_FOUND;
+					return Error::FILE_NOT_FOUND;
 			}
 		}
 
 		id = res;
 		path_src = p_path;
 		absolute_path = path;
-		return OK;
+		return Error::OK;
 	} else {
-		return ERR_UNCONFIGURED;
+		return Error::UNCONFIGURED;
 	}
 }
 
@@ -319,9 +319,9 @@ void FileAccessFilesystemJAndroid::store_buffer(const uint8_t *p_src, uint64_t p
 
 Error FileAccessFilesystemJAndroid::get_error() const {
 	if (eof_reached()) {
-		return ERR_FILE_EOF;
+		return Error::FILE_EOF;
 	}
-	return OK;
+	return Error::OK;
 }
 
 void FileAccessFilesystemJAndroid::flush() {

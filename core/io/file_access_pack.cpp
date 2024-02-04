@@ -40,11 +40,11 @@
 Error PackedData::add_pack(const String &p_path, bool p_replace_files, uint64_t p_offset) {
 	for (int i = 0; i < sources.size(); i++) {
 		if (sources[i]->try_open_pack(p_path, p_replace_files, p_offset)) {
-			return OK;
+			return Error::OK;
 		}
 	}
 
-	return ERR_FILE_UNRECOGNIZED;
+	return Error::FILE_UNRECOGNIZED;
 }
 
 void PackedData::add_path(const String &p_pkg_path, const String &p_path, uint64_t p_ofs, uint64_t p_size, const uint8_t *p_md5, PackSource *p_src, bool p_replace_files, bool p_encrypted) {
@@ -228,7 +228,7 @@ bool PackedSourcePCK::try_open_pack(const String &p_path, bool p_replace_files, 
 		}
 
 		Error err = fae->open_and_parse(f, key, FileAccessEncrypted::MODE_READ, false);
-		ERR_FAIL_COND_V_MSG(err, false, "Can't open encrypted pack directory.");
+		ERR_FAIL_COND_V_MSG(err != Error::OK, false, "Can't open encrypted pack directory.");
 		f = fae;
 	}
 
@@ -262,7 +262,7 @@ Ref<FileAccess> PackedSourcePCK::get_file(const String &p_path, PackedData::Pack
 
 Error FileAccessPack::open_internal(const String &p_path, int p_mode_flags) {
 	ERR_PRINT("Can't open pack-referenced file.");
-	return ERR_UNAVAILABLE;
+	return Error::UNAVAILABLE;
 }
 
 bool FileAccessPack::is_open() const {
@@ -346,9 +346,9 @@ void FileAccessPack::set_big_endian(bool p_big_endian) {
 
 Error FileAccessPack::get_error() const {
 	if (eof) {
-		return ERR_FILE_EOF;
+		return Error::FILE_EOF;
 	}
-	return OK;
+	return Error::OK;
 }
 
 void FileAccessPack::flush() {
@@ -391,7 +391,7 @@ FileAccessPack::FileAccessPack(const String &p_path, const PackedData::PackedFil
 		}
 
 		Error err = fae->open_and_parse(f, key, FileAccessEncrypted::MODE_READ, false);
-		ERR_FAIL_COND_MSG(err, "Can't open encrypted pack-referenced file '" + String(pf.pack) + "'.");
+		ERR_FAIL_COND_MSG(err != Error::OK, "Can't open encrypted pack-referenced file '" + String(pf.pack) + "'.");
 		f = fae;
 		off = 0;
 	}
@@ -415,7 +415,7 @@ Error DirAccessPack::list_dir_begin() {
 		list_files.push_back(E);
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 String DirAccessPack::get_next() {
@@ -513,9 +513,9 @@ Error DirAccessPack::change_dir(String p_dir) {
 	PackedData::PackedDir *pd = _find_dir(p_dir);
 	if (pd) {
 		current = pd;
-		return OK;
+		return Error::OK;
 	} else {
-		return ERR_INVALID_PARAMETER;
+		return Error::INVALID_PARAMETER;
 	}
 }
 
@@ -548,15 +548,15 @@ bool DirAccessPack::dir_exists(String p_dir) {
 }
 
 Error DirAccessPack::make_dir(String p_dir) {
-	return ERR_UNAVAILABLE;
+	return Error::UNAVAILABLE;
 }
 
 Error DirAccessPack::rename(String p_from, String p_to) {
-	return ERR_UNAVAILABLE;
+	return Error::UNAVAILABLE;
 }
 
 Error DirAccessPack::remove(String p_name) {
-	return ERR_UNAVAILABLE;
+	return Error::UNAVAILABLE;
 }
 
 uint64_t DirAccessPack::get_space_left() {

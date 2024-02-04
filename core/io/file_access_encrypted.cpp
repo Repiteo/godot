@@ -37,8 +37,8 @@
 #include <stdio.h>
 
 Error FileAccessEncrypted::open_and_parse(Ref<FileAccess> p_base, const Vector<uint8_t> &p_key, Mode p_mode, bool p_with_magic) {
-	ERR_FAIL_COND_V_MSG(file != nullptr, ERR_ALREADY_IN_USE, "Can't open file while another file from path '" + file->get_path_absolute() + "' is open.");
-	ERR_FAIL_COND_V(p_key.size() != 32, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V_MSG(file != nullptr, Error::ALREADY_IN_USE, "Can't open file while another file from path '" + file->get_path_absolute() + "' is open.");
+	ERR_FAIL_COND_V(p_key.size() != 32, Error::INVALID_PARAMETER);
 
 	pos = 0;
 	eofed = false;
@@ -56,7 +56,7 @@ Error FileAccessEncrypted::open_and_parse(Ref<FileAccess> p_base, const Vector<u
 
 		if (use_magic) {
 			uint32_t magic = p_base->get_32();
-			ERR_FAIL_COND_V(magic != ENCRYPTED_HEADER_MAGIC, ERR_FILE_UNRECOGNIZED);
+			ERR_FAIL_COND_V(magic != ENCRYPTED_HEADER_MAGIC, Error::FILE_UNRECOGNIZED);
 		}
 
 		unsigned char md5d[16];
@@ -69,7 +69,7 @@ Error FileAccessEncrypted::open_and_parse(Ref<FileAccess> p_base, const Vector<u
 		}
 
 		base = p_base->get_position();
-		ERR_FAIL_COND_V(p_base->get_length() < base + length, ERR_FILE_CORRUPT);
+		ERR_FAIL_COND_V(p_base->get_length() < base + length, Error::FILE_CORRUPT);
 		uint64_t ds = length;
 		if (ds % 16) {
 			ds += 16 - (ds % 16);
@@ -77,7 +77,7 @@ Error FileAccessEncrypted::open_and_parse(Ref<FileAccess> p_base, const Vector<u
 		data.resize(ds);
 
 		uint64_t blen = p_base->get_buffer(data.ptrw(), ds);
-		ERR_FAIL_COND_V(blen != ds, ERR_FILE_CORRUPT);
+		ERR_FAIL_COND_V(blen != ds, Error::FILE_CORRUPT);
 
 		{
 			CryptoCore::AESContext ctx;
@@ -89,19 +89,19 @@ Error FileAccessEncrypted::open_and_parse(Ref<FileAccess> p_base, const Vector<u
 		data.resize(length);
 
 		unsigned char hash[16];
-		ERR_FAIL_COND_V(CryptoCore::md5(data.ptr(), data.size(), hash) != OK, ERR_BUG);
+		ERR_FAIL_COND_V(CryptoCore::md5(data.ptr(), data.size(), hash) != Error::OK, Error::BUG);
 
-		ERR_FAIL_COND_V_MSG(String::md5(hash) != String::md5(md5d), ERR_FILE_CORRUPT, "The MD5 sum of the decrypted file does not match the expected value. It could be that the file is corrupt, or that the provided decryption key is invalid.");
+		ERR_FAIL_COND_V_MSG(String::md5(hash) != String::md5(md5d), Error::FILE_CORRUPT, "The MD5 sum of the decrypted file does not match the expected value. It could be that the file is corrupt, or that the provided decryption key is invalid.");
 
 		file = p_base;
 	}
 
-	return OK;
+	return Error::OK;
 }
 
 Error FileAccessEncrypted::open_and_parse_password(Ref<FileAccess> p_base, const String &p_key, Mode p_mode) {
 	String cs = p_key.md5_text();
-	ERR_FAIL_COND_V(cs.length() != 32, ERR_INVALID_PARAMETER);
+	ERR_FAIL_COND_V(cs.length() != 32, Error::INVALID_PARAMETER);
 	Vector<uint8_t> key_md5;
 	key_md5.resize(32);
 	for (int i = 0; i < 32; i++) {
@@ -112,7 +112,7 @@ Error FileAccessEncrypted::open_and_parse_password(Ref<FileAccess> p_base, const
 }
 
 Error FileAccessEncrypted::open_internal(const String &p_path, int p_mode_flags) {
-	return OK;
+	return Error::OK;
 }
 
 void FileAccessEncrypted::_close() {
@@ -128,7 +128,7 @@ void FileAccessEncrypted::_close() {
 		}
 
 		unsigned char hash[16];
-		ERR_FAIL_COND(CryptoCore::md5(data.ptr(), data.size(), hash) != OK); // Bug?
+		ERR_FAIL_COND(CryptoCore::md5(data.ptr(), data.size(), hash) != Error::OK); // Bug?
 
 		compressed.resize(len);
 		memset(compressed.ptrw(), 0, len);
@@ -235,7 +235,7 @@ uint64_t FileAccessEncrypted::get_buffer(uint8_t *p_dst, uint64_t p_length) cons
 }
 
 Error FileAccessEncrypted::get_error() const {
-	return eofed ? ERR_FILE_EOF : OK;
+	return eofed ? Error::FILE_EOF : Error::OK;
 }
 
 void FileAccessEncrypted::store_buffer(const uint8_t *p_src, uint64_t p_length) {
@@ -296,7 +296,7 @@ Error FileAccessEncrypted::_set_unix_permissions(const String &p_file, BitField<
 	if (file.is_valid()) {
 		return file->_set_unix_permissions(p_file, p_permissions);
 	}
-	return FAILED;
+	return Error::FAILED;
 }
 
 bool FileAccessEncrypted::_get_hidden_attribute(const String &p_file) {
@@ -310,7 +310,7 @@ Error FileAccessEncrypted::_set_hidden_attribute(const String &p_file, bool p_hi
 	if (file.is_valid()) {
 		return file->_set_hidden_attribute(p_file, p_hidden);
 	}
-	return FAILED;
+	return Error::FAILED;
 }
 
 bool FileAccessEncrypted::_get_read_only_attribute(const String &p_file) {
@@ -324,7 +324,7 @@ Error FileAccessEncrypted::_set_read_only_attribute(const String &p_file, bool p
 	if (file.is_valid()) {
 		return file->_set_read_only_attribute(p_file, p_ro);
 	}
-	return FAILED;
+	return Error::FAILED;
 }
 
 void FileAccessEncrypted::close() {

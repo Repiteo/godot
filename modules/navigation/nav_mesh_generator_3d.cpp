@@ -360,7 +360,7 @@ void NavMeshGenerator3D::generator_parse_staticbody3d_node(const Ref<NavigationM
 
 						Error err = ConvexHullComputer::convex_hull(varr, md);
 
-						if (err == OK) {
+						if (err == Error::OK) {
 							PackedVector3Array faces;
 
 							for (const Geometry3D::MeshData::Face &face : md.faces) {
@@ -501,7 +501,7 @@ void NavMeshGenerator3D::generator_parse_gridmap_node(const Ref<NavigationMesh> 
 
 						Error err = ConvexHullComputer::convex_hull(vertices, md);
 
-						if (err == OK) {
+						if (err == Error::OK) {
 							PackedVector3Array faces;
 
 							for (const Geometry3D::MeshData::Face &face : md.faces) {

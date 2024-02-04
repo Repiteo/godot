@@ -56,14 +56,14 @@ int main(int argc, char *argv[]) {
 	TEST_MAIN_OVERRIDE
 
 	char *cwd = (char *)malloc(PATH_MAX);
-	ERR_FAIL_NULL_V(cwd, ERR_OUT_OF_MEMORY);
+	ERR_FAIL_NULL_V(cwd, Error::OUT_OF_MEMORY);
 	char *ret = getcwd(cwd, PATH_MAX);
 
 	Error err = Main::setup(argv[0], argc - 1, &argv[1]);
-	if (err != OK) {
+	if (err != Error::OK) {
 		free(cwd);
 
-		if (err == ERR_HELP) { // Returned by --help and --version, so success.
+		if (err == Error::HELP) { // Returned by --help and --version, so success.
 			return 0;
 		}
 		return 255;

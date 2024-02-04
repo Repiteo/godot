@@ -378,7 +378,7 @@ void MeshInstance3DEditor::_menu_option(int p_option) {
 				Ref<ArrayMesh> unwrapped_mesh = array_mesh->duplicate(false);
 
 				Error err = unwrapped_mesh->lightmap_unwrap(node->get_global_transform());
-				if (err != OK) {
+				if (err != Error::OK) {
 					err_dialog->set_text(TTR("UV Unwrap failed, mesh may not be manifold?"));
 					err_dialog->popup_centered();
 					return;
