@@ -530,7 +530,7 @@ void JoypadLinux::process_joypads() {
 
 			switch (joypad_event.type) {
 				case EV_KEY:
-					input->joy_button(i, (JoyButton)joypad.key_map[joypad_event.code], joypad_event.value);
+					set_joy_button(i, (JoyButton)joypad.key_map[joypad_event.code], joypad_event.value);
 					break;
 
 				case EV_ABS:
@@ -548,7 +548,7 @@ void JoypadLinux::process_joypads() {
 								joypad.dpad.clear_flag(HatMask::LEFT);
 								joypad.dpad.clear_flag(HatMask::RIGHT);
 							}
-							input->joy_hat(i, joypad.dpad);
+							set_joy_hat(i, joypad.dpad);
 							break;
 
 						case ABS_HAT0Y:
@@ -564,7 +564,7 @@ void JoypadLinux::process_joypads() {
 								joypad.dpad.clear_flag(HatMask::UP);
 								joypad.dpad.clear_flag(HatMask::DOWN);
 							}
-							input->joy_hat(i, joypad.dpad);
+							set_joy_hat(i, joypad.dpad);
 							break;
 
 						default:
@@ -585,7 +585,7 @@ void JoypadLinux::process_joypads() {
 		for (int j = 0; j < MAX_ABS; j++) {
 			int index = joypad.abs_map[j];
 			if (index != -1) {
-				input->joy_axis(i, (JoyAxis)index, joypad.curr_axis[index]);
+				set_joy_axis(i, (JoyAxis)index, joypad.curr_axis[index]);
 			}
 		}
 

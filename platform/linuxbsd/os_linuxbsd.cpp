@@ -142,7 +142,8 @@ void OS_LinuxBSD::initialize() {
 
 void OS_LinuxBSD::initialize_joypads() {
 #ifdef JOYDEV_ENABLED
-	joypad = memnew(JoypadLinux(Input::get_singleton()));
+	joypad = Ref<JoypadLinux>(memnew(JoypadLinux(Input::get_singleton())));
+	Input::get_singleton()->add_handler(joypad);
 #endif
 }
 
@@ -222,12 +223,6 @@ void OS_LinuxBSD::finalize() {
 
 #ifdef ALSAMIDI_ENABLED
 	driver_alsamidi.close();
-#endif
-
-#ifdef JOYDEV_ENABLED
-	if (joypad) {
-		memdelete(joypad);
-	}
 #endif
 }
 
@@ -957,7 +952,9 @@ void OS_LinuxBSD::run() {
 	while (true) {
 		DisplayServer::get_singleton()->process_events(); // get rid of pending events
 #ifdef JOYDEV_ENABLED
-		joypad->process_joypads();
+		if (joypad.is_valid()) {
+			joypad->process_joypads();
+		}
 #endif
 		if (Main::iteration()) {
 			break;

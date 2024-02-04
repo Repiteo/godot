@@ -32,6 +32,7 @@
 #define INPUT_H
 
 #include "core/input/input_event.h"
+#include "core/input/input_handler.h"
 #include "core/object/object.h"
 #include "core/os/keyboard.h"
 #include "core/os/thread_safe.h"
@@ -254,6 +255,7 @@ private:
 #endif
 
 	friend class DisplayServer;
+	friend class InputHandler;
 
 	static void (*set_mouse_mode_func)(MouseMode);
 	static MouseMode (*get_mouse_mode_func)();
@@ -263,6 +265,15 @@ private:
 	static void (*set_custom_mouse_cursor_func)(const Ref<Resource> &, CursorShape, const Vector2 &);
 
 	EventDispatchFunc event_dispatch_function = nullptr;
+
+	Vector<ObjectID> handlers;
+	HashMap<int, ObjectID> handler_inputs;
+
+	int _claim_device(const ObjectID &p_handler);
+	void _release_device(const ObjectID &p_handler, int p_device);
+	void _set_device_button(const ObjectID &p_handler, int p_device, JoyButton p_button, bool p_pressed);
+	void _set_device_axis(const ObjectID &p_handler, int p_device, JoyAxis p_axis, float p_value);
+	void _set_device_hat(const ObjectID &p_handler, int p_device, BitField<HatMask> p_val);
 
 #ifndef DISABLE_DEPRECATED
 	void _vibrate_handheld_bind_compat_91143(int p_duration_ms = 500);
@@ -348,10 +359,6 @@ public:
 	void set_custom_mouse_cursor(const Ref<Resource> &p_cursor, CursorShape p_shape = Input::CURSOR_ARROW, const Vector2 &p_hotspot = Vector2());
 
 	void parse_mapping(const String &p_mapping);
-	void joy_button(int p_device, JoyButton p_button, bool p_pressed);
-	void joy_axis(int p_device, JoyAxis p_axis, float p_value);
-	void joy_hat(int p_device, BitField<HatMask> p_val);
-
 	void add_joy_mapping(const String &p_mapping, bool p_update_existing = false);
 	void remove_joy_mapping(const String &p_guid);
 
@@ -375,6 +382,13 @@ public:
 	void release_pressed_events();
 
 	void set_event_dispatch_function(EventDispatchFunc p_function);
+
+	void add_handler(const Ref<InputHandler> &p_handler);
+	void remove_handler(const Ref<InputHandler> &p_handler);
+	int get_handler_count() const;
+	Ref<InputHandler> get_handler(int p_index) const;
+	Ref<InputHandler> find_handler(const String &p_name) const;
+	TypedArray<Dictionary> get_handlers() const;
 
 	Input();
 	~Input();

@@ -46,9 +46,6 @@ DWORD WINAPI _xinput_set_state(DWORD dwUserIndex, XINPUT_VIBRATION *pVibration) 
 	return ERROR_DEVICE_NOT_CONNECTED;
 }
 
-JoypadWindows::JoypadWindows() {
-}
-
 JoypadWindows::JoypadWindows(HWND *hwnd) {
 	input = Input::get_singleton();
 	hWnd = hwnd;
@@ -59,10 +56,6 @@ JoypadWindows::JoypadWindows(HWND *hwnd) {
 	xinput_set_state = nullptr;
 
 	load_xinput();
-
-	for (int i = 0; i < JOYPADS_MAX; i++) {
-		attached_joypads[i] = false;
-	}
 
 	HRESULT result = DirectInput8Create(GetModuleHandle(nullptr), DIRECTINPUT_VERSION, IID_IDirectInput8, (void **)&dinput, nullptr);
 	if (result == DI_OK) {
@@ -87,9 +80,10 @@ JoypadWindows::~JoypadWindows() {
 }
 
 bool JoypadWindows::have_device(const GUID &p_guid) {
-	for (int i = 0; i < JOYPADS_MAX; i++) {
-		if (d_joypads[i].guid == p_guid) {
-			d_joypads[i].confirmed = true;
+	for (KeyValue<int, dinput_gamepad> &E : d_joypads) {
+		dinput_gamepad &joy = E.value;
+		if (joy.guid == p_guid) {
+			joy.confirmed = true;
 			return true;
 		}
 	}
@@ -160,15 +154,12 @@ bool JoypadWindows::is_xinput_device(const GUID *p_guid) {
 
 bool JoypadWindows::setup_dinput_joypad(const DIDEVICEINSTANCE *instance) {
 	ERR_FAIL_NULL_V_MSG(dinput, false, "DirectInput not initialized. Rebooting your PC may solve this issue.");
-	HRESULT hr;
-	int num = input->get_unused_joy_id();
 
-	if (have_device(instance->guidInstance) || num == -1) {
+	if (have_device(instance->guidInstance)) {
 		return false;
 	}
 
-	d_joypads[num] = dinput_gamepad();
-	dinput_gamepad *joy = &d_joypads[num];
+	dinput_gamepad joy = dinput_gamepad();
 
 	const DWORD devtype = (instance->dwDevType & 0xFF);
 
@@ -176,7 +167,7 @@ bool JoypadWindows::setup_dinput_joypad(const DIDEVICEINSTANCE *instance) {
 		return false;
 	}
 
-	hr = dinput->CreateDevice(instance->guidInstance, &joy->di_joy, nullptr);
+	HRESULT hr = dinput->CreateDevice(instance->guidInstance, &joy.di_joy, nullptr);
 
 	if (FAILED(hr)) {
 		return false;
@@ -192,20 +183,24 @@ bool JoypadWindows::setup_dinput_joypad(const DIDEVICEINSTANCE *instance) {
 	WORD version = 0;
 	sprintf_s(uid, "%04x%04x%04x%04x%04x%04x%04x%04x", type, 0, vendor, 0, product, 0, version, 0);
 
+	int num = claim_device();
+	if (num == -1) {
+		joy.di_joy->Release();
+		return false;
+	}
+
 	id_to_change = num;
 	slider_count = 0;
 
-	joy->di_joy->SetDataFormat(&c_dfDIJoystick2);
-	joy->di_joy->SetCooperativeLevel(*hWnd, DISCL_FOREGROUND);
-	joy->di_joy->EnumObjects(objectsCallback, this, 0);
-	joy->joy_axis.sort();
+	joy.di_joy->SetDataFormat(&c_dfDIJoystick2);
+	joy.di_joy->SetCooperativeLevel(*hWnd, DISCL_FOREGROUND);
+	joy.di_joy->EnumObjects(objectsCallback, this, 0);
+	joy.joy_axis.sort();
 
-	joy->guid = instance->guidInstance;
-	input->joy_connection_changed(num, true, instance->tszProductName, uid);
-	joy->attached = true;
-	joy->id = num;
-	attached_joypads[num] = true;
-	joy->confirmed = true;
+	joy.guid = instance->guidInstance;
+	joy.attached = true;
+	joy.id = num;
+	joy.confirmed = true;
 	joypad_count++;
 	return true;
 }
@@ -298,7 +293,6 @@ void JoypadWindows::close_joypad(int id) {
 	d_joypads[id].di_joy->Unacquire();
 	d_joypads[id].di_joy->Release();
 	d_joypads[id].attached = false;
-	attached_joypads[d_joypads[id].id] = false;
 	d_joypads[id].guid.Data1 = d_joypads[id].guid.Data2 = d_joypads[id].guid.Data3 = 0;
 	input->joy_connection_changed(d_joypads[id].id, false, "");
 	joypad_count--;
@@ -312,21 +306,21 @@ void JoypadWindows::probe_joypads() {
 
 		dwResult = xinput_get_state(i, &x_joypads[i].state);
 		if (dwResult == ERROR_SUCCESS) {
-			int id = input->get_unused_joy_id();
-			if (id != -1 && !x_joypads[i].attached) {
-				x_joypads[i].attached = true;
-				x_joypads[i].id = id;
-				x_joypads[i].ff_timestamp = 0;
-				x_joypads[i].ff_end_timestamp = 0;
-				x_joypads[i].vibrating = false;
-				attached_joypads[id] = true;
-				Dictionary joypad_info;
-				joypad_info["xinput_index"] = (int)i;
-				input->joy_connection_changed(id, true, "XInput Gamepad", "__XINPUT_DEVICE__", joypad_info);
+			if (!x_joypads[i].attached) {
+				int id = claim_device();
+				if (id != -1 && !x_joypads[i].attached) {
+					x_joypads[i].attached = true;
+					x_joypads[i].id = id;
+					x_joypads[i].ff_timestamp = 0;
+					x_joypads[i].ff_end_timestamp = 0;
+					x_joypads[i].vibrating = false;
+					Dictionary joypad_info;
+					joypad_info["xinput_index"] = (int)i;
+					input->joy_connection_changed(id, true, "XInput Gamepad", "__XINPUT_DEVICE__", joypad_info);
+				}
 			}
 		} else if (x_joypads[i].attached) {
 			x_joypads[i].attached = false;
-			attached_joypads[x_joypads[i].id] = false;
 			input->joy_connection_changed(x_joypads[i].id, false, "");
 		}
 	}
@@ -358,16 +352,16 @@ void JoypadWindows::process_joypads() {
 		if (joy.state.dwPacketNumber != joy.last_packet) {
 			int button_mask = XINPUT_GAMEPAD_DPAD_UP;
 			for (int j = 0; j <= 16; j++) {
-				input->joy_button(joy.id, (JoyButton)j, joy.state.Gamepad.wButtons & button_mask);
+				set_device_button(joy.id, (JoyButton)j, joy.state.Gamepad.wButtons & button_mask);
 				button_mask = button_mask * 2;
 			}
 
-			input->joy_axis(joy.id, JoyAxis::LEFT_X, axis_correct(joy.state.Gamepad.sThumbLX, true));
-			input->joy_axis(joy.id, JoyAxis::LEFT_Y, axis_correct(joy.state.Gamepad.sThumbLY, true, false, true));
-			input->joy_axis(joy.id, JoyAxis::RIGHT_X, axis_correct(joy.state.Gamepad.sThumbRX, true));
-			input->joy_axis(joy.id, JoyAxis::RIGHT_Y, axis_correct(joy.state.Gamepad.sThumbRY, true, false, true));
-			input->joy_axis(joy.id, JoyAxis::TRIGGER_LEFT, axis_correct(joy.state.Gamepad.bLeftTrigger, true, true));
-			input->joy_axis(joy.id, JoyAxis::TRIGGER_RIGHT, axis_correct(joy.state.Gamepad.bRightTrigger, true, true));
+			set_device_axis(joy.id, JoyAxis::LEFT_X, axis_correct(joy.state.Gamepad.sThumbLX, true));
+			set_device_axis(joy.id, JoyAxis::LEFT_Y, axis_correct(joy.state.Gamepad.sThumbLY, true, false, true));
+			set_device_axis(joy.id, JoyAxis::RIGHT_X, axis_correct(joy.state.Gamepad.sThumbRX, true));
+			set_device_axis(joy.id, JoyAxis::RIGHT_Y, axis_correct(joy.state.Gamepad.sThumbRY, true, false, true));
+			set_device_axis(joy.id, JoyAxis::TRIGGER_LEFT, axis_correct(joy.state.Gamepad.bLeftTrigger, true, true));
+			set_device_axis(joy.id, JoyAxis::TRIGGER_RIGHT, axis_correct(joy.state.Gamepad.bRightTrigger, true, true));
 			joy.last_packet = joy.state.dwPacketNumber;
 		}
 		uint64_t timestamp = input->get_joy_vibration_timestamp(joy.id);
@@ -411,12 +405,12 @@ void JoypadWindows::process_joypads() {
 		for (int j = 0; j < 128; j++) {
 			if (js.rgbButtons[j] & 0x80) {
 				if (!joy->last_buttons[j]) {
-					input->joy_button(joy->id, (JoyButton)j, true);
+					set_device_button(joy->id, (JoyButton)j, true);
 					joy->last_buttons[j] = true;
 				}
 			} else {
 				if (joy->last_buttons[j]) {
-					input->joy_button(joy->id, (JoyButton)j, false);
+					set_device_button(joy->id, (JoyButton)j, false);
 					joy->last_buttons[j] = false;
 				}
 			}
@@ -430,7 +424,7 @@ void JoypadWindows::process_joypads() {
 		for (uint32_t j = 0; j < joy->joy_axis.size(); j++) {
 			for (int k = 0; k < count; k++) {
 				if (joy->joy_axis[j] == axes[k]) {
-					input->joy_axis(joy->id, (JoyAxis)j, axis_correct(values[k]));
+					set_device_axis(joy->id, (JoyAxis)j, axis_correct(values[k]));
 					break;
 				}
 			}
@@ -478,7 +472,7 @@ void JoypadWindows::post_hat(int p_device, DWORD p_dpad) {
 		dpad_val.set_flag(HatMask::LEFT);
 		dpad_val.set_flag(HatMask::UP);
 	}
-	input->joy_hat(p_device, dpad_val);
+	set_device_hat(p_device, dpad_val);
 }
 
 float JoypadWindows::axis_correct(int p_val, bool p_xinput, bool p_trigger, bool p_negate) const {

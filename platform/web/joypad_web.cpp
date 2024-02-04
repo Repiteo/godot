@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*  joypad_ios.h                                                          */
+/*  joypad_web.cpp                                                        */
 /**************************************************************************/
 /*                         This file is part of:                          */
 /*                             GODOT ENGINE                               */
@@ -28,25 +28,13 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#include "core/input/input_handler.h"
-#import <GameController/GameController.h>
+#include "joypad_web.h"
 
-@interface JoypadIOSObserver : NSObject
+void JoypadWeb::process_joypads() {
+}
 
-- (void)startObserving;
-- (void)startProcessing;
-- (void)finishObserving;
+JoypadWeb::JoypadWeb() {
+}
 
-@end
-
-class JoypadIOS : public InputHandler {
-	JoypadIOSObserver *observer;
-
-public:
-	_FORCE_INLINE_ virtual String get_name() const override { return "JoypadIOS"; }
-
-	JoypadIOS();
-	~JoypadIOS();
-
-	void start_processing();
-};
+JoypadWeb::~JoypadWeb() {
+}

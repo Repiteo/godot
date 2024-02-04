@@ -149,6 +149,12 @@ void Input::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("is_emulating_mouse_from_touch"), &Input::is_emulating_mouse_from_touch);
 	ClassDB::bind_method(D_METHOD("set_emulate_touch_from_mouse", "enable"), &Input::set_emulate_touch_from_mouse);
 	ClassDB::bind_method(D_METHOD("is_emulating_touch_from_mouse"), &Input::is_emulating_touch_from_mouse);
+	ClassDB::bind_method(D_METHOD("add_handler", "handler"), &Input::add_handler);
+	ClassDB::bind_method(D_METHOD("remove_handler", "handler"), &Input::remove_handler);
+	ClassDB::bind_method(D_METHOD("get_handler_count"), &Input::get_handler_count);
+	ClassDB::bind_method(D_METHOD("get_handler", "idx"), &Input::get_handler);
+	ClassDB::bind_method(D_METHOD("find_handler", "name"), &Input::find_handler);
+	ClassDB::bind_method(D_METHOD("get_handlers"), &Input::get_handlers);
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "mouse_mode"), "set_mouse_mode", "get_mouse_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "use_accumulated_input"), "set_use_accumulated_input", "is_using_accumulated_input");
@@ -180,6 +186,8 @@ void Input::_bind_methods() {
 	BIND_ENUM_CONSTANT(CURSOR_HELP);
 
 	ADD_SIGNAL(MethodInfo("joy_connection_changed", PropertyInfo(Variant::INT, "device"), PropertyInfo(Variant::BOOL, "connected")));
+	ADD_SIGNAL(MethodInfo("handler_added", PropertyInfo(Variant::STRING_NAME, "handler_name")));
+	ADD_SIGNAL(MethodInfo("handler_removed", PropertyInfo(Variant::STRING_NAME, "handler_name")));
 }
 
 #ifdef TOOLS_ENABLED
@@ -1089,8 +1097,119 @@ void Input::set_event_dispatch_function(EventDispatchFunc p_function) {
 	event_dispatch_function = p_function;
 }
 
-void Input::joy_button(int p_device, JoyButton p_button, bool p_pressed) {
-	_THREAD_SAFE_METHOD_;
+void Input::add_handler(const Ref<InputHandler> &p_handler) {
+	ERR_FAIL_NULL(p_handler);
+
+	const ObjectID id = p_handler->get_instance_id();
+	for (int i = 0; i < handlers.size(); i++) {
+		ERR_FAIL_COND_MSG(handlers[i] == id, "Input: Handler was already added.");
+	}
+
+	handlers.push_back(id);
+	print_verbose("Input: Added handler \"" + p_handler->get_name() + "\"");
+	emit_signal(SNAME("handler_added"), p_handler->get_name());
+}
+
+void Input::remove_handler(const Ref<InputHandler> &p_handler) {
+	ERR_FAIL_NULL(p_handler);
+
+	int idx = -1;
+	const ObjectID id = p_handler->get_instance_id();
+	for (int i = 0; i < handlers.size(); i++) {
+		if (handlers[i] == id) {
+			idx = i;
+			break;
+		};
+	};
+
+	ERR_FAIL_COND_MSG(idx == -1, "Handler not found.");
+	print_verbose("Input: Removed handler \"" + p_handler->get_name() + "\"");
+	emit_signal(SNAME("handler_removed"), p_handler->get_name());
+	handlers.remove_at(idx);
+}
+
+int Input::get_handler_count() const {
+	return handlers.size();
+}
+
+Ref<InputHandler> Input::get_handler(int p_index) const {
+	ERR_FAIL_INDEX_V(p_index, handlers.size(), nullptr);
+	return Ref<InputHandler>(ObjectDB::get_instance(handlers[p_index]));
+}
+
+Ref<InputHandler> Input::find_handler(const String &p_name) const {
+	for (int i = 0; i < handlers.size(); i++) {
+		const Ref<InputHandler> handler = get_handler(i);
+		if (handler->get_name() == p_name) {
+			return handler;
+		};
+	};
+
+	ERR_FAIL_V_MSG(nullptr, "Handler not found.");
+}
+
+TypedArray<Dictionary> Input::get_handlers() const {
+	TypedArray<Dictionary> ret;
+
+	for (int i = 0; i < handlers.size(); i++) {
+		Dictionary dict;
+
+		dict["id"] = i;
+		dict["name"] = get_handler(i)->get_name();
+
+		ret.push_back(dict);
+	};
+
+	return ret;
+}
+
+int Input::_claim_device(const ObjectID &p_handler) {
+	_THREAD_SAFE_METHOD_
+
+	DEV_ASSERT(p_handler.is_valid());
+	int idx = -1;
+
+	for (int i = 0; i < JOYPADS_MAX; i++) {
+		if (!handler_inputs.has(i) || !ObjectDB::get_instance(handler_inputs[i])) {
+			handler_inputs[i] = p_handler;
+			idx = i;
+			break;
+		}
+	}
+
+	if (idx != -1) {
+		call_deferred("emit_signal", SNAME("joy_connection_changed"), idx, true);
+	}
+	return idx;
+}
+
+void Input::_release_device(const ObjectID &p_handler, int p_device) {
+	_THREAD_SAFE_METHOD_
+
+	DEV_ASSERT(p_handler.is_valid());
+	ERR_FAIL_COND_MSG(!handler_inputs.has(p_device) || handler_inputs[p_device] != p_handler,
+			vformat("Input: Handler \"%s\" does not own device %d.", Ref<InputHandler>(ObjectDB::get_instance(p_handler))->get_name(), p_device));
+
+	handler_inputs.erase(p_device);
+
+	for (KeyValue<StringName, ActionState> &E : action_states) {
+		HashMap<int, ActionState::DeviceState>::Iterator it = E.value.device_states.find(p_device);
+		if (it) {
+			E.value.device_states.remove(it);
+			_update_action_cache(E.key, E.value);
+		}
+	}
+
+	call_deferred("emit_signal", SNAME("joy_connection_changed"), p_device, false);
+}
+
+void Input::_set_device_button(const ObjectID &p_handler, int p_device, JoyButton p_button, bool p_pressed) {
+	_THREAD_SAFE_METHOD_
+
+	DEV_ASSERT(p_handler.is_valid());
+	ERR_FAIL_COND_MSG(!handler_inputs.has(p_device) || handler_inputs[p_device] != p_handler,
+			vformat("Input: Handler \"%s\" does not own device %d.", Ref<InputHandler>(ObjectDB::get_instance(p_handler))->get_name(), p_device));
+
 	Joypad &joy = joy_names[p_device];
 	ERR_FAIL_INDEX((int)p_button, (int)JoyButton::MAX);
 
@@ -1116,8 +1235,12 @@ void Input::joy_button(int p_device, JoyButton p_button, bool p_pressed) {
 	// no event?
 }
 
-void Input::joy_axis(int p_device, JoyAxis p_axis, float p_value) {
-	_THREAD_SAFE_METHOD_;
+void Input::_set_device_axis(const ObjectID &p_handler, int p_device, JoyAxis p_axis, float p_value) {
+	_THREAD_SAFE_METHOD_
+
+	DEV_ASSERT(p_handler.is_valid());
+	ERR_FAIL_COND_MSG(!handler_inputs.has(p_device) || handler_inputs[p_device] != p_handler,
+			vformat("Input: Handler \"%s\" does not own device %d.", Ref<InputHandler>(ObjectDB::get_instance(p_handler))->get_name(), p_device));
 
 	ERR_FAIL_INDEX((int)p_axis, (int)JoyAxis::MAX);
 
@@ -1184,8 +1307,13 @@ void Input::joy_axis(int p_device, JoyAxis p_axis, float p_value) {
 	}
 }
 
-void Input::joy_hat(int p_device, BitField<HatMask> p_val) {
-	_THREAD_SAFE_METHOD_;
+void Input::_set_device_hat(const ObjectID &p_handler, int p_device, BitField<HatMask> p_val) {
+	_THREAD_SAFE_METHOD_
+
+	DEV_ASSERT(p_handler.is_valid());
+	ERR_FAIL_COND_MSG(!handler_inputs.has(p_device) || handler_inputs[p_device] != p_handler,
+			vformat("Input: Handler \"%s\" does not own device %d.", Ref<InputHandler>(ObjectDB::get_instance(p_handler))->get_name(), p_device));
+
 	const Joypad &joy = joy_names[p_device];
 
 	JoyEvent map[(size_t)HatDir::MAX];

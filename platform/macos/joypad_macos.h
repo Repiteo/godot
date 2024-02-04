@@ -71,11 +71,13 @@ API_AVAILABLE(macosx(11))
 
 @end
 
-class JoypadMacOS {
+class JoypadMacOS : public InputHandler {
 private:
 	JoypadMacOSObserver *observer;
 
 public:
+	_FORCE_INLINE_ virtual String get_name() const override { return "JoypadMacOS"; }
+
 	JoypadMacOS();
 	~JoypadMacOS();
 

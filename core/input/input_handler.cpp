@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*  joypad_ios.h                                                          */
+/*  input_handler.cpp                                                     */
 /**************************************************************************/
 /*                         This file is part of:                          */
 /*                             GODOT ENGINE                               */
@@ -28,25 +28,48 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#include "core/input/input_handler.h"
-#import <GameController/GameController.h>
+#include "input_handler.h"
 
-@interface JoypadIOSObserver : NSObject
+#include "core/input/input.h"
+#include "core/string/ustring.h"
 
-- (void)startObserving;
-- (void)startProcessing;
-- (void)finishObserving;
+Input *input = Input::get_singleton();
 
-@end
+void InputHandler::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("get_name"), &InputHandler::get_name);
+	ClassDB::bind_method(D_METHOD("claim_device"), &InputHandler::claim_device);
+	ClassDB::bind_method(D_METHOD("release_device", "device"), &InputHandler::release_device);
+	ClassDB::bind_method(D_METHOD("set_device_button", "device", "button", "pressed"), &InputHandler::set_device_button);
+	ClassDB::bind_method(D_METHOD("set_device_axis", "device", "axis", "value"), &InputHandler::set_device_axis);
 
-class JoypadIOS : public InputHandler {
-	JoypadIOSObserver *observer;
+	GDVIRTUAL_BIND(_get_name);
+}
 
-public:
-	_FORCE_INLINE_ virtual String get_name() const override { return "JoypadIOS"; }
+String InputHandler::get_name() const {
+	String ret = "Unknown";
+	GDVIRTUAL_REQUIRED_CALL(_get_name, ret);
+	return ret;
+}
 
-	JoypadIOS();
-	~JoypadIOS();
+int InputHandler::claim_device() {
+	return input->_claim_device(this->get_instance_id());
+}
 
-	void start_processing();
-};
+void InputHandler::release_device(int p_device) {
+	input->_release_device(this->get_instance_id(), p_device);
+}
+
+void InputHandler::set_device_button(int p_device, JoyButton p_button, bool p_pressed) {
+	input->_set_device_button(this->get_instance_id(), p_device, p_button, p_pressed);
+}
+
+void InputHandler::set_device_axis(int p_device, JoyAxis p_axis, float p_value) {
+	input->_set_device_axis(this->get_instance_id(), p_device, p_axis, p_value);
+}
+
+void InputHandler::set_device_hat(int p_device, BitField<HatMask> p_val) {
+	input->_set_device_hat(this->get_instance_id(), p_device, p_val);
+}
+
+InputHandler::InputHandler() {}
+InputHandler::~InputHandler() {}

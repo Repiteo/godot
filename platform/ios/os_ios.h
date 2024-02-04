@@ -58,7 +58,7 @@ private:
 
 	iOS *ios = nullptr;
 
-	JoypadIOS *joypad_ios = nullptr;
+	Ref<JoypadIOS> joypad_ios;
 
 	MainLoop *main_loop = nullptr;
 

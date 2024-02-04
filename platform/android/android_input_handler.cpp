@@ -36,13 +36,13 @@
 void AndroidInputHandler::process_joy_event(AndroidInputHandler::JoypadEvent p_event) {
 	switch (p_event.type) {
 		case JOY_EVENT_BUTTON:
-			Input::get_singleton()->joy_button(p_event.device, (JoyButton)p_event.index, p_event.pressed);
+			set_joy_button(p_event.device, (JoyButton)p_event.index, p_event.pressed);
 			break;
 		case JOY_EVENT_AXIS:
-			Input::get_singleton()->joy_axis(p_event.device, (JoyAxis)p_event.index, p_event.value);
+			set_joy_axis(p_event.device, (JoyAxis)p_event.index, p_event.value);
 			break;
 		case JOY_EVENT_HAT:
-			Input::get_singleton()->joy_hat(p_event.device, p_event.hat);
+			set_joy_hat(p_event.device, p_event.hat);
 			break;
 		default:
 			return;

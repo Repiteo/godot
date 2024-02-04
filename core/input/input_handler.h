@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*  joypad_ios.h                                                          */
+/*  input_handler.h                                                       */
 /**************************************************************************/
 /*                         This file is part of:                          */
 /*                             GODOT ENGINE                               */
@@ -28,25 +28,32 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#include "core/input/input_handler.h"
-#import <GameController/GameController.h>
+#ifndef INPUT_HANDLER_H
+#define INPUT_HANDLER_H
 
-@interface JoypadIOSObserver : NSObject
+#include "core/object/gdvirtual.gen.inc"
+#include "core/object/ref_counted.h"
 
-- (void)startObserving;
-- (void)startProcessing;
-- (void)finishObserving;
+class InputHandler : public RefCounted {
+	GDCLASS(InputHandler, RefCounted);
 
-@end
+protected:
+	static void _bind_methods();
 
-class JoypadIOS : public InputHandler {
-	JoypadIOSObserver *observer;
+	GDVIRTUAL0RC(String, _get_name);
 
 public:
-	_FORCE_INLINE_ virtual String get_name() const override { return "JoypadIOS"; }
+	virtual String get_name() const;
 
-	JoypadIOS();
-	~JoypadIOS();
+	[[nodiscard]] int claim_device();
+	void release_device(int p_device);
 
-	void start_processing();
+	void set_device_button(int p_device, JoyButton p_button, bool p_pressed);
+	void set_device_axis(int p_device, JoyAxis p_axis, float p_value);
+	void set_device_hat(int p_device, BitField<HatMask> p_val);
+
+	InputHandler();
+	~InputHandler();
 };
+
+#endif // INPUT_HANDLER_H
