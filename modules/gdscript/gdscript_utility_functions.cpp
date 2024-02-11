@@ -658,7 +658,7 @@ static void _register_function(const String &p_name, const MethodInfo &p_method_
 		}                                                                                        \
 		MethodInfo info = MethodInfo(name);                                                      \
 		info.return_val.type = m_return_type;                                                    \
-		info.flags |= METHOD_FLAG_VARARG;                                                        \
+		info.flags |= MethodFlags::VARARG;                                                        \
 		_register_function(name, info, GDScriptUtilityFunctionsDefinitions::m_func, m_is_const); \
 	}
 
@@ -670,7 +670,7 @@ static void _register_function(const String &p_name, const MethodInfo &p_method_
 		}                                                                                        \
 		MethodInfo info = MethodInfo(name, __VA_ARGS__);                                         \
 		info.return_val.type = Variant::NIL;                                                     \
-		info.return_val.usage |= PROPERTY_USAGE_NIL_IS_VARIANT;                                  \
+		info.return_val.usage |= PropertyUsageFlags::NIL_IS_VARIANT;                                  \
 		_register_function(name, info, GDScriptUtilityFunctionsDefinitions::m_func, m_is_const); \
 	}
 
@@ -682,7 +682,7 @@ static void _register_function(const String &p_name, const MethodInfo &p_method_
 		}                                                                                        \
 		MethodInfo info = MethodInfo(name, __VA_ARGS__);                                         \
 		info.return_val.type = Variant::OBJECT;                                                  \
-		info.return_val.hint = PROPERTY_HINT_RESOURCE_TYPE;                                      \
+		info.return_val.hint = PropertyHint::RESOURCE_TYPE;                                      \
 		info.return_val.class_name = m_return_type;                                              \
 		_register_function(name, info, GDScriptUtilityFunctionsDefinitions::m_func, m_is_const); \
 	}
@@ -703,7 +703,7 @@ static void _register_function(const String &p_name, const MethodInfo &p_method_
 	PropertyInfo(m_type, m_name)
 
 #define VARARG(m_name) \
-	PropertyInfo(Variant::NIL, m_name, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_NIL_IS_VARIANT)
+	PropertyInfo(Variant::NIL, m_name, PropertyHint::NONE, "", PropertyUsageFlags::DEFAULT | PropertyUsageFlags::NIL_IS_VARIANT)
 
 void GDScriptUtilityFunctions::register_functions() {
 #ifndef DISABLE_DEPRECATED
@@ -737,7 +737,7 @@ GDScriptUtilityFunctions::FunctionPtr GDScriptUtilityFunctions::get_function(con
 bool GDScriptUtilityFunctions::has_function_return_value(const StringName &p_function) {
 	GDScriptUtilityFunctionInfo *info = utility_function_table.lookup_ptr(p_function);
 	ERR_FAIL_NULL_V(info, false);
-	return info->info.return_val.type != Variant::NIL || bool(info->info.return_val.usage & PROPERTY_USAGE_NIL_IS_VARIANT);
+	return info->info.return_val.type != Variant::NIL || bool(info->info.return_val.usage & PropertyUsageFlags::NIL_IS_VARIANT);
 }
 
 Variant::Type GDScriptUtilityFunctions::get_function_return_type(const StringName &p_function) {
@@ -768,7 +768,7 @@ int GDScriptUtilityFunctions::get_function_argument_count(const StringName &p_fu
 bool GDScriptUtilityFunctions::is_function_vararg(const StringName &p_function) {
 	GDScriptUtilityFunctionInfo *info = utility_function_table.lookup_ptr(p_function);
 	ERR_FAIL_NULL_V(info, false);
-	return (bool)(info->info.flags & METHOD_FLAG_VARARG);
+	return (bool)(info->info.flags & MethodFlags::VARARG);
 }
 
 bool GDScriptUtilityFunctions::is_function_constant(const StringName &p_function) {

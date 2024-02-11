@@ -601,7 +601,7 @@ void MaterialStorage::ShaderData::get_shader_uniform_list(List<PropertyInfo> *p_
 
 		if (group != last_group) {
 			PropertyInfo pi;
-			pi.usage = PROPERTY_USAGE_GROUP;
+			pi.usage = PropertyUsageFlags::GROUP;
 			pi.name = group;
 			p_param_list->push_back(pi);
 

@@ -547,7 +547,7 @@ String DTRN(const String &p_text, const String &p_text_plural, int p_n, const St
 // Property names defined directly inside EDITOR_DEF, GLOBAL_DEF, and ADD_PROPERTY macros don't need this.
 #define PNAME(m_value) (m_value)
 
-// Similar to PNAME, but to mark groups, i.e. properties with PROPERTY_USAGE_GROUP.
+// Similar to PNAME, but to mark groups, i.e. properties with PropertyUsageFlags::GROUP.
 // Groups defined directly inside ADD_GROUP macros don't need this.
 // The arguments are the same as ADD_GROUP. m_prefix is only used for extraction.
 #define GNAME(m_value, m_prefix) (m_value)

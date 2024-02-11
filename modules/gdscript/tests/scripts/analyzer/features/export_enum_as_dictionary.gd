@@ -12,6 +12,6 @@ const Utils = preload("../../utils.notest.gd")
 
 func test():
 	for property in get_property_list():
-		if property.usage & PROPERTY_USAGE_SCRIPT_VARIABLE:
+		if property.usage & PropertyUsageFlags::SCRIPT_VARIABLE:
 			print(Utils.get_property_signature(property))
 			print("  ", Utils.get_property_additional_info(property))

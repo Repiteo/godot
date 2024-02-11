@@ -181,10 +181,10 @@ void ProgressBar::_notification(int p_what) {
 
 void ProgressBar::_validate_property(PropertyInfo &p_property) const {
 	if (indeterminate && p_property.name == "show_percentage") {
-		p_property.usage |= PROPERTY_USAGE_READ_ONLY;
+		p_property.usage |= PropertyUsageFlags::READ_ONLY;
 	}
 	if (!indeterminate && p_property.name == "editor_preview_indeterminate") {
-		p_property.usage = PROPERTY_USAGE_NONE;
+		p_property.usage = PropertyUsageFlags::NONE;
 	}
 }
 
@@ -258,7 +258,7 @@ void ProgressBar::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_editor_preview_indeterminate", "preview_indeterminate"), &ProgressBar::set_editor_preview_indeterminate);
 	ClassDB::bind_method(D_METHOD("is_editor_preview_indeterminate_enabled"), &ProgressBar::is_editor_preview_indeterminate_enabled);
 
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "fill_mode", PROPERTY_HINT_ENUM, "Begin to End,End to Begin,Top to Bottom,Bottom to Top"), "set_fill_mode", "get_fill_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "fill_mode", PropertyHint::ENUM, "Begin to End,End to Begin,Top to Bottom,Bottom to Top"), "set_fill_mode", "get_fill_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "show_percentage"), "set_show_percentage", "is_percentage_shown");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "indeterminate"), "set_indeterminate", "is_indeterminate");
 	ADD_GROUP("Editor", "editor_");

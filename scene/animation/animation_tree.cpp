@@ -391,7 +391,7 @@ void AnimationNode::_set_filters(const Array &p_filters) {
 
 void AnimationNode::_validate_property(PropertyInfo &p_property) const {
 	if (!has_filter() && (p_property.name == "filter_enabled" || p_property.name == "filters")) {
-		p_property.usage = PROPERTY_USAGE_NONE;
+		p_property.usage = PropertyUsageFlags::NONE;
 	}
 }
 
@@ -466,8 +466,8 @@ void AnimationNode::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_parameter", "name", "value"), &AnimationNode::set_parameter);
 	ClassDB::bind_method(D_METHOD("get_parameter", "name"), &AnimationNode::get_parameter);
 
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "filter_enabled", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_filter_enabled", "is_filter_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "filters", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_filters", "_get_filters");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "filter_enabled", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR), "set_filter_enabled", "is_filter_enabled");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "filters", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL), "_set_filters", "_get_filters");
 
 	GDVIRTUAL_BIND(_get_child_nodes);
 	GDVIRTUAL_BIND(_get_parameter_list);
@@ -799,10 +799,10 @@ void AnimationTree::_validate_property(PropertyInfo &p_property) const {
 
 	if (!animation_player.is_empty()) {
 		if (p_property.name == "root_node" || p_property.name.begins_with("libraries")) {
-			p_property.usage |= PROPERTY_USAGE_READ_ONLY;
+			p_property.usage |= PropertyUsageFlags::READ_ONLY;
 		}
 		if (p_property.name.begins_with("libraries")) {
-			p_property.usage &= ~PROPERTY_USAGE_STORAGE;
+			p_property.usage &= ~PropertyUsageFlags::STORAGE;
 		}
 	}
 }
@@ -886,9 +886,9 @@ void AnimationTree::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_animation_player", "path"), &AnimationTree::set_animation_player);
 	ClassDB::bind_method(D_METHOD("get_animation_player"), &AnimationTree::get_animation_player);
 
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "tree_root", PROPERTY_HINT_RESOURCE_TYPE, "AnimationRootNode"), "set_tree_root", "get_tree_root");
-	ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "advance_expression_base_node", PROPERTY_HINT_NODE_PATH_VALID_TYPES, "Node"), "set_advance_expression_base_node", "get_advance_expression_base_node");
-	ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "anim_player", PROPERTY_HINT_NODE_PATH_VALID_TYPES, "AnimationPlayer"), "set_animation_player", "get_animation_player");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "tree_root", PropertyHint::RESOURCE_TYPE, "AnimationRootNode"), "set_tree_root", "get_tree_root");
+	ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "advance_expression_base_node", PropertyHint::NODE_PATH_VALID_TYPES, "Node"), "set_advance_expression_base_node", "get_advance_expression_base_node");
+	ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "anim_player", PropertyHint::NODE_PATH_VALID_TYPES, "AnimationPlayer"), "set_animation_player", "get_animation_player");
 
 #ifdef TOOLS_ENABLED
 	ADD_SIGNAL(MethodInfo(SNAME("animation_player_changed")));

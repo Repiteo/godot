@@ -39,7 +39,7 @@ VARIANT_BITFIELD_CAST(MethodFlags)
 
 class MethodBind {
 	int method_id;
-	uint32_t hint_flags = METHOD_FLAGS_DEFAULT;
+	uint32_t hint_flags = MethodFlags::DEFAULT;
 	StringName name;
 	StringName instance_class;
 	Vector<Variant> default_arguments;
@@ -105,7 +105,7 @@ public:
 #endif
 
 	void set_hint_flags(uint32_t p_hint) { hint_flags = p_hint; }
-	uint32_t get_hint_flags() const { return hint_flags | (is_const() ? METHOD_FLAG_CONST : 0) | (is_vararg() ? METHOD_FLAG_VARARG : 0) | (is_static() ? METHOD_FLAG_STATIC : 0); }
+	uint32_t get_hint_flags() const { return hint_flags | (is_const() ? MethodFlags::CONST : 0) | (is_vararg() ? MethodFlags::VARARG : 0) | (is_static() ? MethodFlags::STATIC : 0); }
 	_FORCE_INLINE_ StringName get_instance_class() const { return instance_class; }
 	_FORCE_INLINE_ void set_instance_class(const StringName &p_class) { instance_class = p_class; }
 
@@ -154,7 +154,7 @@ public:
 		} else if (p_arg < method_info.arguments.size()) {
 			return method_info.arguments[p_arg];
 		} else {
-			return PropertyInfo(Variant::NIL, "arg_" + itos(p_arg), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_NIL_IS_VARIANT);
+			return PropertyInfo(Variant::NIL, "arg_" + itos(p_arg), PropertyHint::NONE, String(), PropertyUsageFlags::DEFAULT | PropertyUsageFlags::NIL_IS_VARIANT);
 		}
 	}
 
@@ -206,7 +206,7 @@ public:
 		}
 		argument_types = at;
 		if (p_return_nil_is_variant) {
-			method_info.return_val.usage |= PROPERTY_USAGE_NIL_IS_VARIANT;
+			method_info.return_val.usage |= PropertyUsageFlags::NIL_IS_VARIANT;
 		}
 
 		_set_returns(should_returns);

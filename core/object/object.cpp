@@ -487,7 +487,7 @@ void Object::get_property_list(List<PropertyInfo> *p_list, bool p_reversed) cons
 	if (_extension) {
 		const ObjectGDExtension *current_extension = _extension;
 		while (current_extension) {
-			p_list->push_back(PropertyInfo(Variant::NIL, current_extension->class_name, PROPERTY_HINT_NONE, current_extension->class_name, PROPERTY_USAGE_CATEGORY));
+			p_list->push_back(PropertyInfo(Variant::NIL, current_extension->class_name, PropertyHint::NONE, current_extension->class_name, PropertyUsageFlags::CATEGORY));
 
 			ClassDB::get_property_list(current_extension->class_name, p_list, true, this);
 
@@ -509,7 +509,7 @@ void Object::get_property_list(List<PropertyInfo> *p_list, bool p_reversed) cons
 	_get_property_listv(p_list, p_reversed);
 
 	if (!is_class("Script")) { // can still be set, but this is for user-friendliness
-		p_list->push_back(PropertyInfo(Variant::OBJECT, "script", PROPERTY_HINT_RESOURCE_TYPE, "Script", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_NEVER_DUPLICATE));
+		p_list->push_back(PropertyInfo(Variant::OBJECT, "script", PropertyHint::RESOURCE_TYPE, "Script", PropertyUsageFlags::DEFAULT | PropertyUsageFlags::NEVER_DUPLICATE));
 	}
 
 	if (script_instance && !p_reversed) {
@@ -519,7 +519,7 @@ void Object::get_property_list(List<PropertyInfo> *p_list, bool p_reversed) cons
 	for (const KeyValue<StringName, Variant> &K : metadata) {
 		PropertyInfo pi = PropertyInfo(K.value.get_type(), "metadata/" + K.key.operator String());
 		if (K.value.get_type() == Variant::OBJECT) {
-			pi.hint = PROPERTY_HINT_RESOURCE_TYPE;
+			pi.hint = PropertyHint::RESOURCE_TYPE;
 			pi.hint_string = "Resource";
 		}
 		p_list->push_back(pi);
@@ -1599,7 +1599,7 @@ void Object::_bind_methods() {
 		mi.name = "emit_signal";
 		mi.arguments.push_back(PropertyInfo(Variant::STRING_NAME, "signal"));
 
-		ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "emit_signal", &Object::_emit_signal, mi, varray(), false);
+		ClassDB::bind_vararg_method(MethodFlags::DEFAULT, "emit_signal", &Object::_emit_signal, mi, varray(), false);
 	}
 
 	{
@@ -1607,7 +1607,7 @@ void Object::_bind_methods() {
 		mi.name = "call";
 		mi.arguments.push_back(PropertyInfo(Variant::STRING_NAME, "method"));
 
-		ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "call", &Object::_call_bind, mi);
+		ClassDB::bind_vararg_method(MethodFlags::DEFAULT, "call", &Object::_call_bind, mi);
 	}
 
 	{
@@ -1615,7 +1615,7 @@ void Object::_bind_methods() {
 		mi.name = "call_deferred";
 		mi.arguments.push_back(PropertyInfo(Variant::STRING_NAME, "method"));
 
-		ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "call_deferred", &Object::_call_deferred_bind, mi, varray(), false);
+		ClassDB::bind_vararg_method(MethodFlags::DEFAULT, "call_deferred", &Object::_call_deferred_bind, mi, varray(), false);
 	}
 
 	ClassDB::bind_method(D_METHOD("set_deferred", "property", "value"), &Object::set_deferred);
@@ -1660,12 +1660,12 @@ void Object::_bind_methods() {
 #ifdef TOOLS_ENABLED
 	MethodInfo miget("_get", PropertyInfo(Variant::STRING_NAME, "property"));
 	miget.return_val.name = "Variant";
-	miget.return_val.usage |= PROPERTY_USAGE_NIL_IS_VARIANT;
+	miget.return_val.usage |= PropertyUsageFlags::NIL_IS_VARIANT;
 	BIND_OBJ_CORE_METHOD(miget);
 
 	MethodInfo plget("_get_property_list");
 	plget.return_val.type = Variant::ARRAY;
-	plget.return_val.hint = PROPERTY_HINT_ARRAY_TYPE;
+	plget.return_val.hint = PropertyHint::ARRAY_TYPE;
 	plget.return_val.hint_string = "Dictionary";
 	BIND_OBJ_CORE_METHOD(plget);
 
@@ -1674,7 +1674,7 @@ void Object::_bind_methods() {
 	BIND_OBJ_CORE_METHOD(MethodInfo(Variant::BOOL, "_property_can_revert", PropertyInfo(Variant::STRING_NAME, "property")));
 	MethodInfo mipgr("_property_get_revert", PropertyInfo(Variant::STRING_NAME, "property"));
 	mipgr.return_val.name = "Variant";
-	mipgr.return_val.usage |= PROPERTY_USAGE_NIL_IS_VARIANT;
+	mipgr.return_val.usage |= PropertyUsageFlags::NIL_IS_VARIANT;
 	BIND_OBJ_CORE_METHOD(mipgr);
 
 #endif
@@ -2076,7 +2076,7 @@ void Object::get_argument_options(const StringName &p_function, int p_idx, List<
 			List<MethodInfo> methods;
 			get_method_list(&methods);
 			for (const MethodInfo &E : methods) {
-				if (E.name.begins_with("_") && !(E.flags & METHOD_FLAG_VIRTUAL)) {
+				if (E.name.begins_with("_") && !(E.flags & MethodFlags::VIRTUAL)) {
 					continue;
 				}
 				r_options->push_back(E.name.quote());
@@ -2085,7 +2085,7 @@ void Object::get_argument_options(const StringName &p_function, int p_idx, List<
 			List<PropertyInfo> properties;
 			get_property_list(&properties);
 			for (const PropertyInfo &E : properties) {
-				if (E.usage & PROPERTY_USAGE_DEFAULT && !(E.usage & PROPERTY_USAGE_INTERNAL)) {
+				if (E.usage & PropertyUsageFlags::DEFAULT && !(E.usage & PropertyUsageFlags::INTERNAL)) {
 					r_options->push_back(E.name.quote());
 				}
 			}

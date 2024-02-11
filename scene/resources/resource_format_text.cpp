@@ -1356,7 +1356,7 @@ Error ResourceLoaderText::save_as_binary(const String &p_path) {
 			int prop_count = 0;
 
 			for (const PropertyInfo &E : props) {
-				if (!(E.usage & PROPERTY_USAGE_STORAGE)) {
+				if (!(E.usage & PropertyUsageFlags::STORAGE)) {
 					continue;
 				}
 
@@ -1893,10 +1893,10 @@ void ResourceFormatSaverTextInstance::_find_resources(const Variant &p_variant, 
 			while (I) {
 				PropertyInfo pi = I->get();
 
-				if (pi.usage & PROPERTY_USAGE_STORAGE) {
+				if (pi.usage & PropertyUsageFlags::STORAGE) {
 					Variant v = res->get(I->get().name);
 
-					if (pi.usage & PROPERTY_USAGE_RESOURCE_NOT_PERSISTENT) {
+					if (pi.usage & PropertyUsageFlags::RESOURCE_NOT_PERSISTENT) {
 						NonPersistentKey npk;
 						npk.base = res;
 						npk.property = pi.name;
@@ -2161,10 +2161,10 @@ Error ResourceFormatSaverTextInstance::save(const String &p_path, const Ref<Reso
 				continue;
 			}
 
-			if (PE->get().usage & PROPERTY_USAGE_STORAGE) {
+			if (PE->get().usage & PropertyUsageFlags::STORAGE) {
 				String name = PE->get().name;
 				Variant value;
-				if (PE->get().usage & PROPERTY_USAGE_RESOURCE_NOT_PERSISTENT) {
+				if (PE->get().usage & PropertyUsageFlags::RESOURCE_NOT_PERSISTENT) {
 					NonPersistentKey npk;
 					npk.base = res;
 					npk.property = name;
@@ -2189,7 +2189,7 @@ Error ResourceFormatSaverTextInstance::save(const String &p_path, const Ref<Reso
 					continue;
 				}
 
-				if (PE->get().type == Variant::OBJECT && value.is_zero() && !(PE->get().usage & PROPERTY_USAGE_STORE_IF_NULL)) {
+				if (PE->get().type == Variant::OBJECT && value.is_zero() && !(PE->get().usage & PropertyUsageFlags::STORE_IF_NULL)) {
 					continue;
 				}
 

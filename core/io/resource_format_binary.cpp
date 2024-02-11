@@ -1972,9 +1972,9 @@ void ResourceFormatSaverBinaryInstance::_find_resources(const Variant &p_variant
 			res->get_property_list(&property_list);
 
 			for (const PropertyInfo &E : property_list) {
-				if (E.usage & PROPERTY_USAGE_STORAGE) {
+				if (E.usage & PropertyUsageFlags::STORAGE) {
 					Variant value = res->get(E.name);
-					if (E.usage & PROPERTY_USAGE_RESOURCE_NOT_PERSISTENT) {
+					if (E.usage & PropertyUsageFlags::RESOURCE_NOT_PERSISTENT) {
 						NonPersistentKey npk;
 						npk.base = res;
 						npk.property = E.name;
@@ -2166,11 +2166,11 @@ Error ResourceFormatSaverBinaryInstance::save(const String &p_path, const Ref<Re
 					continue;
 				}
 
-				if ((F.usage & PROPERTY_USAGE_STORAGE)) {
+				if ((F.usage & PropertyUsageFlags::STORAGE)) {
 					Property p;
 					p.name_idx = get_string_index(F.name);
 
-					if (F.usage & PROPERTY_USAGE_RESOURCE_NOT_PERSISTENT) {
+					if (F.usage & PropertyUsageFlags::RESOURCE_NOT_PERSISTENT) {
 						NonPersistentKey npk;
 						npk.base = E;
 						npk.property = F.name;

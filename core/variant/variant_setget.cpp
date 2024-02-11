@@ -693,7 +693,7 @@ struct VariantIndexedSetGet_Array {
 		v.set(index, PtrToArg<Variant>::convert(member));
 	}
 	static Variant::Type get_index_type() { return Variant::NIL; }
-	static uint32_t get_index_usage() { return PROPERTY_USAGE_NIL_IS_VARIANT; }
+	static uint32_t get_index_usage() { return PropertyUsageFlags::NIL_IS_VARIANT; }
 	static uint64_t get_indexed_size(const Variant *base) { return 0; }
 };
 
@@ -779,7 +779,7 @@ struct VariantIndexedSetGet_String {
 		}
 	}
 	static Variant::Type get_index_type() { return Variant::STRING; }
-	static uint32_t get_index_usage() { return PROPERTY_USAGE_DEFAULT; }
+	static uint32_t get_index_usage() { return PropertyUsageFlags::DEFAULT; }
 	static uint64_t get_indexed_size(const Variant *base) { return VariantInternal::get_string(base)->length(); }
 };
 
@@ -824,7 +824,7 @@ struct VariantIndexedSetGet_String {
 			v[index] = PtrToArg<Variant>::convert(member);                                                                          \
 		}                                                                                                                           \
 		static Variant::Type get_index_type() { return Variant::NIL; }                                                              \
-		static uint32_t get_index_usage() { return PROPERTY_USAGE_DEFAULT; }                                                        \
+		static uint32_t get_index_usage() { return PropertyUsageFlags::DEFAULT; }                                                        \
 		static uint64_t get_indexed_size(const Variant *base) { return VariantGetInternalPtr<m_base_type>::get_ptr(base)->size(); } \
 	};
 
@@ -866,7 +866,7 @@ struct VariantIndexedSetterGetterInfo {
 	uint64_t (*get_indexed_size)(const Variant *base) = nullptr;
 
 	Variant::Type index_type = Variant::NIL;
-	uint32_t index_usage = PROPERTY_USAGE_DEFAULT;
+	uint32_t index_usage = PropertyUsageFlags::DEFAULT;
 
 	bool valid = false;
 };
@@ -936,7 +936,7 @@ Variant::Type Variant::get_indexed_element_type(Variant::Type p_type) {
 }
 
 uint32_t Variant::get_indexed_element_usage(Variant::Type p_type) {
-	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, PROPERTY_USAGE_DEFAULT);
+	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, PropertyUsageFlags::DEFAULT);
 	return variant_indexed_setters_getters[p_type].index_usage;
 }
 

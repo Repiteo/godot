@@ -673,11 +673,11 @@ Point2 TextureProgressBar::get_radial_center_offset() {
 
 void TextureProgressBar::_validate_property(PropertyInfo &p_property) const {
 	if (p_property.name.begins_with("stretch_margin_") && !nine_patch_stretch) {
-		p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+		p_property.usage = PropertyUsageFlags::NO_EDITOR;
 	}
 
 	if (p_property.name.begins_with("radial_") && (mode != FillMode::FILL_CLOCKWISE && mode != FillMode::FILL_COUNTER_CLOCKWISE && mode != FillMode::FILL_CLOCKWISE_AND_COUNTER_CLOCKWISE)) {
-		p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+		p_property.usage = PropertyUsageFlags::NO_EDITOR;
 	}
 }
 
@@ -721,25 +721,25 @@ void TextureProgressBar::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_nine_patch_stretch", "stretch"), &TextureProgressBar::set_nine_patch_stretch);
 	ClassDB::bind_method(D_METHOD("get_nine_patch_stretch"), &TextureProgressBar::get_nine_patch_stretch);
 
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "fill_mode", PROPERTY_HINT_ENUM, "Left to Right,Right to Left,Top to Bottom,Bottom to Top,Clockwise,Counter Clockwise,Bilinear (Left and Right),Bilinear (Top and Bottom),Clockwise and Counter Clockwise"), "set_fill_mode", "get_fill_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "fill_mode", PropertyHint::ENUM, "Left to Right,Right to Left,Top to Bottom,Bottom to Top,Clockwise,Counter Clockwise,Bilinear (Left and Right),Bilinear (Top and Bottom),Clockwise and Counter Clockwise"), "set_fill_mode", "get_fill_mode");
 	ADD_GROUP("Radial Fill", "radial_");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "radial_initial_angle", PROPERTY_HINT_RANGE, "0.0,360.0,0.1,degrees"), "set_radial_initial_angle", "get_radial_initial_angle");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "radial_fill_degrees", PROPERTY_HINT_RANGE, "0.0,360.0,0.1,degrees"), "set_fill_degrees", "get_fill_degrees");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "radial_center_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_radial_center_offset", "get_radial_center_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "radial_initial_angle", PropertyHint::RANGE, "0.0,360.0,0.1,degrees"), "set_radial_initial_angle", "get_radial_initial_angle");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "radial_fill_degrees", PropertyHint::RANGE, "0.0,360.0,0.1,degrees"), "set_fill_degrees", "get_fill_degrees");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "radial_center_offset", PropertyHint::NONE, "suffix:px"), "set_radial_center_offset", "get_radial_center_offset");
 
 	ADD_GROUP("", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "nine_patch_stretch"), "set_nine_patch_stretch", "get_nine_patch_stretch");
 	ADD_GROUP("Stretch Margin", "stretch_margin_");
-	ADD_PROPERTYI(PropertyInfo(Variant::INT, "stretch_margin_left", PROPERTY_HINT_RANGE, "0,16384,1,suffix:px"), "set_stretch_margin", "get_stretch_margin", SIDE_LEFT);
-	ADD_PROPERTYI(PropertyInfo(Variant::INT, "stretch_margin_top", PROPERTY_HINT_RANGE, "0,16384,1,suffix:px"), "set_stretch_margin", "get_stretch_margin", SIDE_TOP);
-	ADD_PROPERTYI(PropertyInfo(Variant::INT, "stretch_margin_right", PROPERTY_HINT_RANGE, "0,16384,1,suffix:px"), "set_stretch_margin", "get_stretch_margin", SIDE_RIGHT);
-	ADD_PROPERTYI(PropertyInfo(Variant::INT, "stretch_margin_bottom", PROPERTY_HINT_RANGE, "0,16384,1,suffix:px"), "set_stretch_margin", "get_stretch_margin", SIDE_BOTTOM);
+	ADD_PROPERTYI(PropertyInfo(Variant::INT, "stretch_margin_left", PropertyHint::RANGE, "0,16384,1,suffix:px"), "set_stretch_margin", "get_stretch_margin", SIDE_LEFT);
+	ADD_PROPERTYI(PropertyInfo(Variant::INT, "stretch_margin_top", PropertyHint::RANGE, "0,16384,1,suffix:px"), "set_stretch_margin", "get_stretch_margin", SIDE_TOP);
+	ADD_PROPERTYI(PropertyInfo(Variant::INT, "stretch_margin_right", PropertyHint::RANGE, "0,16384,1,suffix:px"), "set_stretch_margin", "get_stretch_margin", SIDE_RIGHT);
+	ADD_PROPERTYI(PropertyInfo(Variant::INT, "stretch_margin_bottom", PropertyHint::RANGE, "0,16384,1,suffix:px"), "set_stretch_margin", "get_stretch_margin", SIDE_BOTTOM);
 
 	ADD_GROUP("Textures", "texture_");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture_under", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_under_texture", "get_under_texture");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture_over", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_over_texture", "get_over_texture");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture_progress", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_progress_texture", "get_progress_texture");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "texture_progress_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_texture_progress_offset", "get_texture_progress_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture_under", PropertyHint::RESOURCE_TYPE, "Texture2D"), "set_under_texture", "get_under_texture");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture_over", PropertyHint::RESOURCE_TYPE, "Texture2D"), "set_over_texture", "get_over_texture");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture_progress", PropertyHint::RESOURCE_TYPE, "Texture2D"), "set_progress_texture", "get_progress_texture");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "texture_progress_offset", PropertyHint::NONE, "suffix:px"), "set_texture_progress_offset", "get_texture_progress_offset");
 
 	ADD_GROUP("Tint", "tint_");
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "tint_under"), "set_tint_under", "get_tint_under");

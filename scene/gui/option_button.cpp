@@ -202,19 +202,19 @@ void OptionButton::_get_property_list(List<PropertyInfo> *p_list) const {
 	for (int i = 0; i < popup->get_item_count(); i++) {
 		p_list->push_back(PropertyInfo(Variant::STRING, vformat("popup/item_%d/text", i)));
 
-		PropertyInfo pi = PropertyInfo(Variant::OBJECT, vformat("popup/item_%d/icon", i), PROPERTY_HINT_RESOURCE_TYPE, "Texture2D");
-		pi.usage &= ~(popup->get_item_icon(i).is_null() ? PROPERTY_USAGE_STORAGE : 0);
+		PropertyInfo pi = PropertyInfo(Variant::OBJECT, vformat("popup/item_%d/icon", i), PropertyHint::RESOURCE_TYPE, "Texture2D");
+		pi.usage &= ~(popup->get_item_icon(i).is_null() ? PropertyUsageFlags::STORAGE : 0);
 		p_list->push_back(pi);
 
-		pi = PropertyInfo(Variant::INT, vformat("popup/item_%d/id", i), PROPERTY_HINT_RANGE, "0,10,1,or_greater");
+		pi = PropertyInfo(Variant::INT, vformat("popup/item_%d/id", i), PropertyHint::RANGE, "0,10,1,or_greater");
 		p_list->push_back(pi);
 
 		pi = PropertyInfo(Variant::BOOL, vformat("popup/item_%d/disabled", i));
-		pi.usage &= ~(!popup->is_item_disabled(i) ? PROPERTY_USAGE_STORAGE : 0);
+		pi.usage &= ~(!popup->is_item_disabled(i) ? PropertyUsageFlags::STORAGE : 0);
 		p_list->push_back(pi);
 
 		pi = PropertyInfo(Variant::BOOL, vformat("popup/item_%d/separator", i));
-		pi.usage &= ~(!popup->is_item_separator(i) ? PROPERTY_USAGE_STORAGE : 0);
+		pi.usage &= ~(!popup->is_item_separator(i) ? PropertyUsageFlags::STORAGE : 0);
 		p_list->push_back(pi);
 	}
 }
@@ -531,7 +531,7 @@ void OptionButton::show_popup() {
 
 void OptionButton::_validate_property(PropertyInfo &p_property) const {
 	if (p_property.name == "text" || p_property.name == "icon") {
-		p_property.usage = PROPERTY_USAGE_NONE;
+		p_property.usage = PropertyUsageFlags::NONE;
 	}
 }
 

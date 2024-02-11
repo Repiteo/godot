@@ -522,14 +522,14 @@ String ConnectDialog::get_signature(const MethodInfo &p_method, PackedStringArra
 				type_name = "Variant";
 				break;
 			case Variant::INT:
-				if ((pi.usage & PROPERTY_USAGE_CLASS_IS_ENUM) && pi.class_name != StringName() && !String(pi.class_name).begins_with("res://")) {
+				if ((pi.usage & PropertyUsageFlags::CLASS_IS_ENUM) && pi.class_name != StringName() && !String(pi.class_name).begins_with("res://")) {
 					type_name = pi.class_name;
 				} else {
 					type_name = "int";
 				}
 				break;
 			case Variant::ARRAY:
-				if (pi.hint == PROPERTY_HINT_ARRAY_TYPE && !pi.hint_string.is_empty() && !pi.hint_string.begins_with("res://")) {
+				if (pi.hint == PropertyHint::ARRAY_TYPE && !pi.hint_string.is_empty() && !pi.hint_string.begins_with("res://")) {
 					type_name = "Array[" + pi.hint_string + "]";
 				} else {
 					type_name = "Array";

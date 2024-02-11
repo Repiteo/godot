@@ -111,7 +111,7 @@ void EditorFolding::_fill_folds(const Node *p_root, const Node *p_node, Array &p
 	List<PropertyInfo> plist;
 	p_node->get_property_list(&plist);
 	for (const PropertyInfo &E : plist) {
-		if (E.usage & PROPERTY_USAGE_EDITOR) {
+		if (E.usage & PropertyUsageFlags::EDITOR) {
 			if (E.type == Variant::OBJECT) {
 				Ref<Resource> res = p_node->get(E.name);
 				if (res.is_valid() && !resources.has(res) && !res->get_path().is_empty() && !res->get_path().is_resource_file()) {
@@ -227,11 +227,11 @@ void EditorFolding::_do_object_unfolds(Object *p_object, HashSet<Ref<Resource>> 
 	HashSet<String> unfold_group;
 
 	for (const PropertyInfo &E : plist) {
-		if (E.usage & PROPERTY_USAGE_CATEGORY) {
+		if (E.usage & PropertyUsageFlags::CATEGORY) {
 			group = "";
 			group_base = "";
 		}
-		if (E.usage & PROPERTY_USAGE_GROUP) {
+		if (E.usage & PropertyUsageFlags::GROUP) {
 			group = E.name;
 			group_base = E.hint_string;
 			if (group_base.ends_with("_")) {
@@ -240,7 +240,7 @@ void EditorFolding::_do_object_unfolds(Object *p_object, HashSet<Ref<Resource>> 
 		}
 
 		//can unfold
-		if (E.usage & PROPERTY_USAGE_EDITOR) {
+		if (E.usage & PropertyUsageFlags::EDITOR) {
 			if (!group.is_empty()) { //group
 				if (group_base.is_empty() || E.name.begins_with(group_base)) {
 					bool can_revert = EditorPropertyRevert::can_property_revert(p_object, E.name);

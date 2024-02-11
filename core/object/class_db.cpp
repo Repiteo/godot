@@ -1025,7 +1025,7 @@ void ClassDB::add_property_group(const StringName &p_class, const String &p_name
 		prefix = vformat("%s,%d", p_prefix, p_indent_depth);
 	}
 
-	type->property_list.push_back(PropertyInfo(Variant::NIL, p_name, PROPERTY_HINT_NONE, prefix, PROPERTY_USAGE_GROUP));
+	type->property_list.push_back(PropertyInfo(Variant::NIL, p_name, PropertyHint::NONE, prefix, PropertyUsageFlags::GROUP));
 }
 
 void ClassDB::add_property_subgroup(const StringName &p_class, const String &p_name, const String &p_prefix, int p_indent_depth) {
@@ -1038,11 +1038,11 @@ void ClassDB::add_property_subgroup(const StringName &p_class, const String &p_n
 		prefix = vformat("%s,%d", p_prefix, p_indent_depth);
 	}
 
-	type->property_list.push_back(PropertyInfo(Variant::NIL, p_name, PROPERTY_HINT_NONE, prefix, PROPERTY_USAGE_SUBGROUP));
+	type->property_list.push_back(PropertyInfo(Variant::NIL, p_name, PropertyHint::NONE, prefix, PropertyUsageFlags::SUBGROUP));
 }
 
 void ClassDB::add_property_array_count(const StringName &p_class, const String &p_label, const StringName &p_count_property, const StringName &p_count_setter, const StringName &p_count_getter, const String &p_array_element_prefix, uint32_t p_count_usage) {
-	add_property(p_class, PropertyInfo(Variant::INT, p_count_property, PROPERTY_HINT_NONE, "", p_count_usage | PROPERTY_USAGE_ARRAY, vformat("%s,%s", p_label, p_array_element_prefix)), p_count_setter, p_count_getter);
+	add_property(p_class, PropertyInfo(Variant::INT, p_count_property, PropertyHint::NONE, "", p_count_usage | PropertyUsageFlags::ARRAY, vformat("%s,%s", p_label, p_array_element_prefix)), p_count_setter, p_count_getter);
 }
 
 void ClassDB::add_property_array(const StringName &p_class, const StringName &p_path, const String &p_array_element_prefix) {
@@ -1050,7 +1050,7 @@ void ClassDB::add_property_array(const StringName &p_class, const StringName &p_
 	ClassInfo *type = classes.getptr(p_class);
 	ERR_FAIL_NULL(type);
 
-	type->property_list.push_back(PropertyInfo(Variant::NIL, p_path, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_ARRAY, p_array_element_prefix));
+	type->property_list.push_back(PropertyInfo(Variant::NIL, p_path, PropertyHint::NONE, "", PropertyUsageFlags::EDITOR | PropertyUsageFlags::ARRAY, p_array_element_prefix));
 }
 
 // NOTE: For implementation simplicity reasons, this method doesn't allow setters to have optional arguments at the end.
@@ -1568,10 +1568,10 @@ void ClassDB::add_virtual_method(const StringName &p_class, const MethodInfo &p_
 #ifdef DEBUG_METHODS_ENABLED
 	MethodInfo mi = p_method;
 	if (p_virtual) {
-		mi.flags |= METHOD_FLAG_VIRTUAL;
+		mi.flags |= MethodFlags::VIRTUAL;
 	}
 	if (p_object_core) {
-		mi.flags |= METHOD_FLAG_OBJECT_CORE;
+		mi.flags |= MethodFlags::OBJECT_CORE;
 	}
 
 	if (!p_object_core) {
@@ -1702,7 +1702,7 @@ Variant ClassDB::class_get_default_property_value(const StringName &p_class, con
 			List<PropertyInfo> plist;
 			c->get_property_list(&plist);
 			for (const PropertyInfo &E : plist) {
-				if (E.usage & (PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_EDITOR)) {
+				if (E.usage & (PropertyUsageFlags::STORAGE | PropertyUsageFlags::EDITOR)) {
 					if (!default_values[p_class].has(E.name)) {
 						Variant v = c->get(E.name);
 						default_values[p_class][E.name] = v;
@@ -1741,7 +1741,7 @@ Variant ClassDB::class_get_default_property_value(const StringName &p_class, con
 #ifdef DEBUG_ENABLED
 	// Some properties may have an instantiated Object as default value,
 	// (like Path2D's `curve` used to have), but that's not a good practice.
-	// Instead, those properties should use PROPERTY_USAGE_EDITOR_INSTANTIATE_OBJECT
+	// Instead, those properties should use PropertyUsageFlags::EDITOR_INSTANTIATE_OBJECT
 	// to be auto-instantiated when created in the editor with the following method:
 	// EditorNode::get_editor_data().instantiate_object_properties(obj);
 	if (var.get_type() == Variant::OBJECT) {

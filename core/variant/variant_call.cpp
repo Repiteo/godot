@@ -1122,18 +1122,18 @@ struct VariantBuiltInMethodInfo {
 		if (has_return_type) {
 			mi.return_val.type = return_type;
 			if (mi.return_val.type == Variant::NIL) {
-				mi.return_val.usage |= PROPERTY_USAGE_NIL_IS_VARIANT;
+				mi.return_val.usage |= PropertyUsageFlags::NIL_IS_VARIANT;
 			}
 		}
 
 		if (is_const) {
-			mi.flags |= METHOD_FLAG_CONST;
+			mi.flags |= MethodFlags::CONST;
 		}
 		if (is_vararg) {
-			mi.flags |= METHOD_FLAG_VARARG;
+			mi.flags |= MethodFlags::VARARG;
 		}
 		if (is_static) {
-			mi.flags |= METHOD_FLAG_STATIC;
+			mi.flags |= MethodFlags::STATIC;
 		}
 
 		for (int i = 0; i < argument_count; i++) {
@@ -1145,7 +1145,7 @@ struct VariantBuiltInMethodInfo {
 #endif
 			pi.type = (*get_argument_type)(i);
 			if (pi.type == Variant::NIL) {
-				pi.usage |= PROPERTY_USAGE_NIL_IS_VARIANT;
+				pi.usage |= PropertyUsageFlags::NIL_IS_VARIANT;
 			}
 			mi.arguments.push_back(pi);
 		}

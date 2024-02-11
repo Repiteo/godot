@@ -150,13 +150,13 @@ bool Skeleton3D::_get(const StringName &p_path, Variant &r_ret) const {
 void Skeleton3D::_get_property_list(List<PropertyInfo> *p_list) const {
 	for (int i = 0; i < bones.size(); i++) {
 		const String prep = vformat("%s/%d/", PNAME("bones"), i);
-		p_list->push_back(PropertyInfo(Variant::STRING, prep + PNAME("name"), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
-		p_list->push_back(PropertyInfo(Variant::INT, prep + PNAME("parent"), PROPERTY_HINT_RANGE, "-1," + itos(bones.size() - 1) + ",1", PROPERTY_USAGE_NO_EDITOR));
-		p_list->push_back(PropertyInfo(Variant::TRANSFORM3D, prep + PNAME("rest"), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
-		p_list->push_back(PropertyInfo(Variant::BOOL, prep + PNAME("enabled"), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
-		p_list->push_back(PropertyInfo(Variant::VECTOR3, prep + PNAME("position"), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
-		p_list->push_back(PropertyInfo(Variant::QUATERNION, prep + PNAME("rotation"), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
-		p_list->push_back(PropertyInfo(Variant::VECTOR3, prep + PNAME("scale"), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
+		p_list->push_back(PropertyInfo(Variant::STRING, prep + PNAME("name"), PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR));
+		p_list->push_back(PropertyInfo(Variant::INT, prep + PNAME("parent"), PropertyHint::RANGE, "-1," + itos(bones.size() - 1) + ",1", PropertyUsageFlags::NO_EDITOR));
+		p_list->push_back(PropertyInfo(Variant::TRANSFORM3D, prep + PNAME("rest"), PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR));
+		p_list->push_back(PropertyInfo(Variant::BOOL, prep + PNAME("enabled"), PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR));
+		p_list->push_back(PropertyInfo(Variant::VECTOR3, prep + PNAME("position"), PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR));
+		p_list->push_back(PropertyInfo(Variant::QUATERNION, prep + PNAME("rotation"), PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR));
+		p_list->push_back(PropertyInfo(Variant::VECTOR3, prep + PNAME("scale"), PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR));
 	}
 
 	for (PropertyInfo &E : *p_list) {
@@ -168,30 +168,30 @@ void Skeleton3D::_validate_property(PropertyInfo &p_property) const {
 	PackedStringArray split = p_property.name.split("/");
 	if (split.size() == 3 && split[0] == "bones") {
 		if (split[2] == "rest") {
-			p_property.usage |= PROPERTY_USAGE_READ_ONLY;
+			p_property.usage |= PropertyUsageFlags::READ_ONLY;
 		}
 		if (is_show_rest_only()) {
 			if (split[2] == "enabled") {
-				p_property.usage |= PROPERTY_USAGE_READ_ONLY;
+				p_property.usage |= PropertyUsageFlags::READ_ONLY;
 			}
 			if (split[2] == "position") {
-				p_property.usage |= PROPERTY_USAGE_READ_ONLY;
+				p_property.usage |= PropertyUsageFlags::READ_ONLY;
 			}
 			if (split[2] == "rotation") {
-				p_property.usage |= PROPERTY_USAGE_READ_ONLY;
+				p_property.usage |= PropertyUsageFlags::READ_ONLY;
 			}
 			if (split[2] == "scale") {
-				p_property.usage |= PROPERTY_USAGE_READ_ONLY;
+				p_property.usage |= PropertyUsageFlags::READ_ONLY;
 			}
 		} else if (!is_bone_enabled(split[1].to_int())) {
 			if (split[2] == "position") {
-				p_property.usage |= PROPERTY_USAGE_READ_ONLY;
+				p_property.usage |= PropertyUsageFlags::READ_ONLY;
 			}
 			if (split[2] == "rotation") {
-				p_property.usage |= PROPERTY_USAGE_READ_ONLY;
+				p_property.usage |= PropertyUsageFlags::READ_ONLY;
 			}
 			if (split[2] == "scale") {
-				p_property.usage |= PROPERTY_USAGE_READ_ONLY;
+				p_property.usage |= PropertyUsageFlags::READ_ONLY;
 			}
 		}
 	}
@@ -1045,7 +1045,7 @@ void Skeleton3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("physical_bones_add_collision_exception", "exception"), &Skeleton3D::physical_bones_add_collision_exception);
 	ClassDB::bind_method(D_METHOD("physical_bones_remove_collision_exception", "exception"), &Skeleton3D::physical_bones_remove_collision_exception);
 
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "motion_scale", PROPERTY_HINT_RANGE, "0.001,10,0.001,or_greater"), "set_motion_scale", "get_motion_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "motion_scale", PropertyHint::RANGE, "0.001,10,0.001,or_greater"), "set_motion_scale", "get_motion_scale");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "show_rest_only"), "set_show_rest_only", "is_show_rest_only");
 #ifndef _3D_DISABLED
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "animate_physical_bones"), "set_animate_physical_bones", "get_animate_physical_bones");

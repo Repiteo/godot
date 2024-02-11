@@ -129,8 +129,8 @@ bool EditorExportPlatformIOS::get_export_option_visibility(const EditorExportPre
 }
 
 void EditorExportPlatformIOS::get_export_options(List<ExportOption> *r_options) const {
-	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "custom_template/debug", PROPERTY_HINT_GLOBAL_FILE, "*.zip"), ""));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "custom_template/release", PROPERTY_HINT_GLOBAL_FILE, "*.zip"), ""));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "custom_template/debug", PropertyHint::GLOBAL_FILE, "*.zip"), ""));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "custom_template/release", PropertyHint::GLOBAL_FILE, "*.zip"), ""));
 
 	Vector<ExportArchitecture> architectures = _get_supported_architectures();
 	for (int i = 0; i < architectures.size(); ++i) {
@@ -139,25 +139,25 @@ void EditorExportPlatformIOS::get_export_options(List<ExportOption> *r_options) 
 
 	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/app_store_team_id"), "", false, true));
 
-	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/provisioning_profile_uuid_debug", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SECRET), ""));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/code_sign_identity_debug", PROPERTY_HINT_PLACEHOLDER_TEXT, "iPhone Developer"), ""));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::INT, "application/export_method_debug", PROPERTY_HINT_ENUM, "App Store,Development,Ad-Hoc,Enterprise"), 1));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/provisioning_profile_uuid_release", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SECRET), ""));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/code_sign_identity_release", PROPERTY_HINT_PLACEHOLDER_TEXT, "iPhone Distribution"), ""));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::INT, "application/export_method_release", PROPERTY_HINT_ENUM, "App Store,Development,Ad-Hoc,Enterprise"), 0));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/provisioning_profile_uuid_debug", PropertyHint::NONE, "", PropertyUsageFlags::DEFAULT | PropertyUsageFlags::SECRET), ""));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/code_sign_identity_debug", PropertyHint::PLACEHOLDER_TEXT, "iPhone Developer"), ""));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::INT, "application/export_method_debug", PropertyHint::ENUM, "App Store,Development,Ad-Hoc,Enterprise"), 1));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/provisioning_profile_uuid_release", PropertyHint::NONE, "", PropertyUsageFlags::DEFAULT | PropertyUsageFlags::SECRET), ""));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/code_sign_identity_release", PropertyHint::PLACEHOLDER_TEXT, "iPhone Distribution"), ""));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::INT, "application/export_method_release", PropertyHint::ENUM, "App Store,Development,Ad-Hoc,Enterprise"), 0));
 
-	r_options->push_back(ExportOption(PropertyInfo(Variant::INT, "application/targeted_device_family", PROPERTY_HINT_ENUM, "iPhone,iPad,iPhone & iPad"), 2));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::INT, "application/targeted_device_family", PropertyHint::ENUM, "iPhone,iPad,iPhone & iPad"), 2));
 
-	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/bundle_identifier", PROPERTY_HINT_PLACEHOLDER_TEXT, "com.example.game"), "", false, true));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/bundle_identifier", PropertyHint::PLACEHOLDER_TEXT, "com.example.game"), "", false, true));
 	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/signature"), ""));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/short_version", PROPERTY_HINT_PLACEHOLDER_TEXT, "Leave empty to use project version"), ""));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/version", PROPERTY_HINT_PLACEHOLDER_TEXT, "Leave empty to use project version"), ""));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/short_version", PropertyHint::PLACEHOLDER_TEXT, "Leave empty to use project version"), ""));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/version", PropertyHint::PLACEHOLDER_TEXT, "Leave empty to use project version"), ""));
 
 	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/min_ios_version"), "12.0"));
 
-	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/additional_plist_content", PROPERTY_HINT_MULTILINE_TEXT), ""));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "application/additional_plist_content", PropertyHint::MULTILINE_TEXT), ""));
 
-	r_options->push_back(ExportOption(PropertyInfo(Variant::INT, "application/icon_interpolation", PROPERTY_HINT_ENUM, "Nearest neighbor,Bilinear,Cubic,Trilinear,Lanczos"), 4));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::INT, "application/icon_interpolation", PropertyHint::ENUM, "Nearest neighbor,Bilinear,Cubic,Trilinear,Lanczos"), 4));
 
 	r_options->push_back(ExportOption(PropertyInfo(Variant::BOOL, "application/export_project_only"), false));
 
@@ -198,23 +198,23 @@ void EditorExportPlatformIOS::get_export_options(List<ExportOption> *r_options) 
 	r_options->push_back(ExportOption(PropertyInfo(Variant::BOOL, "user_data/accessible_from_files_app"), false));
 	r_options->push_back(ExportOption(PropertyInfo(Variant::BOOL, "user_data/accessible_from_itunes_sharing"), false));
 
-	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "privacy/camera_usage_description", PROPERTY_HINT_PLACEHOLDER_TEXT, "Provide a message if you need to use the camera"), ""));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::DICTIONARY, "privacy/camera_usage_description_localized", PROPERTY_HINT_LOCALIZABLE_STRING), Dictionary()));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "privacy/microphone_usage_description", PROPERTY_HINT_PLACEHOLDER_TEXT, "Provide a message if you need to use the microphone"), ""));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::DICTIONARY, "privacy/microphone_usage_description_localized", PROPERTY_HINT_LOCALIZABLE_STRING), Dictionary()));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "privacy/photolibrary_usage_description", PROPERTY_HINT_PLACEHOLDER_TEXT, "Provide a message if you need access to the photo library"), ""));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::DICTIONARY, "privacy/photolibrary_usage_description_localized", PROPERTY_HINT_LOCALIZABLE_STRING), Dictionary()));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "privacy/camera_usage_description", PropertyHint::PLACEHOLDER_TEXT, "Provide a message if you need to use the camera"), ""));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::DICTIONARY, "privacy/camera_usage_description_localized", PropertyHint::LOCALIZABLE_STRING), Dictionary()));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "privacy/microphone_usage_description", PropertyHint::PLACEHOLDER_TEXT, "Provide a message if you need to use the microphone"), ""));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::DICTIONARY, "privacy/microphone_usage_description_localized", PropertyHint::LOCALIZABLE_STRING), Dictionary()));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "privacy/photolibrary_usage_description", PropertyHint::PLACEHOLDER_TEXT, "Provide a message if you need access to the photo library"), ""));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::DICTIONARY, "privacy/photolibrary_usage_description_localized", PropertyHint::LOCALIZABLE_STRING), Dictionary()));
 
 	HashSet<String> used_names;
 	for (uint64_t i = 0; i < sizeof(icon_infos) / sizeof(icon_infos[0]); ++i) {
 		if (!used_names.has(icon_infos[i].preset_key)) {
 			used_names.insert(icon_infos[i].preset_key);
-			r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, icon_infos[i].preset_key, PROPERTY_HINT_FILE, "*.png,*.jpg,*.jpeg"), ""));
+			r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, icon_infos[i].preset_key, PropertyHint::FILE, "*.png,*.jpg,*.jpeg"), ""));
 		}
 	}
-	r_options->push_back(ExportOption(PropertyInfo(Variant::INT, "storyboard/image_scale_mode", PROPERTY_HINT_ENUM, "Same as Logo,Center,Scale to Fit,Scale to Fill,Scale"), 0));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "storyboard/custom_image@2x", PROPERTY_HINT_FILE, "*.png,*.jpg,*.jpeg"), ""));
-	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "storyboard/custom_image@3x", PROPERTY_HINT_FILE, "*.png,*.jpg,*.jpeg"), ""));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::INT, "storyboard/image_scale_mode", PropertyHint::ENUM, "Same as Logo,Center,Scale to Fit,Scale to Fill,Scale"), 0));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "storyboard/custom_image@2x", PropertyHint::FILE, "*.png,*.jpg,*.jpeg"), ""));
+	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "storyboard/custom_image@3x", PropertyHint::FILE, "*.png,*.jpg,*.jpeg"), ""));
 	r_options->push_back(ExportOption(PropertyInfo(Variant::BOOL, "storyboard/use_custom_bg_color"), false));
 	r_options->push_back(ExportOption(PropertyInfo(Variant::COLOR, "storyboard/custom_bg_color"), Color()));
 }

@@ -110,13 +110,13 @@ bool TileSetAtlasSourceEditor::TileSetAtlasSourceProxyObject::_get(const StringN
 }
 
 void TileSetAtlasSourceEditor::TileSetAtlasSourceProxyObject::_get_property_list(List<PropertyInfo> *p_list) const {
-	p_list->push_back(PropertyInfo(Variant::NIL, TTR("Atlas"), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_CATEGORY));
-	p_list->push_back(PropertyInfo(Variant::INT, PNAME("id"), PROPERTY_HINT_RANGE, "0," + itos(INT_MAX) + ",1"));
+	p_list->push_back(PropertyInfo(Variant::NIL, TTR("Atlas"), PropertyHint::NONE, String(), PropertyUsageFlags::CATEGORY));
+	p_list->push_back(PropertyInfo(Variant::INT, PNAME("id"), PropertyHint::RANGE, "0," + itos(INT_MAX) + ",1"));
 	p_list->push_back(PropertyInfo(Variant::STRING, PNAME("name")));
-	p_list->push_back(PropertyInfo(Variant::OBJECT, PNAME("texture"), PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"));
-	p_list->push_back(PropertyInfo(Variant::VECTOR2I, PNAME("margins"), PROPERTY_HINT_NONE, "suffix:px"));
-	p_list->push_back(PropertyInfo(Variant::VECTOR2I, PNAME("separation"), PROPERTY_HINT_NONE, "suffix:px"));
-	p_list->push_back(PropertyInfo(Variant::VECTOR2I, PNAME("texture_region_size"), PROPERTY_HINT_NONE, "suffix:px"));
+	p_list->push_back(PropertyInfo(Variant::OBJECT, PNAME("texture"), PropertyHint::RESOURCE_TYPE, "Texture2D"));
+	p_list->push_back(PropertyInfo(Variant::VECTOR2I, PNAME("margins"), PropertyHint::NONE, "suffix:px"));
+	p_list->push_back(PropertyInfo(Variant::VECTOR2I, PNAME("separation"), PropertyHint::NONE, "suffix:px"));
+	p_list->push_back(PropertyInfo(Variant::VECTOR2I, PNAME("texture_region_size"), PropertyHint::NONE, "suffix:px"));
 	p_list->push_back(PropertyInfo(Variant::BOOL, PNAME("use_texture_padding")));
 }
 
@@ -405,15 +405,15 @@ void TileSetAtlasSourceEditor::AtlasTileProxyObject::_get_property_list(List<Pro
 	// ID and size related properties.
 	if (tiles.size() == 1) {
 		if (tiles.front()->get().alternative == 0) {
-			p_list->push_back(PropertyInfo(Variant::NIL, TTR("Base Tile"), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_CATEGORY));
+			p_list->push_back(PropertyInfo(Variant::NIL, TTR("Base Tile"), PropertyHint::NONE, String(), PropertyUsageFlags::CATEGORY));
 			p_list->push_back(PropertyInfo(Variant::VECTOR2I, PNAME("atlas_coords")));
 			p_list->push_back(PropertyInfo(Variant::VECTOR2I, PNAME("size_in_atlas")));
 		} else {
-			p_list->push_back(PropertyInfo(Variant::NIL, TTR("Alternative Tile"), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_CATEGORY));
+			p_list->push_back(PropertyInfo(Variant::NIL, TTR("Alternative Tile"), PropertyHint::NONE, String(), PropertyUsageFlags::CATEGORY));
 			p_list->push_back(PropertyInfo(Variant::INT, PNAME("alternative_id")));
 		}
 	} else {
-		p_list->push_back(PropertyInfo(Variant::NIL, TTR("Tiles"), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_CATEGORY));
+		p_list->push_back(PropertyInfo(Variant::NIL, TTR("Tiles"), PropertyHint::NONE, String(), PropertyUsageFlags::CATEGORY));
 	}
 
 	// Animation.
@@ -427,18 +427,18 @@ void TileSetAtlasSourceEditor::AtlasTileProxyObject::_get_property_list(List<Pro
 	}
 
 	if (all_alternatve_id_zero) {
-		p_list->push_back(PropertyInfo(Variant::NIL, GNAME("Animation", "animation_"), PROPERTY_HINT_NONE, "animation_", PROPERTY_USAGE_GROUP));
+		p_list->push_back(PropertyInfo(Variant::NIL, GNAME("Animation", "animation_"), PropertyHint::NONE, "animation_", PropertyUsageFlags::GROUP));
 		p_list->push_back(PropertyInfo(Variant::INT, PNAME("animation_columns")));
 		p_list->push_back(PropertyInfo(Variant::VECTOR2I, PNAME("animation_separation")));
 		p_list->push_back(PropertyInfo(Variant::FLOAT, PNAME("animation_speed")));
-		p_list->push_back(PropertyInfo(Variant::INT, PNAME("animation_mode"), PROPERTY_HINT_ENUM, "Default,Random Start Times"));
-		p_list->push_back(PropertyInfo(Variant::INT, PNAME("animation_frames_count"), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_ARRAY, "Frames,animation_frame_"));
+		p_list->push_back(PropertyInfo(Variant::INT, PNAME("animation_mode"), PropertyHint::ENUM, "Default,Random Start Times"));
+		p_list->push_back(PropertyInfo(Variant::INT, PNAME("animation_frames_count"), PropertyHint::NONE, "", PropertyUsageFlags::EDITOR | PropertyUsageFlags::ARRAY, "Frames,animation_frame_"));
 		// Not optimal, but returns value for the first tile. This is similar to what MultiNodeEdit does.
 		if (tile_set_atlas_source->get_tile_animation_frames_count(tiles.front()->get().tile) == 1) {
-			p_list->push_back(PropertyInfo(Variant::FLOAT, "animation_frame_0/duration", PROPERTY_HINT_NONE, "suffix:s", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_READ_ONLY));
+			p_list->push_back(PropertyInfo(Variant::FLOAT, "animation_frame_0/duration", PropertyHint::NONE, "suffix:s", PropertyUsageFlags::DEFAULT | PropertyUsageFlags::READ_ONLY));
 		} else {
 			for (int i = 0; i < tile_set_atlas_source->get_tile_animation_frames_count(tiles.front()->get().tile); i++) {
-				p_list->push_back(PropertyInfo(Variant::FLOAT, vformat("animation_frame_%d/%s", i, PNAME("duration")), PROPERTY_HINT_NONE, "suffix:s"));
+				p_list->push_back(PropertyInfo(Variant::FLOAT, vformat("animation_frame_%d/%s", i, PNAME("duration")), PropertyHint::NONE, "suffix:s"));
 			}
 		}
 	}
@@ -471,7 +471,7 @@ void TileSetAtlasSourceEditor::AtlasTileProxyObject::_get_property_list(List<Pro
 		HashMap<String, int> counts; // Counts the number of time a property appears (useful for groups that may appear more than once)
 		for (List<PropertyInfo>::Element *E_property = list.front(); E_property; E_property = E_property->next()) {
 			// Don't show category for TileData.
-			if (E_property->get().usage & PROPERTY_USAGE_CATEGORY) {
+			if (E_property->get().usage & PropertyUsageFlags::CATEGORY) {
 				continue;
 			}
 
@@ -487,7 +487,7 @@ void TileSetAtlasSourceEditor::AtlasTileProxyObject::_get_property_list(List<Pro
 			}
 
 			PropertyInfo stored_property_info = E_property->get();
-			stored_property_info.usage |= PROPERTY_USAGE_STORAGE; // Ignore the storage flag in comparing properties.
+			stored_property_info.usage |= PropertyUsageFlags::STORAGE; // Ignore the storage flag in comparing properties.
 
 			PropertyId id = { counts[property_string], property_string };
 			if (!usage.has(id)) {

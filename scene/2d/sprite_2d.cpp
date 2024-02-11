@@ -414,17 +414,17 @@ Rect2 Sprite2D::get_rect() const {
 
 void Sprite2D::_validate_property(PropertyInfo &p_property) const {
 	if (p_property.name == "frame") {
-		p_property.hint = PROPERTY_HINT_RANGE;
+		p_property.hint = PropertyHint::RANGE;
 		p_property.hint_string = "0," + itos(vframes * hframes - 1) + ",1";
-		p_property.usage |= PROPERTY_USAGE_KEYING_INCREMENTS;
+		p_property.usage |= PropertyUsageFlags::KEYING_INCREMENTS;
 	}
 
 	if (p_property.name == "frame_coords") {
-		p_property.usage |= PROPERTY_USAGE_KEYING_INCREMENTS;
+		p_property.usage |= PropertyUsageFlags::KEYING_INCREMENTS;
 	}
 
 	if (!region_enabled && (p_property.name == "region_rect" || p_property.name == "region_filter_clip")) {
-		p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+		p_property.usage = PropertyUsageFlags::NO_EDITOR;
 	}
 }
 
@@ -480,17 +480,17 @@ void Sprite2D::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("frame_changed"));
 	ADD_SIGNAL(MethodInfo("texture_changed"));
 
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_texture", "get_texture");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture", PropertyHint::RESOURCE_TYPE, "Texture2D"), "set_texture", "get_texture");
 	ADD_GROUP("Offset", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "centered"), "set_centered", "is_centered");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_offset", "get_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "offset", PropertyHint::NONE, "suffix:px"), "set_offset", "get_offset");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flip_h"), "set_flip_h", "is_flipped_h");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flip_v"), "set_flip_v", "is_flipped_v");
 	ADD_GROUP("Animation", "");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "hframes", PROPERTY_HINT_RANGE, "1,16384,1"), "set_hframes", "get_hframes");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "vframes", PROPERTY_HINT_RANGE, "1,16384,1"), "set_vframes", "get_vframes");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "hframes", PropertyHint::RANGE, "1,16384,1"), "set_hframes", "get_hframes");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "vframes", PropertyHint::RANGE, "1,16384,1"), "set_vframes", "get_vframes");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "frame"), "set_frame", "get_frame");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "frame_coords", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_EDITOR), "set_frame_coords", "get_frame_coords");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "frame_coords", PropertyHint::NONE, "", PropertyUsageFlags::EDITOR), "set_frame_coords", "get_frame_coords");
 
 	ADD_GROUP("Region", "region_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "region_enabled"), "set_region_enabled", "is_region_enabled");

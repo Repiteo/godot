@@ -60,10 +60,10 @@ void NavigationObstacle2D::_bind_methods() {
 
 	ADD_GROUP("Avoidance", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "avoidance_enabled"), "set_avoidance_enabled", "get_avoidance_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "velocity", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_velocity", "get_velocity");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "radius", PROPERTY_HINT_RANGE, "0.0,500,0.01,suffix:px"), "set_radius", "get_radius");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "velocity", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR), "set_velocity", "get_velocity");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "radius", PropertyHint::RANGE, "0.0,500,0.01,suffix:px"), "set_radius", "get_radius");
 	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR2_ARRAY, "vertices"), "set_vertices", "get_vertices");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "avoidance_layers", PROPERTY_HINT_LAYERS_AVOIDANCE), "set_avoidance_layers", "get_avoidance_layers");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "avoidance_layers", PropertyHint::LAYERS_AVOIDANCE), "set_avoidance_layers", "get_avoidance_layers");
 }
 
 void NavigationObstacle2D::_notification(int p_what) {

@@ -607,12 +607,12 @@ void ScrollContainer::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "follow_focus"), "set_follow_focus", "is_following_focus");
 
 	ADD_GROUP("Scroll", "scroll_");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "scroll_horizontal", PROPERTY_HINT_NONE, "suffix:px"), "set_h_scroll", "get_h_scroll");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "scroll_vertical", PROPERTY_HINT_NONE, "suffix:px"), "set_v_scroll", "get_v_scroll");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "scroll_horizontal_custom_step", PROPERTY_HINT_RANGE, "-1,4096,suffix:px"), "set_horizontal_custom_step", "get_horizontal_custom_step");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "scroll_vertical_custom_step", PROPERTY_HINT_RANGE, "-1,4096,suffix:px"), "set_vertical_custom_step", "get_vertical_custom_step");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "horizontal_scroll_mode", PROPERTY_HINT_ENUM, "Disabled,Auto,Always Show,Never Show"), "set_horizontal_scroll_mode", "get_horizontal_scroll_mode");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "vertical_scroll_mode", PROPERTY_HINT_ENUM, "Disabled,Auto,Always Show,Never Show"), "set_vertical_scroll_mode", "get_vertical_scroll_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "scroll_horizontal", PropertyHint::NONE, "suffix:px"), "set_h_scroll", "get_h_scroll");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "scroll_vertical", PropertyHint::NONE, "suffix:px"), "set_v_scroll", "get_v_scroll");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "scroll_horizontal_custom_step", PropertyHint::RANGE, "-1,4096,suffix:px"), "set_horizontal_custom_step", "get_horizontal_custom_step");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "scroll_vertical_custom_step", PropertyHint::RANGE, "-1,4096,suffix:px"), "set_vertical_custom_step", "get_vertical_custom_step");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "horizontal_scroll_mode", PropertyHint::ENUM, "Disabled,Auto,Always Show,Never Show"), "set_horizontal_scroll_mode", "get_horizontal_scroll_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "vertical_scroll_mode", PropertyHint::ENUM, "Disabled,Auto,Always Show,Never Show"), "set_vertical_scroll_mode", "get_vertical_scroll_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "scroll_deadzone"), "set_deadzone", "get_deadzone");
 
 	BIND_ENUM_CONSTANT(SCROLL_MODE_DISABLED);

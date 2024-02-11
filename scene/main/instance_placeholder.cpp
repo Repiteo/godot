@@ -56,7 +56,7 @@ void InstancePlaceholder::_get_property_list(List<PropertyInfo> *p_list) const {
 		PropertyInfo pi;
 		pi.name = E.name;
 		pi.type = E.value.get_type();
-		pi.usage = PROPERTY_USAGE_STORAGE;
+		pi.usage = PropertyUsageFlags::STORAGE;
 
 		p_list->push_back(pi);
 	}

@@ -1882,7 +1882,7 @@ void EditorAnimationMultiTransitionEdit::_get_property_list(List<PropertyInfo> *
 				continue;
 			}
 
-			if (F->get().usage != PROPERTY_USAGE_DEFAULT) {
+			if (F->get().usage != PropertyUsageFlags::DEFAULT) {
 				continue;
 			}
 

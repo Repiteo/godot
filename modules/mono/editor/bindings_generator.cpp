@@ -816,7 +816,7 @@ int BindingsGenerator::_determine_enum_prefix(const EnumInterface &p_ienum) {
 		int i;
 		for (i = 0; i < candidate_len && i < parts.size(); i++) {
 			if (front_parts[i] != parts[i]) {
-				// HARDCODED: Some Flag enums have the prefix 'FLAG_' for everything except 'FLAGS_DEFAULT' (same for 'METHOD_FLAG_' and'METHOD_FLAGS_DEFAULT').
+				// HARDCODED: Some Flag enums have the prefix 'FLAG_' for everything except 'FLAGS_DEFAULT' (same for 'METHOD_FLAG_' and'MethodFlags::DEFAULT').
 				bool hardcoded_exc = (i == candidate_len - 1 && ((front_parts[i] == "FLAGS" && parts[i] == "FLAG") || (front_parts[i] == "FLAG" && parts[i] == "FLAGS")));
 				if (!hardcoded_exc) {
 					break;
@@ -2967,11 +2967,11 @@ bool BindingsGenerator::_arg_default_value_is_assignable_to_type(const Variant &
 }
 
 bool method_has_ptr_parameter(MethodInfo p_method_info) {
-	if (p_method_info.return_val.type == Variant::INT && p_method_info.return_val.hint == PROPERTY_HINT_INT_IS_POINTER) {
+	if (p_method_info.return_val.type == Variant::INT && p_method_info.return_val.hint == PropertyHint::INT_IS_POINTER) {
 		return true;
 	}
 	for (PropertyInfo arg : p_method_info.arguments) {
-		if (arg.type == Variant::INT && arg.hint == PROPERTY_HINT_INT_IS_POINTER) {
+		if (arg.type == Variant::INT && arg.hint == PropertyHint::INT_IS_POINTER) {
 			return true;
 		}
 	}
@@ -3057,7 +3057,7 @@ bool BindingsGenerator::_populate_object_type_interfaces() {
 		HashMap<StringName, StringName> accessor_methods;
 
 		for (const PropertyInfo &property : property_list) {
-			if (property.usage & PROPERTY_USAGE_GROUP || property.usage & PROPERTY_USAGE_SUBGROUP || property.usage & PROPERTY_USAGE_CATEGORY || (property.type == Variant::NIL && property.usage & PROPERTY_USAGE_ARRAY)) {
+			if (property.usage & PropertyUsageFlags::GROUP || property.usage & PropertyUsageFlags::SUBGROUP || property.usage & PropertyUsageFlags::CATEGORY || (property.type == Variant::NIL && property.usage & PropertyUsageFlags::ARRAY)) {
 				continue;
 			}
 
@@ -3143,11 +3143,11 @@ bool BindingsGenerator::_populate_object_type_interfaces() {
 			imethod.cname = cname;
 			imethod.hash = hash;
 
-			if (method_info.flags & METHOD_FLAG_STATIC) {
+			if (method_info.flags & MethodFlags::STATIC) {
 				imethod.is_static = true;
 			}
 
-			if (method_info.flags & METHOD_FLAG_VIRTUAL) {
+			if (method_info.flags & MethodFlags::VIRTUAL) {
 				imethod.is_virtual = true;
 				itype.has_virtual_methods = true;
 			}
@@ -3189,23 +3189,23 @@ bool BindingsGenerator::_populate_object_type_interfaces() {
 							   " We only expected Object.free, but found '" +
 							itype.name + "." + imethod.name + "'.");
 				}
-			} else if (return_info.type == Variant::INT && return_info.usage & (PROPERTY_USAGE_CLASS_IS_ENUM | PROPERTY_USAGE_CLASS_IS_BITFIELD)) {
+			} else if (return_info.type == Variant::INT && return_info.usage & (PropertyUsageFlags::CLASS_IS_ENUM | PropertyUsageFlags::CLASS_IS_BITFIELD)) {
 				imethod.return_type.cname = return_info.class_name;
 				imethod.return_type.is_enum = true;
 			} else if (return_info.class_name != StringName()) {
 				imethod.return_type.cname = return_info.class_name;
 
-				bool bad_reference_hint = !imethod.is_virtual && return_info.hint != PROPERTY_HINT_RESOURCE_TYPE &&
+				bool bad_reference_hint = !imethod.is_virtual && return_info.hint != PropertyHint::RESOURCE_TYPE &&
 						ClassDB::is_parent_class(return_info.class_name, name_cache.type_RefCounted);
 				ERR_FAIL_COND_V_MSG(bad_reference_hint, false,
-						String() + "Return type is reference but hint is not '" _STR(PROPERTY_HINT_RESOURCE_TYPE) "'." +
+						String() + "Return type is reference but hint is not '" _STR(PropertyHint::RESOURCE_TYPE) "'." +
 								" Are you returning a reference type by pointer? Method: '" + itype.name + "." + imethod.name + "'.");
-			} else if (return_info.type == Variant::ARRAY && return_info.hint == PROPERTY_HINT_ARRAY_TYPE) {
+			} else if (return_info.type == Variant::ARRAY && return_info.hint == PropertyHint::ARRAY_TYPE) {
 				imethod.return_type.cname = Variant::get_type_name(return_info.type) + "_@generic";
 				imethod.return_type.generic_type_parameters.push_back(TypeReference(return_info.hint_string));
-			} else if (return_info.hint == PROPERTY_HINT_RESOURCE_TYPE) {
+			} else if (return_info.hint == PropertyHint::RESOURCE_TYPE) {
 				imethod.return_type.cname = return_info.hint_string;
-			} else if (return_info.type == Variant::NIL && return_info.usage & PROPERTY_USAGE_NIL_IS_VARIANT) {
+			} else if (return_info.type == Variant::NIL && return_info.usage & PropertyUsageFlags::NIL_IS_VARIANT) {
 				imethod.return_type.cname = name_cache.type_Variant;
 			} else if (return_info.type == Variant::NIL) {
 				imethod.return_type.cname = name_cache.type_void;
@@ -3221,15 +3221,15 @@ bool BindingsGenerator::_populate_object_type_interfaces() {
 				ArgumentInterface iarg;
 				iarg.name = orig_arg_name;
 
-				if (arginfo.type == Variant::INT && arginfo.usage & (PROPERTY_USAGE_CLASS_IS_ENUM | PROPERTY_USAGE_CLASS_IS_BITFIELD)) {
+				if (arginfo.type == Variant::INT && arginfo.usage & (PropertyUsageFlags::CLASS_IS_ENUM | PropertyUsageFlags::CLASS_IS_BITFIELD)) {
 					iarg.type.cname = arginfo.class_name;
 					iarg.type.is_enum = true;
 				} else if (arginfo.class_name != StringName()) {
 					iarg.type.cname = arginfo.class_name;
-				} else if (arginfo.type == Variant::ARRAY && arginfo.hint == PROPERTY_HINT_ARRAY_TYPE) {
+				} else if (arginfo.type == Variant::ARRAY && arginfo.hint == PropertyHint::ARRAY_TYPE) {
 					iarg.type.cname = Variant::get_type_name(arginfo.type) + "_@generic";
 					iarg.type.generic_type_parameters.push_back(TypeReference(arginfo.hint_string));
-				} else if (arginfo.hint == PROPERTY_HINT_RESOURCE_TYPE) {
+				} else if (arginfo.hint == PropertyHint::RESOURCE_TYPE) {
 					iarg.type.cname = arginfo.hint_string;
 				} else if (arginfo.type == Variant::NIL) {
 					iarg.type.cname = name_cache.type_Variant;
@@ -3338,15 +3338,15 @@ bool BindingsGenerator::_populate_object_type_interfaces() {
 				ArgumentInterface iarg;
 				iarg.name = orig_arg_name;
 
-				if (arginfo.type == Variant::INT && arginfo.usage & (PROPERTY_USAGE_CLASS_IS_ENUM | PROPERTY_USAGE_CLASS_IS_BITFIELD)) {
+				if (arginfo.type == Variant::INT && arginfo.usage & (PropertyUsageFlags::CLASS_IS_ENUM | PropertyUsageFlags::CLASS_IS_BITFIELD)) {
 					iarg.type.cname = arginfo.class_name;
 					iarg.type.is_enum = true;
 				} else if (arginfo.class_name != StringName()) {
 					iarg.type.cname = arginfo.class_name;
-				} else if (arginfo.type == Variant::ARRAY && arginfo.hint == PROPERTY_HINT_ARRAY_TYPE) {
+				} else if (arginfo.type == Variant::ARRAY && arginfo.hint == PropertyHint::ARRAY_TYPE) {
 					iarg.type.cname = Variant::get_type_name(arginfo.type) + "_@generic";
 					iarg.type.generic_type_parameters.push_back(TypeReference(arginfo.hint_string));
-				} else if (arginfo.hint == PROPERTY_HINT_RESOURCE_TYPE) {
+				} else if (arginfo.hint == PropertyHint::RESOURCE_TYPE) {
 					iarg.type.cname = arginfo.hint_string;
 				} else if (arginfo.type == Variant::NIL) {
 					iarg.type.cname = name_cache.type_Variant;

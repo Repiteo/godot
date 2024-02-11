@@ -1036,7 +1036,7 @@ void GDExtension::prepare_reload() {
 			List<PropertyInfo> prop_list;
 			obj->get_property_list(&prop_list);
 			for (const PropertyInfo &P : prop_list) {
-				if (!(P.usage & PROPERTY_USAGE_STORAGE)) {
+				if (!(P.usage & PropertyUsageFlags::STORAGE)) {
 					continue;
 				}
 
@@ -1047,7 +1047,7 @@ void GDExtension::prepare_reload() {
 					continue;
 				}
 
-				if (P.type == Variant::OBJECT && value.is_zero() && !(P.usage & PROPERTY_USAGE_STORE_IF_NULL)) {
+				if (P.type == Variant::OBJECT && value.is_zero() && !(P.usage & PropertyUsageFlags::STORE_IF_NULL)) {
 					continue;
 				}
 

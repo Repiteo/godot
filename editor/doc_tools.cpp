@@ -460,7 +460,7 @@ void DocTools::generate(BitField<GenerateFlags> p_flags) {
 					}
 				}
 
-				if (E.usage & PROPERTY_USAGE_GROUP || E.usage & PROPERTY_USAGE_SUBGROUP || E.usage & PROPERTY_USAGE_CATEGORY || E.usage & PROPERTY_USAGE_INTERNAL || (E.type == Variant::NIL && E.usage & PROPERTY_USAGE_ARRAY)) {
+				if (E.usage & PropertyUsageFlags::GROUP || E.usage & PropertyUsageFlags::SUBGROUP || E.usage & PropertyUsageFlags::CATEGORY || E.usage & PropertyUsageFlags::INTERNAL || (E.type == Variant::NIL && E.usage & PropertyUsageFlags::ARRAY)) {
 					continue;
 				}
 
@@ -484,7 +484,7 @@ void DocTools::generate(BitField<GenerateFlags> p_flags) {
 					if (!ProjectSettings::get_singleton()->is_builtin_setting(E.name)) {
 						continue;
 					}
-					if (E.usage & PROPERTY_USAGE_EDITOR) {
+					if (E.usage & PropertyUsageFlags::EDITOR) {
 						if (!ProjectSettings::get_singleton()->get_ignore_value_in_docs(E.name)) {
 							default_value = ProjectSettings::get_singleton()->property_get_revert(E.name);
 							default_value_valid = true;
@@ -523,17 +523,17 @@ void DocTools::generate(BitField<GenerateFlags> p_flags) {
 						PropertyInfo retinfo = mb->get_return_info();
 
 						found_type = true;
-						if (retinfo.type == Variant::INT && retinfo.usage & (PROPERTY_USAGE_CLASS_IS_ENUM | PROPERTY_USAGE_CLASS_IS_BITFIELD)) {
+						if (retinfo.type == Variant::INT && retinfo.usage & (PropertyUsageFlags::CLASS_IS_ENUM | PropertyUsageFlags::CLASS_IS_BITFIELD)) {
 							prop.enumeration = retinfo.class_name;
-							prop.is_bitfield = retinfo.usage & PROPERTY_USAGE_CLASS_IS_BITFIELD;
+							prop.is_bitfield = retinfo.usage & PropertyUsageFlags::CLASS_IS_BITFIELD;
 							prop.type = "int";
 						} else if (retinfo.class_name != StringName()) {
 							prop.type = retinfo.class_name;
-						} else if (retinfo.type == Variant::ARRAY && retinfo.hint == PROPERTY_HINT_ARRAY_TYPE) {
+						} else if (retinfo.type == Variant::ARRAY && retinfo.hint == PropertyHint::ARRAY_TYPE) {
 							prop.type = retinfo.hint_string + "[]";
-						} else if (retinfo.hint == PROPERTY_HINT_RESOURCE_TYPE) {
+						} else if (retinfo.hint == PropertyHint::RESOURCE_TYPE) {
 							prop.type = retinfo.hint_string;
-						} else if (retinfo.type == Variant::NIL && retinfo.usage & PROPERTY_USAGE_NIL_IS_VARIANT) {
+						} else if (retinfo.type == Variant::NIL && retinfo.usage & PropertyUsageFlags::NIL_IS_VARIANT) {
 							prop.type = "Variant";
 						} else if (retinfo.type == Variant::NIL) {
 							prop.type = "void";
@@ -550,7 +550,7 @@ void DocTools::generate(BitField<GenerateFlags> p_flags) {
 				}
 
 				if (!found_type) {
-					if (E.type == Variant::OBJECT && E.hint == PROPERTY_HINT_RESOURCE_TYPE) {
+					if (E.type == Variant::OBJECT && E.hint == PropertyHint::RESOURCE_TYPE) {
 						prop.type = E.hint_string;
 					} else {
 						prop.type = Variant::get_type_name(E.type);
@@ -566,7 +566,7 @@ void DocTools::generate(BitField<GenerateFlags> p_flags) {
 			ClassDB::get_method_list(name, &method_list, true);
 
 			for (const MethodInfo &E : method_list) {
-				if (E.name.is_empty() || (E.name[0] == '_' && !(E.flags & METHOD_FLAG_VIRTUAL))) {
+				if (E.name.is_empty() || (E.name[0] == '_' && !(E.flags & MethodFlags::VIRTUAL))) {
 					continue; //hidden, don't count
 				}
 
@@ -759,7 +759,7 @@ void DocTools::generate(BitField<GenerateFlags> p_flags) {
 			PropertyInfo arg;
 			arg.name = "right";
 			arg.type = Variant::NIL;
-			arg.usage = PROPERTY_USAGE_NIL_IS_VARIANT;
+			arg.usage = PropertyUsageFlags::NIL_IS_VARIANT;
 			mi.arguments.push_back(arg);
 
 			method_list.push_back(mi);
@@ -769,12 +769,12 @@ void DocTools::generate(BitField<GenerateFlags> p_flags) {
 			MethodInfo mi;
 			mi.name = "operator []";
 			mi.return_val.type = Variant::NIL;
-			mi.return_val.usage = PROPERTY_USAGE_NIL_IS_VARIANT;
+			mi.return_val.usage = PropertyUsageFlags::NIL_IS_VARIANT;
 
 			PropertyInfo arg;
 			arg.name = "key";
 			arg.type = Variant::NIL;
-			arg.usage = PROPERTY_USAGE_NIL_IS_VARIANT;
+			arg.usage = PropertyUsageFlags::NIL_IS_VARIANT;
 			mi.arguments.push_back(arg);
 
 			method_list.push_back(mi);
@@ -812,21 +812,21 @@ void DocTools::generate(BitField<GenerateFlags> p_flags) {
 
 			DocData::return_doc_from_retinfo(method, mi.return_val);
 
-			if (mi.flags & METHOD_FLAG_VARARG) {
+			if (mi.flags & MethodFlags::VARARG) {
 				if (!method.qualifiers.is_empty()) {
 					method.qualifiers += " ";
 				}
 				method.qualifiers += "vararg";
 			}
 
-			if (mi.flags & METHOD_FLAG_CONST) {
+			if (mi.flags & MethodFlags::CONST) {
 				if (!method.qualifiers.is_empty()) {
 					method.qualifiers += " ";
 				}
 				method.qualifiers += "const";
 			}
 
-			if (mi.flags & METHOD_FLAG_STATIC) {
+			if (mi.flags & MethodFlags::STATIC) {
 				if (!method.qualifiers.is_empty()) {
 					method.qualifiers += " ";
 				}
@@ -922,7 +922,7 @@ void DocTools::generate(BitField<GenerateFlags> p_flags) {
 				PropertyInfo pi;
 				pi.type = Variant::get_utility_function_return_type(E);
 				if (pi.type == Variant::NIL) {
-					pi.usage = PROPERTY_USAGE_NIL_IS_VARIANT;
+					pi.usage = PropertyUsageFlags::NIL_IS_VARIANT;
 				}
 				DocData::ArgumentDoc ad;
 				DocData::argument_doc_from_arginfo(ad, pi);
@@ -938,7 +938,7 @@ void DocTools::generate(BitField<GenerateFlags> p_flags) {
 					pi.type = Variant::get_utility_function_argument_type(E, i);
 					pi.name = Variant::get_utility_function_argument_name(E, i);
 					if (pi.type == Variant::NIL) {
-						pi.usage = PROPERTY_USAGE_NIL_IS_VARIANT;
+						pi.usage = PropertyUsageFlags::NIL_IS_VARIANT;
 					}
 					DocData::ArgumentDoc ad;
 					DocData::argument_doc_from_arginfo(ad, pi);
@@ -970,7 +970,7 @@ void DocTools::generate(BitField<GenerateFlags> p_flags) {
 				DocData::MethodDoc md;
 				md.name = mi.name;
 
-				if (mi.flags & METHOD_FLAG_VARARG) {
+				if (mi.flags & MethodFlags::VARARG) {
 					if (!md.qualifiers.is_empty()) {
 						md.qualifiers += " ";
 					}
@@ -1014,7 +1014,7 @@ void DocTools::generate(BitField<GenerateFlags> p_flags) {
 				DocData::MethodDoc atd;
 				atd.name = ai.name;
 
-				if (ai.flags & METHOD_FLAG_VARARG) {
+				if (ai.flags & MethodFlags::VARARG) {
 					if (!atd.qualifiers.is_empty()) {
 						atd.qualifiers += " ";
 					}

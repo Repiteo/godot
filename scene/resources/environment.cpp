@@ -1036,60 +1036,60 @@ void Environment::_update_adjustment() {
 void Environment::_validate_property(PropertyInfo &p_property) const {
 	if (p_property.name == "sky" || p_property.name == "sky_custom_fov" || p_property.name == "sky_rotation" || p_property.name == "ambient_light_sky_contribution") {
 		if (bg_mode != BG_SKY && ambient_source != AMBIENT_SOURCE_SKY && reflection_source != REFLECTION_SOURCE_SKY) {
-			p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+			p_property.usage = PropertyUsageFlags::NO_EDITOR;
 		}
 	}
 
 	if (p_property.name == "ambient_light_color" || p_property.name == "ambient_light_energy") {
 		if (ambient_source == AMBIENT_SOURCE_DISABLED) {
-			p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+			p_property.usage = PropertyUsageFlags::NO_EDITOR;
 		}
 	}
 
 	if (p_property.name == "ambient_light_sky_contribution") {
 		if (ambient_source == AMBIENT_SOURCE_DISABLED || ambient_source == AMBIENT_SOURCE_COLOR) {
-			p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+			p_property.usage = PropertyUsageFlags::NO_EDITOR;
 		}
 	}
 
 	if (p_property.name == "fog_aerial_perspective") {
 		if (bg_mode != BG_SKY) {
-			p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+			p_property.usage = PropertyUsageFlags::NO_EDITOR;
 		}
 	}
 
 	if (p_property.name == "tonemap_white" && tone_mapper == TONE_MAPPER_LINEAR) {
-		p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+		p_property.usage = PropertyUsageFlags::NO_EDITOR;
 	}
 
 	if (p_property.name == "glow_intensity" && glow_blend_mode == GLOW_BLEND_MODE_MIX) {
-		p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+		p_property.usage = PropertyUsageFlags::NO_EDITOR;
 	}
 
 	if (p_property.name == "glow_mix" && glow_blend_mode != GLOW_BLEND_MODE_MIX) {
-		p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+		p_property.usage = PropertyUsageFlags::NO_EDITOR;
 	}
 
 	if (p_property.name == "background_color") {
 		if (bg_mode != BG_COLOR && ambient_source != AMBIENT_SOURCE_COLOR) {
-			p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+			p_property.usage = PropertyUsageFlags::NO_EDITOR;
 		}
 	}
 
 	if (p_property.name == "background_canvas_max_layer") {
 		if (bg_mode != BG_CANVAS) {
-			p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+			p_property.usage = PropertyUsageFlags::NO_EDITOR;
 		}
 	}
 
 	if (p_property.name == "background_camera_feed_id") {
 		if (bg_mode != BG_CAMERA_FEED) {
-			p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+			p_property.usage = PropertyUsageFlags::NO_EDITOR;
 		}
 	}
 
 	if (p_property.name == "background_intensity" && !GLOBAL_GET("rendering/lights_and_shadows/use_physical_light_units")) {
-		p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+		p_property.usage = PropertyUsageFlags::NO_EDITOR;
 	}
 
 	static const char *hide_prefixes[] = {
@@ -1111,7 +1111,7 @@ void Environment::_validate_property(PropertyInfo &p_property) const {
 
 		String enabled = prefix + "enabled";
 		if (p_property.name.begins_with(prefix) && p_property.name != enabled && !bool(get(enabled))) {
-			p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+			p_property.usage = PropertyUsageFlags::NO_EDITOR;
 			return;
 		}
 
@@ -1161,18 +1161,18 @@ void Environment::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_camera_feed_id"), &Environment::get_camera_feed_id);
 
 	ADD_GROUP("Background", "background_");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "background_mode", PROPERTY_HINT_ENUM, "Clear Color,Custom Color,Sky,Canvas,Keep,Camera Feed"), "set_background", "get_background");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "background_mode", PropertyHint::ENUM, "Clear Color,Custom Color,Sky,Canvas,Keep,Camera Feed"), "set_background", "get_background");
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "background_color"), "set_bg_color", "get_bg_color");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "background_energy_multiplier", PROPERTY_HINT_RANGE, "0,16,0.01"), "set_bg_energy_multiplier", "get_bg_energy_multiplier");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "background_intensity", PROPERTY_HINT_RANGE, "0,100000,0.01,suffix:nt"), "set_bg_intensity", "get_bg_intensity");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "background_energy_multiplier", PropertyHint::RANGE, "0,16,0.01"), "set_bg_energy_multiplier", "get_bg_energy_multiplier");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "background_intensity", PropertyHint::RANGE, "0,100000,0.01,suffix:nt"), "set_bg_intensity", "get_bg_intensity");
 
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "background_canvas_max_layer", PROPERTY_HINT_RANGE, "-1000,1000,1"), "set_canvas_max_layer", "get_canvas_max_layer");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "background_camera_feed_id", PROPERTY_HINT_RANGE, "1,10,1"), "set_camera_feed_id", "get_camera_feed_id");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "background_canvas_max_layer", PropertyHint::RANGE, "-1000,1000,1"), "set_canvas_max_layer", "get_canvas_max_layer");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "background_camera_feed_id", PropertyHint::RANGE, "1,10,1"), "set_camera_feed_id", "get_camera_feed_id");
 
 	ADD_GROUP("Sky", "sky_");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "sky", PROPERTY_HINT_RESOURCE_TYPE, "Sky"), "set_sky", "get_sky");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "sky_custom_fov", PROPERTY_HINT_RANGE, "0,180,0.1,degrees"), "set_sky_custom_fov", "get_sky_custom_fov");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "sky_rotation", PROPERTY_HINT_RANGE, "-360,360,0.1,or_less,or_greater,radians_as_degrees"), "set_sky_rotation", "get_sky_rotation");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "sky", PropertyHint::RESOURCE_TYPE, "Sky"), "set_sky", "get_sky");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "sky_custom_fov", PropertyHint::RANGE, "0,180,0.1,degrees"), "set_sky_custom_fov", "get_sky_custom_fov");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "sky_rotation", PropertyHint::RANGE, "-360,360,0.1,or_less,or_greater,radians_as_degrees"), "set_sky_rotation", "get_sky_rotation");
 
 	// Ambient light
 
@@ -1188,13 +1188,13 @@ void Environment::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_reflection_source"), &Environment::get_reflection_source);
 
 	ADD_GROUP("Ambient Light", "ambient_light_");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "ambient_light_source", PROPERTY_HINT_ENUM, "Background,Disabled,Color,Sky"), "set_ambient_source", "get_ambient_source");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "ambient_light_source", PropertyHint::ENUM, "Background,Disabled,Color,Sky"), "set_ambient_source", "get_ambient_source");
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "ambient_light_color"), "set_ambient_light_color", "get_ambient_light_color");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ambient_light_sky_contribution", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_ambient_light_sky_contribution", "get_ambient_light_sky_contribution");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ambient_light_energy", PROPERTY_HINT_RANGE, "0,16,0.01"), "set_ambient_light_energy", "get_ambient_light_energy");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ambient_light_sky_contribution", PropertyHint::RANGE, "0,1,0.01"), "set_ambient_light_sky_contribution", "get_ambient_light_sky_contribution");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ambient_light_energy", PropertyHint::RANGE, "0,16,0.01"), "set_ambient_light_energy", "get_ambient_light_energy");
 
 	ADD_GROUP("Reflected Light", "reflected_light_");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "reflected_light_source", PROPERTY_HINT_ENUM, "Background,Disabled,Sky"), "set_reflection_source", "get_reflection_source");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "reflected_light_source", PropertyHint::ENUM, "Background,Disabled,Sky"), "set_reflection_source", "get_reflection_source");
 
 	// Tonemap
 
@@ -1206,9 +1206,9 @@ void Environment::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_tonemap_white"), &Environment::get_tonemap_white);
 
 	ADD_GROUP("Tonemap", "tonemap_");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "tonemap_mode", PROPERTY_HINT_ENUM, "Linear,Reinhard,Filmic,ACES"), "set_tonemapper", "get_tonemapper");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "tonemap_exposure", PROPERTY_HINT_RANGE, "0,16,0.01"), "set_tonemap_exposure", "get_tonemap_exposure");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "tonemap_white", PROPERTY_HINT_RANGE, "0,16,0.01"), "set_tonemap_white", "get_tonemap_white");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "tonemap_mode", PropertyHint::ENUM, "Linear,Reinhard,Filmic,ACES"), "set_tonemapper", "get_tonemapper");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "tonemap_exposure", PropertyHint::RANGE, "0,16,0.01"), "set_tonemap_exposure", "get_tonemap_exposure");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "tonemap_white", PropertyHint::RANGE, "0,16,0.01"), "set_tonemap_white", "get_tonemap_white");
 
 	// SSR
 
@@ -1225,10 +1225,10 @@ void Environment::_bind_methods() {
 
 	ADD_GROUP("SSR", "ssr_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "ssr_enabled"), "set_ssr_enabled", "is_ssr_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "ssr_max_steps", PROPERTY_HINT_RANGE, "1,512,1"), "set_ssr_max_steps", "get_ssr_max_steps");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssr_fade_in", PROPERTY_HINT_EXP_EASING, "positive_only"), "set_ssr_fade_in", "get_ssr_fade_in");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssr_fade_out", PROPERTY_HINT_EXP_EASING, "positive_only"), "set_ssr_fade_out", "get_ssr_fade_out");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssr_depth_tolerance", PROPERTY_HINT_RANGE, "0.01,128,0.1"), "set_ssr_depth_tolerance", "get_ssr_depth_tolerance");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "ssr_max_steps", PropertyHint::RANGE, "1,512,1"), "set_ssr_max_steps", "get_ssr_max_steps");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssr_fade_in", PropertyHint::EXP_EASING, "positive_only"), "set_ssr_fade_in", "get_ssr_fade_in");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssr_fade_out", PropertyHint::EXP_EASING, "positive_only"), "set_ssr_fade_out", "get_ssr_fade_out");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssr_depth_tolerance", PropertyHint::RANGE, "0.01,128,0.1"), "set_ssr_depth_tolerance", "get_ssr_depth_tolerance");
 
 	// SSAO
 	ClassDB::bind_method(D_METHOD("set_ssao_enabled", "enabled"), &Environment::set_ssao_enabled);
@@ -1252,14 +1252,14 @@ void Environment::_bind_methods() {
 
 	ADD_GROUP("SSAO", "ssao_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "ssao_enabled"), "set_ssao_enabled", "is_ssao_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssao_radius", PROPERTY_HINT_RANGE, "0.01,16,0.01,or_greater"), "set_ssao_radius", "get_ssao_radius");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssao_intensity", PROPERTY_HINT_RANGE, "0,16,0.01,or_greater"), "set_ssao_intensity", "get_ssao_intensity");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssao_power", PROPERTY_HINT_EXP_EASING, "positive_only"), "set_ssao_power", "get_ssao_power");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssao_detail", PROPERTY_HINT_RANGE, "0,5,0.01"), "set_ssao_detail", "get_ssao_detail");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssao_horizon", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_ssao_horizon", "get_ssao_horizon");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssao_sharpness", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_ssao_sharpness", "get_ssao_sharpness");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssao_light_affect", PROPERTY_HINT_RANGE, "0.00,1,0.01"), "set_ssao_direct_light_affect", "get_ssao_direct_light_affect");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssao_ao_channel_affect", PROPERTY_HINT_RANGE, "0.00,1,0.01"), "set_ssao_ao_channel_affect", "get_ssao_ao_channel_affect");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssao_radius", PropertyHint::RANGE, "0.01,16,0.01,or_greater"), "set_ssao_radius", "get_ssao_radius");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssao_intensity", PropertyHint::RANGE, "0,16,0.01,or_greater"), "set_ssao_intensity", "get_ssao_intensity");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssao_power", PropertyHint::EXP_EASING, "positive_only"), "set_ssao_power", "get_ssao_power");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssao_detail", PropertyHint::RANGE, "0,5,0.01"), "set_ssao_detail", "get_ssao_detail");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssao_horizon", PropertyHint::RANGE, "0,1,0.01"), "set_ssao_horizon", "get_ssao_horizon");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssao_sharpness", PropertyHint::RANGE, "0,1,0.01"), "set_ssao_sharpness", "get_ssao_sharpness");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssao_light_affect", PropertyHint::RANGE, "0.00,1,0.01"), "set_ssao_direct_light_affect", "get_ssao_direct_light_affect");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssao_ao_channel_affect", PropertyHint::RANGE, "0.00,1,0.01"), "set_ssao_ao_channel_affect", "get_ssao_ao_channel_affect");
 
 	// SSIL
 	ClassDB::bind_method(D_METHOD("set_ssil_enabled", "enabled"), &Environment::set_ssil_enabled);
@@ -1275,10 +1275,10 @@ void Environment::_bind_methods() {
 
 	ADD_GROUP("SSIL", "ssil_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "ssil_enabled"), "set_ssil_enabled", "is_ssil_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssil_radius", PROPERTY_HINT_RANGE, "0.01,16,0.01,or_greater,suffix:m"), "set_ssil_radius", "get_ssil_radius");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssil_intensity", PROPERTY_HINT_RANGE, "0,16,0.01,or_greater"), "set_ssil_intensity", "get_ssil_intensity");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssil_sharpness", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_ssil_sharpness", "get_ssil_sharpness");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssil_normal_rejection", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_ssil_normal_rejection", "get_ssil_normal_rejection");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssil_radius", PropertyHint::RANGE, "0.01,16,0.01,or_greater,suffix:m"), "set_ssil_radius", "get_ssil_radius");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssil_intensity", PropertyHint::RANGE, "0,16,0.01,or_greater"), "set_ssil_intensity", "get_ssil_intensity");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssil_sharpness", PropertyHint::RANGE, "0,1,0.01"), "set_ssil_sharpness", "get_ssil_sharpness");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "ssil_normal_rejection", PropertyHint::RANGE, "0,1,0.01"), "set_ssil_normal_rejection", "get_ssil_normal_rejection");
 
 	// SDFGI
 
@@ -1311,14 +1311,14 @@ void Environment::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "sdfgi_enabled"), "set_sdfgi_enabled", "is_sdfgi_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "sdfgi_use_occlusion"), "set_sdfgi_use_occlusion", "is_sdfgi_using_occlusion");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "sdfgi_read_sky_light"), "set_sdfgi_read_sky_light", "is_sdfgi_reading_sky_light");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "sdfgi_bounce_feedback", PROPERTY_HINT_RANGE, "0,1.99,0.01"), "set_sdfgi_bounce_feedback", "get_sdfgi_bounce_feedback");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "sdfgi_cascades", PROPERTY_HINT_RANGE, "1,8,1"), "set_sdfgi_cascades", "get_sdfgi_cascades");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "sdfgi_min_cell_size", PROPERTY_HINT_RANGE, "0.01,64,0.01"), "set_sdfgi_min_cell_size", "get_sdfgi_min_cell_size");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "sdfgi_bounce_feedback", PropertyHint::RANGE, "0,1.99,0.01"), "set_sdfgi_bounce_feedback", "get_sdfgi_bounce_feedback");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "sdfgi_cascades", PropertyHint::RANGE, "1,8,1"), "set_sdfgi_cascades", "get_sdfgi_cascades");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "sdfgi_min_cell_size", PropertyHint::RANGE, "0.01,64,0.01"), "set_sdfgi_min_cell_size", "get_sdfgi_min_cell_size");
 	// Don't store the values of `sdfgi_cascade0_distance` and `sdfgi_max_distance`
 	// as they're derived from `sdfgi_min_cell_size`.
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "sdfgi_cascade0_distance", PROPERTY_HINT_RANGE, "0.1,16384,0.1,or_greater", PROPERTY_USAGE_EDITOR), "set_sdfgi_cascade0_distance", "get_sdfgi_cascade0_distance");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "sdfgi_max_distance", PROPERTY_HINT_RANGE, "0.1,16384,0.1,or_greater", PROPERTY_USAGE_EDITOR), "set_sdfgi_max_distance", "get_sdfgi_max_distance");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "sdfgi_y_scale", PROPERTY_HINT_ENUM, "50% (Compact),75% (Balanced),100% (Sparse)"), "set_sdfgi_y_scale", "get_sdfgi_y_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "sdfgi_cascade0_distance", PropertyHint::RANGE, "0.1,16384,0.1,or_greater", PropertyUsageFlags::EDITOR), "set_sdfgi_cascade0_distance", "get_sdfgi_cascade0_distance");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "sdfgi_max_distance", PropertyHint::RANGE, "0.1,16384,0.1,or_greater", PropertyUsageFlags::EDITOR), "set_sdfgi_max_distance", "get_sdfgi_max_distance");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "sdfgi_y_scale", PropertyHint::ENUM, "50% (Compact),75% (Balanced),100% (Sparse)"), "set_sdfgi_y_scale", "get_sdfgi_y_scale");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "sdfgi_energy"), "set_sdfgi_energy", "get_sdfgi_energy");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "sdfgi_normal_bias"), "set_sdfgi_normal_bias", "get_sdfgi_normal_bias");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "sdfgi_probe_bias"), "set_sdfgi_probe_bias", "get_sdfgi_probe_bias");
@@ -1354,24 +1354,24 @@ void Environment::_bind_methods() {
 
 	ADD_GROUP("Glow", "glow_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "glow_enabled"), "set_glow_enabled", "is_glow_enabled");
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "glow_levels/1", PROPERTY_HINT_RANGE, "0,16,0.01,or_greater"), "set_glow_level", "get_glow_level", 0);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "glow_levels/2", PROPERTY_HINT_RANGE, "0,16,0.01,or_greater"), "set_glow_level", "get_glow_level", 1);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "glow_levels/3", PROPERTY_HINT_RANGE, "0,16,0.01,or_greater"), "set_glow_level", "get_glow_level", 2);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "glow_levels/4", PROPERTY_HINT_RANGE, "0,16,0.01,or_greater"), "set_glow_level", "get_glow_level", 3);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "glow_levels/5", PROPERTY_HINT_RANGE, "0,16,0.01,or_greater"), "set_glow_level", "get_glow_level", 4);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "glow_levels/6", PROPERTY_HINT_RANGE, "0,16,0.01,or_greater"), "set_glow_level", "get_glow_level", 5);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "glow_levels/7", PROPERTY_HINT_RANGE, "0,16,0.01,or_greater"), "set_glow_level", "get_glow_level", 6);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "glow_levels/1", PropertyHint::RANGE, "0,16,0.01,or_greater"), "set_glow_level", "get_glow_level", 0);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "glow_levels/2", PropertyHint::RANGE, "0,16,0.01,or_greater"), "set_glow_level", "get_glow_level", 1);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "glow_levels/3", PropertyHint::RANGE, "0,16,0.01,or_greater"), "set_glow_level", "get_glow_level", 2);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "glow_levels/4", PropertyHint::RANGE, "0,16,0.01,or_greater"), "set_glow_level", "get_glow_level", 3);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "glow_levels/5", PropertyHint::RANGE, "0,16,0.01,or_greater"), "set_glow_level", "get_glow_level", 4);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "glow_levels/6", PropertyHint::RANGE, "0,16,0.01,or_greater"), "set_glow_level", "get_glow_level", 5);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "glow_levels/7", PropertyHint::RANGE, "0,16,0.01,or_greater"), "set_glow_level", "get_glow_level", 6);
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "glow_normalized"), "set_glow_normalized", "is_glow_normalized");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "glow_intensity", PROPERTY_HINT_RANGE, "0.0,8.0,0.01"), "set_glow_intensity", "get_glow_intensity");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "glow_strength", PROPERTY_HINT_RANGE, "0.0,2.0,0.01"), "set_glow_strength", "get_glow_strength");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "glow_mix", PROPERTY_HINT_RANGE, "0.0,1.0,0.001"), "set_glow_mix", "get_glow_mix");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "glow_bloom", PROPERTY_HINT_RANGE, "0.0,1.0,0.01"), "set_glow_bloom", "get_glow_bloom");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "glow_blend_mode", PROPERTY_HINT_ENUM, "Additive,Screen,Softlight,Replace,Mix"), "set_glow_blend_mode", "get_glow_blend_mode");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "glow_hdr_threshold", PROPERTY_HINT_RANGE, "0.0,4.0,0.01"), "set_glow_hdr_bleed_threshold", "get_glow_hdr_bleed_threshold");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "glow_hdr_scale", PROPERTY_HINT_RANGE, "0.0,4.0,0.01"), "set_glow_hdr_bleed_scale", "get_glow_hdr_bleed_scale");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "glow_hdr_luminance_cap", PROPERTY_HINT_RANGE, "0.0,256.0,0.01"), "set_glow_hdr_luminance_cap", "get_glow_hdr_luminance_cap");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "glow_map_strength", PROPERTY_HINT_RANGE, "0.0,1.0,0.01"), "set_glow_map_strength", "get_glow_map_strength");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "glow_map", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_glow_map", "get_glow_map");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "glow_intensity", PropertyHint::RANGE, "0.0,8.0,0.01"), "set_glow_intensity", "get_glow_intensity");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "glow_strength", PropertyHint::RANGE, "0.0,2.0,0.01"), "set_glow_strength", "get_glow_strength");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "glow_mix", PropertyHint::RANGE, "0.0,1.0,0.001"), "set_glow_mix", "get_glow_mix");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "glow_bloom", PropertyHint::RANGE, "0.0,1.0,0.01"), "set_glow_bloom", "get_glow_bloom");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "glow_blend_mode", PropertyHint::ENUM, "Additive,Screen,Softlight,Replace,Mix"), "set_glow_blend_mode", "get_glow_blend_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "glow_hdr_threshold", PropertyHint::RANGE, "0.0,4.0,0.01"), "set_glow_hdr_bleed_threshold", "get_glow_hdr_bleed_threshold");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "glow_hdr_scale", PropertyHint::RANGE, "0.0,4.0,0.01"), "set_glow_hdr_bleed_scale", "get_glow_hdr_bleed_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "glow_hdr_luminance_cap", PropertyHint::RANGE, "0.0,256.0,0.01"), "set_glow_hdr_luminance_cap", "get_glow_hdr_luminance_cap");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "glow_map_strength", PropertyHint::RANGE, "0.0,1.0,0.01"), "set_glow_map_strength", "get_glow_map_strength");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "glow_map", PropertyHint::RESOURCE_TYPE, "Texture2D"), "set_glow_map", "get_glow_map");
 
 	// Fog
 
@@ -1401,15 +1401,15 @@ void Environment::_bind_methods() {
 
 	ADD_GROUP("Fog", "fog_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "fog_enabled"), "set_fog_enabled", "is_fog_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "fog_light_color", PROPERTY_HINT_COLOR_NO_ALPHA), "set_fog_light_color", "get_fog_light_color");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "fog_light_energy", PROPERTY_HINT_RANGE, "0,16,0.01,or_greater"), "set_fog_light_energy", "get_fog_light_energy");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "fog_sun_scatter", PROPERTY_HINT_RANGE, "0,1,0.01,or_greater"), "set_fog_sun_scatter", "get_fog_sun_scatter");
+	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "fog_light_color", PropertyHint::COLOR_NO_ALPHA), "set_fog_light_color", "get_fog_light_color");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "fog_light_energy", PropertyHint::RANGE, "0,16,0.01,or_greater"), "set_fog_light_energy", "get_fog_light_energy");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "fog_sun_scatter", PropertyHint::RANGE, "0,1,0.01,or_greater"), "set_fog_sun_scatter", "get_fog_sun_scatter");
 
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "fog_density", PROPERTY_HINT_RANGE, "0,1,0.0001,or_greater"), "set_fog_density", "get_fog_density");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "fog_aerial_perspective", PROPERTY_HINT_RANGE, "0,1,0.001"), "set_fog_aerial_perspective", "get_fog_aerial_perspective");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "fog_sky_affect", PROPERTY_HINT_RANGE, "0,1,0.001"), "set_fog_sky_affect", "get_fog_sky_affect");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "fog_height", PROPERTY_HINT_RANGE, "-1024,1024,0.01,or_less,or_greater,suffix:m"), "set_fog_height", "get_fog_height");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "fog_height_density", PROPERTY_HINT_RANGE, "-16,16,0.0001,or_less,or_greater"), "set_fog_height_density", "get_fog_height_density");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "fog_density", PropertyHint::RANGE, "0,1,0.0001,or_greater"), "set_fog_density", "get_fog_density");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "fog_aerial_perspective", PropertyHint::RANGE, "0,1,0.001"), "set_fog_aerial_perspective", "get_fog_aerial_perspective");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "fog_sky_affect", PropertyHint::RANGE, "0,1,0.001"), "set_fog_sky_affect", "get_fog_sky_affect");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "fog_height", PropertyHint::RANGE, "-1024,1024,0.01,or_less,or_greater,suffix:m"), "set_fog_height", "get_fog_height");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "fog_height_density", PropertyHint::RANGE, "-16,16,0.0001,or_less,or_greater"), "set_fog_height_density", "get_fog_height_density");
 
 	ClassDB::bind_method(D_METHOD("set_volumetric_fog_enabled", "enabled"), &Environment::set_volumetric_fog_enabled);
 	ClassDB::bind_method(D_METHOD("is_volumetric_fog_enabled"), &Environment::is_volumetric_fog_enabled);
@@ -1440,19 +1440,19 @@ void Environment::_bind_methods() {
 
 	ADD_GROUP("Volumetric Fog", "volumetric_fog_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "volumetric_fog_enabled"), "set_volumetric_fog_enabled", "is_volumetric_fog_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_density", PROPERTY_HINT_RANGE, "0,1,0.0001,or_greater"), "set_volumetric_fog_density", "get_volumetric_fog_density");
-	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "volumetric_fog_albedo", PROPERTY_HINT_COLOR_NO_ALPHA), "set_volumetric_fog_albedo", "get_volumetric_fog_albedo");
-	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "volumetric_fog_emission", PROPERTY_HINT_COLOR_NO_ALPHA), "set_volumetric_fog_emission", "get_volumetric_fog_emission");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_emission_energy", PROPERTY_HINT_RANGE, "0,1024,0.01,or_greater"), "set_volumetric_fog_emission_energy", "get_volumetric_fog_emission_energy");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_gi_inject", PROPERTY_HINT_RANGE, "0.0,16,0.01,exp"), "set_volumetric_fog_gi_inject", "get_volumetric_fog_gi_inject");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_anisotropy", PROPERTY_HINT_RANGE, "-0.9,0.9,0.01"), "set_volumetric_fog_anisotropy", "get_volumetric_fog_anisotropy");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_length", PROPERTY_HINT_RANGE, "0.01,1024,0.01,or_greater,suffix:m"), "set_volumetric_fog_length", "get_volumetric_fog_length");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_detail_spread", PROPERTY_HINT_EXP_EASING, "positive_only"), "set_volumetric_fog_detail_spread", "get_volumetric_fog_detail_spread");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_ambient_inject", PROPERTY_HINT_RANGE, "0.0,16,0.01,exp"), "set_volumetric_fog_ambient_inject", "get_volumetric_fog_ambient_inject");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_sky_affect", PROPERTY_HINT_RANGE, "0,1,0.001"), "set_volumetric_fog_sky_affect", "get_volumetric_fog_sky_affect");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_density", PropertyHint::RANGE, "0,1,0.0001,or_greater"), "set_volumetric_fog_density", "get_volumetric_fog_density");
+	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "volumetric_fog_albedo", PropertyHint::COLOR_NO_ALPHA), "set_volumetric_fog_albedo", "get_volumetric_fog_albedo");
+	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "volumetric_fog_emission", PropertyHint::COLOR_NO_ALPHA), "set_volumetric_fog_emission", "get_volumetric_fog_emission");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_emission_energy", PropertyHint::RANGE, "0,1024,0.01,or_greater"), "set_volumetric_fog_emission_energy", "get_volumetric_fog_emission_energy");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_gi_inject", PropertyHint::RANGE, "0.0,16,0.01,exp"), "set_volumetric_fog_gi_inject", "get_volumetric_fog_gi_inject");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_anisotropy", PropertyHint::RANGE, "-0.9,0.9,0.01"), "set_volumetric_fog_anisotropy", "get_volumetric_fog_anisotropy");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_length", PropertyHint::RANGE, "0.01,1024,0.01,or_greater,suffix:m"), "set_volumetric_fog_length", "get_volumetric_fog_length");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_detail_spread", PropertyHint::EXP_EASING, "positive_only"), "set_volumetric_fog_detail_spread", "get_volumetric_fog_detail_spread");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_ambient_inject", PropertyHint::RANGE, "0.0,16,0.01,exp"), "set_volumetric_fog_ambient_inject", "get_volumetric_fog_ambient_inject");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_sky_affect", PropertyHint::RANGE, "0,1,0.001"), "set_volumetric_fog_sky_affect", "get_volumetric_fog_sky_affect");
 	ADD_SUBGROUP("Temporal Reprojection", "volumetric_fog_temporal_reprojection_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "volumetric_fog_temporal_reprojection_enabled"), "set_volumetric_fog_temporal_reprojection_enabled", "is_volumetric_fog_temporal_reprojection_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_temporal_reprojection_amount", PROPERTY_HINT_RANGE, "0.5,0.99,0.001"), "set_volumetric_fog_temporal_reprojection_amount", "get_volumetric_fog_temporal_reprojection_amount");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_temporal_reprojection_amount", PropertyHint::RANGE, "0.5,0.99,0.001"), "set_volumetric_fog_temporal_reprojection_amount", "get_volumetric_fog_temporal_reprojection_amount");
 
 	// Adjustment
 
@@ -1469,10 +1469,10 @@ void Environment::_bind_methods() {
 
 	ADD_GROUP("Adjustments", "adjustment_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "adjustment_enabled"), "set_adjustment_enabled", "is_adjustment_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "adjustment_brightness", PROPERTY_HINT_RANGE, "0.01,8,0.01"), "set_adjustment_brightness", "get_adjustment_brightness");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "adjustment_contrast", PROPERTY_HINT_RANGE, "0.01,8,0.01"), "set_adjustment_contrast", "get_adjustment_contrast");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "adjustment_saturation", PROPERTY_HINT_RANGE, "0.01,8,0.01"), "set_adjustment_saturation", "get_adjustment_saturation");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "adjustment_color_correction", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D,Texture3D"), "set_adjustment_color_correction", "get_adjustment_color_correction");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "adjustment_brightness", PropertyHint::RANGE, "0.01,8,0.01"), "set_adjustment_brightness", "get_adjustment_brightness");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "adjustment_contrast", PropertyHint::RANGE, "0.01,8,0.01"), "set_adjustment_contrast", "get_adjustment_contrast");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "adjustment_saturation", PropertyHint::RANGE, "0.01,8,0.01"), "set_adjustment_saturation", "get_adjustment_saturation");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "adjustment_color_correction", PropertyHint::RESOURCE_TYPE, "Texture2D,Texture3D"), "set_adjustment_color_correction", "get_adjustment_color_correction");
 
 	// Constants
 

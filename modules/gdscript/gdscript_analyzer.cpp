@@ -61,12 +61,12 @@ static MethodInfo info_from_utility_func(const StringName &p_function) {
 	if (Variant::has_utility_function_return_value(p_function)) {
 		info.return_val.type = Variant::get_utility_function_return_type(p_function);
 		if (info.return_val.type == Variant::NIL) {
-			info.return_val.usage |= PROPERTY_USAGE_NIL_IS_VARIANT;
+			info.return_val.usage |= PropertyUsageFlags::NIL_IS_VARIANT;
 		}
 	}
 
 	if (Variant::is_utility_function_vararg(p_function)) {
-		info.flags |= METHOD_FLAG_VARARG;
+		info.flags |= MethodFlags::VARARG;
 	} else {
 		for (int i = 0; i < Variant::get_utility_function_argument_count(p_function); i++) {
 			PropertyInfo pi;
@@ -1687,7 +1687,7 @@ void GDScriptAnalyzer::resolve_function_signature(GDScriptParser::FunctionNode *
 		BitField<MethodFlags> method_flags;
 		StringName native_base;
 		if (!p_is_lambda && get_function_signature(p_function, false, base_type, function_name, parent_return_type, parameters_types, default_par_count, method_flags, &native_base)) {
-			bool valid = p_function->is_static == method_flags.has_flag(METHOD_FLAG_STATIC);
+			bool valid = p_function->is_static == method_flags.has_flag(MethodFlags::STATIC);
 
 			if (p_function->return_type != nullptr) {
 				// Check return type covariance.
@@ -3138,7 +3138,7 @@ void GDScriptAnalyzer::reduce_call(GDScriptParser::CallNode *p_call, bool p_is_a
 		} else if (GDScriptUtilityFunctions::function_exists(function_name)) {
 			MethodInfo function_info = GDScriptUtilityFunctions::get_function_info(function_name);
 
-			if (!p_is_root && !p_is_await && function_info.return_val.type == Variant::NIL && ((function_info.return_val.usage & PROPERTY_USAGE_NIL_IS_VARIANT) == 0)) {
+			if (!p_is_root && !p_is_await && function_info.return_val.type == Variant::NIL && ((function_info.return_val.usage & PropertyUsageFlags::NIL_IS_VARIANT) == 0)) {
 				push_error(vformat(R"*(Cannot get return value of call to "%s()" because it returns "void".)*", function_name), p_call);
 			}
 
@@ -3189,7 +3189,7 @@ void GDScriptAnalyzer::reduce_call(GDScriptParser::CallNode *p_call, bool p_is_a
 		} else if (Variant::has_utility_function(function_name)) {
 			MethodInfo function_info = info_from_utility_func(function_name);
 
-			if (!p_is_root && !p_is_await && function_info.return_val.type == Variant::NIL && ((function_info.return_val.usage & PROPERTY_USAGE_NIL_IS_VARIANT) == 0)) {
+			if (!p_is_root && !p_is_await && function_info.return_val.type == Variant::NIL && ((function_info.return_val.usage & PropertyUsageFlags::NIL_IS_VARIANT) == 0)) {
 				push_error(vformat(R"*(Cannot get return value of call to "%s()" because it returns "void".)*", function_name), p_call);
 			}
 
@@ -3313,7 +3313,7 @@ void GDScriptAnalyzer::reduce_call(GDScriptParser::CallNode *p_call, bool p_is_a
 	if (get_function_signature(p_call, is_constructor, base_type, p_call->function_name, return_type, par_types, default_arg_count, method_flags)) {
 		// If the method is implemented in the class hierarchy, the virtual flag will not be set for that MethodInfo and the search stops there.
 		// Virtual check only possible for super() calls because class hierarchy is known. Node/Objects may have scripts attached we don't know of at compile-time.
-		if (p_call->is_super && method_flags.has_flag(METHOD_FLAG_VIRTUAL)) {
+		if (p_call->is_super && method_flags.has_flag(MethodFlags::VIRTUAL)) {
 			push_error(vformat(R"*(Cannot call the parent class' virtual function "%s()" because it hasn't been defined.)*", p_call->function_name), p_call);
 		}
 
@@ -3324,14 +3324,14 @@ void GDScriptAnalyzer::reduce_call(GDScriptParser::CallNode *p_call, bool p_is_a
 				update_array_literal_element_type(E.value, par_types[index].get_container_element_type(0));
 			}
 		}
-		validate_call_arg(par_types, default_arg_count, method_flags.has_flag(METHOD_FLAG_VARARG), p_call);
+		validate_call_arg(par_types, default_arg_count, method_flags.has_flag(MethodFlags::VARARG), p_call);
 
 		if (base_type.kind == GDScriptParser::DataType::ENUM && base_type.is_meta_type) {
 			// Enum type is treated as a dictionary value for function calls.
 			base_type.is_meta_type = false;
 		}
 
-		if (is_self && static_context && !method_flags.has_flag(METHOD_FLAG_STATIC)) {
+		if (is_self && static_context && !method_flags.has_flag(MethodFlags::STATIC)) {
 			// Get the parent function above any lambda.
 			GDScriptParser::FunctionNode *parent_function = parser->current_function;
 			while (parent_function && parent_function->source_lambda) {
@@ -3343,10 +3343,10 @@ void GDScriptAnalyzer::reduce_call(GDScriptParser::CallNode *p_call, bool p_is_a
 			} else {
 				push_error(vformat(R"*(Cannot call non-static function "%s()" from a static variable initializer.)*", p_call->function_name), p_call);
 			}
-		} else if (!is_self && base_type.is_meta_type && !method_flags.has_flag(METHOD_FLAG_STATIC)) {
+		} else if (!is_self && base_type.is_meta_type && !method_flags.has_flag(MethodFlags::STATIC)) {
 			base_type.is_meta_type = false; // For `to_string()`.
 			push_error(vformat(R"*(Cannot call non-static function "%s()" on the class "%s" directly. Make an instance instead.)*", p_call->function_name, base_type.to_string()), p_call);
-		} else if (is_self && !method_flags.has_flag(METHOD_FLAG_STATIC)) {
+		} else if (is_self && !method_flags.has_flag(MethodFlags::STATIC)) {
 			mark_lambda_use_self();
 		}
 
@@ -3360,7 +3360,7 @@ void GDScriptAnalyzer::reduce_call(GDScriptParser::CallNode *p_call, bool p_is_a
 			parser->push_warning(p_call, GDScriptWarning::RETURN_VALUE_DISCARDED, p_call->function_name);
 		}
 
-		if (method_flags.has_flag(METHOD_FLAG_STATIC) && !is_constructor && !base_type.is_meta_type && !(is_self && static_context)) {
+		if (method_flags.has_flag(MethodFlags::STATIC) && !is_constructor && !base_type.is_meta_type && !(is_self && static_context)) {
 			String caller_type = String(base_type.native_type);
 
 			if (caller_type.is_empty()) {
@@ -4910,7 +4910,7 @@ GDScriptParser::DataType GDScriptAnalyzer::type_from_property(const PropertyInfo
 	GDScriptParser::DataType result;
 	result.is_read_only = p_is_readonly;
 	result.type_source = GDScriptParser::DataType::ANNOTATED_EXPLICIT;
-	if (p_property.type == Variant::NIL && (p_is_arg || (p_property.usage & PROPERTY_USAGE_NIL_IS_VARIANT))) {
+	if (p_property.type == Variant::NIL && (p_is_arg || (p_property.usage & PropertyUsageFlags::NIL_IS_VARIANT))) {
 		// Variant
 		result.kind = GDScriptParser::DataType::VARIANT;
 		return result;
@@ -4933,7 +4933,7 @@ GDScriptParser::DataType GDScriptAnalyzer::type_from_property(const PropertyInfo
 	} else {
 		result.kind = GDScriptParser::DataType::BUILTIN;
 		result.builtin_type = p_property.type;
-		if (p_property.type == Variant::ARRAY && p_property.hint == PROPERTY_HINT_ARRAY_TYPE) {
+		if (p_property.type == Variant::ARRAY && p_property.hint == PropertyHint::ARRAY_TYPE) {
 			// Check element type.
 			StringName elem_type_name = p_property.hint_string;
 			GDScriptParser::DataType elem_type;
@@ -4962,7 +4962,7 @@ GDScriptParser::DataType GDScriptAnalyzer::type_from_property(const PropertyInfo
 			result.set_container_element_type(0, elem_type);
 		} else if (p_property.type == Variant::INT) {
 			// Check if it's enum.
-			if ((p_property.usage & PROPERTY_USAGE_CLASS_IS_ENUM) && p_property.class_name != StringName()) {
+			if ((p_property.usage & PropertyUsageFlags::CLASS_IS_ENUM) && p_property.class_name != StringName()) {
 				if (CoreConstants::is_global_enum(p_property.class_name)) {
 					result = make_global_enum_type(p_property.class_name, StringName(), false);
 					result.is_constant = false;
@@ -4974,14 +4974,14 @@ GDScriptParser::DataType GDScriptAnalyzer::type_from_property(const PropertyInfo
 					}
 				}
 			}
-			// PROPERTY_USAGE_CLASS_IS_BITFIELD: BitField[T] isn't supported (yet?), use plain int.
+			// PropertyUsageFlags::CLASS_IS_BITFIELD: BitField[T] isn't supported (yet?), use plain int.
 		}
 	}
 	return result;
 }
 
 bool GDScriptAnalyzer::get_function_signature(GDScriptParser::Node *p_source, bool p_is_constructor, GDScriptParser::DataType p_base_type, const StringName &p_function, GDScriptParser::DataType &r_return_type, List<GDScriptParser::DataType> &r_par_types, int &r_default_arg_count, BitField<MethodFlags> &r_method_flags, StringName *r_native_class) {
-	r_method_flags = METHOD_FLAGS_DEFAULT;
+	r_method_flags = MethodFlags::DEFAULT;
 	r_default_arg_count = 0;
 	if (r_native_class) {
 		*r_native_class = StringName();
@@ -5016,7 +5016,7 @@ bool GDScriptAnalyzer::get_function_signature(GDScriptParser::Node *p_source, bo
 			if (E.name == p_function) {
 				function_signature_from_info(E, r_return_type, r_par_types, r_default_arg_count, r_method_flags);
 				// Cannot use non-const methods on enums.
-				if (!r_method_flags.has_flag(METHOD_FLAG_STATIC) && was_enum && !(E.flags & METHOD_FLAG_CONST)) {
+				if (!r_method_flags.has_flag(MethodFlags::STATIC) && was_enum && !(E.flags & MethodFlags::CONST)) {
 					push_error(vformat(R"*(Cannot call non-const Dictionary function "%s()" on enum "%s".)*", p_function, p_base_type.enum_type), p_source);
 				}
 				return true;
@@ -5047,7 +5047,7 @@ bool GDScriptAnalyzer::get_function_signature(GDScriptParser::Node *p_source, bo
 
 	if (p_is_constructor) {
 		function_name = GDScriptLanguage::get_singleton()->strings._init;
-		r_method_flags.set_flag(METHOD_FLAG_STATIC);
+		r_method_flags.set_flag(MethodFlags::STATIC);
 	}
 
 	GDScriptParser::ClassNode *base_class = p_base_type.class_type;
@@ -5071,7 +5071,7 @@ bool GDScriptAnalyzer::get_function_signature(GDScriptParser::Node *p_source, bo
 
 	if (found_function != nullptr) {
 		if (p_is_constructor || found_function->is_static) {
-			r_method_flags.set_flag(METHOD_FLAG_STATIC);
+			r_method_flags.set_flag(MethodFlags::STATIC);
 		}
 		for (int i = 0; i < found_function->parameters.size(); i++) {
 			r_par_types.push_back(found_function->parameters[i]->get_datatype());
@@ -5119,7 +5119,7 @@ bool GDScriptAnalyzer::get_function_signature(GDScriptParser::Node *p_source, bo
 	if (ClassDB::get_method_info(base_native, function_name, &info)) {
 		bool valid = function_signature_from_info(info, r_return_type, r_par_types, r_default_arg_count, r_method_flags);
 		if (valid && Engine::get_singleton()->has_singleton(base_native)) {
-			r_method_flags.set_flag(METHOD_FLAG_STATIC);
+			r_method_flags.set_flag(MethodFlags::STATIC);
 		}
 #ifdef DEBUG_ENABLED
 		MethodBind *native_method = ClassDB::get_method(base_native, function_name);
@@ -5151,7 +5151,7 @@ void GDScriptAnalyzer::validate_call_arg(const MethodInfo &p_method, const GDScr
 		arg_types.push_back(type_from_property(E, true));
 	}
 
-	validate_call_arg(arg_types, p_method.default_arguments.size(), (p_method.flags & METHOD_FLAG_VARARG) != 0, p_call);
+	validate_call_arg(arg_types, p_method.default_arguments.size(), (p_method.flags & MethodFlags::VARARG) != 0, p_call);
 }
 
 void GDScriptAnalyzer::validate_call_arg(const List<GDScriptParser::DataType> &p_par_types, int p_default_args_count, bool p_is_vararg, const GDScriptParser::CallNode *p_call) {

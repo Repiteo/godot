@@ -92,10 +92,10 @@ def generate_version(argcount, const=False, returns=False):
     if const:
         sproto += "C"
         s = s.replace("$CONST", "const")
-        s = s.replace("$METHOD_FLAGS", "METHOD_FLAG_VIRTUAL | METHOD_FLAG_CONST")
+        s = s.replace("$METHOD_FLAGS", "MethodFlags::VIRTUAL | MethodFlags::CONST")
     else:
         s = s.replace("$CONST ", "")
-        s = s.replace("$METHOD_FLAGS", "METHOD_FLAG_VIRTUAL")
+        s = s.replace("$METHOD_FLAGS", "MethodFlags::VIRTUAL")
 
     s = s.replace("$VER", sproto)
     argtext = ""

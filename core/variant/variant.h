@@ -50,6 +50,7 @@
 #include "core/math/vector3i.h"
 #include "core/math/vector4.h"
 #include "core/math/vector4i.h"
+#include "core/object/object_enums.h"
 #include "core/object/object_id.h"
 #include "core/os/keyboard.h"
 #include "core/string/node_path.h"

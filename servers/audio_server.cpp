@@ -201,8 +201,8 @@ int AudioDriverManager::get_driver_count() {
 
 void AudioDriverManager::initialize(int p_driver) {
 	GLOBAL_DEF_RST("audio/driver/enable_input", false);
-	GLOBAL_DEF_RST(PropertyInfo(Variant::INT, "audio/driver/mix_rate", PROPERTY_HINT_RANGE, "11025,192000,1,or_greater,suffix:Hz"), DEFAULT_MIX_RATE);
-	GLOBAL_DEF_RST(PropertyInfo(Variant::INT, "audio/driver/mix_rate.web", PROPERTY_HINT_RANGE, "0,192000,1,or_greater,suffix:Hz"), 0); // Safer default output_latency for web (use browser default).
+	GLOBAL_DEF_RST(PropertyInfo(Variant::INT, "audio/driver/mix_rate", PropertyHint::RANGE, "11025,192000,1,or_greater,suffix:Hz"), DEFAULT_MIX_RATE);
+	GLOBAL_DEF_RST(PropertyInfo(Variant::INT, "audio/driver/mix_rate.web", PropertyHint::RANGE, "0,192000,1,or_greater,suffix:Hz"), 0); // Safer default output_latency for web (use browser default).
 
 	int failed_driver = -1;
 
@@ -1374,7 +1374,7 @@ void AudioServer::init_channels_and_buffers() {
 
 void AudioServer::init() {
 	channel_disable_threshold_db = GLOBAL_DEF_RST("audio/buses/channel_disable_threshold_db", -60.0);
-	channel_disable_frames = float(GLOBAL_DEF_RST(PropertyInfo(Variant::FLOAT, "audio/buses/channel_disable_time", PROPERTY_HINT_RANGE, "0,5,0.01,or_greater"), 2.0)) * get_mix_rate();
+	channel_disable_frames = float(GLOBAL_DEF_RST(PropertyInfo(Variant::FLOAT, "audio/buses/channel_disable_time", PropertyHint::RANGE, "0,5,0.01,or_greater"), 2.0)) * get_mix_rate();
 	buffer_size = 512; //hardcoded for now
 
 	init_channels_and_buffers();
@@ -1894,16 +1894,16 @@ bool AudioBusLayout::_get(const StringName &p_name, Variant &r_ret) const {
 
 void AudioBusLayout::_get_property_list(List<PropertyInfo> *p_list) const {
 	for (int i = 0; i < buses.size(); i++) {
-		p_list->push_back(PropertyInfo(Variant::STRING, "bus/" + itos(i) + "/name", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
-		p_list->push_back(PropertyInfo(Variant::BOOL, "bus/" + itos(i) + "/solo", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
-		p_list->push_back(PropertyInfo(Variant::BOOL, "bus/" + itos(i) + "/mute", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
-		p_list->push_back(PropertyInfo(Variant::BOOL, "bus/" + itos(i) + "/bypass_fx", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
-		p_list->push_back(PropertyInfo(Variant::FLOAT, "bus/" + itos(i) + "/volume_db", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
-		p_list->push_back(PropertyInfo(Variant::FLOAT, "bus/" + itos(i) + "/send", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
+		p_list->push_back(PropertyInfo(Variant::STRING, "bus/" + itos(i) + "/name", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
+		p_list->push_back(PropertyInfo(Variant::BOOL, "bus/" + itos(i) + "/solo", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
+		p_list->push_back(PropertyInfo(Variant::BOOL, "bus/" + itos(i) + "/mute", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
+		p_list->push_back(PropertyInfo(Variant::BOOL, "bus/" + itos(i) + "/bypass_fx", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
+		p_list->push_back(PropertyInfo(Variant::FLOAT, "bus/" + itos(i) + "/volume_db", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
+		p_list->push_back(PropertyInfo(Variant::FLOAT, "bus/" + itos(i) + "/send", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
 
 		for (int j = 0; j < buses[i].effects.size(); j++) {
-			p_list->push_back(PropertyInfo(Variant::OBJECT, "bus/" + itos(i) + "/effect/" + itos(j) + "/effect", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
-			p_list->push_back(PropertyInfo(Variant::BOOL, "bus/" + itos(i) + "/effect/" + itos(j) + "/enabled", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
+			p_list->push_back(PropertyInfo(Variant::OBJECT, "bus/" + itos(i) + "/effect/" + itos(j) + "/effect", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
+			p_list->push_back(PropertyInfo(Variant::BOOL, "bus/" + itos(i) + "/effect/" + itos(j) + "/enabled", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
 		}
 	}
 }

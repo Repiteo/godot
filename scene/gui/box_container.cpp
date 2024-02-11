@@ -308,7 +308,7 @@ void BoxContainer::_notification(int p_what) {
 
 void BoxContainer::_validate_property(PropertyInfo &p_property) const {
 	if (is_fixed && p_property.name == "vertical") {
-		p_property.usage = PROPERTY_USAGE_NONE;
+		p_property.usage = PropertyUsageFlags::NONE;
 	}
 }
 
@@ -392,7 +392,7 @@ void BoxContainer::_bind_methods() {
 	BIND_ENUM_CONSTANT(ALIGNMENT_CENTER);
 	BIND_ENUM_CONSTANT(ALIGNMENT_END);
 
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "alignment", PROPERTY_HINT_ENUM, "Begin,Center,End"), "set_alignment", "get_alignment");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "alignment", PropertyHint::ENUM, "Begin,Center,End"), "set_alignment", "get_alignment");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "vertical"), "set_vertical", "is_vertical");
 
 	BIND_THEME_ITEM(Theme::DATA_TYPE_CONSTANT, BoxContainer, separation);

@@ -124,7 +124,7 @@ void EditorImportPlugin::get_import_options(const String &p_path, List<ResourceI
 			String name = d["name"];
 			Variant default_value = d["default_value"];
 
-			PropertyHint hint = PROPERTY_HINT_NONE;
+			PropertyHint hint = PropertyHint::NONE;
 			if (d.has("property_hint")) {
 				hint = (PropertyHint)d["property_hint"].operator int64_t();
 			}
@@ -134,7 +134,7 @@ void EditorImportPlugin::get_import_options(const String &p_path, List<ResourceI
 				hint_string = d["hint_string"];
 			}
 
-			uint32_t usage = PROPERTY_USAGE_DEFAULT;
+			uint32_t usage = PropertyUsageFlags::DEFAULT;
 			if (d.has("usage")) {
 				usage = d["usage"];
 			}

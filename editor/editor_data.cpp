@@ -283,7 +283,7 @@ void EditorData::copy_object_params(Object *p_object) {
 	p_object->get_property_list(&pinfo);
 
 	for (const PropertyInfo &E : pinfo) {
-		if (!(E.usage & PROPERTY_USAGE_EDITOR) || E.name == "script" || E.name == "scripts" || E.name == "resource_path") {
+		if (!(E.usage & PropertyUsageFlags::EDITOR) || E.name == "script" || E.name == "scripts" || E.name == "resource_path") {
 			continue;
 		}
 
@@ -591,7 +591,7 @@ void EditorData::instantiate_object_properties(Object *p_object) {
 
 	for (List<PropertyInfo>::Element *E = pinfo.front(); E; E = E->next()) {
 		PropertyInfo pi = E->get();
-		if (pi.type == Variant::OBJECT && pi.usage & PROPERTY_USAGE_EDITOR_INSTANTIATE_OBJECT) {
+		if (pi.type == Variant::OBJECT && pi.usage & PropertyUsageFlags::EDITOR_INSTANTIATE_OBJECT) {
 			Object *prop = ClassDB::instantiate(pi.class_name);
 			p_object->set(pi.name, prop);
 		}

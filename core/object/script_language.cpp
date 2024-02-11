@@ -122,7 +122,7 @@ PropertyInfo Script::get_class_category() const {
 		}
 	}
 
-	return PropertyInfo(Variant::NIL, scr_name, PROPERTY_HINT_NONE, path, PROPERTY_USAGE_CATEGORY);
+	return PropertyInfo(Variant::NIL, scr_name, PropertyHint::NONE, path, PropertyUsageFlags::CATEGORY);
 }
 
 #endif // TOOLS_ENABLED
@@ -151,7 +151,7 @@ void Script::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("is_tool"), &Script::is_tool);
 	ClassDB::bind_method(D_METHOD("is_abstract"), &Script::is_abstract);
 
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "source_code", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_source_code", "get_source_code");
+	ADD_PROPERTY(PropertyInfo(Variant::STRING, "source_code", PropertyHint::NONE, "", PropertyUsageFlags::NONE), "set_source_code", "get_source_code");
 }
 
 void ScriptServer::set_scripting_enabled(bool p_enabled) {
@@ -645,7 +645,7 @@ bool PlaceHolderScriptInstance::has_method(const StringName &p_method) const {
 void PlaceHolderScriptInstance::update(const List<PropertyInfo> &p_properties, const HashMap<StringName, Variant> &p_values) {
 	HashSet<StringName> new_values;
 	for (const PropertyInfo &E : p_properties) {
-		if (E.usage & (PROPERTY_USAGE_GROUP | PROPERTY_USAGE_SUBGROUP | PROPERTY_USAGE_CATEGORY)) {
+		if (E.usage & (PropertyUsageFlags::GROUP | PropertyUsageFlags::SUBGROUP | PropertyUsageFlags::CATEGORY)) {
 			continue;
 		}
 
@@ -708,7 +708,7 @@ void PlaceHolderScriptInstance::property_set_fallback(const StringName &p_name, 
 			}
 		}
 		if (!found) {
-			properties.push_back(PropertyInfo(p_value.get_type(), p_name, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_SCRIPT_VARIABLE));
+			properties.push_back(PropertyInfo(p_value.get_type(), p_name, PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::SCRIPT_VARIABLE));
 		}
 	}
 

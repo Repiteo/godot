@@ -286,7 +286,7 @@ void EditorPropertyArray::update_property() {
 	String array_type_name = Variant::get_type_name(array_type);
 	if (array_type == Variant::ARRAY && subtype != Variant::NIL) {
 		String type_name;
-		if (subtype == Variant::OBJECT && (subtype_hint == PROPERTY_HINT_RESOURCE_TYPE || subtype_hint == PROPERTY_HINT_NODE_TYPE)) {
+		if (subtype == Variant::OBJECT && (subtype_hint == PropertyHint::RESOURCE_TYPE || subtype_hint == PropertyHint::NODE_TYPE)) {
 			type_name = subtype_hint_string;
 		} else {
 			type_name = Variant::get_type_name(subtype);
@@ -399,7 +399,7 @@ void EditorPropertyArray::update_property() {
 					editor->setup("Object");
 					new_prop = editor;
 				} else {
-					new_prop = EditorInspector::instantiate_property_editor(nullptr, value_type, "", subtype_hint, subtype_hint_string, PROPERTY_USAGE_NONE);
+					new_prop = EditorInspector::instantiate_property_editor(nullptr, value_type, "", subtype_hint, subtype_hint_string, PropertyUsageFlags::NONE);
 				}
 				new_prop->set_selectable(false);
 				new_prop->set_use_folding(is_using_folding());
@@ -735,7 +735,7 @@ EditorPropertyArray::EditorPropertyArray() {
 	changing_type_index = -1;
 
 	subtype = Variant::NIL;
-	subtype_hint = PROPERTY_HINT_NONE;
+	subtype_hint = PropertyHint::NONE;
 	subtype_hint_string = "";
 }
 
@@ -929,7 +929,7 @@ void EditorPropertyDictionary::update_property() {
 					prop = editor;
 				} break;
 				case Variant::STRING: {
-					if (i != amount && property_hint == PROPERTY_HINT_MULTILINE_TEXT) {
+					if (i != amount && property_hint == PropertyHint::MULTILINE_TEXT) {
 						// If this is NOT the new key field and there's a multiline hint,
 						// show the field as multiline
 						prop = memnew(EditorPropertyMultilineText);

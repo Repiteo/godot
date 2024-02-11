@@ -585,7 +585,7 @@ void JSON::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_error_line"), &JSON::get_error_line);
 	ClassDB::bind_method(D_METHOD("get_error_message"), &JSON::get_error_message);
 
-	ADD_PROPERTY(PropertyInfo(Variant::NIL, "data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_NIL_IS_VARIANT), "set_data", "get_data"); // Ensures that it can be serialized as binary.
+	ADD_PROPERTY(PropertyInfo(Variant::NIL, "data", PropertyHint::NONE, "", PropertyUsageFlags::DEFAULT | PropertyUsageFlags::NIL_IS_VARIANT), "set_data", "get_data"); // Ensures that it can be serialized as binary.
 }
 
 ////

@@ -1222,7 +1222,7 @@ Ref<Animation> AnimationPlayerEditor::_animation_clone(Ref<Animation> p_anim) {
 	p_anim->get_property_list(&plist);
 
 	for (const PropertyInfo &E : plist) {
-		if (E.usage & PROPERTY_USAGE_STORAGE) {
+		if (E.usage & PropertyUsageFlags::STORAGE) {
 			new_anim->set(E.name, p_anim->get(E.name));
 		}
 	}
@@ -2166,7 +2166,7 @@ void AnimationPlayerEditorPlugin::_update_dummy_player(AnimationMixer *p_mixer) 
 	List<PropertyInfo> pinfo;
 	default_node->get_property_list(&pinfo);
 	for (const PropertyInfo &E : pinfo) {
-		if (!(E.usage & PROPERTY_USAGE_STORAGE)) {
+		if (!(E.usage & PropertyUsageFlags::STORAGE)) {
 			continue;
 		}
 		if (E.name != "script" && E.name != "active" && E.name != "deterministic" && E.name != "root_motion_track") {

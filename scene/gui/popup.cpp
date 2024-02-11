@@ -137,7 +137,7 @@ void Popup::_validate_property(PropertyInfo &p_property) const {
 			p_property.name == "exclusive" ||
 			p_property.name == "popup_window" ||
 			p_property.name == "unfocusable") {
-		p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+		p_property.usage = PropertyUsageFlags::NO_EDITOR;
 	}
 }
 

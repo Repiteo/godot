@@ -50,32 +50,32 @@ static String get_builtin_or_variant_type_name(const Variant::Type p_type) {
 }
 
 static String get_property_info_type_name(const PropertyInfo &p_info) {
-	if (p_info.type == Variant::INT && (p_info.hint == PROPERTY_HINT_INT_IS_POINTER)) {
+	if (p_info.type == Variant::INT && (p_info.hint == PropertyHint::INT_IS_POINTER)) {
 		if (p_info.hint_string.is_empty()) {
 			return "void*";
 		} else {
 			return p_info.hint_string + "*";
 		}
 	}
-	if (p_info.type == Variant::ARRAY && (p_info.hint == PROPERTY_HINT_ARRAY_TYPE)) {
+	if (p_info.type == Variant::ARRAY && (p_info.hint == PropertyHint::ARRAY_TYPE)) {
 		return String("typedarray::") + p_info.hint_string;
 	}
-	if (p_info.type == Variant::INT && (p_info.usage & (PROPERTY_USAGE_CLASS_IS_ENUM))) {
+	if (p_info.type == Variant::INT && (p_info.usage & (PropertyUsageFlags::CLASS_IS_ENUM))) {
 		return String("enum::") + String(p_info.class_name);
 	}
-	if (p_info.type == Variant::INT && (p_info.usage & (PROPERTY_USAGE_CLASS_IS_BITFIELD))) {
+	if (p_info.type == Variant::INT && (p_info.usage & (PropertyUsageFlags::CLASS_IS_BITFIELD))) {
 		return String("bitfield::") + String(p_info.class_name);
 	}
-	if (p_info.type == Variant::INT && (p_info.usage & PROPERTY_USAGE_ARRAY)) {
+	if (p_info.type == Variant::INT && (p_info.usage & PropertyUsageFlags::ARRAY)) {
 		return "int";
 	}
 	if (p_info.class_name != StringName()) {
 		return p_info.class_name;
 	}
-	if (p_info.hint == PROPERTY_HINT_RESOURCE_TYPE) {
+	if (p_info.hint == PropertyHint::RESOURCE_TYPE) {
 		return p_info.hint_string;
 	}
-	if (p_info.type == Variant::NIL && (p_info.usage & PROPERTY_USAGE_NIL_IS_VARIANT)) {
+	if (p_info.type == Variant::NIL && (p_info.usage & PropertyUsageFlags::NIL_IS_VARIANT)) {
 		return "Variant";
 	}
 	if (p_info.type == Variant::NIL) {
@@ -1005,17 +1005,17 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 				ClassDB::get_method_list(class_name, &method_list, true);
 				for (const MethodInfo &F : method_list) {
 					StringName method_name = F.name;
-					if ((F.flags & METHOD_FLAG_VIRTUAL) && !(F.flags & METHOD_FLAG_OBJECT_CORE)) {
+					if ((F.flags & MethodFlags::VIRTUAL) && !(F.flags & MethodFlags::OBJECT_CORE)) {
 						//virtual method
 						const MethodInfo &mi = F;
 						Dictionary d2;
 						d2["name"] = String(method_name);
-						d2["is_const"] = (F.flags & METHOD_FLAG_CONST) ? true : false;
-						d2["is_static"] = (F.flags & METHOD_FLAG_STATIC) ? true : false;
+						d2["is_const"] = (F.flags & MethodFlags::CONST) ? true : false;
+						d2["is_static"] = (F.flags & MethodFlags::STATIC) ? true : false;
 						d2["is_vararg"] = false;
 						d2["is_virtual"] = true;
 						// virtual functions have no hash since no MethodBind is involved
-						bool has_return = mi.return_val.type != Variant::NIL || (mi.return_val.usage & PROPERTY_USAGE_NIL_IS_VARIANT);
+						bool has_return = mi.return_val.type != Variant::NIL || (mi.return_val.usage & PropertyUsageFlags::NIL_IS_VARIANT);
 						Array arguments;
 						for (int i = (has_return ? -1 : 0); i < mi.arguments.size(); i++) {
 							PropertyInfo pinfo = i == -1 ? mi.return_val : mi.arguments[i];
@@ -1184,7 +1184,7 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 				List<PropertyInfo> property_list;
 				ClassDB::get_property_list(class_name, &property_list, true);
 				for (const PropertyInfo &F : property_list) {
-					if (F.usage & PROPERTY_USAGE_CATEGORY || F.usage & PROPERTY_USAGE_GROUP || F.usage & PROPERTY_USAGE_SUBGROUP || (F.type == Variant::NIL && F.usage & PROPERTY_USAGE_ARRAY)) {
+					if (F.usage & PropertyUsageFlags::CATEGORY || F.usage & PropertyUsageFlags::GROUP || F.usage & PropertyUsageFlags::SUBGROUP || (F.type == Variant::NIL && F.usage & PropertyUsageFlags::ARRAY)) {
 						continue; //not real properties
 					}
 					if (F.name.begins_with("_")) {

@@ -581,7 +581,7 @@ bool EditorProperty::use_keying_next() const {
 		PropertyInfo &p = I->get();
 
 		if (p.name == property) {
-			return (p.usage & PROPERTY_USAGE_KEYING_INCREMENTS);
+			return (p.usage & PropertyUsageFlags::KEYING_INCREMENTS);
 		}
 	}
 
@@ -1085,15 +1085,15 @@ void EditorProperty::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "deletable"), "set_deletable", "is_deletable");
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "configuration_warning"), "set_configuration_warning", "get_configuration_warning");
 
-	ADD_SIGNAL(MethodInfo("property_changed", PropertyInfo(Variant::STRING_NAME, "property"), PropertyInfo(Variant::NIL, "value", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NIL_IS_VARIANT), PropertyInfo(Variant::STRING_NAME, "field"), PropertyInfo(Variant::BOOL, "changing")));
+	ADD_SIGNAL(MethodInfo("property_changed", PropertyInfo(Variant::STRING_NAME, "property"), PropertyInfo(Variant::NIL, "value", PropertyHint::NONE, "", PropertyUsageFlags::NIL_IS_VARIANT), PropertyInfo(Variant::STRING_NAME, "field"), PropertyInfo(Variant::BOOL, "changing")));
 	ADD_SIGNAL(MethodInfo("multiple_properties_changed", PropertyInfo(Variant::PACKED_STRING_ARRAY, "properties"), PropertyInfo(Variant::ARRAY, "value")));
 	ADD_SIGNAL(MethodInfo("property_keyed", PropertyInfo(Variant::STRING_NAME, "property")));
 	ADD_SIGNAL(MethodInfo("property_deleted", PropertyInfo(Variant::STRING_NAME, "property")));
-	ADD_SIGNAL(MethodInfo("property_keyed_with_value", PropertyInfo(Variant::STRING_NAME, "property"), PropertyInfo(Variant::NIL, "value", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NIL_IS_VARIANT)));
+	ADD_SIGNAL(MethodInfo("property_keyed_with_value", PropertyInfo(Variant::STRING_NAME, "property"), PropertyInfo(Variant::NIL, "value", PropertyHint::NONE, "", PropertyUsageFlags::NIL_IS_VARIANT)));
 	ADD_SIGNAL(MethodInfo("property_checked", PropertyInfo(Variant::STRING_NAME, "property"), PropertyInfo(Variant::BOOL, "checked")));
 	ADD_SIGNAL(MethodInfo("property_pinned", PropertyInfo(Variant::STRING_NAME, "property"), PropertyInfo(Variant::BOOL, "pinned")));
 	ADD_SIGNAL(MethodInfo("property_can_revert_changed", PropertyInfo(Variant::STRING_NAME, "property"), PropertyInfo(Variant::BOOL, "can_revert")));
-	ADD_SIGNAL(MethodInfo("resource_selected", PropertyInfo(Variant::STRING, "path"), PropertyInfo(Variant::OBJECT, "resource", PROPERTY_HINT_RESOURCE_TYPE, "Resource")));
+	ADD_SIGNAL(MethodInfo("resource_selected", PropertyInfo(Variant::STRING, "path"), PropertyInfo(Variant::OBJECT, "resource", PropertyHint::RESOURCE_TYPE, "Resource")));
 	ADD_SIGNAL(MethodInfo("object_id_selected", PropertyInfo(Variant::STRING_NAME, "property"), PropertyInfo(Variant::INT, "id")));
 	ADD_SIGNAL(MethodInfo("selected", PropertyInfo(Variant::STRING, "path"), PropertyInfo(Variant::INT, "focusable_idx")));
 
@@ -2830,7 +2830,7 @@ void EditorInspector::update_tree() {
 	for (List<PropertyInfo>::Element *E_property = plist.front(); E_property; E_property = E_property->next()) {
 		PropertyInfo &p = E_property->get();
 
-		if (p.usage & PROPERTY_USAGE_SUBGROUP) {
+		if (p.usage & PropertyUsageFlags::SUBGROUP) {
 			// Setup a property sub-group.
 			subgroup = p.name;
 
@@ -2844,7 +2844,7 @@ void EditorInspector::update_tree() {
 
 			continue;
 
-		} else if (p.usage & PROPERTY_USAGE_GROUP) {
+		} else if (p.usage & PropertyUsageFlags::GROUP) {
 			// Setup a property group.
 			group = p.name;
 
@@ -2861,7 +2861,7 @@ void EditorInspector::update_tree() {
 
 			continue;
 
-		} else if (p.usage & PROPERTY_USAGE_CATEGORY) {
+		} else if (p.usage & PropertyUsageFlags::CATEGORY) {
 			// Setup a property category.
 			group = "";
 			group_base = "";
@@ -2882,11 +2882,11 @@ void EditorInspector::update_tree() {
 			List<PropertyInfo>::Element *N = E_property->next();
 			bool valid = true;
 			while (N) {
-				if (!N->get().name.begins_with("metadata/_") && N->get().usage & PROPERTY_USAGE_EDITOR &&
-						(!filter.is_empty() || !restrict_to_basic || (N->get().usage & PROPERTY_USAGE_EDITOR_BASIC_SETTING))) {
+				if (!N->get().name.begins_with("metadata/_") && N->get().usage & PropertyUsageFlags::EDITOR &&
+						(!filter.is_empty() || !restrict_to_basic || (N->get().usage & PropertyUsageFlags::EDITOR_BASIC_SETTING))) {
 					break;
 				}
-				if (N->get().usage & PROPERTY_USAGE_CATEGORY) {
+				if (N->get().usage & PropertyUsageFlags::CATEGORY) {
 					valid = false;
 					break;
 				}
@@ -2960,8 +2960,8 @@ void EditorInspector::update_tree() {
 
 			continue;
 
-		} else if (p.name.begins_with("metadata/_") || !(p.usage & PROPERTY_USAGE_EDITOR) || _is_property_disabled_by_feature_profile(p.name) ||
-				(filter.is_empty() && restrict_to_basic && !(p.usage & PROPERTY_USAGE_EDITOR_BASIC_SETTING))) {
+		} else if (p.name.begins_with("metadata/_") || !(p.usage & PropertyUsageFlags::EDITOR) || _is_property_disabled_by_feature_profile(p.name) ||
+				(filter.is_empty() && restrict_to_basic && !(p.usage & PropertyUsageFlags::EDITOR_BASIC_SETTING))) {
 			// Ignore properties that are not supposed to be in the inspector.
 			continue;
 		}
@@ -2971,7 +2971,7 @@ void EditorInspector::update_tree() {
 			category_vbox = nullptr;
 		}
 
-		if (p.usage & PROPERTY_USAGE_HIGH_END_GFX && RS::get_singleton()->is_low_end()) {
+		if (p.usage & PropertyUsageFlags::HIGH_END_GFX && RS::get_singleton()->is_low_end()) {
 			// Do not show this property in low end gfx.
 			continue;
 		}
@@ -3069,7 +3069,7 @@ void EditorInspector::update_tree() {
 
 		// Don't localize script variables.
 		EditorPropertyNameProcessor::Style name_style = property_name_style;
-		if ((p.usage & PROPERTY_USAGE_SCRIPT_VARIABLE) && name_style == EditorPropertyNameProcessor::STYLE_LOCALIZED) {
+		if ((p.usage & PropertyUsageFlags::SCRIPT_VARIABLE) && name_style == EditorPropertyNameProcessor::STYLE_LOCALIZED) {
 			name_style = EditorPropertyNameProcessor::STYLE_CAPITALIZED;
 		}
 		const String property_label_string = EditorPropertyNameProcessor::get_singleton()->process_name(name_override, name_style) + feature_tag;
@@ -3127,7 +3127,7 @@ void EditorInspector::update_tree() {
 
 				// Don't localize groups for script variables.
 				EditorPropertyNameProcessor::Style section_name_style = property_name_style;
-				if ((p.usage & PROPERTY_USAGE_SCRIPT_VARIABLE) && section_name_style == EditorPropertyNameProcessor::STYLE_LOCALIZED) {
+				if ((p.usage & PropertyUsageFlags::SCRIPT_VARIABLE) && section_name_style == EditorPropertyNameProcessor::STYLE_LOCALIZED) {
 					section_name_style = EditorPropertyNameProcessor::STYLE_CAPITALIZED;
 				}
 
@@ -3169,7 +3169,7 @@ void EditorInspector::update_tree() {
 		}
 
 		// Check if the property is an array counter, if so create a dedicated array editor for the array.
-		if (p.usage & PROPERTY_USAGE_ARRAY) {
+		if (p.usage & PropertyUsageFlags::ARRAY) {
 			EditorInspectorArray *editor_inspector_array = nullptr;
 			StringName array_element_prefix;
 			Color c = sscolor;
@@ -3232,15 +3232,15 @@ void EditorInspector::update_tree() {
 		// Checkable and checked properties.
 		bool checkable = false;
 		bool checked = false;
-		if (p.usage & PROPERTY_USAGE_CHECKABLE) {
+		if (p.usage & PropertyUsageFlags::CHECKABLE) {
 			checkable = true;
-			checked = p.usage & PROPERTY_USAGE_CHECKED;
+			checked = p.usage & PropertyUsageFlags::CHECKED;
 		}
 
-		bool property_read_only = (p.usage & PROPERTY_USAGE_READ_ONLY) || read_only;
+		bool property_read_only = (p.usage & PropertyUsageFlags::READ_ONLY) || read_only;
 
 		// Mark properties that would require an editor restart (mostly when editing editor settings).
-		if (p.usage & PROPERTY_USAGE_RESTART_IF_CHANGED) {
+		if (p.usage & PropertyUsageFlags::RESTART_IF_CHANGED) {
 			restart_request_props.insert(p.name);
 		}
 
@@ -3408,7 +3408,7 @@ void EditorInspector::update_tree() {
 
 			if (ep) {
 				// Eventually, set other properties/signals after the property editor got added to the tree.
-				bool update_all = (p.usage & PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED);
+				bool update_all = (p.usage & PropertyUsageFlags::UPDATE_ALL_IF_MODIFIED);
 				ep->connect("property_changed", callable_mp(this, &EditorInspector::_property_changed).bind(update_all));
 				ep->connect("property_keyed", callable_mp(this, &EditorInspector::_property_keyed));
 				ep->connect("property_deleted", callable_mp(this, &EditorInspector::_property_deleted), CONNECT_DEFERRED);
@@ -3423,7 +3423,7 @@ void EditorInspector::update_tree() {
 				if (use_doc_hints) {
 					// `|` separator used in `EditorHelpTooltip` for formatting.
 					if (theme_item_name.is_empty()) {
-						if (p.usage & PROPERTY_USAGE_INTERNAL) {
+						if (p.usage & PropertyUsageFlags::INTERNAL) {
 							ep->set_tooltip_text("internal_property|" + classname + "|" + property_prefix + p.name + "|");
 						} else {
 							ep->set_tooltip_text("property|" + classname + "|" + property_prefix + p.name + "|");
@@ -3435,7 +3435,7 @@ void EditorInspector::update_tree() {
 				}
 
 				ep->set_doc_path(doc_path);
-				ep->set_internal(p.usage & PROPERTY_USAGE_INTERNAL);
+				ep->set_internal(p.usage & PropertyUsageFlags::INTERNAL);
 
 				ep->update_property();
 				ep->_update_pin_flags();
@@ -4299,9 +4299,9 @@ void EditorInspector::_bind_methods() {
 	ClassDB::bind_method("get_edited_object", &EditorInspector::get_edited_object);
 
 	ADD_SIGNAL(MethodInfo("property_selected", PropertyInfo(Variant::STRING, "property")));
-	ADD_SIGNAL(MethodInfo("property_keyed", PropertyInfo(Variant::STRING, "property"), PropertyInfo(Variant::NIL, "value", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NIL_IS_VARIANT), PropertyInfo(Variant::BOOL, "advance")));
+	ADD_SIGNAL(MethodInfo("property_keyed", PropertyInfo(Variant::STRING, "property"), PropertyInfo(Variant::NIL, "value", PropertyHint::NONE, "", PropertyUsageFlags::NIL_IS_VARIANT), PropertyInfo(Variant::BOOL, "advance")));
 	ADD_SIGNAL(MethodInfo("property_deleted", PropertyInfo(Variant::STRING, "property")));
-	ADD_SIGNAL(MethodInfo("resource_selected", PropertyInfo(Variant::OBJECT, "resource", PROPERTY_HINT_RESOURCE_TYPE, "Resource"), PropertyInfo(Variant::STRING, "path")));
+	ADD_SIGNAL(MethodInfo("resource_selected", PropertyInfo(Variant::OBJECT, "resource", PropertyHint::RESOURCE_TYPE, "Resource"), PropertyInfo(Variant::STRING, "path")));
 	ADD_SIGNAL(MethodInfo("object_id_selected", PropertyInfo(Variant::INT, "id")));
 	ADD_SIGNAL(MethodInfo("property_edited", PropertyInfo(Variant::STRING, "property")));
 	ADD_SIGNAL(MethodInfo("property_toggled", PropertyInfo(Variant::STRING, "property"), PropertyInfo(Variant::BOOL, "checked")));

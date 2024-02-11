@@ -8664,9 +8664,9 @@ Node3DEditor::Node3DEditor() {
 	add_to_group("_spatial_editor_group");
 
 	EDITOR_DEF("editors/3d/manipulator_gizmo_size", 80);
-	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::INT, "editors/3d/manipulator_gizmo_size", PROPERTY_HINT_RANGE, "16,160,1"));
+	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::INT, "editors/3d/manipulator_gizmo_size", PropertyHint::RANGE, "16,160,1"));
 	EDITOR_DEF("editors/3d/manipulator_gizmo_opacity", 0.9);
-	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::FLOAT, "editors/3d/manipulator_gizmo_opacity", PROPERTY_HINT_RANGE, "0,1,0.01"));
+	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::FLOAT, "editors/3d/manipulator_gizmo_opacity", PropertyHint::RANGE, "0,1,0.01"));
 	EDITOR_DEF("editors/3d/navigation/show_viewport_rotation_gizmo", true);
 	EDITOR_DEF("editors/3d/navigation/show_viewport_navigation_gizmo", DisplayServer::get_singleton()->is_touchscreen_available());
 

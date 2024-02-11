@@ -229,7 +229,7 @@ void AnimatedTexture::_validate_property(PropertyInfo &p_property) const {
 	if (prop.begins_with("frame_")) {
 		int frame = prop.get_slicec('/', 0).get_slicec('_', 1).to_int();
 		if (frame >= frame_count) {
-			p_property.usage = PROPERTY_USAGE_NONE;
+			p_property.usage = PropertyUsageFlags::NONE;
 		}
 	}
 }
@@ -256,15 +256,15 @@ void AnimatedTexture::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_frame_duration", "frame", "duration"), &AnimatedTexture::set_frame_duration);
 	ClassDB::bind_method(D_METHOD("get_frame_duration", "frame"), &AnimatedTexture::get_frame_duration);
 
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "frames", PROPERTY_HINT_RANGE, "1," + itos(MAX_FRAMES), PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), "set_frames", "get_frames");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "current_frame", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_current_frame", "get_current_frame");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "frames", PropertyHint::RANGE, "1," + itos(MAX_FRAMES), PropertyUsageFlags::DEFAULT | PropertyUsageFlags::UPDATE_ALL_IF_MODIFIED), "set_frames", "get_frames");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "current_frame", PropertyHint::NONE, "", PropertyUsageFlags::NONE), "set_current_frame", "get_current_frame");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "pause"), "set_pause", "get_pause");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "one_shot"), "set_one_shot", "get_one_shot");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "speed_scale", PROPERTY_HINT_RANGE, "-60,60,0.1,or_less,or_greater"), "set_speed_scale", "get_speed_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "speed_scale", PropertyHint::RANGE, "-60,60,0.1,or_less,or_greater"), "set_speed_scale", "get_speed_scale");
 
 	for (int i = 0; i < MAX_FRAMES; i++) {
-		ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "frame_" + itos(i) + "/texture", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_INTERNAL), "set_frame_texture", "get_frame_texture", i);
-		ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "frame_" + itos(i) + "/duration", PROPERTY_HINT_RANGE, "0.0,16.0,0.01,or_greater,suffix:s", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_INTERNAL), "set_frame_duration", "get_frame_duration", i);
+		ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "frame_" + itos(i) + "/texture", PropertyHint::RESOURCE_TYPE, "Texture2D", PropertyUsageFlags::DEFAULT | PropertyUsageFlags::INTERNAL), "set_frame_texture", "get_frame_texture", i);
+		ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "frame_" + itos(i) + "/duration", PropertyHint::RANGE, "0.0,16.0,0.01,or_greater,suffix:s", PropertyUsageFlags::DEFAULT | PropertyUsageFlags::INTERNAL), "set_frame_duration", "get_frame_duration", i);
 	}
 
 	BIND_CONSTANT(MAX_FRAMES);

@@ -4085,7 +4085,7 @@ PropertyInfo ShaderLanguage::uniform_to_property_info(const ShaderNode::Uniform 
 				pi.type = Variant::PACKED_INT32_ARRAY;
 			} else {
 				pi.type = Variant::INT;
-				pi.hint = PROPERTY_HINT_FLAGS;
+				pi.hint = PropertyHint::FLAGS;
 				pi.hint_string = "x,y";
 			}
 			break;
@@ -4094,7 +4094,7 @@ PropertyInfo ShaderLanguage::uniform_to_property_info(const ShaderNode::Uniform 
 				pi.type = Variant::PACKED_INT32_ARRAY;
 			} else {
 				pi.type = Variant::INT;
-				pi.hint = PROPERTY_HINT_FLAGS;
+				pi.hint = PropertyHint::FLAGS;
 				pi.hint_string = "x,y,z";
 			}
 			break;
@@ -4103,7 +4103,7 @@ PropertyInfo ShaderLanguage::uniform_to_property_info(const ShaderNode::Uniform 
 				pi.type = Variant::PACKED_INT32_ARRAY;
 			} else {
 				pi.type = Variant::INT;
-				pi.hint = PROPERTY_HINT_FLAGS;
+				pi.hint = PropertyHint::FLAGS;
 				pi.hint_string = "x,y,z,w";
 			}
 			break;
@@ -4114,7 +4114,7 @@ PropertyInfo ShaderLanguage::uniform_to_property_info(const ShaderNode::Uniform 
 			} else {
 				pi.type = Variant::INT;
 				if (p_uniform.hint == ShaderLanguage::ShaderNode::Uniform::HINT_RANGE) {
-					pi.hint = PROPERTY_HINT_RANGE;
+					pi.hint = PropertyHint::RANGE;
 					pi.hint_string = rtos(p_uniform.hint_range[0]) + "," + rtos(p_uniform.hint_range[1]) + "," + rtos(p_uniform.hint_range[2]);
 				}
 			}
@@ -4149,7 +4149,7 @@ PropertyInfo ShaderLanguage::uniform_to_property_info(const ShaderNode::Uniform 
 			} else {
 				pi.type = Variant::FLOAT;
 				if (p_uniform.hint == ShaderLanguage::ShaderNode::Uniform::HINT_RANGE) {
-					pi.hint = PROPERTY_HINT_RANGE;
+					pi.hint = PropertyHint::RANGE;
 					pi.hint_string = rtos(p_uniform.hint_range[0]) + "," + rtos(p_uniform.hint_range[1]) + "," + rtos(p_uniform.hint_range[2]);
 				}
 			}
@@ -4164,14 +4164,14 @@ PropertyInfo ShaderLanguage::uniform_to_property_info(const ShaderNode::Uniform 
 		case ShaderLanguage::TYPE_VEC3:
 			if (p_uniform.array_size > 0) {
 				if (p_uniform.hint == ShaderLanguage::ShaderNode::Uniform::HINT_SOURCE_COLOR) {
-					pi.hint = PROPERTY_HINT_COLOR_NO_ALPHA;
+					pi.hint = PropertyHint::COLOR_NO_ALPHA;
 					pi.type = Variant::PACKED_COLOR_ARRAY;
 				} else {
 					pi.type = Variant::PACKED_VECTOR3_ARRAY;
 				}
 			} else {
 				if (p_uniform.hint == ShaderLanguage::ShaderNode::Uniform::HINT_SOURCE_COLOR) {
-					pi.hint = PROPERTY_HINT_COLOR_NO_ALPHA;
+					pi.hint = PropertyHint::COLOR_NO_ALPHA;
 					pi.type = Variant::COLOR;
 				} else {
 					pi.type = Variant::VECTOR3;
@@ -4219,11 +4219,11 @@ PropertyInfo ShaderLanguage::uniform_to_property_info(const ShaderNode::Uniform 
 		case ShaderLanguage::TYPE_USAMPLER2D: {
 			if (p_uniform.array_size > 0) {
 				pi.type = Variant::ARRAY;
-				pi.hint = PROPERTY_HINT_ARRAY_TYPE;
+				pi.hint = PropertyHint::ARRAY_TYPE;
 				pi.hint_string = MAKE_RESOURCE_TYPE_HINT("Texture2D");
 			} else {
 				pi.type = Variant::OBJECT;
-				pi.hint = PROPERTY_HINT_RESOURCE_TYPE;
+				pi.hint = PropertyHint::RESOURCE_TYPE;
 				pi.hint_string = "Texture2D";
 			}
 		} break;
@@ -4234,11 +4234,11 @@ PropertyInfo ShaderLanguage::uniform_to_property_info(const ShaderNode::Uniform 
 		case ShaderLanguage::TYPE_SAMPLERCUBEARRAY: {
 			if (p_uniform.array_size > 0) {
 				pi.type = Variant::ARRAY;
-				pi.hint = PROPERTY_HINT_ARRAY_TYPE;
+				pi.hint = PropertyHint::ARRAY_TYPE;
 				pi.hint_string = MAKE_RESOURCE_TYPE_HINT("TextureLayered");
 			} else {
 				pi.type = Variant::OBJECT;
-				pi.hint = PROPERTY_HINT_RESOURCE_TYPE;
+				pi.hint = PropertyHint::RESOURCE_TYPE;
 				pi.hint_string = "TextureLayered";
 			}
 		} break;
@@ -4247,11 +4247,11 @@ PropertyInfo ShaderLanguage::uniform_to_property_info(const ShaderNode::Uniform 
 		case ShaderLanguage::TYPE_USAMPLER3D: {
 			if (p_uniform.array_size > 0) {
 				pi.type = Variant::ARRAY;
-				pi.hint = PROPERTY_HINT_ARRAY_TYPE;
+				pi.hint = PropertyHint::ARRAY_TYPE;
 				pi.hint_string = MAKE_RESOURCE_TYPE_HINT("Texture3D");
 			} else {
 				pi.type = Variant::OBJECT;
-				pi.hint = PROPERTY_HINT_RESOURCE_TYPE;
+				pi.hint = PropertyHint::RESOURCE_TYPE;
 				pi.hint_string = "Texture3D";
 			}
 		} break;

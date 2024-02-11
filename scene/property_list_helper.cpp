@@ -85,7 +85,7 @@ void PropertyListHelper::get_property_list(List<PropertyInfo> *p_list, int p_cou
 
 			PropertyInfo info = property.info;
 			if (property.getter.call(i) == property.default_value) {
-				info.usage &= (~PROPERTY_USAGE_STORAGE);
+				info.usage &= (~PropertyUsageFlags::STORAGE);
 			}
 
 			info.name = vformat("%s%d/%s", prefix, i, info.name);

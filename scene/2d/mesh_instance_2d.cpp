@@ -51,8 +51,8 @@ void MeshInstance2D::_bind_methods() {
 
 	ADD_SIGNAL(MethodInfo("texture_changed"));
 
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "mesh", PROPERTY_HINT_RESOURCE_TYPE, "Mesh"), "set_mesh", "get_mesh");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_texture", "get_texture");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "mesh", PropertyHint::RESOURCE_TYPE, "Mesh"), "set_mesh", "get_mesh");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture", PropertyHint::RESOURCE_TYPE, "Texture2D"), "set_texture", "get_texture");
 }
 
 void MeshInstance2D::set_mesh(const Ref<Mesh> &p_mesh) {

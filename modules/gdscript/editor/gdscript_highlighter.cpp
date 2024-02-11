@@ -790,7 +790,7 @@ void GDScriptSyntaxHighlighter::_update_cache() {
 			ClassDB::get_property_list(instance_base, &plist);
 			for (const PropertyInfo &E : plist) {
 				String prop_name = E.name;
-				if (E.usage & PROPERTY_USAGE_CATEGORY || E.usage & PROPERTY_USAGE_GROUP || E.usage & PROPERTY_USAGE_SUBGROUP) {
+				if (E.usage & PropertyUsageFlags::CATEGORY || E.usage & PropertyUsageFlags::GROUP || E.usage & PropertyUsageFlags::SUBGROUP) {
 					continue;
 				}
 				if (prop_name.contains("/")) {

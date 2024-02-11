@@ -50,10 +50,10 @@ void EditorObjectSelector::_add_children_to_popup(Object *p_obj, int p_depth) {
 	List<PropertyInfo> pinfo;
 	p_obj->get_property_list(&pinfo);
 	for (const PropertyInfo &E : pinfo) {
-		if (!(E.usage & PROPERTY_USAGE_EDITOR)) {
+		if (!(E.usage & PropertyUsageFlags::EDITOR)) {
 			continue;
 		}
-		if (E.hint != PROPERTY_HINT_RESOURCE_TYPE) {
+		if (E.hint != PropertyHint::RESOURCE_TYPE) {
 			continue;
 		}
 

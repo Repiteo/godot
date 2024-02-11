@@ -100,30 +100,30 @@ GDScriptParser::GDScriptParser() {
 
 		register_annotation(MethodInfo("@onready"), AnnotationInfo::VARIABLE, &GDScriptParser::onready_annotation);
 		// Export annotations.
-		register_annotation(MethodInfo("@export"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_NONE, Variant::NIL>);
-		register_annotation(MethodInfo("@export_enum", PropertyInfo(Variant::STRING, "names")), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_ENUM, Variant::NIL>, varray(), true);
-		register_annotation(MethodInfo("@export_file", PropertyInfo(Variant::STRING, "filter")), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_FILE, Variant::STRING>, varray(""), true);
-		register_annotation(MethodInfo("@export_dir"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_DIR, Variant::STRING>);
-		register_annotation(MethodInfo("@export_global_file", PropertyInfo(Variant::STRING, "filter")), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_GLOBAL_FILE, Variant::STRING>, varray(""), true);
-		register_annotation(MethodInfo("@export_global_dir"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_GLOBAL_DIR, Variant::STRING>);
-		register_annotation(MethodInfo("@export_multiline"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_MULTILINE_TEXT, Variant::STRING>);
-		register_annotation(MethodInfo("@export_placeholder", PropertyInfo(Variant::STRING, "placeholder")), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_PLACEHOLDER_TEXT, Variant::STRING>);
-		register_annotation(MethodInfo("@export_range", PropertyInfo(Variant::FLOAT, "min"), PropertyInfo(Variant::FLOAT, "max"), PropertyInfo(Variant::FLOAT, "step"), PropertyInfo(Variant::STRING, "extra_hints")), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_RANGE, Variant::FLOAT>, varray(1.0, ""), true);
-		register_annotation(MethodInfo("@export_exp_easing", PropertyInfo(Variant::STRING, "hints")), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_EXP_EASING, Variant::FLOAT>, varray(""), true);
-		register_annotation(MethodInfo("@export_color_no_alpha"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_COLOR_NO_ALPHA, Variant::COLOR>);
-		register_annotation(MethodInfo("@export_node_path", PropertyInfo(Variant::STRING, "type")), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_NODE_PATH_VALID_TYPES, Variant::NODE_PATH>, varray(""), true);
-		register_annotation(MethodInfo("@export_flags", PropertyInfo(Variant::STRING, "names")), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_FLAGS, Variant::INT>, varray(), true);
-		register_annotation(MethodInfo("@export_flags_2d_render"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_LAYERS_2D_RENDER, Variant::INT>);
-		register_annotation(MethodInfo("@export_flags_2d_physics"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_LAYERS_2D_PHYSICS, Variant::INT>);
-		register_annotation(MethodInfo("@export_flags_2d_navigation"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_LAYERS_2D_NAVIGATION, Variant::INT>);
-		register_annotation(MethodInfo("@export_flags_3d_render"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_LAYERS_3D_RENDER, Variant::INT>);
-		register_annotation(MethodInfo("@export_flags_3d_physics"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_LAYERS_3D_PHYSICS, Variant::INT>);
-		register_annotation(MethodInfo("@export_flags_3d_navigation"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_LAYERS_3D_NAVIGATION, Variant::INT>);
-		register_annotation(MethodInfo("@export_flags_avoidance"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PROPERTY_HINT_LAYERS_AVOIDANCE, Variant::INT>);
+		register_annotation(MethodInfo("@export"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::NONE, Variant::NIL>);
+		register_annotation(MethodInfo("@export_enum", PropertyInfo(Variant::STRING, "names")), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::ENUM, Variant::NIL>, varray(), true);
+		register_annotation(MethodInfo("@export_file", PropertyInfo(Variant::STRING, "filter")), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::FILE, Variant::STRING>, varray(""), true);
+		register_annotation(MethodInfo("@export_dir"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::DIR, Variant::STRING>);
+		register_annotation(MethodInfo("@export_global_file", PropertyInfo(Variant::STRING, "filter")), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::GLOBAL_FILE, Variant::STRING>, varray(""), true);
+		register_annotation(MethodInfo("@export_global_dir"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::GLOBAL_DIR, Variant::STRING>);
+		register_annotation(MethodInfo("@export_multiline"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::MULTILINE_TEXT, Variant::STRING>);
+		register_annotation(MethodInfo("@export_placeholder", PropertyInfo(Variant::STRING, "placeholder")), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::PLACEHOLDER_TEXT, Variant::STRING>);
+		register_annotation(MethodInfo("@export_range", PropertyInfo(Variant::FLOAT, "min"), PropertyInfo(Variant::FLOAT, "max"), PropertyInfo(Variant::FLOAT, "step"), PropertyInfo(Variant::STRING, "extra_hints")), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::RANGE, Variant::FLOAT>, varray(1.0, ""), true);
+		register_annotation(MethodInfo("@export_exp_easing", PropertyInfo(Variant::STRING, "hints")), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::EXP_EASING, Variant::FLOAT>, varray(""), true);
+		register_annotation(MethodInfo("@export_color_no_alpha"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::COLOR_NO_ALPHA, Variant::COLOR>);
+		register_annotation(MethodInfo("@export_node_path", PropertyInfo(Variant::STRING, "type")), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::NODE_PATH_VALID_TYPES, Variant::NODE_PATH>, varray(""), true);
+		register_annotation(MethodInfo("@export_flags", PropertyInfo(Variant::STRING, "names")), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::FLAGS, Variant::INT>, varray(), true);
+		register_annotation(MethodInfo("@export_flags_2d_render"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::LAYERS_2D_RENDER, Variant::INT>);
+		register_annotation(MethodInfo("@export_flags_2d_physics"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::LAYERS_2D_PHYSICS, Variant::INT>);
+		register_annotation(MethodInfo("@export_flags_2d_navigation"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::LAYERS_2D_NAVIGATION, Variant::INT>);
+		register_annotation(MethodInfo("@export_flags_3d_render"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::LAYERS_3D_RENDER, Variant::INT>);
+		register_annotation(MethodInfo("@export_flags_3d_physics"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::LAYERS_3D_PHYSICS, Variant::INT>);
+		register_annotation(MethodInfo("@export_flags_3d_navigation"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::LAYERS_3D_NAVIGATION, Variant::INT>);
+		register_annotation(MethodInfo("@export_flags_avoidance"), AnnotationInfo::VARIABLE, &GDScriptParser::export_annotations<PropertyHint::LAYERS_AVOIDANCE, Variant::INT>);
 		// Export grouping annotations.
-		register_annotation(MethodInfo("@export_category", PropertyInfo(Variant::STRING, "name")), AnnotationInfo::STANDALONE, &GDScriptParser::export_group_annotations<PROPERTY_USAGE_CATEGORY>);
-		register_annotation(MethodInfo("@export_group", PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::STRING, "prefix")), AnnotationInfo::STANDALONE, &GDScriptParser::export_group_annotations<PROPERTY_USAGE_GROUP>, varray(""));
-		register_annotation(MethodInfo("@export_subgroup", PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::STRING, "prefix")), AnnotationInfo::STANDALONE, &GDScriptParser::export_group_annotations<PROPERTY_USAGE_SUBGROUP>, varray(""));
+		register_annotation(MethodInfo("@export_category", PropertyInfo(Variant::STRING, "name")), AnnotationInfo::STANDALONE, &GDScriptParser::export_group_annotations<PropertyUsageFlags::CATEGORY>);
+		register_annotation(MethodInfo("@export_group", PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::STRING, "prefix")), AnnotationInfo::STANDALONE, &GDScriptParser::export_group_annotations<PropertyUsageFlags::GROUP>, varray(""));
+		register_annotation(MethodInfo("@export_subgroup", PropertyInfo(Variant::STRING, "name"), PropertyInfo(Variant::STRING, "prefix")), AnnotationInfo::STANDALONE, &GDScriptParser::export_group_annotations<PropertyUsageFlags::SUBGROUP>, varray(""));
 		// Warning annotations.
 		register_annotation(MethodInfo("@warning_ignore", PropertyInfo(Variant::STRING, "warning")), AnnotationInfo::CLASS | AnnotationInfo::VARIABLE | AnnotationInfo::SIGNAL | AnnotationInfo::CONSTANT | AnnotationInfo::FUNCTION | AnnotationInfo::STATEMENT, &GDScriptParser::warning_annotations, varray(), true);
 		// Networking.
@@ -1590,7 +1590,7 @@ bool GDScriptParser::register_annotation(const MethodInfo &p_info, uint32_t p_ta
 	new_annotation.info = p_info;
 	new_annotation.info.default_arguments = p_default_arguments;
 	if (p_is_vararg) {
-		new_annotation.info.flags |= METHOD_FLAG_VARARG;
+		new_annotation.info.flags |= MethodFlags::VARARG;
 	}
 	new_annotation.apply = p_apply;
 	new_annotation.target_kind = p_target_kinds;
@@ -3896,7 +3896,7 @@ bool GDScriptParser::validate_annotation_arguments(AnnotationNode *p_annotation)
 
 	const MethodInfo &info = valid_annotations[p_annotation->name].info;
 
-	if (((info.flags & METHOD_FLAG_VARARG) == 0) && p_annotation->arguments.size() > info.arguments.size()) {
+	if (((info.flags & MethodFlags::VARARG) == 0) && p_annotation->arguments.size() > info.arguments.size()) {
 		push_error(vformat(R"(Annotation "%s" requires at most %d arguments, but %d were given.)", p_annotation->name, info.arguments.size(), p_annotation->arguments.size()));
 		return false;
 	}
@@ -4092,7 +4092,7 @@ bool GDScriptParser::export_annotations(const AnnotationNode *p_annotation, Node
 			}
 
 			String hint_prefix = itos(inner_type.builtin_type) + "/" + itos(variable->export_info.hint);
-			variable->export_info.hint = PROPERTY_HINT_TYPE_STRING;
+			variable->export_info.hint = PropertyHint::TYPE_STRING;
 			variable->export_info.hint_string = hint_prefix + ":" + variable->export_info.hint_string;
 			variable->export_info.type = Variant::ARRAY;
 
@@ -4103,7 +4103,7 @@ bool GDScriptParser::export_annotations(const AnnotationNode *p_annotation, Node
 			return true;
 		} else if (export_type.builtin_type == Variant::PACKED_STRING_ARRAY) {
 			String hint_prefix = itos(Variant::STRING) + "/" + itos(variable->export_info.hint);
-			variable->export_info.hint = PROPERTY_HINT_TYPE_STRING;
+			variable->export_info.hint = PropertyHint::TYPE_STRING;
 			variable->export_info.hint_string = hint_prefix + ":" + variable->export_info.hint_string;
 			variable->export_info.type = Variant::PACKED_STRING_ARRAY;
 
@@ -4134,17 +4134,17 @@ bool GDScriptParser::export_annotations(const AnnotationNode *p_annotation, Node
 		switch (export_type.kind) {
 			case GDScriptParser::DataType::BUILTIN:
 				variable->export_info.type = export_type.builtin_type;
-				variable->export_info.hint = PROPERTY_HINT_NONE;
+				variable->export_info.hint = PropertyHint::NONE;
 				variable->export_info.hint_string = Variant::get_type_name(export_type.builtin_type);
 				break;
 			case GDScriptParser::DataType::NATIVE:
 				if (ClassDB::is_parent_class(export_type.native_type, SNAME("Resource"))) {
 					variable->export_info.type = Variant::OBJECT;
-					variable->export_info.hint = PROPERTY_HINT_RESOURCE_TYPE;
+					variable->export_info.hint = PropertyHint::RESOURCE_TYPE;
 					variable->export_info.hint_string = export_type.native_type;
 				} else if (ClassDB::is_parent_class(export_type.native_type, SNAME("Node"))) {
 					variable->export_info.type = Variant::OBJECT;
-					variable->export_info.hint = PROPERTY_HINT_NODE_TYPE;
+					variable->export_info.hint = PropertyHint::NODE_TYPE;
 					variable->export_info.hint_string = export_type.native_type;
 				} else {
 					push_error(R"(Export type can only be built-in, a resource, a node, or an enum.)", variable);
@@ -4154,11 +4154,11 @@ bool GDScriptParser::export_annotations(const AnnotationNode *p_annotation, Node
 			case GDScriptParser::DataType::CLASS:
 				if (ClassDB::is_parent_class(export_type.native_type, SNAME("Resource"))) {
 					variable->export_info.type = Variant::OBJECT;
-					variable->export_info.hint = PROPERTY_HINT_RESOURCE_TYPE;
+					variable->export_info.hint = PropertyHint::RESOURCE_TYPE;
 					variable->export_info.hint_string = export_type.to_string();
 				} else if (ClassDB::is_parent_class(export_type.native_type, SNAME("Node"))) {
 					variable->export_info.type = Variant::OBJECT;
-					variable->export_info.hint = PROPERTY_HINT_NODE_TYPE;
+					variable->export_info.hint = PropertyHint::NODE_TYPE;
 					variable->export_info.hint_string = export_type.to_string();
 				} else {
 					push_error(R"(Export type can only be built-in, a resource, a node, or an enum.)", variable);
@@ -4182,7 +4182,7 @@ bool GDScriptParser::export_annotations(const AnnotationNode *p_annotation, Node
 				}
 				if (class_name != StringName() && native_base != StringName() && ClassDB::is_parent_class(native_base, SNAME("Resource"))) {
 					variable->export_info.type = Variant::OBJECT;
-					variable->export_info.hint = PROPERTY_HINT_RESOURCE_TYPE;
+					variable->export_info.hint = PropertyHint::RESOURCE_TYPE;
 					variable->export_info.hint_string = class_name;
 				}
 			} break;
@@ -4191,7 +4191,7 @@ bool GDScriptParser::export_annotations(const AnnotationNode *p_annotation, Node
 					variable->export_info.type = Variant::DICTIONARY;
 				} else {
 					variable->export_info.type = Variant::INT;
-					variable->export_info.hint = PROPERTY_HINT_ENUM;
+					variable->export_info.hint = PropertyHint::ENUM;
 
 					String enum_hint_string;
 					bool first = true;
@@ -4207,7 +4207,7 @@ bool GDScriptParser::export_annotations(const AnnotationNode *p_annotation, Node
 					}
 
 					variable->export_info.hint_string = enum_hint_string;
-					variable->export_info.usage |= PROPERTY_USAGE_CLASS_IS_ENUM;
+					variable->export_info.usage |= PropertyUsageFlags::CLASS_IS_ENUM;
 					variable->export_info.class_name = String(export_type.native_type).replace("::", ".");
 				}
 			} break;
@@ -4216,7 +4216,7 @@ bool GDScriptParser::export_annotations(const AnnotationNode *p_annotation, Node
 				return false;
 		}
 
-		if (variable->export_info.hint == PROPERTY_HINT_NODE_TYPE && !ClassDB::is_parent_class(p_class->base_type.native_type, SNAME("Node"))) {
+		if (variable->export_info.hint == PropertyHint::NODE_TYPE && !ClassDB::is_parent_class(p_class->base_type.native_type, SNAME("Node"))) {
 			push_error(vformat(R"(Node export is only supported in Node-derived classes, but the current class inherits "%s".)", p_class->base_type.to_string()), variable);
 			return false;
 		}
@@ -4226,7 +4226,7 @@ bool GDScriptParser::export_annotations(const AnnotationNode *p_annotation, Node
 			if (variable->export_info.hint) {
 				hint_prefix += "/" + itos(variable->export_info.hint);
 			}
-			variable->export_info.hint = PROPERTY_HINT_TYPE_STRING;
+			variable->export_info.hint = PropertyHint::TYPE_STRING;
 			variable->export_info.hint_string = hint_prefix + ":" + variable->export_info.hint_string;
 			variable->export_info.type = Variant::ARRAY;
 		}
@@ -4273,18 +4273,18 @@ bool GDScriptParser::export_group_annotations(const AnnotationNode *p_annotation
 	annotation->export_info.name = annotation->resolved_arguments[0];
 
 	switch (t_usage) {
-		case PROPERTY_USAGE_CATEGORY: {
+		case PropertyUsageFlags::CATEGORY: {
 			annotation->export_info.usage = t_usage;
 		} break;
 
-		case PROPERTY_USAGE_GROUP: {
+		case PropertyUsageFlags::GROUP: {
 			annotation->export_info.usage = t_usage;
 			if (annotation->resolved_arguments.size() == 2) {
 				annotation->export_info.hint_string = annotation->resolved_arguments[1];
 			}
 		} break;
 
-		case PROPERTY_USAGE_SUBGROUP: {
+		case PropertyUsageFlags::SUBGROUP: {
 			annotation->export_info.usage = t_usage;
 			if (annotation->resolved_arguments.size() == 2) {
 				annotation->export_info.hint_string = annotation->resolved_arguments[1];
@@ -4476,10 +4476,10 @@ String GDScriptParser::DataType::to_string() const {
 PropertyInfo GDScriptParser::DataType::to_property_info(const String &p_name) const {
 	PropertyInfo result;
 	result.name = p_name;
-	result.usage = PROPERTY_USAGE_NONE;
+	result.usage = PropertyUsageFlags::NONE;
 
 	if (!is_hard_type()) {
-		result.usage |= PROPERTY_USAGE_NIL_IS_VARIANT;
+		result.usage |= PropertyUsageFlags::NIL_IS_VARIANT;
 		return result;
 	}
 
@@ -4490,15 +4490,15 @@ PropertyInfo GDScriptParser::DataType::to_property_info(const String &p_name) co
 				const DataType elem_type = get_container_element_type(0);
 				switch (elem_type.kind) {
 					case BUILTIN:
-						result.hint = PROPERTY_HINT_ARRAY_TYPE;
+						result.hint = PropertyHint::ARRAY_TYPE;
 						result.hint_string = Variant::get_type_name(elem_type.builtin_type);
 						break;
 					case NATIVE:
-						result.hint = PROPERTY_HINT_ARRAY_TYPE;
+						result.hint = PropertyHint::ARRAY_TYPE;
 						result.hint_string = elem_type.native_type;
 						break;
 					case SCRIPT:
-						result.hint = PROPERTY_HINT_ARRAY_TYPE;
+						result.hint = PropertyHint::ARRAY_TYPE;
 						if (elem_type.script_type.is_valid() && elem_type.script_type->get_global_name() != StringName()) {
 							result.hint_string = elem_type.script_type->get_global_name();
 						} else {
@@ -4506,7 +4506,7 @@ PropertyInfo GDScriptParser::DataType::to_property_info(const String &p_name) co
 						}
 						break;
 					case CLASS:
-						result.hint = PROPERTY_HINT_ARRAY_TYPE;
+						result.hint = PropertyHint::ARRAY_TYPE;
 						if (elem_type.class_type != nullptr && elem_type.class_type->get_global_name() != StringName()) {
 							result.hint_string = elem_type.class_type->get_global_name();
 						} else {
@@ -4514,7 +4514,7 @@ PropertyInfo GDScriptParser::DataType::to_property_info(const String &p_name) co
 						}
 						break;
 					case ENUM:
-						result.hint = PROPERTY_HINT_ARRAY_TYPE;
+						result.hint = PropertyHint::ARRAY_TYPE;
 						result.hint_string = String(elem_type.native_type).replace("::", ".");
 						break;
 					case VARIANT:
@@ -4557,14 +4557,14 @@ PropertyInfo GDScriptParser::DataType::to_property_info(const String &p_name) co
 				result.type = Variant::DICTIONARY;
 			} else {
 				result.type = Variant::INT;
-				result.usage |= PROPERTY_USAGE_CLASS_IS_ENUM;
+				result.usage |= PropertyUsageFlags::CLASS_IS_ENUM;
 				result.class_name = String(native_type).replace("::", ".");
 			}
 			break;
 		case VARIANT:
 		case RESOLVING:
 		case UNRESOLVED:
-			result.usage |= PROPERTY_USAGE_NIL_IS_VARIANT;
+			result.usage |= PropertyUsageFlags::NIL_IS_VARIANT;
 			break;
 	}
 

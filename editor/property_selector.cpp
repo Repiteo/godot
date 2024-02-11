@@ -108,13 +108,13 @@ void PropertySelector::_update_search() {
 		} else {
 			Object *obj = ObjectDB::get_instance(script);
 			if (Object::cast_to<Script>(obj)) {
-				props.push_back(PropertyInfo(Variant::NIL, "Script Variables", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_CATEGORY));
+				props.push_back(PropertyInfo(Variant::NIL, "Script Variables", PropertyHint::NONE, "", PropertyUsageFlags::CATEGORY));
 				Object::cast_to<Script>(obj)->get_script_property_list(&props);
 			}
 
 			StringName base = base_type;
 			while (base) {
-				props.push_back(PropertyInfo(Variant::NIL, base, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_CATEGORY));
+				props.push_back(PropertyInfo(Variant::NIL, base, PropertyHint::NONE, "", PropertyUsageFlags::CATEGORY));
 				ClassDB::get_property_list(base, &props, true);
 				base = ClassDB::get_parent_class(base);
 			}
@@ -167,7 +167,7 @@ void PropertySelector::_update_search() {
 		static_assert((sizeof(type_icons) / sizeof(type_icons[0])) == Variant::VARIANT_MAX, "Number of type icons doesn't match the number of Variant types.");
 
 		for (const PropertyInfo &E : props) {
-			if (E.usage == PROPERTY_USAGE_CATEGORY) {
+			if (E.usage == PropertyUsageFlags::CATEGORY) {
 				if (category && category->get_first_child() == nullptr) {
 					memdelete(category); //old category was unused
 				}
@@ -185,7 +185,7 @@ void PropertySelector::_update_search() {
 				continue;
 			}
 
-			if (!(E.usage & PROPERTY_USAGE_EDITOR) && !(E.usage & PROPERTY_USAGE_SCRIPT_VARIABLE)) {
+			if (!(E.usage & PropertyUsageFlags::EDITOR) && !(E.usage & PropertyUsageFlags::SCRIPT_VARIABLE)) {
 				continue;
 			}
 
@@ -268,15 +268,15 @@ void PropertySelector::_update_search() {
 			}
 
 			String name = mi.name.get_slice(":", 0);
-			if (!script_methods && name.begins_with("_") && !(mi.flags & METHOD_FLAG_VIRTUAL)) {
+			if (!script_methods && name.begins_with("_") && !(mi.flags & MethodFlags::VIRTUAL)) {
 				continue;
 			}
 
-			if (virtuals_only && !(mi.flags & METHOD_FLAG_VIRTUAL)) {
+			if (virtuals_only && !(mi.flags & MethodFlags::VIRTUAL)) {
 				continue;
 			}
 
-			if (!virtuals_only && (mi.flags & METHOD_FLAG_VIRTUAL)) {
+			if (!virtuals_only && (mi.flags & MethodFlags::VIRTUAL)) {
 				continue;
 			}
 
@@ -317,11 +317,11 @@ void PropertySelector::_update_search() {
 
 			desc += ")";
 
-			if (mi.flags & METHOD_FLAG_CONST) {
+			if (mi.flags & MethodFlags::CONST) {
 				desc += " const";
 			}
 
-			if (mi.flags & METHOD_FLAG_VIRTUAL) {
+			if (mi.flags & MethodFlags::VIRTUAL) {
 				desc += " virtual";
 			}
 

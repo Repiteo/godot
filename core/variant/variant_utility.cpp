@@ -1894,11 +1894,11 @@ MethodInfo Variant::get_utility_function_info(const StringName &p_name) {
 	if (bfi) {
 		info.name = p_name;
 		if (bfi->returns_value && bfi->return_type == Variant::NIL) {
-			info.return_val.usage |= PROPERTY_USAGE_NIL_IS_VARIANT;
+			info.return_val.usage |= PropertyUsageFlags::NIL_IS_VARIANT;
 		}
 		info.return_val.type = bfi->return_type;
 		if (bfi->is_vararg) {
-			info.flags |= METHOD_FLAG_VARARG;
+			info.flags |= MethodFlags::VARARG;
 		}
 		for (int i = 0; i < bfi->argnames.size(); ++i) {
 			PropertyInfo arg;

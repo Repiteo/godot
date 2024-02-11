@@ -230,11 +230,11 @@ real_t Light2D::get_shadow_smooth() const {
 
 void Light2D::_validate_property(PropertyInfo &p_property) const {
 	if (!shadow && (p_property.name == "shadow_color" || p_property.name == "shadow_filter" || p_property.name == "shadow_filter_smooth" || p_property.name == "shadow_item_cull_mask")) {
-		p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+		p_property.usage = PropertyUsageFlags::NO_EDITOR;
 	}
 
 	if (shadow && p_property.name == "shadow_filter_smooth" && shadow_filter == SHADOW_FILTER_NONE) {
-		p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+		p_property.usage = PropertyUsageFlags::NO_EDITOR;
 	}
 }
 
@@ -290,21 +290,21 @@ void Light2D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "enabled"), "set_enabled", "is_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "editor_only"), "set_editor_only", "is_editor_only");
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "color"), "set_color", "get_color");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "energy", PROPERTY_HINT_RANGE, "0,16,0.01,or_greater"), "set_energy", "get_energy");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "blend_mode", PROPERTY_HINT_ENUM, "Add,Subtract,Mix"), "set_blend_mode", "get_blend_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "energy", PropertyHint::RANGE, "0,16,0.01,or_greater"), "set_energy", "get_energy");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "blend_mode", PropertyHint::ENUM, "Add,Subtract,Mix"), "set_blend_mode", "get_blend_mode");
 	ADD_GROUP("Range", "range_");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "range_z_min", PROPERTY_HINT_RANGE, itos(RS::CANVAS_ITEM_Z_MIN) + "," + itos(RS::CANVAS_ITEM_Z_MAX) + ",1"), "set_z_range_min", "get_z_range_min");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "range_z_max", PROPERTY_HINT_RANGE, itos(RS::CANVAS_ITEM_Z_MIN) + "," + itos(RS::CANVAS_ITEM_Z_MAX) + ",1"), "set_z_range_max", "get_z_range_max");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "range_layer_min", PROPERTY_HINT_RANGE, "-512,512,1"), "set_layer_range_min", "get_layer_range_min");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "range_layer_max", PROPERTY_HINT_RANGE, "-512,512,1"), "set_layer_range_max", "get_layer_range_max");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "range_item_cull_mask", PROPERTY_HINT_LAYERS_2D_RENDER), "set_item_cull_mask", "get_item_cull_mask");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "range_z_min", PropertyHint::RANGE, itos(RS::CANVAS_ITEM_Z_MIN) + "," + itos(RS::CANVAS_ITEM_Z_MAX) + ",1"), "set_z_range_min", "get_z_range_min");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "range_z_max", PropertyHint::RANGE, itos(RS::CANVAS_ITEM_Z_MIN) + "," + itos(RS::CANVAS_ITEM_Z_MAX) + ",1"), "set_z_range_max", "get_z_range_max");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "range_layer_min", PropertyHint::RANGE, "-512,512,1"), "set_layer_range_min", "get_layer_range_min");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "range_layer_max", PropertyHint::RANGE, "-512,512,1"), "set_layer_range_max", "get_layer_range_max");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "range_item_cull_mask", PropertyHint::LAYERS_2D_RENDER), "set_item_cull_mask", "get_item_cull_mask");
 
 	ADD_GROUP("Shadow", "shadow_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "shadow_enabled"), "set_shadow_enabled", "is_shadow_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "shadow_color"), "set_shadow_color", "get_shadow_color");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "shadow_filter", PROPERTY_HINT_ENUM, "None (Fast),PCF5 (Average),PCF13 (Slow)"), "set_shadow_filter", "get_shadow_filter");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "shadow_filter_smooth", PROPERTY_HINT_RANGE, "0,64,0.1"), "set_shadow_smooth", "get_shadow_smooth");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "shadow_item_cull_mask", PROPERTY_HINT_LAYERS_2D_RENDER), "set_item_shadow_cull_mask", "get_item_shadow_cull_mask");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "shadow_filter", PropertyHint::ENUM, "None (Fast),PCF5 (Average),PCF13 (Slow)"), "set_shadow_filter", "get_shadow_filter");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "shadow_filter_smooth", PropertyHint::RANGE, "0,64,0.1"), "set_shadow_smooth", "get_shadow_smooth");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "shadow_item_cull_mask", PropertyHint::LAYERS_2D_RENDER), "set_item_shadow_cull_mask", "get_item_shadow_cull_mask");
 
 	BIND_ENUM_CONSTANT(SHADOW_FILTER_NONE);
 	BIND_ENUM_CONSTANT(SHADOW_FILTER_PCF5);
@@ -449,10 +449,10 @@ void PointLight2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_texture_scale", "texture_scale"), &PointLight2D::set_texture_scale);
 	ClassDB::bind_method(D_METHOD("get_texture_scale"), &PointLight2D::get_texture_scale);
 
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_texture", "get_texture");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "offset", PROPERTY_HINT_NONE, "suffix:px"), "set_texture_offset", "get_texture_offset");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "texture_scale", PROPERTY_HINT_RANGE, "0.01,50,0.01"), "set_texture_scale", "get_texture_scale");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "height", PROPERTY_HINT_RANGE, "0,1024,1,or_greater,suffix:px"), "set_height", "get_height");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture", PropertyHint::RESOURCE_TYPE, "Texture2D"), "set_texture", "get_texture");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "offset", PropertyHint::NONE, "suffix:px"), "set_texture_offset", "get_texture_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "texture_scale", PropertyHint::RANGE, "0.01,50,0.01"), "set_texture_scale", "get_texture_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "height", PropertyHint::RANGE, "0,1024,1,or_greater,suffix:px"), "set_height", "get_height");
 }
 
 PointLight2D::PointLight2D() {
@@ -475,8 +475,8 @@ void DirectionalLight2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_max_distance", "pixels"), &DirectionalLight2D::set_max_distance);
 	ClassDB::bind_method(D_METHOD("get_max_distance"), &DirectionalLight2D::get_max_distance);
 
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "height", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_height", "get_height");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "max_distance", PROPERTY_HINT_RANGE, "0,16384.0,1.0,or_greater,suffix:px"), "set_max_distance", "get_max_distance");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "height", PropertyHint::RANGE, "0,1,0.01"), "set_height", "get_height");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "max_distance", PropertyHint::RANGE, "0,16384.0,1.0,or_greater,suffix:px"), "set_max_distance", "get_max_distance");
 }
 
 DirectionalLight2D::DirectionalLight2D() {

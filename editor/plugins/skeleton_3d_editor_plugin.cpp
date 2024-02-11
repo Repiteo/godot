@@ -188,27 +188,27 @@ void BoneTransformEditor::_update_properties() {
 		if (split.size() == 3 && split[0] == "bones") {
 			if (split[1].to_int() == selected) {
 				if (split[2] == "enabled") {
-					enabled_checkbox->set_read_only(E.usage & PROPERTY_USAGE_READ_ONLY);
+					enabled_checkbox->set_read_only(E.usage & PropertyUsageFlags::READ_ONLY);
 					enabled_checkbox->update_property();
 					enabled_checkbox->queue_redraw();
 				}
 				if (split[2] == "position") {
-					position_property->set_read_only(E.usage & PROPERTY_USAGE_READ_ONLY);
+					position_property->set_read_only(E.usage & PropertyUsageFlags::READ_ONLY);
 					position_property->update_property();
 					position_property->queue_redraw();
 				}
 				if (split[2] == "rotation") {
-					rotation_property->set_read_only(E.usage & PROPERTY_USAGE_READ_ONLY);
+					rotation_property->set_read_only(E.usage & PropertyUsageFlags::READ_ONLY);
 					rotation_property->update_property();
 					rotation_property->queue_redraw();
 				}
 				if (split[2] == "scale") {
-					scale_property->set_read_only(E.usage & PROPERTY_USAGE_READ_ONLY);
+					scale_property->set_read_only(E.usage & PropertyUsageFlags::READ_ONLY);
 					scale_property->update_property();
 					scale_property->queue_redraw();
 				}
 				if (split[2] == "rest") {
-					rest_matrix->set_read_only(E.usage & PROPERTY_USAGE_READ_ONLY);
+					rest_matrix->set_read_only(E.usage & PropertyUsageFlags::READ_ONLY);
 					rest_matrix->update_property();
 					rest_matrix->queue_redraw();
 				}
@@ -1211,7 +1211,7 @@ void fragment() {
 	EDITOR_DEF_RST("editors/3d_gizmos/gizmo_colors/selected_bone", Color(0.8, 0.3, 0.0));
 	EDITOR_DEF("editors/3d_gizmos/gizmo_settings/bone_axis_length", (float)0.1);
 	EDITOR_DEF("editors/3d_gizmos/gizmo_settings/bone_shape", 1);
-	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::INT, "editors/3d_gizmos/gizmo_settings/bone_shape", PROPERTY_HINT_ENUM, "Wire,Octahedron"));
+	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::INT, "editors/3d_gizmos/gizmo_settings/bone_shape", PropertyHint::ENUM, "Wire,Octahedron"));
 }
 
 bool Skeleton3DGizmoPlugin::has_gizmo(Node3D *p_spatial) {

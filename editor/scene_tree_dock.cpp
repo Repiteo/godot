@@ -1814,7 +1814,7 @@ bool SceneTreeDock::_check_node_path_recursive(Node *p_root_node, Variant &r_var
 			resource->get_property_list(&properties);
 
 			for (const PropertyInfo &E : properties) {
-				if (!(E.usage & (PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_EDITOR))) {
+				if (!(E.usage & (PropertyUsageFlags::STORAGE | PropertyUsageFlags::EDITOR))) {
 					continue;
 				}
 				String propertyname = E.name;
@@ -1957,7 +1957,7 @@ void SceneTreeDock::perform_node_renames(Node *p_base, HashMap<Node *, NodePath>
 	p_base->get_property_list(&properties);
 
 	for (const PropertyInfo &E : properties) {
-		if (!(E.usage & (PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_EDITOR))) {
+		if (!(E.usage & (PropertyUsageFlags::STORAGE | PropertyUsageFlags::EDITOR))) {
 			continue;
 		}
 		String propertyname = E.name;
@@ -2758,7 +2758,7 @@ void SceneTreeDock::_replace_node(Node *p_node, Node *p_by_node, bool p_keep_pro
 		n->get_property_list(&pinfo);
 
 		for (const PropertyInfo &E : pinfo) {
-			if (!(E.usage & PROPERTY_USAGE_STORAGE)) {
+			if (!(E.usage & PropertyUsageFlags::STORAGE)) {
 				continue;
 			}
 
@@ -2835,7 +2835,7 @@ void SceneTreeDock::perform_node_replace(Node *p_base, Node *p_node, Node *p_by_
 	p_base->get_property_list(&properties);
 
 	for (const PropertyInfo &E : properties) {
-		if (!(E.usage & (PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_EDITOR))) {
+		if (!(E.usage & (PropertyUsageFlags::STORAGE | PropertyUsageFlags::EDITOR))) {
 			continue;
 		}
 		String propertyname = E.name;
@@ -3072,7 +3072,7 @@ void SceneTreeDock::_files_dropped(Vector<String> p_files, NodePath p_to, int p_
 		node->get_property_list(&pinfo);
 
 		for (const PropertyInfo &p : pinfo) {
-			if (!(p.usage & PROPERTY_USAGE_EDITOR) || !(p.usage & PROPERTY_USAGE_STORAGE) || p.hint != PROPERTY_HINT_RESOURCE_TYPE) {
+			if (!(p.usage & PropertyUsageFlags::EDITOR) || !(p.usage & PropertyUsageFlags::STORAGE) || p.hint != PropertyHint::RESOURCE_TYPE) {
 				continue;
 			}
 			Vector<String> valid_types = p.hint_string.split(",");
@@ -3193,10 +3193,10 @@ void SceneTreeDock::_add_children_to_popup(Object *p_obj, int p_depth) {
 	List<PropertyInfo> pinfo;
 	p_obj->get_property_list(&pinfo);
 	for (const PropertyInfo &E : pinfo) {
-		if (!(E.usage & PROPERTY_USAGE_EDITOR)) {
+		if (!(E.usage & PropertyUsageFlags::EDITOR)) {
 			continue;
 		}
-		if (E.hint != PROPERTY_HINT_RESOURCE_TYPE) {
+		if (E.hint != PropertyHint::RESOURCE_TYPE) {
 			continue;
 		}
 
@@ -3920,7 +3920,7 @@ void SceneTreeDock::_create_remap_for_node(Node *p_node, HashMap<Ref<Resource>, 
 	bool states_stack_ready = false;
 
 	for (const PropertyInfo &E : props) {
-		if (!(E.usage & PROPERTY_USAGE_STORAGE)) {
+		if (!(E.usage & PropertyUsageFlags::STORAGE)) {
 			continue;
 		}
 
@@ -3958,7 +3958,7 @@ void SceneTreeDock::_create_remap_for_resource(Ref<Resource> p_resource, HashMap
 	p_resource->get_property_list(&props);
 
 	for (const PropertyInfo &E : props) {
-		if (!(E.usage & PROPERTY_USAGE_STORAGE)) {
+		if (!(E.usage & PropertyUsageFlags::STORAGE)) {
 			continue;
 		}
 
@@ -4030,10 +4030,10 @@ void SceneTreeDock::_gather_resources(Node *p_node, List<Pair<Ref<Resource>, Nod
 	List<PropertyInfo> pinfo;
 	p_node->get_property_list(&pinfo);
 	for (const PropertyInfo &E : pinfo) {
-		if (!(E.usage & PROPERTY_USAGE_EDITOR)) {
+		if (!(E.usage & PropertyUsageFlags::EDITOR)) {
 			continue;
 		}
-		if (E.hint != PROPERTY_HINT_RESOURCE_TYPE) {
+		if (E.hint != PropertyHint::RESOURCE_TYPE) {
 			continue;
 		}
 
@@ -4082,7 +4082,7 @@ void SceneTreeDock::_bind_methods() {
 
 	ADD_SIGNAL(MethodInfo("remote_tree_selected"));
 	ADD_SIGNAL(MethodInfo("add_node_used"));
-	ADD_SIGNAL(MethodInfo("node_created", PropertyInfo(Variant::OBJECT, "node", PROPERTY_HINT_RESOURCE_TYPE, "Node")));
+	ADD_SIGNAL(MethodInfo("node_created", PropertyInfo(Variant::OBJECT, "node", PropertyHint::RESOURCE_TYPE, "Node")));
 }
 
 SceneTreeDock *SceneTreeDock::singleton = nullptr;

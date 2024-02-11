@@ -70,7 +70,7 @@ void JavaScriptBridge::_bind_methods() {
 		MethodInfo mi;
 		mi.name = "create_object";
 		mi.arguments.push_back(PropertyInfo(Variant::STRING, "object"));
-		ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "create_object", &JavaScriptBridge::_create_object_bind, mi);
+		ClassDB::bind_vararg_method(MethodFlags::DEFAULT, "create_object", &JavaScriptBridge::_create_object_bind, mi);
 	}
 	ClassDB::bind_method(D_METHOD("download_buffer", "buffer", "name", "mime"), &JavaScriptBridge::download_buffer, DEFVAL("application/octet-stream"));
 	ClassDB::bind_method(D_METHOD("pwa_needs_update"), &JavaScriptBridge::pwa_needs_update);

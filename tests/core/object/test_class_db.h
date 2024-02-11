@@ -513,7 +513,7 @@ void add_exposed_classes(Context &r_context) {
 		HashMap<StringName, StringName> accessor_methods;
 
 		for (const PropertyInfo &property : property_list) {
-			if (property.usage & PROPERTY_USAGE_GROUP || property.usage & PROPERTY_USAGE_SUBGROUP || property.usage & PROPERTY_USAGE_CATEGORY || (property.type == Variant::NIL && property.usage & PROPERTY_USAGE_ARRAY)) {
+			if (property.usage & PropertyUsageFlags::GROUP || property.usage & PropertyUsageFlags::SUBGROUP || property.usage & PropertyUsageFlags::CATEGORY || (property.type == Variant::NIL && property.usage & PropertyUsageFlags::ARRAY)) {
 				continue;
 			}
 
@@ -559,7 +559,7 @@ void add_exposed_classes(Context &r_context) {
 			TEST_FAIL_COND(!String(method.name).is_valid_identifier(),
 					"Method name is not a valid identifier: '", exposed_class.name, ".", method.name, "'.");
 
-			if (method_info.flags & METHOD_FLAG_VIRTUAL) {
+			if (method_info.flags & MethodFlags::VIRTUAL) {
 				method.is_virtual = true;
 			}
 
@@ -590,19 +590,19 @@ void add_exposed_classes(Context &r_context) {
 						(exposed_class.name != r_context.names_cache.object_class || String(method.name) != "free"),
 						warn_msg.utf8().get_data());
 
-			} else if (return_info.type == Variant::INT && return_info.usage & (PROPERTY_USAGE_CLASS_IS_ENUM | PROPERTY_USAGE_CLASS_IS_BITFIELD)) {
+			} else if (return_info.type == Variant::INT && return_info.usage & (PropertyUsageFlags::CLASS_IS_ENUM | PropertyUsageFlags::CLASS_IS_BITFIELD)) {
 				method.return_type.name = return_info.class_name;
 				method.return_type.is_enum = true;
 			} else if (return_info.class_name != StringName()) {
 				method.return_type.name = return_info.class_name;
 
-				bool bad_reference_hint = !method.is_virtual && return_info.hint != PROPERTY_HINT_RESOURCE_TYPE &&
+				bool bad_reference_hint = !method.is_virtual && return_info.hint != PropertyHint::RESOURCE_TYPE &&
 						ClassDB::is_parent_class(return_info.class_name, r_context.names_cache.ref_counted_class);
-				TEST_COND(bad_reference_hint, "Return type is reference but hint is not '" _STR(PROPERTY_HINT_RESOURCE_TYPE) "'.", " Are you returning a reference type by pointer? Method: '",
+				TEST_COND(bad_reference_hint, "Return type is reference but hint is not '" _STR(PropertyHint::RESOURCE_TYPE) "'.", " Are you returning a reference type by pointer? Method: '",
 						exposed_class.name, ".", method.name, "'.");
-			} else if (return_info.hint == PROPERTY_HINT_RESOURCE_TYPE) {
+			} else if (return_info.hint == PropertyHint::RESOURCE_TYPE) {
 				method.return_type.name = return_info.hint_string;
-			} else if (return_info.type == Variant::NIL && return_info.usage & PROPERTY_USAGE_NIL_IS_VARIANT) {
+			} else if (return_info.type == Variant::NIL && return_info.usage & PropertyUsageFlags::NIL_IS_VARIANT) {
 				method.return_type.name = r_context.names_cache.variant_type;
 			} else if (return_info.type == Variant::NIL) {
 				method.return_type.name = r_context.names_cache.void_type;
@@ -620,12 +620,12 @@ void add_exposed_classes(Context &r_context) {
 				arg.name = orig_arg_name;
 				arg.position = i;
 
-				if (arg_info.type == Variant::INT && arg_info.usage & (PROPERTY_USAGE_CLASS_IS_ENUM | PROPERTY_USAGE_CLASS_IS_BITFIELD)) {
+				if (arg_info.type == Variant::INT && arg_info.usage & (PropertyUsageFlags::CLASS_IS_ENUM | PropertyUsageFlags::CLASS_IS_BITFIELD)) {
 					arg.type.name = arg_info.class_name;
 					arg.type.is_enum = true;
 				} else if (arg_info.class_name != StringName()) {
 					arg.type.name = arg_info.class_name;
-				} else if (arg_info.hint == PROPERTY_HINT_RESOURCE_TYPE) {
+				} else if (arg_info.hint == PropertyHint::RESOURCE_TYPE) {
 					arg.type.name = arg_info.hint_string;
 				} else if (arg_info.type == Variant::NIL) {
 					arg.type.name = r_context.names_cache.variant_type;
@@ -695,12 +695,12 @@ void add_exposed_classes(Context &r_context) {
 				arg.name = orig_arg_name;
 				arg.position = i;
 
-				if (arg_info.type == Variant::INT && arg_info.usage & (PROPERTY_USAGE_CLASS_IS_ENUM | PROPERTY_USAGE_CLASS_IS_BITFIELD)) {
+				if (arg_info.type == Variant::INT && arg_info.usage & (PropertyUsageFlags::CLASS_IS_ENUM | PropertyUsageFlags::CLASS_IS_BITFIELD)) {
 					arg.type.name = arg_info.class_name;
 					arg.type.is_enum = true;
 				} else if (arg_info.class_name != StringName()) {
 					arg.type.name = arg_info.class_name;
-				} else if (arg_info.hint == PROPERTY_HINT_RESOURCE_TYPE) {
+				} else if (arg_info.hint == PropertyHint::RESOURCE_TYPE) {
 					arg.type.name = arg_info.hint_string;
 				} else if (arg_info.type == Variant::NIL) {
 					arg.type.name = r_context.names_cache.variant_type;

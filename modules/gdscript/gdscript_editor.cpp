@@ -445,7 +445,7 @@ void GDScriptLanguage::get_public_functions(List<MethodInfo> *p_functions) const
 		MethodInfo mi;
 		mi.name = "preload";
 		mi.arguments.push_back(PropertyInfo(Variant::STRING, "path"));
-		mi.return_val = PropertyInfo(Variant::OBJECT, "", PROPERTY_HINT_RESOURCE_TYPE, "Resource");
+		mi.return_val = PropertyInfo(Variant::OBJECT, "", PropertyHint::RESOURCE_TYPE, "Resource");
 		p_functions->push_back(mi);
 	}
 	{
@@ -670,18 +670,18 @@ static String _trim_parent_class(const String &p_class, const String &p_base_cla
 
 static String _get_visual_datatype(const PropertyInfo &p_info, bool p_is_arg, const String &p_base_class = "") {
 	String class_name = p_info.class_name;
-	bool is_enum = p_info.type == Variant::INT && p_info.usage & PROPERTY_USAGE_CLASS_IS_ENUM;
-	// PROPERTY_USAGE_CLASS_IS_BITFIELD: BitField[T] isn't supported (yet?), use plain int.
+	bool is_enum = p_info.type == Variant::INT && p_info.usage & PropertyUsageFlags::CLASS_IS_ENUM;
+	// PropertyUsageFlags::CLASS_IS_BITFIELD: BitField[T] isn't supported (yet?), use plain int.
 
 	if ((p_info.type == Variant::OBJECT || is_enum) && !class_name.is_empty()) {
 		if (is_enum && CoreConstants::is_global_enum(p_info.class_name)) {
 			return class_name;
 		}
 		return _trim_parent_class(class_name, p_base_class);
-	} else if (p_info.type == Variant::ARRAY && p_info.hint == PROPERTY_HINT_ARRAY_TYPE && !p_info.hint_string.is_empty()) {
+	} else if (p_info.type == Variant::ARRAY && p_info.hint == PropertyHint::ARRAY_TYPE && !p_info.hint_string.is_empty()) {
 		return "Array[" + _trim_parent_class(p_info.hint_string, p_base_class) + "]";
 	} else if (p_info.type == Variant::NIL) {
-		if (p_is_arg || (p_info.usage & PROPERTY_USAGE_NIL_IS_VARIANT)) {
+		if (p_is_arg || (p_info.usage & PropertyUsageFlags::NIL_IS_VARIANT)) {
 			return "Variant";
 		} else {
 			return "void";
@@ -721,7 +721,7 @@ static String _make_arguments_hint(const MethodInfo &p_info, int p_arg_idx, bool
 		i++;
 	}
 
-	if (p_info.flags & METHOD_FLAG_VARARG) {
+	if (p_info.flags & MethodFlags::VARARG) {
 		if (p_info.arguments.size() > 0) {
 			arghint += ", ";
 		}
@@ -1128,7 +1128,7 @@ static void _find_identifiers_in_base(const GDScriptCompletionIdentifier &p_base
 							List<PropertyInfo> members;
 							scr->get_script_property_list(&members);
 							for (const PropertyInfo &E : members) {
-								if (E.usage & (PROPERTY_USAGE_CATEGORY | PROPERTY_USAGE_GROUP | PROPERTY_USAGE_SUBGROUP | PROPERTY_USAGE_INTERNAL)) {
+								if (E.usage & (PropertyUsageFlags::CATEGORY | PropertyUsageFlags::GROUP | PropertyUsageFlags::SUBGROUP | PropertyUsageFlags::INTERNAL)) {
 									continue;
 								}
 								if (E.name.contains("/")) {
@@ -1215,7 +1215,7 @@ static void _find_identifiers_in_base(const GDScriptCompletionIdentifier &p_base
 						List<PropertyInfo> pinfo;
 						ClassDB::get_property_list(type, &pinfo);
 						for (const PropertyInfo &E : pinfo) {
-							if (E.usage & (PROPERTY_USAGE_CATEGORY | PROPERTY_USAGE_GROUP | PROPERTY_USAGE_SUBGROUP | PROPERTY_USAGE_INTERNAL)) {
+							if (E.usage & (PropertyUsageFlags::CATEGORY | PropertyUsageFlags::GROUP | PropertyUsageFlags::SUBGROUP | PropertyUsageFlags::INTERNAL)) {
 								continue;
 							}
 							if (E.name.contains("/")) {
@@ -1241,7 +1241,7 @@ static void _find_identifiers_in_base(const GDScriptCompletionIdentifier &p_base
 				List<MethodInfo> methods;
 				ClassDB::get_method_list(type, &methods, false, true);
 				for (const MethodInfo &E : methods) {
-					if (only_static && (E.flags & METHOD_FLAG_STATIC) == 0) {
+					if (only_static && (E.flags & MethodFlags::STATIC) == 0) {
 						continue;
 					}
 					if (E.name.begins_with("_")) {
@@ -1282,7 +1282,7 @@ static void _find_identifiers_in_base(const GDScriptCompletionIdentifier &p_base
 					}
 
 					for (const PropertyInfo &E : members) {
-						if (E.usage & (PROPERTY_USAGE_CATEGORY | PROPERTY_USAGE_GROUP | PROPERTY_USAGE_SUBGROUP | PROPERTY_USAGE_INTERNAL)) {
+						if (E.usage & (PropertyUsageFlags::CATEGORY | PropertyUsageFlags::GROUP | PropertyUsageFlags::SUBGROUP | PropertyUsageFlags::INTERNAL)) {
 							continue;
 						}
 						if (!String(E.name).contains("/")) {
@@ -1302,7 +1302,7 @@ static void _find_identifiers_in_base(const GDScriptCompletionIdentifier &p_base
 				List<MethodInfo> methods;
 				tmp.get_method_list(&methods);
 				for (const MethodInfo &E : methods) {
-					if (base_type.kind == GDScriptParser::DataType::ENUM && base_type.is_meta_type && !(E.flags & METHOD_FLAG_CONST)) {
+					if (base_type.kind == GDScriptParser::DataType::ENUM && base_type.is_meta_type && !(E.flags & MethodFlags::CONST)) {
 						// Enum types are static and cannot change, therefore we skip non-const dictionary methods.
 						continue;
 					}
@@ -1340,7 +1340,7 @@ static void _find_identifiers(const GDScriptParser::CompletionContext &p_context
 	for (const StringName &E : functions) {
 		MethodInfo function = GDScriptUtilityFunctions::get_function_info(E);
 		ScriptLanguage::CodeCompletionOption option(String(E), ScriptLanguage::CODE_COMPLETION_KIND_FUNCTION);
-		if (function.arguments.size() || (function.flags & METHOD_FLAG_VARARG)) {
+		if (function.arguments.size() || (function.flags & MethodFlags::VARARG)) {
 			option.insert_text += "(";
 		} else {
 			option.insert_text += "()";
@@ -1486,7 +1486,7 @@ static GDScriptCompletionIdentifier _type_from_property(const PropertyInfo &p_pr
 		return ci;
 	}
 
-	if (p_property.usage & (PROPERTY_USAGE_CLASS_IS_ENUM | PROPERTY_USAGE_CLASS_IS_BITFIELD)) {
+	if (p_property.usage & (PropertyUsageFlags::CLASS_IS_ENUM | PropertyUsageFlags::CLASS_IS_BITFIELD)) {
 		ci.enumeration = p_property.class_name;
 	}
 
@@ -2699,7 +2699,7 @@ static void _find_call_arguments(GDScriptParser::CompletionContext &p_context, c
 
 					if (p_argidx < method_args) {
 						PropertyInfo arg_info = info.arguments[p_argidx];
-						if (arg_info.usage & (PROPERTY_USAGE_CLASS_IS_ENUM | PROPERTY_USAGE_CLASS_IS_BITFIELD)) {
+						if (arg_info.usage & (PropertyUsageFlags::CLASS_IS_ENUM | PropertyUsageFlags::CLASS_IS_BITFIELD)) {
 							_find_enumeration_candidates(p_context, arg_info.class_name, r_result);
 						}
 					}
@@ -2720,7 +2720,7 @@ static void _find_call_arguments(GDScriptParser::CompletionContext &p_context, c
 								List<PropertyInfo> properties;
 								script->get_script_property_list(&properties);
 								for (const PropertyInfo &E : properties) {
-									if (E.usage & (PROPERTY_USAGE_SUBGROUP | PROPERTY_USAGE_GROUP | PROPERTY_USAGE_CATEGORY | PROPERTY_USAGE_INTERNAL)) {
+									if (E.usage & (PropertyUsageFlags::SUBGROUP | PropertyUsageFlags::GROUP | PropertyUsageFlags::CATEGORY | PropertyUsageFlags::INTERNAL)) {
 										continue;
 									}
 									ScriptLanguage::CodeCompletionOption option(E.name.quote(quote_style), ScriptLanguage::CODE_COMPLETION_KIND_MEMBER, ScriptLanguage::CodeCompletionLocation::LOCATION_LOCAL + n);
@@ -2757,7 +2757,7 @@ static void _find_call_arguments(GDScriptParser::CompletionContext &p_context, c
 					List<PropertyInfo> properties;
 					ClassDB::get_property_list(native_type, &properties);
 					for (const PropertyInfo &E : properties) {
-						if (E.usage & (PROPERTY_USAGE_SUBGROUP | PROPERTY_USAGE_GROUP | PROPERTY_USAGE_CATEGORY | PROPERTY_USAGE_INTERNAL)) {
+						if (E.usage & (PropertyUsageFlags::SUBGROUP | PropertyUsageFlags::GROUP | PropertyUsageFlags::CATEGORY | PropertyUsageFlags::INTERNAL)) {
 							continue;
 						}
 						ScriptLanguage::CodeCompletionOption option(E.name.quote(quote_style), ScriptLanguage::CODE_COMPLETION_KIND_MEMBER);
@@ -2911,7 +2911,7 @@ static void _find_call_arguments(GDScriptParser::CompletionContext &p_context, c
 			_get_directory_contents(EditorFileSystem::get_singleton()->get_filesystem(), r_result);
 		}
 
-		MethodInfo mi(PropertyInfo(Variant::OBJECT, "resource", PROPERTY_HINT_RESOURCE_TYPE, "Resource"), "preload", PropertyInfo(Variant::STRING, "path"));
+		MethodInfo mi(PropertyInfo(Variant::OBJECT, "resource", PropertyHint::RESOURCE_TYPE, "Resource"), "preload", PropertyInfo(Variant::STRING, "path"));
 		r_arghint = _make_arguments_hint(mi, p_argidx);
 		return;
 	} else if (p_call->type != GDScriptParser::Node::CALL) {
@@ -3265,7 +3265,7 @@ static void _find_call_arguments(GDScriptParser::CompletionContext &p_context, c
 				// Not truly a virtual method, but can also be "overridden".
 				MethodInfo static_init("_static_init");
 				static_init.return_val.type = Variant::NIL;
-				static_init.flags |= METHOD_FLAG_STATIC | METHOD_FLAG_VIRTUAL;
+				static_init.flags |= MethodFlags::STATIC | MethodFlags::VIRTUAL;
 				virtual_methods.push_back(static_init);
 			}
 
@@ -3549,7 +3549,7 @@ static Error _lookup_symbol_from_base(const GDScriptParser::DataType &p_base, co
 				if (ClassDB::has_property(class_name, p_symbol, true)) {
 					PropertyInfo prop_info;
 					ClassDB::get_property_info(class_name, p_symbol, &prop_info, true);
-					if (prop_info.usage & PROPERTY_USAGE_INTERNAL) {
+					if (prop_info.usage & PropertyUsageFlags::INTERNAL) {
 						return ERR_CANT_RESOLVE;
 					}
 

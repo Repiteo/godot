@@ -41,14 +41,14 @@ void FogVolume::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_material", "material"), &FogVolume::set_material);
 	ClassDB::bind_method(D_METHOD("get_material"), &FogVolume::get_material);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "size", PROPERTY_HINT_RANGE, "0.01,1024,0.01,or_greater,suffix:m"), "set_size", "get_size");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "shape", PROPERTY_HINT_ENUM, "Ellipsoid (Local),Cone (Local),Cylinder (Local),Box (Local),World (Global)"), "set_shape", "get_shape");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "material", PROPERTY_HINT_RESOURCE_TYPE, "FogMaterial,ShaderMaterial"), "set_material", "get_material");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "size", PropertyHint::RANGE, "0.01,1024,0.01,or_greater,suffix:m"), "set_size", "get_size");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "shape", PropertyHint::ENUM, "Ellipsoid (Local),Cone (Local),Cylinder (Local),Box (Local),World (Global)"), "set_shape", "get_shape");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "material", PropertyHint::RESOURCE_TYPE, "FogMaterial,ShaderMaterial"), "set_material", "get_material");
 }
 
 void FogVolume::_validate_property(PropertyInfo &p_property) const {
 	if (p_property.name == "size" && shape == RS::FOG_VOLUME_SHAPE_WORLD) {
-		p_property.usage = PROPERTY_USAGE_NONE;
+		p_property.usage = PropertyUsageFlags::NONE;
 		return;
 	}
 }

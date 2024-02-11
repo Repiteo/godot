@@ -229,12 +229,12 @@ void EditorDebuggerInspector::add_stack_variable(const Array &p_array) {
 	String n = var.name;
 	Variant v = var.value;
 
-	PropertyHint h = PROPERTY_HINT_NONE;
+	PropertyHint h = PropertyHint::NONE;
 	String hs;
 
 	if (var.var_type == Variant::OBJECT && v) {
 		v = Object::cast_to<EncodedObjectAsID>(v)->get_object_id();
-		h = PROPERTY_HINT_OBJECT_ID;
+		h = PropertyHint::OBJECT_ID;
 		hs = "Object";
 	}
 	String type;

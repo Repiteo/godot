@@ -40,7 +40,7 @@ void ScriptInstance::get_property_state(List<Pair<StringName, Variant>> &state) 
 	List<PropertyInfo> pinfo;
 	get_property_list(&pinfo);
 	for (const PropertyInfo &E : pinfo) {
-		if (E.usage & PROPERTY_USAGE_STORAGE) {
+		if (E.usage & PropertyUsageFlags::STORAGE) {
 			Pair<StringName, Variant> p;
 			p.first = E.name;
 			if (get(p.first, p.second)) {

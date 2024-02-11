@@ -2233,7 +2233,7 @@ GDScriptFunction *GDScriptCompiler::_parse_function(Error &r_error, GDScript *p_
 	method_info.name = func_name;
 	codegen.is_static = is_static;
 	if (is_static) {
-		method_info.flags |= METHOD_FLAG_STATIC;
+		method_info.flags |= MethodFlags::STATIC;
 	}
 	codegen.generator->write_start(p_script, func_name, is_static, rpc_config, return_type);
 
@@ -2752,7 +2752,7 @@ Error GDScriptCompiler::_prepare_compilation(GDScript *p_script, const GDScriptP
 					prop_info.hint_string = export_info.hint_string;
 					prop_info.usage = export_info.usage;
 				}
-				prop_info.usage |= PROPERTY_USAGE_SCRIPT_VARIABLE;
+				prop_info.usage |= PropertyUsageFlags::SCRIPT_VARIABLE;
 				minfo.property_info = prop_info;
 
 				if (variable->is_static) {

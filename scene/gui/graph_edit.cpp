@@ -2268,17 +2268,17 @@ void GraphEdit::_bind_methods() {
 	GDVIRTUAL_BIND(_get_connection_line, "from_position", "to_position")
 	GDVIRTUAL_BIND(_is_node_hover_valid, "from_node", "from_port", "to_node", "to_port");
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "scroll_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_scroll_offset", "get_scroll_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "scroll_offset", PropertyHint::NONE, "suffix:px"), "set_scroll_offset", "get_scroll_offset");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "show_grid"), "set_show_grid", "is_showing_grid");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "grid_pattern", PROPERTY_HINT_ENUM, "Lines,Dots"), "set_grid_pattern", "get_grid_pattern");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "grid_pattern", PropertyHint::ENUM, "Lines,Dots"), "set_grid_pattern", "get_grid_pattern");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "snapping_enabled"), "set_snapping_enabled", "is_snapping_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "snapping_distance", PROPERTY_HINT_NONE, "suffix:px"), "set_snapping_distance", "get_snapping_distance");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "panning_scheme", PROPERTY_HINT_ENUM, "Scroll Zooms,Scroll Pans"), "set_panning_scheme", "get_panning_scheme");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "snapping_distance", PropertyHint::NONE, "suffix:px"), "set_snapping_distance", "get_snapping_distance");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "panning_scheme", PropertyHint::ENUM, "Scroll Zooms,Scroll Pans"), "set_panning_scheme", "get_panning_scheme");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "right_disconnects"), "set_right_disconnects", "is_right_disconnects_enabled");
 
 	ADD_GROUP("Connection Lines", "connection_lines");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "connection_lines_curvature"), "set_connection_lines_curvature", "get_connection_lines_curvature");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "connection_lines_thickness", PROPERTY_HINT_RANGE, "0,100,0.1,suffix:px"), "set_connection_lines_thickness", "get_connection_lines_thickness");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "connection_lines_thickness", PropertyHint::RANGE, "0,100,0.1,suffix:px"), "set_connection_lines_thickness", "get_connection_lines_thickness");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "connection_lines_antialiased"), "set_connection_lines_antialiased", "is_connection_lines_antialiased");
 
 	ADD_GROUP("Zoom", "");
@@ -2289,7 +2289,7 @@ void GraphEdit::_bind_methods() {
 
 	ADD_GROUP("Minimap", "minimap_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "minimap_enabled"), "set_minimap_enabled", "is_minimap_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "minimap_size", PROPERTY_HINT_NONE, "suffix:px"), "set_minimap_size", "get_minimap_size");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "minimap_size", PropertyHint::NONE, "suffix:px"), "set_minimap_size", "get_minimap_size");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "minimap_opacity"), "set_minimap_opacity", "get_minimap_opacity");
 
 	ADD_GROUP("Toolbar Menu", "");
@@ -2310,10 +2310,10 @@ void GraphEdit::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("copy_nodes_request"));
 	ADD_SIGNAL(MethodInfo("paste_nodes_request"));
 	ADD_SIGNAL(MethodInfo("duplicate_nodes_request"));
-	ADD_SIGNAL(MethodInfo("delete_nodes_request", PropertyInfo(Variant::ARRAY, "nodes", PROPERTY_HINT_ARRAY_TYPE, "StringName")));
+	ADD_SIGNAL(MethodInfo("delete_nodes_request", PropertyInfo(Variant::ARRAY, "nodes", PropertyHint::ARRAY_TYPE, "StringName")));
 
-	ADD_SIGNAL(MethodInfo("node_selected", PropertyInfo(Variant::OBJECT, "node", PROPERTY_HINT_RESOURCE_TYPE, "Node")));
-	ADD_SIGNAL(MethodInfo("node_deselected", PropertyInfo(Variant::OBJECT, "node", PROPERTY_HINT_RESOURCE_TYPE, "Node")));
+	ADD_SIGNAL(MethodInfo("node_selected", PropertyInfo(Variant::OBJECT, "node", PropertyHint::RESOURCE_TYPE, "Node")));
+	ADD_SIGNAL(MethodInfo("node_deselected", PropertyInfo(Variant::OBJECT, "node", PropertyHint::RESOURCE_TYPE, "Node")));
 
 	ADD_SIGNAL(MethodInfo("popup_request", PropertyInfo(Variant::VECTOR2, "position")));
 

@@ -832,22 +832,22 @@ bool Animation::_get(const StringName &p_name, Variant &r_ret) const {
 
 void Animation::_get_property_list(List<PropertyInfo> *p_list) const {
 	if (compression.enabled) {
-		p_list->push_back(PropertyInfo(Variant::DICTIONARY, "_compression", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
+		p_list->push_back(PropertyInfo(Variant::DICTIONARY, "_compression", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
 	}
 	for (int i = 0; i < tracks.size(); i++) {
-		p_list->push_back(PropertyInfo(Variant::STRING, "tracks/" + itos(i) + "/type", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
-		p_list->push_back(PropertyInfo(Variant::BOOL, "tracks/" + itos(i) + "/imported", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
-		p_list->push_back(PropertyInfo(Variant::BOOL, "tracks/" + itos(i) + "/enabled", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
-		p_list->push_back(PropertyInfo(Variant::NODE_PATH, "tracks/" + itos(i) + "/path", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
+		p_list->push_back(PropertyInfo(Variant::STRING, "tracks/" + itos(i) + "/type", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
+		p_list->push_back(PropertyInfo(Variant::BOOL, "tracks/" + itos(i) + "/imported", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
+		p_list->push_back(PropertyInfo(Variant::BOOL, "tracks/" + itos(i) + "/enabled", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
+		p_list->push_back(PropertyInfo(Variant::NODE_PATH, "tracks/" + itos(i) + "/path", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
 		if (track_is_compressed(i)) {
-			p_list->push_back(PropertyInfo(Variant::INT, "tracks/" + itos(i) + "/compressed_track", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
+			p_list->push_back(PropertyInfo(Variant::INT, "tracks/" + itos(i) + "/compressed_track", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
 		} else {
-			p_list->push_back(PropertyInfo(Variant::INT, "tracks/" + itos(i) + "/interp", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
-			p_list->push_back(PropertyInfo(Variant::BOOL, "tracks/" + itos(i) + "/loop_wrap", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
-			p_list->push_back(PropertyInfo(Variant::ARRAY, "tracks/" + itos(i) + "/keys", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
+			p_list->push_back(PropertyInfo(Variant::INT, "tracks/" + itos(i) + "/interp", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
+			p_list->push_back(PropertyInfo(Variant::BOOL, "tracks/" + itos(i) + "/loop_wrap", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
+			p_list->push_back(PropertyInfo(Variant::ARRAY, "tracks/" + itos(i) + "/keys", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
 		}
 		if (track_get_type(i) == TYPE_AUDIO) {
-			p_list->push_back(PropertyInfo(Variant::BOOL, "tracks/" + itos(i) + "/use_blend", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
+			p_list->push_back(PropertyInfo(Variant::BOOL, "tracks/" + itos(i) + "/use_blend", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
 		}
 	}
 }
@@ -3861,9 +3861,9 @@ void Animation::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("compress", "page_size", "fps", "split_tolerance"), &Animation::compress, DEFVAL(8192), DEFVAL(120), DEFVAL(4.0));
 
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "length", PROPERTY_HINT_RANGE, "0.001,99999,0.001,suffix:s"), "set_length", "get_length");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "loop_mode", PROPERTY_HINT_ENUM, "None,Linear,Ping-Pong"), "set_loop_mode", "get_loop_mode");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "step", PROPERTY_HINT_RANGE, "0,4096,0.001,suffix:s"), "set_step", "get_step");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "length", PropertyHint::RANGE, "0.001,99999,0.001,suffix:s"), "set_length", "get_length");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "loop_mode", PropertyHint::ENUM, "None,Linear,Ping-Pong"), "set_loop_mode", "get_loop_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "step", PropertyHint::RANGE, "0,4096,0.001,suffix:s"), "set_step", "get_step");
 
 	BIND_ENUM_CONSTANT(TYPE_VALUE);
 	BIND_ENUM_CONSTANT(TYPE_POSITION_3D);

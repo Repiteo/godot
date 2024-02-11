@@ -835,13 +835,13 @@ bool TileMap::_get(const StringName &p_name, Variant &r_ret) const {
 }
 
 void TileMap::_get_property_list(List<PropertyInfo> *p_list) const {
-	p_list->push_back(PropertyInfo(Variant::INT, "format", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
-	p_list->push_back(PropertyInfo(Variant::NIL, "Layers", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_GROUP));
+	p_list->push_back(PropertyInfo(Variant::INT, "format", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
+	p_list->push_back(PropertyInfo(Variant::NIL, "Layers", PropertyHint::NONE, "", PropertyUsageFlags::GROUP));
 
 #define MAKE_LAYER_PROPERTY(m_type, m_name, m_hint)                                                                                                                                                      \
 	{                                                                                                                                                                                                    \
 		const String property_name = vformat("layer_%d/" m_name, i);                                                                                                                                     \
-		p_list->push_back(PropertyInfo(m_type, property_name, PROPERTY_HINT_NONE, m_hint, (get(property_name) == property_get_revert(property_name)) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_DEFAULT)); \
+		p_list->push_back(PropertyInfo(m_type, property_name, PropertyHint::NONE, m_hint, (get(property_name) == property_get_revert(property_name)) ? PropertyUsageFlags::EDITOR : PropertyUsageFlags::DEFAULT)); \
 	}
 
 	for (uint32_t i = 0; i < layers.size(); i++) {
@@ -852,7 +852,7 @@ void TileMap::_get_property_list(List<PropertyInfo> *p_list) const {
 		MAKE_LAYER_PROPERTY(Variant::INT, "y_sort_origin", "suffix:px");
 		MAKE_LAYER_PROPERTY(Variant::INT, "z_index", "");
 		MAKE_LAYER_PROPERTY(Variant::BOOL, "navigation_enabled", "");
-		p_list->push_back(PropertyInfo(Variant::OBJECT, vformat("layer_%d/tile_data", i), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
+		p_list->push_back(PropertyInfo(Variant::OBJECT, vformat("layer_%d/tile_data", i), PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR));
 	}
 
 #undef MAKE_LAYER_PROPERTY
@@ -1244,11 +1244,11 @@ void TileMap::_bind_methods() {
 	GDVIRTUAL_BIND(_use_tile_data_runtime_update, "layer", "coords");
 	GDVIRTUAL_BIND(_tile_data_runtime_update, "layer", "coords", "tile_data");
 
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "tile_set", PROPERTY_HINT_RESOURCE_TYPE, "TileSet"), "set_tileset", "get_tileset");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "rendering_quadrant_size", PROPERTY_HINT_RANGE, "1,128,1"), "set_rendering_quadrant_size", "get_rendering_quadrant_size");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "tile_set", PropertyHint::RESOURCE_TYPE, "TileSet"), "set_tileset", "get_tileset");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "rendering_quadrant_size", PropertyHint::RANGE, "1,128,1"), "set_rendering_quadrant_size", "get_rendering_quadrant_size");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "collision_animatable"), "set_collision_animatable", "is_collision_animatable");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_visibility_mode", PROPERTY_HINT_ENUM, "Default,Force Show,Force Hide"), "set_collision_visibility_mode", "get_collision_visibility_mode");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "navigation_visibility_mode", PROPERTY_HINT_ENUM, "Default,Force Show,Force Hide"), "set_navigation_visibility_mode", "get_navigation_visibility_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_visibility_mode", PropertyHint::ENUM, "Default,Force Show,Force Hide"), "set_collision_visibility_mode", "get_collision_visibility_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "navigation_visibility_mode", PropertyHint::ENUM, "Default,Force Show,Force Hide"), "set_navigation_visibility_mode", "get_navigation_visibility_mode");
 
 	ADD_ARRAY("layers", "layer_");
 

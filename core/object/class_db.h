@@ -299,7 +299,7 @@ public:
 		if constexpr (std::is_same_v<typename member_function_traits<M>::return_type, Object *>) {
 			bind->set_return_type_is_raw_object_ptr(true);
 		}
-		return bind_methodfi(METHOD_FLAGS_DEFAULT, bind, false, p_method_name, sizeof...(p_args) == 0 ? nullptr : (const Variant **)argptrs, sizeof...(p_args));
+		return bind_methodfi(MethodFlags::DEFAULT, bind, false, p_method_name, sizeof...(p_args) == 0 ? nullptr : (const Variant **)argptrs, sizeof...(p_args));
 	}
 
 	template <class N, class M, typename... VarArgs>
@@ -314,7 +314,7 @@ public:
 		if constexpr (std::is_same_v<typename member_function_traits<M>::return_type, Object *>) {
 			bind->set_return_type_is_raw_object_ptr(true);
 		}
-		return bind_methodfi(METHOD_FLAGS_DEFAULT, bind, false, p_method_name, sizeof...(p_args) == 0 ? nullptr : (const Variant **)argptrs, sizeof...(p_args));
+		return bind_methodfi(MethodFlags::DEFAULT, bind, false, p_method_name, sizeof...(p_args) == 0 ? nullptr : (const Variant **)argptrs, sizeof...(p_args));
 	}
 
 	template <class N, class M, typename... VarArgs>
@@ -328,7 +328,7 @@ public:
 		if constexpr (std::is_same_v<typename member_function_traits<M>::return_type, Object *>) {
 			bind->set_return_type_is_raw_object_ptr(true);
 		}
-		return bind_methodfi(METHOD_FLAGS_DEFAULT, bind, true, p_method_name, sizeof...(p_args) == 0 ? nullptr : (const Variant **)argptrs, sizeof...(p_args));
+		return bind_methodfi(MethodFlags::DEFAULT, bind, true, p_method_name, sizeof...(p_args) == 0 ? nullptr : (const Variant **)argptrs, sizeof...(p_args));
 	}
 
 	template <class N, class M, typename... VarArgs>
@@ -343,7 +343,7 @@ public:
 		if constexpr (std::is_same_v<typename member_function_traits<M>::return_type, Object *>) {
 			bind->set_return_type_is_raw_object_ptr(true);
 		}
-		return bind_methodfi(METHOD_FLAGS_DEFAULT, bind, true, p_method_name, sizeof...(p_args) == 0 ? nullptr : (const Variant **)argptrs, sizeof...(p_args));
+		return bind_methodfi(MethodFlags::DEFAULT, bind, true, p_method_name, sizeof...(p_args) == 0 ? nullptr : (const Variant **)argptrs, sizeof...(p_args));
 	}
 
 	template <class M>
@@ -382,7 +382,7 @@ public:
 
 	static void add_property_group(const StringName &p_class, const String &p_name, const String &p_prefix = "", int p_indent_depth = 0);
 	static void add_property_subgroup(const StringName &p_class, const String &p_name, const String &p_prefix = "", int p_indent_depth = 0);
-	static void add_property_array_count(const StringName &p_class, const String &p_label, const StringName &p_count_property, const StringName &p_count_setter, const StringName &p_count_getter, const String &p_array_element_prefix, uint32_t p_count_usage = PROPERTY_USAGE_DEFAULT);
+	static void add_property_array_count(const StringName &p_class, const String &p_label, const StringName &p_count_property, const StringName &p_count_setter, const StringName &p_count_getter, const String &p_array_element_prefix, uint32_t p_count_usage = PropertyUsageFlags::DEFAULT);
 	static void add_property_array(const StringName &p_class, const StringName &p_path, const String &p_array_element_prefix);
 	static void add_property(const StringName &p_class, const PropertyInfo &p_pinfo, const StringName &p_setter, const StringName &p_getter, int p_index = -1);
 	static void set_property_default_value(const StringName &p_class, const StringName &p_name, const Variant &p_default);

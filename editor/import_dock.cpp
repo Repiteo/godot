@@ -78,9 +78,9 @@ public:
 			}
 			PropertyInfo pi = E;
 			if (checking) {
-				pi.usage |= PROPERTY_USAGE_CHECKABLE;
+				pi.usage |= PropertyUsageFlags::CHECKABLE;
 				if (checked.has(E.name)) {
-					pi.usage |= PROPERTY_USAGE_CHECKED;
+					pi.usage |= PropertyUsageFlags::CHECKED;
 				}
 			}
 			p_list->push_back(pi);
@@ -629,7 +629,7 @@ void ImportDock::_replace_resource_in_object(Object *p_object, const Ref<Resourc
 	p_object->get_property_list(&props);
 
 	for (const PropertyInfo &p : props) {
-		if (p.type != Variant::OBJECT || p.hint != PROPERTY_HINT_RESOURCE_TYPE) {
+		if (p.type != Variant::OBJECT || p.hint != PropertyHint::RESOURCE_TYPE) {
 			continue;
 		}
 

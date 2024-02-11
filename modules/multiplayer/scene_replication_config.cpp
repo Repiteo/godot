@@ -97,9 +97,9 @@ bool SceneReplicationConfig::_get(const StringName &p_name, Variant &r_ret) cons
 
 void SceneReplicationConfig::_get_property_list(List<PropertyInfo> *p_list) const {
 	for (int i = 0; i < properties.size(); i++) {
-		p_list->push_back(PropertyInfo(Variant::STRING, "properties/" + itos(i) + "/path", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
-		p_list->push_back(PropertyInfo(Variant::STRING, "properties/" + itos(i) + "/spawn", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
-		p_list->push_back(PropertyInfo(Variant::INT, "properties/" + itos(i) + "/replication_mode", PROPERTY_HINT_ENUM, "Never,Always,On Change", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
+		p_list->push_back(PropertyInfo(Variant::STRING, "properties/" + itos(i) + "/path", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
+		p_list->push_back(PropertyInfo(Variant::STRING, "properties/" + itos(i) + "/spawn", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
+		p_list->push_back(PropertyInfo(Variant::INT, "properties/" + itos(i) + "/replication_mode", PropertyHint::ENUM, "Never,Always,On Change", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
 	}
 }
 

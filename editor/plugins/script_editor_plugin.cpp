@@ -165,7 +165,7 @@ void EditorStandardSyntaxHighlighter::_update_cache() {
 			ClassDB::get_property_list(instance_base, &plist);
 			for (const PropertyInfo &E : plist) {
 				String prop_name = E.name;
-				if (E.usage & PROPERTY_USAGE_CATEGORY || E.usage & PROPERTY_USAGE_GROUP || E.usage & PROPERTY_USAGE_SUBGROUP) {
+				if (E.usage & PropertyUsageFlags::CATEGORY || E.usage & PropertyUsageFlags::GROUP || E.usage & PropertyUsageFlags::SUBGROUP) {
 					continue;
 				}
 				if (prop_name.contains("/")) {
@@ -3823,8 +3823,8 @@ void ScriptEditor::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_open_scripts"), &ScriptEditor::_get_open_scripts);
 	ClassDB::bind_method(D_METHOD("open_script_create_dialog", "base_name", "base_path"), &ScriptEditor::open_script_create_dialog);
 
-	ADD_SIGNAL(MethodInfo("editor_script_changed", PropertyInfo(Variant::OBJECT, "script", PROPERTY_HINT_RESOURCE_TYPE, "Script")));
-	ADD_SIGNAL(MethodInfo("script_close", PropertyInfo(Variant::OBJECT, "script", PROPERTY_HINT_RESOURCE_TYPE, "Script")));
+	ADD_SIGNAL(MethodInfo("editor_script_changed", PropertyInfo(Variant::OBJECT, "script", PropertyHint::RESOURCE_TYPE, "Script")));
+	ADD_SIGNAL(MethodInfo("script_close", PropertyInfo(Variant::OBJECT, "script", PropertyHint::RESOURCE_TYPE, "Script")));
 }
 
 ScriptEditor::ScriptEditor(WindowWrapper *p_wrapper) {
@@ -4381,13 +4381,13 @@ ScriptEditorPlugin::ScriptEditorPlugin() {
 	EDITOR_DEF("text_editor/script_list/script_temperature_enabled", true);
 	EDITOR_DEF("text_editor/script_list/script_temperature_history_size", 15);
 	EDITOR_DEF("text_editor/script_list/group_help_pages", true);
-	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::INT, "text_editor/script_list/sort_scripts_by", PROPERTY_HINT_ENUM, "Name,Path,None"));
+	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::INT, "text_editor/script_list/sort_scripts_by", PropertyHint::ENUM, "Name,Path,None"));
 	EDITOR_DEF("text_editor/script_list/sort_scripts_by", 0);
-	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::INT, "text_editor/script_list/list_script_names_as", PROPERTY_HINT_ENUM, "Name,Parent Directory And Name,Full Path"));
+	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::INT, "text_editor/script_list/list_script_names_as", PropertyHint::ENUM, "Name,Parent Directory And Name,Full Path"));
 	EDITOR_DEF("text_editor/script_list/list_script_names_as", 0);
-	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::STRING, "text_editor/external/exec_path", PROPERTY_HINT_GLOBAL_FILE));
+	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::STRING, "text_editor/external/exec_path", PropertyHint::GLOBAL_FILE));
 	EDITOR_DEF("text_editor/external/exec_flags", "{file}");
-	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::STRING, "text_editor/external/exec_flags", PROPERTY_HINT_PLACEHOLDER_TEXT, "Call flags with placeholders: {project}, {file}, {col}, {line}."));
+	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::STRING, "text_editor/external/exec_flags", PropertyHint::PLACEHOLDER_TEXT, "Call flags with placeholders: {project}, {file}, {col}, {line}."));
 
 	ED_SHORTCUT("script_editor/reopen_closed_script", TTR("Reopen Closed Script"), KeyModifierMask::CMD_OR_CTRL | KeyModifierMask::SHIFT | Key::T);
 	ED_SHORTCUT("script_editor/clear_recent", TTR("Clear Recent Scripts"));

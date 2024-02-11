@@ -137,7 +137,7 @@ void AtlasMergingDialog::_generate_merged(Vector<Ref<TileSetAtlasSource>> p_atla
 
 					TileData *dst_tile_data = merged->get_tile_data(tile_mapping.value, changed_id == -1 ? alternative_id : changed_id);
 					for (PropertyInfo property : properties) {
-						if (!(property.usage & PROPERTY_USAGE_STORAGE)) {
+						if (!(property.usage & PropertyUsageFlags::STORAGE)) {
 							continue;
 						}
 						Variant value = src_tile_data->get(property.name);

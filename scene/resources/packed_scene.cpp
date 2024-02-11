@@ -91,7 +91,7 @@ Ref<Resource> SceneState::get_remap_resource(const Ref<Resource> &p_resource, Ha
 		List<PropertyInfo> pi;
 		p_resource->get_property_list(&pi);
 		for (const PropertyInfo &E : pi) {
-			if (!(E.usage & PROPERTY_USAGE_STORAGE)) {
+			if (!(E.usage & PropertyUsageFlags::STORAGE)) {
 				continue;
 			}
 			if (E.name == "resource_path") {
@@ -661,7 +661,7 @@ Error SceneState::_parse_node(Node *p_owner, Node *p_node, int p_parent_idx, Has
 	Dictionary missing_resource_properties = p_node->get_meta(META_MISSING_RESOURCES, Dictionary());
 
 	for (const PropertyInfo &E : plist) {
-		if (!(E.usage & PROPERTY_USAGE_STORAGE)) {
+		if (!(E.usage & PropertyUsageFlags::STORAGE)) {
 			continue;
 		}
 
@@ -671,7 +671,7 @@ Error SceneState::_parse_node(Node *p_owner, Node *p_node, int p_parent_idx, Has
 
 		// If instance or inheriting, not saving if property requested so.
 		if (!states_stack.is_empty()) {
-			if ((E.usage & PROPERTY_USAGE_NO_INSTANCE_STATE)) {
+			if ((E.usage & PropertyUsageFlags::NO_INSTANCE_STATE)) {
 				continue;
 			}
 		}
@@ -680,7 +680,7 @@ Error SceneState::_parse_node(Node *p_owner, Node *p_node, int p_parent_idx, Has
 		Variant value = p_node->get(name);
 		bool use_deferred_node_path_bit = false;
 
-		if (E.type == Variant::OBJECT && E.hint == PROPERTY_HINT_NODE_TYPE) {
+		if (E.type == Variant::OBJECT && E.hint == PropertyHint::NODE_TYPE) {
 			if (value.get_type() == Variant::OBJECT) {
 				if (Node *n = Object::cast_to<Node>(value)) {
 					value = p_node->get_path_to(n);
@@ -696,19 +696,19 @@ Error SceneState::_parse_node(Node *p_owner, Node *p_node, int p_parent_idx, Has
 			if (ures.is_null()) {
 				value = missing_resource_properties[E.name];
 			}
-		} else if (E.type == Variant::ARRAY && E.hint == PROPERTY_HINT_TYPE_STRING) {
+		} else if (E.type == Variant::ARRAY && E.hint == PropertyHint::TYPE_STRING) {
 			int hint_subtype_separator = E.hint_string.find(":");
 			if (hint_subtype_separator >= 0) {
 				String subtype_string = E.hint_string.substr(0, hint_subtype_separator);
 				int slash_pos = subtype_string.find("/");
-				PropertyHint subtype_hint = PropertyHint::PROPERTY_HINT_NONE;
+				PropertyHint subtype_hint = PropertyHint::PropertyHint::NONE;
 				if (slash_pos >= 0) {
 					subtype_hint = PropertyHint(subtype_string.get_slice("/", 1).to_int());
 					subtype_string = subtype_string.substr(0, slash_pos);
 				}
 				Variant::Type subtype = Variant::Type(subtype_string.to_int());
 
-				if (subtype == Variant::OBJECT && subtype_hint == PROPERTY_HINT_NODE_TYPE) {
+				if (subtype == Variant::OBJECT && subtype_hint == PropertyHint::NODE_TYPE) {
 					use_deferred_node_path_bit = true;
 					Array array = value;
 					Array new_array;

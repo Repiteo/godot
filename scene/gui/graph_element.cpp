@@ -101,7 +101,7 @@ void GraphElement::_validate_property(PropertyInfo &p_property) const {
 	GraphEdit *graph = Object::cast_to<GraphEdit>(get_parent());
 	if (graph) {
 		if (p_property.name == "position") {
-			p_property.usage |= PROPERTY_USAGE_READ_ONLY;
+			p_property.usage |= PropertyUsageFlags::READ_ONLY;
 		}
 	}
 }

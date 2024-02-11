@@ -634,17 +634,17 @@ void CollisionObject2D::_bind_methods() {
 	GDVIRTUAL_BIND(_mouse_shape_enter, "shape_idx");
 	GDVIRTUAL_BIND(_mouse_shape_exit, "shape_idx");
 
-	ADD_SIGNAL(MethodInfo("input_event", PropertyInfo(Variant::OBJECT, "viewport", PROPERTY_HINT_RESOURCE_TYPE, "Node"), PropertyInfo(Variant::OBJECT, "event", PROPERTY_HINT_RESOURCE_TYPE, "InputEvent"), PropertyInfo(Variant::INT, "shape_idx")));
+	ADD_SIGNAL(MethodInfo("input_event", PropertyInfo(Variant::OBJECT, "viewport", PropertyHint::RESOURCE_TYPE, "Node"), PropertyInfo(Variant::OBJECT, "event", PropertyHint::RESOURCE_TYPE, "InputEvent"), PropertyInfo(Variant::INT, "shape_idx")));
 	ADD_SIGNAL(MethodInfo("mouse_entered"));
 	ADD_SIGNAL(MethodInfo("mouse_exited"));
 	ADD_SIGNAL(MethodInfo("mouse_shape_entered", PropertyInfo(Variant::INT, "shape_idx")));
 	ADD_SIGNAL(MethodInfo("mouse_shape_exited", PropertyInfo(Variant::INT, "shape_idx")));
 
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "disable_mode", PROPERTY_HINT_ENUM, "Remove,Make Static,Keep Active"), "set_disable_mode", "get_disable_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "disable_mode", PropertyHint::ENUM, "Remove,Make Static,Keep Active"), "set_disable_mode", "get_disable_mode");
 
 	ADD_GROUP("Collision", "collision_");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_layer", PROPERTY_HINT_LAYERS_2D_PHYSICS), "set_collision_layer", "get_collision_layer");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_mask", PROPERTY_HINT_LAYERS_2D_PHYSICS), "set_collision_mask", "get_collision_mask");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_layer", PropertyHint::LAYERS_2D_PHYSICS), "set_collision_layer", "get_collision_layer");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "collision_mask", PropertyHint::LAYERS_2D_PHYSICS), "set_collision_mask", "get_collision_mask");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "collision_priority"), "set_collision_priority", "get_collision_priority");
 
 	ADD_GROUP("Input", "input_");

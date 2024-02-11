@@ -1749,12 +1749,12 @@ void TabBar::_get_property_list(List<PropertyInfo> *p_list) const {
 	for (int i = 0; i < tabs.size(); i++) {
 		p_list->push_back(PropertyInfo(Variant::STRING, vformat("tab_%d/title", i)));
 
-		PropertyInfo pi = PropertyInfo(Variant::OBJECT, vformat("tab_%d/icon", i), PROPERTY_HINT_RESOURCE_TYPE, "Texture2D");
-		pi.usage &= ~(get_tab_icon(i).is_null() ? PROPERTY_USAGE_STORAGE : 0);
+		PropertyInfo pi = PropertyInfo(Variant::OBJECT, vformat("tab_%d/icon", i), PropertyHint::RESOURCE_TYPE, "Texture2D");
+		pi.usage &= ~(get_tab_icon(i).is_null() ? PropertyUsageFlags::STORAGE : 0);
 		p_list->push_back(pi);
 
 		pi = PropertyInfo(Variant::BOOL, vformat("tab_%d/disabled", i));
-		pi.usage &= ~(!is_tab_disabled(i) ? PROPERTY_USAGE_STORAGE : 0);
+		pi.usage &= ~(!is_tab_disabled(i) ? PropertyUsageFlags::STORAGE : 0);
 		p_list->push_back(pi);
 	}
 }
@@ -1827,11 +1827,11 @@ void TabBar::_bind_methods() {
 	// "current_tab" property must come after "tab_count", otherwise the property isn't loaded correctly.
 	ADD_ARRAY_COUNT("Tabs", "tab_count", "set_tab_count", "get_tab_count", "tab_");
 
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "current_tab", PROPERTY_HINT_RANGE, "-1,4096,1"), "set_current_tab", "get_current_tab");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "tab_alignment", PROPERTY_HINT_ENUM, "Left,Center,Right"), "set_tab_alignment", "get_tab_alignment");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "current_tab", PropertyHint::RANGE, "-1,4096,1"), "set_current_tab", "get_current_tab");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "tab_alignment", PropertyHint::ENUM, "Left,Center,Right"), "set_tab_alignment", "get_tab_alignment");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "clip_tabs"), "set_clip_tabs", "get_clip_tabs");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "tab_close_display_policy", PROPERTY_HINT_ENUM, "Show Never,Show Active Only,Show Always"), "set_tab_close_display_policy", "get_tab_close_display_policy");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "max_tab_width", PROPERTY_HINT_RANGE, "0,99999,1,suffix:px"), "set_max_tab_width", "get_max_tab_width");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "tab_close_display_policy", PropertyHint::ENUM, "Show Never,Show Active Only,Show Always"), "set_tab_close_display_policy", "get_tab_close_display_policy");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "max_tab_width", PropertyHint::RANGE, "0,99999,1,suffix:px"), "set_max_tab_width", "get_max_tab_width");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "scrolling_enabled"), "set_scrolling_enabled", "get_scrolling_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "drag_to_rearrange_enabled"), "set_drag_to_rearrange_enabled", "get_drag_to_rearrange_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "tabs_rearrange_group"), "set_tabs_rearrange_group", "get_tabs_rearrange_group");

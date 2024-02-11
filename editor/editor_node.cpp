@@ -1515,7 +1515,7 @@ bool EditorNode::_find_and_save_edited_subresources(Object *obj, HashMap<Ref<Res
 	List<PropertyInfo> pi;
 	obj->get_property_list(&pi);
 	for (const PropertyInfo &E : pi) {
-		if (!(E.usage & PROPERTY_USAGE_STORAGE)) {
+		if (!(E.usage & PropertyUsageFlags::STORAGE)) {
 			continue;
 		}
 
@@ -3935,7 +3935,7 @@ HashMap<StringName, Variant> EditorNode::get_modified_properties_for_node(Node *
 	List<PropertyInfo> pinfo;
 	p_node->get_property_list(&pinfo);
 	for (const PropertyInfo &E : pinfo) {
-		if (E.usage & PROPERTY_USAGE_STORAGE) {
+		if (E.usage & PropertyUsageFlags::STORAGE) {
 			bool is_valid_revert = false;
 			Variant revert_value = EditorPropertyRevert::get_property_revert_value(p_node, E.name, &is_valid_revert);
 			Variant current_value = p_node->get(E.name);
@@ -5854,7 +5854,7 @@ void EditorNode::reload_instances_with_path_in_edited_scenes(const String &p_ins
 						// Get names of all valid property names (TODO: make this more efficient).
 						List<String> property_names;
 						for (const PropertyInfo &E2 : pinfo) {
-							if (E2.usage & PROPERTY_USAGE_STORAGE) {
+							if (E2.usage & PropertyUsageFlags::STORAGE) {
 								property_names.push_back(E2.name);
 							}
 						}
@@ -6481,11 +6481,11 @@ EditorNode::EditorNode() {
 	EDITOR_DEF("interface/editor/localize_settings", true);
 	EDITOR_DEF_RST("interface/scene_tabs/restore_scenes_on_load", true);
 	EDITOR_DEF_RST("interface/inspector/default_property_name_style", EditorPropertyNameProcessor::STYLE_CAPITALIZED);
-	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::INT, "interface/inspector/default_property_name_style", PROPERTY_HINT_ENUM, "Raw,Capitalized,Localized"));
+	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::INT, "interface/inspector/default_property_name_style", PropertyHint::ENUM, "Raw,Capitalized,Localized"));
 	EDITOR_DEF_RST("interface/inspector/default_float_step", 0.001);
 	// The lowest value is equal to the minimum float step for 32-bit floats.
 	// The step must be set manually, as changing this setting should not change the step here.
-	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::FLOAT, "interface/inspector/default_float_step", PROPERTY_HINT_RANGE, "0.0000001,1,0.0000001"));
+	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::FLOAT, "interface/inspector/default_float_step", PropertyHint::RANGE, "0.0000001,1,0.0000001"));
 	EDITOR_DEF_RST("interface/inspector/disable_folding", false);
 	EDITOR_DEF_RST("interface/inspector/auto_unfold_foreign_scenes", true);
 	EDITOR_DEF("interface/inspector/horizontal_vector2_editing", false);
@@ -6500,9 +6500,9 @@ EditorNode::EditorNode() {
 	EDITOR_DEF("interface/inspector/resources_to_open_in_new_inspector", open_in_new_inspector_defaults);
 
 	EDITOR_DEF("interface/inspector/default_color_picker_mode", 0);
-	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::INT, "interface/inspector/default_color_picker_mode", PROPERTY_HINT_ENUM, "RGB,HSV,RAW,OKHSL", PROPERTY_USAGE_DEFAULT));
+	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::INT, "interface/inspector/default_color_picker_mode", PropertyHint::ENUM, "RGB,HSV,RAW,OKHSL", PropertyUsageFlags::DEFAULT));
 	EDITOR_DEF("interface/inspector/default_color_picker_shape", (int32_t)ColorPicker::SHAPE_OKHSL_CIRCLE);
-	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::INT, "interface/inspector/default_color_picker_shape", PROPERTY_HINT_ENUM, "HSV Rectangle,HSV Rectangle Wheel,VHS Circle,OKHSL Circle", PROPERTY_USAGE_DEFAULT));
+	EditorSettings::get_singleton()->add_property_hint(PropertyInfo(Variant::INT, "interface/inspector/default_color_picker_shape", PropertyHint::ENUM, "HSV Rectangle,HSV Rectangle Wheel,VHS Circle,OKHSL Circle", PropertyUsageFlags::DEFAULT));
 
 	ED_SHORTCUT("canvas_item_editor/pan_view", TTR("Pan View"), Key::SPACE);
 

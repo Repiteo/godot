@@ -1922,7 +1922,7 @@ Error VariantWriter::write(const Variant &p_variant, StoreStringFunc p_store_str
 			obj->get_property_list(&props);
 			bool first = true;
 			for (const PropertyInfo &E : props) {
-				if (E.usage & PROPERTY_USAGE_STORAGE || E.usage & PROPERTY_USAGE_SCRIPT_VARIABLE) {
+				if (E.usage & PropertyUsageFlags::STORAGE || E.usage & PropertyUsageFlags::SCRIPT_VARIABLE) {
 					//must be serialized
 
 					if (first) {

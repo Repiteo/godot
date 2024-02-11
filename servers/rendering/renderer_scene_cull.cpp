@@ -1501,7 +1501,7 @@ void RendererSceneCull::instance_geometry_set_shader_parameter(RID p_instance, c
 		E->value.value = p_value;
 		if (E->value.index >= 0 && instance->instance_allocated_shader_uniforms) {
 			int flags_count = 0;
-			if (E->value.info.hint == PROPERTY_HINT_FLAGS) {
+			if (E->value.info.hint == PropertyHint::FLAGS) {
 				// A small hack to detect boolean flags count and prevent overhead.
 				switch (E->value.info.hint_string.length()) {
 					case 3: // "x,y"
@@ -4021,7 +4021,7 @@ void RendererSceneCull::_update_dirty_instance(Instance *p_instance) {
 					for (const KeyValue<StringName, Instance::InstanceShaderParameter> &E : p_instance->instance_shader_uniforms) {
 						if (E.value.value.get_type() != Variant::NIL) {
 							int flags_count = 0;
-							if (E.value.info.hint == PROPERTY_HINT_FLAGS) {
+							if (E.value.info.hint == PropertyHint::FLAGS) {
 								// A small hack to detect boolean flags count and prevent overhead.
 								switch (E.value.info.hint_string.length()) {
 									case 3: // "x,y"

@@ -100,7 +100,7 @@ class AudioEffectLowPassFilter : public AudioEffectFilter {
 
 	void _validate_property(PropertyInfo &p_property) const {
 		if (p_property.name == "gain") {
-			p_property.usage = PROPERTY_USAGE_NONE;
+			p_property.usage = PropertyUsageFlags::NONE;
 		}
 	}
 
@@ -113,7 +113,7 @@ class AudioEffectHighPassFilter : public AudioEffectFilter {
 	GDCLASS(AudioEffectHighPassFilter, AudioEffectFilter);
 	void _validate_property(PropertyInfo &p_property) const {
 		if (p_property.name == "gain") {
-			p_property.usage = PROPERTY_USAGE_NONE;
+			p_property.usage = PropertyUsageFlags::NONE;
 		}
 	}
 
@@ -126,7 +126,7 @@ class AudioEffectBandPassFilter : public AudioEffectFilter {
 	GDCLASS(AudioEffectBandPassFilter, AudioEffectFilter);
 	void _validate_property(PropertyInfo &p_property) const {
 		if (p_property.name == "gain") {
-			p_property.usage = PROPERTY_USAGE_NONE;
+			p_property.usage = PropertyUsageFlags::NONE;
 		}
 	}
 

@@ -289,7 +289,7 @@ Size2 SplitContainer::get_minimum_size() const {
 
 void SplitContainer::_validate_property(PropertyInfo &p_property) const {
 	if (is_fixed && p_property.name == "vertical") {
-		p_property.usage = PROPERTY_USAGE_NONE;
+		p_property.usage = PropertyUsageFlags::NONE;
 	}
 }
 
@@ -410,9 +410,9 @@ void SplitContainer::_bind_methods() {
 
 	ADD_SIGNAL(MethodInfo("dragged", PropertyInfo(Variant::INT, "offset")));
 
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "split_offset", PROPERTY_HINT_NONE, "suffix:px"), "set_split_offset", "get_split_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "split_offset", PropertyHint::NONE, "suffix:px"), "set_split_offset", "get_split_offset");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "collapsed"), "set_collapsed", "is_collapsed");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "dragger_visibility", PROPERTY_HINT_ENUM, "Visible,Hidden,Hidden and Collapsed"), "set_dragger_visibility", "get_dragger_visibility");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "dragger_visibility", PropertyHint::ENUM, "Visible,Hidden,Hidden and Collapsed"), "set_dragger_visibility", "get_dragger_visibility");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "vertical"), "set_vertical", "is_vertical");
 
 	BIND_ENUM_CONSTANT(DRAGGER_VISIBLE);

@@ -522,31 +522,31 @@ bool CPUParticles3D::get_split_scale() {
 
 void CPUParticles3D::_validate_property(PropertyInfo &p_property) const {
 	if (p_property.name == "emission_sphere_radius" && (emission_shape != EMISSION_SHAPE_SPHERE && emission_shape != EMISSION_SHAPE_SPHERE_SURFACE)) {
-		p_property.usage = PROPERTY_USAGE_NONE;
+		p_property.usage = PropertyUsageFlags::NONE;
 	}
 
 	if (p_property.name == "emission_box_extents" && emission_shape != EMISSION_SHAPE_BOX) {
-		p_property.usage = PROPERTY_USAGE_NONE;
+		p_property.usage = PropertyUsageFlags::NONE;
 	}
 
 	if ((p_property.name == "emission_point_texture" || p_property.name == "emission_color_texture" || p_property.name == "emission_points") && (emission_shape != EMISSION_SHAPE_POINTS && (emission_shape != EMISSION_SHAPE_DIRECTED_POINTS))) {
-		p_property.usage = PROPERTY_USAGE_NONE;
+		p_property.usage = PropertyUsageFlags::NONE;
 	}
 
 	if (p_property.name == "emission_normals" && emission_shape != EMISSION_SHAPE_DIRECTED_POINTS) {
-		p_property.usage = PROPERTY_USAGE_NONE;
+		p_property.usage = PropertyUsageFlags::NONE;
 	}
 
 	if (p_property.name.begins_with("emission_ring_") && emission_shape != EMISSION_SHAPE_RING) {
-		p_property.usage = PROPERTY_USAGE_NONE;
+		p_property.usage = PropertyUsageFlags::NONE;
 	}
 
 	if (p_property.name.begins_with("orbit_") && !particle_flags[PARTICLE_FLAG_DISABLE_Z]) {
-		p_property.usage = PROPERTY_USAGE_NONE;
+		p_property.usage = PropertyUsageFlags::NONE;
 	}
 
 	if (p_property.name.begins_with("scale_curve_") && !split_scale) {
-		p_property.usage = PROPERTY_USAGE_NONE;
+		p_property.usage = PropertyUsageFlags::NONE;
 	}
 }
 
@@ -1449,21 +1449,21 @@ void CPUParticles3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("restart"), &CPUParticles3D::restart);
 
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "emitting"), "set_emitting", "is_emitting");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "amount", PROPERTY_HINT_RANGE, "1,1000000,1,exp"), "set_amount", "get_amount");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "amount", PropertyHint::RANGE, "1,1000000,1,exp"), "set_amount", "get_amount");
 	ADD_GROUP("Time", "");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "lifetime", PROPERTY_HINT_RANGE, "0.01,600.0,0.01,or_greater,exp,suffix:s"), "set_lifetime", "get_lifetime");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "lifetime", PropertyHint::RANGE, "0.01,600.0,0.01,or_greater,exp,suffix:s"), "set_lifetime", "get_lifetime");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "one_shot"), "set_one_shot", "get_one_shot");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "preprocess", PROPERTY_HINT_RANGE, "0.00,600.0,0.01,exp,suffix:s"), "set_pre_process_time", "get_pre_process_time");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "speed_scale", PROPERTY_HINT_RANGE, "0,64,0.01"), "set_speed_scale", "get_speed_scale");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "explosiveness", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_explosiveness_ratio", "get_explosiveness_ratio");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "randomness", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_randomness_ratio", "get_randomness_ratio");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "lifetime_randomness", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_lifetime_randomness", "get_lifetime_randomness");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "fixed_fps", PROPERTY_HINT_RANGE, "0,1000,1,suffix:FPS"), "set_fixed_fps", "get_fixed_fps");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "preprocess", PropertyHint::RANGE, "0.00,600.0,0.01,exp,suffix:s"), "set_pre_process_time", "get_pre_process_time");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "speed_scale", PropertyHint::RANGE, "0,64,0.01"), "set_speed_scale", "get_speed_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "explosiveness", PropertyHint::RANGE, "0,1,0.01"), "set_explosiveness_ratio", "get_explosiveness_ratio");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "randomness", PropertyHint::RANGE, "0,1,0.01"), "set_randomness_ratio", "get_randomness_ratio");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "lifetime_randomness", PropertyHint::RANGE, "0,1,0.01"), "set_lifetime_randomness", "get_lifetime_randomness");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "fixed_fps", PropertyHint::RANGE, "0,1000,1,suffix:FPS"), "set_fixed_fps", "get_fixed_fps");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "fract_delta"), "set_fractional_delta", "get_fractional_delta");
 	ADD_GROUP("Drawing", "");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "local_coords"), "set_use_local_coordinates", "get_use_local_coordinates");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "draw_order", PROPERTY_HINT_ENUM, "Index,Lifetime,View Depth"), "set_draw_order", "get_draw_order");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "mesh", PROPERTY_HINT_RESOURCE_TYPE, "Mesh"), "set_mesh", "get_mesh");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "draw_order", PropertyHint::ENUM, "Index,Lifetime,View Depth"), "set_draw_order", "get_draw_order");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "mesh", PropertyHint::RESOURCE_TYPE, "Mesh"), "set_mesh", "get_mesh");
 
 	BIND_ENUM_CONSTANT(DRAW_ORDER_INDEX);
 	BIND_ENUM_CONSTANT(DRAW_ORDER_LIFETIME);
@@ -1551,8 +1551,8 @@ void CPUParticles3D::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("finished"));
 
 	ADD_GROUP("Emission Shape", "emission_");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "emission_shape", PROPERTY_HINT_ENUM, "Point,Sphere,Sphere Surface,Box,Points,Directed Points,Ring", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED), "set_emission_shape", "get_emission_shape");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "emission_sphere_radius", PROPERTY_HINT_RANGE, "0.01,128,0.01"), "set_emission_sphere_radius", "get_emission_sphere_radius");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "emission_shape", PropertyHint::ENUM, "Point,Sphere,Sphere Surface,Box,Points,Directed Points,Ring", PropertyUsageFlags::DEFAULT | PropertyUsageFlags::UPDATE_ALL_IF_MODIFIED), "set_emission_shape", "get_emission_shape");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "emission_sphere_radius", PropertyHint::RANGE, "0.01,128,0.01"), "set_emission_sphere_radius", "get_emission_sphere_radius");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "emission_box_extents"), "set_emission_box_extents", "get_emission_box_extents");
 	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR3_ARRAY, "emission_points"), "set_emission_points", "get_emission_points");
 	ADD_PROPERTY(PropertyInfo(Variant::PACKED_VECTOR3_ARRAY, "emission_normals"), "set_emission_normals", "get_emission_normals");
@@ -1567,65 +1567,65 @@ void CPUParticles3D::_bind_methods() {
 	ADD_PROPERTYI(PropertyInfo(Variant::BOOL, "particle_flag_disable_z"), "set_particle_flag", "get_particle_flag", PARTICLE_FLAG_DISABLE_Z);
 	ADD_GROUP("Direction", "");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "direction"), "set_direction", "get_direction");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "spread", PROPERTY_HINT_RANGE, "0,180,0.01"), "set_spread", "get_spread");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "flatness", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_flatness", "get_flatness");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "spread", PropertyHint::RANGE, "0,180,0.01"), "set_spread", "get_spread");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "flatness", PropertyHint::RANGE, "0,1,0.01"), "set_flatness", "get_flatness");
 	ADD_GROUP("Gravity", "");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "gravity"), "set_gravity", "get_gravity");
 	ADD_GROUP("Initial Velocity", "initial_");
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "initial_velocity_min", PROPERTY_HINT_RANGE, "0,1000,0.01,or_greater"), "set_param_min", "get_param_min", PARAM_INITIAL_LINEAR_VELOCITY);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "initial_velocity_max", PROPERTY_HINT_RANGE, "0,1000,0.01,or_greater"), "set_param_max", "get_param_max", PARAM_INITIAL_LINEAR_VELOCITY);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "initial_velocity_min", PropertyHint::RANGE, "0,1000,0.01,or_greater"), "set_param_min", "get_param_min", PARAM_INITIAL_LINEAR_VELOCITY);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "initial_velocity_max", PropertyHint::RANGE, "0,1000,0.01,or_greater"), "set_param_max", "get_param_max", PARAM_INITIAL_LINEAR_VELOCITY);
 	ADD_GROUP("Angular Velocity", "angular_");
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "angular_velocity_min", PROPERTY_HINT_RANGE, "-720,720,0.01,or_less,or_greater"), "set_param_min", "get_param_min", PARAM_ANGULAR_VELOCITY);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "angular_velocity_max", PROPERTY_HINT_RANGE, "-720,720,0.01,or_less,or_greater"), "set_param_max", "get_param_max", PARAM_ANGULAR_VELOCITY);
-	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "angular_velocity_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_ANGULAR_VELOCITY);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "angular_velocity_min", PropertyHint::RANGE, "-720,720,0.01,or_less,or_greater"), "set_param_min", "get_param_min", PARAM_ANGULAR_VELOCITY);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "angular_velocity_max", PropertyHint::RANGE, "-720,720,0.01,or_less,or_greater"), "set_param_max", "get_param_max", PARAM_ANGULAR_VELOCITY);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "angular_velocity_curve", PropertyHint::RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_ANGULAR_VELOCITY);
 	ADD_GROUP("Orbit Velocity", "orbit_");
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "orbit_velocity_min", PROPERTY_HINT_RANGE, "-1000,1000,0.01,or_less,or_greater"), "set_param_min", "get_param_min", PARAM_ORBIT_VELOCITY);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "orbit_velocity_max", PROPERTY_HINT_RANGE, "-1000,1000,0.01,or_less,or_greater"), "set_param_max", "get_param_max", PARAM_ORBIT_VELOCITY);
-	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "orbit_velocity_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_ORBIT_VELOCITY);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "orbit_velocity_min", PropertyHint::RANGE, "-1000,1000,0.01,or_less,or_greater"), "set_param_min", "get_param_min", PARAM_ORBIT_VELOCITY);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "orbit_velocity_max", PropertyHint::RANGE, "-1000,1000,0.01,or_less,or_greater"), "set_param_max", "get_param_max", PARAM_ORBIT_VELOCITY);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "orbit_velocity_curve", PropertyHint::RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_ORBIT_VELOCITY);
 	ADD_GROUP("Linear Accel", "linear_");
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "linear_accel_min", PROPERTY_HINT_RANGE, "-100,100,0.01,or_less,or_greater"), "set_param_min", "get_param_min", PARAM_LINEAR_ACCEL);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "linear_accel_max", PROPERTY_HINT_RANGE, "-100,100,0.01,or_less,or_greater"), "set_param_max", "get_param_max", PARAM_LINEAR_ACCEL);
-	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "linear_accel_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_LINEAR_ACCEL);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "linear_accel_min", PropertyHint::RANGE, "-100,100,0.01,or_less,or_greater"), "set_param_min", "get_param_min", PARAM_LINEAR_ACCEL);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "linear_accel_max", PropertyHint::RANGE, "-100,100,0.01,or_less,or_greater"), "set_param_max", "get_param_max", PARAM_LINEAR_ACCEL);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "linear_accel_curve", PropertyHint::RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_LINEAR_ACCEL);
 	ADD_GROUP("Radial Accel", "radial_");
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "radial_accel_min", PROPERTY_HINT_RANGE, "-100,100,0.01,or_less,or_greater"), "set_param_min", "get_param_min", PARAM_RADIAL_ACCEL);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "radial_accel_max", PROPERTY_HINT_RANGE, "-100,100,0.01,or_less,or_greater"), "set_param_max", "get_param_max", PARAM_RADIAL_ACCEL);
-	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "radial_accel_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_RADIAL_ACCEL);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "radial_accel_min", PropertyHint::RANGE, "-100,100,0.01,or_less,or_greater"), "set_param_min", "get_param_min", PARAM_RADIAL_ACCEL);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "radial_accel_max", PropertyHint::RANGE, "-100,100,0.01,or_less,or_greater"), "set_param_max", "get_param_max", PARAM_RADIAL_ACCEL);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "radial_accel_curve", PropertyHint::RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_RADIAL_ACCEL);
 	ADD_GROUP("Tangential Accel", "tangential_");
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "tangential_accel_min", PROPERTY_HINT_RANGE, "-100,100,0.01,or_less,or_greater"), "set_param_min", "get_param_min", PARAM_TANGENTIAL_ACCEL);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "tangential_accel_max", PROPERTY_HINT_RANGE, "-100,100,0.01,or_less,or_greater"), "set_param_max", "get_param_max", PARAM_TANGENTIAL_ACCEL);
-	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "tangential_accel_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_TANGENTIAL_ACCEL);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "tangential_accel_min", PropertyHint::RANGE, "-100,100,0.01,or_less,or_greater"), "set_param_min", "get_param_min", PARAM_TANGENTIAL_ACCEL);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "tangential_accel_max", PropertyHint::RANGE, "-100,100,0.01,or_less,or_greater"), "set_param_max", "get_param_max", PARAM_TANGENTIAL_ACCEL);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "tangential_accel_curve", PropertyHint::RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_TANGENTIAL_ACCEL);
 	ADD_GROUP("Damping", "");
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "damping_min", PROPERTY_HINT_RANGE, "0,100,0.001,or_greater"), "set_param_min", "get_param_min", PARAM_DAMPING);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "damping_max", PROPERTY_HINT_RANGE, "0,100,0.001,or_greater"), "set_param_max", "get_param_max", PARAM_DAMPING);
-	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "damping_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_DAMPING);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "damping_min", PropertyHint::RANGE, "0,100,0.001,or_greater"), "set_param_min", "get_param_min", PARAM_DAMPING);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "damping_max", PropertyHint::RANGE, "0,100,0.001,or_greater"), "set_param_max", "get_param_max", PARAM_DAMPING);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "damping_curve", PropertyHint::RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_DAMPING);
 	ADD_GROUP("Angle", "");
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "angle_min", PROPERTY_HINT_RANGE, "-720,720,0.1,or_less,or_greater,degrees"), "set_param_min", "get_param_min", PARAM_ANGLE);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "angle_max", PROPERTY_HINT_RANGE, "-720,720,0.1,or_less,or_greater,degrees"), "set_param_max", "get_param_max", PARAM_ANGLE);
-	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "angle_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_ANGLE);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "angle_min", PropertyHint::RANGE, "-720,720,0.1,or_less,or_greater,degrees"), "set_param_min", "get_param_min", PARAM_ANGLE);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "angle_max", PropertyHint::RANGE, "-720,720,0.1,or_less,or_greater,degrees"), "set_param_max", "get_param_max", PARAM_ANGLE);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "angle_curve", PropertyHint::RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_ANGLE);
 	ADD_GROUP("Scale", "");
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "scale_amount_min", PROPERTY_HINT_RANGE, "0,1000,0.01,or_greater"), "set_param_min", "get_param_min", PARAM_SCALE);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "scale_amount_max", PROPERTY_HINT_RANGE, "0,1000,0.01,or_greater"), "set_param_max", "get_param_max", PARAM_SCALE);
-	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "scale_amount_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_SCALE);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "scale_amount_min", PropertyHint::RANGE, "0,1000,0.01,or_greater"), "set_param_min", "get_param_min", PARAM_SCALE);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "scale_amount_max", PropertyHint::RANGE, "0,1000,0.01,or_greater"), "set_param_max", "get_param_max", PARAM_SCALE);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "scale_amount_curve", PropertyHint::RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_SCALE);
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "split_scale"), "set_split_scale", "get_split_scale");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "scale_curve_x", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_scale_curve_x", "get_scale_curve_x");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "scale_curve_y", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_scale_curve_y", "get_scale_curve_y");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "scale_curve_z", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_scale_curve_z", "get_scale_curve_z");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "scale_curve_x", PropertyHint::RESOURCE_TYPE, "Curve"), "set_scale_curve_x", "get_scale_curve_x");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "scale_curve_y", PropertyHint::RESOURCE_TYPE, "Curve"), "set_scale_curve_y", "get_scale_curve_y");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "scale_curve_z", PropertyHint::RESOURCE_TYPE, "Curve"), "set_scale_curve_z", "get_scale_curve_z");
 	ADD_GROUP("Color", "");
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "color"), "set_color", "get_color");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "color_ramp", PROPERTY_HINT_RESOURCE_TYPE, "Gradient"), "set_color_ramp", "get_color_ramp");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "color_initial_ramp", PROPERTY_HINT_RESOURCE_TYPE, "Gradient"), "set_color_initial_ramp", "get_color_initial_ramp");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "color_ramp", PropertyHint::RESOURCE_TYPE, "Gradient"), "set_color_ramp", "get_color_ramp");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "color_initial_ramp", PropertyHint::RESOURCE_TYPE, "Gradient"), "set_color_initial_ramp", "get_color_initial_ramp");
 
 	ADD_GROUP("Hue Variation", "hue_");
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "hue_variation_min", PROPERTY_HINT_RANGE, "-1,1,0.01"), "set_param_min", "get_param_min", PARAM_HUE_VARIATION);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "hue_variation_max", PROPERTY_HINT_RANGE, "-1,1,0.01"), "set_param_max", "get_param_max", PARAM_HUE_VARIATION);
-	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "hue_variation_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_HUE_VARIATION);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "hue_variation_min", PropertyHint::RANGE, "-1,1,0.01"), "set_param_min", "get_param_min", PARAM_HUE_VARIATION);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "hue_variation_max", PropertyHint::RANGE, "-1,1,0.01"), "set_param_max", "get_param_max", PARAM_HUE_VARIATION);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "hue_variation_curve", PropertyHint::RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_HUE_VARIATION);
 	ADD_GROUP("Animation", "anim_");
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "anim_speed_min", PROPERTY_HINT_RANGE, "0,128,0.01,or_greater,or_less"), "set_param_min", "get_param_min", PARAM_ANIM_SPEED);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "anim_speed_max", PROPERTY_HINT_RANGE, "0,128,0.01,or_greater,or_less"), "set_param_max", "get_param_max", PARAM_ANIM_SPEED);
-	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "anim_speed_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_ANIM_SPEED);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "anim_offset_min", PROPERTY_HINT_RANGE, "0,1,0.0001"), "set_param_min", "get_param_min", PARAM_ANIM_OFFSET);
-	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "anim_offset_max", PROPERTY_HINT_RANGE, "0,1,0.0001"), "set_param_max", "get_param_max", PARAM_ANIM_OFFSET);
-	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "anim_offset_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_ANIM_OFFSET);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "anim_speed_min", PropertyHint::RANGE, "0,128,0.01,or_greater,or_less"), "set_param_min", "get_param_min", PARAM_ANIM_SPEED);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "anim_speed_max", PropertyHint::RANGE, "0,128,0.01,or_greater,or_less"), "set_param_max", "get_param_max", PARAM_ANIM_SPEED);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "anim_speed_curve", PropertyHint::RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_ANIM_SPEED);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "anim_offset_min", PropertyHint::RANGE, "0,1,0.0001"), "set_param_min", "get_param_min", PARAM_ANIM_OFFSET);
+	ADD_PROPERTYI(PropertyInfo(Variant::FLOAT, "anim_offset_max", PropertyHint::RANGE, "0,1,0.0001"), "set_param_max", "get_param_max", PARAM_ANIM_OFFSET);
+	ADD_PROPERTYI(PropertyInfo(Variant::OBJECT, "anim_offset_curve", PropertyHint::RESOURCE_TYPE, "Curve"), "set_param_curve", "get_param_curve", PARAM_ANIM_OFFSET);
 
 	BIND_ENUM_CONSTANT(PARAM_INITIAL_LINEAR_VELOCITY);
 	BIND_ENUM_CONSTANT(PARAM_ANGULAR_VELOCITY);

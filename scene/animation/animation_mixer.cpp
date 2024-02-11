@@ -117,7 +117,7 @@ void AnimationMixer::_get_property_list(List<PropertyInfo> *p_list) const {
 void AnimationMixer::_validate_property(PropertyInfo &p_property) const {
 #ifdef TOOLS_ENABLED
 	if (editing && (p_property.name == "active" || p_property.name == "deterministic" || p_property.name == "root_motion_track")) {
-		p_property.usage |= PROPERTY_USAGE_READ_ONLY;
+		p_property.usage |= PropertyUsageFlags::READ_ONLY;
 	}
 #endif // TOOLS_ENABLED
 }
@@ -2120,7 +2120,7 @@ void AnimationMixer::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("set_reset_on_save_enabled", "enabled"), &AnimationMixer::set_reset_on_save_enabled);
 	ClassDB::bind_method(D_METHOD("is_reset_on_save_enabled"), &AnimationMixer::is_reset_on_save_enabled);
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "reset_on_save", PROPERTY_HINT_NONE, ""), "set_reset_on_save_enabled", "is_reset_on_save_enabled");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "reset_on_save", PropertyHint::NONE, ""), "set_reset_on_save_enabled", "is_reset_on_save_enabled");
 	ADD_SIGNAL(MethodInfo("mixer_updated")); // For updating dummy player.
 
 	ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "root_node"), "set_root_node", "get_root_node");
@@ -2129,11 +2129,11 @@ void AnimationMixer::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "root_motion_track"), "set_root_motion_track", "get_root_motion_track");
 
 	ADD_GROUP("Audio", "audio_");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "audio_max_polyphony", PROPERTY_HINT_RANGE, "1,127,1"), "set_audio_max_polyphony", "get_audio_max_polyphony");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "audio_max_polyphony", PropertyHint::RANGE, "1,127,1"), "set_audio_max_polyphony", "get_audio_max_polyphony");
 
 	ADD_GROUP("Callback Mode", "callback_mode_");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "callback_mode_process", PROPERTY_HINT_ENUM, "Physics,Idle,Manual"), "set_callback_mode_process", "get_callback_mode_process");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "callback_mode_method", PROPERTY_HINT_ENUM, "Deferred,Immediate"), "set_callback_mode_method", "get_callback_mode_method");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "callback_mode_process", PropertyHint::ENUM, "Physics,Idle,Manual"), "set_callback_mode_process", "get_callback_mode_process");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "callback_mode_method", PropertyHint::ENUM, "Deferred,Immediate"), "set_callback_mode_method", "get_callback_mode_method");
 
 	BIND_ENUM_CONSTANT(ANIMATION_CALLBACK_MODE_PROCESS_PHYSICS);
 	BIND_ENUM_CONSTANT(ANIMATION_CALLBACK_MODE_PROCESS_IDLE);

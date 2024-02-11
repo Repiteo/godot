@@ -2446,7 +2446,7 @@ void Node::get_storable_properties(HashSet<StringName> &r_storable_properties) c
 	List<PropertyInfo> pi;
 	get_property_list(&pi);
 	for (List<PropertyInfo>::Element *E = pi.front(); E; E = E->next()) {
-		if ((E->get().usage & PROPERTY_USAGE_STORAGE)) {
+		if ((E->get().usage & PropertyUsageFlags::STORAGE)) {
 			r_storable_properties.insert(E->get().name);
 		}
 	}
@@ -2653,7 +2653,7 @@ Node *Node::_duplicate(int p_flags, HashMap<const Node *, Node *> *r_duplimap) c
 		N->get()->get_property_list(&plist);
 
 		for (const PropertyInfo &E : plist) {
-			if (!(E.usage & PROPERTY_USAGE_STORAGE)) {
+			if (!(E.usage & PropertyUsageFlags::STORAGE)) {
 				continue;
 			}
 			String name = E.name;
@@ -2663,7 +2663,7 @@ Node *Node::_duplicate(int p_flags, HashMap<const Node *, Node *> *r_duplimap) c
 
 			Variant value = N->get()->get(name).duplicate(true);
 
-			if (E.usage & PROPERTY_USAGE_ALWAYS_DUPLICATE) {
+			if (E.usage & PropertyUsageFlags::ALWAYS_DUPLICATE) {
 				Resource *res = Object::cast_to<Resource>(value);
 				if (res) { // Duplicate only if it's a resource
 					current_node->set(name, res->duplicate());
@@ -2733,7 +2733,7 @@ void Node::remap_node_resources(Node *p_node, const HashMap<Ref<Resource>, Ref<R
 	p_node->get_property_list(&props);
 
 	for (const PropertyInfo &E : props) {
-		if (!(E.usage & PROPERTY_USAGE_STORAGE)) {
+		if (!(E.usage & PropertyUsageFlags::STORAGE)) {
 			continue;
 		}
 
@@ -2759,7 +2759,7 @@ void Node::remap_nested_resources(Ref<Resource> p_resource, const HashMap<Ref<Re
 	p_resource->get_property_list(&props);
 
 	for (const PropertyInfo &E : props) {
-		if (!(E.usage & PROPERTY_USAGE_STORAGE)) {
+		if (!(E.usage & PropertyUsageFlags::STORAGE)) {
 			continue;
 		}
 
@@ -3403,8 +3403,8 @@ void Node::notify_thread_safe(int p_notification) {
 }
 
 void Node::_bind_methods() {
-	GLOBAL_DEF(PropertyInfo(Variant::INT, "editor/naming/node_name_num_separator", PROPERTY_HINT_ENUM, "None,Space,Underscore,Dash"), 0);
-	GLOBAL_DEF(PropertyInfo(Variant::INT, "editor/naming/node_name_casing", PROPERTY_HINT_ENUM, "PascalCase,camelCase,snake_case"), NAME_CASING_PASCAL_CASE);
+	GLOBAL_DEF(PropertyInfo(Variant::INT, "editor/naming/node_name_num_separator", PropertyHint::ENUM, "None,Space,Underscore,Dash"), 0);
+	GLOBAL_DEF(PropertyInfo(Variant::INT, "editor/naming/node_name_casing", PropertyHint::ENUM, "PascalCase,camelCase,snake_case"), NAME_CASING_PASCAL_CASE);
 
 	ClassDB::bind_static_method("Node", D_METHOD("print_orphan_nodes"), &Node::print_orphan_nodes);
 	ClassDB::bind_method(D_METHOD("add_sibling", "sibling", "force_readable_name"), &Node::add_sibling, DEFVAL(false));
@@ -3529,7 +3529,7 @@ void Node::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("_set_property_pinned", "property", "pinned"), &Node::set_property_pinned);
 #endif
 
-	ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "_import_path", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_import_path", "_get_import_path");
+	ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "_import_path", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL), "_set_import_path", "_get_import_path");
 
 	{
 		MethodInfo mi;
@@ -3537,12 +3537,12 @@ void Node::_bind_methods() {
 		mi.arguments.push_back(PropertyInfo(Variant::STRING_NAME, "method"));
 
 		mi.name = "rpc";
-		ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "rpc", &Node::_rpc_bind, mi);
+		ClassDB::bind_vararg_method(MethodFlags::DEFAULT, "rpc", &Node::_rpc_bind, mi);
 
 		mi.arguments.push_front(PropertyInfo(Variant::INT, "peer_id"));
 
 		mi.name = "rpc_id";
-		ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "rpc_id", &Node::_rpc_id_bind, mi);
+		ClassDB::bind_vararg_method(MethodFlags::DEFAULT, "rpc_id", &Node::_rpc_id_bind, mi);
 	}
 
 	ClassDB::bind_method(D_METHOD("update_configuration_warnings"), &Node::update_configuration_warnings);
@@ -3552,7 +3552,7 @@ void Node::_bind_methods() {
 		mi.name = "call_deferred_thread_group";
 		mi.arguments.push_back(PropertyInfo(Variant::STRING_NAME, "method"));
 
-		ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "call_deferred_thread_group", &Node::_call_deferred_thread_group_bind, mi, varray(), false);
+		ClassDB::bind_vararg_method(MethodFlags::DEFAULT, "call_deferred_thread_group", &Node::_call_deferred_thread_group_bind, mi, varray(), false);
 	}
 	ClassDB::bind_method(D_METHOD("set_deferred_thread_group", "property", "value"), &Node::set_deferred_thread_group);
 	ClassDB::bind_method(D_METHOD("notify_deferred_thread_group", "what"), &Node::notify_deferred_thread_group);
@@ -3562,7 +3562,7 @@ void Node::_bind_methods() {
 		mi.name = "call_thread_safe";
 		mi.arguments.push_back(PropertyInfo(Variant::STRING_NAME, "method"));
 
-		ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "call_thread_safe", &Node::_call_thread_safe_bind, mi, varray(), false);
+		ClassDB::bind_vararg_method(MethodFlags::DEFAULT, "call_thread_safe", &Node::_call_thread_safe_bind, mi, varray(), false);
 	}
 	ClassDB::bind_method(D_METHOD("set_thread_safe", "property", "value"), &Node::set_thread_safe);
 	ClassDB::bind_method(D_METHOD("notify_thread_safe", "what"), &Node::notify_thread_safe);
@@ -3640,30 +3640,30 @@ void Node::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("tree_entered"));
 	ADD_SIGNAL(MethodInfo("tree_exiting"));
 	ADD_SIGNAL(MethodInfo("tree_exited"));
-	ADD_SIGNAL(MethodInfo("child_entered_tree", PropertyInfo(Variant::OBJECT, "node", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT, "Node")));
-	ADD_SIGNAL(MethodInfo("child_exiting_tree", PropertyInfo(Variant::OBJECT, "node", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT, "Node")));
+	ADD_SIGNAL(MethodInfo("child_entered_tree", PropertyInfo(Variant::OBJECT, "node", PropertyHint::NONE, "", PropertyUsageFlags::DEFAULT, "Node")));
+	ADD_SIGNAL(MethodInfo("child_exiting_tree", PropertyInfo(Variant::OBJECT, "node", PropertyHint::NONE, "", PropertyUsageFlags::DEFAULT, "Node")));
 
 	ADD_SIGNAL(MethodInfo("child_order_changed"));
-	ADD_SIGNAL(MethodInfo("replacing_by", PropertyInfo(Variant::OBJECT, "node", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT, "Node")));
-	ADD_SIGNAL(MethodInfo("editor_description_changed", PropertyInfo(Variant::OBJECT, "node", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT, "Node")));
+	ADD_SIGNAL(MethodInfo("replacing_by", PropertyInfo(Variant::OBJECT, "node", PropertyHint::NONE, "", PropertyUsageFlags::DEFAULT, "Node")));
+	ADD_SIGNAL(MethodInfo("editor_description_changed", PropertyInfo(Variant::OBJECT, "node", PropertyHint::NONE, "", PropertyUsageFlags::DEFAULT, "Node")));
 
-	ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "name", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_name", "get_name");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "unique_name_in_owner", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_unique_name_in_owner", "is_unique_name_in_owner");
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "scene_file_path", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_scene_file_path", "get_scene_file_path");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "owner", PROPERTY_HINT_RESOURCE_TYPE, "Node", PROPERTY_USAGE_NONE), "set_owner", "get_owner");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "multiplayer", PROPERTY_HINT_RESOURCE_TYPE, "MultiplayerAPI", PROPERTY_USAGE_NONE), "", "get_multiplayer");
+	ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "name", PropertyHint::NONE, "", PropertyUsageFlags::NONE), "set_name", "get_name");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "unique_name_in_owner", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR), "set_unique_name_in_owner", "is_unique_name_in_owner");
+	ADD_PROPERTY(PropertyInfo(Variant::STRING, "scene_file_path", PropertyHint::NONE, "", PropertyUsageFlags::NONE), "set_scene_file_path", "get_scene_file_path");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "owner", PropertyHint::RESOURCE_TYPE, "Node", PropertyUsageFlags::NONE), "set_owner", "get_owner");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "multiplayer", PropertyHint::RESOURCE_TYPE, "MultiplayerAPI", PropertyUsageFlags::NONE), "", "get_multiplayer");
 
 	ADD_GROUP("Process", "process_");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "process_mode", PROPERTY_HINT_ENUM, "Inherit,Pausable,When Paused,Always,Disabled"), "set_process_mode", "get_process_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "process_mode", PropertyHint::ENUM, "Inherit,Pausable,When Paused,Always,Disabled"), "set_process_mode", "get_process_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "process_priority"), "set_process_priority", "get_process_priority");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "process_physics_priority"), "set_physics_process_priority", "get_physics_process_priority");
 	ADD_SUBGROUP("Thread Group", "process_thread");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "process_thread_group", PROPERTY_HINT_ENUM, "Inherit,Main Thread,Sub Thread"), "set_process_thread_group", "get_process_thread_group");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "process_thread_group", PropertyHint::ENUM, "Inherit,Main Thread,Sub Thread"), "set_process_thread_group", "get_process_thread_group");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "process_thread_group_order"), "set_process_thread_group_order", "get_process_thread_group_order");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "process_thread_messages", PROPERTY_HINT_FLAGS, "Process,Physics Process"), "set_process_thread_messages", "get_process_thread_messages");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "process_thread_messages", PropertyHint::FLAGS, "Process,Physics Process"), "set_process_thread_messages", "get_process_thread_messages");
 
 	ADD_GROUP("Editor Description", "editor_");
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "editor_description", PROPERTY_HINT_MULTILINE_TEXT), "set_editor_description", "get_editor_description");
+	ADD_PROPERTY(PropertyInfo(Variant::STRING, "editor_description", PropertyHint::MULTILINE_TEXT), "set_editor_description", "get_editor_description");
 
 	GDVIRTUAL_BIND(_process, "delta");
 	GDVIRTUAL_BIND(_physics_process, "delta");

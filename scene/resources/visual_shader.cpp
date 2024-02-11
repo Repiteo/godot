@@ -429,8 +429,8 @@ void VisualShaderNode::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_default_input_values"), &VisualShaderNode::get_default_input_values);
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "output_port_for_preview"), "set_output_port_for_preview", "get_output_port_for_preview");
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "default_input_values", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "set_default_input_values", "get_default_input_values");
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "expanded_output_ports", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_output_ports_expanded", "_get_output_ports_expanded");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "default_input_values", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL), "set_default_input_values", "get_default_input_values");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "expanded_output_ports", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL), "_set_output_ports_expanded", "_get_output_ports_expanded");
 
 	BIND_ENUM_CONSTANT(PORT_TYPE_SCALAR);
 	BIND_ENUM_CONSTANT(PORT_TYPE_SCALAR_INT);
@@ -797,8 +797,8 @@ void VisualShaderNodeCustom::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("get_option_index", "option"), &VisualShaderNodeCustom::get_option_index);
 
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "initialized", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_initialized", "_is_initialized");
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "properties", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_properties", "_get_properties");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "initialized", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL), "_set_initialized", "_is_initialized");
+	ADD_PROPERTY(PropertyInfo(Variant::STRING, "properties", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL), "_set_properties", "_get_properties");
 }
 
 VisualShaderNodeCustom::VisualShaderNodeCustom() {
@@ -1692,7 +1692,7 @@ void VisualShader::reset_state() {
 
 void VisualShader::_get_property_list(List<PropertyInfo> *p_list) const {
 	//mode
-	p_list->push_back(PropertyInfo(Variant::INT, PNAME("mode"), PROPERTY_HINT_ENUM, "Node3D,CanvasItem,Particles,Sky,Fog"));
+	p_list->push_back(PropertyInfo(Variant::INT, PNAME("mode"), PropertyHint::ENUM, "Node3D,CanvasItem,Particles,Sky,Fog"));
 	//render modes
 
 	HashMap<String, String> blend_mode_enums;
@@ -1721,7 +1721,7 @@ void VisualShader::_get_property_list(List<PropertyInfo> *p_list) const {
 	}
 
 	for (const KeyValue<String, String> &E : blend_mode_enums) {
-		p_list->push_back(PropertyInfo(Variant::INT, vformat("%s/%s", PNAME("modes"), E.key), PROPERTY_HINT_ENUM, E.value));
+		p_list->push_back(PropertyInfo(Variant::INT, vformat("%s/%s", PNAME("modes"), E.key), PropertyHint::ENUM, E.value));
 	}
 
 	for (const String &E : toggles) {
@@ -1739,20 +1739,20 @@ void VisualShader::_get_property_list(List<PropertyInfo> *p_list) const {
 			prop_name += "/" + itos(E.key);
 
 			if (E.key != NODE_ID_OUTPUT) {
-				p_list->push_back(PropertyInfo(Variant::OBJECT, prop_name + "/node", PROPERTY_HINT_RESOURCE_TYPE, "VisualShaderNode", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_ALWAYS_DUPLICATE));
+				p_list->push_back(PropertyInfo(Variant::OBJECT, prop_name + "/node", PropertyHint::RESOURCE_TYPE, "VisualShaderNode", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::ALWAYS_DUPLICATE));
 			}
-			p_list->push_back(PropertyInfo(Variant::VECTOR2, prop_name + "/position", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
+			p_list->push_back(PropertyInfo(Variant::VECTOR2, prop_name + "/position", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR));
 
 			if (Object::cast_to<VisualShaderNodeGroupBase>(E.value.node.ptr()) != nullptr) {
-				p_list->push_back(PropertyInfo(Variant::VECTOR2, prop_name + "/size", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
-				p_list->push_back(PropertyInfo(Variant::STRING, prop_name + "/input_ports", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
-				p_list->push_back(PropertyInfo(Variant::STRING, prop_name + "/output_ports", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
+				p_list->push_back(PropertyInfo(Variant::VECTOR2, prop_name + "/size", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR));
+				p_list->push_back(PropertyInfo(Variant::STRING, prop_name + "/input_ports", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR));
+				p_list->push_back(PropertyInfo(Variant::STRING, prop_name + "/output_ports", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR));
 			}
 			if (Object::cast_to<VisualShaderNodeExpression>(E.value.node.ptr()) != nullptr) {
-				p_list->push_back(PropertyInfo(Variant::STRING, prop_name + "/expression", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
+				p_list->push_back(PropertyInfo(Variant::STRING, prop_name + "/expression", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR));
 			}
 		}
-		p_list->push_back(PropertyInfo(Variant::PACKED_INT32_ARRAY, "nodes/" + String(type_string[i]) + "/connections", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR));
+		p_list->push_back(PropertyInfo(Variant::PACKED_INT32_ARRAY, "nodes/" + String(type_string[i]) + "/connections", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR));
 	}
 }
 
@@ -2798,7 +2798,7 @@ void VisualShader::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("_update_shader"), &VisualShader::_update_shader);
 
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "graph_offset", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_graph_offset", "get_graph_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "graph_offset", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR), "set_graph_offset", "get_graph_offset");
 
 	ADD_PROPERTY_DEFAULT("code", ""); // Inherited from Shader, prevents showing default code as override in docs.
 
@@ -3454,7 +3454,7 @@ void VisualShaderNodeInput::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_input_name"), &VisualShaderNodeInput::get_input_name);
 	ClassDB::bind_method(D_METHOD("get_input_real_name"), &VisualShaderNodeInput::get_input_real_name);
 
-	ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "input_name", PROPERTY_HINT_ENUM, ""), "set_input_name", "get_input_name");
+	ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "input_name", PropertyHint::ENUM, ""), "set_input_name", "get_input_name");
 	ADD_SIGNAL(MethodInfo("input_type_changed"));
 }
 
@@ -3722,8 +3722,8 @@ void VisualShaderNodeParameterRef::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("_set_parameter_type", "type"), &VisualShaderNodeParameterRef::_set_parameter_type);
 	ClassDB::bind_method(D_METHOD("_get_parameter_type"), &VisualShaderNodeParameterRef::_get_parameter_type);
 
-	ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "parameter_name", PROPERTY_HINT_ENUM, ""), "set_parameter_name", "get_parameter_name");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "param_type", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_parameter_type", "_get_parameter_type");
+	ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "parameter_name", PropertyHint::ENUM, ""), "set_parameter_name", "get_parameter_name");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "param_type", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL), "_set_parameter_type", "_get_parameter_type");
 }
 
 Vector<StringName> VisualShaderNodeParameterRef::get_editable_properties() const {
@@ -3997,7 +3997,7 @@ void VisualShaderNodeParameter::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_qualifier"), &VisualShaderNodeParameter::get_qualifier);
 
 	ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "parameter_name"), "set_parameter_name", "get_parameter_name");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "qualifier", PROPERTY_HINT_ENUM, "None,Global,Instance"), "set_qualifier", "get_qualifier");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "qualifier", PropertyHint::ENUM, "None,Global,Instance"), "set_qualifier", "get_qualifier");
 
 	BIND_ENUM_CONSTANT(QUAL_NONE);
 	BIND_ENUM_CONSTANT(QUAL_GLOBAL);
@@ -4916,7 +4916,7 @@ void VisualShaderNodeVarying::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_varying_type"), &VisualShaderNodeVarying::get_varying_type);
 
 	ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "varying_name"), "set_varying_name", "get_varying_name");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "varying_type", PROPERTY_HINT_ENUM, "Float,Int,Vector2,Vector3,Vector4,Boolean,Transform"), "set_varying_type", "get_varying_type");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "varying_type", PropertyHint::ENUM, "Float,Int,Vector2,Vector3,Vector4,Boolean,Transform"), "set_varying_type", "get_varying_type");
 }
 
 String VisualShaderNodeVarying::get_type_str() const {

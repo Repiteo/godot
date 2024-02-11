@@ -160,7 +160,7 @@ struct GetTypeInfo<TypedArray<T>> {
 	static const Variant::Type VARIANT_TYPE = Variant::ARRAY;
 	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;
 	static inline PropertyInfo get_class_info() {
-		return PropertyInfo(Variant::ARRAY, String(), PROPERTY_HINT_ARRAY_TYPE, T::get_class_static());
+		return PropertyInfo(Variant::ARRAY, String(), PropertyHint::ARRAY_TYPE, T::get_class_static());
 	}
 };
 
@@ -169,7 +169,7 @@ struct GetTypeInfo<const TypedArray<T> &> {
 	static const Variant::Type VARIANT_TYPE = Variant::ARRAY;
 	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;
 	static inline PropertyInfo get_class_info() {
-		return PropertyInfo(Variant::ARRAY, String(), PROPERTY_HINT_ARRAY_TYPE, T::get_class_static());
+		return PropertyInfo(Variant::ARRAY, String(), PropertyHint::ARRAY_TYPE, T::get_class_static());
 	}
 };
 
@@ -179,7 +179,7 @@ struct GetTypeInfo<const TypedArray<T> &> {
 		static const Variant::Type VARIANT_TYPE = Variant::ARRAY;                                                            \
 		static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;                                        \
 		static inline PropertyInfo get_class_info() {                                                                        \
-			return PropertyInfo(Variant::ARRAY, String(), PROPERTY_HINT_ARRAY_TYPE, Variant::get_type_name(m_variant_type)); \
+			return PropertyInfo(Variant::ARRAY, String(), PropertyHint::ARRAY_TYPE, Variant::get_type_name(m_variant_type)); \
 		}                                                                                                                    \
 	};                                                                                                                       \
 	template <>                                                                                                              \
@@ -187,7 +187,7 @@ struct GetTypeInfo<const TypedArray<T> &> {
 		static const Variant::Type VARIANT_TYPE = Variant::ARRAY;                                                            \
 		static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;                                        \
 		static inline PropertyInfo get_class_info() {                                                                        \
-			return PropertyInfo(Variant::ARRAY, String(), PROPERTY_HINT_ARRAY_TYPE, Variant::get_type_name(m_variant_type)); \
+			return PropertyInfo(Variant::ARRAY, String(), PropertyHint::ARRAY_TYPE, Variant::get_type_name(m_variant_type)); \
 		}                                                                                                                    \
 	};
 

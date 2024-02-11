@@ -122,7 +122,7 @@ void MaterialStorage::get_shader_parameter_list(RID p_shader, List<PropertyInfo>
 
 		if (group != last_group) {
 			PropertyInfo pi;
-			pi.usage = PROPERTY_USAGE_GROUP;
+			pi.usage = PropertyUsageFlags::GROUP;
 			pi.name = group;
 			p_param_list->push_back(pi);
 

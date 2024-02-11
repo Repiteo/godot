@@ -97,7 +97,7 @@ void ShaderGlobalsOverride::_get_property_list(List<PropertyInfo> *p_list) const
 	for (int i = 0; i < variables.size(); i++) {
 		PropertyInfo pinfo;
 		pinfo.name = "params/" + variables[i];
-		pinfo.usage = PROPERTY_USAGE_EDITOR | PROPERTY_USAGE_CHECKABLE;
+		pinfo.usage = PropertyUsageFlags::EDITOR | PropertyUsageFlags::CHECKABLE;
 
 		switch (RS::get_singleton()->global_shader_parameter_get_type(variables[i])) {
 			case RS::GLOBAL_VAR_TYPE_BOOL: {
@@ -105,17 +105,17 @@ void ShaderGlobalsOverride::_get_property_list(List<PropertyInfo> *p_list) const
 			} break;
 			case RS::GLOBAL_VAR_TYPE_BVEC2: {
 				pinfo.type = Variant::INT;
-				pinfo.hint = PROPERTY_HINT_FLAGS;
+				pinfo.hint = PropertyHint::FLAGS;
 				pinfo.hint_string = "x,y";
 			} break;
 			case RS::GLOBAL_VAR_TYPE_BVEC3: {
 				pinfo.type = Variant::INT;
-				pinfo.hint = PROPERTY_HINT_FLAGS;
+				pinfo.hint = PropertyHint::FLAGS;
 				pinfo.hint_string = "x,y,z";
 			} break;
 			case RS::GLOBAL_VAR_TYPE_BVEC4: {
 				pinfo.type = Variant::INT;
-				pinfo.hint = PROPERTY_HINT_FLAGS;
+				pinfo.hint = PropertyHint::FLAGS;
 				pinfo.hint_string = "x,y,z,w";
 			} break;
 			case RS::GLOBAL_VAR_TYPE_INT: {
@@ -180,22 +180,22 @@ void ShaderGlobalsOverride::_get_property_list(List<PropertyInfo> *p_list) const
 			} break;
 			case RS::GLOBAL_VAR_TYPE_SAMPLER2D: {
 				pinfo.type = Variant::OBJECT;
-				pinfo.hint = PROPERTY_HINT_RESOURCE_TYPE;
+				pinfo.hint = PropertyHint::RESOURCE_TYPE;
 				pinfo.hint_string = "Texture2D";
 			} break;
 			case RS::GLOBAL_VAR_TYPE_SAMPLER2DARRAY: {
 				pinfo.type = Variant::OBJECT;
-				pinfo.hint = PROPERTY_HINT_RESOURCE_TYPE;
+				pinfo.hint = PropertyHint::RESOURCE_TYPE;
 				pinfo.hint_string = "Texture2DArray";
 			} break;
 			case RS::GLOBAL_VAR_TYPE_SAMPLER3D: {
 				pinfo.type = Variant::OBJECT;
-				pinfo.hint = PROPERTY_HINT_RESOURCE_TYPE;
+				pinfo.hint = PropertyHint::RESOURCE_TYPE;
 				pinfo.hint_string = "Texture3D";
 			} break;
 			case RS::GLOBAL_VAR_TYPE_SAMPLERCUBE: {
 				pinfo.type = Variant::OBJECT;
-				pinfo.hint = PROPERTY_HINT_RESOURCE_TYPE;
+				pinfo.hint = PropertyHint::RESOURCE_TYPE;
 				pinfo.hint_string = "Cubemap";
 			} break;
 			default: {
@@ -212,8 +212,8 @@ void ShaderGlobalsOverride::_get_property_list(List<PropertyInfo> *p_list) const
 
 		Override *o = overrides.getptr(variables[i]);
 		if (o->in_use && o->override.get_type() != Variant::NIL) {
-			pinfo.usage |= PROPERTY_USAGE_CHECKED;
-			pinfo.usage |= PROPERTY_USAGE_STORAGE;
+			pinfo.usage |= PropertyUsageFlags::CHECKED;
+			pinfo.usage |= PropertyUsageFlags::STORAGE;
 		}
 
 		p_list->push_back(pinfo);

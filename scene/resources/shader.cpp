@@ -122,7 +122,7 @@ void Shader::get_shader_uniform_list(List<PropertyInfo> *p_params, bool p_get_gr
 	RenderingServer::get_singleton()->get_shader_parameter_list(shader, &local);
 
 	for (PropertyInfo &pi : local) {
-		bool is_group = pi.usage == PROPERTY_USAGE_GROUP || pi.usage == PROPERTY_USAGE_SUBGROUP;
+		bool is_group = pi.usage == PropertyUsageFlags::GROUP || pi.usage == PropertyUsageFlags::SUBGROUP;
 		if (!p_get_groups && is_group) {
 			continue;
 		}
@@ -209,7 +209,7 @@ void Shader::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("get_shader_uniform_list", "get_groups"), &Shader::_get_shader_uniform_list, DEFVAL(false));
 
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "code", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR), "set_code", "get_code");
+	ADD_PROPERTY(PropertyInfo(Variant::STRING, "code", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR), "set_code", "get_code");
 
 	BIND_ENUM_CONSTANT(MODE_SPATIAL);
 	BIND_ENUM_CONSTANT(MODE_CANVAS_ITEM);

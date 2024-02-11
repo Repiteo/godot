@@ -211,7 +211,7 @@ void AudioStreamPlayerInternal::get_property_list(List<PropertyInfo> *p_list) co
 
 		const ParameterData *pd = playback_parameters.getptr(pi.name);
 		if (pd && pd->value == K.default_value) {
-			pi.usage &= ~PROPERTY_USAGE_STORAGE;
+			pi.usage &= ~PropertyUsageFlags::STORAGE;
 		}
 
 		p_list->push_back(pi);

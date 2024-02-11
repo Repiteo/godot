@@ -1834,22 +1834,22 @@ void ItemList::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("force_update_list_size"), &ItemList::force_update_list_size);
 
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "select_mode", PROPERTY_HINT_ENUM, "Single,Multi"), "set_select_mode", "get_select_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "select_mode", PropertyHint::ENUM, "Single,Multi"), "set_select_mode", "get_select_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "allow_reselect"), "set_allow_reselect", "get_allow_reselect");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "allow_rmb_select"), "set_allow_rmb_select", "get_allow_rmb_select");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "allow_search"), "set_allow_search", "get_allow_search");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "max_text_lines", PROPERTY_HINT_RANGE, "1,10,1,or_greater"), "set_max_text_lines", "get_max_text_lines");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "max_text_lines", PropertyHint::RANGE, "1,10,1,or_greater"), "set_max_text_lines", "get_max_text_lines");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "auto_height"), "set_auto_height", "has_auto_height");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "text_overrun_behavior", PROPERTY_HINT_ENUM, "Trim Nothing,Trim Characters,Trim Words,Ellipsis,Word Ellipsis"), "set_text_overrun_behavior", "get_text_overrun_behavior");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "text_overrun_behavior", PropertyHint::ENUM, "Trim Nothing,Trim Characters,Trim Words,Ellipsis,Word Ellipsis"), "set_text_overrun_behavior", "get_text_overrun_behavior");
 	ADD_ARRAY_COUNT("Items", "item_count", "set_item_count", "get_item_count", "item_");
 	ADD_GROUP("Columns", "");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "max_columns", PROPERTY_HINT_RANGE, "0,10,1,or_greater"), "set_max_columns", "get_max_columns");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "max_columns", PropertyHint::RANGE, "0,10,1,or_greater"), "set_max_columns", "get_max_columns");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "same_column_width"), "set_same_column_width", "is_same_column_width");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "fixed_column_width", PROPERTY_HINT_RANGE, "0,100,1,or_greater,suffix:px"), "set_fixed_column_width", "get_fixed_column_width");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "fixed_column_width", PropertyHint::RANGE, "0,100,1,or_greater,suffix:px"), "set_fixed_column_width", "get_fixed_column_width");
 	ADD_GROUP("Icon", "");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "icon_mode", PROPERTY_HINT_ENUM, "Top,Left"), "set_icon_mode", "get_icon_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "icon_mode", PropertyHint::ENUM, "Top,Left"), "set_icon_mode", "get_icon_mode");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "icon_scale"), "set_icon_scale", "get_icon_scale");
-	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "fixed_icon_size", PROPERTY_HINT_NONE, "suffix:px"), "set_fixed_icon_size", "get_fixed_icon_size");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "fixed_icon_size", PropertyHint::NONE, "suffix:px"), "set_fixed_icon_size", "get_fixed_icon_size");
 
 	BIND_ENUM_CONSTANT(ICON_MODE_TOP);
 	BIND_ENUM_CONSTANT(ICON_MODE_LEFT);
@@ -1890,7 +1890,7 @@ void ItemList::_bind_methods() {
 
 	base_property_helper.set_prefix("item_");
 	base_property_helper.register_property(PropertyInfo(Variant::STRING, "text"), defaults.text, "set_item_text", "get_item_text");
-	base_property_helper.register_property(PropertyInfo(Variant::OBJECT, "icon", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), defaults.icon, "set_item_icon", "get_item_icon");
+	base_property_helper.register_property(PropertyInfo(Variant::OBJECT, "icon", PropertyHint::RESOURCE_TYPE, "Texture2D"), defaults.icon, "set_item_icon", "get_item_icon");
 	base_property_helper.register_property(PropertyInfo(Variant::BOOL, "selectable"), defaults.selectable, "set_item_selectable", "is_item_selectable");
 	base_property_helper.register_property(PropertyInfo(Variant::BOOL, "disabled"), defaults.disabled, "set_item_disabled", "is_item_disabled");
 }

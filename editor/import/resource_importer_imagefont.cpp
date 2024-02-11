@@ -66,10 +66,10 @@ void ResourceImporterImageFont::get_import_options(const String &p_path, List<Im
 	r_options->push_back(ImportOption(PropertyInfo(Variant::RECT2I, "image_margin"), Rect2i()));
 	r_options->push_back(ImportOption(PropertyInfo(Variant::RECT2I, "character_margin"), Rect2i()));
 
-	r_options->push_back(ImportOption(PropertyInfo(Variant::ARRAY, "fallbacks", PROPERTY_HINT_ARRAY_TYPE, MAKE_RESOURCE_TYPE_HINT("Font")), Array()));
+	r_options->push_back(ImportOption(PropertyInfo(Variant::ARRAY, "fallbacks", PropertyHint::ARRAY_TYPE, MAKE_RESOURCE_TYPE_HINT("Font")), Array()));
 
 	r_options->push_back(ImportOption(PropertyInfo(Variant::BOOL, "compress"), true));
-	r_options->push_back(ImportOption(PropertyInfo(Variant::INT, "scaling_mode", PROPERTY_HINT_ENUM, "Disabled,Enabled (Integer),Enabled (Fractional)"), TextServer::FIXED_SIZE_SCALE_ENABLED));
+	r_options->push_back(ImportOption(PropertyInfo(Variant::INT, "scaling_mode", PropertyHint::ENUM, "Disabled,Enabled (Integer),Enabled (Fractional)"), TextServer::FIXED_SIZE_SCALE_ENABLED));
 }
 
 bool ResourceImporterImageFont::_decode_range(const String &p_token, int32_t &r_pos) {

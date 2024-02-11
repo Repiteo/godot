@@ -125,7 +125,7 @@ void InspectorDock::_menu_option_confirm(int p_option, bool p_confirmed) {
 					current->get_property_list(&props);
 
 					for (List<PropertyInfo>::Element *E = props.front(); E; E = E->next()) {
-						if (!(E->get().usage & PROPERTY_USAGE_STORAGE)) {
+						if (!(E->get().usage & PropertyUsageFlags::STORAGE)) {
 							continue;
 						}
 
@@ -165,7 +165,7 @@ void InspectorDock::_menu_option_confirm(int p_option, bool p_confirmed) {
 					current->get_property_list(&props);
 					HashMap<Ref<Resource>, Ref<Resource>> duplicates;
 					for (const PropertyInfo &prop_info : props) {
-						if (!(prop_info.usage & PROPERTY_USAGE_STORAGE)) {
+						if (!(prop_info.usage & PropertyUsageFlags::STORAGE)) {
 							continue;
 						}
 
@@ -568,7 +568,7 @@ void InspectorDock::update(Object *p_object) {
 		List<MethodInfo>::Element *I = methods.front();
 		int i = 0;
 		while (I) {
-			if (I->get().flags & METHOD_FLAG_EDITOR) {
+			if (I->get().flags & MethodFlags::EDITOR) {
 				if (!found) {
 					p->add_separator();
 					found = true;

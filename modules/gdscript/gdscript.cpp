@@ -964,7 +964,7 @@ bool GDScript::_set(const StringName &p_name, const Variant &p_value) {
 }
 
 void GDScript::_get_property_list(List<PropertyInfo> *p_properties) const {
-	p_properties->push_back(PropertyInfo(Variant::STRING, "script/source", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
+	p_properties->push_back(PropertyInfo(Variant::STRING, "script/source", PropertyHint::NONE, "", PropertyUsageFlags::NO_EDITOR | PropertyUsageFlags::INTERNAL));
 
 	List<const GDScript *> classes;
 	const GDScript *top = this;
@@ -990,7 +990,7 @@ void GDScript::_get_property_list(List<PropertyInfo> *p_properties) const {
 }
 
 void GDScript::_bind_methods() {
-	ClassDB::bind_vararg_method(METHOD_FLAGS_DEFAULT, "new", &GDScript::_new, MethodInfo("new"));
+	ClassDB::bind_vararg_method(MethodFlags::DEFAULT, "new", &GDScript::_new, MethodInfo("new"));
 }
 
 void GDScript::set_path(const String &p_path, bool p_take_over) {
@@ -1800,7 +1800,7 @@ void GDScriptInstance::get_property_list(List<PropertyInfo> *p_properties) const
 						pinfo.class_name = d["class_name"];
 					}
 
-					ERR_CONTINUE(pinfo.name.is_empty() && (pinfo.usage & PROPERTY_USAGE_STORAGE));
+					ERR_CONTINUE(pinfo.name.is_empty() && (pinfo.usage & PropertyUsageFlags::STORAGE));
 					ERR_CONTINUE(pinfo.type < 0 || pinfo.type >= Variant::VARIANT_MAX);
 
 					props.push_back(pinfo);
@@ -2739,7 +2739,7 @@ GDScriptLanguage::GDScriptLanguage() {
 	profiling = false;
 	script_frame_time = 0;
 
-	int dmcs = GLOBAL_DEF(PropertyInfo(Variant::INT, "debug/settings/gdscript/max_call_stack", PROPERTY_HINT_RANGE, "512," + itos(GDScriptFunction::MAX_CALL_DEPTH - 1) + ",1"), 1024);
+	int dmcs = GLOBAL_DEF(PropertyInfo(Variant::INT, "debug/settings/gdscript/max_call_stack", PropertyHint::RANGE, "512," + itos(GDScriptFunction::MAX_CALL_DEPTH - 1) + ",1"), 1024);
 
 	if (EngineDebugger::is_active()) {
 		//debugging enabled!

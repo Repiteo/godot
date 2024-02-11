@@ -259,9 +259,9 @@ bool CollisionShape2D::_property_get_revert(const StringName &p_name, Variant &r
 void CollisionShape2D::_validate_property(PropertyInfo &p_property) const {
 	if (p_property.name == "debug_color") {
 		if (debug_color == _get_default_debug_color()) {
-			p_property.usage = PROPERTY_USAGE_DEFAULT & ~PROPERTY_USAGE_STORAGE;
+			p_property.usage = PropertyUsageFlags::DEFAULT & ~PropertyUsageFlags::STORAGE;
 		} else {
-			p_property.usage = PROPERTY_USAGE_DEFAULT;
+			p_property.usage = PropertyUsageFlags::DEFAULT;
 		}
 	}
 }
@@ -278,10 +278,10 @@ void CollisionShape2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_debug_color", "color"), &CollisionShape2D::set_debug_color);
 	ClassDB::bind_method(D_METHOD("get_debug_color"), &CollisionShape2D::get_debug_color);
 
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "shape", PROPERTY_HINT_RESOURCE_TYPE, "Shape2D"), "set_shape", "get_shape");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "shape", PropertyHint::RESOURCE_TYPE, "Shape2D"), "set_shape", "get_shape");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "disabled"), "set_disabled", "is_disabled");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "one_way_collision"), "set_one_way_collision", "is_one_way_collision_enabled");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "one_way_collision_margin", PROPERTY_HINT_RANGE, "0,128,0.1,suffix:px"), "set_one_way_collision_margin", "get_one_way_collision_margin");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "one_way_collision_margin", PropertyHint::RANGE, "0,128,0.1,suffix:px"), "set_one_way_collision_margin", "get_one_way_collision_margin");
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "debug_color"), "set_debug_color", "get_debug_color");
 	// Default value depends on a project setting, override for doc generation purposes.
 	ADD_PROPERTY_DEFAULT("debug_color", Color());

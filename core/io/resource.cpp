@@ -178,7 +178,7 @@ Error Resource::copy_from(const Ref<Resource> &p_resource) {
 	p_resource->get_property_list(&pi);
 
 	for (const PropertyInfo &E : pi) {
-		if (!(E.usage & PROPERTY_USAGE_STORAGE)) {
+		if (!(E.usage & PropertyUsageFlags::STORAGE)) {
 			continue;
 		}
 		if (E.name == "resource_path") {
@@ -265,7 +265,7 @@ Ref<Resource> Resource::duplicate_for_local_scene(Node *p_for_scene, HashMap<Ref
 	r->local_scene = p_for_scene;
 
 	for (const PropertyInfo &E : plist) {
-		if (!(E.usage & PROPERTY_USAGE_STORAGE)) {
+		if (!(E.usage & PropertyUsageFlags::STORAGE)) {
 			continue;
 		}
 		Variant p = get(E.name).duplicate(true);
@@ -314,7 +314,7 @@ void Resource::configure_for_local_scene(Node *p_for_scene, HashMap<Ref<Resource
 	local_scene = p_for_scene;
 
 	for (const PropertyInfo &E : plist) {
-		if (!(E.usage & PROPERTY_USAGE_STORAGE)) {
+		if (!(E.usage & PropertyUsageFlags::STORAGE)) {
 			continue;
 		}
 		Variant p = get(E.name);
@@ -341,7 +341,7 @@ Ref<Resource> Resource::duplicate(bool p_subresources) const {
 	ERR_FAIL_COND_V(r.is_null(), Ref<Resource>());
 
 	for (const PropertyInfo &E : plist) {
-		if (!(E.usage & PROPERTY_USAGE_STORAGE)) {
+		if (!(E.usage & PropertyUsageFlags::STORAGE)) {
 			continue;
 		}
 		Variant p = get(E.name);
@@ -362,7 +362,7 @@ Ref<Resource> Resource::duplicate(bool p_subresources) const {
 			} break;
 
 			case Variant::Type::OBJECT: {
-				if (!(E.usage & PROPERTY_USAGE_NEVER_DUPLICATE) && (p_subresources || (E.usage & PROPERTY_USAGE_ALWAYS_DUPLICATE))) {
+				if (!(E.usage & PropertyUsageFlags::NEVER_DUPLICATE) && (p_subresources || (E.usage & PropertyUsageFlags::ALWAYS_DUPLICATE))) {
 					Ref<Resource> sr = p;
 					if (sr.is_valid()) {
 						r->set(E.name, sr->duplicate(p_subresources));
@@ -417,7 +417,7 @@ uint32_t Resource::hash_edited_version() const {
 	get_property_list(&plist);
 
 	for (const PropertyInfo &E : plist) {
-		if (E.usage & PROPERTY_USAGE_STORAGE && E.type == Variant::OBJECT && E.hint == PROPERTY_HINT_RESOURCE_TYPE) {
+		if (E.usage & PropertyUsageFlags::STORAGE && E.type == Variant::OBJECT && E.hint == PropertyHint::RESOURCE_TYPE) {
 			Ref<Resource> res = get(E.name);
 			if (res.is_valid()) {
 				hash = hash_murmur3_one_32(res->hash_edited_version(), hash);
@@ -525,7 +525,7 @@ void Resource::_bind_methods() {
 
 	ADD_GROUP("Resource", "resource_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "resource_local_to_scene"), "set_local_to_scene", "is_local_to_scene");
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "resource_path", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_EDITOR), "set_path", "get_path");
+	ADD_PROPERTY(PropertyInfo(Variant::STRING, "resource_path", PropertyHint::NONE, "", PropertyUsageFlags::EDITOR), "set_path", "get_path");
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "resource_name"), "set_name", "get_name");
 
 	MethodInfo get_rid_bind("_get_rid");

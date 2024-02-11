@@ -71,8 +71,8 @@ void Gradient::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_interpolation_color_space"), &Gradient::get_interpolation_color_space);
 
 	ADD_GROUP("Interpolation", "interpolation_");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "interpolation_mode", PROPERTY_HINT_ENUM, "Linear,Constant,Cubic"), "set_interpolation_mode", "get_interpolation_mode");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "interpolation_color_space", PROPERTY_HINT_ENUM, "sRGB,Linear sRGB,Oklab"), "set_interpolation_color_space", "get_interpolation_color_space");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "interpolation_mode", PropertyHint::ENUM, "Linear,Constant,Cubic"), "set_interpolation_mode", "get_interpolation_mode");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "interpolation_color_space", PropertyHint::ENUM, "sRGB,Linear sRGB,Oklab"), "set_interpolation_color_space", "get_interpolation_color_space");
 
 	ADD_GROUP("Raw Data", "");
 	ADD_PROPERTY(PropertyInfo(Variant::PACKED_FLOAT32_ARRAY, "offsets"), "set_offsets", "get_offsets");
@@ -89,7 +89,7 @@ void Gradient::_bind_methods() {
 
 void Gradient::_validate_property(PropertyInfo &p_property) const {
 	if (p_property.name == "interpolation_color_space" && interpolation_mode == GRADIENT_INTERPOLATE_CONSTANT) {
-		p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+		p_property.usage = PropertyUsageFlags::NO_EDITOR;
 	}
 }
 
