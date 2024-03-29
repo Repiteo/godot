@@ -2584,7 +2584,7 @@ void Window::set_unparent_when_invisible(bool p_unparent) {
 
 void Window::set_layout_direction(Window::LayoutDirection p_direction) {
 	ERR_MAIN_THREAD_GUARD;
-	ERR_FAIL_INDEX((int)p_direction, 4);
+	ERR_FAIL_INDEX(p_direction, 4);
 
 	layout_dir = p_direction;
 	propagate_notification(Control::NOTIFICATION_LAYOUT_DIRECTION_CHANGED);
