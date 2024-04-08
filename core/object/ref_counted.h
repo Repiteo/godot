@@ -54,6 +54,9 @@ public:
 };
 
 template <typename T>
+class Required;
+
+template <typename T>
 class Ref {
 	T *reference = nullptr;
 
@@ -301,6 +304,135 @@ template <typename T>
 struct VariantInternalAccessor<const Ref<T> &> {
 	static _FORCE_INLINE_ Ref<T> get(const Variant *v) { return Ref<T>(*VariantInternal::get_object(v)); }
 	static _FORCE_INLINE_ void set(Variant *v, const Ref<T> &p_ref) { VariantInternal::refcounted_object_assign(v, p_ref.ptr()); }
+};
+
+template <typename T>
+class Required {
+	T *value = nullptr;
+
+	Required() = delete;
+	Required(nullptr_t) = delete;
+	operator nullptr_t() = delete;
+
+public:
+	_FORCE_INLINE_ Required(T *p_value) {
+		CRASH_COND(p_value == nullptr);
+		value = p_value;
+	}
+
+	_FORCE_INLINE_ Required(const Required &p_other) {
+		value = p_other.value;
+	}
+
+	_FORCE_INLINE_ bool operator==(const T *p_ptr) const {
+		return value == p_ptr;
+	}
+	_FORCE_INLINE_ bool operator!=(const T *p_ptr) const {
+		return value != p_ptr;
+	}
+	_FORCE_INLINE_ bool operator<(const T *p_ptr) const {
+		return value < p_ptr;
+	}
+
+	_FORCE_INLINE_ bool operator==(const Ref<T> &p_other) const {
+		return value == p_other.value;
+	}
+	_FORCE_INLINE_ bool operator!=(const Ref<T> &p_other) const {
+		return value != p_other.value;
+	}
+	_FORCE_INLINE_ bool operator<(const Ref<T> &p_other) const {
+		return value < p_other.value;
+	}
+
+	_FORCE_INLINE_ T *ptr() const {
+		return value;
+	}
+
+	_FORCE_INLINE_ T &operator*() const {
+		return value;
+	}
+
+	_FORCE_INLINE_ T *operator->() const {
+		return value;
+	}
+
+	_FORCE_INLINE_ operator T *() const {
+		return value;
+	}
+};
+
+template <typename T>
+struct PtrToArg<Required<T>> {
+	typedef T *EncodeT;
+
+	_FORCE_INLINE_ static T *convert(const void *p_ptr) {
+		return RequiredPtr<T>(const_cast<T *>(*reinterpret_cast<T *const *>(p_ptr)));
+	}
+
+	_FORCE_INLINE_ static void encode(Required<T> p_var, void *p_ptr) {
+		*((T **)p_ptr) = p_var.ptr();
+	}
+};
+
+template <typename T>
+struct PtrToArg<const Required<T> &> {
+	typedef T *EncodeT;
+
+	_FORCE_INLINE_ static Required<T> convert(const void *p_ptr) {
+		return RequiredPtr<T>(*reinterpret_cast<T *const *>(p_ptr));
+	}
+};
+
+template <typename T>
+struct GetTypeInfo<Required<T>> {
+	static const Variant::Type VARIANT_TYPE = Variant::OBJECT;
+	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_OBJECT_IS_REQUIRED;
+	static inline PropertyInfo get_class_info() {
+		return PropertyInfo(StringName(T::get_class_static()));
+	}
+};
+
+template <typename T>
+struct GetTypeInfo<const Required<T> &> {
+	static const Variant::Type VARIANT_TYPE = Variant::OBJECT;
+	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_OBJECT_IS_REQUIRED;
+	static inline PropertyInfo get_class_info() {
+		return PropertyInfo(StringName(T::get_class_static()));
+	}
+};
+
+template <typename T>
+struct VariantInternalAccessor<Required<T>> {
+	static _FORCE_INLINE_ Required<T> get(const Variant *v) { return RequiredPtr<T>(Object::cast_to<T>(const_cast<Object *>(*VariantInternal::get_object(v)))); }
+	static _FORCE_INLINE_ void set(Variant *v, const Required<T> &p_value) { VariantInternal::object_assign(v, p_value.ptr()); }
+};
+
+template <typename T>
+struct VariantInternalAccessor<const Required<T> &> {
+	static _FORCE_INLINE_ Required<T> get(const Variant *v) { return RequiredPtr<T>(Object::cast_to<T>(*VariantInternal::get_object(v))); }
+	static _FORCE_INLINE_ void set(Variant *v, const Required<T> &p_value) { VariantInternal::object_assign(v, p_value.ptr()); }
+};
+
+//
+
+template <typename T>
+struct GetTypeInfo<Ref<Required<T>>> {
+	static const Variant::Type VARIANT_TYPE = Variant::OBJECT;
+	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_OBJECT_IS_REQUIRED;
+
+	static inline PropertyInfo get_class_info() {
+		return PropertyInfo(Variant::OBJECT, String(), PROPERTY_HINT_RESOURCE_TYPE, T::get_class_static());
+	}
+};
+
+template <typename T>
+struct GetTypeInfo<const Ref<Required<T>> &> {
+	static const Variant::Type VARIANT_TYPE = Variant::OBJECT;
+	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_OBJECT_IS_REQUIRED;
+
+	static inline PropertyInfo get_class_info() {
+		return PropertyInfo(Variant::OBJECT, String(), PROPERTY_HINT_RESOURCE_TYPE, T::get_class_static());
+	}
 };
 
 #endif // REF_COUNTED_H
