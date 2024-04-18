@@ -148,6 +148,18 @@ env.PrependENVPath("PKG_CONFIG_PATH", os.getenv("PKG_CONFIG_PATH"))
 if "TERM" in os.environ:  # Used for colored output.
     env["ENV"]["TERM"] = os.environ["TERM"]
 
+for item in os.scandir("platform"):
+    if not item.is_dir():
+        continue
+
+    tool = Tool(item.name, toolpath=["platform"])
+
+    if not tool.exists(env):
+        continue
+
+    tool(env)
+
+
 env.disabled_modules = []
 env.module_version_string = ""
 env.msvc = False
