@@ -33,10 +33,6 @@
 #include "core/math/math_funcs.h"
 #include "core/variant/variant.h"
 
-void Plane::set_normal(const Vector3 &p_normal) {
-	normal = p_normal;
-}
-
 void Plane::normalize() {
 	real_t l = normal.length();
 	if (l == 0) {

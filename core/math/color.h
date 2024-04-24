@@ -43,8 +43,12 @@ struct _NO_DISCARD_ Color {
 			float b;
 			float a;
 		};
-		float components[4] = { 0, 0, 0, 1.0 };
+
+		float components[4] = { 0, 0, 0, 1 };
 	};
+
+	constexpr const float &operator[](int p_idx) const;
+	constexpr float &operator[](int p_idx);
 
 	uint32_t to_rgba32() const;
 	uint32_t to_argb32() const;
@@ -53,53 +57,41 @@ struct _NO_DISCARD_ Color {
 	uint64_t to_argb64() const;
 	uint64_t to_abgr64() const;
 	String to_html(bool p_alpha = true) const;
-	float get_h() const;
-	float get_s() const;
-	float get_v() const;
+	constexpr float get_h() const;
+	constexpr float get_s() const;
+	constexpr float get_v() const;
 	void set_hsv(float p_h, float p_s, float p_v, float p_alpha = 1.0f);
 	float get_ok_hsl_h() const;
 	float get_ok_hsl_s() const;
 	float get_ok_hsl_l() const;
 	void set_ok_hsl(float p_h, float p_s, float p_l, float p_alpha = 1.0f);
 
-	_FORCE_INLINE_ float &operator[](int p_idx) {
-		return components[p_idx];
-	}
-	_FORCE_INLINE_ const float &operator[](int p_idx) const {
-		return components[p_idx];
-	}
+	constexpr Color &operator+=(const Color &p_other);
+	constexpr Color operator+(const Color &p_other) const;
+	constexpr Color &operator-=(const Color &p_other);
+	constexpr Color operator-(const Color &p_other) const;
+	constexpr Color &operator*=(const Color &p_other);
+	constexpr Color operator*(const Color &p_other) const;
+	constexpr Color &operator/=(const Color &p_other);
+	constexpr Color operator/(const Color &p_other) const;
 
-	bool operator==(const Color &p_color) const {
-		return (r == p_color.r && g == p_color.g && b == p_color.b && a == p_color.a);
-	}
-	bool operator!=(const Color &p_color) const {
-		return (r != p_color.r || g != p_color.g || b != p_color.b || a != p_color.a);
-	}
+	constexpr Color &operator*=(float p_scalar);
+	constexpr Color operator*(float p_scalar) const;
+	constexpr Color &operator/=(float p_scalar);
+	constexpr Color operator/(float p_scalar) const;
 
-	Color operator+(const Color &p_color) const;
-	void operator+=(const Color &p_color);
+	constexpr Color operator-() const;
 
-	Color operator-() const;
-	Color operator-(const Color &p_color) const;
-	void operator-=(const Color &p_color);
+	constexpr bool operator==(const Color &p_other) const;
+	constexpr bool operator!=(const Color &p_other) const;
 
-	Color operator*(const Color &p_color) const;
-	Color operator*(float p_scalar) const;
-	void operator*=(const Color &p_color);
-	void operator*=(float p_scalar);
+	bool is_equal_approx(const Color &p_other) const;
 
-	Color operator/(const Color &p_color) const;
-	Color operator/(float p_scalar) const;
-	void operator/=(const Color &p_color);
-	void operator/=(float p_scalar);
+	constexpr Color clamp(const Color &p_min = Color(0, 0, 0, 0), const Color &p_max = Color(1, 1, 1, 1)) const;
+	constexpr void invert();
+	constexpr Color inverted() const;
 
-	bool is_equal_approx(const Color &p_color) const;
-
-	Color clamp(const Color &p_min = Color(0, 0, 0, 0), const Color &p_max = Color(1, 1, 1, 1)) const;
-	void invert();
-	Color inverted() const;
-
-	_FORCE_INLINE_ float get_luminance() const {
+	constexpr float get_luminance() const {
 		return 0.2126f * r + 0.7152f * g + 0.0722f * b;
 	}
 
@@ -112,7 +104,7 @@ struct _NO_DISCARD_ Color {
 		return res;
 	}
 
-	_FORCE_INLINE_ Color darkened(float p_amount) const {
+	constexpr Color darkened(float p_amount) const {
 		Color res = *this;
 		res.r = res.r * (1.0f - p_amount);
 		res.g = res.g * (1.0f - p_amount);
@@ -120,7 +112,7 @@ struct _NO_DISCARD_ Color {
 		return res;
 	}
 
-	_FORCE_INLINE_ Color lightened(float p_amount) const {
+	constexpr Color lightened(float p_amount) const {
 		Color res = *this;
 		res.r = res.r + (1.0f - res.r) * p_amount;
 		res.g = res.g + (1.0f - res.g) * p_amount;
@@ -129,11 +121,11 @@ struct _NO_DISCARD_ Color {
 	}
 
 	_FORCE_INLINE_ uint32_t to_rgbe9995() const {
-		const float pow2to9 = 512.0f;
-		const float B = 15.0f;
-		const float N = 9.0f;
+		constexpr float pow2to9 = 512.0f;
+		constexpr float B = 15.0f;
+		constexpr float N = 9.0f;
 
-		float sharedexp = 65408.000f; // Result of: ((pow2to9 - 1.0f) / pow2to9) * powf(2.0f, 31.0f - 15.0f)
+		constexpr float sharedexp = 65408.000f; // Result of: ((pow2to9 - 1.0f) / pow2to9) * powf(2.0f, 31.0f - 15.0f)
 
 		float cRed = MAX(0.0f, MIN(sharedexp, r));
 		float cGreen = MAX(0.0f, MIN(sharedexp, g));
@@ -158,7 +150,7 @@ struct _NO_DISCARD_ Color {
 		return (uint32_t(Math::fast_ftoi(sRed)) & 0x1FF) | ((uint32_t(Math::fast_ftoi(sGreen)) & 0x1FF) << 9) | ((uint32_t(Math::fast_ftoi(sBlue)) & 0x1FF) << 18) | ((uint32_t(Math::fast_ftoi(exps)) & 0x1F) << 27);
 	}
 
-	_FORCE_INLINE_ Color blend(const Color &p_over) const {
+	constexpr Color blend(const Color &p_over) const {
 		Color res;
 		float sa = 1.0f - p_over.a;
 		res.a = a * sa + p_over.a;
@@ -186,8 +178,8 @@ struct _NO_DISCARD_ Color {
 				b < 0.0031308f ? 12.92f * b : (1.0f + 0.055f) * Math::pow(b, 1.0f / 2.4f) - 0.055f, a);
 	}
 
-	static Color hex(uint32_t p_hex);
-	static Color hex64(uint64_t p_hex);
+	constexpr static Color hex(uint32_t p_hex);
+	constexpr static Color hex64(uint64_t p_hex);
 	static Color html(const String &p_rgba);
 	static bool html_is_valid(const String &p_color);
 	static Color named(const String &p_name);
@@ -201,17 +193,17 @@ struct _NO_DISCARD_ Color {
 	static Color from_ok_hsl(float p_h, float p_s, float p_l, float p_alpha = 1.0f);
 	static Color from_rgbe9995(uint32_t p_rgbe);
 
-	_FORCE_INLINE_ bool operator<(const Color &p_color) const; // Used in set keys.
+	constexpr bool operator<(const Color &p_other) const; // Used in set keys.
 	operator String() const;
 
 	// For the binder.
-	_FORCE_INLINE_ void set_r8(int32_t r8) { r = (CLAMP(r8, 0, 255) / 255.0f); }
+	constexpr void set_r8(int32_t r8) { r = (CLAMP(r8, 0, 255) / 255.0f); }
 	_FORCE_INLINE_ int32_t get_r8() const { return int32_t(CLAMP(Math::round(r * 255.0f), 0.0f, 255.0f)); }
-	_FORCE_INLINE_ void set_g8(int32_t g8) { g = (CLAMP(g8, 0, 255) / 255.0f); }
+	constexpr void set_g8(int32_t g8) { g = (CLAMP(g8, 0, 255) / 255.0f); }
 	_FORCE_INLINE_ int32_t get_g8() const { return int32_t(CLAMP(Math::round(g * 255.0f), 0.0f, 255.0f)); }
-	_FORCE_INLINE_ void set_b8(int32_t b8) { b = (CLAMP(b8, 0, 255) / 255.0f); }
+	constexpr void set_b8(int32_t b8) { b = (CLAMP(b8, 0, 255) / 255.0f); }
 	_FORCE_INLINE_ int32_t get_b8() const { return int32_t(CLAMP(Math::round(b * 255.0f), 0.0f, 255.0f)); }
-	_FORCE_INLINE_ void set_a8(int32_t a8) { a = (CLAMP(a8, 0, 255) / 255.0f); }
+	constexpr void set_a8(int32_t a8) { a = (CLAMP(a8, 0, 255) / 255.0f); }
 	_FORCE_INLINE_ int32_t get_a8() const { return int32_t(CLAMP(Math::round(a * 255.0f), 0.0f, 255.0f)); }
 
 	_FORCE_INLINE_ void set_h(float p_h) { set_hsv(p_h, get_s(), get_v(), a); }
@@ -221,71 +213,282 @@ struct _NO_DISCARD_ Color {
 	_FORCE_INLINE_ void set_ok_hsl_s(float p_s) { set_ok_hsl(get_ok_hsl_h(), p_s, get_ok_hsl_l(), a); }
 	_FORCE_INLINE_ void set_ok_hsl_l(float p_l) { set_ok_hsl(get_ok_hsl_h(), get_ok_hsl_s(), p_l, a); }
 
-	_FORCE_INLINE_ Color() {}
-
-	/**
-	 * RGBA construct parameters.
-	 * Alpha is not optional as otherwise we can't bind the RGB version for scripting.
-	 */
-	_FORCE_INLINE_ Color(float p_r, float p_g, float p_b, float p_a) {
-		r = p_r;
-		g = p_g;
-		b = p_b;
-		a = p_a;
-	}
-
-	/**
-	 * RGB construct parameters.
-	 */
-	_FORCE_INLINE_ Color(float p_r, float p_g, float p_b) {
-		r = p_r;
-		g = p_g;
-		b = p_b;
-		a = 1.0f;
-	}
-
-	/**
-	 * Construct a Color from another Color, but with the specified alpha value.
-	 */
-	_FORCE_INLINE_ Color(const Color &p_c, float p_a) {
-		r = p_c.r;
-		g = p_c.g;
-		b = p_c.b;
-		a = p_a;
-	}
-
-	Color(const String &p_code) {
-		if (html_is_valid(p_code)) {
-			*this = html(p_code);
-		} else {
-			*this = named(p_code);
-		}
-	}
-
-	Color(const String &p_code, float p_a) {
-		*this = Color(p_code);
-		a = p_a;
-	}
+	constexpr Color();
+	constexpr Color(float p_r, float p_g, float p_b, float p_a);
+	constexpr Color(float p_r, float p_g, float p_b);
+	constexpr Color(const Color &p_c, float p_a);
+	_FORCE_INLINE_ Color(const String &p_code);
+	_FORCE_INLINE_ Color(const String &p_code, float p_a);
 };
 
-bool Color::operator<(const Color &p_color) const {
-	if (r == p_color.r) {
-		if (g == p_color.g) {
-			if (b == p_color.b) {
-				return (a < p_color.a);
-			} else {
-				return (b < p_color.b);
-			}
-		} else {
-			return g < p_color.g;
-		}
-	} else {
-		return r < p_color.r;
+constexpr const float &Color::operator[](int p_idx) const {
+	switch (p_idx) {
+		case 0:
+			return r;
+		case 1:
+			return g;
+		case 2:
+			return b;
+		case 3:
+			return a;
+		default:
+			return components[p_idx];
 	}
 }
 
-_FORCE_INLINE_ Color operator*(float p_scalar, const Color &p_color) {
+constexpr float &Color::operator[](int p_idx) {
+	switch (p_idx) {
+		case 0:
+			return r;
+		case 1:
+			return g;
+		case 2:
+			return b;
+		case 3:
+			return a;
+		default:
+			return components[p_idx];
+	}
+}
+
+constexpr Color &Color::operator+=(const Color &p_other) {
+	r = r + p_other.r;
+	g = g + p_other.g;
+	b = b + p_other.b;
+	a = a + p_other.a;
+	return *this;
+}
+
+constexpr Color Color::operator+(const Color &p_other) const {
+	return Color(r + p_other.r, g + p_other.g, b + p_other.b, a + p_other.a);
+}
+
+constexpr Color &Color::operator-=(const Color &p_other) {
+	r = r - p_other.r;
+	g = g - p_other.g;
+	b = b - p_other.b;
+	a = a - p_other.a;
+	return *this;
+}
+
+constexpr Color Color::operator-(const Color &p_other) const {
+	return Color(r - p_other.r, g - p_other.g, b - p_other.b, a - p_other.a);
+}
+
+constexpr Color &Color::operator*=(const Color &p_other) {
+	r *= p_other.r;
+	g *= p_other.g;
+	b *= p_other.b;
+	a *= p_other.a;
+	return *this;
+}
+
+constexpr Color Color::operator*(const Color &p_other) const {
+	return Color(r * p_other.r, g * p_other.g, b * p_other.b, a * p_other.a);
+}
+
+constexpr Color &Color::operator/=(const Color &p_other) {
+	r /= p_other.r;
+	g /= p_other.g;
+	b /= p_other.b;
+	a /= p_other.a;
+	return *this;
+}
+
+constexpr Color Color::operator/(const Color &p_other) const {
+	return Color(r / p_other.r, g / p_other.g, b / p_other.b, a / p_other.a);
+}
+
+constexpr Color &Color::operator*=(float p_scalar) {
+	r *= p_scalar;
+	g *= p_scalar;
+	b *= p_scalar;
+	a *= p_scalar;
+	return *this;
+}
+
+constexpr Color Color::operator*(float p_scalar) const {
+	return Color(r * p_scalar, g * p_scalar, b * p_scalar, a * p_scalar);
+}
+
+constexpr Color &Color::operator/=(float p_scalar) {
+	r /= p_scalar;
+	g /= p_scalar;
+	b /= p_scalar;
+	a /= p_scalar;
+	return *this;
+}
+
+constexpr Color Color::operator/(float p_scalar) const {
+	return Color(r / p_scalar, g / p_scalar, b / p_scalar, a / p_scalar);
+}
+
+constexpr Color Color::operator-() const {
+	return Color(1.0f - r, 1.0f - g, 1.0f - b, 1.0f - a);
+}
+
+constexpr bool Color::operator==(const Color &p_other) const {
+	return r == p_other.r && g == p_other.g && b == p_other.b && a == p_other.a;
+}
+
+constexpr bool Color::operator!=(const Color &p_other) const {
+	return r != p_other.r || g != p_other.g || b != p_other.b || a != p_other.a;
+}
+
+constexpr bool Color::operator<(const Color &p_other) const {
+	if (r == p_other.r) {
+		if (g == p_other.g) {
+			if (b == p_other.b) {
+				return (a < p_other.a);
+			}
+			return (b < p_other.b);
+		}
+		return g < p_other.g;
+	}
+	return r < p_other.r;
+}
+
+constexpr Color operator*(float p_scalar, const Color &p_color) {
 	return p_color * p_scalar;
+}
+
+constexpr Color Color::hex(uint32_t p_hex) {
+	float a = (p_hex & 0xFF) / 255.0f;
+	p_hex >>= 8;
+	float b = (p_hex & 0xFF) / 255.0f;
+	p_hex >>= 8;
+	float g = (p_hex & 0xFF) / 255.0f;
+	p_hex >>= 8;
+	float r = (p_hex & 0xFF) / 255.0f;
+
+	return Color(r, g, b, a);
+}
+
+constexpr Color Color::hex64(uint64_t p_hex) {
+	float a = (p_hex & 0xFFFF) / 65535.0f;
+	p_hex >>= 16;
+	float b = (p_hex & 0xFFFF) / 65535.0f;
+	p_hex >>= 16;
+	float g = (p_hex & 0xFFFF) / 65535.0f;
+	p_hex >>= 16;
+	float r = (p_hex & 0xFFFF) / 65535.0f;
+
+	return Color(r, g, b, a);
+}
+
+constexpr float Color::get_h() const {
+	float min = MIN(r, g);
+	min = MIN(min, b);
+	float max = MAX(r, g);
+	max = MAX(max, b);
+
+	float delta = max - min;
+
+	if (delta == 0.0f) {
+		return 0.0f;
+	}
+
+	float h = 0.0f;
+	if (r == max) {
+		h = (g - b) / delta; // between yellow & magenta
+	} else if (g == max) {
+		h = 2 + (b - r) / delta; // between cyan & yellow
+	} else {
+		h = 4 + (r - g) / delta; // between magenta & cyan
+	}
+
+	h /= 6.0f;
+	if (h < 0.0f) {
+		h += 1.0f;
+	}
+
+	return h;
+}
+
+constexpr float Color::get_s() const {
+	float min = MIN(r, g);
+	min = MIN(min, b);
+	float max = MAX(r, g);
+	max = MAX(max, b);
+
+	float delta = max - min;
+
+	return (max != 0.0f) ? (delta / max) : 0.0f;
+}
+
+constexpr float Color::get_v() const {
+	float max = MAX(r, g);
+	max = MAX(max, b);
+	return max;
+}
+
+constexpr Color Color::clamp(const Color &p_min, const Color &p_max) const {
+	return Color(
+			CLAMP(r, p_min.r, p_max.r),
+			CLAMP(g, p_min.g, p_max.g),
+			CLAMP(b, p_min.b, p_max.b),
+			CLAMP(a, p_min.a, p_max.a));
+}
+
+constexpr void Color::invert() {
+	r = 1.0f - r;
+	g = 1.0f - g;
+	b = 1.0f - b;
+}
+
+constexpr Color Color::inverted() const {
+	Color c = *this;
+	c.invert();
+	return c;
+}
+
+constexpr Color::Color() :
+		r(0),
+		g(0),
+		b(0),
+		a(1) {}
+
+/**
+ * RGBA construct parameters.
+ * Alpha is not optional as otherwise we can't bind the RGB version for scripting.
+ */
+constexpr Color::Color(float p_r, float p_g, float p_b, float p_a) :
+		r(p_r),
+		g(p_g),
+		b(p_b),
+		a(p_a) {}
+
+/**
+ * RGB construct parameters.
+ */
+constexpr Color::Color(float p_r, float p_g, float p_b) :
+		r(p_r),
+		g(p_g),
+		b(p_b),
+		a(1) {}
+
+/**
+ * Construct a Color from another Color, but with the specified alpha value.
+ */
+constexpr Color::Color(const Color &p_c, float p_a) :
+		r(p_c.r),
+		g(p_c.g),
+		b(p_c.b),
+		a(p_a) {}
+
+Color::Color(const String &p_code) :
+		Color() {
+	if (html_is_valid(p_code)) {
+		*this = html(p_code);
+	} else {
+		*this = named(p_code);
+	}
+}
+
+Color::Color(const String &p_code, float p_a) :
+		Color() {
+	*this = Color(p_code);
+	a = p_a;
 }
 
 #endif // COLOR_H

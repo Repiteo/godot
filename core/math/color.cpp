@@ -142,52 +142,6 @@ String Color::to_html(bool p_alpha) const {
 	return txt;
 }
 
-float Color::get_h() const {
-	float min = MIN(r, g);
-	min = MIN(min, b);
-	float max = MAX(r, g);
-	max = MAX(max, b);
-
-	float delta = max - min;
-
-	if (delta == 0.0f) {
-		return 0.0f;
-	}
-
-	float h;
-	if (r == max) {
-		h = (g - b) / delta; // between yellow & magenta
-	} else if (g == max) {
-		h = 2 + (b - r) / delta; // between cyan & yellow
-	} else {
-		h = 4 + (r - g) / delta; // between magenta & cyan
-	}
-
-	h /= 6.0f;
-	if (h < 0.0f) {
-		h += 1.0f;
-	}
-
-	return h;
-}
-
-float Color::get_s() const {
-	float min = MIN(r, g);
-	min = MIN(min, b);
-	float max = MAX(r, g);
-	max = MAX(max, b);
-
-	float delta = max - min;
-
-	return (max != 0.0f) ? (delta / max) : 0.0f;
-}
-
-float Color::get_v() const {
-	float max = MAX(r, g);
-	max = MAX(max, b);
-	return max;
-}
-
 void Color::set_hsv(float p_h, float p_s, float p_v, float p_alpha) {
 	int i;
 	float f, p, q, t;
@@ -259,44 +213,6 @@ bool Color::is_equal_approx(const Color &p_color) const {
 	return Math::is_equal_approx(r, p_color.r) && Math::is_equal_approx(g, p_color.g) && Math::is_equal_approx(b, p_color.b) && Math::is_equal_approx(a, p_color.a);
 }
 
-Color Color::clamp(const Color &p_min, const Color &p_max) const {
-	return Color(
-			CLAMP(r, p_min.r, p_max.r),
-			CLAMP(g, p_min.g, p_max.g),
-			CLAMP(b, p_min.b, p_max.b),
-			CLAMP(a, p_min.a, p_max.a));
-}
-
-void Color::invert() {
-	r = 1.0f - r;
-	g = 1.0f - g;
-	b = 1.0f - b;
-}
-
-Color Color::hex(uint32_t p_hex) {
-	float a = (p_hex & 0xFF) / 255.0f;
-	p_hex >>= 8;
-	float b = (p_hex & 0xFF) / 255.0f;
-	p_hex >>= 8;
-	float g = (p_hex & 0xFF) / 255.0f;
-	p_hex >>= 8;
-	float r = (p_hex & 0xFF) / 255.0f;
-
-	return Color(r, g, b, a);
-}
-
-Color Color::hex64(uint64_t p_hex) {
-	float a = (p_hex & 0xFFFF) / 65535.0f;
-	p_hex >>= 16;
-	float b = (p_hex & 0xFFFF) / 65535.0f;
-	p_hex >>= 16;
-	float g = (p_hex & 0xFFFF) / 65535.0f;
-	p_hex >>= 16;
-	float r = (p_hex & 0xFFFF) / 65535.0f;
-
-	return Color(r, g, b, a);
-}
-
 static int _parse_col4(const String &p_str, int p_ofs) {
 	char character = p_str[p_ofs];
 
@@ -312,12 +228,6 @@ static int _parse_col4(const String &p_str, int p_ofs) {
 
 static int _parse_col8(const String &p_str, int p_ofs) {
 	return _parse_col4(p_str, p_ofs) * 16 + _parse_col4(p_str, p_ofs + 1);
-}
-
-Color Color::inverted() const {
-	Color c = *this;
-	c.invert();
-	return c;
 }
 
 Color Color::html(const String &p_rgba) {
@@ -483,104 +393,6 @@ Color Color::from_rgbe9995(uint32_t p_rgbe) {
 
 Color::operator String() const {
 	return "(" + String::num(r, 4) + ", " + String::num(g, 4) + ", " + String::num(b, 4) + ", " + String::num(a, 4) + ")";
-}
-
-Color Color::operator+(const Color &p_color) const {
-	return Color(
-			r + p_color.r,
-			g + p_color.g,
-			b + p_color.b,
-			a + p_color.a);
-}
-
-void Color::operator+=(const Color &p_color) {
-	r = r + p_color.r;
-	g = g + p_color.g;
-	b = b + p_color.b;
-	a = a + p_color.a;
-}
-
-Color Color::operator-(const Color &p_color) const {
-	return Color(
-			r - p_color.r,
-			g - p_color.g,
-			b - p_color.b,
-			a - p_color.a);
-}
-
-void Color::operator-=(const Color &p_color) {
-	r = r - p_color.r;
-	g = g - p_color.g;
-	b = b - p_color.b;
-	a = a - p_color.a;
-}
-
-Color Color::operator*(const Color &p_color) const {
-	return Color(
-			r * p_color.r,
-			g * p_color.g,
-			b * p_color.b,
-			a * p_color.a);
-}
-
-Color Color::operator*(float p_scalar) const {
-	return Color(
-			r * p_scalar,
-			g * p_scalar,
-			b * p_scalar,
-			a * p_scalar);
-}
-
-void Color::operator*=(const Color &p_color) {
-	r = r * p_color.r;
-	g = g * p_color.g;
-	b = b * p_color.b;
-	a = a * p_color.a;
-}
-
-void Color::operator*=(float p_scalar) {
-	r = r * p_scalar;
-	g = g * p_scalar;
-	b = b * p_scalar;
-	a = a * p_scalar;
-}
-
-Color Color::operator/(const Color &p_color) const {
-	return Color(
-			r / p_color.r,
-			g / p_color.g,
-			b / p_color.b,
-			a / p_color.a);
-}
-
-Color Color::operator/(float p_scalar) const {
-	return Color(
-			r / p_scalar,
-			g / p_scalar,
-			b / p_scalar,
-			a / p_scalar);
-}
-
-void Color::operator/=(const Color &p_color) {
-	r = r / p_color.r;
-	g = g / p_color.g;
-	b = b / p_color.b;
-	a = a / p_color.a;
-}
-
-void Color::operator/=(float p_scalar) {
-	r = r / p_scalar;
-	g = g / p_scalar;
-	b = b / p_scalar;
-	a = a / p_scalar;
-}
-
-Color Color::operator-() const {
-	return Color(
-			1.0f - r,
-			1.0f - g,
-			1.0f - b,
-			1.0f - a);
 }
 
 Color Color::from_ok_hsl(float p_h, float p_s, float p_l, float p_alpha) {

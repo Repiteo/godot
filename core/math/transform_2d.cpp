@@ -124,26 +124,6 @@ void Transform2D::set_scale(const Size2 &p_scale) {
 	columns[1] *= p_scale.y;
 }
 
-void Transform2D::scale(const Size2 &p_scale) {
-	scale_basis(p_scale);
-	columns[2] *= p_scale;
-}
-
-void Transform2D::scale_basis(const Size2 &p_scale) {
-	columns[0][0] *= p_scale.x;
-	columns[0][1] *= p_scale.y;
-	columns[1][0] *= p_scale.x;
-	columns[1][1] *= p_scale.y;
-}
-
-void Transform2D::translate_local(real_t p_tx, real_t p_ty) {
-	translate_local(Vector2(p_tx, p_ty));
-}
-
-void Transform2D::translate_local(const Vector2 &p_translation) {
-	columns[2] += basis_xform(p_translation);
-}
-
 void Transform2D::orthonormalize() {
 	// Gram-Schmidt Process
 

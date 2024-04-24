@@ -57,7 +57,7 @@ struct _NO_DISCARD_ Face3 {
 	Plane get_plane(ClockDirection p_dir = CLOCKWISE) const;
 	Vector3 get_random_point_inside() const;
 
-	bool is_degenerate() const;
+	constexpr bool is_degenerate() const;
 	real_t get_area() const;
 
 	Vector3 get_closest_point_to(const Vector3 &p_point) const;
@@ -68,7 +68,7 @@ struct _NO_DISCARD_ Face3 {
 	void get_support(const Vector3 &p_normal, const Transform3D &p_transform, Vector3 *p_vertices, int *p_count, int p_max) const;
 	void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const;
 
-	AABB get_aabb() const {
+	constexpr AABB get_aabb() const {
 		AABB aabb(vertex[0], Vector3());
 		aabb.expand_to(vertex[1]);
 		aabb.expand_to(vertex[2]);
@@ -76,18 +76,25 @@ struct _NO_DISCARD_ Face3 {
 	}
 
 	bool intersects_aabb(const AABB &p_aabb) const;
-	_FORCE_INLINE_ bool intersects_aabb2(const AABB &p_aabb) const;
+	constexpr bool intersects_aabb2(const AABB &p_aabb) const;
 	operator String() const;
 
-	inline Face3() {}
-	inline Face3(const Vector3 &p_v1, const Vector3 &p_v2, const Vector3 &p_v3) {
-		vertex[0] = p_v1;
-		vertex[1] = p_v2;
-		vertex[2] = p_v3;
-	}
+	constexpr Face3() {}
+
+	constexpr Face3(const Vector3 &p_v1, const Vector3 &p_v2, const Vector3 &p_v3) :
+			vertex{
+				p_v1,
+				p_v2,
+				p_v3,
+			} {}
 };
 
-bool Face3::intersects_aabb2(const AABB &p_aabb) const {
+constexpr bool Face3::is_degenerate() const {
+	Vector3 normal = vec3_cross(vertex[0] - vertex[1], vertex[0] - vertex[2]);
+	return (normal.length_squared() < (real_t)CMP_EPSILON2);
+}
+
+constexpr bool Face3::intersects_aabb2(const AABB &p_aabb) const {
 	Vector3 perp = (vertex[0] - vertex[2]).cross(vertex[0] - vertex[1]);
 
 	Vector3 half_extents = p_aabb.size * 0.5f;
@@ -110,7 +117,7 @@ bool Face3::intersects_aabb2(const AABB &p_aabb) const {
 	{                                                              \
 		real_t aabb_min = p_aabb.position.m_ax;                    \
 		real_t aabb_max = p_aabb.position.m_ax + p_aabb.size.m_ax; \
-		real_t tri_min, tri_max;                                   \
+		real_t tri_min = 0, tri_max = 0;                           \
 		for (int i = 0; i < 3; i++) {                              \
 			if (i == 0 || vertex[i].m_ax > tri_max)                \
 				tri_max = vertex[i].m_ax;                          \

@@ -42,16 +42,16 @@ struct _NO_DISCARD_ Rect2 {
 	Point2 position;
 	Size2 size;
 
-	const Vector2 &get_position() const { return position; }
-	void set_position(const Vector2 &p_pos) { position = p_pos; }
-	const Vector2 &get_size() const { return size; }
-	void set_size(const Vector2 &p_size) { size = p_size; }
+	constexpr const Vector2 &get_position() const { return position; }
+	constexpr void set_position(const Vector2 &p_pos) { position = p_pos; }
+	constexpr const Vector2 &get_size() const { return size; }
+	constexpr void set_size(const Vector2 &p_size) { size = p_size; }
 
-	real_t get_area() const { return size.width * size.height; }
+	constexpr real_t get_area() const { return size.width * size.height; }
 
-	_FORCE_INLINE_ Vector2 get_center() const { return position + (size * 0.5f); }
+	constexpr Vector2 get_center() const { return position + (size * 0.5f); }
 
-	inline bool intersects(const Rect2 &p_rect, bool p_include_borders = false) const {
+	constexpr bool intersects(const Rect2 &p_rect, bool p_include_borders = false) const {
 #ifdef MATH_CHECKS
 		if (unlikely(size.x < 0 || size.y < 0 || p_rect.size.x < 0 || p_rect.size.y < 0)) {
 			ERR_PRINT("Rect2 size is negative, this is not supported. Use Rect2.abs() to get a Rect2 with a positive size.");
@@ -88,7 +88,7 @@ struct _NO_DISCARD_ Rect2 {
 		return true;
 	}
 
-	inline real_t distance_to(const Vector2 &p_point) const {
+	constexpr real_t distance_to(const Vector2 &p_point) const {
 #ifdef MATH_CHECKS
 		if (unlikely(size.x < 0 || size.y < 0)) {
 			ERR_PRINT("Rect2 size is negative, this is not supported. Use Rect2.abs() to get a Rect2 with a positive size.");
@@ -129,7 +129,7 @@ struct _NO_DISCARD_ Rect2 {
 
 	bool intersects_segment(const Point2 &p_from, const Point2 &p_to, Point2 *r_pos = nullptr, Point2 *r_normal = nullptr) const;
 
-	inline bool encloses(const Rect2 &p_rect) const {
+	constexpr bool encloses(const Rect2 &p_rect) const {
 #ifdef MATH_CHECKS
 		if (unlikely(size.x < 0 || size.y < 0 || p_rect.size.x < 0 || p_rect.size.y < 0)) {
 			ERR_PRINT("Rect2 size is negative, this is not supported. Use Rect2.abs() to get a Rect2 with a positive size.");
@@ -140,12 +140,12 @@ struct _NO_DISCARD_ Rect2 {
 				((p_rect.position.y + p_rect.size.y) <= (position.y + size.y));
 	}
 
-	_FORCE_INLINE_ bool has_area() const {
-		return size.x > 0.0f && size.y > 0.0f;
+	constexpr bool has_area() const {
+		return size.x > 0 && size.y > 0;
 	}
 
 	// Returns the intersection between two Rect2s or an empty Rect2 if there is no intersection.
-	inline Rect2 intersection(const Rect2 &p_rect) const {
+	constexpr Rect2 intersection(const Rect2 &p_rect) const {
 		Rect2 new_rect = p_rect;
 
 		if (!intersects(new_rect)) {
@@ -162,7 +162,7 @@ struct _NO_DISCARD_ Rect2 {
 		return new_rect;
 	}
 
-	inline Rect2 merge(const Rect2 &p_rect) const { ///< return a merged rect
+	constexpr Rect2 merge(const Rect2 &p_rect) const { ///< return a merged rect
 #ifdef MATH_CHECKS
 		if (unlikely(size.x < 0 || size.y < 0 || p_rect.size.x < 0 || p_rect.size.y < 0)) {
 			ERR_PRINT("Rect2 size is negative, this is not supported. Use Rect2.abs() to get a Rect2 with a positive size.");
@@ -179,7 +179,7 @@ struct _NO_DISCARD_ Rect2 {
 		return new_rect;
 	}
 
-	inline bool has_point(const Point2 &p_point) const {
+	constexpr bool has_point(const Point2 &p_point) const {
 #ifdef MATH_CHECKS
 		if (unlikely(size.x < 0 || size.y < 0)) {
 			ERR_PRINT("Rect2 size is negative, this is not supported. Use Rect2.abs() to get a Rect2 with a positive size.");
@@ -205,23 +205,23 @@ struct _NO_DISCARD_ Rect2 {
 	bool is_equal_approx(const Rect2 &p_rect) const;
 	bool is_finite() const;
 
-	bool operator==(const Rect2 &p_rect) const { return position == p_rect.position && size == p_rect.size; }
-	bool operator!=(const Rect2 &p_rect) const { return position != p_rect.position || size != p_rect.size; }
+	constexpr bool operator==(const Rect2 &p_rect) const { return position == p_rect.position && size == p_rect.size; }
+	constexpr bool operator!=(const Rect2 &p_rect) const { return position != p_rect.position || size != p_rect.size; }
 
-	inline Rect2 grow(real_t p_amount) const {
+	constexpr Rect2 grow(real_t p_amount) const {
 		Rect2 g = *this;
 		g.grow_by(p_amount);
 		return g;
 	}
 
-	inline void grow_by(real_t p_amount) {
+	constexpr void grow_by(real_t p_amount) {
 		position.x -= p_amount;
 		position.y -= p_amount;
 		size.width += p_amount * 2;
 		size.height += p_amount * 2;
 	}
 
-	inline Rect2 grow_side(Side p_side, real_t p_amount) const {
+	constexpr Rect2 grow_side(Side p_side, real_t p_amount) const {
 		Rect2 g = *this;
 		g = g.grow_individual((SIDE_LEFT == p_side) ? p_amount : 0,
 				(SIDE_TOP == p_side) ? p_amount : 0,
@@ -230,11 +230,11 @@ struct _NO_DISCARD_ Rect2 {
 		return g;
 	}
 
-	inline Rect2 grow_side_bind(uint32_t p_side, real_t p_amount) const {
+	constexpr Rect2 grow_side_bind(uint32_t p_side, real_t p_amount) const {
 		return grow_side(Side(p_side), p_amount);
 	}
 
-	inline Rect2 grow_individual(real_t p_left, real_t p_top, real_t p_right, real_t p_bottom) const {
+	constexpr Rect2 grow_individual(real_t p_left, real_t p_top, real_t p_right, real_t p_bottom) const {
 		Rect2 g = *this;
 		g.position.x -= p_left;
 		g.position.y -= p_top;
@@ -244,13 +244,13 @@ struct _NO_DISCARD_ Rect2 {
 		return g;
 	}
 
-	_FORCE_INLINE_ Rect2 expand(const Vector2 &p_vector) const {
+	constexpr Rect2 expand(const Vector2 &p_vector) const {
 		Rect2 r = *this;
 		r.expand_to(p_vector);
 		return r;
 	}
 
-	inline void expand_to(const Vector2 &p_vector) { // In place function for speed.
+	constexpr void expand_to(const Vector2 &p_vector) { // In place function for speed.
 #ifdef MATH_CHECKS
 		if (unlikely(size.x < 0 || size.y < 0)) {
 			ERR_PRINT("Rect2 size is negative, this is not supported. Use Rect2.abs() to get a Rect2 with a positive size.");
@@ -285,7 +285,7 @@ struct _NO_DISCARD_ Rect2 {
 		return Rect2(position.round(), size.round());
 	}
 
-	Vector2 get_support(const Vector2 &p_normal) const {
+	constexpr Vector2 get_support(const Vector2 &p_normal) const {
 		Vector2 half_extents = size * 0.5f;
 		Vector2 ofs = position + half_extents;
 		return Vector2(
@@ -348,26 +348,26 @@ struct _NO_DISCARD_ Rect2 {
 		}
 	}
 
-	_FORCE_INLINE_ void set_end(const Vector2 &p_end) {
+	constexpr void set_end(const Vector2 &p_end) {
 		size = p_end - position;
 	}
 
-	_FORCE_INLINE_ Vector2 get_end() const {
+	constexpr Vector2 get_end() const {
 		return position + size;
 	}
 
 	operator String() const;
 	operator Rect2i() const;
 
-	Rect2() {}
-	Rect2(real_t p_x, real_t p_y, real_t p_width, real_t p_height) :
+	constexpr Rect2() {}
+
+	constexpr Rect2(real_t p_x, real_t p_y, real_t p_width, real_t p_height) :
 			position(Point2(p_x, p_y)),
-			size(Size2(p_width, p_height)) {
-	}
-	Rect2(const Point2 &p_pos, const Size2 &p_size) :
+			size(Size2(p_width, p_height)) {}
+
+	constexpr Rect2(const Point2 &p_pos, const Size2 &p_size) :
 			position(p_pos),
-			size(p_size) {
-	}
+			size(p_size) {}
 };
 
 #endif // RECT2_H

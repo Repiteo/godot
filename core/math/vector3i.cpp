@@ -33,21 +33,6 @@
 #include "core/math/vector3.h"
 #include "core/string/ustring.h"
 
-Vector3i::Axis Vector3i::min_axis_index() const {
-	return x < y ? (x < z ? Vector3i::AXIS_X : Vector3i::AXIS_Z) : (y < z ? Vector3i::AXIS_Y : Vector3i::AXIS_Z);
-}
-
-Vector3i::Axis Vector3i::max_axis_index() const {
-	return x < y ? (y < z ? Vector3i::AXIS_Z : Vector3i::AXIS_Y) : (x < z ? Vector3i::AXIS_Z : Vector3i::AXIS_X);
-}
-
-Vector3i Vector3i::clamp(const Vector3i &p_min, const Vector3i &p_max) const {
-	return Vector3i(
-			CLAMP(x, p_min.x, p_max.x),
-			CLAMP(y, p_min.y, p_max.y),
-			CLAMP(z, p_min.z, p_max.z));
-}
-
 Vector3i Vector3i::snapped(const Vector3i &p_step) const {
 	return Vector3i(
 			Math::snapped(x, p_step.x),

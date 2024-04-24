@@ -45,10 +45,6 @@ real_t Vector2::length() const {
 	return Math::sqrt(x * x + y * y);
 }
 
-real_t Vector2::length_squared() const {
-	return x * x + y * y;
-}
-
 void Vector2::normalize() {
 	real_t l = x * x + y * y;
 	if (l != 0) {
@@ -69,28 +65,16 @@ bool Vector2::is_normalized() const {
 	return Math::is_equal_approx(length_squared(), 1, (real_t)UNIT_EPSILON);
 }
 
-real_t Vector2::distance_to(const Vector2 &p_vector2) const {
-	return Math::sqrt((x - p_vector2.x) * (x - p_vector2.x) + (y - p_vector2.y) * (y - p_vector2.y));
+real_t Vector2::distance_to(const Vector2 &p_other) const {
+	return Math::sqrt((x - p_other.x) * (x - p_other.x) + (y - p_other.y) * (y - p_other.y));
 }
 
-real_t Vector2::distance_squared_to(const Vector2 &p_vector2) const {
-	return (x - p_vector2.x) * (x - p_vector2.x) + (y - p_vector2.y) * (y - p_vector2.y);
+real_t Vector2::angle_to(const Vector2 &p_other) const {
+	return Math::atan2(cross(p_other), dot(p_other));
 }
 
-real_t Vector2::angle_to(const Vector2 &p_vector2) const {
-	return Math::atan2(cross(p_vector2), dot(p_vector2));
-}
-
-real_t Vector2::angle_to_point(const Vector2 &p_vector2) const {
-	return (p_vector2 - *this).angle();
-}
-
-real_t Vector2::dot(const Vector2 &p_other) const {
-	return x * p_other.x + y * p_other.y;
-}
-
-real_t Vector2::cross(const Vector2 &p_other) const {
-	return x * p_other.y - y * p_other.x;
+real_t Vector2::angle_to_point(const Vector2 &p_other) const {
+	return (p_other - *this).angle();
 }
 
 Vector2 Vector2::sign() const {
@@ -123,16 +107,6 @@ Vector2 Vector2::posmod(real_t p_mod) const {
 
 Vector2 Vector2::posmodv(const Vector2 &p_modv) const {
 	return Vector2(Math::fposmod(x, p_modv.x), Math::fposmod(y, p_modv.y));
-}
-
-Vector2 Vector2::project(const Vector2 &p_to) const {
-	return p_to * (dot(p_to) / p_to.length_squared());
-}
-
-Vector2 Vector2::clamp(const Vector2 &p_min, const Vector2 &p_max) const {
-	return Vector2(
-			CLAMP(x, p_min.x, p_max.x),
-			CLAMP(y, p_min.y, p_max.y));
 }
 
 Vector2 Vector2::snapped(const Vector2 &p_step) const {
@@ -178,8 +152,8 @@ Vector2 Vector2::reflect(const Vector2 &p_normal) const {
 	return 2.0f * p_normal * dot(p_normal) - *this;
 }
 
-bool Vector2::is_equal_approx(const Vector2 &p_v) const {
-	return Math::is_equal_approx(x, p_v.x) && Math::is_equal_approx(y, p_v.y);
+bool Vector2::is_equal_approx(const Vector2 &p_other) const {
+	return Math::is_equal_approx(x, p_other.x) && Math::is_equal_approx(y, p_other.y);
 }
 
 bool Vector2::is_zero_approx() const {

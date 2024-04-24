@@ -115,11 +115,6 @@ bool Face3::intersects_segment(const Vector3 &p_from, const Vector3 &p_dir, Vect
 	return Geometry3D::segment_intersects_triangle(p_from, p_dir, vertex[0], vertex[1], vertex[2], p_intersection);
 }
 
-bool Face3::is_degenerate() const {
-	Vector3 normal = vec3_cross(vertex[0] - vertex[1], vertex[0] - vertex[2]);
-	return (normal.length_squared() < (real_t)CMP_EPSILON2);
-}
-
 Vector3 Face3::get_random_point_inside() const {
 	real_t a = Math::random(0.0, 1.0);
 	real_t b = Math::random(0.0, 1.0);

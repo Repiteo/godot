@@ -46,24 +46,8 @@ Vector3 Quaternion::get_euler(EulerOrder p_order) const {
 	return Basis(*this).get_euler(p_order);
 }
 
-void Quaternion::operator*=(const Quaternion &p_q) {
-	real_t xx = w * p_q.x + x * p_q.w + y * p_q.z - z * p_q.y;
-	real_t yy = w * p_q.y + y * p_q.w + z * p_q.x - x * p_q.z;
-	real_t zz = w * p_q.z + z * p_q.w + x * p_q.y - y * p_q.x;
-	w = w * p_q.w - x * p_q.x - y * p_q.y - z * p_q.z;
-	x = xx;
-	y = yy;
-	z = zz;
-}
-
-Quaternion Quaternion::operator*(const Quaternion &p_q) const {
-	Quaternion r = *this;
-	r *= p_q;
-	return r;
-}
-
-bool Quaternion::is_equal_approx(const Quaternion &p_quaternion) const {
-	return Math::is_equal_approx(x, p_quaternion.x) && Math::is_equal_approx(y, p_quaternion.y) && Math::is_equal_approx(z, p_quaternion.z) && Math::is_equal_approx(w, p_quaternion.w);
+bool Quaternion::is_equal_approx(const Quaternion &p_other) const {
+	return Math::is_equal_approx(x, p_other.x) && Math::is_equal_approx(y, p_other.y) && Math::is_equal_approx(z, p_other.z) && Math::is_equal_approx(w, p_other.w);
 }
 
 bool Quaternion::is_finite() const {
@@ -84,13 +68,6 @@ Quaternion Quaternion::normalized() const {
 
 bool Quaternion::is_normalized() const {
 	return Math::is_equal_approx(length_squared(), 1, (real_t)UNIT_EPSILON); //use less epsilon
-}
-
-Quaternion Quaternion::inverse() const {
-#ifdef MATH_CHECKS
-	ERR_FAIL_COND_V_MSG(!is_normalized(), Quaternion(), "The quaternion " + operator String() + " must be normalized.");
-#endif
-	return Quaternion(-x, -y, -z, w);
 }
 
 Quaternion Quaternion::log() const {
@@ -290,27 +267,6 @@ Vector3 Quaternion::get_axis() const {
 
 real_t Quaternion::get_angle() const {
 	return 2 * Math::acos(w);
-}
-
-Quaternion::Quaternion(const Vector3 &p_axis, real_t p_angle) {
-#ifdef MATH_CHECKS
-	ERR_FAIL_COND_MSG(!p_axis.is_normalized(), "The axis Vector3 " + p_axis.operator String() + " must be normalized.");
-#endif
-	real_t d = p_axis.length();
-	if (d == 0) {
-		x = 0;
-		y = 0;
-		z = 0;
-		w = 0;
-	} else {
-		real_t sin_angle = Math::sin(p_angle * 0.5f);
-		real_t cos_angle = Math::cos(p_angle * 0.5f);
-		real_t s = sin_angle / d;
-		x = p_axis.x * s;
-		y = p_axis.y * s;
-		z = p_axis.z * s;
-		w = cos_angle;
-	}
 }
 
 // Euler constructor expects a vector containing the Euler angles in the format

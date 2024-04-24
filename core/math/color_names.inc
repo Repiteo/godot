@@ -35,14 +35,14 @@
 // this is not used as often as for more performance to make sense
 
 struct NamedColor {
-	const char *name;
+	const char *name = nullptr;
 	Color color;
 };
 
 // NOTE: This data is duplicated in the file:
 // modules/mono/glue/GodotSharp/GodotSharp/Core/Colors.cs
 
-static NamedColor named_colors[] = {
+inline constexpr NamedColor named_colors[] = {
 	{ "ALICE_BLUE", Color::hex(0xF0F8FFFF) },
 	{ "ANTIQUE_WHITE", Color::hex(0xFAEBD7FF) },
 	{ "AQUA", Color::hex(0x00FFFFFF) },
@@ -189,5 +189,5 @@ static NamedColor named_colors[] = {
 	{ "WHITE_SMOKE", Color::hex(0xF5F5F5FF) },
 	{ "YELLOW", Color::hex(0xFFFF00FF) },
 	{ "YELLOW_GREEN", Color::hex(0x9ACD32FF) },
-	{ nullptr, Color() },
+	{},
 };

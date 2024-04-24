@@ -133,8 +133,8 @@ Basis Vector3::outer(const Vector3 &p_with) const {
 	return basis;
 }
 
-bool Vector3::is_equal_approx(const Vector3 &p_v) const {
-	return Math::is_equal_approx(x, p_v.x) && Math::is_equal_approx(y, p_v.y) && Math::is_equal_approx(z, p_v.z);
+bool Vector3::is_equal_approx(const Vector3 &p_other) const {
+	return Math::is_equal_approx(x, p_other.x) && Math::is_equal_approx(y, p_other.y) && Math::is_equal_approx(z, p_other.z);
 }
 
 bool Vector3::is_zero_approx() const {

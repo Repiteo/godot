@@ -80,15 +80,15 @@ struct _NO_DISCARD_ Transform3D {
 	bool operator==(const Transform3D &p_transform) const;
 	bool operator!=(const Transform3D &p_transform) const;
 
-	_FORCE_INLINE_ Vector3 xform(const Vector3 &p_vector) const;
-	_FORCE_INLINE_ AABB xform(const AABB &p_aabb) const;
+	constexpr Vector3 xform(const Vector3 &p_vector) const;
+	constexpr AABB xform(const AABB &p_aabb) const;
 	_FORCE_INLINE_ Vector<Vector3> xform(const Vector<Vector3> &p_array) const;
 
 	// NOTE: These are UNSAFE with non-uniform scaling, and will produce incorrect results.
 	// They use the transpose.
 	// For safe inverse transforms, xform by the affine_inverse.
-	_FORCE_INLINE_ Vector3 xform_inv(const Vector3 &p_vector) const;
-	_FORCE_INLINE_ AABB xform_inv(const AABB &p_aabb) const;
+	constexpr Vector3 xform_inv(const Vector3 &p_vector) const;
+	constexpr AABB xform_inv(const AABB &p_aabb) const;
 	_FORCE_INLINE_ Vector<Vector3> xform_inv(const Vector<Vector3> &p_array) const;
 
 	// Safe with non-uniform scaling (uses affine_inverse).
@@ -124,20 +124,29 @@ struct _NO_DISCARD_ Transform3D {
 
 	operator String() const;
 
-	Transform3D() {}
-	Transform3D(const Basis &p_basis, const Vector3 &p_origin = Vector3());
-	Transform3D(const Vector3 &p_x, const Vector3 &p_y, const Vector3 &p_z, const Vector3 &p_origin);
-	Transform3D(real_t p_xx, real_t p_xy, real_t p_xz, real_t p_yx, real_t p_yy, real_t p_yz, real_t p_zx, real_t p_zy, real_t p_zz, real_t p_ox, real_t p_oy, real_t p_oz);
+	constexpr Transform3D() {}
+
+	constexpr Transform3D(const Basis &p_basis, const Vector3 &p_origin = Vector3()) :
+			basis(p_basis),
+			origin(p_origin) {}
+
+	constexpr Transform3D(const Vector3 &p_x, const Vector3 &p_y, const Vector3 &p_z, const Vector3 &p_origin) :
+			basis(p_x, p_y, p_z),
+			origin(p_origin) {}
+
+	constexpr Transform3D(real_t p_xx, real_t p_xy, real_t p_xz, real_t p_yx, real_t p_yy, real_t p_yz, real_t p_zx, real_t p_zy, real_t p_zz, real_t p_ox, real_t p_oy, real_t p_oz) :
+			basis(p_xx, p_xy, p_xz, p_yx, p_yy, p_yz, p_zx, p_zy, p_zz),
+			origin(p_ox, p_oy, p_oz) {}
 };
 
-_FORCE_INLINE_ Vector3 Transform3D::xform(const Vector3 &p_vector) const {
+constexpr Vector3 Transform3D::xform(const Vector3 &p_vector) const {
 	return Vector3(
 			basis[0].dot(p_vector) + origin.x,
 			basis[1].dot(p_vector) + origin.y,
 			basis[2].dot(p_vector) + origin.z);
 }
 
-_FORCE_INLINE_ Vector3 Transform3D::xform_inv(const Vector3 &p_vector) const {
+constexpr Vector3 Transform3D::xform_inv(const Vector3 &p_vector) const {
 	Vector3 v = p_vector - origin;
 
 	return Vector3(
@@ -162,7 +171,7 @@ _FORCE_INLINE_ Plane Transform3D::xform_inv(const Plane &p_plane) const {
 	return xform_inv_fast(p_plane, inv, basis_transpose);
 }
 
-_FORCE_INLINE_ AABB Transform3D::xform(const AABB &p_aabb) const {
+constexpr AABB Transform3D::xform(const AABB &p_aabb) const {
 	/* https://dev.theomader.com/transform-bounding-boxes/ */
 	Vector3 min = p_aabb.position;
 	Vector3 max = p_aabb.position + p_aabb.size;
@@ -187,7 +196,7 @@ _FORCE_INLINE_ AABB Transform3D::xform(const AABB &p_aabb) const {
 	return r_aabb;
 }
 
-_FORCE_INLINE_ AABB Transform3D::xform_inv(const AABB &p_aabb) const {
+constexpr AABB Transform3D::xform_inv(const AABB &p_aabb) const {
 	/* define vertices */
 	Vector3 vertices[8] = {
 		Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z),

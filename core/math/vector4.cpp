@@ -32,32 +32,8 @@
 
 #include "core/string/ustring.h"
 
-Vector4::Axis Vector4::min_axis_index() const {
-	uint32_t min_index = 0;
-	real_t min_value = x;
-	for (uint32_t i = 1; i < 4; i++) {
-		if (operator[](i) <= min_value) {
-			min_index = i;
-			min_value = operator[](i);
-		}
-	}
-	return Vector4::Axis(min_index);
-}
-
-Vector4::Axis Vector4::max_axis_index() const {
-	uint32_t max_index = 0;
-	real_t max_value = x;
-	for (uint32_t i = 1; i < 4; i++) {
-		if (operator[](i) > max_value) {
-			max_index = i;
-			max_value = operator[](i);
-		}
-	}
-	return Vector4::Axis(max_index);
-}
-
-bool Vector4::is_equal_approx(const Vector4 &p_vec4) const {
-	return Math::is_equal_approx(x, p_vec4.x) && Math::is_equal_approx(y, p_vec4.y) && Math::is_equal_approx(z, p_vec4.z) && Math::is_equal_approx(w, p_vec4.w);
+bool Vector4::is_equal_approx(const Vector4 &p_other) const {
+	return Math::is_equal_approx(x, p_other.x) && Math::is_equal_approx(y, p_other.y) && Math::is_equal_approx(z, p_other.z) && Math::is_equal_approx(w, p_other.w);
 }
 
 bool Vector4::is_zero_approx() const {
@@ -99,10 +75,6 @@ real_t Vector4::distance_to(const Vector4 &p_to) const {
 	return (p_to - *this).length();
 }
 
-real_t Vector4::distance_squared_to(const Vector4 &p_to) const {
-	return (p_to - *this).length_squared();
-}
-
 Vector4 Vector4::direction_to(const Vector4 &p_to) const {
 	Vector4 ret(p_to.x - x, p_to.y - y, p_to.z - z, p_to.w - w);
 	ret.normalize();
@@ -111,10 +83,6 @@ Vector4 Vector4::direction_to(const Vector4 &p_to) const {
 
 Vector4 Vector4::abs() const {
 	return Vector4(Math::abs(x), Math::abs(y), Math::abs(z), Math::abs(w));
-}
-
-Vector4 Vector4::sign() const {
-	return Vector4(SIGN(x), SIGN(y), SIGN(z), SIGN(w));
 }
 
 Vector4 Vector4::floor() const {
@@ -175,18 +143,6 @@ Vector4 Vector4::snapped(const Vector4 &p_step) const {
 	Vector4 v = *this;
 	v.snap(p_step);
 	return v;
-}
-
-Vector4 Vector4::inverse() const {
-	return Vector4(1.0f / x, 1.0f / y, 1.0f / z, 1.0f / w);
-}
-
-Vector4 Vector4::clamp(const Vector4 &p_min, const Vector4 &p_max) const {
-	return Vector4(
-			CLAMP(x, p_min.x, p_max.x),
-			CLAMP(y, p_min.y, p_max.y),
-			CLAMP(z, p_min.z, p_max.z),
-			CLAMP(w, p_min.w, p_max.w));
 }
 
 Vector4::operator String() const {
