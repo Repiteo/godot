@@ -77,37 +77,6 @@ repos:
   #       files: ^(doc/classes|.*/doc_classes)/.*\.xml$
   #       args: [--schema, doc/class.xsd]
 
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.46.0
-    hooks:
-      - id: eslint
-        name: eslint-engine
-        files: ^(platform/web/js/engine/|js/jsdoc2rst/).*\.js$
-        args: [--fix, --no-eslintrc, --config, platform/web/.eslintrc.engine.js]
-        additional_dependencies: &eslint-deps
-          - eslint@8.46.0
-          - eslint-config-airbnb-base@15.0.0
-          - eslint-plugin-import@2.28.0
-          - eslint-plugin-html@7.1.0
-          - '@html-eslint/eslint-plugin@0.19.1'
-          - '@html-eslint/parser@0.19.1'
-      - id: eslint
-        name: eslint-libs
-        files: ^(platform/web/js/libs/|modules/).*\.js$
-        args: [--fix, --no-eslintrc, --config, platform/web/.eslintrc.libs.js]
-        additional_dependencies: *eslint-deps
-      - id: eslint
-        name: eslint-sw
-        files: ^misc/dist/html/service-worker\.js$
-        args: [--fix, --no-eslintrc, --config, platform/web/.eslintrc.sw.js]
-        additional_dependencies: *eslint-deps
-      - id: eslint
-        name: eslint-html
-        files: ^misc/dist/html/.*\.html$
-        types: [html]
-        args: [--fix, --no-eslintrc, --config, platform/web/.eslintrc.html.js]
-        additional_dependencies: *eslint-deps
-
   - repo: local
     hooks:
       - id: make-rst
@@ -123,13 +92,31 @@ repos:
         entry: python3 doc/tools/doc_status.py
         files: ^(doc/classes|.*/doc_classes)/.*\.xml$
 
+      # - id: biome
+      #   name: biome
+      #   language: node
+      #   entry: biome
+      #   files: ^(platform/web/js/|modules/|misc/dist/html/).*\.(js|html)$
+      #   args: [check, --apply]
+      #   additional_dependencies: ['@biomejs/biome@1.7.3']
+
       - id: jsdoc
         name: jsdoc
         language: node
         entry: jsdoc
         files: ^platform/web/js/engine/(engine|config|features)\.js$
-        args: [--template, platform/web/js/jsdoc2rst/, --destination, '', -d, dry-run]
-        additional_dependencies: ["jsdoc@4.0.2"]
+        args:
+          - --template
+          - platform/web/js/jsdoc2rst/
+          - platform/web/js/engine/engine.js
+          - platform/web/js/engine/config.js
+          - platform/web/js/engine/features.js
+          - --destination
+          - ''
+          - -d
+          - dry-run
+        pass_filenames: false
+        additional_dependencies: ['jsdoc@^4.0.3']
 
       - id: copyright-headers
         name: copyright-headers
