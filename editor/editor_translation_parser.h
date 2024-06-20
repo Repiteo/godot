@@ -32,7 +32,7 @@
 #define EDITOR_TRANSLATION_PARSER_H
 
 #include "core/error/error_list.h"
-#include "core/object/gdvirtual.gen.inc"
+#include "core/object/gdvirtual.gen.h"
 #include "core/object/ref_counted.h"
 #include "core/variant/typed_array.h"
 

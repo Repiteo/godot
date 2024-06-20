@@ -31,8 +31,8 @@
 #ifndef PHYSICS_SERVER_2D_EXTENSION_H
 #define PHYSICS_SERVER_2D_EXTENSION_H
 
-#include "core/extension/ext_wrappers.gen.inc"
-#include "core/object/gdvirtual.gen.inc"
+#include "core/extension/ext_wrappers.gen.h"
+#include "core/object/gdvirtual.gen.h"
 #include "core/variant/native_ptr.h"
 #include "core/variant/type_info.h"
 #include "core/variant/typed_array.h"

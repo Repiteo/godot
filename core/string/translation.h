@@ -32,7 +32,7 @@
 #define TRANSLATION_H
 
 #include "core/io/resource.h"
-#include "core/object/gdvirtual.gen.inc"
+#include "core/object/gdvirtual.gen.h"
 
 class Translation : public Resource {
 	GDCLASS(Translation, Resource);

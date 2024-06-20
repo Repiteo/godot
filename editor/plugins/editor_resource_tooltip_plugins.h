@@ -31,7 +31,7 @@
 #ifndef EDITOR_RESOURCE_TOOLTIP_PLUGINS_H
 #define EDITOR_RESOURCE_TOOLTIP_PLUGINS_H
 
-#include "core/object/gdvirtual.gen.inc"
+#include "core/object/gdvirtual.gen.h"
 #include "core/object/ref_counted.h"
 #include "scene/gui/control.h"
 

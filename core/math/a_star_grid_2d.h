@@ -31,7 +31,7 @@
 #ifndef A_STAR_GRID_2D_H
 #define A_STAR_GRID_2D_H
 
-#include "core/object/gdvirtual.gen.inc"
+#include "core/object/gdvirtual.gen.h"
 #include "core/object/ref_counted.h"
 #include "core/templates/list.h"
 #include "core/templates/local_vector.h"

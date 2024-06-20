@@ -32,7 +32,7 @@
 #define RESOURCE_SAVER_H
 
 #include "core/io/resource.h"
-#include "core/object/gdvirtual.gen.inc"
+#include "core/object/gdvirtual.gen.h"
 
 class ResourceFormatSaver : public RefCounted {
 	GDCLASS(ResourceFormatSaver, RefCounted);

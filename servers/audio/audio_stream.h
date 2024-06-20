@@ -37,7 +37,7 @@
 #include "servers/audio/audio_filter_sw.h"
 #include "servers/audio_server.h"
 
-#include "core/object/gdvirtual.gen.inc"
+#include "core/object/gdvirtual.gen.h"
 #include "core/variant/native_ptr.h"
 #include "core/variant/typed_array.h"
 

@@ -31,7 +31,7 @@
 #ifndef TEXT_SERVER_EXTENSION_H
 #define TEXT_SERVER_EXTENSION_H
 
-#include "core/object/gdvirtual.gen.inc"
+#include "core/object/gdvirtual.gen.h"
 #include "core/os/thread_safe.h"
 #include "core/variant/native_ptr.h"
 #include "core/variant/typed_array.h"

@@ -31,7 +31,7 @@
 #ifndef EDITOR_SCRIPT_H
 #define EDITOR_SCRIPT_H
 
-#include "core/object/gdvirtual.gen.inc"
+#include "core/object/gdvirtual.gen.h"
 #include "core/object/ref_counted.h"
 
 class EditorInterface;

@@ -32,7 +32,7 @@
 #define EDITOR_RESOURCE_CONVERSION_PLUGIN_H
 
 #include "core/io/resource.h"
-#include "core/object/gdvirtual.gen.inc"
+#include "core/object/gdvirtual.gen.h"
 
 class EditorResourceConversionPlugin : public RefCounted {
 	GDCLASS(EditorResourceConversionPlugin, RefCounted);

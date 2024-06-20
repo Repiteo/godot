@@ -32,7 +32,7 @@
 #define COMPOSITOR_H
 
 #include "core/io/resource.h"
-#include "core/object/gdvirtual.gen.inc"
+#include "core/object/gdvirtual.gen.h"
 #include "servers/rendering/storage/render_data.h"
 
 /* Compositor Effect */

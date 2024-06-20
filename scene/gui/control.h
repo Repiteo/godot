@@ -32,7 +32,7 @@
 #define CONTROL_H
 
 #include "core/math/transform_2d.h"
-#include "core/object/gdvirtual.gen.inc"
+#include "core/object/gdvirtual.gen.h"
 #include "core/templates/rid.h"
 #include "scene/main/canvas_item.h"
 #include "scene/main/timer.h"
