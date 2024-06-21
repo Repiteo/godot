@@ -499,11 +499,11 @@ private:
 		uint64_t last_frame_call_count = 0;
 		uint64_t last_frame_self_time = 0;
 		uint64_t last_frame_total_time = 0;
-		typedef struct NativeProfile {
+		using NativeProfile = struct NativeProfile {
 			uint64_t call_count;
 			uint64_t total_time;
 			String signature;
-		} NativeProfile;
+		};
 		HashMap<String, NativeProfile> native_calls;
 		HashMap<String, NativeProfile> last_native_calls;
 	} profile;

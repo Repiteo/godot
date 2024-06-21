@@ -45,7 +45,7 @@
 #ifndef __IAudioClient3_FWD_DEFINED__
 #define __IAudioClient3_FWD_DEFINED__
 
-typedef interface IAudioClient3 IAudioClient3;
+using IAudioClient3 = struct IAudioClient3;
 
 #endif // __IAudioClient3_FWD_DEFINED__
 

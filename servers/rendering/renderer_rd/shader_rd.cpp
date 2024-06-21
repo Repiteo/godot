@@ -502,7 +502,7 @@ void ShaderRD::_compile_version(Version *p_version, int p_group) {
 		return;
 	}
 
-	typedef Vector<uint8_t> ShaderStageData;
+	using ShaderStageData = Vector<uint8_t>;
 	p_version->variant_data = memnew_arr(ShaderStageData, variant_defines.size());
 
 	p_version->dirty = false;

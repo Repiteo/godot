@@ -42,21 +42,21 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-typedef struct _NT_IO_STATUS_BLOCK {
+using NT_IO_STATUS_BLOCK = struct _NT_IO_STATUS_BLOCK {
 	union {
 		LONG Status;
 		PVOID Pointer;
 	} DUMMY;
 	ULONG_PTR Information;
-} NT_IO_STATUS_BLOCK;
+};
 
-typedef struct _NT_FILE_CASE_SENSITIVE_INFO {
+using NT_FILE_CASE_SENSITIVE_INFO = struct _NT_FILE_CASE_SENSITIVE_INFO {
 	ULONG Flags;
-} NT_FILE_CASE_SENSITIVE_INFO;
+};
 
-typedef enum _NT_FILE_INFORMATION_CLASS {
+using NT_FILE_INFORMATION_CLASS = enum _NT_FILE_INFORMATION_CLASS {
 	FileCaseSensitiveInformation = 71,
-} NT_FILE_INFORMATION_CLASS;
+};
 
 #define NT_FILE_CS_FLAG_CASE_SENSITIVE_DIR 0x00000001
 

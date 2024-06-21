@@ -35,7 +35,7 @@
 
 extern void (*_print_func)(String);
 
-typedef void (*PrintHandlerFunc)(void *, const String &p_string, bool p_error, bool p_rich);
+using PrintHandlerFunc = void (*)(void *, const String &p_string, bool p_error, bool p_rich);
 
 struct PrintHandlerList {
 	PrintHandlerFunc printfunc = nullptr;

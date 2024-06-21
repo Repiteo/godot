@@ -36,10 +36,10 @@
 template <typename T>
 class PacketBuffer {
 private:
-	typedef struct {
+	using _Packet = struct {
 		uint32_t size;
 		T info;
-	} _Packet;
+	};
 
 	Vector<_Packet> _packets;
 	int _queued = 0;

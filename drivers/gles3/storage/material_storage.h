@@ -71,7 +71,7 @@ struct ShaderData {
 	virtual ~ShaderData() {}
 };
 
-typedef ShaderData *(*ShaderDataRequestFunction)();
+using ShaderDataRequestFunction = ShaderData *(*)();
 
 struct Material;
 
@@ -113,7 +113,7 @@ private:
 	HashMap<StringName, uint64_t> used_global_textures;
 };
 
-typedef MaterialData *(*MaterialDataRequestFunction)(ShaderData *);
+using MaterialDataRequestFunction = MaterialData *(*)(ShaderData *);
 
 struct Material {
 	RID self;

@@ -47,7 +47,7 @@ enum {
 
 class PoolAllocator {
 public:
-	typedef int ID;
+	using ID = int;
 
 private:
 	enum {
@@ -72,8 +72,8 @@ private:
 		Entry() {}
 	};
 
-	typedef int EntryArrayPos;
-	typedef int EntryIndicesPos;
+	using EntryArrayPos = int;
+	using EntryIndicesPos = int;
 
 	Entry *entry_array = nullptr;
 	int *entry_indices = nullptr;

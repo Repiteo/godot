@@ -175,7 +175,7 @@ struct NamesCache {
 	}
 };
 
-typedef HashMap<StringName, ExposedClass> ExposedClasses;
+using ExposedClasses = HashMap<StringName, ExposedClass>;
 
 struct Context {
 	Vector<StringName> enum_types;

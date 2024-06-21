@@ -53,8 +53,8 @@ protected:
 	static void _bind_methods();
 
 public:
-	typedef Error (*EditorExportSaveFunction)(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key);
-	typedef Error (*EditorExportSaveSharedObject)(void *p_userdata, const SharedObject &p_so);
+	using EditorExportSaveFunction = Error (*)(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key);
+	using EditorExportSaveSharedObject = Error (*)(void *p_userdata, const SharedObject &p_so);
 
 	enum ExportMessageType {
 		EXPORT_MESSAGE_NONE,

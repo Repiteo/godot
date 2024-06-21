@@ -411,8 +411,8 @@ Error OS_Windows::open_dynamic_library(const String &p_path, void *&p_library_ha
 		}
 	}
 
-	typedef DLL_DIRECTORY_COOKIE(WINAPI * PAddDllDirectory)(PCWSTR);
-	typedef BOOL(WINAPI * PRemoveDllDirectory)(DLL_DIRECTORY_COOKIE);
+	using PAddDllDirectory = DLL_DIRECTORY_COOKIE(WINAPI *)(PCWSTR);
+	using PRemoveDllDirectory = BOOL(WINAPI *)(DLL_DIRECTORY_COOKIE);
 
 	PAddDllDirectory add_dll_directory = (PAddDllDirectory)GetProcAddress(GetModuleHandle("kernel32.dll"), "AddDllDirectory");
 	PRemoveDllDirectory remove_dll_directory = (PRemoveDllDirectory)GetProcAddress(GetModuleHandle("kernel32.dll"), "RemoveDllDirectory");
@@ -774,7 +774,7 @@ Dictionary OS_Windows::get_memory_info() const {
 	pref_info.cb = sizeof(pref_info);
 	GetPerformanceInfo(&pref_info, sizeof(pref_info));
 
-	typedef void(WINAPI * PGetCurrentThreadStackLimits)(PULONG_PTR, PULONG_PTR);
+	using PGetCurrentThreadStackLimits = void(WINAPI *)(PULONG_PTR, PULONG_PTR);
 	PGetCurrentThreadStackLimits GetCurrentThreadStackLimits = (PGetCurrentThreadStackLimits)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetCurrentThreadStackLimits");
 
 	ULONG_PTR LowLimit = 0;
@@ -1637,7 +1637,7 @@ String OS_Windows::get_locale() const {
 // We need this because GetSystemInfo() is unreliable on WOW64
 // see https://msdn.microsoft.com/en-us/library/windows/desktop/ms724381(v=vs.85).aspx
 // Taken from MSDN
-typedef BOOL(WINAPI *LPFN_ISWOW64PROCESS)(HANDLE, PBOOL);
+using LPFN_ISWOW64PROCESS = BOOL(WINAPI *)(HANDLE, PBOOL);
 LPFN_ISWOW64PROCESS fnIsWow64Process;
 
 BOOL is_wow64() {

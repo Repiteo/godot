@@ -846,11 +846,11 @@ bool DisplayServerWindows::clipboard_has_image() const {
 	return ((png_format && IsClipboardFormatAvailable(png_format)) || IsClipboardFormatAvailable(CF_DIB));
 }
 
-typedef struct {
+using EnumScreenData = struct {
 	int count;
 	int screen;
 	HMONITOR monitor;
-} EnumScreenData;
+};
 
 static BOOL CALLBACK _MonitorEnumProcPrim(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPARAM dwData) {
 	EnumScreenData *data = (EnumScreenData *)dwData;
@@ -904,11 +904,11 @@ int DisplayServerWindows::get_keyboard_focus_screen() const {
 	}
 }
 
-typedef struct {
+using EnumPosData = struct {
 	int count;
 	int screen;
 	Point2 pos;
-} EnumPosData;
+};
 
 static BOOL CALLBACK _MonitorEnumProcPos(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPARAM dwData) {
 	EnumPosData *data = (EnumPosData *)dwData;
@@ -945,25 +945,25 @@ Point2i DisplayServerWindows::screen_get_position(int p_screen) const {
 	return data.pos - _get_screens_origin();
 }
 
-typedef struct {
+using EnumSizeData = struct {
 	int count;
 	int screen;
 	Size2 size;
-} EnumSizeData;
+};
 
-typedef struct {
+using EnumRectData = struct {
 	int count;
 	int screen;
 	Rect2i rect;
-} EnumRectData;
+};
 
-typedef struct {
+using EnumRefreshRateData = struct {
 	Vector<DISPLAYCONFIG_PATH_INFO> paths;
 	Vector<DISPLAYCONFIG_MODE_INFO> modes;
 	int count;
 	int screen;
 	float rate;
-} EnumRefreshRateData;
+};
 
 static BOOL CALLBACK _MonitorEnumProcSize(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPARAM dwData) {
 	EnumSizeData *data = (EnumSizeData *)dwData;
@@ -1051,11 +1051,11 @@ Rect2i DisplayServerWindows::screen_get_usable_rect(int p_screen) const {
 	return data.rect;
 }
 
-typedef struct {
+using EnumDpiData = struct {
 	int count;
 	int screen;
 	int dpi;
-} EnumDpiData;
+};
 
 enum _MonitorDpiType {
 	MDT_Effective_DPI = 0,
@@ -1068,7 +1068,7 @@ static int QueryDpiForMonitor(HMONITOR hmon, _MonitorDpiType dpiType = MDT_Defau
 	int dpiX = 96, dpiY = 96;
 
 	static HMODULE Shcore = nullptr;
-	typedef HRESULT(WINAPI * GetDPIForMonitor_t)(HMONITOR hmonitor, _MonitorDpiType dpiType, UINT * dpiX, UINT * dpiY);
+	using GetDPIForMonitor_t = HRESULT(WINAPI *)(HMONITOR hmonitor, _MonitorDpiType dpiType, UINT * dpiX, UINT * dpiY);
 	static GetDPIForMonitor_t getDPIForMonitor = nullptr;
 
 	if (Shcore == nullptr) {
@@ -2545,7 +2545,7 @@ Error DisplayServerWindows::dialog_show(String p_title, String p_description, Ve
 	Error result = FAILED;
 	HMODULE comctl = LoadLibraryW(L"comctl32.dll");
 	if (comctl) {
-		typedef HRESULT(WINAPI * TaskDialogIndirectPtr)(const TASKDIALOGCONFIG *pTaskConfig, int *pnButton, int *pnRadioButton, BOOL *pfVerificationFlagChecked);
+		using TaskDialogIndirectPtr = HRESULT(WINAPI *)(const TASKDIALOGCONFIG *pTaskConfig, int *pnButton, int *pnRadioButton, BOOL *pfVerificationFlagChecked);
 
 		TaskDialogIndirectPtr task_dialog_indirect = (TaskDialogIndirectPtr)GetProcAddress(comctl, "TaskDialogIndirect");
 		int button_pressed;
@@ -5494,11 +5494,11 @@ Vector2i _get_device_ids(const String &p_device_name) {
 	return ids;
 }
 
-typedef enum _SHC_PROCESS_DPI_AWARENESS {
+using SHC_PROCESS_DPI_AWARENESS = enum _SHC_PROCESS_DPI_AWARENESS {
 	SHC_PROCESS_DPI_UNAWARE = 0,
 	SHC_PROCESS_SYSTEM_DPI_AWARE = 1,
 	SHC_PROCESS_PER_MONITOR_DPI_AWARE = 2
-} SHC_PROCESS_DPI_AWARENESS;
+};
 
 bool DisplayServerWindows::is_dark_mode_supported() const {
 	return ux_theme_available;
@@ -5688,7 +5688,7 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Win
 		HMODULE Shcore = LoadLibraryW(L"Shcore.dll");
 
 		if (Shcore != nullptr) {
-			typedef HRESULT(WINAPI * SetProcessDpiAwareness_t)(SHC_PROCESS_DPI_AWARENESS);
+			using SetProcessDpiAwareness_t = HRESULT(WINAPI *)(SHC_PROCESS_DPI_AWARENESS);
 
 			SetProcessDpiAwareness_t SetProcessDpiAwareness = (SetProcessDpiAwareness_t)GetProcAddress(Shcore, "SetProcessDpiAwareness");
 
@@ -5700,7 +5700,7 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Win
 
 	HMODULE comctl32 = LoadLibraryW(L"comctl32.dll");
 	if (comctl32) {
-		typedef BOOL(WINAPI * InitCommonControlsExPtr)(_In_ const INITCOMMONCONTROLSEX *picce);
+		using InitCommonControlsExPtr = BOOL(WINAPI *)(_In_ const INITCOMMONCONTROLSEX *picce);
 		InitCommonControlsExPtr init_common_controls_ex = (InitCommonControlsExPtr)GetProcAddress(comctl32, "InitCommonControlsEx");
 
 		// Fails if the incorrect version was loaded. Probably not a big enough deal to print an error about.

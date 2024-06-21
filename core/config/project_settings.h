@@ -44,7 +44,7 @@ class ProjectSettings : public Object {
 	bool is_changed = false;
 
 public:
-	typedef HashMap<String, Variant> CustomMap;
+	using CustomMap = HashMap<String, Variant>;
 	static const String PROJECT_DATA_DIR_NAME_SUFFIX;
 
 	enum {

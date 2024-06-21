@@ -250,7 +250,7 @@ struct PtrToArg<Ref<T>> {
 		return Ref<T>(const_cast<T *>(*reinterpret_cast<T *const *>(p_ptr)));
 	}
 
-	typedef Ref<T> EncodeT;
+	using EncodeT = Ref<T>;
 
 	_FORCE_INLINE_ static void encode(Ref<T> p_val, const void *p_ptr) {
 		// p_ptr points to an EncodeT object which is a Ref<T> object.
@@ -260,7 +260,7 @@ struct PtrToArg<Ref<T>> {
 
 template <typename T>
 struct PtrToArg<const Ref<T> &> {
-	typedef Ref<T> EncodeT;
+	using EncodeT = Ref<T>;
 
 	_FORCE_INLINE_ static Ref<T> convert(const void *p_ptr) {
 		if (p_ptr == nullptr) {

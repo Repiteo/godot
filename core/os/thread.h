@@ -57,9 +57,9 @@ class String;
 
 class Thread {
 public:
-	typedef void (*Callback)(void *p_userdata);
+	using Callback = void (*)(void *p_userdata);
 
-	typedef uint64_t ID;
+	using ID = uint64_t;
 
 	enum : ID {
 		UNASSIGNED_ID = 0,
@@ -131,9 +131,9 @@ public:
 
 class Thread {
 public:
-	typedef void (*Callback)(void *p_userdata);
+	using Callback = void (*)(void *p_userdata);
 
-	typedef uint64_t ID;
+	using ID = uint64_t;
 
 	enum : ID {
 		UNASSIGNED_ID = 0,

@@ -49,7 +49,7 @@ private:
 		}
 	};
 
-	typedef typename List<Pair>::Element *Element;
+	using Element = typename List<Pair>::Element *;
 
 	List<Pair> _list;
 	HashMap<TKey, Element, Hasher, Comparator> _map;

@@ -68,14 +68,14 @@ public:
 		SHADER_LANGUAGE_HLSL
 	};
 
-	typedef int64_t DrawListID;
-	typedef int64_t ComputeListID;
+	using DrawListID = int64_t;
+	using ComputeListID = int64_t;
 
-	typedef String (*ShaderSPIRVGetCacheKeyFunction)(const RenderingDevice *p_render_device);
-	typedef Vector<uint8_t> (*ShaderCompileToSPIRVFunction)(ShaderStage p_stage, const String &p_source_code, ShaderLanguage p_language, String *r_error, const RenderingDevice *p_render_device);
-	typedef Vector<uint8_t> (*ShaderCacheFunction)(ShaderStage p_stage, const String &p_source_code, ShaderLanguage p_language);
+	using ShaderSPIRVGetCacheKeyFunction = String (*)(const RenderingDevice *p_render_device);
+	using ShaderCompileToSPIRVFunction = Vector<uint8_t> (*)(ShaderStage p_stage, const String &p_source_code, ShaderLanguage p_language, String *r_error, const RenderingDevice *p_render_device);
+	using ShaderCacheFunction = Vector<uint8_t> (*)(ShaderStage p_stage, const String &p_source_code, ShaderLanguage p_language);
 
-	typedef void (*InvalidationCallback)(void *);
+	using InvalidationCallback = void (*)(void *);
 
 private:
 	static ShaderCompileToSPIRVFunction compile_to_spirv_function;
@@ -388,7 +388,7 @@ public:
 		int32_t vrs_attachment = ATTACHMENT_UNUSED; // density map for VRS, only used if supported
 	};
 
-	typedef int64_t FramebufferFormatID;
+	using FramebufferFormatID = int64_t;
 
 private:
 	struct FramebufferFormatKey {
@@ -592,7 +592,7 @@ public:
 	/**** VERTEX ARRAY ****/
 	/**********************/
 
-	typedef int64_t VertexFormatID;
+	using VertexFormatID = int64_t;
 
 private:
 	// Vertex buffers in Vulkan are similar to how
@@ -1480,6 +1480,6 @@ VARIANT_ENUM_CAST(RenderingDevice::Features)
 VARIANT_BITFIELD_CAST(RenderingDevice::BarrierMask);
 #endif
 
-typedef RenderingDevice RD;
+using RD = RenderingDevice;
 
 #endif // RENDERING_DEVICE_H

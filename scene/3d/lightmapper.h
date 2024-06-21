@@ -155,7 +155,7 @@ public:
 		BAKE_QUALITY_ULTRA,
 	};
 
-	typedef Lightmapper *(*CreateFunc)();
+	using CreateFunc = Lightmapper *(*)();
 
 	static CreateFunc create_custom;
 	static CreateFunc create_gpu;
@@ -163,7 +163,7 @@ public:
 
 protected:
 public:
-	typedef bool (*BakeStepFunc)(float, const String &, void *, bool); //step index, step total, step description, userdata
+	using BakeStepFunc = bool (*)(float, const String &, void *, bool); //step index, step total, step description, userdata
 
 	struct MeshData {
 		//triangle data

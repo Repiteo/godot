@@ -104,8 +104,8 @@ private:
 		uint64_t ff_end_timestamp = 0;
 	};
 
-	typedef DWORD(WINAPI *XInputGetState_t)(DWORD dwUserIndex, XINPUT_STATE *pState);
-	typedef DWORD(WINAPI *XInputSetState_t)(DWORD dwUserIndex, XINPUT_VIBRATION *pVibration);
+	using XInputGetState_t = DWORD(WINAPI *)(DWORD dwUserIndex, XINPUT_STATE *pState);
+	using XInputSetState_t = DWORD(WINAPI *)(DWORD dwUserIndex, XINPUT_VIBRATION *pVibration);
 
 	HWND *hWnd = nullptr;
 	HANDLE xinput_dll;

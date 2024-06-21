@@ -38,7 +38,7 @@
 class ResourceUID : public Object {
 	GDCLASS(ResourceUID, Object)
 public:
-	typedef int64_t ID;
+	using ID = int64_t;
 	enum {
 		INVALID_ID = -1
 	};

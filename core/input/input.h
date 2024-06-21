@@ -81,7 +81,7 @@ public:
 		JOYPADS_MAX = 16,
 	};
 
-	typedef void (*EventDispatchFunc)(const Ref<InputEvent> &p_event);
+	using EventDispatchFunc = void (*)(const Ref<InputEvent> &p_event);
 
 private:
 	BitField<MouseButtonMask> mouse_button_mask;

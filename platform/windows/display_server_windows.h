@@ -91,7 +91,7 @@
 
 #define TPS_INVERT 0x0010 /* 1.1 */
 
-typedef struct tagLOGCONTEXTW {
+using LOGCONTEXTW = struct tagLOGCONTEXTW {
 	WCHAR lcName[40];
 	UINT lcOptions;
 	UINT lcStatus;
@@ -126,33 +126,33 @@ typedef struct tagLOGCONTEXTW {
 	int lcSysExtY;
 	DWORD lcSysSensX;
 	DWORD lcSysSensY;
-} LOGCONTEXTW;
+};
 
-typedef struct tagAXIS {
+using AXIS = struct tagAXIS {
 	LONG axMin;
 	LONG axMax;
 	UINT axUnits;
 	DWORD axResolution;
-} AXIS;
+};
 
-typedef struct tagORIENTATION {
+using ORIENTATION = struct tagORIENTATION {
 	int orAzimuth;
 	int orAltitude;
 	int orTwist;
-} ORIENTATION;
+};
 
-typedef struct tagPACKET {
+using PACKET = struct tagPACKET {
 	int pkStatus;
 	int pkNormalPressure;
 	int pkTangentPressure;
 	ORIENTATION pkOrientation;
-} PACKET;
+};
 
-typedef HANDLE(WINAPI *WTOpenPtr)(HWND p_window, LOGCONTEXTW *p_ctx, BOOL p_enable);
-typedef BOOL(WINAPI *WTClosePtr)(HANDLE p_ctx);
-typedef UINT(WINAPI *WTInfoPtr)(UINT p_category, UINT p_index, LPVOID p_output);
-typedef BOOL(WINAPI *WTPacketPtr)(HANDLE p_ctx, UINT p_param, LPVOID p_packets);
-typedef BOOL(WINAPI *WTEnablePtr)(HANDLE p_ctx, BOOL p_enable);
+using WTOpenPtr = HANDLE(WINAPI *)(HWND p_window, LOGCONTEXTW *p_ctx, BOOL p_enable);
+using WTClosePtr = BOOL(WINAPI *)(HANDLE p_ctx);
+using WTInfoPtr = UINT(WINAPI *)(UINT p_category, UINT p_index, LPVOID p_output);
+using WTPacketPtr = BOOL(WINAPI *)(HANDLE p_ctx, UINT p_param, LPVOID p_packets);
+using WTEnablePtr = BOOL(WINAPI *)(HANDLE p_ctx, BOOL p_enable);
 
 enum PreferredAppMode {
 	APPMODE_DEFAULT = 0,
@@ -162,26 +162,26 @@ enum PreferredAppMode {
 	APPMODE_MAX = 4
 };
 
-typedef const char *(CDECL *WineGetVersionPtr)(void);
-typedef bool(WINAPI *ShouldAppsUseDarkModePtr)();
-typedef DWORD(WINAPI *GetImmersiveColorFromColorSetExPtr)(UINT dwImmersiveColorSet, UINT dwImmersiveColorType, bool bIgnoreHighContrast, UINT dwHighContrastCacheMode);
-typedef int(WINAPI *GetImmersiveColorTypeFromNamePtr)(const WCHAR *name);
-typedef int(WINAPI *GetImmersiveUserColorSetPreferencePtr)(bool bForceCheckRegistry, bool bSkipCheckOnFail);
-typedef HRESULT(WINAPI *RtlGetVersionPtr)(OSVERSIONINFOW *lpVersionInformation);
-typedef bool(WINAPI *AllowDarkModeForAppPtr)(bool darkMode);
-typedef PreferredAppMode(WINAPI *SetPreferredAppModePtr)(PreferredAppMode appMode);
-typedef void(WINAPI *RefreshImmersiveColorPolicyStatePtr)();
-typedef void(WINAPI *FlushMenuThemesPtr)();
+using WineGetVersionPtr = const char *(CDECL *)(void);
+using ShouldAppsUseDarkModePtr = bool(WINAPI *)();
+using GetImmersiveColorFromColorSetExPtr = DWORD(WINAPI *)(UINT dwImmersiveColorSet, UINT dwImmersiveColorType, bool bIgnoreHighContrast, UINT dwHighContrastCacheMode);
+using GetImmersiveColorTypeFromNamePtr = int(WINAPI *)(const WCHAR *name);
+using GetImmersiveUserColorSetPreferencePtr = int(WINAPI *)(bool bForceCheckRegistry, bool bSkipCheckOnFail);
+using RtlGetVersionPtr = HRESULT(WINAPI *)(OSVERSIONINFOW *lpVersionInformation);
+using AllowDarkModeForAppPtr = bool(WINAPI *)(bool darkMode);
+using SetPreferredAppModePtr = PreferredAppMode(WINAPI *)(PreferredAppMode appMode);
+using RefreshImmersiveColorPolicyStatePtr = void(WINAPI *)();
+using FlushMenuThemesPtr = void(WINAPI *)();
 
 // Windows Ink API
 #ifndef POINTER_STRUCTURES
 
 #define POINTER_STRUCTURES
 
-typedef DWORD POINTER_INPUT_TYPE;
-typedef UINT32 POINTER_FLAGS;
-typedef UINT32 PEN_FLAGS;
-typedef UINT32 PEN_MASK;
+using POINTER_INPUT_TYPE = DWORD;
+using POINTER_FLAGS = UINT32;
+using PEN_FLAGS = UINT32;
+using PEN_MASK = UINT32;
 
 #ifndef PEN_FLAG_INVERTED
 #define PEN_FLAG_INVERTED 0x00000002
@@ -216,7 +216,7 @@ enum tagPOINTER_INPUT_TYPE {
 	PT_TOUCHPAD = 0x00000005
 };
 
-typedef enum tagPOINTER_BUTTON_CHANGE_TYPE {
+using POINTER_BUTTON_CHANGE_TYPE = enum tagPOINTER_BUTTON_CHANGE_TYPE {
 	POINTER_CHANGE_NONE,
 	POINTER_CHANGE_FIRSTBUTTON_DOWN,
 	POINTER_CHANGE_FIRSTBUTTON_UP,
@@ -228,9 +228,9 @@ typedef enum tagPOINTER_BUTTON_CHANGE_TYPE {
 	POINTER_CHANGE_FOURTHBUTTON_UP,
 	POINTER_CHANGE_FIFTHBUTTON_DOWN,
 	POINTER_CHANGE_FIFTHBUTTON_UP,
-} POINTER_BUTTON_CHANGE_TYPE;
+};
 
-typedef struct tagPOINTER_INFO {
+using POINTER_INFO = struct tagPOINTER_INFO {
 	POINTER_INPUT_TYPE pointerType;
 	UINT32 pointerId;
 	UINT32 frameId;
@@ -247,9 +247,9 @@ typedef struct tagPOINTER_INFO {
 	DWORD dwKeyStates;
 	UINT64 PerformanceCount;
 	POINTER_BUTTON_CHANGE_TYPE ButtonChangeType;
-} POINTER_INFO;
+};
 
-typedef struct tagPOINTER_PEN_INFO {
+using POINTER_PEN_INFO = struct tagPOINTER_PEN_INFO {
 	POINTER_INFO pointerInfo;
 	PEN_FLAGS penFlags;
 	PEN_MASK penMask;
@@ -257,7 +257,7 @@ typedef struct tagPOINTER_PEN_INFO {
 	UINT32 rotation;
 	INT32 tiltX;
 	INT32 tiltY;
-} POINTER_PEN_INFO;
+};
 #endif
 
 #endif //POINTER_STRUCTURES
@@ -274,12 +274,12 @@ typedef struct tagPOINTER_PEN_INFO {
 #define WM_POINTERLEAVE 0x024A
 #endif
 
-typedef BOOL(WINAPI *GetPointerTypePtr)(uint32_t p_id, POINTER_INPUT_TYPE *p_type);
-typedef BOOL(WINAPI *GetPointerPenInfoPtr)(uint32_t p_id, POINTER_PEN_INFO *p_pen_info);
-typedef BOOL(WINAPI *LogicalToPhysicalPointForPerMonitorDPIPtr)(HWND hwnd, LPPOINT lpPoint);
-typedef BOOL(WINAPI *PhysicalToLogicalPointForPerMonitorDPIPtr)(HWND hwnd, LPPOINT lpPoint);
+using GetPointerTypePtr = BOOL(WINAPI *)(uint32_t p_id, POINTER_INPUT_TYPE *p_type);
+using GetPointerPenInfoPtr = BOOL(WINAPI *)(uint32_t p_id, POINTER_PEN_INFO *p_pen_info);
+using LogicalToPhysicalPointForPerMonitorDPIPtr = BOOL(WINAPI *)(HWND hwnd, LPPOINT lpPoint);
+using PhysicalToLogicalPointForPerMonitorDPIPtr = BOOL(WINAPI *)(HWND hwnd, LPPOINT lpPoint);
 
-typedef struct {
+using ICONDIRENTRY = struct {
 	BYTE bWidth; // Width, in pixels, of the image
 	BYTE bHeight; // Height, in pixels, of the image
 	BYTE bColorCount; // Number of colors in image (0 if >=8bpp)
@@ -288,14 +288,16 @@ typedef struct {
 	WORD wBitCount; // Bits per pixel
 	DWORD dwBytesInRes; // How many bytes in this resource?
 	DWORD dwImageOffset; // Where in the file is this image?
-} ICONDIRENTRY, *LPICONDIRENTRY;
+};
+using LPICONDIRENTRY = ICONDIRENTRY *;
 
-typedef struct {
+using ICONDIR = struct {
 	WORD idReserved; // Reserved (must be 0)
 	WORD idType; // Resource Type (1 for icons)
 	WORD idCount; // How many images?
 	ICONDIRENTRY idEntries[1]; // An entry for each image (idCount of 'em)
-} ICONDIR, *LPICONDIR;
+};
+using LPICONDIR = ICONDIR *;
 
 class DisplayServerWindows : public DisplayServer {
 	// No need to register with GDCLASS, it's platform-specific and nothing is added.

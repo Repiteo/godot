@@ -43,7 +43,7 @@ class ScriptLanguage;
 template <typename T>
 class TypedArray;
 
-typedef void (*ScriptEditRequestFunction)(const String &p_path);
+using ScriptEditRequestFunction = void (*)(const String &p_path);
 
 class ScriptServer {
 	enum {

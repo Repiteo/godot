@@ -126,7 +126,7 @@ private:
 	bool is_infinite = false;
 #endif
 
-	typedef real_t (*interpolater)(real_t t, real_t b, real_t c, real_t d);
+	using interpolater = real_t (*)(real_t t, real_t b, real_t c, real_t d);
 	static interpolater interpolaters[TRANS_MAX][EASE_MAX];
 
 	void _start_tweeners();
