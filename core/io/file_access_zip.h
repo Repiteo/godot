@@ -38,7 +38,7 @@
 
 #include "thirdparty/minizip/unzip.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 class ZipArchive : public PackSource {
 public:

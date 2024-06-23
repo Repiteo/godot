@@ -57,7 +57,7 @@
 #include "modules/svg/image_loader_svg.h"
 #endif
 
-#include <string.h>
+#include <cstring>
 
 static const char *android_perms[] = {
 	"ACCESS_CHECKIN_PROPERTIES",

@@ -35,7 +35,7 @@
 #include "core/os/memory.h"
 #include "core/templates/safe_refcount.h"
 
-#include <string.h>
+#include <cstring>
 #include <type_traits>
 
 template <typename T>

@@ -63,8 +63,9 @@
 #include "servers/physics_server_3d.h"
 #endif // _3D_DISABLED
 #include "window.h"
-#include <stdio.h>
-#include <stdlib.h>
+
+#include <cstdio>
+#include <cstdlib>
 
 void SceneTreeTimer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_time_left", "time"), &SceneTreeTimer::set_time_left);

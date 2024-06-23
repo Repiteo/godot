@@ -35,7 +35,7 @@
 #include "core/os/os.h"
 #include "core/string/print_string.h"
 
-#include <errno.h>
+#include <cerrno>
 
 MIDIDriverALSAMidi::MessageCategory MIDIDriverALSAMidi::msg_category(uint8_t msg_part) {
 	if (msg_part >= 0xf8) {

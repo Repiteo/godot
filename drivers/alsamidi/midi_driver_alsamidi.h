@@ -45,7 +45,7 @@
 #include <alsa/asoundlib.h>
 #endif
 
-#include <stdio.h>
+#include <cstdio>
 
 class MIDIDriverALSAMidi : public MIDIDriver {
 	Thread thread;

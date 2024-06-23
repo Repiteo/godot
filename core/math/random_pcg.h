@@ -35,7 +35,7 @@
 
 #include "thirdparty/misc/pcg.h"
 
-#include <math.h>
+#include <cmath>
 
 #if defined(__GNUC__)
 #define CLZ32(x) __builtin_clz(x)
@@ -54,7 +54,6 @@ static int __bsr_clz32(uint32_t x) {
 #define LDEXP(s, e) __builtin_ldexp(s, e)
 #define LDEXPF(s, e) __builtin_ldexpf(s, e)
 #else
-#include <math.h>
 #define LDEXP(s, e) ldexp(s, e)
 #define LDEXPF(s, e) ldexp(s, e)
 #endif

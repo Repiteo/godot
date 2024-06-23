@@ -39,7 +39,7 @@
 #include "modules/regex/regex.h"
 #endif // MODULE_REGEX_ENABLED
 
-#include <stdarg.h>
+#include <cstdarg>
 
 class Logger {
 protected:
