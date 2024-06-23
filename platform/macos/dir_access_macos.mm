@@ -34,7 +34,7 @@
 
 #if defined(UNIX_ENABLED)
 
-#include <errno.h>
+#include <cerrno>
 
 #import <AppKit/NSWorkspace.h>
 #import <Foundation/Foundation.h>

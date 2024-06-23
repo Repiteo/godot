@@ -59,7 +59,7 @@
 #include "editor/editor_paths.h"
 #endif
 
-#include <stdint.h>
+#include <cstdint>
 
 ///////////////////////////
 

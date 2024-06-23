@@ -39,8 +39,8 @@
 #ifdef CRASH_HANDLER_EXCEPTION
 
 #include <cxxabi.h>
-#include <signal.h>
 #include <algorithm>
+#include <csignal>
 #include <iterator>
 #include <string>
 #include <vector>

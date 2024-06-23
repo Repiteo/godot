@@ -40,7 +40,7 @@
 #include "core/templates/rid.h"
 #include "core/templates/safe_refcount.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <typeinfo>
 
 class RID_AllocBase {

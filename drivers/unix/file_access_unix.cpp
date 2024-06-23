@@ -35,11 +35,11 @@
 #include "core/os/os.h"
 #include "core/string/print_string.h"
 
-#include <errno.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <cerrno>
 
 void FileAccessUnix::check_errors() const {
 	ERR_FAIL_NULL_MSG(f, "File must be opened before use.");

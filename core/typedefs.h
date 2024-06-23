@@ -31,7 +31,8 @@
 #ifndef TYPEDEFS_H
 #define TYPEDEFS_H
 
-#include <stddef.h>
+#include <cstddef>
+#include <cstdint>
 
 /**
  * Basic definitions and simple functions to be used everywhere.
@@ -42,7 +43,6 @@
 
 // Should be available everywhere.
 #include "core/error/error_list.h"
-#include <cstdint>
 
 // Turn argument to string constant:
 // https://gcc.gnu.org/onlinedocs/cpp/Stringizing.html#Stringizing

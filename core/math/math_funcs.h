@@ -38,8 +38,8 @@
 
 #include "thirdparty/misc/pcg.h"
 
-#include <float.h>
-#include <math.h>
+#include <cfloat>
+#include <cmath>
 
 class Math {
 	static RandomPCG default_rand;

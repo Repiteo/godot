@@ -45,7 +45,7 @@
 
 #include "platform_gl.h"
 
-#include <stdio.h>
+#include <cstdio>
 
 class ShaderGLES3 {
 public:

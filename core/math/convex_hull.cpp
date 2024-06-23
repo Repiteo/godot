@@ -40,6 +40,7 @@
  * - adapted to Godot's code style
  * - replaced Bullet's types (e.g. vectors) with Godot's
  * - replaced custom Pool implementation with PagedAllocator
+ * - modernized deprecated headers
  */
 
 /*
@@ -65,7 +66,7 @@ subject to the following restrictions:
 #include "core/templates/oa_hash_map.h"
 #include "core/templates/paged_allocator.h"
 
-#include <string.h>
+#include <cstring>
 
 //#define DEBUG_CONVEX_HULL
 //#define SHOW_ITERATIONS
@@ -91,7 +92,7 @@ subject to the following restrictions:
 #endif
 
 #if defined(DEBUG_CONVEX_HULL) || defined(SHOW_ITERATIONS)
-#include <stdio.h>
+#include <cstdio>
 #endif
 
 // Convex hull implementation based on Preparata and Hong

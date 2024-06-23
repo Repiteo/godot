@@ -38,7 +38,7 @@
 #include "core/templates/vector.h"
 
 #import <CoreMIDI/CoreMIDI.h>
-#include <stdio.h>
+#include <cstdio>
 
 class MIDIDriverCoreMidi : public MIDIDriver {
 	MIDIClientRef client = 0;

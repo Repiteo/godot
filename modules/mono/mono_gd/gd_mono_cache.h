@@ -42,7 +42,7 @@
 #include "core/variant/dictionary.h"
 #include "core/variant/variant.h"
 
-#include <stdint.h>
+#include <cstdint>
 
 class CSharpScript;
 

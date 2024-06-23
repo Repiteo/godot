@@ -65,9 +65,9 @@
 #define GLTF_IMPORT_DISCARD_MESHES_AND_MATERIALS 32
 #define GLTF_IMPORT_FORCE_DISABLE_MESH_COMPRESSION 64
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <cstdint>
+#include <cstdio>
+#include <cstdlib>
 
 static Ref<ImporterMesh> _mesh_to_importer_mesh(Ref<Mesh> p_mesh) {
 	Ref<ImporterMesh> importer_mesh;

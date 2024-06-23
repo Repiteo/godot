@@ -41,7 +41,7 @@
 
 #include <iphlpapi.h>
 
-#include <stdio.h>
+#include <cstdio>
 
 #else // UNIX
 
@@ -69,7 +69,7 @@
 
 #endif // UNIX
 
-#include <string.h>
+#include <cstring>
 
 static IPAddress _sockaddr2ip(struct sockaddr *p_addr) {
 	IPAddress ip;
