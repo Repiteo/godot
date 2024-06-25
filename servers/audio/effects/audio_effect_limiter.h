@@ -43,7 +43,7 @@ class AudioEffectLimiterInstance : public AudioEffectInstance {
 	float mix_volume_db;
 
 public:
-	virtual void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;
+	void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;
 };
 
 class AudioEffectLimiter : public AudioEffect {

@@ -108,7 +108,7 @@ public:
 	RID feed_texture(int p_id, FeedImage p_texture);
 
 	CameraServer();
-	~CameraServer();
+	~CameraServer() override;
 };
 
 VARIANT_ENUM_CAST(CameraServer::FeedImage);

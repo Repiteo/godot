@@ -66,11 +66,11 @@ public:
 	};
 
 	struct PinJointData : public JointData {
-		virtual JointType get_joint_type() { return JOINT_TYPE_PIN; }
+		JointType get_joint_type() override { return JOINT_TYPE_PIN; }
 
-		virtual bool _set(const StringName &p_name, const Variant &p_value, RID j);
-		virtual bool _get(const StringName &p_name, Variant &r_ret) const;
-		virtual void _get_property_list(List<PropertyInfo> *p_list) const;
+		bool _set(const StringName &p_name, const Variant &p_value, RID j) override;
+		bool _get(const StringName &p_name, Variant &r_ret) const override;
+		void _get_property_list(List<PropertyInfo> *p_list) const override;
 
 		real_t bias = 0.3;
 		real_t damping = 1.0;
@@ -78,11 +78,11 @@ public:
 	};
 
 	struct ConeJointData : public JointData {
-		virtual JointType get_joint_type() { return JOINT_TYPE_CONE; }
+		JointType get_joint_type() override { return JOINT_TYPE_CONE; }
 
-		virtual bool _set(const StringName &p_name, const Variant &p_value, RID j);
-		virtual bool _get(const StringName &p_name, Variant &r_ret) const;
-		virtual void _get_property_list(List<PropertyInfo> *p_list) const;
+		bool _set(const StringName &p_name, const Variant &p_value, RID j) override;
+		bool _get(const StringName &p_name, Variant &r_ret) const override;
+		void _get_property_list(List<PropertyInfo> *p_list) const override;
 
 		real_t swing_span = Math_PI * 0.25;
 		real_t twist_span = Math_PI;
@@ -92,11 +92,11 @@ public:
 	};
 
 	struct HingeJointData : public JointData {
-		virtual JointType get_joint_type() { return JOINT_TYPE_HINGE; }
+		JointType get_joint_type() override { return JOINT_TYPE_HINGE; }
 
-		virtual bool _set(const StringName &p_name, const Variant &p_value, RID j);
-		virtual bool _get(const StringName &p_name, Variant &r_ret) const;
-		virtual void _get_property_list(List<PropertyInfo> *p_list) const;
+		bool _set(const StringName &p_name, const Variant &p_value, RID j) override;
+		bool _get(const StringName &p_name, Variant &r_ret) const override;
+		void _get_property_list(List<PropertyInfo> *p_list) const override;
 
 		bool angular_limit_enabled = false;
 		real_t angular_limit_upper = Math_PI * 0.5;
@@ -107,11 +107,11 @@ public:
 	};
 
 	struct SliderJointData : public JointData {
-		virtual JointType get_joint_type() { return JOINT_TYPE_SLIDER; }
+		JointType get_joint_type() override { return JOINT_TYPE_SLIDER; }
 
-		virtual bool _set(const StringName &p_name, const Variant &p_value, RID j);
-		virtual bool _get(const StringName &p_name, Variant &r_ret) const;
-		virtual void _get_property_list(List<PropertyInfo> *p_list) const;
+		bool _set(const StringName &p_name, const Variant &p_value, RID j) override;
+		bool _get(const StringName &p_name, Variant &r_ret) const override;
+		void _get_property_list(List<PropertyInfo> *p_list) const override;
 
 		real_t linear_limit_upper = 1.0;
 		real_t linear_limit_lower = -1.0;
@@ -150,11 +150,11 @@ public:
 			real_t angular_equilibrium_point = 0.0;
 		};
 
-		virtual JointType get_joint_type() { return JOINT_TYPE_6DOF; }
+		JointType get_joint_type() override { return JOINT_TYPE_6DOF; }
 
-		virtual bool _set(const StringName &p_name, const Variant &p_value, RID j);
-		virtual bool _get(const StringName &p_name, Variant &r_ret) const;
-		virtual void _get_property_list(List<PropertyInfo> *p_list) const;
+		bool _set(const StringName &p_name, const Variant &p_value, RID j) override;
+		bool _get(const StringName &p_name, Variant &r_ret) const override;
+		void _get_property_list(List<PropertyInfo> *p_list) const override;
 
 		SixDOFAxisData axis_data[3];
 
@@ -232,8 +232,8 @@ public:
 
 #ifdef TOOLS_ENABLED
 	void _set_gizmo_move_joint(bool p_move_joint);
-	virtual Transform3D get_global_gizmo_transform() const override;
-	virtual Transform3D get_local_gizmo_transform() const override;
+	Transform3D get_global_gizmo_transform() const override;
+	Transform3D get_local_gizmo_transform() const override;
 #endif
 
 	const JointData *get_joint_data() const;
@@ -295,7 +295,7 @@ public:
 	void reset_to_rest_position();
 
 	PhysicalBone3D();
-	~PhysicalBone3D();
+	~PhysicalBone3D() override;
 
 private:
 	void update_bone_id();

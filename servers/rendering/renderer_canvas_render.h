@@ -264,7 +264,7 @@ public:
 			RID texture;
 
 			CommandMesh() { type = TYPE_MESH; }
-			~CommandMesh();
+			~CommandMesh() override;
 		};
 
 		struct CommandMultiMesh : public Command {

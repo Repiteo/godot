@@ -82,7 +82,7 @@ public:
 	PackedStringArray get_configuration_warnings() const override;
 
 	PhysicalBone2D();
-	~PhysicalBone2D();
+	~PhysicalBone2D() override;
 };
 
 #endif // PHYSICAL_BONE_2D_H

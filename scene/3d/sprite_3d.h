@@ -170,12 +170,12 @@ public:
 
 	virtual Rect2 get_item_rect() const = 0;
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 
 	Ref<TriangleMesh> generate_triangle_mesh() const;
 
 	SpriteBase3D();
-	~SpriteBase3D();
+	~SpriteBase3D() override;
 };
 
 class Sprite3D : public SpriteBase3D {
@@ -191,7 +191,7 @@ class Sprite3D : public SpriteBase3D {
 	int hframes = 1;
 
 protected:
-	virtual void _draw() override;
+	void _draw() override;
 	static void _bind_methods();
 
 	void _validate_property(PropertyInfo &p_property) const;
@@ -218,7 +218,7 @@ public:
 	void set_hframes(int p_amount);
 	int get_hframes() const;
 
-	virtual Rect2 get_item_rect() const override;
+	Rect2 get_item_rect() const override;
 
 	Sprite3D();
 	//~Sprite3D();
@@ -249,7 +249,7 @@ protected:
 #ifndef DISABLE_DEPRECATED
 	bool _set(const StringName &p_name, const Variant &p_value);
 #endif
-	virtual void _draw() override;
+	void _draw() override;
 	static void _bind_methods();
 	void _notification(int p_what);
 	void _validate_property(PropertyInfo &p_property) const;
@@ -283,12 +283,12 @@ public:
 	float get_speed_scale() const;
 	float get_playing_speed() const;
 
-	virtual Rect2 get_item_rect() const override;
+	Rect2 get_item_rect() const override;
 
-	virtual PackedStringArray get_configuration_warnings() const override;
+	PackedStringArray get_configuration_warnings() const override;
 
 #ifdef TOOLS_ENABLED
-	virtual void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
+	void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
 #endif
 
 	AnimatedSprite3D();

@@ -93,7 +93,7 @@ public:
 	virtual EditorPlugin::AfterGUIInput forward_3d_gui_input(Camera3D *p_camera, const Ref<InputEvent> &p_event);
 	void edit(Node *p_node);
 	NavigationObstacle3DEditor();
-	~NavigationObstacle3DEditor();
+	~NavigationObstacle3DEditor() override;
 };
 
 class NavigationObstacle3DEditorPlugin : public EditorPlugin {
@@ -102,16 +102,16 @@ class NavigationObstacle3DEditorPlugin : public EditorPlugin {
 	NavigationObstacle3DEditor *obstacle_editor = nullptr;
 
 public:
-	virtual EditorPlugin::AfterGUIInput forward_3d_gui_input(Camera3D *p_camera, const Ref<InputEvent> &p_event) override { return obstacle_editor->forward_3d_gui_input(p_camera, p_event); }
+	EditorPlugin::AfterGUIInput forward_3d_gui_input(Camera3D *p_camera, const Ref<InputEvent> &p_event) override { return obstacle_editor->forward_3d_gui_input(p_camera, p_event); }
 
-	virtual String get_name() const override { return "NavigationObstacle3DEditor"; }
+	String get_name() const override { return "NavigationObstacle3DEditor"; }
 	bool has_main_screen() const override { return false; }
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
 
 	NavigationObstacle3DEditorPlugin();
-	~NavigationObstacle3DEditorPlugin();
+	~NavigationObstacle3DEditorPlugin() override;
 };
 
 #endif // NAVIGATION_OBSTACLE_3D_EDITOR_PLUGIN_H

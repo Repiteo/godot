@@ -61,15 +61,15 @@ class EditorInspectorPluginTexture : public EditorInspectorPlugin {
 	GDCLASS(EditorInspectorPluginTexture, EditorInspectorPlugin);
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual void parse_begin(Object *p_object) override;
+	bool can_handle(Object *p_object) override;
+	void parse_begin(Object *p_object) override;
 };
 
 class TextureEditorPlugin : public EditorPlugin {
 	GDCLASS(TextureEditorPlugin, EditorPlugin);
 
 public:
-	virtual String get_name() const override { return "Texture2D"; }
+	String get_name() const override { return "Texture2D"; }
 
 	TextureEditorPlugin();
 };

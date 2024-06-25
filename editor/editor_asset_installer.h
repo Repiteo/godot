@@ -92,7 +92,7 @@ class EditorAssetInstaller : public ConfirmationDialog {
 	bool _is_item_checked(const String &p_source_path) const;
 
 	void _install_asset();
-	virtual void ok_pressed() override;
+	void ok_pressed() override;
 
 protected:
 	void _notification(int p_what);

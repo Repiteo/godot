@@ -157,19 +157,19 @@ protected:
 
 	bool _check_advance_condition(const Ref<AnimationNodeStateMachine> p_state_machine, const Ref<AnimationNodeStateMachineTransition> p_transition) const;
 
-	virtual void _tree_changed() override;
-	virtual void _animation_node_renamed(const ObjectID &p_oid, const String &p_old_name, const String &p_new_name) override;
-	virtual void _animation_node_removed(const ObjectID &p_oid, const StringName &p_node) override;
+	void _tree_changed() override;
+	void _animation_node_renamed(const ObjectID &p_oid, const String &p_old_name, const String &p_new_name) override;
+	void _animation_node_removed(const ObjectID &p_oid, const StringName &p_node) override;
 
-	virtual void reset_state() override;
+	void reset_state() override;
 
 public:
 	StringName start_node = "Start";
 	StringName end_node = "End";
 
-	virtual void get_parameter_list(List<PropertyInfo> *r_list) const override;
-	virtual Variant get_parameter_default_value(const StringName &p_parameter) const override;
-	virtual bool is_parameter_read_only(const StringName &p_parameter) const override;
+	void get_parameter_list(List<PropertyInfo> *r_list) const override;
+	Variant get_parameter_default_value(const StringName &p_parameter) const override;
+	bool is_parameter_read_only(const StringName &p_parameter) const override;
 
 	void add_node(const StringName &p_name, Ref<AnimationNode> p_node, const Vector2 &p_position = Vector2());
 	void replace_node(const StringName &p_name, Ref<AnimationNode> p_node);
@@ -183,7 +183,7 @@ public:
 	void set_node_position(const StringName &p_name, const Vector2 &p_position);
 	Vector2 get_node_position(const StringName &p_name) const;
 
-	virtual void get_child_nodes(List<ChildNode> *r_child_nodes) override;
+	void get_child_nodes(List<ChildNode> *r_child_nodes) override;
 
 	bool has_transition(const StringName &p_from, const StringName &p_to) const;
 	bool has_transition_from(const StringName &p_from) const;
@@ -214,13 +214,13 @@ public:
 	void set_graph_offset(const Vector2 &p_offset);
 	Vector2 get_graph_offset() const;
 
-	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
-	virtual String get_caption() const override;
+	NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
+	String get_caption() const override;
 
-	virtual Ref<AnimationNode> get_child_by_name(const StringName &p_name) const override;
+	Ref<AnimationNode> get_child_by_name(const StringName &p_name) const override;
 
 #ifdef TOOLS_ENABLED
-	virtual void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
+	void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
 #endif
 
 	AnimationNodeStateMachine();

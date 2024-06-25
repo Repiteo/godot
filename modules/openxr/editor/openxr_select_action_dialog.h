@@ -60,7 +60,7 @@ protected:
 public:
 	void _on_select_action(const String p_action);
 	void open();
-	virtual void ok_pressed() override;
+	void ok_pressed() override;
 
 	OpenXRSelectActionDialog(Ref<OpenXRActionMap> p_action_map);
 };

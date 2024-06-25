@@ -92,8 +92,8 @@ class EditorInspectorPluginAudioStreamInteractive : public EditorInspectorPlugin
 	void _edit(Object *p_object);
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual void parse_end(Object *p_object) override;
+	bool can_handle(Object *p_object) override;
+	void parse_end(Object *p_object) override;
 
 	EditorInspectorPluginAudioStreamInteractive();
 };
@@ -102,7 +102,7 @@ class AudioStreamInteractiveEditorPlugin : public EditorPlugin {
 	GDCLASS(AudioStreamInteractiveEditorPlugin, EditorPlugin);
 
 public:
-	virtual String get_name() const override { return "AudioStreamInteractive"; }
+	String get_name() const override { return "AudioStreamInteractive"; }
 
 	AudioStreamInteractiveEditorPlugin();
 };

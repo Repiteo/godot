@@ -1,7 +1,7 @@
 proto_mod = """
 #define MODBIND$VER($RETTYPE m_name$ARG) \\
 virtual $RETVAL _##m_name($FUNCARGS) $CONST; \\
-_FORCE_INLINE_ virtual $RETVAL m_name($FUNCARGS) $CONST override { \\
+_FORCE_INLINE_ $RETVAL m_name($FUNCARGS) $CONST override { \\
     $RETX _##m_name($CALLARGS);\\
 }
 """
@@ -56,7 +56,7 @@ def generate_mod_version(argcount, const=False, returns=False):
 proto_ex = """
 #define EXBIND$VER($RETTYPE m_name$ARG) \\
 GDVIRTUAL$VER($RETTYPE_##m_name$ARG)\\
-virtual $RETVAL m_name($FUNCARGS) $CONST override { \\
+$RETVAL m_name($FUNCARGS) $CONST override { \\
     $RETPRE\\
     GDVIRTUAL_REQUIRED_CALL(_##m_name$CALLARGS$RETREF);\\
     $RETPOST\\

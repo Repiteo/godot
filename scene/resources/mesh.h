@@ -334,7 +334,7 @@ protected:
 	void _get_property_list(List<PropertyInfo> *p_list) const;
 	bool surface_index_0 = false;
 
-	virtual void reset_state() override;
+	void reset_state() override;
 
 	static void _bind_methods();
 
@@ -371,8 +371,8 @@ public:
 	BitField<ArrayFormat> surface_get_format(int p_idx) const override;
 	PrimitiveType surface_get_primitive_type(int p_idx) const override;
 
-	virtual void surface_set_material(int p_idx, const Ref<Material> &p_material) override;
-	virtual Ref<Material> surface_get_material(int p_idx) const override;
+	void surface_set_material(int p_idx, const Ref<Material> &p_material) override;
+	Ref<Material> surface_get_material(int p_idx) const override;
 
 	int surface_find_by_name(const String &p_name) const;
 	void surface_set_name(int p_idx, const String &p_name);
@@ -382,21 +382,21 @@ public:
 	AABB get_custom_aabb() const;
 
 	AABB get_aabb() const override;
-	virtual RID get_rid() const override;
+	RID get_rid() const override;
 
 	void regen_normal_maps();
 
 	Error lightmap_unwrap(const Transform3D &p_base_transform = Transform3D(), float p_texel_size = 0.05);
 	Error lightmap_unwrap_cached(const Transform3D &p_base_transform, float p_texel_size, const Vector<uint8_t> &p_src_cache, Vector<uint8_t> &r_dst_cache, bool p_generate_cache = true);
 
-	virtual void reload_from_file() override;
+	void reload_from_file() override;
 
 	void set_shadow_mesh(const Ref<ArrayMesh> &p_mesh);
 	Ref<ArrayMesh> get_shadow_mesh() const;
 
 	ArrayMesh();
 
-	~ArrayMesh();
+	~ArrayMesh() override;
 };
 
 VARIANT_ENUM_CAST(Mesh::ArrayType);
@@ -415,28 +415,28 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual int get_surface_count() const override { return 0; }
-	virtual int surface_get_array_len(int p_idx) const override { return 0; }
-	virtual int surface_get_array_index_len(int p_idx) const override { return 0; }
-	virtual Array surface_get_arrays(int p_surface) const override { return Array(); }
-	virtual TypedArray<Array> surface_get_blend_shape_arrays(int p_surface) const override { return TypedArray<Array>(); }
-	virtual Dictionary surface_get_lods(int p_surface) const override { return Dictionary(); }
-	virtual BitField<ArrayFormat> surface_get_format(int p_idx) const override { return 0; }
-	virtual PrimitiveType surface_get_primitive_type(int p_idx) const override { return PRIMITIVE_TRIANGLES; }
-	virtual void surface_set_material(int p_idx, const Ref<Material> &p_material) override {}
-	virtual Ref<Material> surface_get_material(int p_idx) const override { return Ref<Material>(); }
-	virtual int get_blend_shape_count() const override { return 0; }
-	virtual StringName get_blend_shape_name(int p_index) const override { return StringName(); }
-	virtual void set_blend_shape_name(int p_index, const StringName &p_name) override {}
-	virtual RID get_rid() const override { return rid; }
-	virtual AABB get_aabb() const override { return aabb; }
+	int get_surface_count() const override { return 0; }
+	int surface_get_array_len(int p_idx) const override { return 0; }
+	int surface_get_array_index_len(int p_idx) const override { return 0; }
+	Array surface_get_arrays(int p_surface) const override { return Array(); }
+	TypedArray<Array> surface_get_blend_shape_arrays(int p_surface) const override { return TypedArray<Array>(); }
+	Dictionary surface_get_lods(int p_surface) const override { return Dictionary(); }
+	BitField<ArrayFormat> surface_get_format(int p_idx) const override { return 0; }
+	PrimitiveType surface_get_primitive_type(int p_idx) const override { return PRIMITIVE_TRIANGLES; }
+	void surface_set_material(int p_idx, const Ref<Material> &p_material) override {}
+	Ref<Material> surface_get_material(int p_idx) const override { return Ref<Material>(); }
+	int get_blend_shape_count() const override { return 0; }
+	StringName get_blend_shape_name(int p_index) const override { return StringName(); }
+	void set_blend_shape_name(int p_index, const StringName &p_name) override {}
+	RID get_rid() const override { return rid; }
+	AABB get_aabb() const override { return aabb; }
 	void set_aabb(const AABB &p_aabb) { aabb = p_aabb; }
 
-	virtual int get_builtin_bind_pose_count() const override { return 0; }
-	virtual Transform3D get_builtin_bind_pose(int p_index) const override { return Transform3D(); }
+	int get_builtin_bind_pose_count() const override { return 0; }
+	Transform3D get_builtin_bind_pose(int p_index) const override { return Transform3D(); }
 
 	PlaceholderMesh();
-	~PlaceholderMesh();
+	~PlaceholderMesh() override;
 };
 
 #endif // MESH_H

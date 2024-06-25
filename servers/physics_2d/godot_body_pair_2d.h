@@ -90,12 +90,12 @@ class GodotBodyPair2D : public GodotConstraint2D {
 	_FORCE_INLINE_ void _contact_added_callback(const Vector2 &p_point_A, const Vector2 &p_point_B);
 
 public:
-	virtual bool setup(real_t p_step) override;
-	virtual bool pre_solve(real_t p_step) override;
-	virtual void solve(real_t p_step) override;
+	bool setup(real_t p_step) override;
+	bool pre_solve(real_t p_step) override;
+	void solve(real_t p_step) override;
 
 	GodotBodyPair2D(GodotBody2D *p_A, int p_shape_A, GodotBody2D *p_B, int p_shape_B);
-	~GodotBodyPair2D();
+	~GodotBodyPair2D() override;
 };
 
 #endif // GODOT_BODY_PAIR_2D_H

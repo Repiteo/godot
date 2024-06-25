@@ -93,7 +93,7 @@ public:
 	virtual EditorPlugin::AfterGUIInput forward_3d_gui_input(Camera3D *p_camera, const Ref<InputEvent> &p_event);
 	void edit(Node *p_node);
 	Polygon3DEditor();
-	~Polygon3DEditor();
+	~Polygon3DEditor() override;
 };
 
 class Polygon3DEditorPlugin : public EditorPlugin {
@@ -102,16 +102,16 @@ class Polygon3DEditorPlugin : public EditorPlugin {
 	Polygon3DEditor *polygon_editor = nullptr;
 
 public:
-	virtual EditorPlugin::AfterGUIInput forward_3d_gui_input(Camera3D *p_camera, const Ref<InputEvent> &p_event) override { return polygon_editor->forward_3d_gui_input(p_camera, p_event); }
+	EditorPlugin::AfterGUIInput forward_3d_gui_input(Camera3D *p_camera, const Ref<InputEvent> &p_event) override { return polygon_editor->forward_3d_gui_input(p_camera, p_event); }
 
-	virtual String get_name() const override { return "Polygon3DEditor"; }
+	String get_name() const override { return "Polygon3DEditor"; }
 	bool has_main_screen() const override { return false; }
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
 
 	Polygon3DEditorPlugin();
-	~Polygon3DEditorPlugin();
+	~Polygon3DEditorPlugin() override;
 };
 
 #endif // POLYGON_3D_EDITOR_PLUGIN_H

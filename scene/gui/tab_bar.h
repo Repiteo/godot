@@ -170,8 +170,8 @@ private:
 	void _draw_tab(Ref<StyleBox> &p_tab_style, Color &p_font_color, int p_index, float p_x, bool p_focus);
 
 protected:
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
-	virtual String get_tooltip(const Point2 &p_pos) const override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
+	String get_tooltip(const Point2 &p_pos) const override;
 
 	bool _set(const StringName &p_name, const Variant &p_value) { return property_helper.property_set_value(p_name, p_value); }
 	bool _get(const StringName &p_name, Variant &r_ret) const { return property_helper.property_get_value(p_name, r_ret); }

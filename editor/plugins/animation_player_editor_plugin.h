@@ -217,7 +217,7 @@ class AnimationPlayerEditor : public VBoxContainer {
 	void _animation_key_editor_seek(float p_pos, bool p_timeline_only = false);
 	void _animation_key_editor_anim_len_changed(float p_len);
 
-	virtual void shortcut_input(const Ref<InputEvent> &p_ev) override;
+	void shortcut_input(const Ref<InputEvent> &p_ev) override;
 	void _animation_tool_menu(int p_option);
 	void _onion_skinning_menu(int p_option);
 
@@ -240,7 +240,7 @@ class AnimationPlayerEditor : public VBoxContainer {
 
 	void _ensure_dummy_player();
 
-	~AnimationPlayerEditor();
+	~AnimationPlayerEditor() override;
 
 protected:
 	void _notification(int p_what);
@@ -292,20 +292,20 @@ protected:
 	void _update_keying();
 
 public:
-	virtual Dictionary get_state() const override { return anim_editor->get_state(); }
-	virtual void set_state(const Dictionary &p_state) override { anim_editor->set_state(p_state); }
+	Dictionary get_state() const override { return anim_editor->get_state(); }
+	void set_state(const Dictionary &p_state) override { anim_editor->set_state(p_state); }
 
-	virtual String get_name() const override { return "Anim"; }
+	String get_name() const override { return "Anim"; }
 	bool has_main_screen() const override { return false; }
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
 
-	virtual void forward_canvas_force_draw_over_viewport(Control *p_overlay) override { anim_editor->forward_force_draw_over_viewport(p_overlay); }
-	virtual void forward_3d_force_draw_over_viewport(Control *p_overlay) override { anim_editor->forward_force_draw_over_viewport(p_overlay); }
+	void forward_canvas_force_draw_over_viewport(Control *p_overlay) override { anim_editor->forward_force_draw_over_viewport(p_overlay); }
+	void forward_3d_force_draw_over_viewport(Control *p_overlay) override { anim_editor->forward_force_draw_over_viewport(p_overlay); }
 
 	AnimationPlayerEditorPlugin();
-	~AnimationPlayerEditorPlugin();
+	~AnimationPlayerEditorPlugin() override;
 };
 
 // AnimationTrackKeyEditEditorPlugin
@@ -316,8 +316,8 @@ class EditorInspectorPluginAnimationTrackKeyEdit : public EditorInspectorPlugin 
 	AnimationTrackKeyEditEditor *atk_editor = nullptr;
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual void parse_begin(Object *p_object) override;
+	bool can_handle(Object *p_object) override;
+	void parse_begin(Object *p_object) override;
 };
 
 class AnimationTrackKeyEditEditorPlugin : public EditorPlugin {
@@ -327,9 +327,9 @@ class AnimationTrackKeyEditEditorPlugin : public EditorPlugin {
 
 public:
 	bool has_main_screen() const override { return false; }
-	virtual bool handles(Object *p_object) const override;
+	bool handles(Object *p_object) const override;
 
-	virtual String get_name() const override { return "AnimationTrackKeyEdit"; }
+	String get_name() const override { return "AnimationTrackKeyEdit"; }
 
 	AnimationTrackKeyEditEditorPlugin();
 };

@@ -94,7 +94,7 @@ class GodotArea2D : public GodotCollisionObject2D {
 
 	HashSet<GodotConstraint2D *> constraints;
 
-	virtual void _shapes_changed() override;
+	void _shapes_changed() override;
 	void _queue_monitor_update();
 
 	void _set_space_override_mode(PhysicsServer2D::AreaSpaceOverrideMode &r_mode, PhysicsServer2D::AreaSpaceOverrideMode p_new_mode);
@@ -153,7 +153,7 @@ public:
 	void compute_gravity(const Vector2 &p_position, Vector2 &r_gravity) const;
 
 	GodotArea2D();
-	~GodotArea2D();
+	~GodotArea2D() override;
 };
 
 void GodotArea2D::add_body_to_query(GodotBody2D *p_body, uint32_t p_body_shape, uint32_t p_area_shape) {

@@ -112,7 +112,7 @@ protected:
 	void _freeze_change_propagation();
 	void _unfreeze_and_propagate_changes();
 
-	virtual void reset_state() override;
+	void reset_state() override;
 
 public:
 	static bool is_valid_type_name(const String &p_name);
@@ -222,7 +222,7 @@ public:
 	void clear();
 
 	Theme();
-	~Theme();
+	~Theme() override;
 };
 
 VARIANT_ENUM_CAST(Theme::DataType);

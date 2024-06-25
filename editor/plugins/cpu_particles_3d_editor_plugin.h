@@ -55,7 +55,7 @@ class CPUParticles3DEditor : public GPUParticles3DEditorBase {
 
 	friend class CPUParticles3DEditorPlugin;
 
-	virtual void _generate_emission_points() override;
+	void _generate_emission_points() override;
 
 protected:
 	void _notification(int p_notification);
@@ -73,14 +73,14 @@ class CPUParticles3DEditorPlugin : public EditorPlugin {
 	CPUParticles3DEditor *particles_editor = nullptr;
 
 public:
-	virtual String get_name() const override { return "CPUParticles3D"; }
+	String get_name() const override { return "CPUParticles3D"; }
 	bool has_main_screen() const override { return false; }
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
 
 	CPUParticles3DEditorPlugin();
-	~CPUParticles3DEditorPlugin();
+	~CPUParticles3DEditorPlugin() override;
 };
 
 #endif // CPU_PARTICLES_3D_EDITOR_PLUGIN_H

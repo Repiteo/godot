@@ -134,7 +134,7 @@ public:
 
 	virtual Vector<Vector3> get_brush_faces();
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 
 	void set_use_collision(bool p_enable);
 	bool is_using_collision() const;
@@ -162,7 +162,7 @@ public:
 
 	bool is_root_shape() const;
 	CSGShape3D();
-	~CSGShape3D();
+	~CSGShape3D() override;
 };
 
 VARIANT_ENUM_CAST(CSGShape3D::Operation)
@@ -171,7 +171,7 @@ class CSGCombiner3D : public CSGShape3D {
 	GDCLASS(CSGCombiner3D, CSGShape3D);
 
 private:
-	virtual CSGBrush *_build_brush() override;
+	CSGBrush *_build_brush() override;
 
 public:
 	CSGCombiner3D();
@@ -195,7 +195,7 @@ public:
 class CSGMesh3D : public CSGPrimitive3D {
 	GDCLASS(CSGMesh3D, CSGPrimitive3D);
 
-	virtual CSGBrush *_build_brush() override;
+	CSGBrush *_build_brush() override;
 
 	Ref<Mesh> mesh;
 	Ref<Material> material;
@@ -215,7 +215,7 @@ public:
 
 class CSGSphere3D : public CSGPrimitive3D {
 	GDCLASS(CSGSphere3D, CSGPrimitive3D);
-	virtual CSGBrush *_build_brush() override;
+	CSGBrush *_build_brush() override;
 
 	Ref<Material> material;
 	bool smooth_faces;
@@ -247,7 +247,7 @@ public:
 
 class CSGBox3D : public CSGPrimitive3D {
 	GDCLASS(CSGBox3D, CSGPrimitive3D);
-	virtual CSGBrush *_build_brush() override;
+	CSGBrush *_build_brush() override;
 
 	Ref<Material> material;
 	Vector3 size = Vector3(1, 1, 1);
@@ -271,7 +271,7 @@ public:
 
 class CSGCylinder3D : public CSGPrimitive3D {
 	GDCLASS(CSGCylinder3D, CSGPrimitive3D);
-	virtual CSGBrush *_build_brush() override;
+	CSGBrush *_build_brush() override;
 
 	Ref<Material> material;
 	float radius;
@@ -307,7 +307,7 @@ public:
 
 class CSGTorus3D : public CSGPrimitive3D {
 	GDCLASS(CSGTorus3D, CSGPrimitive3D);
-	virtual CSGBrush *_build_brush() override;
+	CSGBrush *_build_brush() override;
 
 	Ref<Material> material;
 	float inner_radius;
@@ -363,7 +363,7 @@ public:
 	};
 
 private:
-	virtual CSGBrush *_build_brush() override;
+	CSGBrush *_build_brush() override;
 
 	Vector<Vector2> polygon;
 	Ref<Material> material;

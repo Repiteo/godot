@@ -64,7 +64,7 @@ public:
 	virtual Transform3D get_listener_transform() const;
 
 	AudioListener3D();
-	~AudioListener3D();
+	~AudioListener3D() override;
 };
 
 #endif // AUDIO_LISTENER_3D_H

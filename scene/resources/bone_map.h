@@ -62,7 +62,7 @@ public:
 	StringName find_profile_bone_name(const StringName &p_skeleton_bone_name) const;
 
 	BoneMap();
-	~BoneMap();
+	~BoneMap() override;
 };
 
 #endif // BONE_MAP_H

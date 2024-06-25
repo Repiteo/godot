@@ -88,7 +88,7 @@ public:
 	Ref<OggPacketSequencePlayback> instantiate_playback();
 
 	OggPacketSequence() {}
-	virtual ~OggPacketSequence() {}
+	~OggPacketSequence() override {}
 };
 
 class OggPacketSequencePlayback : public RefCounted {
@@ -128,7 +128,7 @@ public:
 	bool set_page_number(int64_t p_page_number);
 
 	OggPacketSequencePlayback();
-	virtual ~OggPacketSequencePlayback();
+	~OggPacketSequencePlayback() override;
 };
 
 #endif // OGG_PACKET_SEQUENCE_H

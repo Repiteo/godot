@@ -90,7 +90,7 @@ class EditorAudioBus : public PanelContainer {
 	bool is_master;
 	mutable bool hovering_drop = false;
 
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 	void _effects_gui_input(Ref<InputEvent> p_event);
 	void _bus_popup_pressed(int p_option);
 
@@ -112,9 +112,9 @@ class EditorAudioBus : public PanelContainer {
 	void _effect_rmb(const Vector2 &p_pos, MouseButton p_button);
 	void _update_visible_channels();
 
-	virtual Variant get_drag_data(const Point2 &p_point) override;
-	virtual bool can_drop_data(const Point2 &p_point, const Variant &p_data) const override;
-	virtual void drop_data(const Point2 &p_point, const Variant &p_data) override;
+	Variant get_drag_data(const Point2 &p_point) override;
+	bool can_drop_data(const Point2 &p_point, const Variant &p_data) const override;
+	void drop_data(const Point2 &p_point, const Variant &p_data) override;
 
 	Variant get_drag_data_fw(const Point2 &p_point, Control *p_from);
 	bool can_drop_data_fw(const Point2 &p_point, const Variant &p_data, Control *p_from) const;
@@ -138,8 +138,8 @@ public:
 class EditorAudioBusDrop : public Control {
 	GDCLASS(EditorAudioBusDrop, Control);
 
-	virtual bool can_drop_data(const Point2 &p_point, const Variant &p_data) const override;
-	virtual void drop_data(const Point2 &p_point, const Variant &p_data) override;
+	bool can_drop_data(const Point2 &p_point, const Variant &p_data) const override;
+	void drop_data(const Point2 &p_point, const Variant &p_data) override;
 
 	mutable bool hovering_drop = false;
 
@@ -258,7 +258,7 @@ public:
 	Size2 get_minimum_size() const override;
 
 private:
-	virtual void _update_theme_item_cache() override;
+	void _update_theme_item_cache() override;
 
 	static void _bind_methods();
 	void _notification(int p_what);
@@ -274,14 +274,14 @@ class AudioBusesEditorPlugin : public EditorPlugin {
 	EditorAudioBuses *audio_bus_editor = nullptr;
 
 public:
-	virtual String get_name() const override { return "SampleLibrary"; }
+	String get_name() const override { return "SampleLibrary"; }
 	bool has_main_screen() const override { return false; }
-	virtual void edit(Object *p_node) override;
-	virtual bool handles(Object *p_node) const override;
-	virtual void make_visible(bool p_visible) override;
+	void edit(Object *p_node) override;
+	bool handles(Object *p_node) const override;
+	void make_visible(bool p_visible) override;
 
 	AudioBusesEditorPlugin(EditorAudioBuses *p_node);
-	~AudioBusesEditorPlugin();
+	~AudioBusesEditorPlugin() override;
 };
 
 #endif // EDITOR_AUDIO_BUSES_H

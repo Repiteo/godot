@@ -610,7 +610,7 @@ public:
 	virtual int get_process_info(ProcessInfo p_info) = 0;
 
 	PhysicsServer2D();
-	~PhysicsServer2D();
+	~PhysicsServer2D() override;
 };
 
 class PhysicsRayQueryParameters2D : public RefCounted {
@@ -826,7 +826,7 @@ public:
 	PhysicsServer2D *new_server(const String &p_name);
 
 	PhysicsServer2DManager();
-	~PhysicsServer2DManager();
+	~PhysicsServer2DManager() override;
 };
 
 VARIANT_ENUM_CAST(PhysicsServer2D::ShapeType);

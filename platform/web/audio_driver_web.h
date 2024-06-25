@@ -74,38 +74,38 @@ protected:
 public:
 	static bool is_available();
 
-	virtual Error init() final;
-	virtual void start() final;
-	virtual void finish() final;
+	Error init() final;
+	void start() final;
+	void finish() final;
 
-	virtual int get_mix_rate() const override;
-	virtual SpeakerMode get_speaker_mode() const override;
-	virtual float get_latency() override;
+	int get_mix_rate() const override;
+	SpeakerMode get_speaker_mode() const override;
+	float get_latency() override;
 
-	virtual Error input_start() override;
-	virtual Error input_stop() override;
+	Error input_start() override;
+	Error input_stop() override;
 
 	static void resume();
 
 	// Samples.
-	virtual bool is_stream_registered_as_sample(const Ref<AudioStream> &p_stream) const override;
-	virtual void register_sample(const Ref<AudioSample> &p_sample) override;
-	virtual void unregister_sample(const Ref<AudioSample> &p_sample) override;
-	virtual void start_sample_playback(const Ref<AudioSamplePlayback> &p_playback) override;
-	virtual void stop_sample_playback(const Ref<AudioSamplePlayback> &p_playback) override;
-	virtual void set_sample_playback_pause(const Ref<AudioSamplePlayback> &p_playback, bool p_paused) override;
-	virtual bool is_sample_playback_active(const Ref<AudioSamplePlayback> &p_playback) override;
-	virtual void update_sample_playback_pitch_scale(const Ref<AudioSamplePlayback> &p_playback, float p_pitch_scale = 0.0f) override;
-	virtual void set_sample_playback_bus_volumes_linear(const Ref<AudioSamplePlayback> &p_playback, const HashMap<StringName, Vector<AudioFrame>> &p_bus_volumes) override;
+	bool is_stream_registered_as_sample(const Ref<AudioStream> &p_stream) const override;
+	void register_sample(const Ref<AudioSample> &p_sample) override;
+	void unregister_sample(const Ref<AudioSample> &p_sample) override;
+	void start_sample_playback(const Ref<AudioSamplePlayback> &p_playback) override;
+	void stop_sample_playback(const Ref<AudioSamplePlayback> &p_playback) override;
+	void set_sample_playback_pause(const Ref<AudioSamplePlayback> &p_playback, bool p_paused) override;
+	bool is_sample_playback_active(const Ref<AudioSamplePlayback> &p_playback) override;
+	void update_sample_playback_pitch_scale(const Ref<AudioSamplePlayback> &p_playback, float p_pitch_scale = 0.0f) override;
+	void set_sample_playback_bus_volumes_linear(const Ref<AudioSamplePlayback> &p_playback, const HashMap<StringName, Vector<AudioFrame>> &p_bus_volumes) override;
 
-	virtual void set_sample_bus_count(int p_count) override;
-	virtual void remove_sample_bus(int p_index) override;
-	virtual void add_sample_bus(int p_at_pos = -1) override;
-	virtual void move_sample_bus(int p_bus, int p_to_pos) override;
-	virtual void set_sample_bus_send(int p_bus, const StringName &p_send) override;
-	virtual void set_sample_bus_volume_db(int p_bus, float p_volume_db) override;
-	virtual void set_sample_bus_solo(int p_bus, bool p_enable) override;
-	virtual void set_sample_bus_mute(int p_bus, bool p_enable) override;
+	void set_sample_bus_count(int p_count) override;
+	void remove_sample_bus(int p_index) override;
+	void add_sample_bus(int p_at_pos = -1) override;
+	void move_sample_bus(int p_bus, int p_to_pos) override;
+	void set_sample_bus_send(int p_bus, const StringName &p_send) override;
+	void set_sample_bus_volume_db(int p_bus, float p_volume_db) override;
+	void set_sample_bus_solo(int p_bus, bool p_enable) override;
+	void set_sample_bus_mute(int p_bus, bool p_enable) override;
 
 	AudioDriverWeb() {}
 };
@@ -128,17 +128,17 @@ private:
 	static void _audio_thread_func(void *p_data);
 
 protected:
-	virtual Error create(int &p_buffer_size, int p_output_channels) override;
-	virtual void start(float *p_out_buf, int p_out_buf_size, float *p_in_buf, int p_in_buf_size) override;
-	virtual void finish_driver() override;
+	Error create(int &p_buffer_size, int p_output_channels) override;
+	void start(float *p_out_buf, int p_out_buf_size, float *p_in_buf, int p_in_buf_size) override;
+	void finish_driver() override;
 
 public:
-	virtual const char *get_name() const override {
+	const char *get_name() const override {
 		return "AudioWorklet";
 	}
 
-	virtual void lock() override;
-	virtual void unlock() override;
+	void lock() override;
+	void unlock() override;
 };
 
 #else
@@ -151,16 +151,16 @@ private:
 	static AudioDriverWorklet *singleton;
 
 protected:
-	virtual Error create(int &p_buffer_size, int p_output_channels) override;
-	virtual void start(float *p_out_buf, int p_out_buf_size, float *p_in_buf, int p_in_buf_size) override;
+	Error create(int &p_buffer_size, int p_output_channels) override;
+	void start(float *p_out_buf, int p_out_buf_size, float *p_in_buf, int p_in_buf_size) override;
 
 public:
-	virtual const char *get_name() const override {
+	const char *get_name() const override {
 		return "AudioWorklet";
 	}
 
-	virtual void lock() override {}
-	virtual void unlock() override {}
+	void lock() override {}
+	void unlock() override {}
 
 	static AudioDriverWorklet *get_singleton() { return singleton; }
 
@@ -174,15 +174,15 @@ private:
 	static AudioDriverScriptProcessor *singleton;
 
 protected:
-	virtual Error create(int &p_buffer_size, int p_output_channels) override;
-	virtual void start(float *p_out_buf, int p_out_buf_size, float *p_in_buf, int p_in_buf_size) override;
-	virtual void finish_driver() override;
+	Error create(int &p_buffer_size, int p_output_channels) override;
+	void start(float *p_out_buf, int p_out_buf_size, float *p_in_buf, int p_in_buf_size) override;
+	void finish_driver() override;
 
 public:
-	virtual const char *get_name() const override { return "ScriptProcessor"; }
+	const char *get_name() const override { return "ScriptProcessor"; }
 
-	virtual void lock() override {}
-	virtual void unlock() override {}
+	void lock() override {}
+	void unlock() override {}
 
 	static AudioDriverScriptProcessor *get_singleton() { return singleton; }
 

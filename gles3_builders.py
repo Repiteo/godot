@@ -480,7 +480,7 @@ def build_gles3_header(
 
         fd.write("protected:\n\n")
 
-        fd.write("\tvirtual void _init() override {\n\n")
+        fd.write("\tvoid _init() override {\n\n")
 
         if header_data.uniforms:
             fd.write("\t\tstatic const char* _uniform_strings[]={\n")

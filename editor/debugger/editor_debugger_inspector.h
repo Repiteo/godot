@@ -81,7 +81,7 @@ protected:
 
 public:
 	EditorDebuggerInspector();
-	~EditorDebuggerInspector();
+	~EditorDebuggerInspector() override;
 
 	// Remote Object cache
 	ObjectID add_object(const Array &p_arr);

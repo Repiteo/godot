@@ -82,7 +82,7 @@ public:
 	static ResourceUID *get_singleton() { return singleton; }
 
 	ResourceUID();
-	~ResourceUID();
+	~ResourceUID() override;
 };
 
 #endif // RESOURCE_UID_H

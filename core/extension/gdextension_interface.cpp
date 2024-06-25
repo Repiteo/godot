@@ -228,7 +228,7 @@ public:
 		}
 	}
 
-	~CallableCustomExtension() {
+	~CallableCustomExtension() override {
 		if (free_func != nullptr) {
 			free_func(userdata);
 		}

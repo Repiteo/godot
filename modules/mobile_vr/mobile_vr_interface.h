@@ -147,33 +147,33 @@ public:
 	float get_vrs_strength() const;
 	void set_vrs_strength(float p_vrs_strength);
 
-	virtual StringName get_name() const override;
-	virtual uint32_t get_capabilities() const override;
+	StringName get_name() const override;
+	uint32_t get_capabilities() const override;
 
-	virtual TrackingStatus get_tracking_status() const override;
+	TrackingStatus get_tracking_status() const override;
 
-	virtual bool is_initialized() const override;
-	virtual bool initialize() override;
-	virtual void uninitialize() override;
-	virtual Dictionary get_system_info() override;
+	bool is_initialized() const override;
+	bool initialize() override;
+	void uninitialize() override;
+	Dictionary get_system_info() override;
 
-	virtual bool supports_play_area_mode(XRInterface::PlayAreaMode p_mode) override;
-	virtual XRInterface::PlayAreaMode get_play_area_mode() const override;
-	virtual bool set_play_area_mode(XRInterface::PlayAreaMode p_mode) override;
+	bool supports_play_area_mode(XRInterface::PlayAreaMode p_mode) override;
+	XRInterface::PlayAreaMode get_play_area_mode() const override;
+	bool set_play_area_mode(XRInterface::PlayAreaMode p_mode) override;
 
-	virtual Size2 get_render_target_size() override;
-	virtual uint32_t get_view_count() override;
-	virtual Transform3D get_camera_transform() override;
-	virtual Transform3D get_transform_for_view(uint32_t p_view, const Transform3D &p_cam_transform) override;
-	virtual Projection get_projection_for_view(uint32_t p_view, double p_aspect, double p_z_near, double p_z_far) override;
-	virtual Vector<BlitToScreen> post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) override;
+	Size2 get_render_target_size() override;
+	uint32_t get_view_count() override;
+	Transform3D get_camera_transform() override;
+	Transform3D get_transform_for_view(uint32_t p_view, const Transform3D &p_cam_transform) override;
+	Projection get_projection_for_view(uint32_t p_view, double p_aspect, double p_z_near, double p_z_far) override;
+	Vector<BlitToScreen> post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) override;
 
-	virtual void process() override;
+	void process() override;
 
-	virtual RID get_vrs_texture() override;
+	RID get_vrs_texture() override;
 
 	MobileVRInterface();
-	~MobileVRInterface();
+	~MobileVRInterface() override;
 };
 
 #endif // MOBILE_VR_INTERFACE_H

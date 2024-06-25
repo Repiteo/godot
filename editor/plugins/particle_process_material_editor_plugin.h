@@ -122,7 +122,7 @@ protected:
 
 public:
 	void setup(float p_min, float p_max, float p_step, bool p_allow_less, bool p_allow_greater, bool p_degrees);
-	virtual void update_property() override;
+	void update_property() override;
 
 	ParticleProcessMaterialMinMaxPropertyEditor();
 };
@@ -131,8 +131,8 @@ class EditorInspectorParticleProcessMaterialPlugin : public EditorInspectorPlugi
 	GDCLASS(EditorInspectorParticleProcessMaterialPlugin, EditorInspectorPlugin);
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual bool parse_property(Object *p_object, const Variant::Type p_type, const String &p_path, const PropertyHint p_hint, const String &p_hint_text, const BitField<PropertyUsageFlags> p_usage, const bool p_wide = false) override;
+	bool can_handle(Object *p_object) override;
+	bool parse_property(Object *p_object, const Variant::Type p_type, const String &p_path, const PropertyHint p_hint, const String &p_hint_text, const BitField<PropertyUsageFlags> p_usage, const bool p_wide = false) override;
 };
 
 #endif // PARTICLE_PROCESS_MATERIAL_EDITOR_PLUGIN_H

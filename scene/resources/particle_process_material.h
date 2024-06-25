@@ -492,12 +492,12 @@ public:
 	void set_emission_shape_scale(const Vector3 &p_emission_shape_scale);
 	Vector3 get_emission_shape_scale() const;
 
-	virtual RID get_shader_rid() const override;
+	RID get_shader_rid() const override;
 
-	virtual Shader::Mode get_shader_mode() const override;
+	Shader::Mode get_shader_mode() const override;
 
 	ParticleProcessMaterial();
-	~ParticleProcessMaterial();
+	~ParticleProcessMaterial() override;
 };
 
 VARIANT_ENUM_CAST(ParticleProcessMaterial::Parameter)

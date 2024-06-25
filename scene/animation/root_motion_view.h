@@ -70,10 +70,10 @@ public:
 	void set_zero_y(bool p_zero_y);
 	bool get_zero_y() const;
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 
 	RootMotionView();
-	~RootMotionView();
+	~RootMotionView() override;
 };
 
 #endif // ROOT_MOTION_VIEW_H

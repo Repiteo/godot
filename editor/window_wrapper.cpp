@@ -55,7 +55,7 @@ class ShortcutBin : public Node {
 		}
 	}
 
-	virtual void shortcut_input(const Ref<InputEvent> &p_event) override {
+	void shortcut_input(const Ref<InputEvent> &p_event) override {
 		if (!get_window()->is_visible()) {
 			return;
 		}

@@ -142,7 +142,7 @@ protected:
 public:
 	void edit(Ref<TileSet> p_tile_set, TileSetScenesCollectionSource *p_tile_set_scenes_collection_source, int p_source_id);
 	TileSetScenesCollectionSourceEditor();
-	~TileSetScenesCollectionSourceEditor();
+	~TileSetScenesCollectionSourceEditor() override;
 };
 
 #endif // TILE_SET_SCENES_COLLECTION_SOURCE_EDITOR_H

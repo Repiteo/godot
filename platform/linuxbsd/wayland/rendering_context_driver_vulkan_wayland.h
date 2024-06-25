@@ -37,7 +37,7 @@
 
 class RenderingContextDriverVulkanWayland : public RenderingContextDriverVulkan {
 private:
-	virtual const char *_get_platform_surface_extension() const override final;
+	const char *_get_platform_surface_extension() const override final;
 
 protected:
 	SurfaceID surface_create(const void *p_platform_data) override final;
@@ -49,7 +49,7 @@ public:
 	};
 
 	RenderingContextDriverVulkanWayland();
-	~RenderingContextDriverVulkanWayland();
+	~RenderingContextDriverVulkanWayland() override;
 };
 
 #endif // VULKAN_ENABLED

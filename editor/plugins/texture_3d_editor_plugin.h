@@ -70,22 +70,22 @@ protected:
 public:
 	void edit(Ref<Texture3D> p_texture);
 	Texture3DEditor();
-	~Texture3DEditor();
+	~Texture3DEditor() override;
 };
 
 class EditorInspectorPlugin3DTexture : public EditorInspectorPlugin {
 	GDCLASS(EditorInspectorPlugin3DTexture, EditorInspectorPlugin);
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual void parse_begin(Object *p_object) override;
+	bool can_handle(Object *p_object) override;
+	void parse_begin(Object *p_object) override;
 };
 
 class Texture3DEditorPlugin : public EditorPlugin {
 	GDCLASS(Texture3DEditorPlugin, EditorPlugin);
 
 public:
-	virtual String get_name() const override { return "Texture3D"; }
+	String get_name() const override { return "Texture3D"; }
 
 	Texture3DEditorPlugin();
 };

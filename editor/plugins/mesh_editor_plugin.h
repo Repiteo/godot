@@ -72,7 +72,7 @@ class MeshEditor : public SubViewportContainer {
 	void _update_rotation();
 
 protected:
-	virtual void _update_theme_item_cache() override;
+	void _update_theme_item_cache() override;
 	void _notification(int p_what);
 	void gui_input(const Ref<InputEvent> &p_event) override;
 
@@ -85,15 +85,15 @@ class EditorInspectorPluginMesh : public EditorInspectorPlugin {
 	GDCLASS(EditorInspectorPluginMesh, EditorInspectorPlugin);
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual void parse_begin(Object *p_object) override;
+	bool can_handle(Object *p_object) override;
+	void parse_begin(Object *p_object) override;
 };
 
 class MeshEditorPlugin : public EditorPlugin {
 	GDCLASS(MeshEditorPlugin, EditorPlugin);
 
 public:
-	virtual String get_name() const override { return "Mesh"; }
+	String get_name() const override { return "Mesh"; }
 
 	MeshEditorPlugin();
 };

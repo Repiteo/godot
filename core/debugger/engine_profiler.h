@@ -57,7 +57,7 @@ public:
 	GDVIRTUAL4(_tick, double, double, double, double);
 
 	EngineProfiler() {}
-	virtual ~EngineProfiler();
+	~EngineProfiler() override;
 };
 
 #endif // ENGINE_PROFILER_H

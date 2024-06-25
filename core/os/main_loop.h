@@ -68,7 +68,7 @@ public:
 	virtual void finalize();
 
 	MainLoop() {}
-	virtual ~MainLoop() {}
+	~MainLoop() override {}
 };
 
 #endif // MAIN_LOOP_H

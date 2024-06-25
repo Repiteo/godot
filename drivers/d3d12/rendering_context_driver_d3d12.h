@@ -85,22 +85,22 @@ class RenderingContextDriverD3D12 : public RenderingContextDriver {
 	Error _initialize_devices();
 
 public:
-	virtual Error initialize() override;
-	virtual const Device &device_get(uint32_t p_device_index) const override;
-	virtual uint32_t device_get_count() const override;
-	virtual bool device_supports_present(uint32_t p_device_index, SurfaceID p_surface) const override;
-	virtual RenderingDeviceDriver *driver_create() override;
-	virtual void driver_free(RenderingDeviceDriver *p_driver) override;
-	virtual SurfaceID surface_create(const void *p_platform_data) override;
-	virtual void surface_set_size(SurfaceID p_surface, uint32_t p_width, uint32_t p_height) override;
-	virtual void surface_set_vsync_mode(SurfaceID p_surface, DisplayServer::VSyncMode p_vsync_mode) override;
-	virtual DisplayServer::VSyncMode surface_get_vsync_mode(SurfaceID p_surface) const override;
-	virtual uint32_t surface_get_width(SurfaceID p_surface) const override;
-	virtual uint32_t surface_get_height(SurfaceID p_surface) const override;
-	virtual void surface_set_needs_resize(SurfaceID p_surface, bool p_needs_resize) override;
-	virtual bool surface_get_needs_resize(SurfaceID p_surface) const override;
-	virtual void surface_destroy(SurfaceID p_surface) override;
-	virtual bool is_debug_utils_enabled() const override;
+	Error initialize() override;
+	const Device &device_get(uint32_t p_device_index) const override;
+	uint32_t device_get_count() const override;
+	bool device_supports_present(uint32_t p_device_index, SurfaceID p_surface) const override;
+	RenderingDeviceDriver *driver_create() override;
+	void driver_free(RenderingDeviceDriver *p_driver) override;
+	SurfaceID surface_create(const void *p_platform_data) override;
+	void surface_set_size(SurfaceID p_surface, uint32_t p_width, uint32_t p_height) override;
+	void surface_set_vsync_mode(SurfaceID p_surface, DisplayServer::VSyncMode p_vsync_mode) override;
+	DisplayServer::VSyncMode surface_get_vsync_mode(SurfaceID p_surface) const override;
+	uint32_t surface_get_width(SurfaceID p_surface) const override;
+	uint32_t surface_get_height(SurfaceID p_surface) const override;
+	void surface_set_needs_resize(SurfaceID p_surface, bool p_needs_resize) override;
+	bool surface_get_needs_resize(SurfaceID p_surface) const override;
+	void surface_destroy(SurfaceID p_surface) override;
+	bool is_debug_utils_enabled() const override;
 
 	// Platform-specific data for the Windows embedded in this driver.
 	struct WindowPlatformData {
@@ -126,7 +126,7 @@ public:
 	bool use_validation_layers() const;
 
 	RenderingContextDriverD3D12();
-	virtual ~RenderingContextDriverD3D12() override;
+	~RenderingContextDriverD3D12() override;
 };
 
 #endif // RENDERING_CONTEXT_DRIVER_D3D12_H

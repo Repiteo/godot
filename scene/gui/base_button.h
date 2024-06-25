@@ -82,8 +82,8 @@ protected:
 	virtual void pressed();
 	virtual void toggled(bool p_pressed);
 	static void _bind_methods();
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
-	virtual void shortcut_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
+	void shortcut_input(const Ref<InputEvent> &p_event) override;
 	void _notification(int p_what);
 
 	bool _was_pressed_by_mouse() const;
@@ -134,7 +134,7 @@ public:
 	void set_shortcut(const Ref<Shortcut> &p_shortcut);
 	Ref<Shortcut> get_shortcut() const;
 
-	virtual String get_tooltip(const Point2 &p_pos) const override;
+	String get_tooltip(const Point2 &p_pos) const override;
 
 	void set_button_group(const Ref<ButtonGroup> &p_group);
 	Ref<ButtonGroup> get_button_group() const;
@@ -142,7 +142,7 @@ public:
 	PackedStringArray get_configuration_warnings() const override;
 
 	BaseButton();
-	~BaseButton();
+	~BaseButton() override;
 };
 
 VARIANT_ENUM_CAST(BaseButton::DrawMode)

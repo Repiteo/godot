@@ -67,11 +67,11 @@ private:
 	void _menu_option(int p_option);
 
 public:
-	virtual String get_name() const override { return "Debugger"; }
+	String get_name() const override { return "Debugger"; }
 	bool has_main_screen() const override { return false; }
 
 	DebuggerEditorPlugin(PopupMenu *p_menu);
-	~DebuggerEditorPlugin();
+	~DebuggerEditorPlugin() override;
 };
 
 #endif // DEBUGGER_EDITOR_PLUGIN_H

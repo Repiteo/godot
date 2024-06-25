@@ -68,27 +68,27 @@ class TextureLayeredEditor : public Control {
 
 protected:
 	void _notification(int p_what);
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 
 public:
 	void edit(Ref<TextureLayered> p_texture);
 	TextureLayeredEditor();
-	~TextureLayeredEditor();
+	~TextureLayeredEditor() override;
 };
 
 class EditorInspectorPluginLayeredTexture : public EditorInspectorPlugin {
 	GDCLASS(EditorInspectorPluginLayeredTexture, EditorInspectorPlugin);
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual void parse_begin(Object *p_object) override;
+	bool can_handle(Object *p_object) override;
+	void parse_begin(Object *p_object) override;
 };
 
 class TextureLayeredEditorPlugin : public EditorPlugin {
 	GDCLASS(TextureLayeredEditorPlugin, EditorPlugin);
 
 public:
-	virtual String get_name() const override { return "TextureLayered"; }
+	String get_name() const override { return "TextureLayered"; }
 
 	TextureLayeredEditorPlugin();
 };

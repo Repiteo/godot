@@ -66,7 +66,7 @@ protected:
 public:
 	void edit(NavigationRegion3D *p_nav_region);
 	NavigationMeshEditor();
-	~NavigationMeshEditor();
+	~NavigationMeshEditor() override;
 };
 
 class NavigationMeshEditorPlugin : public EditorPlugin {
@@ -75,14 +75,14 @@ class NavigationMeshEditorPlugin : public EditorPlugin {
 	NavigationMeshEditor *navigation_mesh_editor = nullptr;
 
 public:
-	virtual String get_name() const override { return "NavigationMesh"; }
+	String get_name() const override { return "NavigationMesh"; }
 	bool has_main_screen() const override { return false; }
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
 
 	NavigationMeshEditorPlugin();
-	~NavigationMeshEditorPlugin();
+	~NavigationMeshEditorPlugin() override;
 };
 
 #endif // TOOLS_ENABLED

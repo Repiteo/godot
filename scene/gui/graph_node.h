@@ -103,7 +103,7 @@ protected:
 	void _notification(int p_what);
 	static void _bind_methods();
 
-	virtual void _resort() override;
+	void _resort() override;
 
 	virtual void draw_port(int p_slot_index, Point2i p_pos, bool p_left, const Color &p_color);
 	GDVIRTUAL4(_draw_port, int, Point2i, bool, const Color &);
@@ -164,12 +164,12 @@ public:
 	Color get_output_port_color(int p_port_idx);
 	int get_output_port_slot(int p_port_idx);
 
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
-	virtual CursorShape get_cursor_shape(const Point2 &p_pos = Point2i()) const override;
+	CursorShape get_cursor_shape(const Point2 &p_pos = Point2i()) const override;
 
-	virtual Vector<int> get_allowed_size_flags_horizontal() const override;
-	virtual Vector<int> get_allowed_size_flags_vertical() const override;
+	Vector<int> get_allowed_size_flags_horizontal() const override;
+	Vector<int> get_allowed_size_flags_vertical() const override;
 
 	GraphNode();
 };

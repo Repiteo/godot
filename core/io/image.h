@@ -335,7 +335,7 @@ public:
 	 */
 	Image(int p_width, int p_height, bool p_mipmaps, Format p_format, const Vector<uint8_t> &p_data);
 
-	~Image() {}
+	~Image() override {}
 
 	enum AlphaMode {
 		ALPHA_NONE,
@@ -417,7 +417,7 @@ public:
 	Image(const uint8_t *p_mem_png_jpg, int p_len = -1);
 	Image(const char **p_xpm);
 
-	virtual Ref<Resource> duplicate(bool p_subresources = false) const override;
+	Ref<Resource> duplicate(bool p_subresources = false) const override;
 
 	UsedChannels detect_used_channels(CompressSource p_source = COMPRESS_SOURCE_GENERIC) const;
 	void optimize_channels();

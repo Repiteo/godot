@@ -174,7 +174,7 @@ protected:
 
 public:
 	RenderSceneBuffersRD();
-	virtual ~RenderSceneBuffersRD();
+	~RenderSceneBuffersRD() override;
 
 	// info from our renderer
 	void set_can_be_storage(const bool p_can_be_storage) { can_be_storage = p_can_be_storage; }
@@ -185,11 +185,11 @@ public:
 	void set_vrs(RendererRD::VRS *p_vrs) { vrs = p_vrs; }
 
 	void cleanup();
-	virtual void configure(const RenderSceneBuffersConfiguration *p_config) override;
+	void configure(const RenderSceneBuffersConfiguration *p_config) override;
 	void configure_for_reflections(const Size2i p_reflection_size);
-	virtual void set_fsr_sharpness(float p_fsr_sharpness) override;
-	virtual void set_texture_mipmap_bias(float p_texture_mipmap_bias) override;
-	virtual void set_use_debanding(bool p_use_debanding) override;
+	void set_fsr_sharpness(float p_fsr_sharpness) override;
+	void set_texture_mipmap_bias(float p_texture_mipmap_bias) override;
+	void set_use_debanding(bool p_use_debanding) override;
 
 	// Named Textures
 

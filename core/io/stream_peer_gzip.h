@@ -61,16 +61,16 @@ public:
 	Error finish();
 	void clear();
 
-	virtual Error put_data(const uint8_t *p_data, int p_bytes) override;
-	virtual Error put_partial_data(const uint8_t *p_data, int p_bytes, int &r_sent) override;
+	Error put_data(const uint8_t *p_data, int p_bytes) override;
+	Error put_partial_data(const uint8_t *p_data, int p_bytes, int &r_sent) override;
 
-	virtual Error get_data(uint8_t *p_buffer, int p_bytes) override;
-	virtual Error get_partial_data(uint8_t *p_buffer, int p_bytes, int &r_received) override;
+	Error get_data(uint8_t *p_buffer, int p_bytes) override;
+	Error get_partial_data(uint8_t *p_buffer, int p_bytes, int &r_received) override;
 
-	virtual int get_available_bytes() const override;
+	int get_available_bytes() const override;
 
 	StreamPeerGZIP();
-	~StreamPeerGZIP();
+	~StreamPeerGZIP() override;
 };
 
 #endif // STREAM_PEER_GZIP_H

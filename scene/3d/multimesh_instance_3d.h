@@ -49,10 +49,10 @@ public:
 
 	Array get_meshes() const;
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 
 	MultiMeshInstance3D();
-	~MultiMeshInstance3D();
+	~MultiMeshInstance3D() override;
 };
 
 #endif // MULTIMESH_INSTANCE_3D_H

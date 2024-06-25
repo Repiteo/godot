@@ -114,14 +114,14 @@ private:
 		};
 
 		RID get_color_fbs(FramebufferConfigType p_config_type);
-		virtual void free_data() override;
-		virtual void configure(RenderSceneBuffersRD *p_render_buffers) override;
+		void free_data() override;
+		void configure(RenderSceneBuffersRD *p_render_buffers) override;
 
 	private:
 		RenderSceneBuffersRD *render_buffers = nullptr;
 	};
 
-	virtual void setup_render_buffer_data(Ref<RenderSceneBuffersRD> p_render_buffers) override;
+	void setup_render_buffer_data(Ref<RenderSceneBuffersRD> p_render_buffers) override;
 
 	/* Rendering */
 
@@ -355,21 +355,21 @@ private:
 
 protected:
 	/* setup */
-	virtual void _update_shader_quality_settings() override;
+	void _update_shader_quality_settings() override;
 
-	virtual float _render_buffers_get_luminance_multiplier() override;
-	virtual RD::DataFormat _render_buffers_get_color_format() override;
-	virtual bool _render_buffers_can_be_storage() override;
+	float _render_buffers_get_luminance_multiplier() override;
+	RD::DataFormat _render_buffers_get_color_format() override;
+	bool _render_buffers_can_be_storage() override;
 
-	virtual RID _render_buffers_get_normal_texture(Ref<RenderSceneBuffersRD> p_render_buffers) override;
-	virtual RID _render_buffers_get_velocity_texture(Ref<RenderSceneBuffersRD> p_render_buffers) override;
+	RID _render_buffers_get_normal_texture(Ref<RenderSceneBuffersRD> p_render_buffers) override;
+	RID _render_buffers_get_velocity_texture(Ref<RenderSceneBuffersRD> p_render_buffers) override;
 
-	virtual void environment_set_ssao_quality(RS::EnvironmentSSAOQuality p_quality, bool p_half_size, float p_adaptive_target, int p_blur_passes, float p_fadeout_from, float p_fadeout_to) override{};
-	virtual void environment_set_ssil_quality(RS::EnvironmentSSILQuality p_quality, bool p_half_size, float p_adaptive_target, int p_blur_passes, float p_fadeout_from, float p_fadeout_to) override{};
-	virtual void environment_set_ssr_roughness_quality(RS::EnvironmentSSRRoughnessQuality p_quality) override{};
+	void environment_set_ssao_quality(RS::EnvironmentSSAOQuality p_quality, bool p_half_size, float p_adaptive_target, int p_blur_passes, float p_fadeout_from, float p_fadeout_to) override{};
+	void environment_set_ssil_quality(RS::EnvironmentSSILQuality p_quality, bool p_half_size, float p_adaptive_target, int p_blur_passes, float p_fadeout_from, float p_fadeout_to) override{};
+	void environment_set_ssr_roughness_quality(RS::EnvironmentSSRRoughnessQuality p_quality) override{};
 
-	virtual void sub_surface_scattering_set_quality(RS::SubSurfaceScatteringQuality p_quality) override{};
-	virtual void sub_surface_scattering_set_scale(float p_scale, float p_depth_scale) override{};
+	void sub_surface_scattering_set_quality(RS::SubSurfaceScatteringQuality p_quality) override{};
+	void sub_surface_scattering_set_scale(float p_scale, float p_depth_scale) override{};
 
 	/* Geometry instance */
 
@@ -490,27 +490,27 @@ protected:
 		GeometryInstanceForwardMobile() :
 				dirty_list_element(this) {}
 
-		virtual void _mark_dirty() override;
+		void _mark_dirty() override;
 
-		virtual void set_use_lightmap(RID p_lightmap_instance, const Rect2 &p_lightmap_uv_scale, int p_lightmap_slice_index) override;
-		virtual void set_lightmap_capture(const Color *p_sh9) override;
+		void set_use_lightmap(RID p_lightmap_instance, const Rect2 &p_lightmap_uv_scale, int p_lightmap_slice_index) override;
+		void set_lightmap_capture(const Color *p_sh9) override;
 
-		virtual void pair_light_instances(const RID *p_light_instances, uint32_t p_light_instance_count) override;
-		virtual void pair_reflection_probe_instances(const RID *p_reflection_probe_instances, uint32_t p_reflection_probe_instance_count) override;
-		virtual void pair_decal_instances(const RID *p_decal_instances, uint32_t p_decal_instance_count) override;
-		virtual void pair_voxel_gi_instances(const RID *p_voxel_gi_instances, uint32_t p_voxel_gi_instance_count) override {}
+		void pair_light_instances(const RID *p_light_instances, uint32_t p_light_instance_count) override;
+		void pair_reflection_probe_instances(const RID *p_reflection_probe_instances, uint32_t p_reflection_probe_instance_count) override;
+		void pair_decal_instances(const RID *p_decal_instances, uint32_t p_decal_instance_count) override;
+		void pair_voxel_gi_instances(const RID *p_voxel_gi_instances, uint32_t p_voxel_gi_instance_count) override {}
 
-		virtual void set_softshadow_projector_pairing(bool p_softshadow, bool p_projector) override;
+		void set_softshadow_projector_pairing(bool p_softshadow, bool p_projector) override;
 	};
 
 	/* Rendering */
 
-	virtual void _render_scene(RenderDataRD *p_render_data, const Color &p_default_bg_color) override;
+	void _render_scene(RenderDataRD *p_render_data, const Color &p_default_bg_color) override;
 
-	virtual void _render_material(const Transform3D &p_cam_transform, const Projection &p_cam_projection, bool p_cam_orthogonal, const PagedArray<RenderGeometryInstance *> &p_instances, RID p_framebuffer, const Rect2i &p_region, float p_exposure_normalization) override;
-	virtual void _render_uv2(const PagedArray<RenderGeometryInstance *> &p_instances, RID p_framebuffer, const Rect2i &p_region) override;
-	virtual void _render_sdfgi(Ref<RenderSceneBuffersRD> p_render_buffers, const Vector3i &p_from, const Vector3i &p_size, const AABB &p_bounds, const PagedArray<RenderGeometryInstance *> &p_instances, const RID &p_albedo_texture, const RID &p_emission_texture, const RID &p_emission_aniso_texture, const RID &p_geom_facing_texture, float p_exposure_normalization) override;
-	virtual void _render_particle_collider_heightfield(RID p_fb, const Transform3D &p_cam_transform, const Projection &p_cam_projection, const PagedArray<RenderGeometryInstance *> &p_instances) override;
+	void _render_material(const Transform3D &p_cam_transform, const Projection &p_cam_projection, bool p_cam_orthogonal, const PagedArray<RenderGeometryInstance *> &p_instances, RID p_framebuffer, const Rect2i &p_region, float p_exposure_normalization) override;
+	void _render_uv2(const PagedArray<RenderGeometryInstance *> &p_instances, RID p_framebuffer, const Rect2i &p_region) override;
+	void _render_sdfgi(Ref<RenderSceneBuffersRD> p_render_buffers, const Vector3i &p_from, const Vector3i &p_size, const AABB &p_bounds, const PagedArray<RenderGeometryInstance *> &p_instances, const RID &p_albedo_texture, const RID &p_emission_texture, const RID &p_emission_aniso_texture, const RID &p_geom_facing_texture, float p_exposure_normalization) override;
+	void _render_particle_collider_heightfield(RID p_fb, const Transform3D &p_cam_transform, const Projection &p_cam_projection, const PagedArray<RenderGeometryInstance *> &p_instances) override;
 
 	/* Forward ID */
 
@@ -525,17 +525,17 @@ protected:
 		ForwardIDAllocator forward_id_allocators[RendererRD::FORWARD_ID_MAX];
 
 	public:
-		virtual RendererRD::ForwardID allocate_forward_id(RendererRD::ForwardIDType p_type) override;
-		virtual void free_forward_id(RendererRD::ForwardIDType p_type, RendererRD::ForwardID p_id) override;
-		virtual void map_forward_id(RendererRD::ForwardIDType p_type, RendererRD::ForwardID p_id, uint32_t p_index, uint64_t p_last_pass) override;
-		virtual bool uses_forward_ids() const override { return true; }
+		RendererRD::ForwardID allocate_forward_id(RendererRD::ForwardIDType p_type) override;
+		void free_forward_id(RendererRD::ForwardIDType p_type, RendererRD::ForwardID p_id) override;
+		void map_forward_id(RendererRD::ForwardIDType p_type, RendererRD::ForwardID p_id, uint32_t p_index, uint64_t p_last_pass) override;
+		bool uses_forward_ids() const override { return true; }
 	};
 
 	ForwardIDStorageMobile *forward_id_storage_mobile = nullptr;
 
 	void fill_push_constant_instance_indices(SceneState::InstanceData *p_instance_data, const GeometryInstanceForwardMobile *p_instance);
 
-	virtual RendererRD::ForwardIDStorage *create_forward_id_storage() override {
+	RendererRD::ForwardIDStorage *create_forward_id_storage() override {
 		forward_id_storage_mobile = memnew(ForwardIDStorageMobile);
 		return forward_id_storage_mobile;
 	}
@@ -543,14 +543,14 @@ protected:
 public:
 	static RenderForwardMobile *get_singleton() { return singleton; }
 
-	virtual RID reflection_probe_create_framebuffer(RID p_color, RID p_depth) override;
+	RID reflection_probe_create_framebuffer(RID p_color, RID p_depth) override;
 
 	/* SDFGI UPDATE */
 
-	virtual void sdfgi_update(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_environment, const Vector3 &p_world_position) override {}
-	virtual int sdfgi_get_pending_region_count(const Ref<RenderSceneBuffers> &p_render_buffers) const override { return 0; }
-	virtual AABB sdfgi_get_pending_region_bounds(const Ref<RenderSceneBuffers> &p_render_buffers, int p_region) const override { return AABB(); }
-	virtual uint32_t sdfgi_get_pending_region_cascade(const Ref<RenderSceneBuffers> &p_render_buffers, int p_region) const override { return 0; }
+	void sdfgi_update(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_environment, const Vector3 &p_world_position) override {}
+	int sdfgi_get_pending_region_count(const Ref<RenderSceneBuffers> &p_render_buffers) const override { return 0; }
+	AABB sdfgi_get_pending_region_bounds(const Ref<RenderSceneBuffers> &p_render_buffers, int p_region) const override { return AABB(); }
+	uint32_t sdfgi_get_pending_region_cascade(const Ref<RenderSceneBuffers> &p_render_buffers, int p_region) const override { return 0; }
 
 	/* GEOMETRY INSTANCE */
 
@@ -569,21 +569,21 @@ public:
 	void _geometry_instance_update(RenderGeometryInstance *p_geometry_instance);
 	void _update_dirty_geometry_instances();
 
-	virtual RenderGeometryInstance *geometry_instance_create(RID p_base) override;
-	virtual void geometry_instance_free(RenderGeometryInstance *p_geometry_instance) override;
+	RenderGeometryInstance *geometry_instance_create(RID p_base) override;
+	void geometry_instance_free(RenderGeometryInstance *p_geometry_instance) override;
 
-	virtual uint32_t geometry_instance_get_pair_mask() override;
+	uint32_t geometry_instance_get_pair_mask() override;
 
-	virtual bool free(RID p_rid) override;
+	bool free(RID p_rid) override;
 
-	virtual void base_uniforms_changed() override;
+	void base_uniforms_changed() override;
 
-	virtual bool is_dynamic_gi_supported() const override;
-	virtual bool is_volumetric_supported() const override;
-	virtual uint32_t get_max_elements() const override;
+	bool is_dynamic_gi_supported() const override;
+	bool is_volumetric_supported() const override;
+	uint32_t get_max_elements() const override;
 
 	RenderForwardMobile();
-	~RenderForwardMobile();
+	~RenderForwardMobile() override;
 };
 } // namespace RendererSceneRenderImplementation
 

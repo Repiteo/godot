@@ -45,7 +45,7 @@ class AudioEffectCompressorInstance : public AudioEffectInstance {
 
 public:
 	void set_current_channel(int p_channel) { current_channel = p_channel; }
-	virtual void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;
+	void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;
 };
 
 class AudioEffectCompressor : public AudioEffect {

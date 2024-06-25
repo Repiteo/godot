@@ -179,7 +179,7 @@ class AnimationTimelineEdit : public Range {
 	Vector2 zoom_scroll_origin;
 	bool zoom_callback_occured = false;
 
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 	void _track_added(int p_track);
 
 	float _get_zoom_scale(double p_zoom_value) const;
@@ -195,7 +195,7 @@ public:
 
 	float get_zoom_scale() const;
 
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 	void set_animation(const Ref<Animation> &p_animation, bool p_read_only);
 	void set_track_edit(AnimationTrackEdit *p_track_edit);
 	void set_zoom(Range *p_zoom);
@@ -213,7 +213,7 @@ public:
 
 	void set_hscroll(HScrollBar *p_hscroll);
 
-	virtual CursorShape get_cursor_shape(const Point2 &p_pos) const override;
+	CursorShape get_cursor_shape(const Point2 &p_pos) const override;
 
 	AnimationTimelineEdit();
 };
@@ -303,14 +303,14 @@ protected:
 	static void _bind_methods();
 	void _notification(int p_what);
 
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 
 public:
-	virtual Variant get_drag_data(const Point2 &p_point) override;
-	virtual bool can_drop_data(const Point2 &p_point, const Variant &p_data) const override;
-	virtual void drop_data(const Point2 &p_point, const Variant &p_data) override;
+	Variant get_drag_data(const Point2 &p_point) override;
+	bool can_drop_data(const Point2 &p_point, const Variant &p_data) const override;
+	void drop_data(const Point2 &p_point, const Variant &p_data) override;
 
-	virtual String get_tooltip(const Point2 &p_pos) const override;
+	String get_tooltip(const Point2 &p_pos) const override;
 
 	virtual int get_key_height() const;
 	virtual Rect2 get_key_rect(int p_index, float p_pixels_sec);
@@ -330,7 +330,7 @@ public:
 	AnimationTrackEditor *get_editor() const { return editor; }
 	NodePath get_path() const;
 	void set_animation_and_track(const Ref<Animation> &p_animation, int p_track, bool p_read_only);
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
 	void set_timeline(AnimationTimelineEdit *p_timeline);
 	void set_editor(AnimationTrackEditor *p_editor);
@@ -373,11 +373,11 @@ class AnimationTrackEditGroup : public Control {
 protected:
 	void _notification(int p_what);
 
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 
 public:
 	void set_type_and_name(const Ref<Texture2D> &p_type, const String &p_name, const NodePath &p_node);
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 	void set_timeline(AnimationTimelineEdit *p_timeline);
 	void set_root(Node *p_root);
 
@@ -741,7 +741,7 @@ public:
 
 	MenuButton *get_edit_menu();
 	AnimationTrackEditor();
-	~AnimationTrackEditor();
+	~AnimationTrackEditor() override;
 };
 
 // AnimationTrackKeyEditEditorPlugin
@@ -767,7 +767,7 @@ class AnimationTrackKeyEditEditor : public EditorProperty {
 
 public:
 	AnimationTrackKeyEditEditor(Ref<Animation> p_animation, int p_track, real_t p_key_ofs, bool p_use_fps);
-	~AnimationTrackKeyEditEditor();
+	~AnimationTrackKeyEditEditor() override;
 };
 
 #endif // ANIMATION_TRACK_EDITOR_H

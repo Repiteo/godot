@@ -87,21 +87,21 @@ class AudioDriverOpenSL : public AudioDriver {
 	Error init_input_device();
 
 public:
-	virtual const char *get_name() const override {
+	const char *get_name() const override {
 		return "Android";
 	}
 
-	virtual Error init() override;
-	virtual void start() override;
-	virtual int get_mix_rate() const override;
-	virtual SpeakerMode get_speaker_mode() const override;
+	Error init() override;
+	void start() override;
+	int get_mix_rate() const override;
+	SpeakerMode get_speaker_mode() const override;
 
-	virtual void lock() override;
-	virtual void unlock() override;
-	virtual void finish() override;
+	void lock() override;
+	void unlock() override;
+	void finish() override;
 
-	virtual Error input_start() override;
-	virtual Error input_stop() override;
+	Error input_start() override;
+	Error input_stop() override;
 
 	void set_pause(bool p_pause);
 

@@ -237,9 +237,9 @@ class PackedScene : public Resource {
 	Dictionary _get_bundled_scene() const;
 
 protected:
-	virtual bool editor_can_reload_from_file() override { return false; } // this is handled by editor better
+	bool editor_can_reload_from_file() override { return false; } // this is handled by editor better
 	static void _bind_methods();
-	virtual void reset_state() override;
+	void reset_state() override;
 
 public:
 	enum GenEditState {
@@ -259,13 +259,13 @@ public:
 	void recreate_state();
 	void replace_state(Ref<SceneState> p_by);
 
-	virtual void reload_from_file() override;
+	void reload_from_file() override;
 
-	virtual void set_path(const String &p_path, bool p_take_over = false) override;
-	virtual void set_path_cache(const String &p_path) override;
+	void set_path(const String &p_path, bool p_take_over = false) override;
+	void set_path_cache(const String &p_path) override;
 
 #ifdef TOOLS_ENABLED
-	virtual void set_last_modified_time(uint64_t p_time) override {
+	void set_last_modified_time(uint64_t p_time) override {
 		Resource::set_last_modified_time(p_time);
 		state->set_last_modified_time(p_time);
 	}

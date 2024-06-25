@@ -38,9 +38,9 @@ public:
 	static OpenXRPalmPoseExtension *get_singleton();
 
 	OpenXRPalmPoseExtension();
-	virtual ~OpenXRPalmPoseExtension() override;
+	~OpenXRPalmPoseExtension() override;
 
-	virtual HashMap<String, bool *> get_requested_extensions() override;
+	HashMap<String, bool *> get_requested_extensions() override;
 
 	bool is_available();
 

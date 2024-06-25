@@ -73,9 +73,9 @@ protected:
 	}
 
 public:
-	virtual bool setup(real_t p_step) override { return false; }
-	virtual bool pre_solve(real_t p_step) override { return true; }
-	virtual void solve(real_t p_step) override {}
+	bool setup(real_t p_step) override { return false; }
+	bool pre_solve(real_t p_step) override { return true; }
+	void solve(real_t p_step) override {}
 
 	void copy_settings_from(GodotJoint3D *p_joint) {
 		set_self(p_joint->get_self());
@@ -88,7 +88,7 @@ public:
 			GodotConstraint3D(p_body_ptr, p_body_count) {
 	}
 
-	virtual ~GodotJoint3D() {
+	~GodotJoint3D() override {
 		for (int i = 0; i < get_body_count(); i++) {
 			GodotBody3D *body = get_body_ptr()[i];
 			if (body) {

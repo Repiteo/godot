@@ -112,7 +112,7 @@ public:
 	double get_total_time() const override { return time; }
 
 	RasterizerDummy() {}
-	~RasterizerDummy() {}
+	~RasterizerDummy() override {}
 };
 
 #endif // RASTERIZER_DUMMY_H

@@ -394,7 +394,7 @@ public:
 		singleton = this;
 	}
 
-	~SignalWatcher() {
+	~SignalWatcher() override {
 		singleton = nullptr;
 	}
 };

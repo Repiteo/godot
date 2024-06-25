@@ -231,7 +231,7 @@ public:
 
 	void edit(GridMap *p_gridmap);
 	GridMapEditor();
-	~GridMapEditor();
+	~GridMapEditor() override;
 };
 
 class GridMapEditorPlugin : public EditorPlugin {
@@ -243,15 +243,15 @@ protected:
 	void _notification(int p_what);
 
 public:
-	virtual EditorPlugin::AfterGUIInput forward_3d_gui_input(Camera3D *p_camera, const Ref<InputEvent> &p_event) override { return grid_map_editor->forward_spatial_input_event(p_camera, p_event); }
-	virtual String get_name() const override { return "GridMap"; }
+	EditorPlugin::AfterGUIInput forward_3d_gui_input(Camera3D *p_camera, const Ref<InputEvent> &p_event) override { return grid_map_editor->forward_spatial_input_event(p_camera, p_event); }
+	String get_name() const override { return "GridMap"; }
 	bool has_main_screen() const override { return false; }
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
 
 	GridMapEditorPlugin();
-	~GridMapEditorPlugin();
+	~GridMapEditorPlugin() override;
 };
 
 #endif // TOOLS_ENABLED

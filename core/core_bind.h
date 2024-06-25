@@ -370,7 +370,7 @@ public:
 	String base64_to_utf8(const String &p_str);
 
 	Marshalls() { singleton = this; }
-	~Marshalls() { singleton = nullptr; }
+	~Marshalls() override { singleton = nullptr; }
 };
 
 class Mutex : public RefCounted {
@@ -472,11 +472,11 @@ public:
 	bool is_class_enabled(const StringName &p_class) const;
 
 #ifdef TOOLS_ENABLED
-	virtual void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
+	void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
 #endif
 
 	ClassDB() {}
-	~ClassDB() {}
+	~ClassDB() override {}
 };
 
 } // namespace special
@@ -546,7 +546,7 @@ public:
 	bool is_printing_error_messages() const;
 
 #ifdef TOOLS_ENABLED
-	virtual void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
+	void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
 #endif
 
 	Engine() { singleton = this; }
@@ -599,7 +599,7 @@ public:
 	void clear_breakpoints();
 
 	EngineDebugger() { singleton = this; }
-	~EngineDebugger();
+	~EngineDebugger() override;
 };
 
 } // namespace core_bind

@@ -101,25 +101,25 @@ public:
 
 	mutable RID_Owner<Camera, true> camera_owner;
 
-	virtual RID camera_allocate();
-	virtual void camera_initialize(RID p_rid);
+	RID camera_allocate() override;
+	void camera_initialize(RID p_rid) override;
 
-	virtual void camera_set_perspective(RID p_camera, float p_fovy_degrees, float p_z_near, float p_z_far);
-	virtual void camera_set_orthogonal(RID p_camera, float p_size, float p_z_near, float p_z_far);
-	virtual void camera_set_frustum(RID p_camera, float p_size, Vector2 p_offset, float p_z_near, float p_z_far);
-	virtual void camera_set_transform(RID p_camera, const Transform3D &p_transform);
-	virtual void camera_set_cull_mask(RID p_camera, uint32_t p_layers);
-	virtual void camera_set_environment(RID p_camera, RID p_env);
-	virtual void camera_set_camera_attributes(RID p_camera, RID p_attributes);
-	virtual void camera_set_compositor(RID p_camera, RID p_compositor);
-	virtual void camera_set_use_vertical_aspect(RID p_camera, bool p_enable);
-	virtual bool is_camera(RID p_camera) const;
+	void camera_set_perspective(RID p_camera, float p_fovy_degrees, float p_z_near, float p_z_far) override;
+	void camera_set_orthogonal(RID p_camera, float p_size, float p_z_near, float p_z_far) override;
+	void camera_set_frustum(RID p_camera, float p_size, Vector2 p_offset, float p_z_near, float p_z_far) override;
+	void camera_set_transform(RID p_camera, const Transform3D &p_transform) override;
+	void camera_set_cull_mask(RID p_camera, uint32_t p_layers) override;
+	void camera_set_environment(RID p_camera, RID p_env) override;
+	void camera_set_camera_attributes(RID p_camera, RID p_attributes) override;
+	void camera_set_compositor(RID p_camera, RID p_compositor) override;
+	void camera_set_use_vertical_aspect(RID p_camera, bool p_enable) override;
+	bool is_camera(RID p_camera) const override;
 
 	/* OCCLUDER API */
 
-	virtual RID occluder_allocate();
-	virtual void occluder_initialize(RID p_occluder);
-	virtual void occluder_set_mesh(RID p_occluder, const PackedVector3Array &p_vertices, const PackedInt32Array &p_indices);
+	RID occluder_allocate() override;
+	void occluder_initialize(RID p_occluder) override;
+	void occluder_set_mesh(RID p_occluder, const PackedVector3Array &p_vertices, const PackedInt32Array &p_indices) override;
 
 	/* VISIBILITY NOTIFIER API */
 
@@ -309,7 +309,7 @@ public:
 	};
 
 	class VisibilityArray : public BinSortedArray<InstanceVisibilityData> {
-		_FORCE_INLINE_ virtual void _update_idx(InstanceVisibilityData &r_element, uint64_t p_idx) {
+		_FORCE_INLINE_ void _update_idx(InstanceVisibilityData &r_element, uint64_t p_idx) override {
 			r_element.instance->visibility_index = p_idx;
 			if (r_element.instance->scenario && r_element.instance->array_index != -1) {
 				r_element.instance->scenario->instance_data[r_element.instance->array_index].visibility_index = p_idx;
@@ -366,18 +366,18 @@ public:
 
 	void _instance_update_mesh_instance(Instance *p_instance);
 
-	virtual RID scenario_allocate();
-	virtual void scenario_initialize(RID p_rid);
+	RID scenario_allocate() override;
+	void scenario_initialize(RID p_rid) override;
 
-	virtual void scenario_set_environment(RID p_scenario, RID p_environment);
-	virtual void scenario_set_camera_attributes(RID p_scenario, RID p_attributes);
-	virtual void scenario_set_fallback_environment(RID p_scenario, RID p_environment);
-	virtual void scenario_set_compositor(RID p_scenario, RID p_compositor);
-	virtual void scenario_set_reflection_atlas_size(RID p_scenario, int p_reflection_size, int p_reflection_count);
-	virtual bool is_scenario(RID p_scenario) const;
-	virtual RID scenario_get_environment(RID p_scenario);
-	virtual void scenario_add_viewport_visibility_mask(RID p_scenario, RID p_viewport);
-	virtual void scenario_remove_viewport_visibility_mask(RID p_scenario, RID p_viewport);
+	void scenario_set_environment(RID p_scenario, RID p_environment) override;
+	void scenario_set_camera_attributes(RID p_scenario, RID p_attributes) override;
+	void scenario_set_fallback_environment(RID p_scenario, RID p_environment) override;
+	void scenario_set_compositor(RID p_scenario, RID p_compositor) override;
+	void scenario_set_reflection_atlas_size(RID p_scenario, int p_reflection_size, int p_reflection_count) override;
+	bool is_scenario(RID p_scenario) const override;
+	RID scenario_get_environment(RID p_scenario) override;
+	void scenario_add_viewport_visibility_mask(RID p_scenario, RID p_viewport) override;
+	void scenario_remove_viewport_visibility_mask(RID p_scenario, RID p_viewport) override;
 
 	/* INSTANCING API */
 
@@ -1019,54 +1019,54 @@ public:
 	LocalVector<Vector2> camera_jitter_array;
 	RenderingLightCuller *light_culler = nullptr;
 
-	virtual RID instance_allocate();
-	virtual void instance_initialize(RID p_rid);
+	RID instance_allocate() override;
+	void instance_initialize(RID p_rid) override;
 
-	virtual void instance_set_base(RID p_instance, RID p_base);
-	virtual void instance_set_scenario(RID p_instance, RID p_scenario);
-	virtual void instance_set_layer_mask(RID p_instance, uint32_t p_mask);
-	virtual void instance_set_pivot_data(RID p_instance, float p_sorting_offset, bool p_use_aabb_center);
-	virtual void instance_set_transform(RID p_instance, const Transform3D &p_transform);
-	virtual void instance_attach_object_instance_id(RID p_instance, ObjectID p_id);
-	virtual void instance_set_blend_shape_weight(RID p_instance, int p_shape, float p_weight);
-	virtual void instance_set_surface_override_material(RID p_instance, int p_surface, RID p_material);
-	virtual void instance_set_visible(RID p_instance, bool p_visible);
-	virtual void instance_geometry_set_transparency(RID p_instance, float p_transparency);
+	void instance_set_base(RID p_instance, RID p_base) override;
+	void instance_set_scenario(RID p_instance, RID p_scenario) override;
+	void instance_set_layer_mask(RID p_instance, uint32_t p_mask) override;
+	void instance_set_pivot_data(RID p_instance, float p_sorting_offset, bool p_use_aabb_center) override;
+	void instance_set_transform(RID p_instance, const Transform3D &p_transform) override;
+	void instance_attach_object_instance_id(RID p_instance, ObjectID p_id) override;
+	void instance_set_blend_shape_weight(RID p_instance, int p_shape, float p_weight) override;
+	void instance_set_surface_override_material(RID p_instance, int p_surface, RID p_material) override;
+	void instance_set_visible(RID p_instance, bool p_visible) override;
+	void instance_geometry_set_transparency(RID p_instance, float p_transparency) override;
 
-	virtual void instance_set_custom_aabb(RID p_instance, AABB p_aabb);
+	void instance_set_custom_aabb(RID p_instance, AABB p_aabb) override;
 
-	virtual void instance_attach_skeleton(RID p_instance, RID p_skeleton);
+	void instance_attach_skeleton(RID p_instance, RID p_skeleton) override;
 
-	virtual void instance_set_extra_visibility_margin(RID p_instance, real_t p_margin);
+	void instance_set_extra_visibility_margin(RID p_instance, real_t p_margin) override;
 
-	virtual void instance_set_visibility_parent(RID p_instance, RID p_parent_instance);
+	void instance_set_visibility_parent(RID p_instance, RID p_parent_instance) override;
 
-	virtual void instance_set_ignore_culling(RID p_instance, bool p_enabled);
+	void instance_set_ignore_culling(RID p_instance, bool p_enabled) override;
 
 	bool _update_instance_visibility_depth(Instance *p_instance);
 	void _update_instance_visibility_dependencies(Instance *p_instance);
 
 	// don't use these in a game!
-	virtual Vector<ObjectID> instances_cull_aabb(const AABB &p_aabb, RID p_scenario = RID()) const;
-	virtual Vector<ObjectID> instances_cull_ray(const Vector3 &p_from, const Vector3 &p_to, RID p_scenario = RID()) const;
-	virtual Vector<ObjectID> instances_cull_convex(const Vector<Plane> &p_convex, RID p_scenario = RID()) const;
+	Vector<ObjectID> instances_cull_aabb(const AABB &p_aabb, RID p_scenario = RID()) const override;
+	Vector<ObjectID> instances_cull_ray(const Vector3 &p_from, const Vector3 &p_to, RID p_scenario = RID()) const override;
+	Vector<ObjectID> instances_cull_convex(const Vector<Plane> &p_convex, RID p_scenario = RID()) const override;
 
-	virtual void instance_geometry_set_flag(RID p_instance, RS::InstanceFlags p_flags, bool p_enabled);
-	virtual void instance_geometry_set_cast_shadows_setting(RID p_instance, RS::ShadowCastingSetting p_shadow_casting_setting);
-	virtual void instance_geometry_set_material_override(RID p_instance, RID p_material);
-	virtual void instance_geometry_set_material_overlay(RID p_instance, RID p_material);
+	void instance_geometry_set_flag(RID p_instance, RS::InstanceFlags p_flags, bool p_enabled) override;
+	void instance_geometry_set_cast_shadows_setting(RID p_instance, RS::ShadowCastingSetting p_shadow_casting_setting) override;
+	void instance_geometry_set_material_override(RID p_instance, RID p_material) override;
+	void instance_geometry_set_material_overlay(RID p_instance, RID p_material) override;
 
-	virtual void instance_geometry_set_visibility_range(RID p_instance, float p_min, float p_max, float p_min_margin, float p_max_margin, RS::VisibilityRangeFadeMode p_fade_mode);
+	void instance_geometry_set_visibility_range(RID p_instance, float p_min, float p_max, float p_min_margin, float p_max_margin, RS::VisibilityRangeFadeMode p_fade_mode) override;
 
-	virtual void instance_geometry_set_lightmap(RID p_instance, RID p_lightmap, const Rect2 &p_lightmap_uv_scale, int p_slice_index);
-	virtual void instance_geometry_set_lod_bias(RID p_instance, float p_lod_bias);
+	void instance_geometry_set_lightmap(RID p_instance, RID p_lightmap, const Rect2 &p_lightmap_uv_scale, int p_slice_index) override;
+	void instance_geometry_set_lod_bias(RID p_instance, float p_lod_bias) override;
 
 	void _update_instance_shader_uniforms_from_material(HashMap<StringName, Instance::InstanceShaderParameter> &isparams, const HashMap<StringName, Instance::InstanceShaderParameter> &existing_isparams, RID p_material);
 
-	virtual void instance_geometry_set_shader_parameter(RID p_instance, const StringName &p_parameter, const Variant &p_value);
-	virtual void instance_geometry_get_shader_parameter_list(RID p_instance, List<PropertyInfo> *p_parameters) const;
-	virtual Variant instance_geometry_get_shader_parameter(RID p_instance, const StringName &p_parameter) const;
-	virtual Variant instance_geometry_get_shader_parameter_default_value(RID p_instance, const StringName &p_parameter) const;
+	void instance_geometry_set_shader_parameter(RID p_instance, const StringName &p_parameter, const Variant &p_value) override;
+	void instance_geometry_get_shader_parameter_list(RID p_instance, List<PropertyInfo> *p_parameters) const override;
+	Variant instance_geometry_get_shader_parameter(RID p_instance, const StringName &p_parameter) const override;
+	Variant instance_geometry_get_shader_parameter_default_value(RID p_instance, const StringName &p_parameter) const override;
 
 	_FORCE_INLINE_ void _update_instance(Instance *p_instance);
 	_FORCE_INLINE_ void _update_instance_aabb(Instance *p_instance);
@@ -1150,15 +1150,15 @@ public:
 
 	bool _render_reflection_probe_step(Instance *p_instance, int p_step);
 	void _render_scene(const RendererSceneRender::CameraData *p_camera_data, const Ref<RenderSceneBuffers> &p_render_buffers, RID p_environment, RID p_force_camera_attributes, RID p_compositor, uint32_t p_visible_layers, RID p_scenario, RID p_viewport, RID p_shadow_atlas, RID p_reflection_probe, int p_reflection_probe_pass, float p_screen_mesh_lod_threshold, bool p_using_shadows = true, RenderInfo *r_render_info = nullptr);
-	void render_empty_scene(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_scenario, RID p_shadow_atlas);
+	void render_empty_scene(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_scenario, RID p_shadow_atlas) override;
 
-	void render_camera(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_camera, RID p_scenario, RID p_viewport, Size2 p_viewport_size, uint32_t p_jitter_phase_count, float p_screen_mesh_lod_threshold, RID p_shadow_atlas, Ref<XRInterface> &p_xr_interface, RenderingMethod::RenderInfo *r_render_info = nullptr);
+	void render_camera(const Ref<RenderSceneBuffers> &p_render_buffers, RID p_camera, RID p_scenario, RID p_viewport, Size2 p_viewport_size, uint32_t p_jitter_phase_count, float p_screen_mesh_lod_threshold, RID p_shadow_atlas, Ref<XRInterface> &p_xr_interface, RenderingMethod::RenderInfo *r_render_info = nullptr) override;
 	void update_dirty_instances();
 
 	void render_particle_colliders();
-	virtual void render_probes();
+	void render_probes() override;
 
-	TypedArray<Image> bake_render_uv2(RID p_base, const TypedArray<RID> &p_material_overrides, const Size2i &p_image_size);
+	TypedArray<Image> bake_render_uv2(RID p_base, const TypedArray<RID> &p_material_overrides, const Size2i &p_image_size) override;
 
 	//pass to scene render
 
@@ -1385,16 +1385,16 @@ public:
 	PASS1(decals_set_filter, RS::DecalFilter)
 	PASS1(light_projectors_set_filter, RS::LightProjectorFilter)
 
-	virtual void update();
+	void update() override;
 
-	bool free(RID p_rid);
+	bool free(RID p_rid) override;
 
 	void set_scene_render(RendererSceneRender *p_scene_render);
 
-	virtual void update_visibility_notifiers();
+	void update_visibility_notifiers() override;
 
 	RendererSceneCull();
-	virtual ~RendererSceneCull();
+	~RendererSceneCull() override;
 };
 
 #endif // RENDERER_SCENE_CULL_H

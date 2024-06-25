@@ -66,7 +66,7 @@ public:
 	TextEdit *get_text_edit() const;
 
 	SyntaxHighlighter() {}
-	virtual ~SyntaxHighlighter() {}
+	~SyntaxHighlighter() override {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -99,10 +99,10 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual Dictionary _get_line_syntax_highlighting_impl(int p_line) override;
+	Dictionary _get_line_syntax_highlighting_impl(int p_line) override;
 
-	virtual void _clear_highlighting_cache() override;
-	virtual void _update_cache() override;
+	void _clear_highlighting_cache() override;
+	void _update_cache() override;
 
 	void add_keyword_color(const String &p_keyword, const Color &p_color);
 	void remove_keyword_color(const String &p_keyword);

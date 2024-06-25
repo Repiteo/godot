@@ -95,7 +95,7 @@ public:
 	Error leave_multicast_group(IPAddress p_multi_address, const String &p_if_name);
 
 	PacketPeerUDP();
-	~PacketPeerUDP();
+	~PacketPeerUDP() override;
 };
 
 #endif // PACKET_PEER_UDP_H

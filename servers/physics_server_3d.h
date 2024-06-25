@@ -224,7 +224,7 @@ public:
 	virtual void set_normal(int p_vertex_id, const Vector3 &p_normal);
 	virtual void set_aabb(const AABB &p_aabb);
 
-	virtual ~PhysicsServer3DRenderingServerHandler() {}
+	~PhysicsServer3DRenderingServerHandler() override {}
 };
 
 class PhysicsTestMotionParameters3D;
@@ -813,7 +813,7 @@ public:
 	virtual int get_process_info(ProcessInfo p_info) = 0;
 
 	PhysicsServer3D();
-	~PhysicsServer3D();
+	~PhysicsServer3D() override;
 };
 
 class PhysicsRayQueryParameters3D : public RefCounted {
@@ -1034,7 +1034,7 @@ public:
 	PhysicsServer3D *new_server(const String &p_name);
 
 	PhysicsServer3DManager();
-	~PhysicsServer3DManager();
+	~PhysicsServer3DManager() override;
 };
 
 VARIANT_ENUM_CAST(PhysicsServer3D::ShapeType);

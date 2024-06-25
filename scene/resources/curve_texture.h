@@ -67,13 +67,13 @@ public:
 	void set_curve(Ref<Curve> p_curve);
 	Ref<Curve> get_curve() const;
 
-	virtual RID get_rid() const override;
+	RID get_rid() const override;
 
-	virtual int get_height() const override { return 1; }
-	virtual bool has_alpha() const override { return false; }
+	int get_height() const override { return 1; }
+	bool has_alpha() const override { return false; }
 
 	CurveTexture();
-	~CurveTexture();
+	~CurveTexture() override;
 };
 
 VARIANT_ENUM_CAST(CurveTexture::TextureMode)
@@ -110,13 +110,13 @@ public:
 	void set_curve_z(Ref<Curve> p_curve);
 	Ref<Curve> get_curve_z() const;
 
-	virtual RID get_rid() const override;
+	RID get_rid() const override;
 
-	virtual int get_height() const override { return 1; }
-	virtual bool has_alpha() const override { return false; }
+	int get_height() const override { return 1; }
+	bool has_alpha() const override { return false; }
 
 	CurveXYZTexture();
-	~CurveXYZTexture();
+	~CurveXYZTexture() override;
 };
 
 #endif // CURVE_TEXTURE_H

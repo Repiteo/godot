@@ -48,9 +48,9 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual bool has_capture(const String &p_capture) const override;
-	virtual bool capture(const String &p_message, const Array &p_data, int p_index) override;
-	virtual void setup_session(int p_session_id) override;
+	bool has_capture(const String &p_capture) const override;
+	bool capture(const String &p_message, const Array &p_data, int p_index) override;
+	void setup_session(int p_session_id) override;
 
 	MultiplayerEditorDebugger() {}
 };
@@ -74,9 +74,9 @@ protected:
 	void _notification(int p_what);
 
 public:
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
 
 	MultiplayerEditorPlugin();
 };

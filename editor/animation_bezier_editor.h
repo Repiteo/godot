@@ -97,7 +97,7 @@ class AnimationBezierTrackEdit : public Control {
 	void _update_locked_tracks_after(int p_track);
 	void _update_hidden_tracks_after(int p_track);
 
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 	void _menu_selected(int p_index);
 
 	void _play_position_draw();
@@ -201,12 +201,12 @@ public:
 	static Array make_default_bezier_key(float p_value);
 	static float get_bezier_key_value(Array p_bezier_key_array);
 
-	virtual String get_tooltip(const Point2 &p_pos) const override;
+	String get_tooltip(const Point2 &p_pos) const override;
 
 	Ref<Animation> get_animation() const;
 
 	void set_animation_and_track(const Ref<Animation> &p_animation, int p_track, bool p_read_only);
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
 	void set_timeline(AnimationTimelineEdit *p_timeline);
 	void set_editor(AnimationTrackEditor *p_editor);

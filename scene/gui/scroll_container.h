@@ -89,7 +89,7 @@ protected:
 	void _scroll_moved(float);
 
 public:
-	virtual void gui_input(const Ref<InputEvent> &p_gui_input) override;
+	void gui_input(const Ref<InputEvent> &p_gui_input) override;
 
 	void set_h_scroll(int p_pos);
 	int get_h_scroll() const;

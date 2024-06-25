@@ -171,7 +171,7 @@ public:
 	_FORCE_INLINE_ RID get_rid() const { return rid; }
 
 	CollisionObject2D();
-	~CollisionObject2D();
+	~CollisionObject2D() override;
 };
 
 VARIANT_ENUM_CAST(CollisionObject2D::DisableMode);

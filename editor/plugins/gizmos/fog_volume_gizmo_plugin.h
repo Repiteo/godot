@@ -53,7 +53,7 @@ public:
 	void commit_handle(const EditorNode3DGizmo *p_gizmo, int p_id, bool p_secondary, const Variant &p_restore, bool p_cancel = false) override;
 
 	FogVolumeGizmoPlugin();
-	~FogVolumeGizmoPlugin();
+	~FogVolumeGizmoPlugin() override;
 };
 
 #endif // FOG_VOLUME_GIZMO_PLUGIN_H

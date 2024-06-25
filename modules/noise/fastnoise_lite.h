@@ -133,7 +133,7 @@ private:
 
 public:
 	FastNoiseLite();
-	~FastNoiseLite();
+	~FastNoiseLite() override;
 
 	// General noise settings.
 

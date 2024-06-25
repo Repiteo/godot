@@ -99,17 +99,17 @@ public:
 	void set_color_ramp(const Ref<Gradient> &p_gradient);
 	Ref<Gradient> get_color_ramp() const;
 
-	virtual int get_width() const override;
-	virtual int get_height() const override;
-	virtual int get_depth() const override;
+	int get_width() const override;
+	int get_height() const override;
+	int get_depth() const override;
 
-	virtual RID get_rid() const override;
+	RID get_rid() const override;
 
-	virtual Vector<Ref<Image>> get_data() const override;
-	virtual Image::Format get_format() const override;
+	Vector<Ref<Image>> get_data() const override;
+	Image::Format get_format() const override;
 
 	NoiseTexture3D();
-	virtual ~NoiseTexture3D();
+	~NoiseTexture3D() override;
 };
 
 #endif // NOISE_TEXTURE_3D_H

@@ -65,8 +65,8 @@ class AudioEffectRecordInstance : public AudioEffectInstance {
 public:
 	void init();
 	void finish();
-	virtual void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;
-	virtual bool process_silence() const override;
+	void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;
+	bool process_silence() const override;
 };
 
 class AudioEffectRecord : public AudioEffect {
@@ -95,7 +95,7 @@ public:
 	AudioStreamWAV::Format get_format() const;
 	Ref<AudioStreamWAV> get_recording() const;
 	AudioEffectRecord();
-	~AudioEffectRecord();
+	~AudioEffectRecord() override;
 };
 
 #endif // AUDIO_EFFECT_RECORD_H

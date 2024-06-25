@@ -123,13 +123,13 @@ private:
 		bool uses_quarter_res = false;
 		bool uses_light = false;
 
-		virtual void set_code(const String &p_Code);
-		virtual bool is_animated() const;
-		virtual bool casts_shadows() const;
-		virtual RS::ShaderNativeSourceCode get_native_source_code() const;
+		void set_code(const String &p_Code) override;
+		bool is_animated() const override;
+		bool casts_shadows() const override;
+		RS::ShaderNativeSourceCode get_native_source_code() const override;
 
 		SkyShaderData() {}
-		virtual ~SkyShaderData();
+		~SkyShaderData() override;
 	};
 
 	void _render_sky(RD::DrawListID p_list, float p_time, RID p_fb, PipelineCacheRD *p_pipeline, RID p_uniform_set, RID p_texture_set, const Projection &p_projection, const Basis &p_orientation, const Vector3 &p_position, float p_luminance_multiplier);
@@ -236,10 +236,10 @@ public:
 		RID uniform_set;
 		bool uniform_set_updated;
 
-		virtual void set_render_priority(int p_priority) {}
-		virtual void set_next_pass(RID p_pass) {}
-		virtual bool update_parameters(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty);
-		virtual ~SkyMaterialData();
+		void set_render_priority(int p_priority) override {}
+		void set_next_pass(RID p_pass) override {}
+		bool update_parameters(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty) override;
+		~SkyMaterialData() override;
 	};
 
 	struct Sky {

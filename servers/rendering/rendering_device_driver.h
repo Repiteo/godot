@@ -783,7 +783,7 @@ public:
 
 	/******************/
 
-	virtual ~RenderingDeviceDriver();
+	~RenderingDeviceDriver() override;
 };
 
 using RDD = RenderingDeviceDriver;

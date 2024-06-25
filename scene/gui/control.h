@@ -385,30 +385,30 @@ public:
 
 	// TODO: Decouple controls from their editor plugin and get rid of this.
 #ifdef TOOLS_ENABLED
-	virtual Dictionary _edit_get_state() const override;
-	virtual void _edit_set_state(const Dictionary &p_state) override;
+	Dictionary _edit_get_state() const override;
+	void _edit_set_state(const Dictionary &p_state) override;
 
-	virtual void _edit_set_position(const Point2 &p_position) override;
-	virtual Point2 _edit_get_position() const override;
+	void _edit_set_position(const Point2 &p_position) override;
+	Point2 _edit_get_position() const override;
 
-	virtual void _edit_set_scale(const Size2 &p_scale) override;
-	virtual Size2 _edit_get_scale() const override;
+	void _edit_set_scale(const Size2 &p_scale) override;
+	Size2 _edit_get_scale() const override;
 
-	virtual void _edit_set_rect(const Rect2 &p_edit_rect) override;
-	virtual Rect2 _edit_get_rect() const override;
-	virtual bool _edit_use_rect() const override;
+	void _edit_set_rect(const Rect2 &p_edit_rect) override;
+	Rect2 _edit_get_rect() const override;
+	bool _edit_use_rect() const override;
 
-	virtual void _edit_set_rotation(real_t p_rotation) override;
-	virtual real_t _edit_get_rotation() const override;
-	virtual bool _edit_use_rotation() const override;
+	void _edit_set_rotation(real_t p_rotation) override;
+	real_t _edit_get_rotation() const override;
+	bool _edit_use_rotation() const override;
 
-	virtual void _edit_set_pivot(const Point2 &p_pivot) override;
-	virtual Point2 _edit_get_pivot() const override;
-	virtual bool _edit_use_pivot() const override;
+	void _edit_set_pivot(const Point2 &p_pivot) override;
+	Point2 _edit_get_pivot() const override;
+	bool _edit_use_pivot() const override;
 
-	virtual Size2 _edit_get_minimum_size() const override;
+	Size2 _edit_get_minimum_size() const override;
 #endif
-	virtual void reparent(Node *p_parent, bool p_keep_global_transform = true) override;
+	void reparent(Node *p_parent, bool p_keep_global_transform = true) override;
 
 	// Editor integration.
 
@@ -416,7 +416,7 @@ public:
 
 	PackedStringArray get_configuration_warnings() const override;
 #ifdef TOOLS_ENABLED
-	virtual void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
+	void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
 #endif
 
 	virtual bool is_text_field() const;
@@ -434,7 +434,7 @@ public:
 
 	// Positioning and sizing.
 
-	virtual Transform2D get_transform() const override;
+	Transform2D get_transform() const override;
 
 	void set_anchor(Side p_side, real_t p_anchor, bool p_keep_offset = true, bool p_push_opposite_anchor = true);
 	real_t get_anchor(Side p_side) const;
@@ -645,7 +645,7 @@ public:
 	virtual Control *make_custom_tooltip(const String &p_text) const;
 
 	Control();
-	~Control();
+	~Control() override;
 };
 
 VARIANT_ENUM_CAST(Control::FocusMode);

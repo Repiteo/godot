@@ -107,7 +107,7 @@ public:
 	static void draw_selection_rect(CanvasItem *p_ci, const Rect2 &p_rect, const Color &p_color = Color(1.0, 1.0, 1.0));
 
 	TilesEditorUtils();
-	~TilesEditorUtils();
+	~TilesEditorUtils() override;
 };
 
 class TileMapEditorPlugin : public EditorPlugin {
@@ -133,18 +133,18 @@ protected:
 	void _notification(int p_notification);
 
 public:
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
 
-	virtual bool forward_canvas_gui_input(const Ref<InputEvent> &p_event) override;
-	virtual void forward_canvas_draw_over_viewport(Control *p_overlay) override;
+	bool forward_canvas_gui_input(const Ref<InputEvent> &p_event) override;
+	void forward_canvas_draw_over_viewport(Control *p_overlay) override;
 
 	void hide_editor();
 	bool is_editor_visible() const;
 
 	TileMapEditorPlugin();
-	~TileMapEditorPlugin();
+	~TileMapEditorPlugin() override;
 };
 
 class TileSetEditorPlugin : public EditorPlugin {
@@ -156,14 +156,14 @@ class TileSetEditorPlugin : public EditorPlugin {
 	ObjectID edited_tileset;
 
 public:
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
 
 	ObjectID get_edited_tileset() const;
 
 	TileSetEditorPlugin();
-	~TileSetEditorPlugin();
+	~TileSetEditorPlugin() override;
 };
 
 #endif // TILES_EDITOR_PLUGIN_H

@@ -59,7 +59,7 @@ public:
 	Ref<Curve3D> get_curve() const;
 
 	Path3D();
-	~Path3D();
+	~Path3D() override;
 };
 
 class PathFollow3D : public Node3D {

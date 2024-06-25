@@ -305,7 +305,7 @@ public:
 
 	bool is_skip_breakpoints();
 
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
 	void add_debugger_tab(Control *p_control);
 	void remove_debugger_tab(Control *p_control);
@@ -316,7 +316,7 @@ public:
 	void toggle_profiler(const String &p_profiler, bool p_enable, const Array &p_data);
 
 	ScriptEditorDebugger();
-	~ScriptEditorDebugger();
+	~ScriptEditorDebugger() override;
 };
 
 #endif // SCRIPT_EDITOR_DEBUGGER_H

@@ -96,11 +96,11 @@ public:
 	Point2i last_mouse_move_position;
 	StringName drag_data_name = SNAME("Drag Data");
 
-	virtual Variant get_drag_data(const Point2 &p_point) override {
+	Variant get_drag_data(const Point2 &p_point) override {
 		return drag_data_name;
 	}
 
-	virtual void gui_input(const Ref<InputEvent> &p_event) override {
+	void gui_input(const Ref<InputEvent> &p_event) override {
 		Ref<InputEventMouseButton> mb = p_event;
 		if (mb.is_valid()) {
 			last_mouse_button = mb->get_button_index();
@@ -121,7 +121,7 @@ class DragTarget : public NotificationControlViewport {
 
 public:
 	Variant drag_data;
-	virtual bool can_drop_data(const Point2 &p_point, const Variant &p_data) const override {
+	bool can_drop_data(const Point2 &p_point, const Variant &p_data) const override {
 		StringName string_data = p_data;
 		// Verify drag data is compatible.
 		if (string_data != SNAME("Drag Data")) {
@@ -134,7 +134,7 @@ public:
 		return true;
 	}
 
-	virtual void drop_data(const Point2 &p_point, const Variant &p_data) override {
+	void drop_data(const Point2 &p_point, const Variant &p_data) override {
 		drag_data = p_data;
 	}
 };

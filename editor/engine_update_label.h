@@ -94,7 +94,7 @@ protected:
 	void _notification(int p_what);
 	static void _bind_methods();
 
-	virtual void pressed() override;
+	void pressed() override;
 
 public:
 	EngineUpdateLabel();

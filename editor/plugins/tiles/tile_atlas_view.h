@@ -62,7 +62,7 @@ private:
 	void _update_zoom_and_panning(bool p_zoom_on_mouse_pos = false);
 	void _zoom_widget_changed();
 	void _center_view();
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 
 	Ref<ViewPanner> panner;
 	void _pan_callback(Vector2 p_scroll_vec, Ref<InputEvent> p_event);
@@ -120,7 +120,7 @@ private:
 	} theme_cache;
 
 protected:
-	virtual void _update_theme_item_cache() override;
+	void _update_theme_item_cache() override;
 
 	void _notification(int p_what);
 	static void _bind_methods();
@@ -168,7 +168,7 @@ public:
 	void queue_redraw();
 
 	TileAtlasView();
-	~TileAtlasView();
+	~TileAtlasView() override;
 };
 
 #endif // TILE_ATLAS_VIEW_H

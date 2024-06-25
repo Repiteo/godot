@@ -69,7 +69,7 @@ protected:
 #endif // DISABLE_DEPRECATED
 
 public:
-	virtual PackedStringArray get_configuration_warnings() const override;
+	PackedStringArray get_configuration_warnings() const override;
 
 	void set_size(const Vector3 &p_size);
 	Vector3 get_size() const;
@@ -107,10 +107,10 @@ public:
 	void set_cull_mask(uint32_t p_layers);
 	uint32_t get_cull_mask() const;
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 
 	Decal();
-	~Decal();
+	~Decal() override;
 };
 
 VARIANT_ENUM_CAST(Decal::DecalTexture);

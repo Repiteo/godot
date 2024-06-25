@@ -52,9 +52,9 @@ private:
 	HashSet<AudioStreamPlaybackSynchronized *> playbacks;
 
 public:
-	virtual double get_bpm() const override;
-	virtual int get_beat_count() const override;
-	virtual bool has_loop() const override;
+	double get_bpm() const override;
+	int get_beat_count() const override;
+	bool has_loop() const override;
 	void set_stream_count(int p_count);
 	int get_stream_count() const;
 	void set_sync_stream(int p_stream_index, Ref<AudioStream> p_stream);
@@ -62,9 +62,9 @@ public:
 	void set_sync_stream_volume(int p_stream_index, float p_db);
 	float get_sync_stream_volume(int p_stream_index) const;
 
-	virtual Ref<AudioStreamPlayback> instantiate_playback() override;
-	virtual String get_stream_name() const override;
-	virtual double get_length() const override;
+	Ref<AudioStreamPlayback> instantiate_playback() override;
+	String get_stream_name() const override;
+	double get_length() const override;
 	AudioStreamSynchronized();
 
 protected:
@@ -102,18 +102,18 @@ private:
 	void _update_playback_instances();
 
 public:
-	virtual void start(double p_from_pos = 0.0) override;
-	virtual void stop() override;
-	virtual bool is_playing() const override;
-	virtual int get_loop_count() const override; // times it looped
-	virtual double get_playback_position() const override;
-	virtual void seek(double p_time) override;
-	virtual int mix(AudioFrame *p_buffer, float p_rate_scale, int p_frames) override;
+	void start(double p_from_pos = 0.0) override;
+	void stop() override;
+	bool is_playing() const override;
+	int get_loop_count() const override; // times it looped
+	double get_playback_position() const override;
+	void seek(double p_time) override;
+	int mix(AudioFrame *p_buffer, float p_rate_scale, int p_frames) override;
 
-	virtual void tag_used_streams() override;
+	void tag_used_streams() override;
 
 	AudioStreamPlaybackSynchronized();
-	~AudioStreamPlaybackSynchronized();
+	~AudioStreamPlaybackSynchronized() override;
 };
 
 #endif // AUDIO_STREAM_SYNCHRONIZED_H

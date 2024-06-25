@@ -169,8 +169,8 @@ protected:
 
 public:
 	void setup(Variant::Type p_array_type, const String &p_hint_string = "");
-	virtual void update_property() override;
-	virtual bool is_colored(ColorationMode p_mode) override;
+	void update_property() override;
+	bool is_colored(ColorationMode p_mode) override;
 	EditorPropertyArray();
 };
 
@@ -238,8 +238,8 @@ protected:
 
 public:
 	void setup(PropertyHint p_hint);
-	virtual void update_property() override;
-	virtual bool is_colored(ColorationMode p_mode) override;
+	void update_property() override;
+	bool is_colored(ColorationMode p_mode) override;
 	EditorPropertyDictionary();
 };
 
@@ -274,7 +274,7 @@ protected:
 	void _notification(int p_what);
 
 public:
-	virtual void update_property() override;
+	void update_property() override;
 	EditorPropertyLocalizableString();
 };
 

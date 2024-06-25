@@ -109,13 +109,13 @@ private:
 	void add_color_region(ColorRegion::Type p_type, const String &p_start_key, const String &p_end_key, const Color &p_color, bool p_line_only = false, bool p_r_prefix = false);
 
 public:
-	virtual void _update_cache() override;
-	virtual Dictionary _get_line_syntax_highlighting_impl(int p_line) override;
+	void _update_cache() override;
+	Dictionary _get_line_syntax_highlighting_impl(int p_line) override;
 
-	virtual String _get_name() const override;
-	virtual PackedStringArray _get_supported_languages() const override;
+	String _get_name() const override;
+	PackedStringArray _get_supported_languages() const override;
 
-	virtual Ref<EditorSyntaxHighlighter> _create() const override;
+	Ref<EditorSyntaxHighlighter> _create() const override;
 };
 
 #endif // GDSCRIPT_HIGHLIGHTER_H

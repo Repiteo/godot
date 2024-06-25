@@ -65,7 +65,7 @@ public:
 	void set_breakpoint(const String &p_path, int p_line, bool p_enabled);
 
 	EditorDebuggerSession(ScriptEditorDebugger *p_debugger);
-	~EditorDebuggerSession();
+	~EditorDebuggerSession() override;
 };
 
 class EditorDebuggerPlugin : public RefCounted {
@@ -101,7 +101,7 @@ public:
 	GDVIRTUAL3(_breakpoint_set_in_tree, const Ref<Script> &, int, bool);
 
 	EditorDebuggerPlugin();
-	~EditorDebuggerPlugin();
+	~EditorDebuggerPlugin() override;
 };
 
 #endif // EDITOR_DEBUGGER_PLUGIN_H

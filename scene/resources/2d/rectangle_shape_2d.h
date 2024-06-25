@@ -50,9 +50,9 @@ public:
 	void set_size(const Size2 &p_size);
 	Size2 get_size() const;
 
-	virtual void draw(const RID &p_to_rid, const Color &p_color) override;
-	virtual Rect2 get_rect() const override;
-	virtual real_t get_enclosing_radius() const override;
+	void draw(const RID &p_to_rid, const Color &p_color) override;
+	Rect2 get_rect() const override;
+	real_t get_enclosing_radius() const override;
 
 	RectangleShape2D();
 };

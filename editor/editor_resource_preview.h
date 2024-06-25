@@ -143,7 +143,7 @@ public:
 	bool is_threaded() const;
 
 	EditorResourcePreview();
-	~EditorResourcePreview();
+	~EditorResourcePreview() override;
 };
 
 #endif // EDITOR_RESOURCE_PREVIEW_H

@@ -62,18 +62,18 @@ private:
 
 	MainLoop *main_loop = nullptr;
 
-	virtual void initialize_core() override;
-	virtual void initialize() override;
+	void initialize_core() override;
+	void initialize() override;
 
-	virtual void initialize_joypads() override {
+	void initialize_joypads() override {
 	}
 
-	virtual void set_main_loop(MainLoop *p_main_loop) override;
-	virtual MainLoop *get_main_loop() const override;
+	void set_main_loop(MainLoop *p_main_loop) override;
+	MainLoop *get_main_loop() const override;
 
-	virtual void delete_main_loop() override;
+	void delete_main_loop() override;
 
-	virtual void finalize() override;
+	void finalize() override;
 
 	bool is_focused = false;
 
@@ -89,7 +89,7 @@ public:
 	static OS_IOS *get_singleton();
 
 	OS_IOS();
-	~OS_IOS();
+	~OS_IOS() override;
 
 	void initialize_modules();
 
@@ -97,35 +97,35 @@ public:
 
 	void start();
 
-	virtual void alert(const String &p_alert, const String &p_title = "ALERT!") override;
+	void alert(const String &p_alert, const String &p_title = "ALERT!") override;
 
-	virtual Vector<String> get_system_fonts() const override;
-	virtual Vector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
-	virtual String get_system_font_path(const String &p_font_name, int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
+	Vector<String> get_system_fonts() const override;
+	Vector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
+	String get_system_font_path(const String &p_font_name, int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
 
-	virtual Error open_dynamic_library(const String &p_path, void *&p_library_handle, GDExtensionData *p_data = nullptr) override;
-	virtual Error close_dynamic_library(void *p_library_handle) override;
-	virtual Error get_dynamic_library_symbol_handle(void *p_library_handle, const String &p_name, void *&p_symbol_handle, bool p_optional = false) override;
+	Error open_dynamic_library(const String &p_path, void *&p_library_handle, GDExtensionData *p_data = nullptr) override;
+	Error close_dynamic_library(void *p_library_handle) override;
+	Error get_dynamic_library_symbol_handle(void *p_library_handle, const String &p_name, void *&p_symbol_handle, bool p_optional = false) override;
 
-	virtual String get_name() const override;
-	virtual String get_distribution_name() const override;
-	virtual String get_version() const override;
-	virtual String get_model_name() const override;
+	String get_name() const override;
+	String get_distribution_name() const override;
+	String get_version() const override;
+	String get_model_name() const override;
 
-	virtual Error shell_open(const String &p_uri) override;
+	Error shell_open(const String &p_uri) override;
 
-	virtual String get_user_data_dir() const override;
+	String get_user_data_dir() const override;
 
-	virtual String get_cache_path() const override;
+	String get_cache_path() const override;
 
-	virtual String get_locale() const override;
+	String get_locale() const override;
 
-	virtual String get_unique_id() const override;
-	virtual String get_processor_name() const override;
+	String get_unique_id() const override;
+	String get_processor_name() const override;
 
-	virtual void vibrate_handheld(int p_duration_ms = 500, float p_amplitude = -1.0) override;
+	void vibrate_handheld(int p_duration_ms = 500, float p_amplitude = -1.0) override;
 
-	virtual bool _check_internal_feature_support(const String &p_feature) override;
+	bool _check_internal_feature_support(const String &p_feature) override;
 
 	void on_focus_out();
 	void on_focus_in();

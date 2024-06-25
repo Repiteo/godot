@@ -46,8 +46,8 @@ protected:
 
 public:
 #ifdef TOOLS_ENABLED
-	virtual Rect2 _edit_get_rect() const override;
-	virtual bool _edit_use_rect() const override;
+	Rect2 _edit_get_rect() const override;
+	bool _edit_use_rect() const override;
 #endif
 
 	void set_gizmo_extents(real_t p_extents);

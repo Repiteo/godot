@@ -38,9 +38,9 @@ public:
 	static OpenXRLocalFloorExtension *get_singleton();
 
 	OpenXRLocalFloorExtension();
-	virtual ~OpenXRLocalFloorExtension() override;
+	~OpenXRLocalFloorExtension() override;
 
-	virtual HashMap<String, bool *> get_requested_extensions() override;
+	HashMap<String, bool *> get_requested_extensions() override;
 
 	bool is_available();
 

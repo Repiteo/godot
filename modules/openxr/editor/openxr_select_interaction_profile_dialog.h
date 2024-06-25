@@ -59,7 +59,7 @@ protected:
 public:
 	void _on_select_interaction_profile(const String p_interaction_profile);
 	void open(PackedStringArray p_do_not_include);
-	virtual void ok_pressed() override;
+	void ok_pressed() override;
 
 	OpenXRSelectInteractionProfileDialog();
 };

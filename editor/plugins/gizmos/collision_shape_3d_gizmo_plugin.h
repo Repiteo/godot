@@ -53,7 +53,7 @@ public:
 	void commit_handle(const EditorNode3DGizmo *p_gizmo, int p_id, bool p_secondary, const Variant &p_restore, bool p_cancel = false) override;
 
 	CollisionShape3DGizmoPlugin();
-	~CollisionShape3DGizmoPlugin();
+	~CollisionShape3DGizmoPlugin() override;
 };
 
 #endif // COLLISION_SHAPE_3D_GIZMO_PLUGIN_H

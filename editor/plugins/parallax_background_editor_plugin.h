@@ -55,11 +55,11 @@ protected:
 	void _notification(int p_what);
 
 public:
-	virtual String get_name() const override { return "ParallaxBackground"; }
+	String get_name() const override { return "ParallaxBackground"; }
 	bool has_main_screen() const override { return false; }
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
 
 	ParallaxBackgroundEditorPlugin();
 };

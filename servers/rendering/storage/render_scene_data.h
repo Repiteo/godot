@@ -60,14 +60,14 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual Transform3D get_cam_transform() const override;
-	virtual Projection get_cam_projection() const override;
+	Transform3D get_cam_transform() const override;
+	Projection get_cam_projection() const override;
 
-	virtual uint32_t get_view_count() const override;
-	virtual Vector3 get_view_eye_offset(uint32_t p_view) const override;
-	virtual Projection get_view_projection(uint32_t p_view) const override;
+	uint32_t get_view_count() const override;
+	Vector3 get_view_eye_offset(uint32_t p_view) const override;
+	Projection get_view_projection(uint32_t p_view) const override;
 
-	virtual RID get_uniform_buffer() const override;
+	RID get_uniform_buffer() const override;
 
 	GDVIRTUAL0RC(Transform3D, _get_cam_transform)
 	GDVIRTUAL0RC(Projection, _get_cam_projection)

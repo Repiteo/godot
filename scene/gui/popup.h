@@ -58,8 +58,8 @@ private:
 
 protected:
 	void _close_pressed();
-	virtual Rect2i _popup_adjust_rect() const override;
-	virtual void _input_from_window(const Ref<InputEvent> &p_event) override;
+	Rect2i _popup_adjust_rect() const override;
+	void _input_from_window(const Ref<InputEvent> &p_event) override;
 
 	void _notification(int p_what);
 	void _validate_property(PropertyInfo &p_property) const;
@@ -67,13 +67,13 @@ protected:
 
 	virtual void _parent_focused();
 
-	virtual void _post_popup() override;
+	void _post_popup() override;
 
 public:
 	HideReason get_hide_reason() const { return hide_reason; }
 
 	Popup();
-	~Popup();
+	~Popup() override;
 };
 
 class PopupPanel : public Popup {
@@ -91,7 +91,7 @@ protected:
 	void _notification(int p_what);
 	static void _bind_methods();
 
-	virtual Size2 _get_contents_minimum_size() const override;
+	Size2 _get_contents_minimum_size() const override;
 
 public:
 	PopupPanel();

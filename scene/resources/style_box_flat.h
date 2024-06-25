@@ -55,7 +55,7 @@ class StyleBoxFlat : public StyleBox {
 	real_t aa_size = 1;
 
 protected:
-	virtual float get_style_margin(Side p_side) const override;
+	float get_style_margin(Side p_side) const override;
 	static void _bind_methods();
 	void _validate_property(PropertyInfo &p_property) const;
 
@@ -108,11 +108,11 @@ public:
 	void set_aa_size(const real_t p_aa_size);
 	real_t get_aa_size() const;
 
-	virtual Rect2 get_draw_rect(const Rect2 &p_rect) const override;
-	virtual void draw(RID p_canvas_item, const Rect2 &p_rect) const override;
+	Rect2 get_draw_rect(const Rect2 &p_rect) const override;
+	void draw(RID p_canvas_item, const Rect2 &p_rect) const override;
 
 	StyleBoxFlat();
-	~StyleBoxFlat();
+	~StyleBoxFlat() override;
 };
 
 #endif // STYLE_BOX_FLAT_H

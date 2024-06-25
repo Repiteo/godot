@@ -44,7 +44,7 @@ protected:
 	EXBIND0R(bool, editor_can_reload_from_file)
 
 	GDVIRTUAL1(_placeholder_erased, GDExtensionPtr<void>)
-	virtual void _placeholder_erased(PlaceHolderScriptInstance *p_placeholder) override {
+	void _placeholder_erased(PlaceHolderScriptInstance *p_placeholder) override {
 		GDVIRTUAL_CALL(_placeholder_erased, p_placeholder);
 	}
 
@@ -58,7 +58,7 @@ public:
 	EXBIND0RC(StringName, get_instance_base_type)
 
 	GDVIRTUAL1RC(GDExtensionPtr<void>, _instance_create, Object *)
-	virtual ScriptInstance *instance_create(Object *p_this) override {
+	ScriptInstance *instance_create(Object *p_this) override {
 		GDExtensionPtr<void> ret = nullptr;
 		GDVIRTUAL_REQUIRED_CALL(_instance_create, p_this, ret);
 		return reinterpret_cast<ScriptInstance *>(ret.operator void *());
@@ -79,7 +79,7 @@ public:
 	GDVIRTUAL0RC(TypedArray<Dictionary>, _get_documentation)
 	GDVIRTUAL0RC(String, _get_class_icon_path)
 #ifdef TOOLS_ENABLED
-	virtual Vector<DocData::ClassDoc> get_documentation() const override {
+	Vector<DocData::ClassDoc> get_documentation() const override {
 		TypedArray<Dictionary> doc;
 		GDVIRTUAL_REQUIRED_CALL(_get_documentation, doc);
 
@@ -91,7 +91,7 @@ public:
 		return class_doc;
 	}
 
-	virtual String get_class_icon_path() const override {
+	String get_class_icon_path() const override {
 		String ret;
 		GDVIRTUAL_CALL(_get_class_icon_path, ret);
 		return ret;
@@ -102,7 +102,7 @@ public:
 	EXBIND1RC(bool, has_static_method, const StringName &)
 
 	GDVIRTUAL1RC(Variant, _get_script_method_argument_count, const StringName &)
-	virtual int get_script_method_argument_count(const StringName &p_method, bool *r_is_valid = nullptr) const override {
+	int get_script_method_argument_count(const StringName &p_method, bool *r_is_valid = nullptr) const override {
 		Variant ret;
 		if (GDVIRTUAL_CALL(_get_script_method_argument_count, p_method, ret) && ret.get_type() == Variant::INT) {
 			if (r_is_valid) {
@@ -115,7 +115,7 @@ public:
 	}
 
 	GDVIRTUAL1RC(Dictionary, _get_method_info, const StringName &)
-	virtual MethodInfo get_method_info(const StringName &p_method) const override {
+	MethodInfo get_method_info(const StringName &p_method) const override {
 		Dictionary mi;
 		GDVIRTUAL_REQUIRED_CALL(_get_method_info, p_method, mi);
 		return MethodInfo::from_dict(mi);
@@ -124,7 +124,7 @@ public:
 	EXBIND0RC(bool, is_tool)
 	EXBIND0RC(bool, is_valid)
 
-	virtual bool is_abstract() const override {
+	bool is_abstract() const override {
 		bool abst;
 		return GDVIRTUAL_CALL(_is_abstract, abst) && abst;
 	}
@@ -135,7 +135,7 @@ public:
 
 	GDVIRTUAL0RC(TypedArray<Dictionary>, _get_script_signal_list)
 
-	virtual void get_script_signal_list(List<MethodInfo> *r_signals) const override {
+	void get_script_signal_list(List<MethodInfo> *r_signals) const override {
 		TypedArray<Dictionary> sl;
 		GDVIRTUAL_REQUIRED_CALL(_get_script_signal_list, sl);
 		for (int i = 0; i < sl.size(); i++) {
@@ -146,7 +146,7 @@ public:
 	GDVIRTUAL1RC(bool, _has_property_default_value, const StringName &)
 	GDVIRTUAL1RC(Variant, _get_property_default_value, const StringName &)
 
-	virtual bool get_property_default_value(const StringName &p_property, Variant &r_value) const override {
+	bool get_property_default_value(const StringName &p_property, Variant &r_value) const override {
 		bool has_dv = false;
 		if (!GDVIRTUAL_REQUIRED_CALL(_has_property_default_value, p_property, has_dv) || !has_dv) {
 			return false;
@@ -161,7 +161,7 @@ public:
 
 	GDVIRTUAL0RC(TypedArray<Dictionary>, _get_script_method_list)
 
-	virtual void get_script_method_list(List<MethodInfo> *r_methods) const override {
+	void get_script_method_list(List<MethodInfo> *r_methods) const override {
 		TypedArray<Dictionary> sl;
 		GDVIRTUAL_REQUIRED_CALL(_get_script_method_list, sl);
 		for (int i = 0; i < sl.size(); i++) {
@@ -171,7 +171,7 @@ public:
 
 	GDVIRTUAL0RC(TypedArray<Dictionary>, _get_script_property_list)
 
-	virtual void get_script_property_list(List<PropertyInfo> *r_propertys) const override {
+	void get_script_property_list(List<PropertyInfo> *r_propertys) const override {
 		TypedArray<Dictionary> sl;
 		GDVIRTUAL_REQUIRED_CALL(_get_script_property_list, sl);
 		for (int i = 0; i < sl.size(); i++) {
@@ -183,7 +183,7 @@ public:
 
 	GDVIRTUAL0RC(Dictionary, _get_constants)
 
-	virtual void get_constants(HashMap<StringName, Variant> *p_constants) override {
+	void get_constants(HashMap<StringName, Variant> *p_constants) override {
 		Dictionary constants;
 		GDVIRTUAL_REQUIRED_CALL(_get_constants, constants);
 		List<Variant> keys;
@@ -193,7 +193,7 @@ public:
 		}
 	}
 	GDVIRTUAL0RC(TypedArray<StringName>, _get_members)
-	virtual void get_members(HashSet<StringName> *p_members) override {
+	void get_members(HashSet<StringName> *p_members) override {
 		TypedArray<StringName> members;
 		GDVIRTUAL_REQUIRED_CALL(_get_members, members);
 		for (int i = 0; i < members.size(); i++) {
@@ -205,7 +205,7 @@ public:
 
 	GDVIRTUAL0RC(Variant, _get_rpc_config)
 
-	virtual const Variant get_rpc_config() const override {
+	const Variant get_rpc_config() const override {
 		Variant ret;
 		GDVIRTUAL_REQUIRED_CALL(_get_rpc_config, ret);
 		return ret;
@@ -235,7 +235,7 @@ public:
 
 	GDVIRTUAL0RC(Vector<String>, _get_reserved_words)
 
-	virtual void get_reserved_words(List<String> *p_words) const override {
+	void get_reserved_words(List<String> *p_words) const override {
 		Vector<String> ret;
 		GDVIRTUAL_REQUIRED_CALL(_get_reserved_words, ret);
 		for (int i = 0; i < ret.size(); i++) {
@@ -246,7 +246,7 @@ public:
 
 	GDVIRTUAL0RC(Vector<String>, _get_comment_delimiters)
 
-	virtual void get_comment_delimiters(List<String> *p_words) const override {
+	void get_comment_delimiters(List<String> *p_words) const override {
 		Vector<String> ret;
 		GDVIRTUAL_REQUIRED_CALL(_get_comment_delimiters, ret);
 		for (int i = 0; i < ret.size(); i++) {
@@ -256,7 +256,7 @@ public:
 
 	GDVIRTUAL0RC(Vector<String>, _get_doc_comment_delimiters)
 
-	virtual void get_doc_comment_delimiters(List<String> *p_words) const override {
+	void get_doc_comment_delimiters(List<String> *p_words) const override {
 		Vector<String> ret;
 		GDVIRTUAL_CALL(_get_doc_comment_delimiters, ret);
 		for (int i = 0; i < ret.size(); i++) {
@@ -266,7 +266,7 @@ public:
 
 	GDVIRTUAL0RC(Vector<String>, _get_string_delimiters)
 
-	virtual void get_string_delimiters(List<String> *p_words) const override {
+	void get_string_delimiters(List<String> *p_words) const override {
 		Vector<String> ret;
 		GDVIRTUAL_REQUIRED_CALL(_get_string_delimiters, ret);
 		for (int i = 0; i < ret.size(); i++) {
@@ -278,7 +278,7 @@ public:
 
 	GDVIRTUAL1RC(TypedArray<Dictionary>, _get_built_in_templates, StringName)
 
-	virtual Vector<ScriptTemplate> get_built_in_templates(const StringName &p_object) override {
+	Vector<ScriptTemplate> get_built_in_templates(const StringName &p_object) override {
 		TypedArray<Dictionary> ret;
 		GDVIRTUAL_REQUIRED_CALL(_get_built_in_templates, p_object, ret);
 		Vector<ScriptTemplate> stret;
@@ -305,7 +305,7 @@ public:
 	EXBIND0R(bool, is_using_templates)
 
 	GDVIRTUAL6RC(Dictionary, _validate, const String &, const String &, bool, bool, bool, bool)
-	virtual bool validate(const String &p_script, const String &p_path = "", List<String> *r_functions = nullptr, List<ScriptError> *r_errors = nullptr, List<Warning> *r_warnings = nullptr, HashSet<int> *r_safe_lines = nullptr) const override {
+	bool validate(const String &p_script, const String &p_path = "", List<String> *r_functions = nullptr, List<ScriptError> *r_errors = nullptr, List<Warning> *r_warnings = nullptr, HashSet<int> *r_safe_lines = nullptr) const override {
 		Dictionary ret;
 		GDVIRTUAL_REQUIRED_CALL(_validate, p_script, p_path, r_functions != nullptr, r_errors != nullptr, r_warnings != nullptr, r_safe_lines != nullptr, ret);
 		if (!ret.has("valid")) {
@@ -392,7 +392,7 @@ public:
 
 	GDVIRTUAL0RC(ScriptNameCasing, _preferred_file_name_casing);
 
-	virtual ScriptNameCasing preferred_file_name_casing() const override {
+	ScriptNameCasing preferred_file_name_casing() const override {
 		ScriptNameCasing ret;
 		if (GDVIRTUAL_CALL(_preferred_file_name_casing, ret)) {
 			return ret;
@@ -402,7 +402,7 @@ public:
 
 	GDVIRTUAL3RC(Dictionary, _complete_code, const String &, const String &, Object *)
 
-	virtual Error complete_code(const String &p_code, const String &p_path, Object *p_owner, List<CodeCompletionOption> *r_options, bool &r_force, String &r_call_hint) override {
+	Error complete_code(const String &p_code, const String &p_path, Object *p_owner, List<CodeCompletionOption> *r_options, bool &r_force, String &r_call_hint) override {
 		Dictionary ret;
 		GDVIRTUAL_REQUIRED_CALL(_complete_code, p_code, p_path, p_owner, ret);
 		if (!ret.has("result")) {
@@ -451,7 +451,7 @@ public:
 
 	GDVIRTUAL4RC(Dictionary, _lookup_code, const String &, const String &, const String &, Object *)
 
-	virtual Error lookup_code(const String &p_code, const String &p_symbol, const String &p_path, Object *p_owner, LookupResult &r_result) override {
+	Error lookup_code(const String &p_code, const String &p_symbol, const String &p_path, Object *p_owner, LookupResult &r_result) override {
 		Dictionary ret;
 		GDVIRTUAL_REQUIRED_CALL(_lookup_code, p_code, p_symbol, p_path, p_owner, ret);
 		if (!ret.has("result")) {
@@ -475,7 +475,7 @@ public:
 	}
 
 	GDVIRTUAL3RC(String, _auto_indent_code, const String &, int, int)
-	virtual void auto_indent_code(String &p_code, int p_from_line, int p_to_line) const override {
+	void auto_indent_code(String &p_code, int p_from_line, int p_to_line) const override {
 		String ret;
 		GDVIRTUAL_REQUIRED_CALL(_auto_indent_code, p_code, p_from_line, p_to_line, ret);
 		p_code = ret;
@@ -497,7 +497,7 @@ public:
 	EXBIND1RC(String, debug_get_stack_level_source, int)
 
 	GDVIRTUAL3R(Dictionary, _debug_get_stack_level_locals, int, int, int)
-	virtual void debug_get_stack_level_locals(int p_level, List<String> *p_locals, List<Variant> *p_values, int p_max_subitems = -1, int p_max_depth = -1) override {
+	void debug_get_stack_level_locals(int p_level, List<String> *p_locals, List<Variant> *p_values, int p_max_subitems = -1, int p_max_depth = -1) override {
 		Dictionary ret;
 		GDVIRTUAL_REQUIRED_CALL(_debug_get_stack_level_locals, p_level, p_max_subitems, p_max_depth, ret);
 		if (ret.size() == 0) {
@@ -517,7 +517,7 @@ public:
 		}
 	}
 	GDVIRTUAL3R(Dictionary, _debug_get_stack_level_members, int, int, int)
-	virtual void debug_get_stack_level_members(int p_level, List<String> *p_members, List<Variant> *p_values, int p_max_subitems = -1, int p_max_depth = -1) override {
+	void debug_get_stack_level_members(int p_level, List<String> *p_members, List<Variant> *p_values, int p_max_subitems = -1, int p_max_depth = -1) override {
 		Dictionary ret;
 		GDVIRTUAL_REQUIRED_CALL(_debug_get_stack_level_members, p_level, p_max_subitems, p_max_depth, ret);
 		if (ret.size() == 0) {
@@ -538,13 +538,13 @@ public:
 	}
 	GDVIRTUAL1R(GDExtensionPtr<void>, _debug_get_stack_level_instance, int)
 
-	virtual ScriptInstance *debug_get_stack_level_instance(int p_level) override {
+	ScriptInstance *debug_get_stack_level_instance(int p_level) override {
 		GDExtensionPtr<void> ret = nullptr;
 		GDVIRTUAL_REQUIRED_CALL(_debug_get_stack_level_instance, p_level, ret);
 		return reinterpret_cast<ScriptInstance *>(ret.operator void *());
 	}
 	GDVIRTUAL2R(Dictionary, _debug_get_globals, int, int)
-	virtual void debug_get_globals(List<String> *p_globals, List<Variant> *p_values, int p_max_subitems = -1, int p_max_depth = -1) override {
+	void debug_get_globals(List<String> *p_globals, List<Variant> *p_values, int p_max_subitems = -1, int p_max_depth = -1) override {
 		Dictionary ret;
 		GDVIRTUAL_REQUIRED_CALL(_debug_get_globals, p_max_subitems, p_max_depth, ret);
 		if (ret.size() == 0) {
@@ -567,7 +567,7 @@ public:
 	EXBIND4R(String, debug_parse_stack_level_expression, int, const String &, int, int)
 
 	GDVIRTUAL0R(TypedArray<Dictionary>, _debug_get_current_stack_info)
-	virtual Vector<StackInfo> debug_get_current_stack_info() override {
+	Vector<StackInfo> debug_get_current_stack_info() override {
 		TypedArray<Dictionary> ret;
 		GDVIRTUAL_REQUIRED_CALL(_debug_get_current_stack_info, ret);
 		Vector<StackInfo> sret;
@@ -592,7 +592,7 @@ public:
 
 	GDVIRTUAL0RC(PackedStringArray, _get_recognized_extensions)
 
-	virtual void get_recognized_extensions(List<String> *p_extensions) const override {
+	void get_recognized_extensions(List<String> *p_extensions) const override {
 		PackedStringArray ret;
 		GDVIRTUAL_REQUIRED_CALL(_get_recognized_extensions, ret);
 		for (int i = 0; i < ret.size(); i++) {
@@ -601,7 +601,7 @@ public:
 	}
 
 	GDVIRTUAL0RC(TypedArray<Dictionary>, _get_public_functions)
-	virtual void get_public_functions(List<MethodInfo> *p_functions) const override {
+	void get_public_functions(List<MethodInfo> *p_functions) const override {
 		TypedArray<Dictionary> ret;
 		GDVIRTUAL_REQUIRED_CALL(_get_public_functions, ret);
 		for (const Variant &var : ret) {
@@ -610,7 +610,7 @@ public:
 		}
 	}
 	GDVIRTUAL0RC(Dictionary, _get_public_constants)
-	virtual void get_public_constants(List<Pair<String, Variant>> *p_constants) const override {
+	void get_public_constants(List<Pair<String, Variant>> *p_constants) const override {
 		Dictionary ret;
 		GDVIRTUAL_REQUIRED_CALL(_get_public_constants, ret);
 		for (int i = 0; i < ret.size(); i++) {
@@ -621,7 +621,7 @@ public:
 		}
 	}
 	GDVIRTUAL0RC(TypedArray<Dictionary>, _get_public_annotations)
-	virtual void get_public_annotations(List<MethodInfo> *p_annotations) const override {
+	void get_public_annotations(List<MethodInfo> *p_annotations) const override {
 		TypedArray<Dictionary> ret;
 		GDVIRTUAL_REQUIRED_CALL(_get_public_annotations, ret);
 		for (const Variant &var : ret) {
@@ -636,7 +636,7 @@ public:
 
 	GDVIRTUAL2R(int, _profiling_get_accumulated_data, GDExtensionPtr<ScriptLanguageExtensionProfilingInfo>, int)
 
-	virtual int profiling_get_accumulated_data(ProfilingInfo *p_info_arr, int p_info_max) override {
+	int profiling_get_accumulated_data(ProfilingInfo *p_info_arr, int p_info_max) override {
 		int ret = 0;
 		GDVIRTUAL_REQUIRED_CALL(_profiling_get_accumulated_data, p_info_arr, p_info_max, ret);
 		return ret;
@@ -644,7 +644,7 @@ public:
 
 	GDVIRTUAL2R(int, _profiling_get_frame_data, GDExtensionPtr<ScriptLanguageExtensionProfilingInfo>, int)
 
-	virtual int profiling_get_frame_data(ProfilingInfo *p_info_arr, int p_info_max) override {
+	int profiling_get_frame_data(ProfilingInfo *p_info_arr, int p_info_max) override {
 		int ret = 0;
 		GDVIRTUAL_REQUIRED_CALL(_profiling_get_frame_data, p_info_arr, p_info_max, ret);
 		return ret;
@@ -656,7 +656,7 @@ public:
 
 	GDVIRTUAL1RC(Dictionary, _get_global_class_name, const String &)
 
-	virtual String get_global_class_name(const String &p_path, String *r_base_type = nullptr, String *r_icon_path = nullptr) const override {
+	String get_global_class_name(const String &p_path, String *r_base_type = nullptr, String *r_icon_path = nullptr) const override {
 		Dictionary ret;
 		GDVIRTUAL_REQUIRED_CALL(_get_global_class_name, p_path, ret);
 		if (!ret.has("name")) {
@@ -698,19 +698,19 @@ public:
 #pragma GCC diagnostic ignored "-Wignored-qualifiers"
 #endif
 
-	virtual bool set(const StringName &p_name, const Variant &p_value) override {
+	bool set(const StringName &p_name, const Variant &p_value) override {
 		if (native_info->set_func) {
 			return native_info->set_func(instance, (GDExtensionConstStringNamePtr)&p_name, (GDExtensionConstVariantPtr)&p_value);
 		}
 		return false;
 	}
-	virtual bool get(const StringName &p_name, Variant &r_ret) const override {
+	bool get(const StringName &p_name, Variant &r_ret) const override {
 		if (native_info->get_func) {
 			return native_info->get_func(instance, (GDExtensionConstStringNamePtr)&p_name, (GDExtensionVariantPtr)&r_ret);
 		}
 		return false;
 	}
-	virtual void get_property_list(List<PropertyInfo> *p_list) const override {
+	void get_property_list(List<PropertyInfo> *p_list) const override {
 		if (native_info->get_property_list_func) {
 			uint32_t pcount;
 			const GDExtensionPropertyInfo *pinfo = native_info->get_property_list_func(instance, &pcount);
@@ -743,7 +743,7 @@ public:
 			}
 		}
 	}
-	virtual Variant::Type get_property_type(const StringName &p_name, bool *r_is_valid = nullptr) const override {
+	Variant::Type get_property_type(const StringName &p_name, bool *r_is_valid = nullptr) const override {
 		if (native_info->get_property_type_func) {
 			GDExtensionBool is_valid = 0;
 			GDExtensionVariantType type = native_info->get_property_type_func(instance, (GDExtensionConstStringNamePtr)&p_name, &is_valid);
@@ -754,7 +754,7 @@ public:
 		}
 		return Variant::NIL;
 	}
-	virtual void validate_property(PropertyInfo &p_property) const override {
+	void validate_property(PropertyInfo &p_property) const override {
 		if (native_info->validate_property_func) {
 			// GDExtension uses a StringName rather than a String for property name.
 			StringName prop_name = p_property.name;
@@ -777,20 +777,20 @@ public:
 		}
 	}
 
-	virtual bool property_can_revert(const StringName &p_name) const override {
+	bool property_can_revert(const StringName &p_name) const override {
 		if (native_info->property_can_revert_func) {
 			return native_info->property_can_revert_func(instance, (GDExtensionConstStringNamePtr)&p_name);
 		}
 		return false;
 	}
-	virtual bool property_get_revert(const StringName &p_name, Variant &r_ret) const override {
+	bool property_get_revert(const StringName &p_name, Variant &r_ret) const override {
 		if (native_info->property_get_revert_func) {
 			return native_info->property_get_revert_func(instance, (GDExtensionConstStringNamePtr)&p_name, (GDExtensionVariantPtr)&r_ret);
 		}
 		return false;
 	}
 
-	virtual Object *get_owner() override {
+	Object *get_owner() override {
 		if (native_info->get_owner_func) {
 			return (Object *)native_info->get_owner_func(instance);
 		}
@@ -800,13 +800,13 @@ public:
 		List<Pair<StringName, Variant>> *state = (List<Pair<StringName, Variant>> *)p_userdata;
 		state->push_back(Pair<StringName, Variant>(*(const StringName *)p_name, *(const Variant *)p_value));
 	}
-	virtual void get_property_state(List<Pair<StringName, Variant>> &state) override {
+	void get_property_state(List<Pair<StringName, Variant>> &state) override {
 		if (native_info->get_property_state_func) {
 			native_info->get_property_state_func(instance, _add_property_with_state, &state);
 		}
 	}
 
-	virtual void get_method_list(List<MethodInfo> *p_list) const override {
+	void get_method_list(List<MethodInfo> *p_list) const override {
 		if (native_info->get_method_list_func) {
 			uint32_t mcount;
 			const GDExtensionMethodInfo *minfo = native_info->get_method_list_func(instance, &mcount);
@@ -822,14 +822,14 @@ public:
 			}
 		}
 	}
-	virtual bool has_method(const StringName &p_method) const override {
+	bool has_method(const StringName &p_method) const override {
 		if (native_info->has_method_func) {
 			return native_info->has_method_func(instance, (GDExtensionStringNamePtr)&p_method);
 		}
 		return false;
 	}
 
-	virtual int get_method_argument_count(const StringName &p_method, bool *r_is_valid = nullptr) const override {
+	int get_method_argument_count(const StringName &p_method, bool *r_is_valid = nullptr) const override {
 		if (native_info->get_method_argument_count_func) {
 			GDExtensionBool is_valid = 0;
 			GDExtensionInt ret = native_info->get_method_argument_count_func(instance, (GDExtensionStringNamePtr)&p_method, &is_valid);
@@ -842,7 +842,7 @@ public:
 		return ScriptInstance::get_method_argument_count(p_method, r_is_valid);
 	}
 
-	virtual Variant callp(const StringName &p_method, const Variant **p_args, int p_argcount, Callable::CallError &r_error) override {
+	Variant callp(const StringName &p_method, const Variant **p_args, int p_argcount, Callable::CallError &r_error) override {
 		Variant ret;
 		if (native_info->call_func) {
 			GDExtensionCallError ce;
@@ -854,7 +854,7 @@ public:
 		return ret;
 	}
 
-	virtual void notification(int p_notification, bool p_reversed = false) override {
+	void notification(int p_notification, bool p_reversed = false) override {
 		if (native_info->notification_func) {
 			native_info->notification_func(instance, p_notification, p_reversed);
 #ifndef DISABLE_DEPRECATED
@@ -864,7 +864,7 @@ public:
 		}
 	}
 
-	virtual String to_string(bool *r_valid) override {
+	String to_string(bool *r_valid) override {
 		if (native_info->to_string_func) {
 			GDExtensionBool valid;
 			String ret;
@@ -877,19 +877,19 @@ public:
 		return String();
 	}
 
-	virtual void refcount_incremented() override {
+	void refcount_incremented() override {
 		if (native_info->refcount_incremented_func) {
 			native_info->refcount_incremented_func(instance);
 		}
 	}
-	virtual bool refcount_decremented() override {
+	bool refcount_decremented() override {
 		if (native_info->refcount_decremented_func) {
 			return native_info->refcount_decremented_func(instance);
 		}
 		return false;
 	}
 
-	virtual Ref<Script> get_script() const override {
+	Ref<Script> get_script() const override {
 		if (native_info->get_script_func) {
 			GDExtensionObjectPtr script = native_info->get_script_func(instance);
 			return Ref<Script>(reinterpret_cast<Script *>(script));
@@ -897,14 +897,14 @@ public:
 		return Ref<Script>();
 	}
 
-	virtual bool is_placeholder() const override {
+	bool is_placeholder() const override {
 		if (native_info->is_placeholder_func) {
 			return native_info->is_placeholder_func(instance);
 		}
 		return false;
 	}
 
-	virtual void property_set_fallback(const StringName &p_name, const Variant &p_value, bool *r_valid) override {
+	void property_set_fallback(const StringName &p_name, const Variant &p_value, bool *r_valid) override {
 		if (native_info->set_fallback_func) {
 			bool ret = native_info->set_fallback_func(instance, (GDExtensionConstStringNamePtr)&p_name, (GDExtensionConstVariantPtr)&p_value);
 			if (r_valid) {
@@ -912,7 +912,7 @@ public:
 			}
 		}
 	}
-	virtual Variant property_get_fallback(const StringName &p_name, bool *r_valid) override {
+	Variant property_get_fallback(const StringName &p_name, bool *r_valid) override {
 		Variant ret;
 		if (native_info->get_fallback_func) {
 			bool valid = native_info->get_fallback_func(instance, (GDExtensionConstStringNamePtr)&p_name, (GDExtensionVariantPtr)&ret);
@@ -923,14 +923,14 @@ public:
 		return ret;
 	}
 
-	virtual ScriptLanguage *get_language() override {
+	ScriptLanguage *get_language() override {
 		if (native_info->get_language_func) {
 			GDExtensionScriptLanguagePtr lang = native_info->get_language_func(instance);
 			return reinterpret_cast<ScriptLanguage *>(lang);
 		}
 		return nullptr;
 	}
-	virtual ~ScriptInstanceExtension() {
+	~ScriptInstanceExtension() override {
 		if (native_info->free_func) {
 			native_info->free_func(instance);
 		}

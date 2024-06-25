@@ -205,7 +205,7 @@ class RenderingDeviceDriverD3D12 : public RenderingDeviceDriver {
 	Error _initialize_command_signatures();
 
 public:
-	Error initialize(uint32_t p_device_index, uint32_t p_frame_count) override final;
+	Error initialize(uint32_t p_device_index, uint32_t p_frame_count) final;
 
 private:
 	/****************/
@@ -293,12 +293,12 @@ private:
 	};
 
 public:
-	virtual BufferID buffer_create(uint64_t p_size, BitField<BufferUsageBits> p_usage, MemoryAllocationType p_allocation_type) override final;
-	virtual bool buffer_set_texel_format(BufferID p_buffer, DataFormat p_format) override final;
-	virtual void buffer_free(BufferID p_buffer) override final;
-	virtual uint64_t buffer_get_allocation_size(BufferID p_buffer) override final;
-	virtual uint8_t *buffer_map(BufferID p_buffer) override final;
-	virtual void buffer_unmap(BufferID p_buffer) override final;
+	BufferID buffer_create(uint64_t p_size, BitField<BufferUsageBits> p_usage, MemoryAllocationType p_allocation_type) final;
+	bool buffer_set_texel_format(BufferID p_buffer, DataFormat p_format) final;
+	void buffer_free(BufferID p_buffer) final;
+	uint64_t buffer_get_allocation_size(BufferID p_buffer) final;
+	uint8_t *buffer_map(BufferID p_buffer) final;
+	void buffer_unmap(BufferID p_buffer) final;
 
 	/*****************/
 	/**** TEXTURE ****/
@@ -339,17 +339,17 @@ protected:
 	virtual bool _unordered_access_supported_by_format(DataFormat p_format);
 
 public:
-	virtual TextureID texture_create(const TextureFormat &p_format, const TextureView &p_view) override final;
-	virtual TextureID texture_create_from_extension(uint64_t p_native_texture, TextureType p_type, DataFormat p_format, uint32_t p_array_layers, bool p_depth_stencil) override final;
-	virtual TextureID texture_create_shared(TextureID p_original_texture, const TextureView &p_view) override final;
-	virtual TextureID texture_create_shared_from_slice(TextureID p_original_texture, const TextureView &p_view, TextureSliceType p_slice_type, uint32_t p_layer, uint32_t p_layers, uint32_t p_mipmap, uint32_t p_mipmaps) override final;
-	virtual void texture_free(TextureID p_texture) override final;
-	virtual uint64_t texture_get_allocation_size(TextureID p_texture) override final;
-	virtual void texture_get_copyable_layout(TextureID p_texture, const TextureSubresource &p_subresource, TextureCopyableLayout *r_layout) override final;
-	virtual uint8_t *texture_map(TextureID p_texture, const TextureSubresource &p_subresource) override final;
-	virtual void texture_unmap(TextureID p_texture) override final;
-	virtual BitField<TextureUsageBits> texture_get_usages_supported_by_format(DataFormat p_format, bool p_cpu_readable) override final;
-	virtual bool texture_can_make_shared_with_format(TextureID p_texture, DataFormat p_format, bool &r_raw_reinterpretation) override final;
+	TextureID texture_create(const TextureFormat &p_format, const TextureView &p_view) final;
+	TextureID texture_create_from_extension(uint64_t p_native_texture, TextureType p_type, DataFormat p_format, uint32_t p_array_layers, bool p_depth_stencil) final;
+	TextureID texture_create_shared(TextureID p_original_texture, const TextureView &p_view) final;
+	TextureID texture_create_shared_from_slice(TextureID p_original_texture, const TextureView &p_view, TextureSliceType p_slice_type, uint32_t p_layer, uint32_t p_layers, uint32_t p_mipmap, uint32_t p_mipmaps) final;
+	void texture_free(TextureID p_texture) final;
+	uint64_t texture_get_allocation_size(TextureID p_texture) final;
+	void texture_get_copyable_layout(TextureID p_texture, const TextureSubresource &p_subresource, TextureCopyableLayout *r_layout) final;
+	uint8_t *texture_map(TextureID p_texture, const TextureSubresource &p_subresource) final;
+	void texture_unmap(TextureID p_texture) final;
+	BitField<TextureUsageBits> texture_get_usages_supported_by_format(DataFormat p_format, bool p_cpu_readable) final;
+	bool texture_can_make_shared_with_format(TextureID p_texture, DataFormat p_format, bool &r_raw_reinterpretation) final;
 
 private:
 	TextureID _texture_create_shared_from_slice(TextureID p_original_texture, const TextureView &p_view, TextureSliceType p_slice_type, uint32_t p_layer, uint32_t p_layers, uint32_t p_mipmap, uint32_t p_mipmaps);
@@ -362,9 +362,9 @@ private:
 	LocalVector<D3D12_SAMPLER_DESC> samplers;
 
 public:
-	virtual SamplerID sampler_create(const SamplerState &p_state) final override;
-	virtual void sampler_free(SamplerID p_sampler) final override;
-	virtual bool sampler_is_format_supported_for_filter(DataFormat p_format, SamplerFilter p_filter) override final;
+	SamplerID sampler_create(const SamplerState &p_state) final;
+	void sampler_free(SamplerID p_sampler) final;
+	bool sampler_is_format_supported_for_filter(DataFormat p_format, SamplerFilter p_filter) final;
 
 	/**********************/
 	/**** VERTEX ARRAY ****/
@@ -376,20 +376,20 @@ private:
 	};
 
 public:
-	virtual VertexFormatID vertex_format_create(VectorView<VertexAttribute> p_vertex_attribs) override final;
-	virtual void vertex_format_free(VertexFormatID p_vertex_format) override final;
+	VertexFormatID vertex_format_create(VectorView<VertexAttribute> p_vertex_attribs) final;
+	void vertex_format_free(VertexFormatID p_vertex_format) final;
 
 	/******************/
 	/**** BARRIERS ****/
 	/******************/
 
-	virtual void command_pipeline_barrier(
+	void command_pipeline_barrier(
 			CommandBufferID p_cmd_buffer,
 			BitField<PipelineStageBits> p_src_stages,
 			BitField<PipelineStageBits> p_dst_stages,
 			VectorView<RDD::MemoryBarrier> p_memory_barriers,
 			VectorView<RDD::BufferBarrier> p_buffer_barriers,
-			VectorView<RDD::TextureBarrier> p_texture_barriers) override final;
+			VectorView<RDD::TextureBarrier> p_texture_barriers) final;
 
 private:
 	/****************/
@@ -403,9 +403,9 @@ private:
 	};
 
 public:
-	virtual FenceID fence_create() override;
-	virtual Error fence_wait(FenceID p_fence) override;
-	virtual void fence_free(FenceID p_fence) override;
+	FenceID fence_create() override;
+	Error fence_wait(FenceID p_fence) override;
+	void fence_free(FenceID p_fence) override;
 
 private:
 	/********************/
@@ -417,8 +417,8 @@ private:
 		UINT64 fence_value = 0;
 	};
 
-	virtual SemaphoreID semaphore_create() override;
-	virtual void semaphore_free(SemaphoreID p_semaphore) override;
+	SemaphoreID semaphore_create() override;
+	void semaphore_free(SemaphoreID p_semaphore) override;
 
 	/******************/
 	/**** COMMANDS ****/
@@ -426,7 +426,7 @@ private:
 
 	// ----- QUEUE FAMILY -----
 
-	virtual CommandQueueFamilyID command_queue_family_get(BitField<CommandQueueFamilyBits> p_cmd_queue_family_bits, RenderingContextDriver::SurfaceID p_surface = 0) override;
+	CommandQueueFamilyID command_queue_family_get(BitField<CommandQueueFamilyBits> p_cmd_queue_family_bits, RenderingContextDriver::SurfaceID p_surface = 0) override;
 
 private:
 	// ----- QUEUE -----
@@ -436,9 +436,9 @@ private:
 	};
 
 public:
-	virtual CommandQueueID command_queue_create(CommandQueueFamilyID p_cmd_queue_family, bool p_identify_as_main_queue = false) override;
-	virtual Error command_queue_execute_and_present(CommandQueueID p_cmd_queue, VectorView<SemaphoreID> p_wait_semaphores, VectorView<CommandBufferID> p_cmd_buffers, VectorView<SemaphoreID> p_cmd_semaphores, FenceID p_cmd_fence, VectorView<SwapChainID> p_swap_chains) override;
-	virtual void command_queue_free(CommandQueueID p_cmd_queue) override;
+	CommandQueueID command_queue_create(CommandQueueFamilyID p_cmd_queue_family, bool p_identify_as_main_queue = false) override;
+	Error command_queue_execute_and_present(CommandQueueID p_cmd_queue, VectorView<SemaphoreID> p_wait_semaphores, VectorView<CommandBufferID> p_cmd_buffers, VectorView<SemaphoreID> p_cmd_semaphores, FenceID p_cmd_fence, VectorView<SwapChainID> p_swap_chains) override;
+	void command_queue_free(CommandQueueID p_cmd_queue) override;
 
 private:
 	// ----- POOL -----
@@ -448,8 +448,8 @@ private:
 	};
 
 public:
-	virtual CommandPoolID command_pool_create(CommandQueueFamilyID p_cmd_queue_family, CommandBufferType p_cmd_buffer_type) override final;
-	virtual void command_pool_free(CommandPoolID p_cmd_pool) override final;
+	CommandPoolID command_pool_create(CommandQueueFamilyID p_cmd_queue_family, CommandBufferType p_cmd_buffer_type) final;
+	void command_pool_free(CommandPoolID p_cmd_pool) final;
 
 	// ----- BUFFER -----
 
@@ -486,11 +486,11 @@ private:
 	};
 
 public:
-	virtual CommandBufferID command_buffer_create(CommandPoolID p_cmd_pool) override final;
-	virtual bool command_buffer_begin(CommandBufferID p_cmd_buffer) override final;
-	virtual bool command_buffer_begin_secondary(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, uint32_t p_subpass, FramebufferID p_framebuffer) override final;
-	virtual void command_buffer_end(CommandBufferID p_cmd_buffer) override final;
-	virtual void command_buffer_execute_secondary(CommandBufferID p_cmd_buffer, VectorView<CommandBufferID> p_secondary_cmd_buffers) override final;
+	CommandBufferID command_buffer_create(CommandPoolID p_cmd_pool) final;
+	bool command_buffer_begin(CommandBufferID p_cmd_buffer) final;
+	bool command_buffer_begin_secondary(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, uint32_t p_subpass, FramebufferID p_framebuffer) final;
+	void command_buffer_end(CommandBufferID p_cmd_buffer) final;
+	void command_buffer_execute_secondary(CommandBufferID p_cmd_buffer, VectorView<CommandBufferID> p_secondary_cmd_buffers) final;
 
 private:
 	/********************/
@@ -514,12 +514,12 @@ private:
 	void _swap_chain_release_buffers(SwapChain *p_swap_chain);
 
 public:
-	virtual SwapChainID swap_chain_create(RenderingContextDriver::SurfaceID p_surface) override;
-	virtual Error swap_chain_resize(CommandQueueID p_cmd_queue, SwapChainID p_swap_chain, uint32_t p_desired_framebuffer_count) override;
-	virtual FramebufferID swap_chain_acquire_framebuffer(CommandQueueID p_cmd_queue, SwapChainID p_swap_chain, bool &r_resize_required) override;
-	virtual RenderPassID swap_chain_get_render_pass(SwapChainID p_swap_chain) override;
-	virtual DataFormat swap_chain_get_format(SwapChainID p_swap_chain) override;
-	virtual void swap_chain_free(SwapChainID p_swap_chain) override;
+	SwapChainID swap_chain_create(RenderingContextDriver::SurfaceID p_surface) override;
+	Error swap_chain_resize(CommandQueueID p_cmd_queue, SwapChainID p_swap_chain, uint32_t p_desired_framebuffer_count) override;
+	FramebufferID swap_chain_acquire_framebuffer(CommandQueueID p_cmd_queue, SwapChainID p_swap_chain, bool &r_resize_required) override;
+	RenderPassID swap_chain_get_render_pass(SwapChainID p_swap_chain) override;
+	DataFormat swap_chain_get_format(SwapChainID p_swap_chain) override;
+	void swap_chain_free(SwapChainID p_swap_chain) override;
 
 	/*********************/
 	/**** FRAMEBUFFER ****/
@@ -543,8 +543,8 @@ private:
 	FramebufferID _framebuffer_create(RenderPassID p_render_pass, VectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height, bool p_is_screen);
 
 public:
-	virtual FramebufferID framebuffer_create(RenderPassID p_render_pass, VectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height) override final;
-	virtual void framebuffer_free(FramebufferID p_framebuffer) override final;
+	FramebufferID framebuffer_create(RenderPassID p_render_pass, VectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height) final;
+	void framebuffer_free(FramebufferID p_framebuffer) final;
 
 	/****************/
 	/**** SHADER ****/
@@ -709,11 +709,11 @@ private:
 	bool _shader_sign_dxil_bytecode(ShaderStage p_stage, Vector<uint8_t> &r_dxil_blob);
 
 public:
-	virtual String shader_get_binary_cache_key() override final;
-	virtual Vector<uint8_t> shader_compile_binary_from_spirv(VectorView<ShaderStageSPIRVData> p_spirv, const String &p_shader_name) override final;
-	virtual ShaderID shader_create_from_bytecode(const Vector<uint8_t> &p_shader_binary, ShaderDescription &r_shader_desc, String &r_name) override final;
-	virtual uint32_t shader_get_layout_hash(ShaderID p_shader) override final;
-	virtual void shader_free(ShaderID p_shader) override final;
+	String shader_get_binary_cache_key() final;
+	Vector<uint8_t> shader_compile_binary_from_spirv(VectorView<ShaderStageSPIRVData> p_spirv, const String &p_shader_name) final;
+	ShaderID shader_create_from_bytecode(const Vector<uint8_t> &p_shader_binary, ShaderDescription &r_shader_desc, String &r_name) final;
+	uint32_t shader_get_layout_hash(ShaderID p_shader) final;
+	void shader_free(ShaderID p_shader) final;
 
 	/*********************/
 	/**** UNIFORM SET ****/
@@ -760,12 +760,12 @@ private:
 	};
 
 public:
-	virtual UniformSetID uniform_set_create(VectorView<BoundUniform> p_uniforms, ShaderID p_shader, uint32_t p_set_index) override final;
-	virtual void uniform_set_free(UniformSetID p_uniform_set) override final;
+	UniformSetID uniform_set_create(VectorView<BoundUniform> p_uniforms, ShaderID p_shader, uint32_t p_set_index) final;
+	void uniform_set_free(UniformSetID p_uniform_set) final;
 
 	// ----- COMMANDS -----
 
-	virtual void command_uniform_set_prepare_for_use(CommandBufferID p_cmd_buffer, UniformSetID p_uniform_set, ShaderID p_shader, uint32_t p_set_index) override final;
+	void command_uniform_set_prepare_for_use(CommandBufferID p_cmd_buffer, UniformSetID p_uniform_set, ShaderID p_shader, uint32_t p_set_index) final;
 
 private:
 	void _command_check_descriptor_sets(CommandBufferID p_cmd_buffer);
@@ -776,22 +776,22 @@ public:
 	/**** TRANSFER ****/
 	/******************/
 
-	virtual void command_clear_buffer(CommandBufferID p_cmd_buffer, BufferID p_buffer, uint64_t p_offset, uint64_t p_size) override final;
-	virtual void command_copy_buffer(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, BufferID p_dst_buffer, VectorView<BufferCopyRegion> p_regions) override final;
+	void command_clear_buffer(CommandBufferID p_cmd_buffer, BufferID p_buffer, uint64_t p_offset, uint64_t p_size) final;
+	void command_copy_buffer(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, BufferID p_dst_buffer, VectorView<BufferCopyRegion> p_regions) final;
 
-	virtual void command_copy_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, VectorView<TextureCopyRegion> p_regions) override final;
-	virtual void command_resolve_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, uint32_t p_src_layer, uint32_t p_src_mipmap, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, uint32_t p_dst_layer, uint32_t p_dst_mipmap) override final;
-	virtual void command_clear_color_texture(CommandBufferID p_cmd_buffer, TextureID p_texture, TextureLayout p_texture_layout, const Color &p_color, const TextureSubresourceRange &p_subresources) override final;
+	void command_copy_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, VectorView<TextureCopyRegion> p_regions) final;
+	void command_resolve_texture(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, uint32_t p_src_layer, uint32_t p_src_mipmap, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, uint32_t p_dst_layer, uint32_t p_dst_mipmap) final;
+	void command_clear_color_texture(CommandBufferID p_cmd_buffer, TextureID p_texture, TextureLayout p_texture_layout, const Color &p_color, const TextureSubresourceRange &p_subresources) final;
 
 public:
-	virtual void command_copy_buffer_to_texture(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, VectorView<BufferTextureCopyRegion> p_regions) override final;
-	virtual void command_copy_texture_to_buffer(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, BufferID p_dst_buffer, VectorView<BufferTextureCopyRegion> p_regions) override final;
+	void command_copy_buffer_to_texture(CommandBufferID p_cmd_buffer, BufferID p_src_buffer, TextureID p_dst_texture, TextureLayout p_dst_texture_layout, VectorView<BufferTextureCopyRegion> p_regions) final;
+	void command_copy_texture_to_buffer(CommandBufferID p_cmd_buffer, TextureID p_src_texture, TextureLayout p_src_texture_layout, BufferID p_dst_buffer, VectorView<BufferTextureCopyRegion> p_regions) final;
 
 	/******************/
 	/**** PIPELINE ****/
 	/******************/
 
-	virtual void pipeline_free(PipelineID p_pipeline) override final;
+	void pipeline_free(PipelineID p_pipeline) final;
 
 private:
 	HashMap<ID3D12PipelineState *, const ShaderInfo *> pipelines_shaders;
@@ -799,14 +799,14 @@ private:
 public:
 	// ----- BINDING -----
 
-	virtual void command_bind_push_constants(CommandBufferID p_cmd_buffer, ShaderID p_shader, uint32_t p_dst_first_index, VectorView<uint32_t> p_data) override final;
+	void command_bind_push_constants(CommandBufferID p_cmd_buffer, ShaderID p_shader, uint32_t p_dst_first_index, VectorView<uint32_t> p_data) final;
 
 	// ----- CACHE -----
 
-	virtual bool pipeline_cache_create(const Vector<uint8_t> &p_data) override final;
-	virtual void pipeline_cache_free() override final;
-	virtual size_t pipeline_cache_query_size() override final;
-	virtual Vector<uint8_t> pipeline_cache_serialize() override final;
+	bool pipeline_cache_create(const Vector<uint8_t> &p_data) final;
+	void pipeline_cache_free() final;
+	size_t pipeline_cache_query_size() final;
+	Vector<uint8_t> pipeline_cache_serialize() final;
 
 	/*******************/
 	/**** RENDERING ****/
@@ -823,47 +823,47 @@ private:
 	};
 
 public:
-	virtual RenderPassID render_pass_create(VectorView<Attachment> p_attachments, VectorView<Subpass> p_subpasses, VectorView<SubpassDependency> p_subpass_dependencies, uint32_t p_view_count) override final;
-	virtual void render_pass_free(RenderPassID p_render_pass) override final;
+	RenderPassID render_pass_create(VectorView<Attachment> p_attachments, VectorView<Subpass> p_subpasses, VectorView<SubpassDependency> p_subpass_dependencies, uint32_t p_view_count) final;
+	void render_pass_free(RenderPassID p_render_pass) final;
 
 	// ----- COMMANDS -----
 
-	virtual void command_begin_render_pass(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, FramebufferID p_framebuffer, CommandBufferType p_cmd_buffer_type, const Rect2i &p_rect, VectorView<RenderPassClearValue> p_clear_values) override final;
+	void command_begin_render_pass(CommandBufferID p_cmd_buffer, RenderPassID p_render_pass, FramebufferID p_framebuffer, CommandBufferType p_cmd_buffer_type, const Rect2i &p_rect, VectorView<RenderPassClearValue> p_clear_values) final;
 
 private:
 	void _end_render_pass(CommandBufferID p_cmd_buffer);
 
 public:
-	virtual void command_end_render_pass(CommandBufferID p_cmd_buffer) override final;
-	virtual void command_next_render_subpass(CommandBufferID p_cmd_buffer, CommandBufferType p_cmd_buffer_type) override final;
-	virtual void command_render_set_viewport(CommandBufferID p_cmd_buffer, VectorView<Rect2i> p_viewports) override final;
-	virtual void command_render_set_scissor(CommandBufferID p_cmd_buffer, VectorView<Rect2i> p_scissors) override final;
+	void command_end_render_pass(CommandBufferID p_cmd_buffer) final;
+	void command_next_render_subpass(CommandBufferID p_cmd_buffer, CommandBufferType p_cmd_buffer_type) final;
+	void command_render_set_viewport(CommandBufferID p_cmd_buffer, VectorView<Rect2i> p_viewports) final;
+	void command_render_set_scissor(CommandBufferID p_cmd_buffer, VectorView<Rect2i> p_scissors) final;
 
-	virtual void command_render_clear_attachments(CommandBufferID p_cmd_buffer, VectorView<AttachmentClear> p_attachment_clears, VectorView<Rect2i> p_rects) override final;
+	void command_render_clear_attachments(CommandBufferID p_cmd_buffer, VectorView<AttachmentClear> p_attachment_clears, VectorView<Rect2i> p_rects) final;
 
 	// Binding.
-	virtual void command_bind_render_pipeline(CommandBufferID p_cmd_buffer, PipelineID p_pipeline) override final;
-	virtual void command_bind_render_uniform_set(CommandBufferID p_cmd_buffer, UniformSetID p_uniform_set, ShaderID p_shader, uint32_t p_set_index) override final;
+	void command_bind_render_pipeline(CommandBufferID p_cmd_buffer, PipelineID p_pipeline) final;
+	void command_bind_render_uniform_set(CommandBufferID p_cmd_buffer, UniformSetID p_uniform_set, ShaderID p_shader, uint32_t p_set_index) final;
 
 	// Drawing.
-	virtual void command_render_draw(CommandBufferID p_cmd_buffer, uint32_t p_vertex_count, uint32_t p_instance_count, uint32_t p_base_vertex, uint32_t p_first_instance) override final;
-	virtual void command_render_draw_indexed(CommandBufferID p_cmd_buffer, uint32_t p_index_count, uint32_t p_instance_count, uint32_t p_first_index, int32_t p_vertex_offset, uint32_t p_first_instance) override final;
-	virtual void command_render_draw_indexed_indirect(CommandBufferID p_cmd_buffer, BufferID p_indirect_buffer, uint64_t p_offset, uint32_t p_draw_count, uint32_t p_stride) override final;
-	virtual void command_render_draw_indexed_indirect_count(CommandBufferID p_cmd_buffer, BufferID p_indirect_buffer, uint64_t p_offset, BufferID p_count_buffer, uint64_t p_count_buffer_offset, uint32_t p_max_draw_count, uint32_t p_stride) override final;
-	virtual void command_render_draw_indirect(CommandBufferID p_cmd_buffer, BufferID p_indirect_buffer, uint64_t p_offset, uint32_t p_draw_count, uint32_t p_stride) override final;
-	virtual void command_render_draw_indirect_count(CommandBufferID p_cmd_buffer, BufferID p_indirect_buffer, uint64_t p_offset, BufferID p_count_buffer, uint64_t p_count_buffer_offset, uint32_t p_max_draw_count, uint32_t p_stride) override final;
+	void command_render_draw(CommandBufferID p_cmd_buffer, uint32_t p_vertex_count, uint32_t p_instance_count, uint32_t p_base_vertex, uint32_t p_first_instance) final;
+	void command_render_draw_indexed(CommandBufferID p_cmd_buffer, uint32_t p_index_count, uint32_t p_instance_count, uint32_t p_first_index, int32_t p_vertex_offset, uint32_t p_first_instance) final;
+	void command_render_draw_indexed_indirect(CommandBufferID p_cmd_buffer, BufferID p_indirect_buffer, uint64_t p_offset, uint32_t p_draw_count, uint32_t p_stride) final;
+	void command_render_draw_indexed_indirect_count(CommandBufferID p_cmd_buffer, BufferID p_indirect_buffer, uint64_t p_offset, BufferID p_count_buffer, uint64_t p_count_buffer_offset, uint32_t p_max_draw_count, uint32_t p_stride) final;
+	void command_render_draw_indirect(CommandBufferID p_cmd_buffer, BufferID p_indirect_buffer, uint64_t p_offset, uint32_t p_draw_count, uint32_t p_stride) final;
+	void command_render_draw_indirect_count(CommandBufferID p_cmd_buffer, BufferID p_indirect_buffer, uint64_t p_offset, BufferID p_count_buffer, uint64_t p_count_buffer_offset, uint32_t p_max_draw_count, uint32_t p_stride) final;
 
 	// Buffer binding.
-	virtual void command_render_bind_vertex_buffers(CommandBufferID p_cmd_buffer, uint32_t p_binding_count, const BufferID *p_buffers, const uint64_t *p_offsets) override final;
-	virtual void command_render_bind_index_buffer(CommandBufferID p_cmd_buffer, BufferID p_buffer, IndexBufferFormat p_format, uint64_t p_offset) override final;
+	void command_render_bind_vertex_buffers(CommandBufferID p_cmd_buffer, uint32_t p_binding_count, const BufferID *p_buffers, const uint64_t *p_offsets) final;
+	void command_render_bind_index_buffer(CommandBufferID p_cmd_buffer, BufferID p_buffer, IndexBufferFormat p_format, uint64_t p_offset) final;
 
 private:
 	void _bind_vertex_buffers(CommandBufferInfo *p_cmd_buf_info);
 
 public:
 	// Dynamic state.
-	virtual void command_render_set_blend_constants(CommandBufferID p_cmd_buffer, const Color &p_constants) override final;
-	virtual void command_render_set_line_width(CommandBufferID p_cmd_buffer, float p_width) override final;
+	void command_render_set_blend_constants(CommandBufferID p_cmd_buffer, const Color &p_constants) final;
+	void command_render_set_line_width(CommandBufferID p_cmd_buffer, float p_width) final;
 
 	// ----- PIPELINE -----
 
@@ -882,7 +882,7 @@ private:
 	HashMap<ID3D12PipelineState *, RenderPipelineExtraInfo> render_psos_extra_info;
 
 public:
-	virtual PipelineID render_pipeline_create(
+	PipelineID render_pipeline_create(
 			ShaderID p_shader,
 			VertexFormatID p_vertex_format,
 			RenderPrimitive p_render_primitive,
@@ -894,7 +894,7 @@ public:
 			BitField<PipelineDynamicStateFlags> p_dynamic_state,
 			RenderPassID p_render_pass,
 			uint32_t p_render_subpass,
-			VectorView<PipelineSpecializationConstant> p_specialization_constants) override final;
+			VectorView<PipelineSpecializationConstant> p_specialization_constants) final;
 
 	/*****************/
 	/**** COMPUTE ****/
@@ -903,16 +903,16 @@ public:
 	// ----- COMMANDS -----
 
 	// Binding.
-	virtual void command_bind_compute_pipeline(CommandBufferID p_cmd_buffer, PipelineID p_pipeline) override final;
-	virtual void command_bind_compute_uniform_set(CommandBufferID p_cmd_buffer, UniformSetID p_uniform_set, ShaderID p_shader, uint32_t p_set_index) override final;
+	void command_bind_compute_pipeline(CommandBufferID p_cmd_buffer, PipelineID p_pipeline) final;
+	void command_bind_compute_uniform_set(CommandBufferID p_cmd_buffer, UniformSetID p_uniform_set, ShaderID p_shader, uint32_t p_set_index) final;
 
 	// Dispatching.
-	virtual void command_compute_dispatch(CommandBufferID p_cmd_buffer, uint32_t p_x_groups, uint32_t p_y_groups, uint32_t p_z_groups) override final;
-	virtual void command_compute_dispatch_indirect(CommandBufferID p_cmd_buffer, BufferID p_indirect_buffer, uint64_t p_offset) override final;
+	void command_compute_dispatch(CommandBufferID p_cmd_buffer, uint32_t p_x_groups, uint32_t p_y_groups, uint32_t p_z_groups) final;
+	void command_compute_dispatch_indirect(CommandBufferID p_cmd_buffer, BufferID p_indirect_buffer, uint64_t p_offset) final;
 
 	// ----- PIPELINE -----
 
-	virtual PipelineID compute_pipeline_create(ShaderID p_shader, VectorView<PipelineSpecializationConstant> p_specialization_constants) override final;
+	PipelineID compute_pipeline_create(ShaderID p_shader, VectorView<PipelineSpecializationConstant> p_specialization_constants) final;
 
 	/*****************/
 	/**** QUERIES ****/
@@ -929,21 +929,21 @@ private:
 
 public:
 	// Basic.
-	virtual QueryPoolID timestamp_query_pool_create(uint32_t p_query_count) override final;
-	virtual void timestamp_query_pool_free(QueryPoolID p_pool_id) override final;
-	virtual void timestamp_query_pool_get_results(QueryPoolID p_pool_id, uint32_t p_query_count, uint64_t *r_results) override final;
-	virtual uint64_t timestamp_query_result_to_time(uint64_t p_result) override final;
+	QueryPoolID timestamp_query_pool_create(uint32_t p_query_count) final;
+	void timestamp_query_pool_free(QueryPoolID p_pool_id) final;
+	void timestamp_query_pool_get_results(QueryPoolID p_pool_id, uint32_t p_query_count, uint64_t *r_results) final;
+	uint64_t timestamp_query_result_to_time(uint64_t p_result) final;
 
 	// Commands.
-	virtual void command_timestamp_query_pool_reset(CommandBufferID p_cmd_buffer, QueryPoolID p_pool_id, uint32_t p_query_count) override final;
-	virtual void command_timestamp_write(CommandBufferID p_cmd_buffer, QueryPoolID p_pool_id, uint32_t p_index) override final;
+	void command_timestamp_query_pool_reset(CommandBufferID p_cmd_buffer, QueryPoolID p_pool_id, uint32_t p_query_count) final;
+	void command_timestamp_write(CommandBufferID p_cmd_buffer, QueryPoolID p_pool_id, uint32_t p_index) final;
 
 	/****************/
 	/**** LABELS ****/
 	/****************/
 
-	virtual void command_begin_label(CommandBufferID p_cmd_buffer, const char *p_label_name, const Color &p_color) override final;
-	virtual void command_end_label(CommandBufferID p_cmd_buffer) override final;
+	void command_begin_label(CommandBufferID p_cmd_buffer, const char *p_label_name, const Color &p_color) final;
+	void command_end_label(CommandBufferID p_cmd_buffer) final;
 
 	/********************/
 	/**** SUBMISSION ****/
@@ -983,26 +983,26 @@ private:
 	HashMap<uint64_t, bool> has_comp_alpha;
 
 public:
-	virtual void begin_segment(uint32_t p_frame_index, uint32_t p_frames_drawn) override final;
-	virtual void end_segment() override final;
+	void begin_segment(uint32_t p_frame_index, uint32_t p_frames_drawn) final;
+	void end_segment() final;
 
 	/**************/
 	/**** MISC ****/
 	/**************/
 
-	virtual void set_object_name(ObjectType p_type, ID p_driver_id, const String &p_name) override final;
-	virtual uint64_t get_resource_native_handle(DriverResource p_type, ID p_driver_id) override final;
-	virtual uint64_t get_total_memory_used() override final;
-	virtual uint64_t limit_get(Limit p_limit) override final;
-	virtual uint64_t api_trait_get(ApiTrait p_trait) override final;
-	virtual bool has_feature(Features p_feature) override final;
-	virtual const MultiviewCapabilities &get_multiview_capabilities() override final;
-	virtual String get_api_name() const override final;
-	virtual String get_api_version() const override final;
-	virtual String get_pipeline_cache_uuid() const override final;
-	virtual const Capabilities &get_capabilities() const override final;
+	void set_object_name(ObjectType p_type, ID p_driver_id, const String &p_name) final;
+	uint64_t get_resource_native_handle(DriverResource p_type, ID p_driver_id) final;
+	uint64_t get_total_memory_used() final;
+	uint64_t limit_get(Limit p_limit) final;
+	uint64_t api_trait_get(ApiTrait p_trait) final;
+	bool has_feature(Features p_feature) final;
+	const MultiviewCapabilities &get_multiview_capabilities() final;
+	String get_api_name() const final;
+	String get_api_version() const final;
+	String get_pipeline_cache_uuid() const final;
+	const Capabilities &get_capabilities() const final;
 
-	virtual bool is_composite_alpha_supported(CommandQueueID p_queue) const override final;
+	bool is_composite_alpha_supported(CommandQueueID p_queue) const final;
 
 	static bool is_in_developer_mode();
 
@@ -1029,7 +1029,7 @@ private:
 
 public:
 	RenderingDeviceDriverD3D12(RenderingContextDriverD3D12 *p_context_driver);
-	virtual ~RenderingDeviceDriverD3D12();
+	~RenderingDeviceDriverD3D12() override;
 };
 
 #endif // RENDERING_DEVICE_DRIVER_D3D12_H

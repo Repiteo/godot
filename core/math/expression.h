@@ -269,7 +269,7 @@ public:
 	String get_error_text() const;
 
 	Expression() {}
-	~Expression();
+	~Expression() override;
 };
 
 #endif // EXPRESSION_H

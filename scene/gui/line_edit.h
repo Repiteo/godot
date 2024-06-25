@@ -247,24 +247,24 @@ private:
 protected:
 	bool _is_over_clear_button(const Point2 &p_pos) const;
 
-	virtual void _update_theme_item_cache() override;
+	void _update_theme_item_cache() override;
 
 	void _notification(int p_what);
 	void _validate_property(PropertyInfo &p_property) const;
 	static void _bind_methods();
 
-	virtual void unhandled_key_input(const Ref<InputEvent> &p_event) override;
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void unhandled_key_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 
 public:
 	void set_horizontal_alignment(HorizontalAlignment p_alignment);
 	HorizontalAlignment get_horizontal_alignment() const;
 
-	virtual Variant get_drag_data(const Point2 &p_point) override;
-	virtual bool can_drop_data(const Point2 &p_point, const Variant &p_data) const override;
-	virtual void drop_data(const Point2 &p_point, const Variant &p_data) override;
+	Variant get_drag_data(const Point2 &p_point) override;
+	bool can_drop_data(const Point2 &p_point, const Variant &p_data) const override;
+	void drop_data(const Point2 &p_point, const Variant &p_data) override;
 
-	virtual CursorShape get_cursor_shape(const Point2 &p_pos) const override;
+	CursorShape get_cursor_shape(const Point2 &p_pos) const override;
 
 	void menu_option(int p_option);
 	void set_context_menu_enabled(bool p_enable);
@@ -344,7 +344,7 @@ public:
 	void set_secret_character(const String &p_string);
 	String get_secret_character() const;
 
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
 	void set_expand_to_text_length_enabled(bool p_enabled);
 	bool is_expand_to_text_length_enabled() const;
@@ -383,14 +383,14 @@ public:
 	bool is_select_all_on_focus() const;
 	void clear_pending_select_all_on_focus(); // For other controls, e.g. SpinBox.
 
-	virtual bool is_text_field() const override;
+	bool is_text_field() const override;
 
 	PackedStringArray get_configuration_warnings() const override;
 
 	void show_virtual_keyboard();
 
 	LineEdit(const String &p_placeholder = String());
-	~LineEdit();
+	~LineEdit() override;
 };
 
 VARIANT_ENUM_CAST(LineEdit::MenuItems);

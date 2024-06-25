@@ -136,7 +136,7 @@ protected:
 	static void _bind_methods();
 	void _validate_property(PropertyInfo &p_property) const;
 
-	virtual void _space_changed(const RID &p_new_space) override;
+	void _space_changed(const RID &p_new_space) override;
 
 public:
 	void set_gravity_space_override_mode(SpaceOverride p_mode);
@@ -194,7 +194,7 @@ public:
 	StringName get_audio_bus_name() const;
 
 	Area2D();
-	~Area2D();
+	~Area2D() override;
 };
 
 VARIANT_ENUM_CAST(Area2D::SpaceOverride);

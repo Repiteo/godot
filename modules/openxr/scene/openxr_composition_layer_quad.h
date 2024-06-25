@@ -49,16 +49,16 @@ protected:
 
 	void update_transform();
 
-	virtual Ref<Mesh> _create_fallback_mesh() override;
+	Ref<Mesh> _create_fallback_mesh() override;
 
 public:
 	void set_quad_size(const Size2 &p_size);
 	Size2 get_quad_size() const;
 
-	virtual Vector2 intersects_ray(const Vector3 &p_origin, const Vector3 &p_direction) const override;
+	Vector2 intersects_ray(const Vector3 &p_origin, const Vector3 &p_direction) const override;
 
 	OpenXRCompositionLayerQuad();
-	~OpenXRCompositionLayerQuad();
+	~OpenXRCompositionLayerQuad() override;
 };
 
 #endif // OPENXR_COMPOSITION_LAYER_QUAD_H

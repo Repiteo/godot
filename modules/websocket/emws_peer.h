@@ -81,33 +81,33 @@ public:
 	static void initialize() { WebSocketPeer::_create = EMWSPeer::_create; }
 
 	// PacketPeer
-	virtual int get_available_packet_count() const override;
-	virtual Error get_packet(const uint8_t **r_buffer, int &r_buffer_size) override;
-	virtual Error put_packet(const uint8_t *p_buffer, int p_buffer_size) override;
-	virtual int get_max_packet_size() const override { return packet_buffer.size(); };
+	int get_available_packet_count() const override;
+	Error get_packet(const uint8_t **r_buffer, int &r_buffer_size) override;
+	Error put_packet(const uint8_t *p_buffer, int p_buffer_size) override;
+	int get_max_packet_size() const override { return packet_buffer.size(); };
 
 	// WebSocketPeer
-	virtual Error send(const uint8_t *p_buffer, int p_buffer_size, WriteMode p_mode) override;
-	virtual Error connect_to_url(const String &p_url, Ref<TLSOptions> p_tls_client_options) override;
-	virtual Error accept_stream(Ref<StreamPeer> p_stream) override;
-	virtual void close(int p_code = 1000, String p_reason = "") override;
-	virtual void poll() override;
+	Error send(const uint8_t *p_buffer, int p_buffer_size, WriteMode p_mode) override;
+	Error connect_to_url(const String &p_url, Ref<TLSOptions> p_tls_client_options) override;
+	Error accept_stream(Ref<StreamPeer> p_stream) override;
+	void close(int p_code = 1000, String p_reason = "") override;
+	void poll() override;
 
-	virtual State get_ready_state() const override;
-	virtual int get_close_code() const override;
-	virtual String get_close_reason() const override;
-	virtual int get_current_outbound_buffered_amount() const override;
+	State get_ready_state() const override;
+	int get_close_code() const override;
+	String get_close_reason() const override;
+	int get_current_outbound_buffered_amount() const override;
 
-	virtual IPAddress get_connected_host() const override;
-	virtual uint16_t get_connected_port() const override;
-	virtual String get_selected_protocol() const override;
-	virtual String get_requested_url() const override;
+	IPAddress get_connected_host() const override;
+	uint16_t get_connected_port() const override;
+	String get_selected_protocol() const override;
+	String get_requested_url() const override;
 
-	virtual bool was_string_packet() const override;
-	virtual void set_no_delay(bool p_enabled) override;
+	bool was_string_packet() const override;
+	void set_no_delay(bool p_enabled) override;
 
 	EMWSPeer();
-	~EMWSPeer();
+	~EMWSPeer() override;
 };
 
 #endif // WEB_ENABLED

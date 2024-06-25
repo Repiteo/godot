@@ -109,7 +109,7 @@ class GodotBody3D : public GodotCollisionObject3D {
 	bool first_time_kinematic = false;
 
 	void _mass_properties_changed();
-	virtual void _shapes_changed() override;
+	void _shapes_changed() override;
 	Transform3D new_transform;
 
 	HashMap<GodotConstraint3D *, int> constraint_map;
@@ -344,7 +344,7 @@ public:
 	bool sleep_test(real_t p_step);
 
 	GodotBody3D();
-	~GodotBody3D();
+	~GodotBody3D() override;
 };
 
 //add contact inline

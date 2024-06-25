@@ -139,12 +139,12 @@ public:
 	static void finish_shaders();
 	static void flush_changes();
 
-	virtual RID get_shader_rid() const override;
+	RID get_shader_rid() const override;
 
-	virtual Shader::Mode get_shader_mode() const override;
+	Shader::Mode get_shader_mode() const override;
 
 	CanvasItemMaterial();
-	virtual ~CanvasItemMaterial();
+	~CanvasItemMaterial() override;
 };
 
 VARIANT_ENUM_CAST(CanvasItemMaterial::BlendMode)

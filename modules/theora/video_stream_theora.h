@@ -126,30 +126,30 @@ protected:
 	void clear();
 
 public:
-	virtual void play() override;
-	virtual void stop() override;
-	virtual bool is_playing() const override;
+	void play() override;
+	void stop() override;
+	bool is_playing() const override;
 
-	virtual void set_paused(bool p_paused) override;
-	virtual bool is_paused() const override;
+	void set_paused(bool p_paused) override;
+	bool is_paused() const override;
 
-	virtual double get_length() const override;
+	double get_length() const override;
 
-	virtual double get_playback_position() const override;
-	virtual void seek(double p_time) override;
+	double get_playback_position() const override;
+	void seek(double p_time) override;
 
 	void set_file(const String &p_file);
 
-	virtual Ref<Texture2D> get_texture() const override;
-	virtual void update(double p_delta) override;
+	Ref<Texture2D> get_texture() const override;
+	void update(double p_delta) override;
 
-	virtual int get_channels() const override;
-	virtual int get_mix_rate() const override;
+	int get_channels() const override;
+	int get_mix_rate() const override;
 
-	virtual void set_audio_track(int p_idx) override;
+	void set_audio_track(int p_idx) override;
 
 	VideoStreamPlaybackTheora();
-	~VideoStreamPlaybackTheora();
+	~VideoStreamPlaybackTheora() override;
 };
 
 class VideoStreamTheora : public VideoStream {
@@ -173,10 +173,10 @@ public:
 
 class ResourceFormatLoaderTheora : public ResourceFormatLoader {
 public:
-	virtual Ref<Resource> load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr, bool p_use_sub_threads = false, float *r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE) override;
-	virtual void get_recognized_extensions(List<String> *p_extensions) const override;
-	virtual bool handles_type(const String &p_type) const override;
-	virtual String get_resource_type(const String &p_path) const override;
+	Ref<Resource> load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr, bool p_use_sub_threads = false, float *r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE) override;
+	void get_recognized_extensions(List<String> *p_extensions) const override;
+	bool handles_type(const String &p_type) const override;
+	String get_resource_type(const String &p_path) const override;
 };
 
 #endif // VIDEO_STREAM_THEORA_H

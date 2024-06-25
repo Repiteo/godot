@@ -47,8 +47,8 @@ protected:
 	void _notification(int p_what);
 	static void _bind_methods();
 
-	virtual void add_child_notify(Node *p_child) override;
-	virtual void remove_child_notify(Node *p_child) override;
+	void add_child_notify(Node *p_child) override;
+	void remove_child_notify(Node *p_child) override;
 
 	GDVIRTUAL1RC(bool, _propagate_input_event, Ref<InputEvent>);
 
@@ -56,17 +56,17 @@ public:
 	void set_stretch(bool p_enable);
 	bool is_stretch_enabled() const;
 
-	virtual void input(const Ref<InputEvent> &p_event) override;
-	virtual void unhandled_input(const Ref<InputEvent> &p_event) override;
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void input(const Ref<InputEvent> &p_event) override;
+	void unhandled_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 	void set_stretch_shrink(int p_shrink);
 	int get_stretch_shrink() const;
 	void recalc_force_viewport_sizes();
 
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
-	virtual Vector<int> get_allowed_size_flags_horizontal() const override;
-	virtual Vector<int> get_allowed_size_flags_vertical() const override;
+	Vector<int> get_allowed_size_flags_horizontal() const override;
+	Vector<int> get_allowed_size_flags_vertical() const override;
 
 	PackedStringArray get_configuration_warnings() const override;
 

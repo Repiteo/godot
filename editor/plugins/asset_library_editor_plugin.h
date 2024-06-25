@@ -326,7 +326,7 @@ class EditorAssetLibrary : public PanelContainer {
 protected:
 	static void _bind_methods();
 	void _notification(int p_what);
-	virtual void shortcut_input(const Ref<InputEvent> &p_event) override;
+	void shortcut_input(const Ref<InputEvent> &p_event) override;
 
 public:
 	void disable_community_support();
@@ -342,17 +342,17 @@ class AssetLibraryEditorPlugin : public EditorPlugin {
 public:
 	static bool is_available();
 
-	virtual String get_name() const override { return "AssetLib"; }
+	String get_name() const override { return "AssetLib"; }
 	bool has_main_screen() const override { return true; }
-	virtual void edit(Object *p_object) override {}
-	virtual bool handles(Object *p_object) const override { return false; }
-	virtual void make_visible(bool p_visible) override;
+	void edit(Object *p_object) override {}
+	bool handles(Object *p_object) const override { return false; }
+	void make_visible(bool p_visible) override;
 	//virtual bool get_remove_list(List<Node*> *p_list) { return canvas_item_editor->get_remove_list(p_list); }
 	//virtual Dictionary get_state() const;
 	//virtual void set_state(const Dictionary& p_state);
 
 	AssetLibraryEditorPlugin();
-	~AssetLibraryEditorPlugin();
+	~AssetLibraryEditorPlugin() override;
 };
 
 #endif // ASSET_LIBRARY_EDITOR_PLUGIN_H

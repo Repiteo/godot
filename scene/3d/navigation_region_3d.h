@@ -111,7 +111,7 @@ public:
 	PackedStringArray get_configuration_warnings() const override;
 
 	NavigationRegion3D();
-	~NavigationRegion3D();
+	~NavigationRegion3D() override;
 
 private:
 	void _region_enter_navigation_map();

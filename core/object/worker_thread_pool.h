@@ -173,7 +173,7 @@ private:
 		C *instance;
 		M method;
 		U userdata;
-		virtual void callback() override {
+		void callback() override {
 			(instance->*method)(userdata);
 		}
 	};
@@ -183,7 +183,7 @@ private:
 		C *instance;
 		M method;
 		U userdata;
-		virtual void callback_indexed(uint32_t p_index) override {
+		void callback_indexed(uint32_t p_index) override {
 			(instance->*method)(p_index, userdata);
 		}
 	};
@@ -238,7 +238,7 @@ public:
 	void init(int p_thread_count = -1, float p_low_priority_task_ratio = 0.3);
 	void finish();
 	WorkerThreadPool();
-	~WorkerThreadPool();
+	~WorkerThreadPool() override;
 };
 
 #endif // WORKER_THREAD_POOL_H

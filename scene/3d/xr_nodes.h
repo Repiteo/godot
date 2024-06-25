@@ -57,13 +57,13 @@ protected:
 public:
 	PackedStringArray get_configuration_warnings() const override;
 
-	virtual Vector3 project_local_ray_normal(const Point2 &p_pos) const override;
-	virtual Point2 unproject_position(const Vector3 &p_pos) const override;
-	virtual Vector3 project_position(const Point2 &p_point, real_t p_z_depth) const override;
-	virtual Vector<Plane> get_frustum() const override;
+	Vector3 project_local_ray_normal(const Point2 &p_pos) const override;
+	Point2 unproject_position(const Vector3 &p_pos) const override;
+	Vector3 project_position(const Point2 &p_point, real_t p_z_depth) const override;
+	Vector<Plane> get_frustum() const override;
 
 	XRCamera3D();
-	~XRCamera3D();
+	~XRCamera3D() override;
 };
 
 /*
@@ -116,7 +116,7 @@ public:
 	PackedStringArray get_configuration_warnings() const override;
 
 	XRNode3D();
-	~XRNode3D();
+	~XRNode3D() override;
 };
 
 /*
@@ -132,8 +132,8 @@ private:
 protected:
 	static void _bind_methods();
 
-	virtual void _bind_tracker() override;
-	virtual void _unbind_tracker() override;
+	void _bind_tracker() override;
+	void _unbind_tracker() override;
 
 	void _button_pressed(const String &p_name);
 	void _button_released(const String &p_name);
@@ -150,7 +150,7 @@ public:
 	XRPositionalTracker::TrackerHand get_tracker_hand() const;
 
 	XRController3D() {}
-	~XRController3D() {}
+	~XRController3D() override {}
 };
 
 /*
@@ -172,7 +172,7 @@ public:
 	Plane get_plane() const;
 
 	XRAnchor3D() {}
-	~XRAnchor3D() {}
+	~XRAnchor3D() override {}
 };
 
 /*
@@ -207,7 +207,7 @@ public:
 	bool is_current() const;
 
 	XROrigin3D() {}
-	~XROrigin3D() {}
+	~XROrigin3D() override {}
 };
 
 #endif // XR_NODES_H

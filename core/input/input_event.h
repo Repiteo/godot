@@ -144,8 +144,8 @@ public:
 
 	BitField<KeyModifierMask> get_modifiers_mask() const;
 
-	virtual String as_text() const override;
-	virtual String to_string() override;
+	String as_text() const override;
+	String to_string() override;
 
 	InputEventWithModifiers() {}
 };
@@ -183,23 +183,23 @@ public:
 	KeyLocation get_location() const;
 
 	void set_echo(bool p_enable);
-	virtual bool is_echo() const override;
+	bool is_echo() const override;
 
 	Key get_keycode_with_modifiers() const;
 	Key get_physical_keycode_with_modifiers() const;
 	Key get_key_label_with_modifiers() const;
 
-	virtual bool action_match(const Ref<InputEvent> &p_event, bool p_exact_match, float p_deadzone, bool *r_pressed, float *r_strength, float *r_raw_strength) const override;
-	virtual bool is_match(const Ref<InputEvent> &p_event, bool p_exact_match = true) const override;
+	bool action_match(const Ref<InputEvent> &p_event, bool p_exact_match, float p_deadzone, bool *r_pressed, float *r_strength, float *r_raw_strength) const override;
+	bool is_match(const Ref<InputEvent> &p_event, bool p_exact_match = true) const override;
 
-	virtual bool is_action_type() const override { return true; }
+	bool is_action_type() const override { return true; }
 
 	virtual String as_text_physical_keycode() const;
 	virtual String as_text_keycode() const;
 	virtual String as_text_key_label() const;
 	virtual String as_text_location() const;
-	virtual String as_text() const override;
-	virtual String to_string() override;
+	String as_text() const override;
+	String to_string() override;
 
 	static Ref<InputEventKey> create_reference(Key p_keycode_with_modifier_masks, bool p_physical = false);
 
@@ -253,14 +253,14 @@ public:
 	void set_double_click(bool p_double_click);
 	bool is_double_click() const;
 
-	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
+	Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
 
-	virtual bool action_match(const Ref<InputEvent> &p_event, bool p_exact_match, float p_deadzone, bool *r_pressed, float *r_strength, float *r_raw_strength) const override;
-	virtual bool is_match(const Ref<InputEvent> &p_event, bool p_exact_match = true) const override;
+	bool action_match(const Ref<InputEvent> &p_event, bool p_exact_match, float p_deadzone, bool *r_pressed, float *r_strength, float *r_raw_strength) const override;
+	bool is_match(const Ref<InputEvent> &p_event, bool p_exact_match = true) const override;
 
-	virtual bool is_action_type() const override { return true; }
-	virtual String as_text() const override;
-	virtual String to_string() override;
+	bool is_action_type() const override { return true; }
+	String as_text() const override;
+	String to_string() override;
 
 	InputEventMouseButton() {}
 };
@@ -301,11 +301,11 @@ public:
 	void set_screen_velocity(const Vector2 &p_velocity);
 	Vector2 get_screen_velocity() const;
 
-	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
-	virtual String as_text() const override;
-	virtual String to_string() override;
+	Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
+	String as_text() const override;
+	String to_string() override;
 
-	virtual bool accumulate(const Ref<InputEvent> &p_event) override;
+	bool accumulate(const Ref<InputEvent> &p_event) override;
 
 	InputEventMouseMotion() {}
 };
@@ -325,12 +325,12 @@ public:
 	void set_axis_value(float p_value);
 	float get_axis_value() const;
 
-	virtual bool action_match(const Ref<InputEvent> &p_event, bool p_exact_match, float p_deadzone, bool *r_pressed, float *r_strength, float *r_raw_strength) const override;
-	virtual bool is_match(const Ref<InputEvent> &p_event, bool p_exact_match = true) const override;
+	bool action_match(const Ref<InputEvent> &p_event, bool p_exact_match, float p_deadzone, bool *r_pressed, float *r_strength, float *r_raw_strength) const override;
+	bool is_match(const Ref<InputEvent> &p_event, bool p_exact_match = true) const override;
 
-	virtual bool is_action_type() const override { return true; }
-	virtual String as_text() const override;
-	virtual String to_string() override;
+	bool is_action_type() const override { return true; }
+	String as_text() const override;
+	String to_string() override;
 
 	static Ref<InputEventJoypadMotion> create_reference(JoyAxis p_axis, float p_value);
 
@@ -354,13 +354,13 @@ public:
 	void set_pressure(float p_pressure);
 	float get_pressure() const;
 
-	virtual bool action_match(const Ref<InputEvent> &p_event, bool p_exact_match, float p_deadzone, bool *r_pressed, float *r_strength, float *r_raw_strength) const override;
-	virtual bool is_match(const Ref<InputEvent> &p_event, bool p_exact_match = true) const override;
+	bool action_match(const Ref<InputEvent> &p_event, bool p_exact_match, float p_deadzone, bool *r_pressed, float *r_strength, float *r_raw_strength) const override;
+	bool is_match(const Ref<InputEvent> &p_event, bool p_exact_match = true) const override;
 
-	virtual bool is_action_type() const override { return true; }
+	bool is_action_type() const override { return true; }
 
-	virtual String as_text() const override;
-	virtual String to_string() override;
+	String as_text() const override;
+	String to_string() override;
 
 	static Ref<InputEventJoypadButton> create_reference(JoyButton p_btn_index);
 
@@ -389,9 +389,9 @@ public:
 	void set_double_tap(bool p_double_tap);
 	bool is_double_tap() const;
 
-	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
-	virtual String as_text() const override;
-	virtual String to_string() override;
+	Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
+	String as_text() const override;
+	String to_string() override;
 
 	InputEventScreenTouch() {}
 };
@@ -439,11 +439,11 @@ public:
 	void set_screen_velocity(const Vector2 &p_velocity);
 	Vector2 get_screen_velocity() const;
 
-	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
-	virtual String as_text() const override;
-	virtual String to_string() override;
+	Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
+	String as_text() const override;
+	String to_string() override;
 
-	virtual bool accumulate(const Ref<InputEvent> &p_event) override;
+	bool accumulate(const Ref<InputEvent> &p_event) override;
 
 	InputEventScreenDrag() {}
 };
@@ -472,13 +472,13 @@ public:
 
 	virtual bool is_action(const StringName &p_action) const;
 
-	virtual bool action_match(const Ref<InputEvent> &p_event, bool p_exact_match, float p_deadzone, bool *r_pressed, float *r_strength, float *r_raw_strength) const override;
-	virtual bool is_match(const Ref<InputEvent> &p_event, bool p_exact_match = true) const override;
+	bool action_match(const Ref<InputEvent> &p_event, bool p_exact_match, float p_deadzone, bool *r_pressed, float *r_strength, float *r_raw_strength) const override;
+	bool is_match(const Ref<InputEvent> &p_event, bool p_exact_match = true) const override;
 
-	virtual bool is_action_type() const override { return true; }
+	bool is_action_type() const override { return true; }
 
-	virtual String as_text() const override;
-	virtual String to_string() override;
+	String as_text() const override;
+	String to_string() override;
 
 	InputEventAction() {}
 };
@@ -507,9 +507,9 @@ public:
 	void set_factor(real_t p_factor);
 	real_t get_factor() const;
 
-	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
-	virtual String as_text() const override;
-	virtual String to_string() override;
+	Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
+	String as_text() const override;
+	String to_string() override;
 
 	InputEventMagnifyGesture() {}
 };
@@ -525,9 +525,9 @@ public:
 	void set_delta(const Vector2 &p_delta);
 	Vector2 get_delta() const;
 
-	virtual Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
-	virtual String as_text() const override;
-	virtual String to_string() override;
+	Ref<InputEvent> xformed_by(const Transform2D &p_xform, const Vector2 &p_local_ofs = Vector2()) const override;
+	String as_text() const override;
+	String to_string() override;
 
 	InputEventPanGesture() {}
 };
@@ -572,8 +572,8 @@ public:
 	void set_controller_value(const int p_controller_value);
 	int get_controller_value() const;
 
-	virtual String as_text() const override;
-	virtual String to_string() override;
+	String as_text() const override;
+	String to_string() override;
 
 	InputEventMIDI() {}
 };
@@ -590,8 +590,8 @@ public:
 	void set_shortcut(Ref<Shortcut> p_shortcut);
 	Ref<Shortcut> get_shortcut();
 
-	virtual String as_text() const override;
-	virtual String to_string() override;
+	String as_text() const override;
+	String to_string() override;
 
 	InputEventShortcut();
 };

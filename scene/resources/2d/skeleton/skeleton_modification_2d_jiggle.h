@@ -133,7 +133,7 @@ public:
 	Vector2 get_jiggle_joint_gravity(int p_joint_idx) const;
 
 	SkeletonModification2DJiggle();
-	~SkeletonModification2DJiggle();
+	~SkeletonModification2DJiggle() override;
 };
 
 #endif // SKELETON_MODIFICATION_2D_JIGGLE_H

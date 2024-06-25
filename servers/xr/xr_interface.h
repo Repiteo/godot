@@ -158,7 +158,7 @@ public:
 	virtual RID get_vrs_texture(); /* obtain VRS texture */
 
 	XRInterface();
-	~XRInterface();
+	~XRInterface() override;
 };
 
 VARIANT_ENUM_CAST(XRInterface::Capabilities);

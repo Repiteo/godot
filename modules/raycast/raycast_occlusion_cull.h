@@ -73,12 +73,12 @@ public:
 		LocalVector<uint32_t> camera_ray_masks;
 		RID scenario_rid;
 
-		virtual void clear() override;
-		virtual void resize(const Size2i &p_size) override;
+		void clear() override;
+		void resize(const Size2i &p_size) override;
 		void sort_rays(const Vector3 &p_camera_dir, bool p_orthogonal);
 		void update_camera_rays(const Transform3D &p_cam_transform, const Projection &p_cam_projection, bool p_cam_orthogonal);
 
-		~RaycastHZBuffer();
+		~RaycastHZBuffer() override;
 	};
 
 private:
@@ -169,27 +169,27 @@ private:
 	Projection _jitter_projection(const Projection &p_cam_projection, const Size2i &p_viewport_size);
 
 public:
-	virtual bool is_occluder(RID p_rid) override;
-	virtual RID occluder_allocate() override;
-	virtual void occluder_initialize(RID p_occluder) override;
-	virtual void occluder_set_mesh(RID p_occluder, const PackedVector3Array &p_vertices, const PackedInt32Array &p_indices) override;
-	virtual void free_occluder(RID p_occluder) override;
+	bool is_occluder(RID p_rid) override;
+	RID occluder_allocate() override;
+	void occluder_initialize(RID p_occluder) override;
+	void occluder_set_mesh(RID p_occluder, const PackedVector3Array &p_vertices, const PackedInt32Array &p_indices) override;
+	void free_occluder(RID p_occluder) override;
 
-	virtual void add_scenario(RID p_scenario) override;
-	virtual void remove_scenario(RID p_scenario) override;
-	virtual void scenario_set_instance(RID p_scenario, RID p_instance, RID p_occluder, const Transform3D &p_xform, bool p_enabled) override;
-	virtual void scenario_remove_instance(RID p_scenario, RID p_instance) override;
+	void add_scenario(RID p_scenario) override;
+	void remove_scenario(RID p_scenario) override;
+	void scenario_set_instance(RID p_scenario, RID p_instance, RID p_occluder, const Transform3D &p_xform, bool p_enabled) override;
+	void scenario_remove_instance(RID p_scenario, RID p_instance) override;
 
-	virtual void add_buffer(RID p_buffer) override;
-	virtual void remove_buffer(RID p_buffer) override;
-	virtual HZBuffer *buffer_get_ptr(RID p_buffer) override;
-	virtual void buffer_set_scenario(RID p_buffer, RID p_scenario) override;
-	virtual void buffer_set_size(RID p_buffer, const Vector2i &p_size) override;
-	virtual void buffer_update(RID p_buffer, const Transform3D &p_cam_transform, const Projection &p_cam_projection, bool p_cam_orthogonal) override;
+	void add_buffer(RID p_buffer) override;
+	void remove_buffer(RID p_buffer) override;
+	HZBuffer *buffer_get_ptr(RID p_buffer) override;
+	void buffer_set_scenario(RID p_buffer, RID p_scenario) override;
+	void buffer_set_size(RID p_buffer, const Vector2i &p_size) override;
+	void buffer_update(RID p_buffer, const Transform3D &p_cam_transform, const Projection &p_cam_projection, bool p_cam_orthogonal) override;
 
-	virtual RID buffer_get_debug_texture(RID p_buffer) override;
+	RID buffer_get_debug_texture(RID p_buffer) override;
 
-	virtual void set_build_quality(RS::ViewportOcclusionCullingBuildQuality p_quality) override;
+	void set_build_quality(RS::ViewportOcclusionCullingBuildQuality p_quality) override;
 
 	RaycastOcclusionCull();
 	~RaycastOcclusionCull();

@@ -59,22 +59,22 @@ private:
 	HashSet<int> filter_meshes;
 
 public:
-	virtual bool intersect(Ray &p_ray) override;
+	bool intersect(Ray &p_ray) override;
 
-	virtual void intersect(Vector<Ray> &r_rays) override;
+	void intersect(Vector<Ray> &r_rays) override;
 
-	virtual void add_mesh(const Vector<Vector3> &p_vertices, const Vector<Vector3> &p_normals, const Vector<Vector2> &p_uv2s, unsigned int p_id) override;
-	virtual void set_mesh_alpha_texture(Ref<Image> p_alpha_texture, unsigned int p_id) override;
-	virtual void commit() override;
+	void add_mesh(const Vector<Vector3> &p_vertices, const Vector<Vector3> &p_normals, const Vector<Vector2> &p_uv2s, unsigned int p_id) override;
+	void set_mesh_alpha_texture(Ref<Image> p_alpha_texture, unsigned int p_id) override;
+	void commit() override;
 
-	virtual void set_mesh_filter(const HashSet<int> &p_mesh_ids) override;
-	virtual void clear_mesh_filter() override;
+	void set_mesh_filter(const HashSet<int> &p_mesh_ids) override;
+	void clear_mesh_filter() override;
 
 	static LightmapRaycaster *create_embree_raycaster();
 	static void make_default_raycaster();
 
 	LightmapRaycasterEmbree();
-	~LightmapRaycasterEmbree();
+	~LightmapRaycasterEmbree() override;
 };
 
 #endif // TOOLS_ENABLED

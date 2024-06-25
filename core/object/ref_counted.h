@@ -50,7 +50,7 @@ public:
 	int get_reference_count() const;
 
 	RefCounted();
-	~RefCounted() {}
+	~RefCounted() override {}
 };
 
 template <typename T>

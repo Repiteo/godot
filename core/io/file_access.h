@@ -234,7 +234,7 @@ public:
 	}
 
 	FileAccess() {}
-	virtual ~FileAccess() {}
+	~FileAccess() override {}
 };
 
 VARIANT_ENUM_CAST(FileAccess::CompressionMode);

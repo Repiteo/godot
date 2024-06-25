@@ -53,16 +53,16 @@ public:
 	void _peer_connected(int p_peer, String p_protocol);
 	void _peer_disconnected(int p_peer, bool p_was_clean);
 
-	virtual void poll() override;
-	virtual String get_uri() const override;
-	virtual Error start(const String &p_uri = "") override;
-	virtual void stop() override;
-	virtual bool is_active() const override;
-	virtual bool is_connection_available() const override;
-	virtual Ref<RemoteDebuggerPeer> take_connection() override;
+	void poll() override;
+	String get_uri() const override;
+	Error start(const String &p_uri = "") override;
+	void stop() override;
+	bool is_active() const override;
+	bool is_connection_available() const override;
+	Ref<RemoteDebuggerPeer> take_connection() override;
 
 	EditorDebuggerServerWebSocket();
-	~EditorDebuggerServerWebSocket();
+	~EditorDebuggerServerWebSocket() override;
 };
 
 #endif // TOOLS_ENABLED

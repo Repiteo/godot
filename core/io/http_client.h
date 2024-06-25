@@ -199,7 +199,7 @@ public:
 	virtual void set_https_proxy(const String &p_host, int p_port);
 
 	HTTPClient() {}
-	virtual ~HTTPClient() {}
+	~HTTPClient() override {}
 };
 
 VARIANT_ENUM_CAST(HTTPClient::ResponseCode)

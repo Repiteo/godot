@@ -153,7 +153,7 @@ public:
 		}
 	}
 
-	virtual void set_space(GodotSpace3D *p_space) override;
+	void set_space(GodotSpace3D *p_space) override;
 
 	void set_mesh(RID p_mesh);
 
@@ -215,7 +215,7 @@ public:
 	void query_ray(const Vector3 &p_from, const Vector3 &p_to, QueryResultCallback p_result_callback, void *p_userdata);
 
 protected:
-	virtual void _shapes_changed() override;
+	void _shapes_changed() override;
 
 private:
 	void update_normals_and_centroids();
@@ -254,23 +254,23 @@ class GodotSoftBodyShape3D : public GodotShape3D {
 public:
 	GodotSoftBody3D *get_soft_body() const { return soft_body; }
 
-	virtual PhysicsServer3D::ShapeType get_type() const override { return PhysicsServer3D::SHAPE_SOFT_BODY; }
-	virtual void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override { r_min = r_max = 0.0; }
-	virtual Vector3 get_support(const Vector3 &p_normal) const override { return Vector3(); }
-	virtual void get_supports(const Vector3 &p_normal, int p_max, Vector3 *r_supports, int &r_amount, FeatureType &r_type) const override { r_amount = 0; }
+	PhysicsServer3D::ShapeType get_type() const override { return PhysicsServer3D::SHAPE_SOFT_BODY; }
+	void project_range(const Vector3 &p_normal, const Transform3D &p_transform, real_t &r_min, real_t &r_max) const override { r_min = r_max = 0.0; }
+	Vector3 get_support(const Vector3 &p_normal) const override { return Vector3(); }
+	void get_supports(const Vector3 &p_normal, int p_max, Vector3 *r_supports, int &r_amount, FeatureType &r_type) const override { r_amount = 0; }
 
-	virtual bool intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_result, Vector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
-	virtual bool intersect_point(const Vector3 &p_point) const override;
-	virtual Vector3 get_closest_point_to(const Vector3 &p_point) const override;
-	virtual Vector3 get_moment_of_inertia(real_t p_mass) const override { return Vector3(); }
+	bool intersect_segment(const Vector3 &p_begin, const Vector3 &p_end, Vector3 &r_result, Vector3 &r_normal, int &r_face_index, bool p_hit_back_faces) const override;
+	bool intersect_point(const Vector3 &p_point) const override;
+	Vector3 get_closest_point_to(const Vector3 &p_point) const override;
+	Vector3 get_moment_of_inertia(real_t p_mass) const override { return Vector3(); }
 
-	virtual void set_data(const Variant &p_data) override {}
-	virtual Variant get_data() const override { return Variant(); }
+	void set_data(const Variant &p_data) override {}
+	Variant get_data() const override { return Variant(); }
 
 	void update_bounds();
 
 	GodotSoftBodyShape3D(GodotSoftBody3D *p_soft_body);
-	~GodotSoftBodyShape3D() {}
+	~GodotSoftBodyShape3D() override {}
 };
 
 #endif // GODOT_SOFT_BODY_3D_H

@@ -46,12 +46,12 @@ class GodotAreaPair2D : public GodotConstraint2D {
 	bool body_has_attached_area = false;
 
 public:
-	virtual bool setup(real_t p_step) override;
-	virtual bool pre_solve(real_t p_step) override;
-	virtual void solve(real_t p_step) override;
+	bool setup(real_t p_step) override;
+	bool pre_solve(real_t p_step) override;
+	void solve(real_t p_step) override;
 
 	GodotAreaPair2D(GodotBody2D *p_body, int p_body_shape, GodotArea2D *p_area, int p_area_shape);
-	~GodotAreaPair2D();
+	~GodotAreaPair2D() override;
 };
 
 class GodotArea2Pair2D : public GodotConstraint2D {
@@ -67,12 +67,12 @@ class GodotArea2Pair2D : public GodotConstraint2D {
 	bool area_b_monitorable;
 
 public:
-	virtual bool setup(real_t p_step) override;
-	virtual bool pre_solve(real_t p_step) override;
-	virtual void solve(real_t p_step) override;
+	bool setup(real_t p_step) override;
+	bool pre_solve(real_t p_step) override;
+	void solve(real_t p_step) override;
 
 	GodotArea2Pair2D(GodotArea2D *p_area_a, int p_shape_a, GodotArea2D *p_area_b, int p_shape_b);
-	~GodotArea2Pair2D();
+	~GodotArea2Pair2D() override;
 };
 
 #endif // GODOT_AREA_PAIR_2D_H

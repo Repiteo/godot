@@ -103,16 +103,16 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual Error put_data(const uint8_t *p_data, int p_bytes) override;
+	Error put_data(const uint8_t *p_data, int p_bytes) override;
 	GDVIRTUAL3R(Error, _put_data, GDExtensionConstPtr<const uint8_t>, int, GDExtensionPtr<int>);
 
-	virtual Error put_partial_data(const uint8_t *p_data, int p_bytes, int &r_sent) override;
+	Error put_partial_data(const uint8_t *p_data, int p_bytes, int &r_sent) override;
 	GDVIRTUAL3R(Error, _put_partial_data, GDExtensionConstPtr<const uint8_t>, int, GDExtensionPtr<int>);
 
-	virtual Error get_data(uint8_t *p_buffer, int p_bytes) override;
+	Error get_data(uint8_t *p_buffer, int p_bytes) override;
 	GDVIRTUAL3R(Error, _get_data, GDExtensionPtr<uint8_t>, int, GDExtensionPtr<int>);
 
-	virtual Error get_partial_data(uint8_t *p_buffer, int p_bytes, int &r_received) override;
+	Error get_partial_data(uint8_t *p_buffer, int p_bytes, int &r_received) override;
 	GDVIRTUAL3R(Error, _get_partial_data, GDExtensionPtr<uint8_t>, int, GDExtensionPtr<int>);
 
 	EXBIND0RC(int, get_available_bytes);
@@ -134,7 +134,7 @@ public:
 	Error get_data(uint8_t *p_buffer, int p_bytes) override;
 	Error get_partial_data(uint8_t *p_buffer, int p_bytes, int &r_received) override;
 
-	virtual int get_available_bytes() const override;
+	int get_available_bytes() const override;
 
 	void seek(int p_pos);
 	int get_size() const;

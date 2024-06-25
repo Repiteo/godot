@@ -77,7 +77,7 @@ public:
 	bool is_sorting_use_aabb_center() const;
 
 	VisualInstance3D();
-	~VisualInstance3D();
+	~VisualInstance3D() override;
 };
 
 class GeometryInstance3D : public VisualInstance3D {
@@ -196,7 +196,7 @@ public:
 
 	PackedStringArray get_configuration_warnings() const override;
 	GeometryInstance3D();
-	virtual ~GeometryInstance3D();
+	~GeometryInstance3D() override;
 };
 
 VARIANT_ENUM_CAST(GeometryInstance3D::ShadowCastingSetting);

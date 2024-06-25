@@ -46,7 +46,7 @@ class ConnectionInfoDialog : public AcceptDialog {
 	Label *method = nullptr;
 	Tree *tree = nullptr;
 
-	virtual void ok_pressed() override;
+	void ok_pressed() override;
 
 public:
 	void popup_connections(const String &p_method, const Vector<Node *> &p_nodes);
@@ -211,65 +211,65 @@ protected:
 public:
 	void _update_connected_methods();
 
-	virtual void add_syntax_highlighter(Ref<EditorSyntaxHighlighter> p_highlighter) override;
-	virtual void set_syntax_highlighter(Ref<EditorSyntaxHighlighter> p_highlighter) override;
+	void add_syntax_highlighter(Ref<EditorSyntaxHighlighter> p_highlighter) override;
+	void set_syntax_highlighter(Ref<EditorSyntaxHighlighter> p_highlighter) override;
 	void update_toggle_scripts_button() override;
 
-	virtual void apply_code() override;
-	virtual Ref<Resource> get_edited_resource() const override;
-	virtual void set_edited_resource(const Ref<Resource> &p_res) override;
-	virtual void enable_editor(Control *p_shortcut_context = nullptr) override;
-	virtual Vector<String> get_functions() override;
-	virtual void reload_text() override;
-	virtual String get_name() override;
-	virtual Ref<Texture2D> get_theme_icon() override;
-	virtual bool is_unsaved() override;
-	virtual Variant get_edit_state() override;
-	virtual void set_edit_state(const Variant &p_state) override;
-	virtual Variant get_navigation_state() override;
-	virtual void ensure_focus() override;
-	virtual void trim_trailing_whitespace() override;
-	virtual void trim_final_newlines() override;
-	virtual void insert_final_newline() override;
-	virtual void convert_indent() override;
-	virtual void tag_saved_version() override;
+	void apply_code() override;
+	Ref<Resource> get_edited_resource() const override;
+	void set_edited_resource(const Ref<Resource> &p_res) override;
+	void enable_editor(Control *p_shortcut_context = nullptr) override;
+	Vector<String> get_functions() override;
+	void reload_text() override;
+	String get_name() override;
+	Ref<Texture2D> get_theme_icon() override;
+	bool is_unsaved() override;
+	Variant get_edit_state() override;
+	void set_edit_state(const Variant &p_state) override;
+	Variant get_navigation_state() override;
+	void ensure_focus() override;
+	void trim_trailing_whitespace() override;
+	void trim_final_newlines() override;
+	void insert_final_newline() override;
+	void convert_indent() override;
+	void tag_saved_version() override;
 
-	virtual void goto_line(int p_line, bool p_with_error = false) override;
+	void goto_line(int p_line, bool p_with_error = false) override;
 	void goto_line_selection(int p_line, int p_begin, int p_end);
 	void goto_line_centered(int p_line);
-	virtual void set_executing_line(int p_line) override;
-	virtual void clear_executing_line() override;
+	void set_executing_line(int p_line) override;
+	void clear_executing_line() override;
 
-	virtual void reload(bool p_soft) override;
-	virtual PackedInt32Array get_breakpoints() override;
-	virtual void set_breakpoint(int p_line, bool p_enabled) override;
-	virtual void clear_breakpoints() override;
+	void reload(bool p_soft) override;
+	PackedInt32Array get_breakpoints() override;
+	void set_breakpoint(int p_line, bool p_enabled) override;
+	void clear_breakpoints() override;
 
-	virtual void add_callback(const String &p_function, const PackedStringArray &p_args) override;
-	virtual void update_settings() override;
+	void add_callback(const String &p_function, const PackedStringArray &p_args) override;
+	void update_settings() override;
 
-	virtual bool show_members_overview() override;
+	bool show_members_overview() override;
 
-	virtual void set_tooltip_request_func(const Callable &p_toolip_callback) override;
+	void set_tooltip_request_func(const Callable &p_toolip_callback) override;
 
-	virtual void set_debugger_active(bool p_active) override;
+	void set_debugger_active(bool p_active) override;
 
 	Control *get_edit_menu() override;
-	virtual void clear_edit_menu() override;
-	virtual void set_find_replace_bar(FindReplaceBar *p_bar) override;
+	void clear_edit_menu() override;
+	void set_find_replace_bar(FindReplaceBar *p_bar) override;
 
 	static void register_editor();
 
-	virtual Control *get_base_editor() const override;
-	virtual CodeTextEditor *get_code_editor() const override;
+	Control *get_base_editor() const override;
+	CodeTextEditor *get_code_editor() const override;
 
-	virtual void validate() override;
+	void validate() override;
 
 	Variant get_previous_state();
 	void store_previous_state();
 
 	ScriptTextEditor();
-	~ScriptTextEditor();
+	~ScriptTextEditor() override;
 };
 
 #endif // SCRIPT_TEXT_EDITOR_H

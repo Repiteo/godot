@@ -74,27 +74,27 @@ class EditorExportPlatformWindows : public EditorExportPlatformPC {
 	Error _code_sign(const Ref<EditorExportPreset> &p_preset, const String &p_path);
 
 public:
-	virtual Error export_project(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, int p_flags = 0) override;
-	virtual Error modify_template(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, int p_flags) override;
-	virtual Error sign_shared_object(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path) override;
-	virtual List<String> get_binary_extensions(const Ref<EditorExportPreset> &p_preset) const override;
-	virtual void get_export_options(List<ExportOption> *r_options) const override;
-	virtual bool has_valid_export_configuration(const Ref<EditorExportPreset> &p_preset, String &r_error, bool &r_missing_templates, bool p_debug = false) const override;
-	virtual bool has_valid_project_configuration(const Ref<EditorExportPreset> &p_preset, String &r_error) const override;
-	virtual bool get_export_option_visibility(const EditorExportPreset *p_preset, const String &p_option) const override;
-	virtual String get_export_option_warning(const EditorExportPreset *p_preset, const StringName &p_name) const override;
+	Error export_project(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, int p_flags = 0) override;
+	Error modify_template(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, int p_flags) override;
+	Error sign_shared_object(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path) override;
+	List<String> get_binary_extensions(const Ref<EditorExportPreset> &p_preset) const override;
+	void get_export_options(List<ExportOption> *r_options) const override;
+	bool has_valid_export_configuration(const Ref<EditorExportPreset> &p_preset, String &r_error, bool &r_missing_templates, bool p_debug = false) const override;
+	bool has_valid_project_configuration(const Ref<EditorExportPreset> &p_preset, String &r_error) const override;
+	bool get_export_option_visibility(const EditorExportPreset *p_preset, const String &p_option) const override;
+	String get_export_option_warning(const EditorExportPreset *p_preset, const StringName &p_name) const override;
 
-	virtual String get_template_file_name(const String &p_target, const String &p_arch) const override;
-	virtual Error fixup_embedded_pck(const String &p_path, int64_t p_embedded_start, int64_t p_embedded_size) override;
+	String get_template_file_name(const String &p_target, const String &p_arch) const override;
+	Error fixup_embedded_pck(const String &p_path, int64_t p_embedded_start, int64_t p_embedded_size) override;
 
-	virtual Ref<Texture2D> get_run_icon() const override;
-	virtual bool poll_export() override;
-	virtual Ref<ImageTexture> get_option_icon(int p_index) const override;
-	virtual int get_options_count() const override;
-	virtual String get_option_label(int p_index) const override;
-	virtual String get_option_tooltip(int p_index) const override;
-	virtual Error run(const Ref<EditorExportPreset> &p_preset, int p_device, int p_debug_flags) override;
-	virtual void cleanup() override;
+	Ref<Texture2D> get_run_icon() const override;
+	bool poll_export() override;
+	Ref<ImageTexture> get_option_icon(int p_index) const override;
+	int get_options_count() const override;
+	String get_option_label(int p_index) const override;
+	String get_option_tooltip(int p_index) const override;
+	Error run(const Ref<EditorExportPreset> &p_preset, int p_device, int p_debug_flags) override;
+	void cleanup() override;
 
 	EditorExportPlatformWindows();
 };

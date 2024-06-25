@@ -172,13 +172,13 @@ struct CanvasShaderData : public ShaderData {
 
 	uint64_t vertex_input_mask;
 
-	virtual void set_code(const String &p_Code);
-	virtual bool is_animated() const;
-	virtual bool casts_shadows() const;
-	virtual RS::ShaderNativeSourceCode get_native_source_code() const;
+	void set_code(const String &p_Code) override;
+	bool is_animated() const override;
+	bool casts_shadows() const override;
+	RS::ShaderNativeSourceCode get_native_source_code() const override;
 
 	CanvasShaderData();
-	virtual ~CanvasShaderData();
+	~CanvasShaderData() override;
 };
 
 ShaderData *_create_canvas_shader_func();
@@ -186,11 +186,11 @@ ShaderData *_create_canvas_shader_func();
 struct CanvasMaterialData : public MaterialData {
 	CanvasShaderData *shader_data = nullptr;
 
-	virtual void set_render_priority(int p_priority) {}
-	virtual void set_next_pass(RID p_pass) {}
-	virtual void update_parameters(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty);
-	virtual void bind_uniforms();
-	virtual ~CanvasMaterialData();
+	void set_render_priority(int p_priority) override {}
+	void set_next_pass(RID p_pass) override {}
+	void update_parameters(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty) override;
+	void bind_uniforms() override;
+	~CanvasMaterialData() override;
 };
 
 MaterialData *_create_canvas_material_func(ShaderData *p_shader);
@@ -217,12 +217,12 @@ struct SkyShaderData : public ShaderData {
 	bool uses_quarter_res;
 	bool uses_light;
 
-	virtual void set_code(const String &p_Code);
-	virtual bool is_animated() const;
-	virtual bool casts_shadows() const;
-	virtual RS::ShaderNativeSourceCode get_native_source_code() const;
+	void set_code(const String &p_Code) override;
+	bool is_animated() const override;
+	bool casts_shadows() const override;
+	RS::ShaderNativeSourceCode get_native_source_code() const override;
 	SkyShaderData();
-	virtual ~SkyShaderData();
+	~SkyShaderData() override;
 };
 
 ShaderData *_create_sky_shader_func();
@@ -231,11 +231,11 @@ struct SkyMaterialData : public MaterialData {
 	SkyShaderData *shader_data = nullptr;
 	bool uniform_set_updated = false;
 
-	virtual void set_render_priority(int p_priority) {}
-	virtual void set_next_pass(RID p_pass) {}
-	virtual void update_parameters(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty);
-	virtual void bind_uniforms();
-	virtual ~SkyMaterialData();
+	void set_render_priority(int p_priority) override {}
+	void set_next_pass(RID p_pass) override {}
+	void update_parameters(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty) override;
+	void bind_uniforms() override;
+	~SkyMaterialData() override;
 };
 
 MaterialData *_create_sky_material_func(ShaderData *p_shader);
@@ -332,13 +332,13 @@ struct SceneShaderData : public ShaderData {
 
 	uint64_t vertex_input_mask;
 
-	virtual void set_code(const String &p_Code);
-	virtual bool is_animated() const;
-	virtual bool casts_shadows() const;
-	virtual RS::ShaderNativeSourceCode get_native_source_code() const;
+	void set_code(const String &p_Code) override;
+	bool is_animated() const override;
+	bool casts_shadows() const override;
+	RS::ShaderNativeSourceCode get_native_source_code() const override;
 
 	SceneShaderData();
-	virtual ~SceneShaderData();
+	~SceneShaderData() override;
 };
 
 ShaderData *_create_scene_shader_func();
@@ -349,11 +349,11 @@ struct SceneMaterialData : public MaterialData {
 	uint32_t index = 0;
 	RID next_pass;
 	uint8_t priority = 0;
-	virtual void set_render_priority(int p_priority);
-	virtual void set_next_pass(RID p_pass);
-	virtual void update_parameters(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty);
-	virtual void bind_uniforms();
-	virtual ~SceneMaterialData();
+	void set_render_priority(int p_priority) override;
+	void set_next_pass(RID p_pass) override;
+	void update_parameters(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty) override;
+	void bind_uniforms() override;
+	~SceneMaterialData() override;
 };
 
 MaterialData *_create_scene_material_func(ShaderData *p_shader);
@@ -384,13 +384,13 @@ struct ParticlesShaderData : public ShaderData {
 	bool userdatas_used[PARTICLES_MAX_USERDATAS] = {};
 	uint32_t userdata_count;
 
-	virtual void set_code(const String &p_Code);
-	virtual bool is_animated() const;
-	virtual bool casts_shadows() const;
-	virtual RS::ShaderNativeSourceCode get_native_source_code() const;
+	void set_code(const String &p_Code) override;
+	bool is_animated() const override;
+	bool casts_shadows() const override;
+	RS::ShaderNativeSourceCode get_native_source_code() const override;
 
 	ParticlesShaderData() {}
-	virtual ~ParticlesShaderData();
+	~ParticlesShaderData() override;
 };
 
 ShaderData *_create_particles_shader_func();
@@ -399,11 +399,11 @@ struct ParticleProcessMaterialData : public MaterialData {
 	ParticlesShaderData *shader_data = nullptr;
 	RID uniform_set;
 
-	virtual void set_render_priority(int p_priority) {}
-	virtual void set_next_pass(RID p_pass) {}
-	virtual void update_parameters(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty);
-	virtual void bind_uniforms();
-	virtual ~ParticleProcessMaterialData();
+	void set_render_priority(int p_priority) override {}
+	void set_next_pass(RID p_pass) override {}
+	void update_parameters(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty) override;
+	void bind_uniforms() override;
+	~ParticleProcessMaterialData() override;
 };
 
 MaterialData *_create_particles_material_func(ShaderData *p_shader);
@@ -495,7 +495,7 @@ public:
 	static MaterialStorage *get_singleton();
 
 	MaterialStorage();
-	virtual ~MaterialStorage();
+	~MaterialStorage() override;
 
 	static _FORCE_INLINE_ void store_transform(const Transform3D &p_mtx, float *p_array) {
 		p_array[0] = p_mtx.basis.rows[0][0];
@@ -555,22 +555,22 @@ public:
 
 	void _update_global_shader_uniforms();
 
-	virtual void global_shader_parameter_add(const StringName &p_name, RS::GlobalShaderParameterType p_type, const Variant &p_value) override;
-	virtual void global_shader_parameter_remove(const StringName &p_name) override;
-	virtual Vector<StringName> global_shader_parameter_get_list() const override;
+	void global_shader_parameter_add(const StringName &p_name, RS::GlobalShaderParameterType p_type, const Variant &p_value) override;
+	void global_shader_parameter_remove(const StringName &p_name) override;
+	Vector<StringName> global_shader_parameter_get_list() const override;
 
-	virtual void global_shader_parameter_set(const StringName &p_name, const Variant &p_value) override;
-	virtual void global_shader_parameter_set_override(const StringName &p_name, const Variant &p_value) override;
-	virtual Variant global_shader_parameter_get(const StringName &p_name) const override;
-	virtual RS::GlobalShaderParameterType global_shader_parameter_get_type(const StringName &p_name) const override;
+	void global_shader_parameter_set(const StringName &p_name, const Variant &p_value) override;
+	void global_shader_parameter_set_override(const StringName &p_name, const Variant &p_value) override;
+	Variant global_shader_parameter_get(const StringName &p_name) const override;
+	RS::GlobalShaderParameterType global_shader_parameter_get_type(const StringName &p_name) const override;
 	RS::GlobalShaderParameterType global_shader_parameter_get_type_internal(const StringName &p_name) const;
 
-	virtual void global_shader_parameters_load_settings(bool p_load_textures = true) override;
-	virtual void global_shader_parameters_clear() override;
+	void global_shader_parameters_load_settings(bool p_load_textures = true) override;
+	void global_shader_parameters_clear() override;
 
-	virtual int32_t global_shader_parameters_instance_allocate(RID p_instance) override;
-	virtual void global_shader_parameters_instance_free(RID p_instance) override;
-	virtual void global_shader_parameters_instance_update(RID p_instance, int p_index, const Variant &p_value, int p_flags_count = 0) override;
+	int32_t global_shader_parameters_instance_allocate(RID p_instance) override;
+	void global_shader_parameters_instance_free(RID p_instance) override;
+	void global_shader_parameters_instance_update(RID p_instance, int p_index, const Variant &p_value, int p_flags_count = 0) override;
 
 	GLuint global_shader_parameters_get_uniform_buffer() const;
 
@@ -581,20 +581,20 @@ public:
 
 	void _shader_make_dirty(Shader *p_shader);
 
-	virtual RID shader_allocate() override;
-	virtual void shader_initialize(RID p_rid) override;
-	virtual void shader_free(RID p_rid) override;
+	RID shader_allocate() override;
+	void shader_initialize(RID p_rid) override;
+	void shader_free(RID p_rid) override;
 
-	virtual void shader_set_code(RID p_shader, const String &p_code) override;
-	virtual void shader_set_path_hint(RID p_shader, const String &p_path) override;
-	virtual String shader_get_code(RID p_shader) const override;
-	virtual void get_shader_parameter_list(RID p_shader, List<PropertyInfo> *p_param_list) const override;
+	void shader_set_code(RID p_shader, const String &p_code) override;
+	void shader_set_path_hint(RID p_shader, const String &p_path) override;
+	String shader_get_code(RID p_shader) const override;
+	void get_shader_parameter_list(RID p_shader, List<PropertyInfo> *p_param_list) const override;
 
-	virtual void shader_set_default_texture_parameter(RID p_shader, const StringName &p_name, RID p_texture, int p_index) override;
-	virtual RID shader_get_default_texture_parameter(RID p_shader, const StringName &p_name, int p_index) const override;
-	virtual Variant shader_get_parameter_default(RID p_shader, const StringName &p_name) const override;
+	void shader_set_default_texture_parameter(RID p_shader, const StringName &p_name, RID p_texture, int p_index) override;
+	RID shader_get_default_texture_parameter(RID p_shader, const StringName &p_name, int p_index) const override;
+	Variant shader_get_parameter_default(RID p_shader, const StringName &p_name) const override;
 
-	virtual RS::ShaderNativeSourceCode shader_get_native_source_code(RID p_shader) const override;
+	RS::ShaderNativeSourceCode shader_get_native_source_code(RID p_shader) const override;
 
 	/* MATERIAL API */
 
@@ -604,24 +604,24 @@ public:
 	void _material_queue_update(Material *material, bool p_uniform, bool p_texture);
 	void _update_queued_materials();
 
-	virtual RID material_allocate() override;
-	virtual void material_initialize(RID p_rid) override;
-	virtual void material_free(RID p_rid) override;
+	RID material_allocate() override;
+	void material_initialize(RID p_rid) override;
+	void material_free(RID p_rid) override;
 
-	virtual void material_set_shader(RID p_material, RID p_shader) override;
+	void material_set_shader(RID p_material, RID p_shader) override;
 
-	virtual void material_set_param(RID p_material, const StringName &p_param, const Variant &p_value) override;
-	virtual Variant material_get_param(RID p_material, const StringName &p_param) const override;
+	void material_set_param(RID p_material, const StringName &p_param, const Variant &p_value) override;
+	Variant material_get_param(RID p_material, const StringName &p_param) const override;
 
-	virtual void material_set_next_pass(RID p_material, RID p_next_material) override;
-	virtual void material_set_render_priority(RID p_material, int priority) override;
+	void material_set_next_pass(RID p_material, RID p_next_material) override;
+	void material_set_render_priority(RID p_material, int priority) override;
 
-	virtual bool material_is_animated(RID p_material) override;
-	virtual bool material_casts_shadows(RID p_material) override;
+	bool material_is_animated(RID p_material) override;
+	bool material_casts_shadows(RID p_material) override;
 
-	virtual void material_get_instance_shader_parameters(RID p_material, List<InstanceShaderParam> *r_parameters) override;
+	void material_get_instance_shader_parameters(RID p_material, List<InstanceShaderParam> *r_parameters) override;
 
-	virtual void material_update_dependency(RID p_material, DependencyTracker *p_instance) override;
+	void material_update_dependency(RID p_material, DependencyTracker *p_instance) override;
 
 	_FORCE_INLINE_ uint32_t material_get_shader_id(RID p_material) {
 		Material *material = material_owner.get_or_null(p_material);

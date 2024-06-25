@@ -71,8 +71,8 @@ public:
 protected:
 	static void _bind_methods();
 
-	virtual void _skeleton_changed(Skeleton3D *p_old, Skeleton3D *p_new) override;
-	virtual void _process_modification() override;
+	void _skeleton_changed(Skeleton3D *p_old, Skeleton3D *p_new) override;
+	void _process_modification() override;
 
 private:
 	struct JointData {

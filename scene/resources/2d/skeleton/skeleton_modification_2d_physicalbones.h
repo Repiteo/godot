@@ -76,7 +76,7 @@ public:
 	void stop_simulation(const TypedArray<StringName> &p_bones);
 
 	SkeletonModification2DPhysicalBones();
-	~SkeletonModification2DPhysicalBones();
+	~SkeletonModification2DPhysicalBones() override;
 };
 
 #endif // SKELETON_MODIFICATION_2D_PHYSICALBONES_H

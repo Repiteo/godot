@@ -41,25 +41,25 @@ class OfflineMultiplayerPeer : public MultiplayerPeer {
 	GDCLASS(OfflineMultiplayerPeer, MultiplayerPeer);
 
 public:
-	virtual int get_available_packet_count() const override { return 0; }
-	virtual Error get_packet(const uint8_t **r_buffer, int &r_buffer_size) override {
+	int get_available_packet_count() const override { return 0; }
+	Error get_packet(const uint8_t **r_buffer, int &r_buffer_size) override {
 		*r_buffer = nullptr;
 		r_buffer_size = 0;
 		return OK;
 	}
-	virtual Error put_packet(const uint8_t *p_buffer, int p_buffer_size) override { return OK; }
-	virtual int get_max_packet_size() const override { return 0; }
+	Error put_packet(const uint8_t *p_buffer, int p_buffer_size) override { return OK; }
+	int get_max_packet_size() const override { return 0; }
 
-	virtual void set_target_peer(int p_peer_id) override {}
-	virtual int get_packet_peer() const override { return 0; }
-	virtual TransferMode get_packet_mode() const override { return TRANSFER_MODE_RELIABLE; };
-	virtual int get_packet_channel() const override { return 0; }
-	virtual void disconnect_peer(int p_peer, bool p_force = false) override {}
-	virtual bool is_server() const override { return true; }
-	virtual void poll() override {}
-	virtual void close() override {}
-	virtual int get_unique_id() const override { return TARGET_PEER_SERVER; }
-	virtual ConnectionStatus get_connection_status() const override { return CONNECTION_CONNECTED; };
+	void set_target_peer(int p_peer_id) override {}
+	int get_packet_peer() const override { return 0; }
+	TransferMode get_packet_mode() const override { return TRANSFER_MODE_RELIABLE; };
+	int get_packet_channel() const override { return 0; }
+	void disconnect_peer(int p_peer, bool p_force = false) override {}
+	bool is_server() const override { return true; }
+	void poll() override {}
+	void close() override {}
+	int get_unique_id() const override { return TARGET_PEER_SERVER; }
+	ConnectionStatus get_connection_status() const override { return CONNECTION_CONNECTED; };
 };
 
 class SceneMultiplayer : public MultiplayerAPI {
@@ -150,18 +150,18 @@ protected:
 	void _update_status();
 
 public:
-	virtual void set_multiplayer_peer(const Ref<MultiplayerPeer> &p_peer) override;
-	virtual Ref<MultiplayerPeer> get_multiplayer_peer() override;
+	void set_multiplayer_peer(const Ref<MultiplayerPeer> &p_peer) override;
+	Ref<MultiplayerPeer> get_multiplayer_peer() override;
 
-	virtual Error poll() override;
-	virtual int get_unique_id() override;
-	virtual Vector<int> get_peer_ids() override;
-	virtual int get_remote_sender_id() override { return remote_sender_override ? remote_sender_override : remote_sender_id; }
+	Error poll() override;
+	int get_unique_id() override;
+	Vector<int> get_peer_ids() override;
+	int get_remote_sender_id() override { return remote_sender_override ? remote_sender_override : remote_sender_id; }
 
-	virtual Error rpcp(Object *p_obj, int p_peer_id, const StringName &p_method, const Variant **p_arg, int p_argcount) override;
+	Error rpcp(Object *p_obj, int p_peer_id, const StringName &p_method, const Variant **p_arg, int p_argcount) override;
 
-	virtual Error object_configuration_add(Object *p_obj, Variant p_config) override;
-	virtual Error object_configuration_remove(Object *p_obj, Variant p_config) override;
+	Error object_configuration_add(Object *p_obj, Variant p_config) override;
+	Error object_configuration_remove(Object *p_obj, Variant p_config) override;
 
 	void clear();
 
@@ -202,7 +202,7 @@ public:
 	int get_max_delta_packet_size() const;
 
 	SceneMultiplayer();
-	~SceneMultiplayer();
+	~SceneMultiplayer() override;
 };
 
 #endif // SCENE_MULTIPLAYER_H

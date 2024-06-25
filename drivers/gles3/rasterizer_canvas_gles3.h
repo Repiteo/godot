@@ -337,7 +337,7 @@ public:
 
 	void canvas_begin(RID p_to_render_target, bool p_to_backbuffer);
 
-	//virtual void draw_window_margins(int *black_margin, RID *black_image) override;
+	//void draw_window_margins(int *black_margin, RID *black_image) override;
 	void draw_lens_distortion_rect(const Rect2 &p_rect, float p_k1, float p_k2, const Vector2 &p_eye_center, float p_oversample);
 
 	void reset_canvas();
@@ -373,7 +373,7 @@ public:
 
 	void set_time(double p_time);
 
-	virtual void set_debug_redraw(bool p_enabled, double p_time, const Color &p_color) override {
+	void set_debug_redraw(bool p_enabled, double p_time, const Color &p_color) override {
 		if (p_enabled) {
 			WARN_PRINT_ONCE("Debug CanvasItem Redraw is not available yet when using the GL Compatibility backend.");
 		}
@@ -381,7 +381,7 @@ public:
 
 	static RasterizerCanvasGLES3 *get_singleton();
 	RasterizerCanvasGLES3();
-	~RasterizerCanvasGLES3();
+	~RasterizerCanvasGLES3() override;
 };
 
 #endif // GLES3_ENABLED

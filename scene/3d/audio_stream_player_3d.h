@@ -200,7 +200,7 @@ public:
 	void set_playback_type(AudioServer::PlaybackType p_playback_type);
 
 	AudioStreamPlayer3D();
-	~AudioStreamPlayer3D();
+	~AudioStreamPlayer3D() override;
 };
 
 VARIANT_ENUM_CAST(AudioStreamPlayer3D::AttenuationModel)

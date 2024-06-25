@@ -115,13 +115,13 @@ public:
 	int get_width() const override;
 	int get_height() const override;
 
-	virtual RID get_rid() const override;
-	virtual bool has_alpha() const override { return false; }
+	RID get_rid() const override;
+	bool has_alpha() const override { return false; }
 
-	virtual Ref<Image> get_image() const override;
+	Ref<Image> get_image() const override;
 
 	NoiseTexture2D();
-	virtual ~NoiseTexture2D();
+	~NoiseTexture2D() override;
 };
 
 #endif // NOISE_TEXTURE_2D_H

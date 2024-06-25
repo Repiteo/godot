@@ -50,7 +50,7 @@
 #endif
 
 class OS_LinuxBSD : public OS_Unix {
-	virtual void delete_main_loop() override;
+	void delete_main_loop() override;
 
 #ifdef FONTCONFIG_ENABLED
 	bool font_config_initialized = false;
@@ -89,57 +89,57 @@ class OS_LinuxBSD : public OS_Unix {
 	String system_dir_desktop_cache;
 
 protected:
-	virtual void initialize() override;
-	virtual void finalize() override;
+	void initialize() override;
+	void finalize() override;
 
-	virtual void initialize_joypads() override;
+	void initialize_joypads() override;
 
-	virtual void set_main_loop(MainLoop *p_main_loop) override;
+	void set_main_loop(MainLoop *p_main_loop) override;
 
 public:
-	virtual String get_identifier() const override;
-	virtual String get_name() const override;
-	virtual String get_distribution_name() const override;
-	virtual String get_version() const override;
+	String get_identifier() const override;
+	String get_name() const override;
+	String get_distribution_name() const override;
+	String get_version() const override;
 
-	virtual Vector<String> get_video_adapter_driver_info() const override;
+	Vector<String> get_video_adapter_driver_info() const override;
 
-	virtual MainLoop *get_main_loop() const override;
+	MainLoop *get_main_loop() const override;
 
-	virtual uint64_t get_embedded_pck_offset() const override;
+	uint64_t get_embedded_pck_offset() const override;
 
-	virtual Vector<String> get_system_fonts() const override;
-	virtual String get_system_font_path(const String &p_font_name, int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
-	virtual Vector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
+	Vector<String> get_system_fonts() const override;
+	String get_system_font_path(const String &p_font_name, int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
+	Vector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
 
-	virtual String get_config_path() const override;
-	virtual String get_data_path() const override;
-	virtual String get_cache_path() const override;
+	String get_config_path() const override;
+	String get_data_path() const override;
+	String get_cache_path() const override;
 
-	virtual String get_system_dir(SystemDir p_dir, bool p_shared_storage = true) const override;
+	String get_system_dir(SystemDir p_dir, bool p_shared_storage = true) const override;
 
-	virtual Error shell_open(const String &p_uri) override;
+	Error shell_open(const String &p_uri) override;
 
-	virtual String get_unique_id() const override;
-	virtual String get_processor_name() const override;
+	String get_unique_id() const override;
+	String get_processor_name() const override;
 
-	virtual bool is_sandboxed() const override;
+	bool is_sandboxed() const override;
 
-	virtual void alert(const String &p_alert, const String &p_title = "ALERT!") override;
+	void alert(const String &p_alert, const String &p_title = "ALERT!") override;
 
-	virtual bool _check_internal_feature_support(const String &p_feature) override;
+	bool _check_internal_feature_support(const String &p_feature) override;
 
 	void run();
 
-	virtual void disable_crash_handler() override;
-	virtual bool is_disable_crash_handler() const override;
+	void disable_crash_handler() override;
+	bool is_disable_crash_handler() const override;
 
-	virtual Error move_to_trash(const String &p_path) override;
+	Error move_to_trash(const String &p_path) override;
 
-	virtual String get_system_ca_certificates() override;
+	String get_system_ca_certificates() override;
 
 	OS_LinuxBSD();
-	~OS_LinuxBSD();
+	~OS_LinuxBSD() override;
 };
 
 #endif // OS_LINUXBSD_H

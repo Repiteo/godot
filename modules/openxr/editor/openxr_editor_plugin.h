@@ -45,14 +45,14 @@ class OpenXREditorPlugin : public EditorPlugin {
 #endif
 
 public:
-	virtual String get_name() const override { return "OpenXRPlugin"; }
+	String get_name() const override { return "OpenXRPlugin"; }
 	bool has_main_screen() const override { return false; }
-	virtual void edit(Object *p_node) override;
-	virtual bool handles(Object *p_node) const override;
-	virtual void make_visible(bool p_visible) override;
+	void edit(Object *p_node) override;
+	bool handles(Object *p_node) const override;
+	void make_visible(bool p_visible) override;
 
 	OpenXREditorPlugin();
-	~OpenXREditorPlugin();
+	~OpenXREditorPlugin() override;
 };
 
 #endif // OPENXR_EDITOR_PLUGIN_H

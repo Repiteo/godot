@@ -55,8 +55,8 @@ protected:
 
 public:
 #ifdef TOOLS_ENABLED
-	virtual Rect2 _edit_get_rect() const override;
-	virtual bool _edit_use_rect() const override;
+	Rect2 _edit_get_rect() const override;
+	bool _edit_use_rect() const override;
 #endif
 
 	void set_rect(const Rect2 &p_rect);
@@ -79,8 +79,8 @@ public:
 
 protected:
 	ObjectID node_id;
-	virtual void _screen_enter() override;
-	virtual void _screen_exit() override;
+	void _screen_enter() override;
+	void _screen_exit() override;
 
 	EnableMode enable_mode = ENABLE_MODE_INHERIT;
 	NodePath enable_node_path = NodePath("..");

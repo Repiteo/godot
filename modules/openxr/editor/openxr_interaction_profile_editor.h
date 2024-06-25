@@ -84,8 +84,8 @@ public:
 	void action_selected(const String p_action);
 	void _on_remove_pressed(const String p_action, const String p_for_io_path);
 
-	virtual void _update_interaction_profile() override;
-	virtual void _theme_changed() override;
+	void _update_interaction_profile() override;
+	void _theme_changed() override;
 	OpenXRInteractionProfileEditor(Ref<OpenXRActionMap> p_action_map, Ref<OpenXRInteractionProfile> p_interaction_profile);
 };
 

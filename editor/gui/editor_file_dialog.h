@@ -239,7 +239,7 @@ private:
 
 	void _invalidate();
 
-	virtual void _post_popup() override;
+	void _post_popup() override;
 
 	void _save_to_recent();
 	// Callback function is callback(String p_path,Ref<Texture2D> preview,Variant udata) preview null if could not load.
@@ -248,7 +248,7 @@ private:
 	void _thumbnail_done(const String &p_path, const Ref<Texture2D> &p_preview, const Ref<Texture2D> &p_small_preview, const Variant &p_udata);
 	void _request_single_thumbnail(const String &p_path);
 
-	virtual void shortcut_input(const Ref<InputEvent> &p_event) override;
+	void shortcut_input(const Ref<InputEvent> &p_event) override;
 
 	bool _is_open_should_be_disabled();
 
@@ -263,7 +263,7 @@ private:
 	void _option_changed_item_selected(int p_idx, const String &p_name);
 
 protected:
-	virtual void _update_theme_item_cache() override;
+	void _update_theme_item_cache() override;
 
 	void _notification(int p_what);
 	bool _set(const StringName &p_name, const Variant &p_value) { return property_helper.property_set_value(p_name, p_value); }
@@ -276,8 +276,8 @@ protected:
 public:
 	Color get_dir_icon_color(const String &p_dir_path);
 
-	virtual void set_visible(bool p_visible) override;
-	virtual void popup(const Rect2i &p_rect = Rect2i()) override;
+	void set_visible(bool p_visible) override;
+	void popup(const Rect2i &p_rect = Rect2i()) override;
 
 	// Public for use with callable_mp.
 	void _file_submitted(const String &p_file);
@@ -340,7 +340,7 @@ public:
 	void add_side_menu(Control *p_menu, const String &p_title = "");
 
 	EditorFileDialog();
-	~EditorFileDialog();
+	~EditorFileDialog() override;
 };
 
 VARIANT_ENUM_CAST(EditorFileDialog::FileMode);

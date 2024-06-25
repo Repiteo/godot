@@ -138,42 +138,42 @@ protected:
 	GDVIRTUAL2RC(Vector3, _get_closest_point_to_object_volume, RID, const Vector3 &)
 
 public:
-	virtual bool intersect_ray(const RayParameters &p_parameters, RayResult &r_result) override {
+	bool intersect_ray(const RayParameters &p_parameters, RayResult &r_result) override {
 		exclude = &p_parameters.exclude;
 		bool ret = false;
 		GDVIRTUAL_REQUIRED_CALL(_intersect_ray, p_parameters.from, p_parameters.to, p_parameters.collision_mask, p_parameters.collide_with_bodies, p_parameters.collide_with_areas, p_parameters.hit_from_inside, p_parameters.hit_back_faces, p_parameters.pick_ray, &r_result, ret);
 		exclude = nullptr;
 		return ret;
 	}
-	virtual int intersect_point(const PointParameters &p_parameters, ShapeResult *r_results, int p_result_max) override {
+	int intersect_point(const PointParameters &p_parameters, ShapeResult *r_results, int p_result_max) override {
 		exclude = &p_parameters.exclude;
 		int ret = false;
 		GDVIRTUAL_REQUIRED_CALL(_intersect_point, p_parameters.position, p_parameters.collision_mask, p_parameters.collide_with_bodies, p_parameters.collide_with_areas, r_results, p_result_max, ret);
 		exclude = nullptr;
 		return ret;
 	}
-	virtual int intersect_shape(const ShapeParameters &p_parameters, ShapeResult *r_results, int p_result_max) override {
+	int intersect_shape(const ShapeParameters &p_parameters, ShapeResult *r_results, int p_result_max) override {
 		exclude = &p_parameters.exclude;
 		int ret = 0;
 		GDVIRTUAL_REQUIRED_CALL(_intersect_shape, p_parameters.shape_rid, p_parameters.transform, p_parameters.motion, p_parameters.margin, p_parameters.collision_mask, p_parameters.collide_with_bodies, p_parameters.collide_with_areas, r_results, p_result_max, ret);
 		exclude = nullptr;
 		return ret;
 	}
-	virtual bool cast_motion(const ShapeParameters &p_parameters, real_t &p_closest_safe, real_t &p_closest_unsafe, ShapeRestInfo *r_info = nullptr) override {
+	bool cast_motion(const ShapeParameters &p_parameters, real_t &p_closest_safe, real_t &p_closest_unsafe, ShapeRestInfo *r_info = nullptr) override {
 		exclude = &p_parameters.exclude;
 		bool ret = false;
 		GDVIRTUAL_REQUIRED_CALL(_cast_motion, p_parameters.shape_rid, p_parameters.transform, p_parameters.motion, p_parameters.margin, p_parameters.collision_mask, p_parameters.collide_with_bodies, p_parameters.collide_with_areas, &p_closest_safe, &p_closest_unsafe, r_info, ret);
 		exclude = nullptr;
 		return ret;
 	}
-	virtual bool collide_shape(const ShapeParameters &p_parameters, Vector3 *r_results, int p_result_max, int &r_result_count) override {
+	bool collide_shape(const ShapeParameters &p_parameters, Vector3 *r_results, int p_result_max, int &r_result_count) override {
 		exclude = &p_parameters.exclude;
 		bool ret = false;
 		GDVIRTUAL_REQUIRED_CALL(_collide_shape, p_parameters.shape_rid, p_parameters.transform, p_parameters.motion, p_parameters.margin, p_parameters.collision_mask, p_parameters.collide_with_bodies, p_parameters.collide_with_areas, r_results, p_result_max, &r_result_count, ret);
 		exclude = nullptr;
 		return ret;
 	}
-	virtual bool rest_info(const ShapeParameters &p_parameters, ShapeRestInfo *r_info) override {
+	bool rest_info(const ShapeParameters &p_parameters, ShapeRestInfo *r_info) override {
 		exclude = &p_parameters.exclude;
 		bool ret = false;
 		GDVIRTUAL_REQUIRED_CALL(_rest_info, p_parameters.shape_rid, p_parameters.transform, p_parameters.motion, p_parameters.margin, p_parameters.collision_mask, p_parameters.collide_with_bodies, p_parameters.collide_with_areas, r_info, ret);
@@ -181,7 +181,7 @@ public:
 		return ret;
 	}
 
-	virtual Vector3 get_closest_point_to_object_volume(RID p_object, const Vector3 p_point) const override {
+	Vector3 get_closest_point_to_object_volume(RID p_object, const Vector3 p_point) const override {
 		Vector3 ret;
 		GDVIRTUAL_REQUIRED_CALL(_get_closest_point_to_object_volume, p_object, p_point, ret);
 		return ret;
@@ -521,7 +521,7 @@ public:
 	/* MISC */
 
 	GDVIRTUAL1(_free_rid, RID)
-	virtual void free(RID p_rid) override {
+	void free(RID p_rid) override {
 		GDVIRTUAL_REQUIRED_CALL(_free_rid, p_rid);
 	}
 
@@ -538,7 +538,7 @@ public:
 	EXBIND1R(int, get_process_info, ProcessInfo)
 
 	PhysicsServer3DExtension();
-	~PhysicsServer3DExtension();
+	~PhysicsServer3DExtension() override;
 };
 
 #endif // PHYSICS_SERVER_3D_EXTENSION_H

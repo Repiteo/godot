@@ -158,7 +158,7 @@ public:
 	void get_data(Vector<Vector2> &r_vertices, Vector<Vector<int>> &r_polygons);
 
 	NavigationPolygon() {}
-	~NavigationPolygon() {}
+	~NavigationPolygon() override {}
 };
 
 VARIANT_ENUM_CAST(NavigationPolygon::ParsedGeometryType);

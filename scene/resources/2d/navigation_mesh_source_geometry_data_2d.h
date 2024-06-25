@@ -104,7 +104,7 @@ public:
 	void get_data(Vector<Vector<Vector2>> &r_traversable_outlines, Vector<Vector<Vector2>> &r_obstruction_outlines, Vector<ProjectedObstruction> &r_projected_obstructions);
 
 	NavigationMeshSourceGeometryData2D() {}
-	~NavigationMeshSourceGeometryData2D() { clear(); }
+	~NavigationMeshSourceGeometryData2D() override { clear(); }
 };
 
 #endif // NAVIGATION_MESH_SOURCE_GEOMETRY_DATA_2D_H

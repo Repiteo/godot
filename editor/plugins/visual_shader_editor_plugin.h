@@ -71,7 +71,7 @@ class VSGraphNode : public GraphNode {
 
 protected:
 	void _draw_port(int p_slot_index, Point2i p_pos, bool p_left, const Color &p_color, const Color &p_rim_color);
-	virtual void draw_port(int p_slot_index, Point2i p_pos, bool p_left, const Color &p_color) override;
+	void draw_port(int p_slot_index, Point2i p_pos, bool p_left, const Color &p_color) override;
 };
 
 class VSRerouteNode : public VSGraphNode {
@@ -84,7 +84,7 @@ class VSRerouteNode : public VSGraphNode {
 protected:
 	void _notification(int p_what);
 
-	virtual void draw_port(int p_slot_index, Point2i p_pos, bool p_left, const Color &p_color) override;
+	void draw_port(int p_slot_index, Point2i p_pos, bool p_left, const Color &p_color) override;
 
 public:
 	VSRerouteNode();
@@ -176,7 +176,7 @@ public:
 	VisualShader::Type get_shader_type() const;
 
 	VisualShaderGraphPlugin();
-	~VisualShaderGraphPlugin();
+	~VisualShaderGraphPlugin() override;
 };
 
 class VisualShaderEditedProperty : public RefCounted {
@@ -607,7 +607,7 @@ public:
 	Dictionary get_custom_node_data(Ref<VisualShaderNodeCustom> &p_custom_node);
 	void update_custom_type(const Ref<Resource> &p_resource);
 
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
 	void edit(VisualShader *p_visual_shader);
 	Ref<VisualShader> get_visual_shader() const { return visual_shader; }
@@ -621,7 +621,7 @@ class VisualShaderNodePluginDefault : public VisualShaderNodePlugin {
 	GDCLASS(VisualShaderNodePluginDefault, VisualShaderNodePlugin);
 
 public:
-	virtual Control *create_editor(const Ref<Resource> &p_parent_resource, const Ref<VisualShaderNode> &p_node) override;
+	Control *create_editor(const Ref<Resource> &p_parent_resource, const Ref<VisualShaderNode> &p_node) override;
 };
 
 class EditorPropertyVisualShaderMode : public EditorProperty {
@@ -635,7 +635,7 @@ protected:
 
 public:
 	void setup(const Vector<String> &p_options);
-	virtual void update_property() override;
+	void update_property() override;
 	void set_option_button_clip(bool p_enable);
 	EditorPropertyVisualShaderMode();
 };
@@ -644,8 +644,8 @@ class EditorInspectorVisualShaderModePlugin : public EditorInspectorPlugin {
 	GDCLASS(EditorInspectorVisualShaderModePlugin, EditorInspectorPlugin);
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual bool parse_property(Object *p_object, const Variant::Type p_type, const String &p_path, const PropertyHint p_hint, const String &p_hint_text, const BitField<PropertyUsageFlags> p_usage, const bool p_wide = false) override;
+	bool can_handle(Object *p_object) override;
+	bool parse_property(Object *p_object, const Variant::Type p_type, const String &p_path, const PropertyHint p_hint, const String &p_hint_text, const BitField<PropertyUsageFlags> p_usage, const bool p_wide = false) override;
 };
 
 class VisualShaderNodePortPreview : public Control {
@@ -661,7 +661,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 	void setup(const Ref<VisualShader> &p_shader, VisualShader::Type p_type, int p_node, int p_port, bool p_is_valid);
 };
 
@@ -669,9 +669,9 @@ class VisualShaderConversionPlugin : public EditorResourceConversionPlugin {
 	GDCLASS(VisualShaderConversionPlugin, EditorResourceConversionPlugin);
 
 public:
-	virtual String converts_to() const override;
-	virtual bool handles(const Ref<Resource> &p_resource) const override;
-	virtual Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
+	String converts_to() const override;
+	bool handles(const Ref<Resource> &p_resource) const override;
+	Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
 };
 
 #endif // VISUAL_SHADER_EDITOR_PLUGIN_H

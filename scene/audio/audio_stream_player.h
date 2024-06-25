@@ -111,7 +111,7 @@ public:
 	void set_playback_type(AudioServer::PlaybackType p_playback_type);
 
 	AudioStreamPlayer();
-	~AudioStreamPlayer();
+	~AudioStreamPlayer() override;
 };
 
 VARIANT_ENUM_CAST(AudioStreamPlayer::MixTarget)

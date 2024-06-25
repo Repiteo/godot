@@ -65,7 +65,7 @@ protected:
 
 public:
 	NavigationLink3D();
-	~NavigationLink3D();
+	~NavigationLink3D() override;
 
 	RID get_rid() const;
 

@@ -126,7 +126,7 @@ public:
 	};
 
 protected:
-	virtual void _update_theme_item_cache() override;
+	void _update_theme_item_cache() override;
 
 	void _notification(int p_what);
 	static void _bind_methods();
@@ -241,7 +241,7 @@ private:
 		Variant key;
 		String tooltip;
 		ItemImage() { type = ITEM_IMAGE; }
-		~ItemImage() {
+		~ItemImage() override {
 			if (image.is_valid()) {
 				RichTextLabel *owner_rtl = Object::cast_to<RichTextLabel>(ObjectDB::get_instance(owner));
 				if (owner_rtl) {
@@ -437,7 +437,7 @@ private:
 
 		ItemCustomFX();
 
-		virtual ~ItemCustomFX();
+		~ItemCustomFX() override;
 	};
 
 	struct ItemContext : public Item {
@@ -600,8 +600,8 @@ private:
 
 	_FORCE_INLINE_ float _calculate_line_vertical_offset(const Line &line) const;
 
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
-	virtual String get_tooltip(const Point2 &p_pos) const override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
+	String get_tooltip(const Point2 &p_pos) const override;
 	Item *_get_next_item(Item *p_item, bool p_free = false) const;
 	Item *_get_prev_item(Item *p_item, bool p_free = false) const;
 
@@ -765,8 +765,8 @@ public:
 
 	VScrollBar *get_v_scroll_bar() { return vscroll; }
 
-	virtual CursorShape get_cursor_shape(const Point2 &p_pos) const override;
-	virtual Variant get_drag_data(const Point2 &p_point) override;
+	CursorShape get_cursor_shape(const Point2 &p_pos) const override;
+	Variant get_drag_data(const Point2 &p_point) override;
 
 	void set_selection_enabled(bool p_enabled);
 	bool is_selection_enabled() const;
@@ -841,10 +841,10 @@ public:
 
 	void install_effect(const Variant effect);
 
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
 	RichTextLabel(const String &p_text = String());
-	~RichTextLabel();
+	~RichTextLabel() override;
 };
 
 VARIANT_ENUM_CAST(RichTextLabel::ListType);

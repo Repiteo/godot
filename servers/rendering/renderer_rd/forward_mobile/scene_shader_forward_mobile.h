@@ -140,15 +140,15 @@ public:
 		uint64_t last_pass = 0;
 		uint32_t index = 0;
 
-		virtual void set_code(const String &p_Code);
-		virtual bool is_animated() const;
-		virtual bool casts_shadows() const;
-		virtual RS::ShaderNativeSourceCode get_native_source_code() const;
+		void set_code(const String &p_Code) override;
+		bool is_animated() const override;
+		bool casts_shadows() const override;
+		RS::ShaderNativeSourceCode get_native_source_code() const override;
 
 		SelfList<ShaderData> shader_list_element;
 
 		ShaderData();
-		virtual ~ShaderData();
+		~ShaderData() override;
 	};
 
 	RendererRD::MaterialStorage::ShaderData *_create_shader_func();
@@ -163,10 +163,10 @@ public:
 		uint32_t index = 0;
 		RID next_pass;
 		uint8_t priority;
-		virtual void set_render_priority(int p_priority);
-		virtual void set_next_pass(RID p_pass);
-		virtual bool update_parameters(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty);
-		virtual ~MaterialData();
+		void set_render_priority(int p_priority) override;
+		void set_next_pass(RID p_pass) override;
+		bool update_parameters(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty) override;
+		~MaterialData() override;
 	};
 
 	SelfList<ShaderData>::List shader_list;

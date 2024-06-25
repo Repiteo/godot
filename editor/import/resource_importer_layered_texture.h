@@ -54,7 +54,7 @@ public:
 	bool mipmaps = true;
 	bool high_quality = false;
 	Image::UsedChannels used_channels = Image::USED_CHANNELS_RGBA;
-	virtual ~LayeredTextureImport() {}
+	~LayeredTextureImport() override {}
 };
 
 class ResourceImporterLayeredTexture : public ResourceImporter {
@@ -90,11 +90,11 @@ public:
 	void _check_compress_ctex(const String &p_source_file, Ref<LayeredTextureImport> r_texture_import);
 
 	static ResourceImporterLayeredTexture *get_singleton() { return singleton; }
-	virtual String get_importer_name() const override;
-	virtual String get_visible_name() const override;
-	virtual void get_recognized_extensions(List<String> *p_extensions) const override;
-	virtual String get_save_extension() const override;
-	virtual String get_resource_type() const override;
+	String get_importer_name() const override;
+	String get_visible_name() const override;
+	void get_recognized_extensions(List<String> *p_extensions) const override;
+	String get_save_extension() const override;
+	String get_resource_type() const override;
 
 	enum CompressMode {
 		COMPRESS_LOSSLESS,
@@ -104,23 +104,23 @@ public:
 		COMPRESS_BASIS_UNIVERSAL
 	};
 
-	virtual int get_preset_count() const override;
-	virtual String get_preset_name(int p_idx) const override;
+	int get_preset_count() const override;
+	String get_preset_name(int p_idx) const override;
 
-	virtual void get_import_options(const String &p_path, List<ImportOption> *r_options, int p_preset = 0) const override;
-	virtual bool get_option_visibility(const String &p_path, const String &p_option, const HashMap<StringName, Variant> &p_options) const override;
+	void get_import_options(const String &p_path, List<ImportOption> *r_options, int p_preset = 0) const override;
+	bool get_option_visibility(const String &p_path, const String &p_option, const HashMap<StringName, Variant> &p_options) const override;
 
 	void _save_tex(Vector<Ref<Image>> p_images, const String &p_to_path, int p_compress_mode, float p_lossy, Image::CompressMode p_vram_compression, Image::CompressSource p_csource, Image::UsedChannels used_channels, bool p_mipmaps, bool p_force_po2);
 
-	virtual Error import(const String &p_source_file, const String &p_save_path, const HashMap<StringName, Variant> &p_options, List<String> *r_platform_variants, List<String> *r_gen_files = nullptr, Variant *r_metadata = nullptr) override;
+	Error import(const String &p_source_file, const String &p_save_path, const HashMap<StringName, Variant> &p_options, List<String> *r_platform_variants, List<String> *r_gen_files = nullptr, Variant *r_metadata = nullptr) override;
 
-	virtual bool are_import_settings_valid(const String &p_path) const override;
-	virtual String get_import_settings_string() const override;
+	bool are_import_settings_valid(const String &p_path) const override;
+	String get_import_settings_string() const override;
 
 	void set_mode(Mode p_mode) { mode = p_mode; }
 
 	ResourceImporterLayeredTexture(bool p_singleton = false);
-	~ResourceImporterLayeredTexture();
+	~ResourceImporterLayeredTexture() override;
 };
 
 #endif // RESOURCE_IMPORTER_LAYERED_TEXTURE_H

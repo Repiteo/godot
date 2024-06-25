@@ -71,21 +71,21 @@ private:
 	static void _on_error(void *p_obj);
 
 public:
-	virtual ConnectionState get_connection_state() const override;
-	virtual GatheringState get_gathering_state() const override;
-	virtual SignalingState get_signaling_state() const override;
+	ConnectionState get_connection_state() const override;
+	GatheringState get_gathering_state() const override;
+	SignalingState get_signaling_state() const override;
 
-	virtual Error initialize(Dictionary configuration = Dictionary()) override;
-	virtual Ref<WebRTCDataChannel> create_data_channel(String p_channel_name, Dictionary p_channel_config = Dictionary()) override;
-	virtual Error create_offer() override;
-	virtual Error set_remote_description(String type, String sdp) override;
-	virtual Error set_local_description(String type, String sdp) override;
-	virtual Error add_ice_candidate(String sdpMidName, int sdpMlineIndexName, String sdpName) override;
-	virtual Error poll() override;
-	virtual void close() override;
+	Error initialize(Dictionary configuration = Dictionary()) override;
+	Ref<WebRTCDataChannel> create_data_channel(String p_channel_name, Dictionary p_channel_config = Dictionary()) override;
+	Error create_offer() override;
+	Error set_remote_description(String type, String sdp) override;
+	Error set_local_description(String type, String sdp) override;
+	Error add_ice_candidate(String sdpMidName, int sdpMlineIndexName, String sdpName) override;
+	Error poll() override;
+	void close() override;
 
 	WebRTCPeerConnectionJS();
-	~WebRTCPeerConnectionJS();
+	~WebRTCPeerConnectionJS() override;
 };
 
 #endif

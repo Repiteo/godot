@@ -461,54 +461,54 @@ public:
 
 		RID get_voxel_gi_buffer();
 
-		virtual void configure(RenderSceneBuffersRD *p_render_buffers) override{};
-		virtual void free_data() override;
+		void configure(RenderSceneBuffersRD *p_render_buffers) override{};
+		void free_data() override;
 	};
 
 	/* VOXEL GI API */
 
 	bool owns_voxel_gi(RID p_rid) { return voxel_gi_owner.owns(p_rid); };
 
-	virtual RID voxel_gi_allocate() override;
-	virtual void voxel_gi_free(RID p_voxel_gi) override;
-	virtual void voxel_gi_initialize(RID p_voxel_gi) override;
+	RID voxel_gi_allocate() override;
+	void voxel_gi_free(RID p_voxel_gi) override;
+	void voxel_gi_initialize(RID p_voxel_gi) override;
 
-	virtual void voxel_gi_allocate_data(RID p_voxel_gi, const Transform3D &p_to_cell_xform, const AABB &p_aabb, const Vector3i &p_octree_size, const Vector<uint8_t> &p_octree_cells, const Vector<uint8_t> &p_data_cells, const Vector<uint8_t> &p_distance_field, const Vector<int> &p_level_counts) override;
+	void voxel_gi_allocate_data(RID p_voxel_gi, const Transform3D &p_to_cell_xform, const AABB &p_aabb, const Vector3i &p_octree_size, const Vector<uint8_t> &p_octree_cells, const Vector<uint8_t> &p_data_cells, const Vector<uint8_t> &p_distance_field, const Vector<int> &p_level_counts) override;
 
-	virtual AABB voxel_gi_get_bounds(RID p_voxel_gi) const override;
-	virtual Vector3i voxel_gi_get_octree_size(RID p_voxel_gi) const override;
-	virtual Vector<uint8_t> voxel_gi_get_octree_cells(RID p_voxel_gi) const override;
-	virtual Vector<uint8_t> voxel_gi_get_data_cells(RID p_voxel_gi) const override;
-	virtual Vector<uint8_t> voxel_gi_get_distance_field(RID p_voxel_gi) const override;
+	AABB voxel_gi_get_bounds(RID p_voxel_gi) const override;
+	Vector3i voxel_gi_get_octree_size(RID p_voxel_gi) const override;
+	Vector<uint8_t> voxel_gi_get_octree_cells(RID p_voxel_gi) const override;
+	Vector<uint8_t> voxel_gi_get_data_cells(RID p_voxel_gi) const override;
+	Vector<uint8_t> voxel_gi_get_distance_field(RID p_voxel_gi) const override;
 
-	virtual Vector<int> voxel_gi_get_level_counts(RID p_voxel_gi) const override;
-	virtual Transform3D voxel_gi_get_to_cell_xform(RID p_voxel_gi) const override;
+	Vector<int> voxel_gi_get_level_counts(RID p_voxel_gi) const override;
+	Transform3D voxel_gi_get_to_cell_xform(RID p_voxel_gi) const override;
 
-	virtual void voxel_gi_set_dynamic_range(RID p_voxel_gi, float p_range) override;
-	virtual float voxel_gi_get_dynamic_range(RID p_voxel_gi) const override;
+	void voxel_gi_set_dynamic_range(RID p_voxel_gi, float p_range) override;
+	float voxel_gi_get_dynamic_range(RID p_voxel_gi) const override;
 
-	virtual void voxel_gi_set_propagation(RID p_voxel_gi, float p_range) override;
-	virtual float voxel_gi_get_propagation(RID p_voxel_gi) const override;
+	void voxel_gi_set_propagation(RID p_voxel_gi, float p_range) override;
+	float voxel_gi_get_propagation(RID p_voxel_gi) const override;
 
-	virtual void voxel_gi_set_energy(RID p_voxel_gi, float p_energy) override;
-	virtual float voxel_gi_get_energy(RID p_voxel_gi) const override;
+	void voxel_gi_set_energy(RID p_voxel_gi, float p_energy) override;
+	float voxel_gi_get_energy(RID p_voxel_gi) const override;
 
-	virtual void voxel_gi_set_baked_exposure_normalization(RID p_voxel_gi, float p_baked_exposure) override;
-	virtual float voxel_gi_get_baked_exposure_normalization(RID p_voxel_gi) const override;
+	void voxel_gi_set_baked_exposure_normalization(RID p_voxel_gi, float p_baked_exposure) override;
+	float voxel_gi_get_baked_exposure_normalization(RID p_voxel_gi) const override;
 
-	virtual void voxel_gi_set_bias(RID p_voxel_gi, float p_bias) override;
-	virtual float voxel_gi_get_bias(RID p_voxel_gi) const override;
+	void voxel_gi_set_bias(RID p_voxel_gi, float p_bias) override;
+	float voxel_gi_get_bias(RID p_voxel_gi) const override;
 
-	virtual void voxel_gi_set_normal_bias(RID p_voxel_gi, float p_range) override;
-	virtual float voxel_gi_get_normal_bias(RID p_voxel_gi) const override;
+	void voxel_gi_set_normal_bias(RID p_voxel_gi, float p_range) override;
+	float voxel_gi_get_normal_bias(RID p_voxel_gi) const override;
 
-	virtual void voxel_gi_set_interior(RID p_voxel_gi, bool p_enable) override;
-	virtual bool voxel_gi_is_interior(RID p_voxel_gi) const override;
+	void voxel_gi_set_interior(RID p_voxel_gi, bool p_enable) override;
+	bool voxel_gi_is_interior(RID p_voxel_gi) const override;
 
-	virtual void voxel_gi_set_use_two_bounces(RID p_voxel_gi, bool p_enable) override;
-	virtual bool voxel_gi_is_using_two_bounces(RID p_voxel_gi) const override;
+	void voxel_gi_set_use_two_bounces(RID p_voxel_gi, bool p_enable) override;
+	bool voxel_gi_is_using_two_bounces(RID p_voxel_gi) const override;
 
-	virtual uint32_t voxel_gi_get_version(RID p_probe) const override;
+	uint32_t voxel_gi_get_version(RID p_probe) const override;
 	uint32_t voxel_gi_get_data_version(RID p_probe);
 
 	RID voxel_gi_get_octree_buffer(RID p_voxel_gi) const;
@@ -675,9 +675,9 @@ public:
 		int32_t cascade_dynamic_light_count[SDFGI::MAX_CASCADES]; //used dynamically
 		RID integrate_sky_uniform_set;
 
-		virtual void configure(RenderSceneBuffersRD *p_render_buffers) override{};
-		virtual void free_data() override;
-		~SDFGI();
+		void configure(RenderSceneBuffersRD *p_render_buffers) override{};
+		void free_data() override;
+		~SDFGI() override;
 
 		void create(RID p_env, const Vector3 &p_world_position, uint32_t p_requested_history_size, GI *p_gi);
 		void update(RID p_env, const Vector3 &p_world_position);
@@ -710,7 +710,7 @@ public:
 
 	int sdfgi_get_lightprobe_octahedron_size() const { return SDFGI::LIGHTPROBE_OCT_SIZE; }
 
-	virtual void sdfgi_reset() override;
+	void sdfgi_reset() override;
 
 	struct SDFGIData {
 		float grid_size[3];
@@ -811,7 +811,7 @@ public:
 	RID pipelines[SHADER_SPECIALIZATION_VARIATIONS][MODE_MAX];
 
 	GI();
-	~GI();
+	~GI() override;
 
 	void init(RendererRD::SkyRD *p_sky);
 	void free();

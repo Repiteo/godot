@@ -180,13 +180,13 @@ public:
 
 	PackedInt32Array get_transition_list() const;
 
-	virtual Ref<AudioStreamPlayback> instantiate_playback() override;
-	virtual String get_stream_name() const override;
-	virtual double get_length() const override { return 0; }
+	Ref<AudioStreamPlayback> instantiate_playback() override;
+	String get_stream_name() const override;
+	double get_length() const override { return 0; }
 	AudioStreamInteractive();
 
 protected:
-	virtual void get_parameter_list(List<Parameter> *r_parameters) override;
+	void get_parameter_list(List<Parameter> *r_parameters) override;
 
 	static void _bind_methods();
 	void _validate_property(PropertyInfo &r_property) const;
@@ -247,24 +247,24 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual void start(double p_from_pos = 0.0) override;
-	virtual void stop() override;
-	virtual bool is_playing() const override;
-	virtual int get_loop_count() const override; // times it looped
-	virtual double get_playback_position() const override;
-	virtual void seek(double p_time) override;
-	virtual int mix(AudioFrame *p_buffer, float p_rate_scale, int p_frames) override;
+	void start(double p_from_pos = 0.0) override;
+	void stop() override;
+	bool is_playing() const override;
+	int get_loop_count() const override; // times it looped
+	double get_playback_position() const override;
+	void seek(double p_time) override;
+	int mix(AudioFrame *p_buffer, float p_rate_scale, int p_frames) override;
 
-	virtual void tag_used_streams() override;
+	void tag_used_streams() override;
 
 	void switch_to_clip_by_name(const StringName &p_name);
 	void switch_to_clip(int p_index);
 
-	virtual void set_parameter(const StringName &p_name, const Variant &p_value) override;
-	virtual Variant get_parameter(const StringName &p_name) const override;
+	void set_parameter(const StringName &p_name, const Variant &p_value) override;
+	Variant get_parameter(const StringName &p_name) const override;
 
 	AudioStreamPlaybackInteractive();
-	~AudioStreamPlaybackInteractive();
+	~AudioStreamPlaybackInteractive() override;
 };
 
 #endif // AUDIO_STREAM_INTERACTIVE_H

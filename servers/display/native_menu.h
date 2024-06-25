@@ -151,7 +151,7 @@ public:
 		singleton = this;
 	}
 
-	~NativeMenu() {
+	~NativeMenu() override {
 		singleton = nullptr;
 	}
 };

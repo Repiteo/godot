@@ -230,7 +230,7 @@ protected:
 #endif
 
 public:
-	virtual RID get_rid() const override;
+	RID get_rid() const override;
 
 	// Background
 	void set_background(BGMode p_bg);
@@ -443,7 +443,7 @@ public:
 	Ref<Texture> get_adjustment_color_correction() const;
 
 	Environment();
-	~Environment();
+	~Environment() override;
 };
 
 VARIANT_ENUM_CAST(Environment::BGMode)

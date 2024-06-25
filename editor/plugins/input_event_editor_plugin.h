@@ -63,15 +63,15 @@ class EditorInspectorPluginInputEvent : public EditorInspectorPlugin {
 	GDCLASS(EditorInspectorPluginInputEvent, EditorInspectorPlugin);
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual void parse_begin(Object *p_object) override;
+	bool can_handle(Object *p_object) override;
+	void parse_begin(Object *p_object) override;
 };
 
 class InputEventEditorPlugin : public EditorPlugin {
 	GDCLASS(InputEventEditorPlugin, EditorPlugin);
 
 public:
-	virtual String get_name() const override { return "InputEvent"; }
+	String get_name() const override { return "InputEvent"; }
 
 	InputEventEditorPlugin();
 };

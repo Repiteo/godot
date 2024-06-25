@@ -151,27 +151,27 @@ class EditorExportPlatformIOS : public EditorExportPlatform {
 	bool is_package_name_valid(const String &p_package, String *r_error = nullptr) const;
 
 protected:
-	virtual void get_preset_features(const Ref<EditorExportPreset> &p_preset, List<String> *r_features) const override;
-	virtual void get_export_options(List<ExportOption> *r_options) const override;
-	virtual bool get_export_option_visibility(const EditorExportPreset *p_preset, const String &p_option) const override;
-	virtual String get_export_option_warning(const EditorExportPreset *p_preset, const StringName &p_name) const override;
+	void get_preset_features(const Ref<EditorExportPreset> &p_preset, List<String> *r_features) const override;
+	void get_export_options(List<ExportOption> *r_options) const override;
+	bool get_export_option_visibility(const EditorExportPreset *p_preset, const String &p_option) const override;
+	String get_export_option_warning(const EditorExportPreset *p_preset, const StringName &p_name) const override;
 
 	void _notification(int p_what);
 
 public:
-	virtual String get_name() const override { return "iOS"; }
-	virtual String get_os_name() const override { return "iOS"; }
-	virtual Ref<Texture2D> get_logo() const override { return logo; }
-	virtual Ref<Texture2D> get_run_icon() const override { return run_icon; }
+	String get_name() const override { return "iOS"; }
+	String get_os_name() const override { return "iOS"; }
+	Ref<Texture2D> get_logo() const override { return logo; }
+	Ref<Texture2D> get_run_icon() const override { return run_icon; }
 
-	virtual int get_options_count() const override;
-	virtual String get_options_tooltip() const override;
-	virtual Ref<ImageTexture> get_option_icon(int p_index) const override;
-	virtual String get_option_label(int p_index) const override;
-	virtual String get_option_tooltip(int p_index) const override;
-	virtual Error run(const Ref<EditorExportPreset> &p_preset, int p_device, int p_debug_flags) override;
+	int get_options_count() const override;
+	String get_options_tooltip() const override;
+	Ref<ImageTexture> get_option_icon(int p_index) const override;
+	String get_option_label(int p_index) const override;
+	String get_option_tooltip(int p_index) const override;
+	Error run(const Ref<EditorExportPreset> &p_preset, int p_device, int p_debug_flags) override;
 
-	virtual bool poll_export() override {
+	bool poll_export() override {
 		bool dc = devices_changed.is_set();
 		if (dc) {
 			// don't clear unless we're reporting true, to avoid race
@@ -180,7 +180,7 @@ public:
 		return dc;
 	}
 
-	virtual bool should_update_export_options() override {
+	bool should_update_export_options() override {
 		bool export_options_changed = plugins_changed.is_set();
 		if (export_options_changed) {
 			// don't clear unless we're reporting true, to avoid race
@@ -189,7 +189,7 @@ public:
 		return export_options_changed;
 	}
 
-	virtual List<String> get_binary_extensions(const Ref<EditorExportPreset> &p_preset) const override {
+	List<String> get_binary_extensions(const Ref<EditorExportPreset> &p_preset) const override {
 		List<String> list;
 		if (p_preset.is_valid()) {
 			bool project_only = p_preset->get("application/export_project_only");
@@ -202,21 +202,21 @@ public:
 		return list;
 	}
 
-	virtual Error export_project(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, int p_flags = 0) override;
+	Error export_project(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, int p_flags = 0) override;
 
-	virtual bool has_valid_export_configuration(const Ref<EditorExportPreset> &p_preset, String &r_error, bool &r_missing_templates, bool p_debug = false) const override;
-	virtual bool has_valid_project_configuration(const Ref<EditorExportPreset> &p_preset, String &r_error) const override;
+	bool has_valid_export_configuration(const Ref<EditorExportPreset> &p_preset, String &r_error, bool &r_missing_templates, bool p_debug = false) const override;
+	bool has_valid_project_configuration(const Ref<EditorExportPreset> &p_preset, String &r_error) const override;
 
-	virtual void get_platform_features(List<String> *r_features) const override {
+	void get_platform_features(List<String> *r_features) const override {
 		r_features->push_back("mobile");
 		r_features->push_back("ios");
 	}
 
-	virtual void resolve_platform_feature_priorities(const Ref<EditorExportPreset> &p_preset, HashSet<String> &p_features) override {
+	void resolve_platform_feature_priorities(const Ref<EditorExportPreset> &p_preset, HashSet<String> &p_features) override {
 	}
 
 	EditorExportPlatformIOS();
-	~EditorExportPlatformIOS();
+	~EditorExportPlatformIOS() override;
 
 	/// List the gdip files in the directory specified by the p_path parameter.
 	static Vector<String> list_plugin_config_files(const String &p_path, bool p_check_directories) {

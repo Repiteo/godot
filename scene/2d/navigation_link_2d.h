@@ -58,8 +58,8 @@ protected:
 
 public:
 #ifdef TOOLS_ENABLED
-	virtual Rect2 _edit_get_rect() const override;
-	virtual bool _edit_is_selected_on_click(const Point2 &p_point, double p_tolerance) const override;
+	Rect2 _edit_get_rect() const override;
+	bool _edit_is_selected_on_click(const Point2 &p_point, double p_tolerance) const override;
 #endif
 	RID get_rid() const;
 
@@ -96,7 +96,7 @@ public:
 	PackedStringArray get_configuration_warnings() const override;
 
 	NavigationLink2D();
-	~NavigationLink2D();
+	~NavigationLink2D() override;
 };
 
 #endif // NAVIGATION_LINK_2D_H

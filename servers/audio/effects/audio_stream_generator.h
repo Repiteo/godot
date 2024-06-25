@@ -50,11 +50,11 @@ public:
 	void set_buffer_length(float p_seconds);
 	float get_buffer_length() const;
 
-	virtual Ref<AudioStreamPlayback> instantiate_playback() override;
-	virtual String get_stream_name() const override;
+	Ref<AudioStreamPlayback> instantiate_playback() override;
+	String get_stream_name() const override;
 
-	virtual double get_length() const override;
-	virtual bool is_monophonic() const override;
+	double get_length() const override;
+	bool is_monophonic() const override;
 	AudioStreamGenerator();
 };
 
@@ -68,20 +68,20 @@ class AudioStreamGeneratorPlayback : public AudioStreamPlaybackResampled {
 	AudioStreamGenerator *generator = nullptr;
 
 protected:
-	virtual int _mix_internal(AudioFrame *p_buffer, int p_frames) override;
-	virtual float get_stream_sampling_rate() override;
+	int _mix_internal(AudioFrame *p_buffer, int p_frames) override;
+	float get_stream_sampling_rate() override;
 
 	static void _bind_methods();
 
 public:
-	virtual void start(double p_from_pos = 0.0) override;
-	virtual void stop() override;
-	virtual bool is_playing() const override;
+	void start(double p_from_pos = 0.0) override;
+	void stop() override;
+	bool is_playing() const override;
 
-	virtual int get_loop_count() const override; //times it looped
+	int get_loop_count() const override; //times it looped
 
-	virtual double get_playback_position() const override;
-	virtual void seek(double p_time) override;
+	double get_playback_position() const override;
+	void seek(double p_time) override;
 
 	bool push_frame(const Vector2 &p_frame);
 	bool can_push_buffer(int p_frames) const;
@@ -89,7 +89,7 @@ public:
 	int get_frames_available() const;
 	int get_skips() const;
 
-	virtual void tag_used_streams() override;
+	void tag_used_streams() override;
 
 	void clear_buffer();
 

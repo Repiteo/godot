@@ -48,10 +48,10 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
-	virtual Vector<int> get_allowed_size_flags_horizontal() const override;
-	virtual Vector<int> get_allowed_size_flags_vertical() const override;
+	Vector<int> get_allowed_size_flags_horizontal() const override;
+	Vector<int> get_allowed_size_flags_vertical() const override;
 
 	int get_margin_size(Side p_side) const;
 

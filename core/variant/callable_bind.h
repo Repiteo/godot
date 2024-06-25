@@ -43,24 +43,24 @@ class CallableCustomBind : public CallableCustom {
 
 public:
 	//for every type that inherits, these must always be the same for this type
-	virtual uint32_t hash() const override;
-	virtual String get_as_text() const override;
-	virtual CompareEqualFunc get_compare_equal_func() const override;
-	virtual CompareLessFunc get_compare_less_func() const override;
-	virtual bool is_valid() const override;
-	virtual StringName get_method() const override;
-	virtual ObjectID get_object() const override;
-	virtual void call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const override;
-	virtual Error rpc(int p_peer_id, const Variant **p_arguments, int p_argcount, Callable::CallError &r_call_error) const override;
-	virtual const Callable *get_base_comparator() const override;
-	virtual int get_argument_count(bool &r_is_valid) const override;
-	virtual int get_bound_arguments_count() const override;
-	virtual void get_bound_arguments(Vector<Variant> &r_arguments, int &r_argcount) const override;
+	uint32_t hash() const override;
+	String get_as_text() const override;
+	CompareEqualFunc get_compare_equal_func() const override;
+	CompareLessFunc get_compare_less_func() const override;
+	bool is_valid() const override;
+	StringName get_method() const override;
+	ObjectID get_object() const override;
+	void call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const override;
+	Error rpc(int p_peer_id, const Variant **p_arguments, int p_argcount, Callable::CallError &r_call_error) const override;
+	const Callable *get_base_comparator() const override;
+	int get_argument_count(bool &r_is_valid) const override;
+	int get_bound_arguments_count() const override;
+	void get_bound_arguments(Vector<Variant> &r_arguments, int &r_argcount) const override;
 	Callable get_callable() { return callable; }
 	Vector<Variant> get_binds() { return binds; }
 
 	CallableCustomBind(const Callable &p_callable, const Vector<Variant> &p_binds);
-	virtual ~CallableCustomBind();
+	~CallableCustomBind() override;
 };
 
 class CallableCustomUnbind : public CallableCustom {
@@ -72,25 +72,25 @@ class CallableCustomUnbind : public CallableCustom {
 
 public:
 	//for every type that inherits, these must always be the same for this type
-	virtual uint32_t hash() const override;
-	virtual String get_as_text() const override;
-	virtual CompareEqualFunc get_compare_equal_func() const override;
-	virtual CompareLessFunc get_compare_less_func() const override;
-	virtual bool is_valid() const override;
-	virtual StringName get_method() const override;
-	virtual ObjectID get_object() const override;
-	virtual void call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const override;
-	virtual Error rpc(int p_peer_id, const Variant **p_arguments, int p_argcount, Callable::CallError &r_call_error) const override;
-	virtual const Callable *get_base_comparator() const override;
-	virtual int get_argument_count(bool &r_is_valid) const override;
-	virtual int get_bound_arguments_count() const override;
-	virtual void get_bound_arguments(Vector<Variant> &r_arguments, int &r_argcount) const override;
+	uint32_t hash() const override;
+	String get_as_text() const override;
+	CompareEqualFunc get_compare_equal_func() const override;
+	CompareLessFunc get_compare_less_func() const override;
+	bool is_valid() const override;
+	StringName get_method() const override;
+	ObjectID get_object() const override;
+	void call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const override;
+	Error rpc(int p_peer_id, const Variant **p_arguments, int p_argcount, Callable::CallError &r_call_error) const override;
+	const Callable *get_base_comparator() const override;
+	int get_argument_count(bool &r_is_valid) const override;
+	int get_bound_arguments_count() const override;
+	void get_bound_arguments(Vector<Variant> &r_arguments, int &r_argcount) const override;
 
 	Callable get_callable() { return callable; }
 	int get_unbinds() { return argcount; }
 
 	CallableCustomUnbind(const Callable &p_callable, int p_argcount);
-	virtual ~CallableCustomUnbind();
+	~CallableCustomUnbind() override;
 };
 
 #endif // CALLABLE_BIND_H

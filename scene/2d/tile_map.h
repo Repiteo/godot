@@ -111,7 +111,7 @@ protected:
 
 public:
 #ifdef TOOLS_ENABLED
-	virtual Rect2 _edit_get_rect() const override;
+	Rect2 _edit_get_rect() const override;
 #endif
 
 #ifndef DISABLE_DEPRECATED
@@ -186,7 +186,7 @@ public:
 	TileMapCell get_cell(int p_layer, const Vector2i &p_coords, bool p_use_proxies = false) const;
 	int get_effective_quadrant_size(int p_layer) const;
 
-	virtual void set_y_sort_enabled(bool p_enable) override;
+	void set_y_sort_enabled(bool p_enable) override;
 
 	Vector2 map_to_local(const Vector2i &p_pos) const;
 	Vector2i local_to_map(const Vector2 &p_pos) const;
@@ -198,10 +198,10 @@ public:
 	Rect2i get_used_rect() const;
 
 	// Override some methods of the CanvasItem class to pass the changes to the quadrants CanvasItems.
-	virtual void set_light_mask(int p_light_mask) override;
-	virtual void set_self_modulate(const Color &p_self_modulate) override;
-	virtual void set_texture_filter(CanvasItem::TextureFilter p_texture_filter) override;
-	virtual void set_texture_repeat(CanvasItem::TextureRepeat p_texture_repeat) override;
+	void set_light_mask(int p_light_mask) override;
+	void set_self_modulate(const Color &p_self_modulate) override;
+	void set_texture_filter(CanvasItem::TextureFilter p_texture_filter) override;
+	void set_texture_repeat(CanvasItem::TextureRepeat p_texture_repeat) override;
 
 	// For finding tiles from collision.
 	Vector2i get_coords_for_body_rid(RID p_physics_body);

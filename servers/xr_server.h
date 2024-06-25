@@ -243,7 +243,7 @@ public:
 	void end_frame();
 
 	XRServer();
-	~XRServer();
+	~XRServer() override;
 };
 
 #define XR XRServer

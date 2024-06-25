@@ -159,8 +159,8 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual void set_create_options(Object *p_menu_node) override;
-	virtual bool handle_menu_selected(int p_which) override;
+	void set_create_options(Object *p_menu_node) override;
+	bool handle_menu_selected(int p_which) override;
 
 	void set_script_owner(Node *p_owner);
 	Node *get_script_owner() const;
@@ -179,8 +179,8 @@ class EditorShaderPicker : public EditorResourcePicker {
 	int preferred_mode = -1;
 
 public:
-	virtual void set_create_options(Object *p_menu_node) override;
-	virtual bool handle_menu_selected(int p_which) override;
+	void set_create_options(Object *p_menu_node) override;
+	bool handle_menu_selected(int p_which) override;
 
 	void set_edited_material(ShaderMaterial *p_material);
 	ShaderMaterial *get_edited_material() const;
@@ -202,7 +202,7 @@ class EditorAudioStreamPicker : public EditorResourcePicker {
 	uint32_t tagged_frame_offset_count = 0;
 
 	void _preview_draw();
-	virtual void _update_resource() override;
+	void _update_resource() override;
 
 protected:
 	void _notification(int p_what);

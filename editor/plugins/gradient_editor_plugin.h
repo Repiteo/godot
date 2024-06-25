@@ -80,7 +80,7 @@ class GradientEdit : public Control {
 	void _show_color_picker();
 
 protected:
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 	void _notification(int p_what);
 	static void _bind_methods();
 
@@ -130,15 +130,15 @@ class EditorInspectorPluginGradient : public EditorInspectorPlugin {
 	GDCLASS(EditorInspectorPluginGradient, EditorInspectorPlugin);
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual void parse_begin(Object *p_object) override;
+	bool can_handle(Object *p_object) override;
+	void parse_begin(Object *p_object) override;
 };
 
 class GradientEditorPlugin : public EditorPlugin {
 	GDCLASS(GradientEditorPlugin, EditorPlugin);
 
 public:
-	virtual String get_name() const override { return "Gradient"; }
+	String get_name() const override { return "Gradient"; }
 
 	GradientEditorPlugin();
 };

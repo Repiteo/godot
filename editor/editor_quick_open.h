@@ -66,7 +66,7 @@ class EditorQuickOpen : public ConfirmationDialog {
 	float _score_search_result(const PackedStringArray &p_search_tokens, const String &p_path);
 
 	void _confirmed();
-	virtual void cancel_pressed() override;
+	void cancel_pressed() override;
 	void _cleanup();
 
 	void _sbox_input(const Ref<InputEvent> &p_ie);

@@ -377,7 +377,7 @@ public:
 	void set_event_dispatch_function(EventDispatchFunc p_function);
 
 	Input();
-	~Input();
+	~Input() override;
 };
 
 VARIANT_ENUM_CAST(Input::MouseMode);

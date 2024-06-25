@@ -62,15 +62,15 @@ class EditorInspectorPluginStyleBox : public EditorInspectorPlugin {
 	GDCLASS(EditorInspectorPluginStyleBox, EditorInspectorPlugin);
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual void parse_begin(Object *p_object) override;
+	bool can_handle(Object *p_object) override;
+	void parse_begin(Object *p_object) override;
 };
 
 class StyleBoxEditorPlugin : public EditorPlugin {
 	GDCLASS(StyleBoxEditorPlugin, EditorPlugin);
 
 public:
-	virtual String get_name() const override { return "StyleBox"; }
+	String get_name() const override { return "StyleBox"; }
 
 	StyleBoxEditorPlugin();
 };

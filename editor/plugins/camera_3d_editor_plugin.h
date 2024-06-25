@@ -58,14 +58,14 @@ class Camera3DEditorPlugin : public EditorPlugin {
 	//CameraEditor *camera_editor;
 
 public:
-	virtual String get_name() const override { return "Camera3D"; }
+	String get_name() const override { return "Camera3D"; }
 	bool has_main_screen() const override { return false; }
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
 
 	Camera3DEditorPlugin();
-	~Camera3DEditorPlugin();
+	~Camera3DEditorPlugin() override;
 };
 
 #endif // CAMERA_3D_EDITOR_PLUGIN_H

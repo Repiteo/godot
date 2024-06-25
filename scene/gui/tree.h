@@ -389,7 +389,7 @@ public:
 
 	void call_recursive(const StringName &p_method, const Variant **p_args, int p_argcount, Callable::CallError &r_error);
 
-	~TreeItem();
+	~TreeItem() override;
 };
 
 VARIANT_ENUM_CAST(TreeItem::TreeCellMode);
@@ -688,15 +688,15 @@ private:
 	Rect2 _get_content_rect() const; // Considering the background stylebox and scrollbars.
 
 protected:
-	virtual void _update_theme_item_cache() override;
+	void _update_theme_item_cache() override;
 
 	void _notification(int p_what);
 	static void _bind_methods();
 
 public:
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 
-	virtual String get_tooltip(const Point2 &p_pos) const override;
+	String get_tooltip(const Point2 &p_pos) const override;
 
 	TreeItem *get_item_at_position(const Point2 &p_pos) const;
 	int get_column_at_position(const Point2 &p_pos) const;
@@ -804,7 +804,7 @@ public:
 	Size2 get_minimum_size() const override;
 
 	Tree();
-	~Tree();
+	~Tree() override;
 };
 
 VARIANT_ENUM_CAST(Tree::SelectMode);

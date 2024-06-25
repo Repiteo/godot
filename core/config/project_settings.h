@@ -220,12 +220,12 @@ public:
 	void load_scene_groups_cache();
 
 #ifdef TOOLS_ENABLED
-	virtual void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
+	void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
 #endif
 
 	ProjectSettings();
 	ProjectSettings(const String &p_path);
-	~ProjectSettings();
+	~ProjectSettings() override;
 };
 
 // Not a macro any longer.

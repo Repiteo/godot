@@ -559,7 +559,7 @@ public:
 	virtual void cleanup() {}
 
 	TextServer();
-	~TextServer();
+	~TextServer() override;
 };
 
 /*************************************************************************/
@@ -626,7 +626,7 @@ public:
 	void set_primary_interface(const Ref<TextServer> &p_primary_interface);
 
 	TextServerManager();
-	~TextServerManager();
+	~TextServerManager() override;
 };
 
 /*************************************************************************/

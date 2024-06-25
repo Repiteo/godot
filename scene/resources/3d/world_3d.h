@@ -87,7 +87,7 @@ public:
 	PhysicsDirectSpaceState3D *get_direct_space_state();
 
 	World3D();
-	~World3D();
+	~World3D() override;
 };
 
 #endif // WORLD_3D_H

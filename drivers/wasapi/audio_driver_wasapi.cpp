@@ -128,11 +128,11 @@ public:
 	CMMNotificationClient() {}
 	virtual ~CMMNotificationClient() {}
 
-	ULONG STDMETHODCALLTYPE AddRef() {
+	ULONG STDMETHODCALLTYPE AddRef() override {
 		return InterlockedIncrement(&_cRef);
 	}
 
-	ULONG STDMETHODCALLTYPE Release() {
+	ULONG STDMETHODCALLTYPE Release() override {
 		ULONG ulRef = InterlockedDecrement(&_cRef);
 		if (0 == ulRef) {
 			delete this;
@@ -140,7 +140,7 @@ public:
 		return ulRef;
 	}
 
-	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, VOID **ppvInterface) {
+	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, VOID **ppvInterface) override {
 		if (IID_IUnknown == riid) {
 			AddRef();
 			*ppvInterface = (IUnknown *)this;
@@ -154,19 +154,19 @@ public:
 		return S_OK;
 	}
 
-	HRESULT STDMETHODCALLTYPE OnDeviceAdded(LPCWSTR pwstrDeviceId) {
+	HRESULT STDMETHODCALLTYPE OnDeviceAdded(LPCWSTR pwstrDeviceId) override {
 		return S_OK;
 	}
 
-	HRESULT STDMETHODCALLTYPE OnDeviceRemoved(LPCWSTR pwstrDeviceId) {
+	HRESULT STDMETHODCALLTYPE OnDeviceRemoved(LPCWSTR pwstrDeviceId) override {
 		return S_OK;
 	}
 
-	HRESULT STDMETHODCALLTYPE OnDeviceStateChanged(LPCWSTR pwstrDeviceId, DWORD dwNewState) {
+	HRESULT STDMETHODCALLTYPE OnDeviceStateChanged(LPCWSTR pwstrDeviceId, DWORD dwNewState) override {
 		return S_OK;
 	}
 
-	HRESULT STDMETHODCALLTYPE OnDefaultDeviceChanged(EDataFlow flow, ERole role, LPCWSTR pwstrDeviceId) {
+	HRESULT STDMETHODCALLTYPE OnDefaultDeviceChanged(EDataFlow flow, ERole role, LPCWSTR pwstrDeviceId) override {
 		if (role == eConsole) {
 			if (flow == eRender) {
 				default_output_device_changed = true;
@@ -178,7 +178,7 @@ public:
 		return S_OK;
 	}
 
-	HRESULT STDMETHODCALLTYPE OnPropertyValueChanged(LPCWSTR pwstrDeviceId, const PROPERTYKEY key) {
+	HRESULT STDMETHODCALLTYPE OnPropertyValueChanged(LPCWSTR pwstrDeviceId, const PROPERTYKEY key) override {
 		return S_OK;
 	}
 };

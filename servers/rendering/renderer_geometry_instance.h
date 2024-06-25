@@ -130,25 +130,25 @@ public:
 
 	Data *data = nullptr;
 
-	virtual void set_skeleton(RID p_skeleton) override;
-	virtual void set_material_override(RID p_override) override;
-	virtual void set_material_overlay(RID p_overlay) override;
-	virtual void set_surface_materials(const Vector<RID> &p_materials) override;
-	virtual void set_mesh_instance(RID p_mesh_instance) override;
-	virtual void set_transform(const Transform3D &p_transform, const AABB &p_aabb, const AABB &p_transformed_aabb) override;
-	virtual void set_pivot_data(float p_sorting_offset, bool p_use_aabb_center) override;
-	virtual void set_lod_bias(float p_lod_bias) override;
-	virtual void set_layer_mask(uint32_t p_layer_mask) override;
-	virtual void set_fade_range(bool p_enable_near, float p_near_begin, float p_near_end, bool p_enable_far, float p_far_begin, float p_far_end) override;
-	virtual void set_parent_fade_alpha(float p_alpha) override;
-	virtual void set_transparency(float p_transparency) override;
-	virtual void set_use_baked_light(bool p_enable) override;
-	virtual void set_use_dynamic_gi(bool p_enable) override;
-	virtual void set_instance_shader_uniforms_offset(int32_t p_offset) override;
-	virtual void set_cast_double_sided_shadows(bool p_enable) override;
+	void set_skeleton(RID p_skeleton) override;
+	void set_material_override(RID p_override) override;
+	void set_material_overlay(RID p_overlay) override;
+	void set_surface_materials(const Vector<RID> &p_materials) override;
+	void set_mesh_instance(RID p_mesh_instance) override;
+	void set_transform(const Transform3D &p_transform, const AABB &p_aabb, const AABB &p_transformed_aabb) override;
+	void set_pivot_data(float p_sorting_offset, bool p_use_aabb_center) override;
+	void set_lod_bias(float p_lod_bias) override;
+	void set_layer_mask(uint32_t p_layer_mask) override;
+	void set_fade_range(bool p_enable_near, float p_near_begin, float p_near_end, bool p_enable_far, float p_far_begin, float p_far_end) override;
+	void set_parent_fade_alpha(float p_alpha) override;
+	void set_transparency(float p_transparency) override;
+	void set_use_baked_light(bool p_enable) override;
+	void set_use_dynamic_gi(bool p_enable) override;
+	void set_instance_shader_uniforms_offset(int32_t p_offset) override;
+	void set_cast_double_sided_shadows(bool p_enable) override;
 
-	virtual Transform3D get_transform() override;
-	virtual AABB get_aabb() override;
+	Transform3D get_transform() override;
+	AABB get_aabb() override;
 };
 
 #endif // RENDERER_GEOMETRY_INSTANCE_H

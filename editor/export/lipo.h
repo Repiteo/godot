@@ -68,7 +68,7 @@ public:
 
 	void close();
 
-	~LipO();
+	~LipO() override;
 };
 
 #endif // LIPO_H

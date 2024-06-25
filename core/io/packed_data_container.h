@@ -72,7 +72,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual Variant getvar(const Variant &p_key, bool *r_valid = nullptr) const override;
+	Variant getvar(const Variant &p_key, bool *r_valid = nullptr) const override;
 	Error pack(const Variant &p_data);
 
 	int size() const;
@@ -96,7 +96,7 @@ public:
 	Variant _iter_get(const Variant &p_iter);
 
 	int size() const;
-	virtual Variant getvar(const Variant &p_key, bool *r_valid = nullptr) const override;
+	Variant getvar(const Variant &p_key, bool *r_valid = nullptr) const override;
 
 	PackedDataContainerRef() {}
 };

@@ -103,8 +103,8 @@ protected:
 #endif
 
 public:
-	virtual Size2 get_minimum_size() const override;
-	virtual PackedStringArray get_configuration_warnings() const override;
+	Size2 get_minimum_size() const override;
+	PackedStringArray get_configuration_warnings() const override;
 
 	void set_horizontal_alignment(HorizontalAlignment p_alignment);
 	HorizontalAlignment get_horizontal_alignment() const;
@@ -174,7 +174,7 @@ public:
 	Rect2 get_character_bounds(int p_pos) const;
 
 	Label(const String &p_text = String());
-	~Label();
+	~Label() override;
 };
 
 #endif // LABEL_H

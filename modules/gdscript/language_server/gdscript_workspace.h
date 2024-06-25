@@ -98,7 +98,7 @@ public:
 	Vector<lsp::Location> find_all_usages(const lsp::DocumentSymbol &p_symbol);
 
 	GDScriptWorkspace();
-	~GDScriptWorkspace();
+	~GDScriptWorkspace() override;
 };
 
 #endif // GDSCRIPT_WORKSPACE_H

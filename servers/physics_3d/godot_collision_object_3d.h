@@ -188,7 +188,7 @@ public:
 
 	_FORCE_INLINE_ bool is_static() const { return _static; }
 
-	virtual ~GodotCollisionObject3D() {}
+	~GodotCollisionObject3D() override {}
 };
 
 #endif // GODOT_COLLISION_OBJECT_3D_H

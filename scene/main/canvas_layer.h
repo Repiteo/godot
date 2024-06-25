@@ -109,7 +109,7 @@ public:
 	RID get_canvas() const;
 
 	CanvasLayer();
-	~CanvasLayer();
+	~CanvasLayer() override;
 };
 
 #endif // CANVAS_LAYER_H

@@ -51,16 +51,16 @@ public:
 	static OpenXRFBFoveationExtension *get_singleton();
 
 	OpenXRFBFoveationExtension(const String &p_rendering_driver);
-	virtual ~OpenXRFBFoveationExtension() override;
+	~OpenXRFBFoveationExtension() override;
 
-	virtual HashMap<String, bool *> get_requested_extensions() override;
+	HashMap<String, bool *> get_requested_extensions() override;
 
-	virtual void on_instance_created(const XrInstance p_instance) override;
-	virtual void on_instance_destroyed() override;
+	void on_instance_created(const XrInstance p_instance) override;
+	void on_instance_destroyed() override;
 
-	virtual void *set_swapchain_create_info_and_get_next_pointer(void *p_next_pointer) override;
+	void *set_swapchain_create_info_and_get_next_pointer(void *p_next_pointer) override;
 
-	virtual void on_main_swapchains_created() override;
+	void on_main_swapchains_created() override;
 
 	bool is_enabled() const;
 

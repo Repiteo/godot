@@ -49,7 +49,7 @@ class ImageTexture : public Texture2D {
 	bool image_stored = false;
 
 protected:
-	virtual void reload_from_file() override;
+	void reload_from_file() override;
 
 	bool _set(const StringName &p_name, const Variant &p_value);
 	bool _get(const StringName &p_name, Variant &r_ret) const;
@@ -69,21 +69,21 @@ public:
 	int get_width() const override;
 	int get_height() const override;
 
-	virtual RID get_rid() const override;
+	RID get_rid() const override;
 
 	bool has_alpha() const override;
-	virtual void draw(RID p_canvas_item, const Point2 &p_pos, const Color &p_modulate = Color(1, 1, 1), bool p_transpose = false) const override;
-	virtual void draw_rect(RID p_canvas_item, const Rect2 &p_rect, bool p_tile = false, const Color &p_modulate = Color(1, 1, 1), bool p_transpose = false) const override;
-	virtual void draw_rect_region(RID p_canvas_item, const Rect2 &p_rect, const Rect2 &p_src_rect, const Color &p_modulate = Color(1, 1, 1), bool p_transpose = false, bool p_clip_uv = true) const override;
+	void draw(RID p_canvas_item, const Point2 &p_pos, const Color &p_modulate = Color(1, 1, 1), bool p_transpose = false) const override;
+	void draw_rect(RID p_canvas_item, const Rect2 &p_rect, bool p_tile = false, const Color &p_modulate = Color(1, 1, 1), bool p_transpose = false) const override;
+	void draw_rect_region(RID p_canvas_item, const Rect2 &p_rect, const Rect2 &p_src_rect, const Color &p_modulate = Color(1, 1, 1), bool p_transpose = false, bool p_clip_uv = true) const override;
 
 	bool is_pixel_opaque(int p_x, int p_y) const override;
 
 	void set_size_override(const Size2i &p_size);
 
-	virtual void set_path(const String &p_path, bool p_take_over = false) override;
+	void set_path(const String &p_path, bool p_take_over = false) override;
 
 	ImageTexture();
-	~ImageTexture();
+	~ImageTexture() override;
 };
 
 class ImageTextureLayered : public TextureLayered {
@@ -108,22 +108,22 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual Image::Format get_format() const override;
-	virtual int get_width() const override;
-	virtual int get_height() const override;
-	virtual int get_layers() const override;
-	virtual bool has_mipmaps() const override;
-	virtual LayeredType get_layered_type() const override;
+	Image::Format get_format() const override;
+	int get_width() const override;
+	int get_height() const override;
+	int get_layers() const override;
+	bool has_mipmaps() const override;
+	LayeredType get_layered_type() const override;
 
 	Error create_from_images(Vector<Ref<Image>> p_images);
 	void update_layer(const Ref<Image> &p_image, int p_layer);
-	virtual Ref<Image> get_layer_data(int p_layer) const override;
+	Ref<Image> get_layer_data(int p_layer) const override;
 
-	virtual RID get_rid() const override;
-	virtual void set_path(const String &p_path, bool p_take_over = false) override;
+	RID get_rid() const override;
+	void set_path(const String &p_path, bool p_take_over = false) override;
 
 	ImageTextureLayered(LayeredType p_layered_type);
-	~ImageTextureLayered();
+	~ImageTextureLayered() override;
 };
 
 class ImageTexture3D : public Texture3D {
@@ -147,21 +147,21 @@ protected:
 	void _update(const TypedArray<Image> &p_data);
 
 public:
-	virtual Image::Format get_format() const override;
-	virtual int get_width() const override;
-	virtual int get_height() const override;
-	virtual int get_depth() const override;
-	virtual bool has_mipmaps() const override;
+	Image::Format get_format() const override;
+	int get_width() const override;
+	int get_height() const override;
+	int get_depth() const override;
+	bool has_mipmaps() const override;
 
 	Error create(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const Vector<Ref<Image>> &p_data);
 	void update(const Vector<Ref<Image>> &p_data);
-	virtual Vector<Ref<Image>> get_data() const override;
+	Vector<Ref<Image>> get_data() const override;
 
-	virtual RID get_rid() const override;
-	virtual void set_path(const String &p_path, bool p_take_over = false) override;
+	RID get_rid() const override;
+	void set_path(const String &p_path, bool p_take_over = false) override;
 
 	ImageTexture3D();
-	~ImageTexture3D();
+	~ImageTexture3D() override;
 };
 
 class Texture2DArray : public ImageTextureLayered {

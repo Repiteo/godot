@@ -1406,7 +1406,7 @@ public:
 	static RenderingDevice *get_singleton();
 
 	RenderingDevice();
-	~RenderingDevice();
+	~RenderingDevice() override;
 
 private:
 	/*****************/

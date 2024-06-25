@@ -64,7 +64,7 @@ protected:
 
 public:
 	VideoStreamPlayback();
-	virtual ~VideoStreamPlayback();
+	~VideoStreamPlayback() override;
 
 	virtual void stop();
 	virtual void play();
@@ -109,7 +109,7 @@ public:
 	virtual Ref<VideoStreamPlayback> instantiate_playback();
 
 	VideoStream();
-	~VideoStream();
+	~VideoStream() override;
 };
 
 #endif // VIDEO_STREAM_H

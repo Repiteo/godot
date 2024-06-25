@@ -89,7 +89,7 @@ class EditorSpinSlider : public Range {
 
 protected:
 	void _notification(int p_what);
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 	static void _bind_methods();
 	void _grabber_mouse_entered();
 	void _grabber_mouse_exited();
@@ -119,7 +119,7 @@ public:
 	void setup_and_show() { _focus_entered(); }
 	LineEdit *get_line_edit();
 
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 	EditorSpinSlider();
 };
 

@@ -37,11 +37,11 @@ class GeometryInstance3DGizmoPlugin : public EditorNode3DGizmoPlugin {
 	GDCLASS(GeometryInstance3DGizmoPlugin, EditorNode3DGizmoPlugin);
 
 public:
-	virtual bool has_gizmo(Node3D *p_spatial) override;
-	virtual String get_gizmo_name() const override;
-	virtual int get_priority() const override;
+	bool has_gizmo(Node3D *p_spatial) override;
+	String get_gizmo_name() const override;
+	int get_priority() const override;
 
-	virtual void redraw(EditorNode3DGizmo *p_gizmo) override;
+	void redraw(EditorNode3DGizmo *p_gizmo) override;
 
 	GeometryInstance3DGizmoPlugin();
 };

@@ -64,7 +64,7 @@ public:
 	_FORCE_INLINE_ const HashSet<Viewport *> &get_viewports() { return viewports; }
 
 	World2D();
-	~World2D();
+	~World2D() override;
 };
 
 #endif // WORLD_2D_H

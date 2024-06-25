@@ -78,7 +78,7 @@ protected:
 
 public:
 	NavigationObstacle3D();
-	virtual ~NavigationObstacle3D();
+	~NavigationObstacle3D() override;
 
 	RID get_rid() const { return obstacle; }
 

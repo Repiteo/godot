@@ -136,14 +136,14 @@ class OS_Windows : public OS {
 
 	// functions used by main to initialize/deinitialize the OS
 protected:
-	virtual void initialize() override;
+	void initialize() override;
 
-	virtual void set_main_loop(MainLoop *p_main_loop) override;
-	virtual void delete_main_loop() override;
+	void set_main_loop(MainLoop *p_main_loop) override;
+	void delete_main_loop() override;
 
-	virtual void finalize() override;
-	virtual void finalize_core() override;
-	virtual String get_stdin_string() override;
+	void finalize() override;
+	void finalize_core() override;
+	String get_stdin_string() override;
 
 	String _quote_command_line_argument(const String &p_text) const;
 
@@ -157,90 +157,90 @@ protected:
 	Mutex process_map_mutex;
 
 public:
-	virtual void alert(const String &p_alert, const String &p_title = "ALERT!") override;
+	void alert(const String &p_alert, const String &p_title = "ALERT!") override;
 
-	virtual Error get_entropy(uint8_t *r_buffer, int p_bytes) override;
+	Error get_entropy(uint8_t *r_buffer, int p_bytes) override;
 
-	virtual Error open_dynamic_library(const String &p_path, void *&p_library_handle, GDExtensionData *p_data = nullptr) override;
-	virtual Error close_dynamic_library(void *p_library_handle) override;
-	virtual Error get_dynamic_library_symbol_handle(void *p_library_handle, const String &p_name, void *&p_symbol_handle, bool p_optional = false) override;
+	Error open_dynamic_library(const String &p_path, void *&p_library_handle, GDExtensionData *p_data = nullptr) override;
+	Error close_dynamic_library(void *p_library_handle) override;
+	Error get_dynamic_library_symbol_handle(void *p_library_handle, const String &p_name, void *&p_symbol_handle, bool p_optional = false) override;
 
-	virtual MainLoop *get_main_loop() const override;
+	MainLoop *get_main_loop() const override;
 
-	virtual String get_name() const override;
-	virtual String get_distribution_name() const override;
-	virtual String get_version() const override;
+	String get_name() const override;
+	String get_distribution_name() const override;
+	String get_version() const override;
 
-	virtual Vector<String> get_video_adapter_driver_info() const override;
+	Vector<String> get_video_adapter_driver_info() const override;
 
-	virtual void initialize_joypads() override {}
+	void initialize_joypads() override {}
 
-	virtual DateTime get_datetime(bool p_utc) const override;
-	virtual TimeZoneInfo get_time_zone_info() const override;
-	virtual double get_unix_time() const override;
+	DateTime get_datetime(bool p_utc) const override;
+	TimeZoneInfo get_time_zone_info() const override;
+	double get_unix_time() const override;
 
-	virtual Error set_cwd(const String &p_cwd) override;
+	Error set_cwd(const String &p_cwd) override;
 
-	virtual void delay_usec(uint32_t p_usec) const override;
-	virtual uint64_t get_ticks_usec() const override;
+	void delay_usec(uint32_t p_usec) const override;
+	uint64_t get_ticks_usec() const override;
 
-	virtual Dictionary get_memory_info() const override;
+	Dictionary get_memory_info() const override;
 
-	virtual Error execute(const String &p_path, const List<String> &p_arguments, String *r_pipe = nullptr, int *r_exitcode = nullptr, bool read_stderr = false, Mutex *p_pipe_mutex = nullptr, bool p_open_console = false) override;
-	virtual Dictionary execute_with_pipe(const String &p_path, const List<String> &p_arguments) override;
-	virtual Error create_process(const String &p_path, const List<String> &p_arguments, ProcessID *r_child_id = nullptr, bool p_open_console = false) override;
-	virtual Error kill(const ProcessID &p_pid) override;
-	virtual int get_process_id() const override;
-	virtual bool is_process_running(const ProcessID &p_pid) const override;
-	virtual int get_process_exit_code(const ProcessID &p_pid) const override;
+	Error execute(const String &p_path, const List<String> &p_arguments, String *r_pipe = nullptr, int *r_exitcode = nullptr, bool read_stderr = false, Mutex *p_pipe_mutex = nullptr, bool p_open_console = false) override;
+	Dictionary execute_with_pipe(const String &p_path, const List<String> &p_arguments) override;
+	Error create_process(const String &p_path, const List<String> &p_arguments, ProcessID *r_child_id = nullptr, bool p_open_console = false) override;
+	Error kill(const ProcessID &p_pid) override;
+	int get_process_id() const override;
+	bool is_process_running(const ProcessID &p_pid) const override;
+	int get_process_exit_code(const ProcessID &p_pid) const override;
 
-	virtual bool has_environment(const String &p_var) const override;
-	virtual String get_environment(const String &p_var) const override;
-	virtual void set_environment(const String &p_var, const String &p_value) const override;
-	virtual void unset_environment(const String &p_var) const override;
+	bool has_environment(const String &p_var) const override;
+	String get_environment(const String &p_var) const override;
+	void set_environment(const String &p_var, const String &p_value) const override;
+	void unset_environment(const String &p_var) const override;
 
-	virtual Vector<String> get_system_fonts() const override;
-	virtual String get_system_font_path(const String &p_font_name, int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
-	virtual Vector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
+	Vector<String> get_system_fonts() const override;
+	String get_system_font_path(const String &p_font_name, int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
+	Vector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
 
-	virtual String get_executable_path() const override;
+	String get_executable_path() const override;
 
-	virtual String get_locale() const override;
+	String get_locale() const override;
 
-	virtual String get_processor_name() const override;
+	String get_processor_name() const override;
 
-	virtual uint64_t get_embedded_pck_offset() const override;
+	uint64_t get_embedded_pck_offset() const override;
 
-	virtual String get_config_path() const override;
-	virtual String get_data_path() const override;
-	virtual String get_cache_path() const override;
-	virtual String get_godot_dir_name() const override;
+	String get_config_path() const override;
+	String get_data_path() const override;
+	String get_cache_path() const override;
+	String get_godot_dir_name() const override;
 
-	virtual String get_system_dir(SystemDir p_dir, bool p_shared_storage = true) const override;
-	virtual String get_user_data_dir() const override;
+	String get_system_dir(SystemDir p_dir, bool p_shared_storage = true) const override;
+	String get_user_data_dir() const override;
 
-	virtual String get_unique_id() const override;
+	String get_unique_id() const override;
 
-	virtual Error shell_open(const String &p_uri) override;
-	virtual Error shell_show_in_file_manager(String p_path, bool p_open_folder) override;
+	Error shell_open(const String &p_uri) override;
+	Error shell_show_in_file_manager(String p_path, bool p_open_folder) override;
 
 	void run();
 
-	virtual bool _check_internal_feature_support(const String &p_feature) override;
+	bool _check_internal_feature_support(const String &p_feature) override;
 
-	virtual void disable_crash_handler() override;
-	virtual bool is_disable_crash_handler() const override;
-	virtual void initialize_debugging() override;
+	void disable_crash_handler() override;
+	bool is_disable_crash_handler() const override;
+	void initialize_debugging() override;
 
-	virtual Error move_to_trash(const String &p_path) override;
+	Error move_to_trash(const String &p_path) override;
 
-	virtual String get_system_ca_certificates() override;
+	String get_system_ca_certificates() override;
 
 	void set_main_window(HWND p_main_window) { main_window = p_main_window; }
 
 	HINSTANCE get_hinstance() { return hInstance; }
 	OS_Windows(HINSTANCE _hInstance);
-	~OS_Windows();
+	~OS_Windows() override;
 };
 
 #endif // OS_WINDOWS_H

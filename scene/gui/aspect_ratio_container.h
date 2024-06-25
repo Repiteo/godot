@@ -39,7 +39,7 @@ class AspectRatioContainer : public Container {
 protected:
 	void _notification(int p_what);
 	static void _bind_methods();
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
 public:
 	enum StretchMode {
@@ -73,8 +73,8 @@ public:
 	void set_alignment_vertical(AlignmentMode p_alignment_vertical);
 	AlignmentMode get_alignment_vertical() const { return alignment_vertical; }
 
-	virtual Vector<int> get_allowed_size_flags_horizontal() const override;
-	virtual Vector<int> get_allowed_size_flags_vertical() const override;
+	Vector<int> get_allowed_size_flags_horizontal() const override;
+	Vector<int> get_allowed_size_flags_vertical() const override;
 };
 
 VARIANT_ENUM_CAST(AspectRatioContainer::StretchMode);

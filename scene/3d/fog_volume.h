@@ -65,11 +65,11 @@ public:
 	void set_material(const Ref<Material> &p_material);
 	Ref<Material> get_material() const;
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 	PackedStringArray get_configuration_warnings() const override;
 
 	FogVolume();
-	~FogVolume();
+	~FogVolume() override;
 };
 
 #endif // FOG_VOLUME_H

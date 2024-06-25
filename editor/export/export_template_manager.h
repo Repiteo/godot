@@ -114,7 +114,7 @@ class ExportTemplateManager : public AcceptDialog {
 
 	void _open_template_folder(const String &p_version);
 
-	virtual void ok_pressed() override;
+	void ok_pressed() override;
 	void _hide_dialog();
 
 protected:

@@ -376,7 +376,7 @@ protected:
 	bool _get(const StringName &p_name, Variant &r_ret) const;
 	void _get_property_list(List<PropertyInfo> *p_list) const;
 
-	virtual void reset_state() override;
+	void reset_state() override;
 
 	static void _bind_methods();
 
@@ -529,7 +529,7 @@ public:
 	static TrackType get_cache_type(TrackType p_type);
 
 	Animation();
-	~Animation();
+	~Animation() override;
 };
 
 VARIANT_ENUM_CAST(Animation::TrackType);

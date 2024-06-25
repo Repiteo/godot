@@ -120,12 +120,12 @@ private:
 	void _drag_move_tab_from(TabBar *p_from_tabbar, int p_from_index, int p_to_index);
 
 protected:
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 
 	void _notification(int p_what);
-	virtual void add_child_notify(Node *p_child) override;
-	virtual void move_child_notify(Node *p_child) override;
-	virtual void remove_child_notify(Node *p_child) override;
+	void add_child_notify(Node *p_child) override;
+	void move_child_notify(Node *p_child) override;
+	void remove_child_notify(Node *p_child) override;
 	static void _bind_methods();
 
 public:
@@ -190,7 +190,7 @@ public:
 	Control *get_tab_control(int p_idx) const;
 	Control *get_current_tab_control() const;
 
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
 	void set_popup(Node *p_popup);
 	Popup *get_popup() const;
@@ -204,8 +204,8 @@ public:
 	void set_use_hidden_tabs_for_min_size(bool p_use_hidden_tabs);
 	bool get_use_hidden_tabs_for_min_size() const;
 
-	virtual Vector<int> get_allowed_size_flags_horizontal() const override;
-	virtual Vector<int> get_allowed_size_flags_vertical() const override;
+	Vector<int> get_allowed_size_flags_horizontal() const override;
+	Vector<int> get_allowed_size_flags_vertical() const override;
 
 	TabContainer();
 };

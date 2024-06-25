@@ -70,14 +70,14 @@ class PhysicalBoneSimulator3D : public SkeletonModifier3D {
 protected:
 	static void _bind_methods();
 
-	virtual void _set_active(bool p_active) override;
+	void _set_active(bool p_active) override;
 
 	void _bone_list_changed();
 	void _pose_updated();
 
-	virtual void _process_modification() override;
+	void _process_modification() override;
 
-	virtual void _skeleton_changed(Skeleton3D *p_old, Skeleton3D *p_new) override;
+	void _skeleton_changed(Skeleton3D *p_old, Skeleton3D *p_new) override;
 
 public:
 #ifndef DISABLE_DEPRECATED

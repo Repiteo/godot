@@ -162,7 +162,7 @@ public:
 	virtual bool is_case_sensitive(const String &p_path) const;
 
 	DirAccess() {}
-	virtual ~DirAccess() {}
+	~DirAccess() override {}
 };
 
 #endif // DIR_ACCESS_H

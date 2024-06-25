@@ -68,7 +68,7 @@ private:
 	mutable Ref<BitMap> alpha_cache;
 
 	Error _load_data(const String &p_path, int &r_width, int &r_height, Ref<Image> &image, bool &r_request_3d, bool &r_request_normal, bool &r_request_roughness, int &mipmap_limit, int p_size_limit = 0);
-	virtual void reload_from_file() override;
+	void reload_from_file() override;
 
 	static void _requested_3d(void *p_ud);
 	static void _requested_roughness(void *p_ud, const String &p_normal_path, RS::TextureDetectRoughnessChannel p_roughness_channel);
@@ -94,29 +94,29 @@ public:
 
 	int get_width() const override;
 	int get_height() const override;
-	virtual RID get_rid() const override;
+	RID get_rid() const override;
 
-	virtual void set_path(const String &p_path, bool p_take_over) override;
+	void set_path(const String &p_path, bool p_take_over) override;
 
-	virtual void draw(RID p_canvas_item, const Point2 &p_pos, const Color &p_modulate = Color(1, 1, 1), bool p_transpose = false) const override;
-	virtual void draw_rect(RID p_canvas_item, const Rect2 &p_rect, bool p_tile = false, const Color &p_modulate = Color(1, 1, 1), bool p_transpose = false) const override;
-	virtual void draw_rect_region(RID p_canvas_item, const Rect2 &p_rect, const Rect2 &p_src_rect, const Color &p_modulate = Color(1, 1, 1), bool p_transpose = false, bool p_clip_uv = true) const override;
+	void draw(RID p_canvas_item, const Point2 &p_pos, const Color &p_modulate = Color(1, 1, 1), bool p_transpose = false) const override;
+	void draw_rect(RID p_canvas_item, const Rect2 &p_rect, bool p_tile = false, const Color &p_modulate = Color(1, 1, 1), bool p_transpose = false) const override;
+	void draw_rect_region(RID p_canvas_item, const Rect2 &p_rect, const Rect2 &p_src_rect, const Color &p_modulate = Color(1, 1, 1), bool p_transpose = false, bool p_clip_uv = true) const override;
 
-	virtual bool has_alpha() const override;
+	bool has_alpha() const override;
 	bool is_pixel_opaque(int p_x, int p_y) const override;
 
-	virtual Ref<Image> get_image() const override;
+	Ref<Image> get_image() const override;
 
 	CompressedTexture2D();
-	~CompressedTexture2D();
+	~CompressedTexture2D() override;
 };
 
 class ResourceFormatLoaderCompressedTexture2D : public ResourceFormatLoader {
 public:
-	virtual Ref<Resource> load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr, bool p_use_sub_threads = false, float *r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE) override;
-	virtual void get_recognized_extensions(List<String> *p_extensions) const override;
-	virtual bool handles_type(const String &p_type) const override;
-	virtual String get_resource_type(const String &p_path) const override;
+	Ref<Resource> load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr, bool p_use_sub_threads = false, float *r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE) override;
+	void get_recognized_extensions(List<String> *p_extensions) const override;
+	bool handles_type(const String &p_type) const override;
+	String get_resource_type(const String &p_path) const override;
 };
 
 class CompressedTextureLayered : public TextureLayered {
@@ -150,7 +150,7 @@ private:
 	bool mipmaps = false;
 	LayeredType layered_type = LayeredType::LAYERED_TYPE_2D_ARRAY;
 
-	virtual void reload_from_file() override;
+	void reload_from_file() override;
 
 protected:
 	static void _bind_methods();
@@ -160,28 +160,28 @@ public:
 	Image::Format get_format() const override;
 	Error load(const String &p_path);
 	String get_load_path() const;
-	virtual LayeredType get_layered_type() const override;
+	LayeredType get_layered_type() const override;
 
 	int get_width() const override;
 	int get_height() const override;
 	int get_layers() const override;
-	virtual bool has_mipmaps() const override;
-	virtual RID get_rid() const override;
+	bool has_mipmaps() const override;
+	RID get_rid() const override;
 
-	virtual void set_path(const String &p_path, bool p_take_over) override;
+	void set_path(const String &p_path, bool p_take_over) override;
 
-	virtual Ref<Image> get_layer_data(int p_layer) const override;
+	Ref<Image> get_layer_data(int p_layer) const override;
 
 	CompressedTextureLayered(LayeredType p_layered_type);
-	~CompressedTextureLayered();
+	~CompressedTextureLayered() override;
 };
 
 class ResourceFormatLoaderCompressedTextureLayered : public ResourceFormatLoader {
 public:
-	virtual Ref<Resource> load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr, bool p_use_sub_threads = false, float *r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE) override;
-	virtual void get_recognized_extensions(List<String> *p_extensions) const override;
-	virtual bool handles_type(const String &p_type) const override;
-	virtual String get_resource_type(const String &p_path) const override;
+	Ref<Resource> load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr, bool p_use_sub_threads = false, float *r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE) override;
+	void get_recognized_extensions(List<String> *p_extensions) const override;
+	bool handles_type(const String &p_type) const override;
+	String get_resource_type(const String &p_path) const override;
 };
 
 class CompressedTexture2DArray : public CompressedTextureLayered {
@@ -237,7 +237,7 @@ private:
 	int d = 0;
 	bool mipmaps = false;
 
-	virtual void reload_from_file() override;
+	void reload_from_file() override;
 
 protected:
 	static void _bind_methods();
@@ -251,23 +251,23 @@ public:
 	int get_width() const override;
 	int get_height() const override;
 	int get_depth() const override;
-	virtual bool has_mipmaps() const override;
-	virtual RID get_rid() const override;
+	bool has_mipmaps() const override;
+	RID get_rid() const override;
 
-	virtual void set_path(const String &p_path, bool p_take_over) override;
+	void set_path(const String &p_path, bool p_take_over) override;
 
-	virtual Vector<Ref<Image>> get_data() const override;
+	Vector<Ref<Image>> get_data() const override;
 
 	CompressedTexture3D();
-	~CompressedTexture3D();
+	~CompressedTexture3D() override;
 };
 
 class ResourceFormatLoaderCompressedTexture3D : public ResourceFormatLoader {
 public:
-	virtual Ref<Resource> load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr, bool p_use_sub_threads = false, float *r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE) override;
-	virtual void get_recognized_extensions(List<String> *p_extensions) const override;
-	virtual bool handles_type(const String &p_type) const override;
-	virtual String get_resource_type(const String &p_path) const override;
+	Ref<Resource> load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr, bool p_use_sub_threads = false, float *r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE) override;
+	void get_recognized_extensions(List<String> *p_extensions) const override;
+	bool handles_type(const String &p_type) const override;
+	String get_resource_type(const String &p_path) const override;
 };
 
 #endif // COMPRESSED_TEXTURE_H

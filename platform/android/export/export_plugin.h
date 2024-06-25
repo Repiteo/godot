@@ -186,37 +186,37 @@ protected:
 public:
 	typedef Error (*EditorExportSaveFunction)(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key);
 
-	virtual void get_preset_features(const Ref<EditorExportPreset> &p_preset, List<String> *r_features) const override;
+	void get_preset_features(const Ref<EditorExportPreset> &p_preset, List<String> *r_features) const override;
 
-	virtual void get_export_options(List<ExportOption> *r_options) const override;
+	void get_export_options(List<ExportOption> *r_options) const override;
 
-	virtual bool get_export_option_visibility(const EditorExportPreset *p_preset, const String &p_option) const override;
+	bool get_export_option_visibility(const EditorExportPreset *p_preset, const String &p_option) const override;
 
-	virtual String get_export_option_warning(const EditorExportPreset *p_preset, const StringName &p_name) const override;
+	String get_export_option_warning(const EditorExportPreset *p_preset, const StringName &p_name) const override;
 
-	virtual String get_name() const override;
+	String get_name() const override;
 
-	virtual String get_os_name() const override;
+	String get_os_name() const override;
 
-	virtual Ref<Texture2D> get_logo() const override;
+	Ref<Texture2D> get_logo() const override;
 
-	virtual bool should_update_export_options() override;
+	bool should_update_export_options() override;
 
-	virtual bool poll_export() override;
+	bool poll_export() override;
 
-	virtual int get_options_count() const override;
+	int get_options_count() const override;
 
-	virtual String get_options_tooltip() const override;
+	String get_options_tooltip() const override;
 
-	virtual String get_option_label(int p_index) const override;
+	String get_option_label(int p_index) const override;
 
-	virtual String get_option_tooltip(int p_index) const override;
+	String get_option_tooltip(int p_index) const override;
 
-	virtual String get_device_architecture(int p_index) const override;
+	String get_device_architecture(int p_index) const override;
 
-	virtual Error run(const Ref<EditorExportPreset> &p_preset, int p_device, int p_debug_flags) override;
+	Error run(const Ref<EditorExportPreset> &p_preset, int p_device, int p_debug_flags) override;
 
-	virtual Ref<Texture2D> get_run_icon() const override;
+	Ref<Texture2D> get_run_icon() const override;
 
 	static String get_adb_path();
 
@@ -226,11 +226,11 @@ public:
 
 	static String get_keytool_path();
 
-	virtual bool has_valid_export_configuration(const Ref<EditorExportPreset> &p_preset, String &r_error, bool &r_missing_templates, bool p_debug = false) const override;
-	virtual bool has_valid_project_configuration(const Ref<EditorExportPreset> &p_preset, String &r_error) const override;
+	bool has_valid_export_configuration(const Ref<EditorExportPreset> &p_preset, String &r_error, bool &r_missing_templates, bool p_debug = false) const override;
+	bool has_valid_project_configuration(const Ref<EditorExportPreset> &p_preset, String &r_error) const override;
 	static bool has_valid_username_and_password(const Ref<EditorExportPreset> &p_preset, String &r_error);
 
-	virtual List<String> get_binary_extensions(const Ref<EditorExportPreset> &p_preset) const override;
+	List<String> get_binary_extensions(const Ref<EditorExportPreset> &p_preset) const override;
 
 	String _get_plugins_names(const Ref<EditorExportPreset> &p_preset) const;
 
@@ -253,17 +253,17 @@ public:
 	static String join_list(const List<String> &p_parts, const String &p_separator);
 	static String join_abis(const Vector<ABI> &p_parts, const String &p_separator, bool p_use_arch);
 
-	virtual Error export_project(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, int p_flags = 0) override;
+	Error export_project(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, int p_flags = 0) override;
 
 	Error export_project_helper(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, int export_format, bool should_sign, int p_flags);
 
-	virtual void get_platform_features(List<String> *r_features) const override;
+	void get_platform_features(List<String> *r_features) const override;
 
-	virtual void resolve_platform_feature_priorities(const Ref<EditorExportPreset> &p_preset, HashSet<String> &p_features) override;
+	void resolve_platform_feature_priorities(const Ref<EditorExportPreset> &p_preset, HashSet<String> &p_features) override;
 
 	EditorExportPlatformAndroid();
 
-	~EditorExportPlatformAndroid();
+	~EditorExportPlatformAndroid() override;
 };
 
 #endif // ANDROID_EXPORT_PLUGIN_H

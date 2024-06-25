@@ -64,7 +64,7 @@ public:
 	LineEdit *get_name_box() const;
 
 	ShaderGlobalsEditor();
-	~ShaderGlobalsEditor();
+	~ShaderGlobalsEditor() override;
 };
 
 #endif // SHADER_GLOBALS_EDITOR_H

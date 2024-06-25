@@ -42,9 +42,9 @@ class EditorTexturePreviewPlugin : public EditorResourcePreviewGenerator {
 	GDCLASS(EditorTexturePreviewPlugin, EditorResourcePreviewGenerator);
 
 public:
-	virtual bool handles(const String &p_type) const override;
-	virtual bool generate_small_preview_automatically() const override;
-	virtual Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
+	bool handles(const String &p_type) const override;
+	bool generate_small_preview_automatically() const override;
+	Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
 
 	EditorTexturePreviewPlugin();
 };
@@ -53,9 +53,9 @@ class EditorImagePreviewPlugin : public EditorResourcePreviewGenerator {
 	GDCLASS(EditorImagePreviewPlugin, EditorResourcePreviewGenerator);
 
 public:
-	virtual bool handles(const String &p_type) const override;
-	virtual bool generate_small_preview_automatically() const override;
-	virtual Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
+	bool handles(const String &p_type) const override;
+	bool generate_small_preview_automatically() const override;
+	Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
 
 	EditorImagePreviewPlugin();
 };
@@ -64,9 +64,9 @@ class EditorBitmapPreviewPlugin : public EditorResourcePreviewGenerator {
 	GDCLASS(EditorBitmapPreviewPlugin, EditorResourcePreviewGenerator);
 
 public:
-	virtual bool handles(const String &p_type) const override;
-	virtual bool generate_small_preview_automatically() const override;
-	virtual Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
+	bool handles(const String &p_type) const override;
+	bool generate_small_preview_automatically() const override;
+	Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
 
 	EditorBitmapPreviewPlugin();
 };
@@ -75,9 +75,9 @@ class EditorPackedScenePreviewPlugin : public EditorResourcePreviewGenerator {
 	GDCLASS(EditorPackedScenePreviewPlugin, EditorResourcePreviewGenerator);
 
 public:
-	virtual bool handles(const String &p_type) const override;
-	virtual Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
-	virtual Ref<Texture2D> generate_from_path(const String &p_path, const Size2 &p_size, Dictionary &p_metadata) const override;
+	bool handles(const String &p_type) const override;
+	Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
+	Ref<Texture2D> generate_from_path(const String &p_path, const Size2 &p_size, Dictionary &p_metadata) const override;
 
 	EditorPackedScenePreviewPlugin();
 };
@@ -99,13 +99,13 @@ class EditorMaterialPreviewPlugin : public EditorResourcePreviewGenerator {
 	DrawRequester draw_requester;
 
 public:
-	virtual bool handles(const String &p_type) const override;
-	virtual bool generate_small_preview_automatically() const override;
-	virtual Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
-	virtual void abort() override;
+	bool handles(const String &p_type) const override;
+	bool generate_small_preview_automatically() const override;
+	Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
+	void abort() override;
 
 	EditorMaterialPreviewPlugin();
-	~EditorMaterialPreviewPlugin();
+	~EditorMaterialPreviewPlugin() override;
 };
 
 class EditorScriptPreviewPlugin : public EditorResourcePreviewGenerator {
@@ -114,9 +114,9 @@ class EditorScriptPreviewPlugin : public EditorResourcePreviewGenerator {
 	Ref<Texture2D> _generate_from_source_code(const ScriptLanguage *p_language, const String &p_source_code, const Size2 &p_size, Dictionary &p_metadata) const;
 
 public:
-	virtual bool handles(const String &p_type) const override;
-	virtual Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
-	virtual Ref<Texture2D> generate_from_path(const String &p_path, const Size2 &p_size, Dictionary &p_metadata) const override;
+	bool handles(const String &p_type) const override;
+	Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
+	Ref<Texture2D> generate_from_path(const String &p_path, const Size2 &p_size, Dictionary &p_metadata) const override;
 
 	EditorScriptPreviewPlugin();
 };
@@ -125,8 +125,8 @@ class EditorAudioStreamPreviewPlugin : public EditorResourcePreviewGenerator {
 	GDCLASS(EditorAudioStreamPreviewPlugin, EditorResourcePreviewGenerator);
 
 public:
-	virtual bool handles(const String &p_type) const override;
-	virtual Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
+	bool handles(const String &p_type) const override;
+	Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
 
 	EditorAudioStreamPreviewPlugin();
 };
@@ -147,12 +147,12 @@ class EditorMeshPreviewPlugin : public EditorResourcePreviewGenerator {
 	DrawRequester draw_requester;
 
 public:
-	virtual bool handles(const String &p_type) const override;
-	virtual Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
-	virtual void abort() override;
+	bool handles(const String &p_type) const override;
+	Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
+	void abort() override;
 
 	EditorMeshPreviewPlugin();
-	~EditorMeshPreviewPlugin();
+	~EditorMeshPreviewPlugin() override;
 };
 
 class EditorFontPreviewPlugin : public EditorResourcePreviewGenerator {
@@ -165,22 +165,22 @@ class EditorFontPreviewPlugin : public EditorResourcePreviewGenerator {
 	DrawRequester draw_requester;
 
 public:
-	virtual bool handles(const String &p_type) const override;
-	virtual Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
-	virtual Ref<Texture2D> generate_from_path(const String &p_path, const Size2 &p_size, Dictionary &p_metadata) const override;
-	virtual void abort() override;
+	bool handles(const String &p_type) const override;
+	Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
+	Ref<Texture2D> generate_from_path(const String &p_path, const Size2 &p_size, Dictionary &p_metadata) const override;
+	void abort() override;
 
 	EditorFontPreviewPlugin();
-	~EditorFontPreviewPlugin();
+	~EditorFontPreviewPlugin() override;
 };
 
 class EditorGradientPreviewPlugin : public EditorResourcePreviewGenerator {
 	GDCLASS(EditorGradientPreviewPlugin, EditorResourcePreviewGenerator);
 
 public:
-	virtual bool handles(const String &p_type) const override;
-	virtual bool generate_small_preview_automatically() const override;
-	virtual Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
+	bool handles(const String &p_type) const override;
+	bool generate_small_preview_automatically() const override;
+	Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const override;
 
 	EditorGradientPreviewPlugin();
 };

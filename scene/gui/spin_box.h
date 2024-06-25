@@ -75,7 +75,7 @@ class SpinBox : public Range {
 	} theme_cache;
 
 protected:
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 
 	void _notification(int p_what);
 	static void _bind_methods();
@@ -83,7 +83,7 @@ protected:
 public:
 	LineEdit *get_line_edit();
 
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
 	void set_horizontal_alignment(HorizontalAlignment p_alignment);
 	HorizontalAlignment get_horizontal_alignment() const;

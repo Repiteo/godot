@@ -55,11 +55,11 @@ class RenderDataExtension : public RenderData {
 protected:
 	static void _bind_methods();
 
-	virtual Ref<RenderSceneBuffers> get_render_scene_buffers() const override;
-	virtual RenderSceneData *get_render_scene_data() const override;
+	Ref<RenderSceneBuffers> get_render_scene_buffers() const override;
+	RenderSceneData *get_render_scene_data() const override;
 
-	virtual RID get_environment() const override;
-	virtual RID get_camera_attributes() const override;
+	RID get_environment() const override;
+	RID get_camera_attributes() const override;
 
 	GDVIRTUAL0RC(Ref<RenderSceneBuffers>, _get_render_scene_buffers)
 	GDVIRTUAL0RC(RenderSceneData *, _get_render_scene_data)

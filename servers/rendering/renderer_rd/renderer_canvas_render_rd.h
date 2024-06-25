@@ -179,13 +179,13 @@ class RendererCanvasRenderRD : public RendererCanvasRender {
 		bool uses_sdf = false;
 		bool uses_time = false;
 
-		virtual void set_code(const String &p_Code);
-		virtual bool is_animated() const;
-		virtual bool casts_shadows() const;
-		virtual RS::ShaderNativeSourceCode get_native_source_code() const;
+		void set_code(const String &p_Code) override;
+		bool is_animated() const override;
+		bool casts_shadows() const override;
+		RS::ShaderNativeSourceCode get_native_source_code() const override;
 
 		CanvasShaderData() {}
-		virtual ~CanvasShaderData();
+		~CanvasShaderData() override;
 	};
 
 	RendererRD::MaterialStorage::ShaderData *_create_shader_func();
@@ -198,10 +198,10 @@ class RendererCanvasRenderRD : public RendererCanvasRender {
 		RID uniform_set;
 		RID uniform_set_srgb;
 
-		virtual void set_render_priority(int p_priority) {}
-		virtual void set_next_pass(RID p_pass) {}
-		virtual bool update_parameters(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty);
-		virtual ~CanvasMaterialData();
+		void set_render_priority(int p_priority) override {}
+		void set_next_pass(RID p_pass) override {}
+		bool update_parameters(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty) override;
+		~CanvasMaterialData() override;
 	};
 
 	RendererRD::MaterialStorage::MaterialData *_create_material_func(CanvasShaderData *p_shader);
@@ -444,7 +444,7 @@ public:
 	void light_update_shadow(RID p_rid, int p_shadow_index, const Transform2D &p_light_xform, int p_light_mask, float p_near, float p_far, LightOccluderInstance *p_occluders) override;
 	void light_update_directional_shadow(RID p_rid, int p_shadow_index, const Transform2D &p_light_xform, int p_light_mask, float p_cull_distance, const Rect2 &p_clip_rect, LightOccluderInstance *p_occluders) override;
 
-	virtual void render_sdf(RID p_render_target, LightOccluderInstance *p_occluders) override;
+	void render_sdf(RID p_render_target, LightOccluderInstance *p_occluders) override;
 
 	RID occluder_polygon_create() override;
 	void occluder_polygon_set_shape(RID p_occluder, const Vector<Vector2> &p_points, bool p_closed) override;
@@ -452,7 +452,7 @@ public:
 
 	void canvas_render_items(RID p_to_render_target, Item *p_item_list, const Color &p_modulate, Light *p_light_list, Light *p_directional_light_list, const Transform2D &p_canvas_transform, RS::CanvasItemTextureFilter p_default_filter, RS::CanvasItemTextureRepeat p_default_repeat, bool p_snap_2d_vertices_to_pixel, bool &r_sdf_used, RenderingMethod::RenderInfo *r_render_info = nullptr) override;
 
-	virtual void set_shadow_texture_size(int p_size) override;
+	void set_shadow_texture_size(int p_size) override;
 
 	void set_debug_redraw(bool p_enabled, double p_time, const Color &p_color) override;
 
@@ -460,7 +460,7 @@ public:
 	void update() override;
 	bool free(RID p_rid) override;
 	RendererCanvasRenderRD();
-	~RendererCanvasRenderRD();
+	~RendererCanvasRenderRD() override;
 };
 
 #endif // RENDERER_CANVAS_RENDER_RD_H

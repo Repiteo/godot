@@ -45,12 +45,12 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual int get_width() const override;
-	virtual int get_height() const override;
-	virtual RID get_rid() const override;
-	virtual bool has_alpha() const override;
+	int get_width() const override;
+	int get_height() const override;
+	RID get_rid() const override;
+	bool has_alpha() const override;
 
-	virtual Ref<Image> get_image() const override;
+	Ref<Image> get_image() const override;
 
 	void set_camera_feed_id(int p_new_id);
 	int get_camera_feed_id() const;
@@ -62,7 +62,7 @@ public:
 	bool get_camera_active() const;
 
 	CameraTexture();
-	~CameraTexture();
+	~CameraTexture() override;
 };
 
 #endif // CAMERA_TEXTURE_H

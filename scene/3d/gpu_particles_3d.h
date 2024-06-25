@@ -191,7 +191,7 @@ public:
 	void convert_from_particles(Node *p_particles);
 
 	GPUParticles3D();
-	~GPUParticles3D();
+	~GPUParticles3D() override;
 };
 
 VARIANT_ENUM_CAST(GPUParticles3D::DrawOrder)

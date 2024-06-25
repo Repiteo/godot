@@ -67,18 +67,18 @@ public:
 	float cached_hue = 0.0;
 	float cached_saturation = 0.0;
 
-	virtual String get_name() const override { return "HSV"; }
+	String get_name() const override { return "HSV"; }
 
-	virtual float get_slider_step() const override { return 1.0; }
-	virtual String get_slider_label(int idx) const override;
-	virtual float get_slider_max(int idx) const override;
-	virtual float get_slider_value(int idx) const override;
+	float get_slider_step() const override { return 1.0; }
+	String get_slider_label(int idx) const override;
+	float get_slider_max(int idx) const override;
+	float get_slider_value(int idx) const override;
 
-	virtual Color get_color() const override;
+	Color get_color() const override;
 
-	virtual void _value_changed() override;
+	void _value_changed() override;
 
-	virtual void slider_draw(int p_which) override;
+	void slider_draw(int p_which) override;
 
 	ColorModeHSV(ColorPicker *p_color_picker) :
 			ColorMode(p_color_picker){};
@@ -88,16 +88,16 @@ class ColorModeRGB : public ColorMode {
 public:
 	String labels[3] = { "R", "G", "B" };
 
-	virtual String get_name() const override { return "RGB"; }
+	String get_name() const override { return "RGB"; }
 
-	virtual float get_slider_step() const override { return 1; }
-	virtual String get_slider_label(int idx) const override;
-	virtual float get_slider_max(int idx) const override;
-	virtual float get_slider_value(int idx) const override;
+	float get_slider_step() const override { return 1; }
+	String get_slider_label(int idx) const override;
+	float get_slider_max(int idx) const override;
+	float get_slider_value(int idx) const override;
 
-	virtual Color get_color() const override;
+	Color get_color() const override;
 
-	virtual void slider_draw(int p_which) override;
+	void slider_draw(int p_which) override;
 
 	ColorModeRGB(ColorPicker *p_color_picker) :
 			ColorMode(p_color_picker){};
@@ -108,18 +108,18 @@ public:
 	String labels[3] = { "R", "G", "B" };
 	float slider_max[4] = { 100, 100, 100, 1 };
 
-	virtual String get_name() const override { return "RAW"; }
+	String get_name() const override { return "RAW"; }
 
-	virtual float get_slider_step() const override { return 0.001; }
-	virtual float get_spinbox_arrow_step() const override { return 0.01; }
-	virtual String get_slider_label(int idx) const override;
-	virtual float get_slider_max(int idx) const override;
-	virtual float get_slider_value(int idx) const override;
+	float get_slider_step() const override { return 0.001; }
+	float get_spinbox_arrow_step() const override { return 0.01; }
+	String get_slider_label(int idx) const override;
+	float get_slider_max(int idx) const override;
+	float get_slider_value(int idx) const override;
 
-	virtual Color get_color() const override;
+	Color get_color() const override;
 
-	virtual void slider_draw(int p_which) override;
-	virtual bool apply_theme() const override;
+	void slider_draw(int p_which) override;
+	bool apply_theme() const override;
 
 	ColorModeRAW(ColorPicker *p_color_picker) :
 			ColorMode(p_color_picker){};
@@ -132,24 +132,24 @@ public:
 	float cached_hue = 0.0;
 	float cached_saturation = 0.0;
 
-	virtual String get_name() const override { return "OKHSL"; }
+	String get_name() const override { return "OKHSL"; }
 
-	virtual float get_slider_step() const override { return 1.0; }
-	virtual String get_slider_label(int idx) const override;
-	virtual float get_slider_max(int idx) const override;
-	virtual float get_slider_value(int idx) const override;
+	float get_slider_step() const override { return 1.0; }
+	String get_slider_label(int idx) const override;
+	float get_slider_max(int idx) const override;
+	float get_slider_value(int idx) const override;
 
-	virtual Color get_color() const override;
+	Color get_color() const override;
 
-	virtual void _value_changed() override;
+	void _value_changed() override;
 
-	virtual void slider_draw(int p_which) override;
-	virtual ColorPicker::PickerShapeType get_shape_override() const override { return ColorPicker::SHAPE_OKHSL_CIRCLE; }
+	void slider_draw(int p_which) override;
+	ColorPicker::PickerShapeType get_shape_override() const override { return ColorPicker::SHAPE_OKHSL_CIRCLE; }
 
 	ColorModeOKHSL(ColorPicker *p_color_picker) :
 			ColorMode(p_color_picker){};
 
-	~ColorModeOKHSL(){};
+	~ColorModeOKHSL() override{};
 };
 
 #endif // COLOR_MODE_H

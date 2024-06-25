@@ -116,7 +116,7 @@ public:
 	void close(Control *p_control);
 
 	EditorToaster();
-	~EditorToaster();
+	~EditorToaster() override;
 };
 
 VARIANT_ENUM_CAST(EditorToaster::Severity);

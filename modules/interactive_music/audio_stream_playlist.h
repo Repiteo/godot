@@ -55,7 +55,7 @@ private:
 	HashSet<AudioStreamPlaybackPlaylist *> playbacks;
 
 public:
-	virtual double get_bpm() const override;
+	double get_bpm() const override;
 	void set_stream_count(int p_count);
 	int get_stream_count() const;
 	void set_fade_time(float p_time);
@@ -63,13 +63,13 @@ public:
 	void set_shuffle(bool p_shuffle);
 	bool get_shuffle() const;
 	void set_loop(bool p_loop);
-	virtual bool has_loop() const override;
+	bool has_loop() const override;
 	void set_list_stream(int p_stream_index, Ref<AudioStream> p_stream);
 	Ref<AudioStream> get_list_stream(int p_stream_index) const;
 
-	virtual Ref<AudioStreamPlayback> instantiate_playback() override;
-	virtual String get_stream_name() const override;
-	virtual double get_length() const override;
+	Ref<AudioStreamPlayback> instantiate_playback() override;
+	String get_stream_name() const override;
+	double get_length() const override;
 
 protected:
 	static void _bind_methods();
@@ -109,17 +109,17 @@ private:
 	void _update_playback_instances();
 
 public:
-	virtual void start(double p_from_pos = 0.0) override;
-	virtual void stop() override;
-	virtual bool is_playing() const override;
-	virtual int get_loop_count() const override; // times it looped
-	virtual double get_playback_position() const override;
-	virtual void seek(double p_time) override;
-	virtual int mix(AudioFrame *p_buffer, float p_rate_scale, int p_frames) override;
+	void start(double p_from_pos = 0.0) override;
+	void stop() override;
+	bool is_playing() const override;
+	int get_loop_count() const override; // times it looped
+	double get_playback_position() const override;
+	void seek(double p_time) override;
+	int mix(AudioFrame *p_buffer, float p_rate_scale, int p_frames) override;
 
-	virtual void tag_used_streams() override;
+	void tag_used_streams() override;
 
-	~AudioStreamPlaybackPlaylist();
+	~AudioStreamPlaybackPlaylist() override;
 };
 
 #endif // AUDIO_STREAM_PLAYLIST_H

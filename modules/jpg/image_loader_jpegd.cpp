@@ -137,7 +137,7 @@ class ImageLoaderJPGOSFile : public jpge::output_stream {
 public:
 	Ref<FileAccess> f;
 
-	virtual bool put_buf(const void *Pbuf, int len) {
+	bool put_buf(const void *Pbuf, int len) override {
 		f->store_buffer((const uint8_t *)Pbuf, len);
 		return true;
 	}
@@ -146,7 +146,7 @@ public:
 class ImageLoaderJPGOSBuffer : public jpge::output_stream {
 public:
 	Vector<uint8_t> *buffer = nullptr;
-	virtual bool put_buf(const void *Pbuf, int len) {
+	bool put_buf(const void *Pbuf, int len) override {
 		uint32_t base = buffer->size();
 		buffer->resize(base + len);
 		memcpy(buffer->ptrw() + base, Pbuf, len);

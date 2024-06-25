@@ -78,7 +78,7 @@ public:
 	uint64_t get_ticks_usec() const;
 
 	Time();
-	virtual ~Time();
+	~Time() override;
 };
 
 VARIANT_ENUM_CAST(Month);

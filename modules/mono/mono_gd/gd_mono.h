@@ -176,7 +176,7 @@ public:
 	void reload_assemblies(bool p_soft_reload);
 
 	GodotSharp();
-	~GodotSharp();
+	~GodotSharp() override;
 };
 
 } // namespace mono_bind

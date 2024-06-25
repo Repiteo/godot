@@ -100,7 +100,7 @@ class GodotArea3D : public GodotCollisionObject3D {
 
 	HashSet<GodotConstraint3D *> constraints;
 
-	virtual void _shapes_changed() override;
+	void _shapes_changed() override;
 	void _queue_monitor_update();
 
 	void _set_space_override_mode(PhysicsServer3D::AreaSpaceOverrideMode &r_mode, PhysicsServer3D::AreaSpaceOverrideMode p_new_mode);
@@ -174,7 +174,7 @@ public:
 	void compute_gravity(const Vector3 &p_position, Vector3 &r_gravity) const;
 
 	GodotArea3D();
-	~GodotArea3D();
+	~GodotArea3D() override;
 };
 
 void GodotArea3D::add_soft_body_to_query(GodotSoftBody3D *p_soft_body, uint32_t p_soft_body_shape, uint32_t p_area_shape) {

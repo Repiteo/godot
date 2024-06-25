@@ -186,7 +186,7 @@ public:
 	bool is_ray_pickable() const;
 
 	SoftBody3D();
-	~SoftBody3D();
+	~SoftBody3D() override;
 
 private:
 	void _make_cache_dirty();

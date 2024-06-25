@@ -67,7 +67,7 @@ public:
 	PackedStringArray get_configuration_warnings() const override;
 
 	CollisionShape3D();
-	~CollisionShape3D();
+	~CollisionShape3D() override;
 };
 
 #endif // COLLISION_SHAPE_3D_H

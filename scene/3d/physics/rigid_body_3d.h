@@ -154,7 +154,7 @@ public:
 	void set_mass(real_t p_mass);
 	real_t get_mass() const;
 
-	virtual real_t get_inverse_mass() const override { return 1.0 / mass; }
+	real_t get_inverse_mass() const override { return 1.0 / mass; }
 
 	void set_inertia(const Vector3 &p_inertia);
 	const Vector3 &get_inertia() const;
@@ -232,10 +232,10 @@ public:
 	void set_constant_torque(const Vector3 &p_torque);
 	Vector3 get_constant_torque() const;
 
-	virtual PackedStringArray get_configuration_warnings() const override;
+	PackedStringArray get_configuration_warnings() const override;
 
 	RigidBody3D();
-	~RigidBody3D();
+	~RigidBody3D() override;
 
 private:
 	void _reload_physics_characteristics();

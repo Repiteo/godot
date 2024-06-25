@@ -441,7 +441,7 @@ private:
 
 	void _keying_changed();
 
-	virtual void shortcut_input(const Ref<InputEvent> &p_ev) override;
+	void shortcut_input(const Ref<InputEvent> &p_ev) override;
 
 	void _draw_text_at_position(Point2 p_position, const String &p_string, Side p_side);
 	void _draw_margin_at_position(int p_value, Point2 p_position, Side p_side);
@@ -587,7 +587,7 @@ public:
 	void focus_selection();
 	void center_at(const Point2 &p_pos);
 
-	virtual CursorShape get_cursor_shape(const Point2 &p_pos) const override;
+	CursorShape get_cursor_shape(const Point2 &p_pos) const override;
 
 	ThemePreviewMode get_theme_preview() const { return theme_preview; }
 
@@ -605,19 +605,19 @@ protected:
 	void _notification(int p_what);
 
 public:
-	virtual String get_name() const override { return "2D"; }
+	String get_name() const override { return "2D"; }
 	bool has_main_screen() const override { return true; }
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
-	virtual Dictionary get_state() const override;
-	virtual void set_state(const Dictionary &p_state) override;
-	virtual void clear() override;
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
+	Dictionary get_state() const override;
+	void set_state(const Dictionary &p_state) override;
+	void clear() override;
 
 	CanvasItemEditor *get_canvas_item_editor() { return canvas_item_editor; }
 
 	CanvasItemEditorPlugin();
-	~CanvasItemEditorPlugin();
+	~CanvasItemEditorPlugin() override;
 };
 
 class CanvasItemEditorViewport : public Control {
@@ -661,11 +661,11 @@ protected:
 	void _notification(int p_what);
 
 public:
-	virtual bool can_drop_data(const Point2 &p_point, const Variant &p_data) const override;
-	virtual void drop_data(const Point2 &p_point, const Variant &p_data) override;
+	bool can_drop_data(const Point2 &p_point, const Variant &p_data) const override;
+	void drop_data(const Point2 &p_point, const Variant &p_data) override;
 
 	CanvasItemEditorViewport(CanvasItemEditor *p_canvas_item_editor);
-	~CanvasItemEditorViewport();
+	~CanvasItemEditorViewport() override;
 };
 
 #endif // CANVAS_ITEM_EDITOR_PLUGIN_H

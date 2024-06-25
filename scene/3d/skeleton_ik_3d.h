@@ -145,11 +145,11 @@ protected:
 	static void _bind_methods();
 	virtual void _notification(int p_what);
 
-	virtual void _process_modification() override;
+	void _process_modification() override;
 
 public:
 	SkeletonIK3D();
-	virtual ~SkeletonIK3D();
+	~SkeletonIK3D() override;
 
 	void set_root_bone(const StringName &p_root_bone);
 	StringName get_root_bone() const;

@@ -468,7 +468,7 @@ public:
 	void set_enable_tagging_used_audio_streams(bool p_enable);
 
 #ifdef TOOLS_ENABLED
-	virtual void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
+	void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
 #endif
 
 	PlaybackType get_default_playback_type() const;
@@ -485,7 +485,7 @@ public:
 	void update_sample_playback_pitch_scale(const Ref<AudioSamplePlayback> &p_playback, float p_pitch_scale = 0.0f);
 
 	AudioServer();
-	virtual ~AudioServer();
+	~AudioServer() override;
 };
 
 VARIANT_ENUM_CAST(AudioServer::SpeakerMode)

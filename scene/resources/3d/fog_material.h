@@ -74,14 +74,14 @@ public:
 	void set_density_texture(const Ref<Texture3D> &p_texture);
 	Ref<Texture3D> get_density_texture() const;
 
-	virtual Shader::Mode get_shader_mode() const override;
-	virtual RID get_shader_rid() const override;
-	virtual RID get_rid() const override;
+	Shader::Mode get_shader_mode() const override;
+	RID get_shader_rid() const override;
+	RID get_rid() const override;
 
 	static void cleanup_shader();
 
 	FogMaterial();
-	virtual ~FogMaterial();
+	~FogMaterial() override;
 };
 
 #endif // FOG_MATERIAL_H

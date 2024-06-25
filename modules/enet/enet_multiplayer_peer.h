@@ -94,30 +94,30 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual void set_target_peer(int p_peer) override;
+	void set_target_peer(int p_peer) override;
 
-	virtual int get_packet_peer() const override;
-	virtual TransferMode get_packet_mode() const override;
-	virtual int get_packet_channel() const override;
+	int get_packet_peer() const override;
+	TransferMode get_packet_mode() const override;
+	int get_packet_channel() const override;
 
-	virtual void poll() override;
-	virtual void close() override;
-	virtual void disconnect_peer(int p_peer, bool p_force = false) override;
+	void poll() override;
+	void close() override;
+	void disconnect_peer(int p_peer, bool p_force = false) override;
 
-	virtual bool is_server() const override;
-	virtual bool is_server_relay_supported() const override;
+	bool is_server() const override;
+	bool is_server_relay_supported() const override;
 
 	// Overridden so we can instrument the DTLSServer when needed.
-	virtual void set_refuse_new_connections(bool p_enabled) override;
+	void set_refuse_new_connections(bool p_enabled) override;
 
-	virtual ConnectionStatus get_connection_status() const override;
+	ConnectionStatus get_connection_status() const override;
 
-	virtual int get_unique_id() const override;
+	int get_unique_id() const override;
 
-	virtual int get_max_packet_size() const override;
-	virtual int get_available_packet_count() const override;
-	virtual Error get_packet(const uint8_t **r_buffer, int &r_buffer_size) override;
-	virtual Error put_packet(const uint8_t *p_buffer, int p_buffer_size) override;
+	int get_max_packet_size() const override;
+	int get_available_packet_count() const override;
+	Error get_packet(const uint8_t **r_buffer, int &r_buffer_size) override;
+	Error put_packet(const uint8_t *p_buffer, int p_buffer_size) override;
 
 	Error create_server(int p_port, int p_max_clients = 32, int p_max_channels = 0, int p_in_bandwidth = 0, int p_out_bandwidth = 0);
 	Error create_client(const String &p_address, int p_port, int p_channel_count = 0, int p_in_bandwidth = 0, int p_out_bandwidth = 0, int p_local_port = 0);
@@ -130,7 +130,7 @@ public:
 	Ref<ENetPacketPeer> get_peer(int p_id) const;
 
 	ENetMultiplayerPeer();
-	~ENetMultiplayerPeer();
+	~ENetMultiplayerPeer() override;
 };
 
 #endif // ENET_MULTIPLAYER_PEER_H

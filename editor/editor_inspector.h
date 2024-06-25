@@ -142,8 +142,8 @@ protected:
 	static void _bind_methods();
 	virtual void _set_read_only(bool p_read_only);
 
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
-	virtual void shortcut_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
+	void shortcut_input(const Ref<InputEvent> &p_event) override;
 	const Color *_get_property_colors();
 
 	virtual Variant _get_cache_value(const StringName &p_prop, bool &r_valid) const;
@@ -154,7 +154,7 @@ protected:
 public:
 	void emit_changed(const StringName &p_property, const Variant &p_value, const StringName &p_field = StringName(), bool p_changing = false);
 
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
 	void set_label(const String &p_label);
 	String get_label() const;
@@ -207,7 +207,7 @@ public:
 	virtual void collapse_all_folding();
 	virtual void expand_revertable();
 
-	virtual Variant get_drag_data(const Point2 &p_point) override;
+	Variant get_drag_data(const Point2 &p_point) override;
 	virtual void update_cache();
 	virtual bool is_cache_valid() const;
 
@@ -218,7 +218,7 @@ public:
 	float get_name_split_ratio() const;
 
 	void set_object_and_property(Object *p_object, const StringName &p_property);
-	virtual Control *make_custom_tooltip(const String &p_text) const override;
+	Control *make_custom_tooltip(const String &p_text) const override;
 
 	void set_draw_top_bg(bool p_draw) { draw_top_bg = p_draw; }
 
@@ -289,11 +289,11 @@ class EditorInspectorCategory : public Control {
 
 protected:
 	void _notification(int p_what);
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 
 public:
-	virtual Size2 get_minimum_size() const override;
-	virtual Control *make_custom_tooltip(const String &p_text) const override;
+	Size2 get_minimum_size() const override;
+	Control *make_custom_tooltip(const String &p_text) const override;
 
 	EditorInspectorCategory();
 };
@@ -325,10 +325,10 @@ protected:
 
 	void _notification(int p_what);
 	static void _bind_methods();
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 
 public:
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
 	void setup(const String &p_section, const String &p_label, Object *p_object, const Color &p_bg_color, bool p_foldable, int p_indent_depth = 0, int p_level = 1);
 	VBoxContainer *get_vbox();
@@ -340,7 +340,7 @@ public:
 	void property_can_revert_changed(const String &p_path, bool p_can_revert);
 
 	EditorInspectorSection();
-	~EditorInspectorSection();
+	~EditorInspectorSection() override;
 };
 
 class EditorInspectorArray : public EditorInspectorSection {

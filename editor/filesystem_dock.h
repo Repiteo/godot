@@ -53,7 +53,7 @@ class DirectoryCreateDialog;
 class EditorResourceTooltipPlugin;
 
 class FileSystemTree : public Tree {
-	virtual Control *make_custom_tooltip(const String &p_text) const;
+	Control *make_custom_tooltip(const String &p_text) const override;
 };
 
 class FileSystemList : public ItemList {
@@ -64,7 +64,7 @@ class FileSystemList : public ItemList {
 	Popup *popup_editor = nullptr;
 	LineEdit *line_editor = nullptr;
 
-	virtual Control *make_custom_tooltip(const String &p_text) const override;
+	Control *make_custom_tooltip(const String &p_text) const override;
 	void _line_editor_submit(const String &p_text);
 	void _text_editor_popup_modal_close();
 
@@ -429,7 +429,7 @@ public:
 	void load_layout_from_config(Ref<ConfigFile> p_layout, const String &p_section);
 
 	FileSystemDock();
-	~FileSystemDock();
+	~FileSystemDock() override;
 };
 
 VARIANT_ENUM_CAST(FileSystemDock::Overwrite);

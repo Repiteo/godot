@@ -59,7 +59,7 @@ protected:
 	static void _bind_methods();
 	void _notification(int p_what);
 
-	virtual void shortcut_input(const Ref<InputEvent> &p_event) override;
+	void shortcut_input(const Ref<InputEvent> &p_event) override;
 
 public:
 	void set_wrapped_control(Control *p_control, const Ref<Shortcut> &p_enable_shortcut = Ref<Shortcut>());
@@ -98,7 +98,7 @@ class ScreenSelect : public Button {
 	void _show_popup();
 
 protected:
-	virtual void pressed() override;
+	void pressed() override;
 	static void _bind_methods();
 
 	void _notification(int p_what);

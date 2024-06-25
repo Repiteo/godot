@@ -139,16 +139,16 @@ class MenuBar : public Control {
 	void unbind_global_menu();
 
 protected:
-	virtual void shortcut_input(const Ref<InputEvent> &p_event) override;
+	void shortcut_input(const Ref<InputEvent> &p_event) override;
 
 	void _notification(int p_what);
-	virtual void add_child_notify(Node *p_child) override;
-	virtual void move_child_notify(Node *p_child) override;
-	virtual void remove_child_notify(Node *p_child) override;
+	void add_child_notify(Node *p_child) override;
+	void move_child_notify(Node *p_child) override;
+	void remove_child_notify(Node *p_child) override;
 	static void _bind_methods();
 
 public:
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 
 	void set_switch_on_hover(bool p_enabled);
 	bool is_switch_on_hover();
@@ -159,7 +159,7 @@ public:
 
 	bool is_native_menu() const;
 
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
 	int get_menu_count() const;
 
@@ -189,10 +189,10 @@ public:
 
 	PopupMenu *get_menu_popup(int p_menu) const;
 
-	virtual String get_tooltip(const Point2 &p_pos) const override;
+	String get_tooltip(const Point2 &p_pos) const override;
 
 	MenuBar();
-	~MenuBar();
+	~MenuBar() override;
 };
 
 #endif // MENU_BAR_H

@@ -47,10 +47,10 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
 	Separator();
-	~Separator();
+	~Separator() override;
 };
 
 class VSeparator : public Separator {

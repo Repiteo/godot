@@ -84,7 +84,7 @@ public:
 	void config(const String &p_config_path);
 
 	PluginConfigDialog();
-	~PluginConfigDialog();
+	~PluginConfigDialog() override;
 };
 
 #endif // PLUGIN_CONFIG_DIALOG_H

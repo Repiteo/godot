@@ -46,16 +46,16 @@ public:
 	static OpenXRCompositionLayerExtension *get_singleton();
 
 	OpenXRCompositionLayerExtension();
-	virtual ~OpenXRCompositionLayerExtension() override;
+	~OpenXRCompositionLayerExtension() override;
 
-	virtual HashMap<String, bool *> get_requested_extensions() override;
-	virtual void on_session_created(const XrSession p_instance) override;
-	virtual void on_session_destroyed() override;
-	virtual void on_pre_render() override;
+	HashMap<String, bool *> get_requested_extensions() override;
+	void on_session_created(const XrSession p_instance) override;
+	void on_session_destroyed() override;
+	void on_pre_render() override;
 
-	virtual int get_composition_layer_count() override;
-	virtual XrCompositionLayerBaseHeader *get_composition_layer(int p_index) override;
-	virtual int get_composition_layer_order(int p_index) override;
+	int get_composition_layer_count() override;
+	XrCompositionLayerBaseHeader *get_composition_layer(int p_index) override;
+	int get_composition_layer_order(int p_index) override;
 
 	void register_viewport_composition_layer_provider(OpenXRViewportCompositionLayerProvider *p_composition_layer);
 	void unregister_viewport_composition_layer_provider(OpenXRViewportCompositionLayerProvider *p_composition_layer);

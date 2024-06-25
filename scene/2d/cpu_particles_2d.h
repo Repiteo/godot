@@ -289,7 +289,7 @@ public:
 	void convert_from_particles(Node *p_particles);
 
 	CPUParticles2D();
-	~CPUParticles2D();
+	~CPUParticles2D() override;
 };
 
 VARIANT_ENUM_CAST(CPUParticles2D::DrawOrder)

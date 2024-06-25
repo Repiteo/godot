@@ -56,7 +56,7 @@ protected:
 public:
 #ifdef TOOLS_ENABLED
 	Rect2 _edit_get_rect() const override;
-	virtual bool _edit_use_rect() const override;
+	bool _edit_use_rect() const override;
 #endif
 
 	void set_rect(const Rect2 &p_rect);
@@ -67,7 +67,7 @@ public:
 	CopyMode get_copy_mode() const;
 
 	BackBufferCopy();
-	~BackBufferCopy();
+	~BackBufferCopy() override;
 };
 
 VARIANT_ENUM_CAST(BackBufferCopy::CopyMode);

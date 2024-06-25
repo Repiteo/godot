@@ -182,7 +182,7 @@ public:
 			dirty_quadrant_list_element(this) {
 	}
 
-	~DebugQuadrant() {
+	~DebugQuadrant() override {
 		cells.clear();
 	}
 };
@@ -214,7 +214,7 @@ public:
 			dirty_quadrant_list_element(this) {
 	}
 
-	~RenderingQuadrant() {
+	~RenderingQuadrant() override {
 		cells.clear();
 	}
 };
@@ -381,7 +381,7 @@ private:
 	void _deferred_internal_update();
 	void _internal_update(bool p_force_cleanup);
 
-	virtual void _physics_interpolated_changed() override;
+	void _physics_interpolated_changed() override;
 
 protected:
 	void _notification(int p_what);
@@ -389,8 +389,8 @@ protected:
 	static void _bind_methods();
 	void _validate_property(PropertyInfo &p_property) const;
 
-	virtual void _update_self_texture_filter(RS::CanvasItemTextureFilter p_texture_filter) override;
-	virtual void _update_self_texture_repeat(RS::CanvasItemTextureRepeat p_texture_repeat) override;
+	void _update_self_texture_filter(RS::CanvasItemTextureFilter p_texture_filter) override;
+	void _update_self_texture_repeat(RS::CanvasItemTextureRepeat p_texture_repeat) override;
 
 public:
 	// TileMap node.
@@ -471,14 +471,14 @@ public:
 	void set_highlight_mode(HighlightMode p_highlight_mode);
 	HighlightMode get_highlight_mode() const;
 
-	virtual void set_self_modulate(const Color &p_self_modulate) override;
-	virtual void set_y_sort_enabled(bool p_y_sort_enabled) override;
+	void set_self_modulate(const Color &p_self_modulate) override;
+	void set_y_sort_enabled(bool p_y_sort_enabled) override;
 	void set_y_sort_origin(int p_y_sort_origin);
 	int get_y_sort_origin() const;
 	void set_x_draw_order_reversed(bool p_x_draw_order_reversed);
 	bool is_x_draw_order_reversed() const;
-	virtual void set_z_index(int p_z_index) override;
-	virtual void set_light_mask(int p_light_mask) override;
+	void set_z_index(int p_z_index) override;
+	void set_light_mask(int p_light_mask) override;
 	void set_rendering_quadrant_size(int p_size);
 	int get_rendering_quadrant_size() const;
 
@@ -497,7 +497,7 @@ public:
 	DebugVisibilityMode get_navigation_visibility_mode() const;
 
 	TileMapLayer();
-	~TileMapLayer();
+	~TileMapLayer() override;
 };
 
 VARIANT_ENUM_CAST(TileMapLayer::DebugVisibilityMode);

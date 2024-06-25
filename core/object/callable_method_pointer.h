@@ -51,7 +51,7 @@ protected:
 	void _setup(uint32_t *p_base_ptr, uint32_t p_ptr_size);
 
 public:
-	virtual StringName get_method() const {
+	StringName get_method() const override {
 #ifdef DEBUG_METHODS_ENABLED
 		return StringName(text);
 #else
@@ -63,18 +63,18 @@ public:
 	void set_text(const char *p_text) {
 		text = p_text;
 	}
-	virtual String get_as_text() const {
+	String get_as_text() const override {
 		return text;
 	}
 #else
-	virtual String get_as_text() const {
+	String get_as_text() const override {
 		return String();
 	}
 #endif
-	virtual CompareEqualFunc get_compare_equal_func() const;
-	virtual CompareLessFunc get_compare_less_func() const;
+	CompareEqualFunc get_compare_equal_func() const override;
+	CompareLessFunc get_compare_less_func() const override;
 
-	virtual uint32_t hash() const;
+	uint32_t hash() const override;
 };
 
 template <typename T, typename... P>
@@ -86,19 +86,19 @@ class CallableCustomMethodPointer : public CallableCustomMethodPointerBase {
 	} data;
 
 public:
-	virtual ObjectID get_object() const {
+	ObjectID get_object() const override {
 		if (ObjectDB::get_instance(ObjectID(data.object_id)) == nullptr) {
 			return ObjectID();
 		}
 		return data.instance->get_instance_id();
 	}
 
-	virtual int get_argument_count(bool &r_is_valid) const {
+	int get_argument_count(bool &r_is_valid) const override {
 		r_is_valid = true;
 		return sizeof...(P);
 	}
 
-	virtual void call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const {
+	void call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const override {
 		ERR_FAIL_NULL_MSG(ObjectDB::get_instance(ObjectID(data.object_id)), "Invalid Object id '" + uitos(data.object_id) + "', can't call method.");
 		call_with_variant_args(data.instance, data.method, p_arguments, p_argcount, r_call_error);
 	}
@@ -138,19 +138,19 @@ class CallableCustomMethodPointerRet : public CallableCustomMethodPointerBase {
 	} data;
 
 public:
-	virtual ObjectID get_object() const {
+	ObjectID get_object() const override {
 		if (ObjectDB::get_instance(ObjectID(data.object_id)) == nullptr) {
 			return ObjectID();
 		}
 		return data.instance->get_instance_id();
 	}
 
-	virtual int get_argument_count(bool &r_is_valid) const {
+	int get_argument_count(bool &r_is_valid) const override {
 		r_is_valid = true;
 		return sizeof...(P);
 	}
 
-	virtual void call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const {
+	void call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const override {
 		ERR_FAIL_NULL_MSG(ObjectDB::get_instance(ObjectID(data.object_id)), "Invalid Object id '" + uitos(data.object_id) + "', can't call method.");
 		call_with_variant_args_ret(data.instance, data.method, p_arguments, p_argcount, r_return_value, r_call_error);
 	}
@@ -190,19 +190,19 @@ class CallableCustomMethodPointerRetC : public CallableCustomMethodPointerBase {
 	} data;
 
 public:
-	virtual ObjectID get_object() const override {
+	ObjectID get_object() const override {
 		if (ObjectDB::get_instance(ObjectID(data.object_id)) == nullptr) {
 			return ObjectID();
 		}
 		return data.instance->get_instance_id();
 	}
 
-	virtual int get_argument_count(bool &r_is_valid) const override {
+	int get_argument_count(bool &r_is_valid) const override {
 		r_is_valid = true;
 		return sizeof...(P);
 	}
 
-	virtual void call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const override {
+	void call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const override {
 		ERR_FAIL_NULL_MSG(ObjectDB::get_instance(ObjectID(data.object_id)), "Invalid Object id '" + uitos(data.object_id) + "', can't call method.");
 		call_with_variant_args_retc(data.instance, data.method, p_arguments, p_argcount, r_return_value, r_call_error);
 	}
@@ -245,20 +245,20 @@ class CallableCustomStaticMethodPointer : public CallableCustomMethodPointerBase
 	} data;
 
 public:
-	virtual bool is_valid() const override {
+	bool is_valid() const override {
 		return true;
 	}
 
-	virtual ObjectID get_object() const override {
+	ObjectID get_object() const override {
 		return ObjectID();
 	}
 
-	virtual int get_argument_count(bool &r_is_valid) const override {
+	int get_argument_count(bool &r_is_valid) const override {
 		r_is_valid = true;
 		return sizeof...(P);
 	}
 
-	virtual void call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const override {
+	void call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const override {
 		call_with_variant_args_static_ret(data.method, p_arguments, p_argcount, r_return_value, r_call_error);
 		r_return_value = Variant();
 	}
@@ -292,20 +292,20 @@ class CallableCustomStaticMethodPointerRet : public CallableCustomMethodPointerB
 	} data;
 
 public:
-	virtual bool is_valid() const override {
+	bool is_valid() const override {
 		return true;
 	}
 
-	virtual ObjectID get_object() const override {
+	ObjectID get_object() const override {
 		return ObjectID();
 	}
 
-	virtual int get_argument_count(bool &r_is_valid) const override {
+	int get_argument_count(bool &r_is_valid) const override {
 		r_is_valid = true;
 		return sizeof...(P);
 	}
 
-	virtual void call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const override {
+	void call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const override {
 		call_with_variant_args_static_ret(data.method, p_arguments, p_argcount, r_return_value, r_call_error);
 	}
 

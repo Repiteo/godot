@@ -107,14 +107,14 @@ public:
 	void set_energy_multiplier(float p_multiplier);
 	float get_energy_multiplier() const;
 
-	virtual Shader::Mode get_shader_mode() const override;
-	virtual RID get_shader_rid() const override;
-	virtual RID get_rid() const override;
+	Shader::Mode get_shader_mode() const override;
+	RID get_shader_rid() const override;
+	RID get_rid() const override;
 
 	static void cleanup_shader();
 
 	ProceduralSkyMaterial();
-	~ProceduralSkyMaterial();
+	~ProceduralSkyMaterial() override;
 };
 
 //////////////////////////////////////////////////////
@@ -147,14 +147,14 @@ public:
 	void set_energy_multiplier(float p_multiplier);
 	float get_energy_multiplier() const;
 
-	virtual Shader::Mode get_shader_mode() const override;
-	virtual RID get_shader_rid() const override;
-	virtual RID get_rid() const override;
+	Shader::Mode get_shader_mode() const override;
+	RID get_shader_rid() const override;
+	RID get_rid() const override;
 
 	static void cleanup_shader();
 
 	PanoramaSkyMaterial();
-	~PanoramaSkyMaterial();
+	~PanoramaSkyMaterial() override;
 };
 
 //////////////////////////////////////////////////////
@@ -222,14 +222,14 @@ public:
 	void set_night_sky(const Ref<Texture2D> &p_night_sky);
 	Ref<Texture2D> get_night_sky() const;
 
-	virtual Shader::Mode get_shader_mode() const override;
-	virtual RID get_shader_rid() const override;
+	Shader::Mode get_shader_mode() const override;
+	RID get_shader_rid() const override;
 
 	static void cleanup_shader();
-	virtual RID get_rid() const override;
+	RID get_rid() const override;
 
 	PhysicalSkyMaterial();
-	~PhysicalSkyMaterial();
+	~PhysicalSkyMaterial() override;
 };
 
 #endif // SKY_MATERIAL_H

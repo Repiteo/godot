@@ -62,14 +62,14 @@ protected:
 	void _notification(int p_what);
 
 public:
-	virtual String get_name() const override { return "GPUParticlesCollisionSDF3D"; }
+	String get_name() const override { return "GPUParticlesCollisionSDF3D"; }
 	bool has_main_screen() const override { return false; }
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
 
 	GPUParticlesCollisionSDF3DEditorPlugin();
-	~GPUParticlesCollisionSDF3DEditorPlugin();
+	~GPUParticlesCollisionSDF3DEditorPlugin() override;
 };
 
 #endif // GPU_PARTICLES_COLLISION_SDF_EDITOR_PLUGIN_H

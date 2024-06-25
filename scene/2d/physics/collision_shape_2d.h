@@ -60,7 +60,7 @@ protected:
 
 public:
 #ifdef TOOLS_ENABLED
-	virtual bool _edit_is_selected_on_click(const Point2 &p_point, double p_tolerance) const override;
+	bool _edit_is_selected_on_click(const Point2 &p_point, double p_tolerance) const override;
 #else
 	virtual bool _edit_is_selected_on_click(const Point2 &p_point, double p_tolerance) const;
 #endif // TOOLS_ENABLED

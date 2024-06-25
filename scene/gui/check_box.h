@@ -62,7 +62,7 @@ protected:
 
 public:
 	CheckBox(const String &p_text = String());
-	~CheckBox();
+	~CheckBox() override;
 };
 
 #endif // CHECK_BOX_H

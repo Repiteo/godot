@@ -88,7 +88,7 @@ public:
 	virtual int get_import_order(const String &p_path) const { return 0; }
 	virtual String get_import_group_file(const String &p_path) const { return ""; } //no group
 
-	virtual ~ResourceFormatLoader() {}
+	~ResourceFormatLoader() override {}
 };
 
 VARIANT_ENUM_CAST(ResourceFormatLoader::CacheMode)
@@ -125,7 +125,7 @@ public:
 
 		void clear();
 
-		virtual ~LoadToken();
+		~LoadToken() override;
 	};
 
 	static const int BINARY_MUTEX_TAG = 1;

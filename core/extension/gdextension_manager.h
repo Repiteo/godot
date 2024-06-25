@@ -86,7 +86,7 @@ public:
 	void reload_extensions();
 
 	GDExtensionManager();
-	~GDExtensionManager();
+	~GDExtensionManager() override;
 };
 
 VARIANT_ENUM_CAST(GDExtensionManager::LoadStatus)

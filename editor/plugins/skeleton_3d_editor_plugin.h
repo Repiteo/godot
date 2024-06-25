@@ -218,7 +218,7 @@ public:
 	Vector3 get_bone_original_scale() const { return bone_original_scale; };
 
 	Skeleton3DEditor(EditorInspectorPluginSkeleton *e_plugin, Skeleton3D *skeleton);
-	~Skeleton3DEditor();
+	~Skeleton3DEditor() override;
 };
 
 class EditorInspectorPluginSkeleton : public EditorInspectorPlugin {
@@ -229,8 +229,8 @@ class EditorInspectorPluginSkeleton : public EditorInspectorPlugin {
 	Skeleton3DEditor *skel_editor = nullptr;
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual void parse_begin(Object *p_object) override;
+	bool can_handle(Object *p_object) override;
+	void parse_begin(Object *p_object) override;
 };
 
 class Skeleton3DEditorPlugin : public EditorPlugin {
@@ -239,12 +239,12 @@ class Skeleton3DEditorPlugin : public EditorPlugin {
 	EditorInspectorPluginSkeleton *skeleton_plugin = nullptr;
 
 public:
-	virtual EditorPlugin::AfterGUIInput forward_3d_gui_input(Camera3D *p_camera, const Ref<InputEvent> &p_event) override;
+	EditorPlugin::AfterGUIInput forward_3d_gui_input(Camera3D *p_camera, const Ref<InputEvent> &p_event) override;
 
 	bool has_main_screen() const override { return false; }
-	virtual bool handles(Object *p_object) const override;
+	bool handles(Object *p_object) const override;
 
-	virtual String get_name() const override { return "Skeleton3D"; }
+	String get_name() const override { return "Skeleton3D"; }
 
 	Skeleton3DEditorPlugin();
 };

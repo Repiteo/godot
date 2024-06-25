@@ -63,7 +63,7 @@ protected:
 	_FORCE_INLINE_ bool is_configured() const { return configured; }
 
 public:
-	virtual PackedStringArray get_configuration_warnings() const override;
+	PackedStringArray get_configuration_warnings() const override;
 
 	void set_node_a(const NodePath &p_node_a);
 	NodePath get_node_a() const;
@@ -79,7 +79,7 @@ public:
 
 	RID get_rid() const { return joint; }
 	Joint3D();
-	~Joint3D();
+	~Joint3D() override;
 };
 
 #endif // JOINT_3D_H

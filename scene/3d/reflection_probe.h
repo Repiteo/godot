@@ -120,10 +120,10 @@ public:
 	void set_update_mode(UpdateMode p_mode);
 	UpdateMode get_update_mode() const;
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 
 	ReflectionProbe();
-	~ReflectionProbe();
+	~ReflectionProbe() override;
 };
 
 VARIANT_ENUM_CAST(ReflectionProbe::AmbientMode);

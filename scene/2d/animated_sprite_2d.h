@@ -73,17 +73,17 @@ protected:
 
 public:
 #ifdef TOOLS_ENABLED
-	virtual Dictionary _edit_get_state() const override;
-	virtual void _edit_set_state(const Dictionary &p_state) override;
+	Dictionary _edit_get_state() const override;
+	void _edit_set_state(const Dictionary &p_state) override;
 
-	virtual void _edit_set_pivot(const Point2 &p_pivot) override;
-	virtual Point2 _edit_get_pivot() const override;
-	virtual bool _edit_use_pivot() const override;
-	virtual Rect2 _edit_get_rect() const override;
-	virtual bool _edit_use_rect() const override;
+	void _edit_set_pivot(const Point2 &p_pivot) override;
+	Point2 _edit_get_pivot() const override;
+	bool _edit_use_pivot() const override;
+	Rect2 _edit_get_rect() const override;
+	bool _edit_use_rect() const override;
 #endif
 
-	virtual Rect2 get_anchorable_rect() const override;
+	Rect2 get_anchorable_rect() const override;
 
 	void set_sprite_frames(const Ref<SpriteFrames> &p_frames);
 	Ref<SpriteFrames> get_sprite_frames() const;
@@ -128,7 +128,7 @@ public:
 	PackedStringArray get_configuration_warnings() const override;
 
 #ifdef TOOLS_ENABLED
-	virtual void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
+	void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
 #endif
 
 	AnimatedSprite2D();

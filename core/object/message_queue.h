@@ -169,7 +169,7 @@ public:
 	static void set_thread_singleton_override(CallQueue *p_thread_singleton);
 
 	MessageQueue();
-	~MessageQueue();
+	~MessageQueue() override;
 };
 
 #endif // MESSAGE_QUEUE_H

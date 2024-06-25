@@ -44,21 +44,21 @@
 
 class OpenXROpenGLExtension : public OpenXRGraphicsExtensionWrapper {
 public:
-	virtual HashMap<String, bool *> get_requested_extensions() override;
+	HashMap<String, bool *> get_requested_extensions() override;
 
-	virtual void on_instance_created(const XrInstance p_instance) override;
-	virtual void *set_session_create_and_get_next_pointer(void *p_next_pointer) override;
+	void on_instance_created(const XrInstance p_instance) override;
+	void *set_session_create_and_get_next_pointer(void *p_next_pointer) override;
 
-	virtual void on_pre_draw_viewport(RID p_render_target) override;
-	virtual void on_post_draw_viewport(RID p_render_target) override;
+	void on_pre_draw_viewport(RID p_render_target) override;
+	void on_post_draw_viewport(RID p_render_target) override;
 
-	virtual void get_usable_swapchain_formats(Vector<int64_t> &p_usable_swap_chains) override;
-	virtual void get_usable_depth_formats(Vector<int64_t> &p_usable_swap_chains) override;
-	virtual String get_swapchain_format_name(int64_t p_swapchain_format) const override;
-	virtual bool get_swapchain_image_data(XrSwapchain p_swapchain, int64_t p_swapchain_format, uint32_t p_width, uint32_t p_height, uint32_t p_sample_count, uint32_t p_array_size, void **r_swapchain_graphics_data) override;
-	virtual void cleanup_swapchain_graphics_data(void **p_swapchain_graphics_data) override;
-	virtual bool create_projection_fov(const XrFovf p_fov, double p_z_near, double p_z_far, Projection &r_camera_matrix) override;
-	virtual RID get_texture(void *p_swapchain_graphics_data, int p_image_index) override;
+	void get_usable_swapchain_formats(Vector<int64_t> &p_usable_swap_chains) override;
+	void get_usable_depth_formats(Vector<int64_t> &p_usable_swap_chains) override;
+	String get_swapchain_format_name(int64_t p_swapchain_format) const override;
+	bool get_swapchain_image_data(XrSwapchain p_swapchain, int64_t p_swapchain_format, uint32_t p_width, uint32_t p_height, uint32_t p_sample_count, uint32_t p_array_size, void **r_swapchain_graphics_data) override;
+	void cleanup_swapchain_graphics_data(void **p_swapchain_graphics_data) override;
+	bool create_projection_fov(const XrFovf p_fov, double p_z_near, double p_z_far, Projection &r_camera_matrix) override;
+	RID get_texture(void *p_swapchain_graphics_data, int p_image_index) override;
 
 private:
 	static OpenXROpenGLExtension *singleton;

@@ -57,7 +57,7 @@ public:
 	void stop(); // Stop listening
 
 	TCPServer();
-	~TCPServer();
+	~TCPServer() override;
 };
 
 #endif // TCP_SERVER_H

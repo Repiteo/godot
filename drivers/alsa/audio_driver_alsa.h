@@ -73,25 +73,25 @@ class AudioDriverALSA : public AudioDriver {
 	SafeFlag exit_thread;
 
 public:
-	virtual const char *get_name() const override {
+	const char *get_name() const override {
 		return "ALSA";
 	}
 
-	virtual Error init() override;
-	virtual void start() override;
-	virtual int get_mix_rate() const override;
-	virtual SpeakerMode get_speaker_mode() const override;
+	Error init() override;
+	void start() override;
+	int get_mix_rate() const override;
+	SpeakerMode get_speaker_mode() const override;
 
-	virtual void lock() override;
-	virtual void unlock() override;
-	virtual void finish() override;
+	void lock() override;
+	void unlock() override;
+	void finish() override;
 
-	virtual PackedStringArray get_output_device_list() override;
-	virtual String get_output_device() override;
-	virtual void set_output_device(const String &p_name) override;
+	PackedStringArray get_output_device_list() override;
+	String get_output_device() override;
+	void set_output_device(const String &p_name) override;
 
 	AudioDriverALSA() {}
-	~AudioDriverALSA() {}
+	~AudioDriverALSA() override {}
 };
 
 #endif // ALSA_ENABLED

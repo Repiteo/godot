@@ -103,7 +103,7 @@ class GodotBody2D : public GodotCollisionObject2D {
 	bool can_sleep = true;
 	bool first_time_kinematic = false;
 	void _mass_properties_changed();
-	virtual void _shapes_changed() override;
+	void _shapes_changed() override;
 	Transform2D new_transform;
 
 	List<Pair<GodotConstraint2D *, int>> constraint_list;
@@ -337,7 +337,7 @@ public:
 	bool sleep_test(real_t p_step);
 
 	GodotBody2D();
-	~GodotBody2D();
+	~GodotBody2D() override;
 };
 
 //add contact inline

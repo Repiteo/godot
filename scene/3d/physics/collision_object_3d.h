@@ -176,7 +176,7 @@ public:
 	PackedStringArray get_configuration_warnings() const override;
 
 	CollisionObject3D();
-	~CollisionObject3D();
+	~CollisionObject3D() override;
 };
 
 VARIANT_ENUM_CAST(CollisionObject3D::DisableMode);

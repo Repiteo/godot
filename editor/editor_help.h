@@ -70,7 +70,7 @@ class FindBar : public HBoxContainer {
 
 protected:
 	void _notification(int p_what);
-	virtual void unhandled_input(const Ref<InputEvent> &p_event) override;
+	void unhandled_input(const Ref<InputEvent> &p_event) override;
 
 	bool _search(bool p_search_previous = false);
 
@@ -212,7 +212,7 @@ class EditorHelp : public VBoxContainer {
 	};
 
 protected:
-	virtual void _update_theme_item_cache() override;
+	void _update_theme_item_cache() override;
 
 	void _notification(int p_what);
 	static void _bind_methods();
@@ -248,7 +248,7 @@ public:
 	static void init_gdext_pointers();
 
 	EditorHelp();
-	~EditorHelp();
+	~EditorHelp() override;
 };
 
 class EditorHelpBit : public VBoxContainer {
@@ -333,7 +333,7 @@ class EditorHelpBitTooltip : public PopupPanel {
 
 protected:
 	void _notification(int p_what);
-	virtual void _input_from_window(const Ref<InputEvent> &p_event) override;
+	void _input_from_window(const Ref<InputEvent> &p_event) override;
 
 public:
 	static void show_tooltip(EditorHelpBit *p_help_bit, Control *p_target);

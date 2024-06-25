@@ -62,7 +62,7 @@ protected:
 	_FORCE_INLINE_ bool is_configured() const { return configured; }
 
 public:
-	virtual PackedStringArray get_configuration_warnings() const override;
+	PackedStringArray get_configuration_warnings() const override;
 
 	void set_node_a(const NodePath &p_node_a);
 	NodePath get_node_a() const;
@@ -78,7 +78,7 @@ public:
 
 	RID get_rid() const { return joint; }
 	Joint2D();
-	~Joint2D();
+	~Joint2D() override;
 };
 
 #endif // JOINT_2D_H

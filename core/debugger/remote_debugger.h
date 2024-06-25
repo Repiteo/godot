@@ -114,13 +114,13 @@ private:
 
 public:
 	// Overrides
-	void poll_events(bool p_is_idle);
-	void send_message(const String &p_message, const Array &p_args);
-	void send_error(const String &p_func, const String &p_file, int p_line, const String &p_err, const String &p_descr, bool p_editor_notify, ErrorHandlerType p_type);
-	void debug(bool p_can_continue = true, bool p_is_error_breakpoint = false);
+	void poll_events(bool p_is_idle) override;
+	void send_message(const String &p_message, const Array &p_args) override;
+	void send_error(const String &p_func, const String &p_file, int p_line, const String &p_err, const String &p_descr, bool p_editor_notify, ErrorHandlerType p_type) override;
+	void debug(bool p_can_continue = true, bool p_is_error_breakpoint = false) override;
 
 	explicit RemoteDebugger(Ref<RemoteDebuggerPeer> p_peer);
-	~RemoteDebugger();
+	~RemoteDebugger() override;
 };
 
 #endif // REMOTE_DEBUGGER_H

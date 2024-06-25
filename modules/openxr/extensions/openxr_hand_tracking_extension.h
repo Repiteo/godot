@@ -69,18 +69,18 @@ public:
 	static OpenXRHandTrackingExtension *get_singleton();
 
 	OpenXRHandTrackingExtension();
-	virtual ~OpenXRHandTrackingExtension() override;
+	~OpenXRHandTrackingExtension() override;
 
-	virtual HashMap<String, bool *> get_requested_extensions() override;
+	HashMap<String, bool *> get_requested_extensions() override;
 
-	virtual void on_instance_created(const XrInstance p_instance) override;
-	virtual void on_instance_destroyed() override;
-	virtual void on_session_destroyed() override;
+	void on_instance_created(const XrInstance p_instance) override;
+	void on_instance_destroyed() override;
+	void on_session_destroyed() override;
 
-	virtual void *set_system_properties_and_get_next_pointer(void *p_next_pointer) override;
-	virtual void on_state_ready() override;
-	virtual void on_process() override;
-	virtual void on_state_stopping() override;
+	void *set_system_properties_and_get_next_pointer(void *p_next_pointer) override;
+	void on_state_ready() override;
+	void on_process() override;
+	void on_state_stopping() override;
 
 	bool get_active();
 	const HandTracker *get_hand_tracker(HandTrackedHands p_hand) const;

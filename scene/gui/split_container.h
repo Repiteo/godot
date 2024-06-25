@@ -38,7 +38,7 @@ class SplitContainerDragger : public Control {
 
 protected:
 	void _notification(int p_what);
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 
 private:
 	bool dragging = false;
@@ -47,7 +47,7 @@ private:
 	bool mouse_inside = false;
 
 public:
-	virtual CursorShape get_cursor_shape(const Point2 &p_pos = Point2i()) const override;
+	CursorShape get_cursor_shape(const Point2 &p_pos = Point2i()) const override;
 };
 
 class SplitContainer : public Container {
@@ -105,10 +105,10 @@ public:
 	void set_vertical(bool p_vertical);
 	bool is_vertical() const;
 
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
-	virtual Vector<int> get_allowed_size_flags_horizontal() const override;
-	virtual Vector<int> get_allowed_size_flags_vertical() const override;
+	Vector<int> get_allowed_size_flags_horizontal() const override;
+	Vector<int> get_allowed_size_flags_vertical() const override;
 
 	SplitContainer(bool p_vertical = false);
 };

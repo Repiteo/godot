@@ -73,7 +73,7 @@ public:
 	void clear();
 
 	GDScriptParserRef() {}
-	~GDScriptParserRef();
+	~GDScriptParserRef() override;
 };
 
 class GDScriptCache {

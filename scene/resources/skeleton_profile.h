@@ -124,7 +124,7 @@ public:
 	bool has_bone(const StringName &p_bone_name);
 
 	SkeletonProfile();
-	~SkeletonProfile();
+	~SkeletonProfile() override;
 };
 
 class SkeletonProfileHumanoid : public SkeletonProfile {
@@ -132,7 +132,7 @@ class SkeletonProfileHumanoid : public SkeletonProfile {
 
 public:
 	SkeletonProfileHumanoid();
-	~SkeletonProfileHumanoid();
+	~SkeletonProfileHumanoid() override;
 };
 
 VARIANT_ENUM_CAST(SkeletonProfile::TailDirection);

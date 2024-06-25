@@ -39,15 +39,15 @@ class EditorInspectorPluginSubViewportPreview : public EditorInspectorPluginText
 	GDCLASS(EditorInspectorPluginSubViewportPreview, EditorInspectorPluginTexture);
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual void parse_begin(Object *p_object) override;
+	bool can_handle(Object *p_object) override;
+	void parse_begin(Object *p_object) override;
 };
 
 class SubViewportPreviewEditorPlugin : public EditorPlugin {
 	GDCLASS(SubViewportPreviewEditorPlugin, EditorPlugin);
 
 public:
-	virtual String get_name() const override { return "SubViewportPreview"; }
+	String get_name() const override { return "SubViewportPreview"; }
 
 	SubViewportPreviewEditorPlugin();
 };

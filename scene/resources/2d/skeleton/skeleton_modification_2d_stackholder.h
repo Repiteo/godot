@@ -58,7 +58,7 @@ public:
 	Ref<SkeletonModificationStack2D> get_held_modification_stack() const;
 
 	SkeletonModification2DStackHolder();
-	~SkeletonModification2DStackHolder();
+	~SkeletonModification2DStackHolder() override;
 };
 
 #endif // SKELETON_MODIFICATION_2D_STACKHOLDER_H

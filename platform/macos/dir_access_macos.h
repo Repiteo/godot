@@ -43,13 +43,13 @@
 
 class DirAccessMacOS : public DirAccessUnix {
 protected:
-	virtual String fix_unicode_name(const char *p_name) const override;
+	String fix_unicode_name(const char *p_name) const override;
 
-	virtual int get_drive_count() override;
-	virtual String get_drive(int p_drive) override;
+	int get_drive_count() override;
+	String get_drive(int p_drive) override;
 
-	virtual bool is_hidden(const String &p_name) override;
-	virtual bool is_case_sensitive(const String &p_path) const override;
+	bool is_hidden(const String &p_name) override;
+	bool is_case_sensitive(const String &p_path) const override;
 };
 
 #endif // UNIX ENABLED

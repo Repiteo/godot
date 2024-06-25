@@ -54,7 +54,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	~XRVRS();
+	~XRVRS() override;
 
 	float get_vrs_min_radius() const;
 	void set_vrs_min_radius(float p_vrs_min_radius);

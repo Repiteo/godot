@@ -55,7 +55,7 @@ private:
 	AxisStretchMode axis_v = AXIS_STRETCH_MODE_STRETCH;
 
 protected:
-	virtual float get_style_margin(Side p_side) const override;
+	float get_style_margin(Side p_side) const override;
 	static void _bind_methods();
 
 public:
@@ -87,11 +87,11 @@ public:
 	void set_modulate(const Color &p_modulate);
 	Color get_modulate() const;
 
-	virtual Rect2 get_draw_rect(const Rect2 &p_rect) const override;
-	virtual void draw(RID p_canvas_item, const Rect2 &p_rect) const override;
+	Rect2 get_draw_rect(const Rect2 &p_rect) const override;
+	void draw(RID p_canvas_item, const Rect2 &p_rect) const override;
 
 	StyleBoxTexture();
-	~StyleBoxTexture();
+	~StyleBoxTexture() override;
 };
 
 VARIANT_ENUM_CAST(StyleBoxTexture::AxisStretchMode)

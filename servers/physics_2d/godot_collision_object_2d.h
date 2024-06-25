@@ -192,7 +192,7 @@ public:
 		return collision_layer & p_other->collision_mask || p_other->collision_layer & collision_mask;
 	}
 
-	virtual ~GodotCollisionObject2D() {}
+	~GodotCollisionObject2D() override {}
 };
 
 #endif // GODOT_COLLISION_OBJECT_2D_H

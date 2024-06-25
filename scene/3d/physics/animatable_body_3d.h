@@ -52,8 +52,8 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual Vector3 get_linear_velocity() const override;
-	virtual Vector3 get_angular_velocity() const override;
+	Vector3 get_linear_velocity() const override;
+	Vector3 get_angular_velocity() const override;
 
 	AnimatableBody3D();
 

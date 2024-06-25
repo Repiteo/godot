@@ -58,7 +58,7 @@ public:
 	}
 
 	// Disable heuristic completely.
-	real_t _compute_cost(int64_t p_from, int64_t p_to) {
+	real_t _compute_cost(int64_t p_from, int64_t p_to) override {
 		if (p_from == A && p_to == C) {
 			return 1000;
 		}

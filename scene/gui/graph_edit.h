@@ -54,7 +54,7 @@ class GraphEditFilter : public Control {
 
 	GraphEdit *ge = nullptr;
 
-	virtual bool has_point(const Point2 &p_point) const override;
+	bool has_point(const Point2 &p_point) const override;
 
 public:
 	GraphEditFilter(GraphEdit *p_edit);
@@ -94,7 +94,7 @@ class GraphEditMinimap : public Control {
 	Vector2 _convert_from_graph_position(const Vector2 &p_position);
 	Vector2 _convert_to_graph_position(const Vector2 &p_position);
 
-	virtual void gui_input(const Ref<InputEvent> &p_ev) override;
+	void gui_input(const Ref<InputEvent> &p_ev) override;
 
 	void _adjust_graph_scroll(const Vector2 &p_offset);
 
@@ -102,7 +102,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual CursorShape get_cursor_shape(const Point2 &p_pos = Point2i()) const override;
+	CursorShape get_cursor_shape(const Point2 &p_pos = Point2i()) const override;
 
 	void update_minimap();
 	Rect2 get_camera_rect();
@@ -324,7 +324,7 @@ private:
 	void _update_scroll();
 	void _update_scroll_offset();
 	void _scroll_moved(double);
-	virtual void gui_input(const Ref<InputEvent> &p_ev) override;
+	void gui_input(const Ref<InputEvent> &p_ev) override;
 	void _top_connection_layer_input(const Ref<InputEvent> &p_ev);
 
 	float _get_shader_line_width();
@@ -365,10 +365,10 @@ private:
 #endif
 
 protected:
-	virtual void _update_theme_item_cache() override;
+	void _update_theme_item_cache() override;
 
-	virtual void add_child_notify(Node *p_child) override;
-	virtual void remove_child_notify(Node *p_child) override;
+	void add_child_notify(Node *p_child) override;
+	void remove_child_notify(Node *p_child) override;
 
 	void _notification(int p_what);
 	static void _bind_methods();
@@ -388,7 +388,7 @@ public:
 	static void init_shaders();
 	static void finish_shaders();
 
-	virtual CursorShape get_cursor_shape(const Point2 &p_pos = Point2i()) const override;
+	CursorShape get_cursor_shape(const Point2 &p_pos = Point2i()) const override;
 
 	PackedStringArray get_configuration_warnings() const override;
 

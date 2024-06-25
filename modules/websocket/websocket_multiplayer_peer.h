@@ -91,25 +91,25 @@ protected:
 
 public:
 	/* MultiplayerPeer */
-	virtual void set_target_peer(int p_target_peer) override;
-	virtual int get_packet_peer() const override;
-	virtual int get_packet_channel() const override { return 0; }
-	virtual TransferMode get_packet_mode() const override { return TRANSFER_MODE_RELIABLE; }
-	virtual int get_unique_id() const override;
-	virtual bool is_server_relay_supported() const override { return true; }
+	void set_target_peer(int p_target_peer) override;
+	int get_packet_peer() const override;
+	int get_packet_channel() const override { return 0; }
+	TransferMode get_packet_mode() const override { return TRANSFER_MODE_RELIABLE; }
+	int get_unique_id() const override;
+	bool is_server_relay_supported() const override { return true; }
 
-	virtual int get_max_packet_size() const override;
-	virtual bool is_server() const override;
-	virtual void poll() override;
-	virtual void close() override;
-	virtual void disconnect_peer(int p_peer_id, bool p_force = false) override;
+	int get_max_packet_size() const override;
+	bool is_server() const override;
+	void poll() override;
+	void close() override;
+	void disconnect_peer(int p_peer_id, bool p_force = false) override;
 
-	virtual ConnectionStatus get_connection_status() const override;
+	ConnectionStatus get_connection_status() const override;
 
 	/* PacketPeer */
-	virtual int get_available_packet_count() const override;
-	virtual Error get_packet(const uint8_t **r_buffer, int &r_buffer_size) override;
-	virtual Error put_packet(const uint8_t *p_buffer, int p_buffer_size) override;
+	int get_available_packet_count() const override;
+	Error get_packet(const uint8_t **r_buffer, int &r_buffer_size) override;
+	Error put_packet(const uint8_t *p_buffer, int p_buffer_size) override;
 
 	/* WebSocketPeer */
 	virtual Ref<WebSocketPeer> get_peer(int p_peer_id) const;
@@ -139,7 +139,7 @@ public:
 	int get_max_queued_packets() const;
 
 	WebSocketMultiplayerPeer();
-	~WebSocketMultiplayerPeer();
+	~WebSocketMultiplayerPeer() override;
 };
 
 #endif // WEBSOCKET_MULTIPLAYER_PEER_H

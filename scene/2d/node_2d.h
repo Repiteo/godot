@@ -57,22 +57,22 @@ protected:
 
 public:
 #ifdef TOOLS_ENABLED
-	virtual Dictionary _edit_get_state() const override;
-	virtual void _edit_set_state(const Dictionary &p_state) override;
+	Dictionary _edit_get_state() const override;
+	void _edit_set_state(const Dictionary &p_state) override;
 
-	virtual void _edit_set_position(const Point2 &p_position) override;
-	virtual Point2 _edit_get_position() const override;
+	void _edit_set_position(const Point2 &p_position) override;
+	Point2 _edit_get_position() const override;
 
-	virtual void _edit_set_scale(const Size2 &p_scale) override;
-	virtual Size2 _edit_get_scale() const override;
+	void _edit_set_scale(const Size2 &p_scale) override;
+	Size2 _edit_get_scale() const override;
 
-	virtual void _edit_set_rotation(real_t p_rotation) override;
-	virtual real_t _edit_get_rotation() const override;
-	virtual bool _edit_use_rotation() const override;
+	void _edit_set_rotation(real_t p_rotation) override;
+	real_t _edit_get_rotation() const override;
+	bool _edit_use_rotation() const override;
 
-	virtual void _edit_set_rect(const Rect2 &p_edit_rect) override;
+	void _edit_set_rect(const Rect2 &p_edit_rect) override;
 #endif
-	virtual void reparent(Node *p_parent, bool p_keep_global_transform = true) override;
+	void reparent(Node *p_parent, bool p_keep_global_transform = true) override;
 
 	void set_position(const Point2 &p_pos);
 	void set_rotation(real_t p_radians);

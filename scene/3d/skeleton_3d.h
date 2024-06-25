@@ -60,7 +60,7 @@ public:
 
 	RID get_skeleton() const;
 	Ref<Skin> get_skin() const;
-	~SkinReference();
+	~SkinReference() override;
 };
 
 class Skeleton3D : public Node3D {
@@ -195,9 +195,9 @@ protected:
 	void _notification(int p_what);
 	static void _bind_methods();
 
-	virtual void add_child_notify(Node *p_child) override;
-	virtual void move_child_notify(Node *p_child) override;
-	virtual void remove_child_notify(Node *p_child) override;
+	void add_child_notify(Node *p_child) override;
+	void move_child_notify(Node *p_child) override;
+	void remove_child_notify(Node *p_child) override;
 
 public:
 	enum {
@@ -284,7 +284,7 @@ public:
 
 public:
 	Skeleton3D();
-	~Skeleton3D();
+	~Skeleton3D() override;
 };
 
 VARIANT_ENUM_CAST(Skeleton3D::ModifierCallbackModeProcess);

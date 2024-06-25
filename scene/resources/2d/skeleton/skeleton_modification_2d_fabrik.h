@@ -102,7 +102,7 @@ public:
 	bool get_fabrik_joint_use_target_rotation(int p_joint_idx) const;
 
 	SkeletonModification2DFABRIK();
-	~SkeletonModification2DFABRIK();
+	~SkeletonModification2DFABRIK() override;
 };
 
 #endif // SKELETON_MODIFICATION_2D_FABRIK_H

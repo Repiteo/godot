@@ -104,7 +104,7 @@ public:
 
 	void set_root_path(const NodePath &p_path);
 	NodePath get_root_path() const;
-	virtual void set_multiplayer_authority(int p_peer_id, bool p_recursive = true) override;
+	void set_multiplayer_authority(int p_peer_id, bool p_recursive = true) override;
 
 	bool is_visibility_public() const;
 	void set_visibility_public(bool p_public);

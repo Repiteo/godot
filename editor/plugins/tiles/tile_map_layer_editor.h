@@ -228,20 +228,20 @@ private:
 	List<BaseButton *> viewport_shortcut_buttons;
 
 	// Update callback
-	virtual void tile_set_changed() override;
+	void tile_set_changed() override;
 
 protected:
 	static void _bind_methods();
 
 public:
-	virtual Vector<TabData> get_tabs() const override;
-	virtual bool forward_canvas_gui_input(const Ref<InputEvent> &p_event) override;
-	virtual void forward_canvas_draw_over_viewport(Control *p_overlay) override;
+	Vector<TabData> get_tabs() const override;
+	bool forward_canvas_gui_input(const Ref<InputEvent> &p_event) override;
+	void forward_canvas_draw_over_viewport(Control *p_overlay) override;
 
-	virtual void edit(ObjectID p_tile_map_layer_id) override;
+	void edit(ObjectID p_tile_map_layer_id) override;
 
 	TileMapLayerEditorTilesPlugin();
-	~TileMapLayerEditorTilesPlugin();
+	~TileMapLayerEditorTilesPlugin() override;
 };
 
 class TileMapLayerEditorTerrainsPlugin : public TileMapLayerSubEditorPlugin {
@@ -323,17 +323,17 @@ private:
 	void _update_theme();
 
 	// Update callback
-	virtual void tile_set_changed() override;
+	void tile_set_changed() override;
 
 public:
-	virtual Vector<TabData> get_tabs() const override;
-	virtual bool forward_canvas_gui_input(const Ref<InputEvent> &p_event) override;
-	virtual void forward_canvas_draw_over_viewport(Control *p_overlay) override;
+	Vector<TabData> get_tabs() const override;
+	bool forward_canvas_gui_input(const Ref<InputEvent> &p_event) override;
+	void forward_canvas_draw_over_viewport(Control *p_overlay) override;
 
-	virtual void edit(ObjectID p_tile_map_layer_id) override;
+	void edit(ObjectID p_tile_map_layer_id) override;
 
 	TileMapLayerEditorTerrainsPlugin();
-	~TileMapLayerEditorTerrainsPlugin();
+	~TileMapLayerEditorTerrainsPlugin() override;
 };
 
 class TileMapLayerEditor : public VBoxContainer {
@@ -418,7 +418,7 @@ public:
 	void set_show_layer_selector(bool p_show_layer_selector);
 
 	TileMapLayerEditor();
-	~TileMapLayerEditor();
+	~TileMapLayerEditor() override;
 
 	// Static functions.
 	static Vector<Vector2i> get_line(const TileMapLayer *p_tile_map_layer, Vector2i p_from_cell, Vector2i p_to_cell);

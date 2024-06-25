@@ -89,15 +89,15 @@ protected:
 	void _validate_property(PropertyInfo &p_property) const;
 	static void _bind_methods();
 
-	virtual void _tree_changed() override;
-	virtual void _animation_node_renamed(const ObjectID &p_oid, const String &p_old_name, const String &p_new_name) override;
-	virtual void _animation_node_removed(const ObjectID &p_oid, const StringName &p_node) override;
+	void _tree_changed() override;
+	void _animation_node_renamed(const ObjectID &p_oid, const String &p_old_name, const String &p_new_name) override;
+	void _animation_node_removed(const ObjectID &p_oid, const StringName &p_node) override;
 
 public:
-	virtual void get_parameter_list(List<PropertyInfo> *r_list) const override;
-	virtual Variant get_parameter_default_value(const StringName &p_parameter) const override;
+	void get_parameter_list(List<PropertyInfo> *r_list) const override;
+	Variant get_parameter_default_value(const StringName &p_parameter) const override;
 
-	virtual void get_child_nodes(List<ChildNode> *r_child_nodes) override;
+	void get_child_nodes(List<ChildNode> *r_child_nodes) override;
 
 	void add_blend_point(const Ref<AnimationRootNode> &p_node, const Vector2 &p_position, int p_at_index = -1);
 	void set_blend_point_position(int p_point, const Vector2 &p_position);
@@ -128,8 +128,8 @@ public:
 	void set_y_label(const String &p_label);
 	String get_y_label() const;
 
-	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
-	virtual String get_caption() const override;
+	NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
+	String get_caption() const override;
 
 	Vector2 get_closest_point(const Vector2 &p_point);
 
@@ -142,10 +142,10 @@ public:
 	void set_use_sync(bool p_sync);
 	bool is_using_sync() const;
 
-	virtual Ref<AnimationNode> get_child_by_name(const StringName &p_name) const override;
+	Ref<AnimationNode> get_child_by_name(const StringName &p_name) const override;
 
 	AnimationNodeBlendSpace2D();
-	~AnimationNodeBlendSpace2D();
+	~AnimationNodeBlendSpace2D() override;
 };
 
 VARIANT_ENUM_CAST(AnimationNodeBlendSpace2D::BlendMode)

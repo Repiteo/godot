@@ -82,11 +82,11 @@ public:
 	static void save_to_ctex_format(Ref<FileAccess> f, const Ref<Image> &p_image, CompressMode p_compress_mode, Image::UsedChannels p_channels, Image::CompressMode p_compress_format, float p_lossy_quality);
 
 	static ResourceImporterTexture *get_singleton() { return singleton; }
-	virtual String get_importer_name() const override;
-	virtual String get_visible_name() const override;
-	virtual void get_recognized_extensions(List<String> *p_extensions) const override;
-	virtual String get_save_extension() const override;
-	virtual String get_resource_type() const override;
+	String get_importer_name() const override;
+	String get_visible_name() const override;
+	void get_recognized_extensions(List<String> *p_extensions) const override;
+	String get_save_extension() const override;
+	String get_resource_type() const override;
 
 	enum Preset {
 		PRESET_DETECT,
@@ -94,21 +94,21 @@ public:
 		PRESET_3D,
 	};
 
-	virtual int get_preset_count() const override;
-	virtual String get_preset_name(int p_idx) const override;
+	int get_preset_count() const override;
+	String get_preset_name(int p_idx) const override;
 
-	virtual void get_import_options(const String &p_path, List<ImportOption> *r_options, int p_preset = 0) const override;
-	virtual bool get_option_visibility(const String &p_path, const String &p_option, const HashMap<StringName, Variant> &p_options) const override;
+	void get_import_options(const String &p_path, List<ImportOption> *r_options, int p_preset = 0) const override;
+	bool get_option_visibility(const String &p_path, const String &p_option, const HashMap<StringName, Variant> &p_options) const override;
 
-	virtual Error import(const String &p_source_file, const String &p_save_path, const HashMap<StringName, Variant> &p_options, List<String> *r_platform_variants, List<String> *r_gen_files = nullptr, Variant *r_metadata = nullptr) override;
+	Error import(const String &p_source_file, const String &p_save_path, const HashMap<StringName, Variant> &p_options, List<String> *r_platform_variants, List<String> *r_gen_files = nullptr, Variant *r_metadata = nullptr) override;
 
 	void update_imports();
 
-	virtual bool are_import_settings_valid(const String &p_path) const override;
-	virtual String get_import_settings_string() const override;
+	bool are_import_settings_valid(const String &p_path) const override;
+	String get_import_settings_string() const override;
 
 	ResourceImporterTexture(bool p_singleton = false);
-	~ResourceImporterTexture();
+	~ResourceImporterTexture() override;
 };
 
 #endif // RESOURCE_IMPORTER_TEXTURE_H

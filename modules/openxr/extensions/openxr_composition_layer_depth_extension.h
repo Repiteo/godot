@@ -39,13 +39,13 @@ public:
 	static OpenXRCompositionLayerDepthExtension *get_singleton();
 
 	OpenXRCompositionLayerDepthExtension();
-	virtual ~OpenXRCompositionLayerDepthExtension() override;
+	~OpenXRCompositionLayerDepthExtension() override;
 
-	virtual HashMap<String, bool *> get_requested_extensions() override;
+	HashMap<String, bool *> get_requested_extensions() override;
 	bool is_available();
-	virtual int get_composition_layer_count() override;
-	virtual XrCompositionLayerBaseHeader *get_composition_layer(int p_index) override;
-	virtual int get_composition_layer_order(int p_index) override;
+	int get_composition_layer_count() override;
+	XrCompositionLayerBaseHeader *get_composition_layer(int p_index) override;
+	int get_composition_layer_order(int p_index) override;
 
 private:
 	static OpenXRCompositionLayerDepthExtension *singleton;

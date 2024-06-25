@@ -56,7 +56,7 @@ protected:
 	virtual void _update_auto_exposure(){};
 
 public:
-	virtual RID get_rid() const override;
+	RID get_rid() const override;
 	virtual float calculate_exposure_normalization() const { return 1.0; }
 
 	void set_exposure_multiplier(float p_multiplier);
@@ -72,7 +72,7 @@ public:
 	float get_auto_exposure_scale() const;
 
 	CameraAttributes();
-	~CameraAttributes();
+	~CameraAttributes() override;
 };
 
 class CameraAttributesPractical : public CameraAttributes {
@@ -91,7 +91,7 @@ private:
 	float dof_blur_amount = 0.1;
 	void _update_dof_blur();
 
-	virtual void _update_auto_exposure() override;
+	void _update_auto_exposure() override;
 
 protected:
 	static void _bind_methods();
@@ -120,10 +120,10 @@ public:
 	void set_auto_exposure_max_sensitivity(float p_max);
 	float get_auto_exposure_max_sensitivity() const;
 
-	virtual float calculate_exposure_normalization() const override;
+	float calculate_exposure_normalization() const override;
 
 	CameraAttributesPractical();
-	~CameraAttributesPractical();
+	~CameraAttributesPractical() override;
 };
 
 class CameraAttributesPhysical : public CameraAttributes {
@@ -142,7 +142,7 @@ private:
 	real_t frustum_fov = 75.0;
 	void _update_frustum();
 
-	virtual void _update_auto_exposure() override;
+	void _update_auto_exposure() override;
 
 protected:
 	static void _bind_methods();
@@ -174,10 +174,10 @@ public:
 	void set_auto_exposure_max_exposure_value(float p_max);
 	float get_auto_exposure_max_exposure_value() const;
 
-	virtual float calculate_exposure_normalization() const override;
+	float calculate_exposure_normalization() const override;
 
 	CameraAttributesPhysical();
-	~CameraAttributesPhysical();
+	~CameraAttributesPhysical() override;
 };
 
 #endif // CAMERA_ATTRIBUTES_H

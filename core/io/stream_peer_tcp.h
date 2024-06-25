@@ -88,7 +88,7 @@ public:
 	Error get_partial_data(uint8_t *p_buffer, int p_bytes, int &r_received) override;
 
 	StreamPeerTCP();
-	~StreamPeerTCP();
+	~StreamPeerTCP() override;
 };
 
 VARIANT_ENUM_CAST(StreamPeerTCP::Status);

@@ -205,7 +205,7 @@ class ServersDebugger::ScriptsProfiler : public EngineProfiler {
 	int max_frame_functions = 16;
 
 public:
-	void toggle(bool p_enable, const Array &p_opts) {
+	void toggle(bool p_enable, const Array &p_opts) override {
 		if (p_enable) {
 			sig_map.clear();
 			for (int i = 0; i < ScriptServer::get_language_count(); i++) {
@@ -321,7 +321,7 @@ class ServersDebugger::ServersProfiler : public EngineProfiler {
 	}
 
 public:
-	void toggle(bool p_enable, const Array &p_opts) {
+	void toggle(bool p_enable, const Array &p_opts) override {
 		skip_profile_frame = false;
 		if (p_enable) {
 			server_data.clear(); // Clear old profiling data.
@@ -331,7 +331,7 @@ public:
 		scripts_profiler.toggle(p_enable, p_opts);
 	}
 
-	void add(const Array &p_data) {
+	void add(const Array &p_data) override {
 		String name = p_data[0];
 		if (!server_data.has(name)) {
 			ServerInfo info;
@@ -348,7 +348,7 @@ public:
 		}
 	}
 
-	void tick(double p_frame_time, double p_process_time, double p_physics_time, double p_physics_frame_time) {
+	void tick(double p_frame_time, double p_process_time, double p_physics_time, double p_physics_frame_time) override {
 		frame_time = p_frame_time;
 		process_time = p_process_time;
 		physics_time = p_physics_time;
@@ -368,13 +368,13 @@ class ServersDebugger::VisualProfiler : public EngineProfiler {
 	HashMap<StringName, ServerInfo> server_data;
 
 public:
-	void toggle(bool p_enable, const Array &p_opts) {
+	void toggle(bool p_enable, const Array &p_opts) override {
 		RS::get_singleton()->set_frame_profiling_enabled(p_enable);
 	}
 
-	void add(const Array &p_data) {}
+	void add(const Array &p_data) override {}
 
-	void tick(double p_frame_time, double p_process_time, double p_physics_time, double p_physics_frame_time) {
+	void tick(double p_frame_time, double p_process_time, double p_physics_time, double p_physics_frame_time) override {
 		Vector<RS::FrameProfileArea> profile_areas = RS::get_singleton()->get_frame_profile();
 		ServersDebugger::VisualProfilerFrame frame;
 		if (!profile_areas.size()) {

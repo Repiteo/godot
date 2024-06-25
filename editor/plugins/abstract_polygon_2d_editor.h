@@ -154,17 +154,17 @@ class AbstractPolygon2DEditorPlugin : public EditorPlugin {
 	String klass;
 
 public:
-	virtual bool forward_canvas_gui_input(const Ref<InputEvent> &p_event) override { return polygon_editor->forward_gui_input(p_event); }
-	virtual void forward_canvas_draw_over_viewport(Control *p_overlay) override { polygon_editor->forward_canvas_draw_over_viewport(p_overlay); }
+	bool forward_canvas_gui_input(const Ref<InputEvent> &p_event) override { return polygon_editor->forward_gui_input(p_event); }
+	void forward_canvas_draw_over_viewport(Control *p_overlay) override { polygon_editor->forward_canvas_draw_over_viewport(p_overlay); }
 
 	bool has_main_screen() const override { return false; }
-	virtual String get_name() const override { return klass; }
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
+	String get_name() const override { return klass; }
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
 
 	AbstractPolygon2DEditorPlugin(AbstractPolygon2DEditor *p_polygon_editor, const String &p_class);
-	~AbstractPolygon2DEditorPlugin();
+	~AbstractPolygon2DEditorPlugin() override;
 };
 
 #endif // ABSTRACT_POLYGON_2D_EDITOR_H

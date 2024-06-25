@@ -55,13 +55,13 @@ public:
 	static OpenXRHandInteractionExtension *get_singleton();
 
 	OpenXRHandInteractionExtension();
-	virtual ~OpenXRHandInteractionExtension() override;
+	~OpenXRHandInteractionExtension() override;
 
-	virtual HashMap<String, bool *> get_requested_extensions() override;
+	HashMap<String, bool *> get_requested_extensions() override;
 
 	bool is_available();
 
-	virtual void on_register_metadata() override;
+	void on_register_metadata() override;
 
 private:
 	static OpenXRHandInteractionExtension *singleton;

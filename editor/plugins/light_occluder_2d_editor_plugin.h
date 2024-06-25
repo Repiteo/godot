@@ -42,18 +42,18 @@ class LightOccluder2DEditor : public AbstractPolygon2DEditor {
 	Ref<OccluderPolygon2D> _ensure_occluder() const;
 
 protected:
-	virtual Node2D *_get_node() const override;
-	virtual void _set_node(Node *p_polygon) override;
+	Node2D *_get_node() const override;
+	void _set_node(Node *p_polygon) override;
 
-	virtual bool _is_line() const override;
-	virtual int _get_polygon_count() const override;
-	virtual Variant _get_polygon(int p_idx) const override;
-	virtual void _set_polygon(int p_idx, const Variant &p_polygon) const override;
+	bool _is_line() const override;
+	int _get_polygon_count() const override;
+	Variant _get_polygon(int p_idx) const override;
+	void _set_polygon(int p_idx, const Variant &p_polygon) const override;
 
-	virtual void _action_set_polygon(int p_idx, const Variant &p_previous, const Variant &p_polygon) override;
+	void _action_set_polygon(int p_idx, const Variant &p_previous, const Variant &p_polygon) override;
 
-	virtual bool _has_resource() const override;
-	virtual void _create_resource() override;
+	bool _has_resource() const override;
+	void _create_resource() override;
 
 public:
 	LightOccluder2DEditor();

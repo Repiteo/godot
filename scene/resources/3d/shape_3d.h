@@ -54,7 +54,7 @@ protected:
 	virtual void _update_shape();
 
 public:
-	virtual RID get_rid() const override { return shape; }
+	RID get_rid() const override { return shape; }
 
 	Ref<ArrayMesh> get_debug_mesh();
 	virtual Vector<Vector3> get_debug_mesh_lines() const = 0; // { return Vector<Vector3>(); }
@@ -70,7 +70,7 @@ public:
 	void set_margin(real_t p_margin);
 
 	Shape3D();
-	~Shape3D();
+	~Shape3D() override;
 };
 
 #endif // SHAPE_3D_H

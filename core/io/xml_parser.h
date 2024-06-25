@@ -123,7 +123,7 @@ public:
 
 	void close();
 
-	~XMLParser();
+	~XMLParser() override;
 };
 
 VARIANT_ENUM_CAST(XMLParser::NodeType);

@@ -61,38 +61,38 @@ class DirAccessJAndroid : public DirAccessUnix {
 	static jmethodID _current_is_hidden;
 
 public:
-	virtual Error list_dir_begin() override; ///< This starts dir listing
-	virtual String get_next() override;
-	virtual bool current_is_dir() const override;
-	virtual bool current_is_hidden() const override;
-	virtual void list_dir_end() override; ///<
+	Error list_dir_begin() override; ///< This starts dir listing
+	String get_next() override;
+	bool current_is_dir() const override;
+	bool current_is_hidden() const override;
+	void list_dir_end() override; ///<
 
-	virtual int get_drive_count() override;
-	virtual String get_drive(int p_drive) override;
-	virtual String get_current_dir(bool p_include_drive = true) const override; ///< return current dir location
+	int get_drive_count() override;
+	String get_drive(int p_drive) override;
+	String get_current_dir(bool p_include_drive = true) const override; ///< return current dir location
 
-	virtual Error change_dir(String p_dir) override; ///< can be relative or absolute, return false on success
+	Error change_dir(String p_dir) override; ///< can be relative or absolute, return false on success
 
-	virtual bool file_exists(String p_file) override;
-	virtual bool dir_exists(String p_dir) override;
+	bool file_exists(String p_file) override;
+	bool dir_exists(String p_dir) override;
 
-	virtual Error make_dir(String p_dir) override;
-	virtual Error make_dir_recursive(const String &p_dir) override;
+	Error make_dir(String p_dir) override;
+	Error make_dir_recursive(const String &p_dir) override;
 
-	virtual Error rename(String p_from, String p_to) override;
-	virtual Error remove(String p_name) override;
+	Error rename(String p_from, String p_to) override;
+	Error remove(String p_name) override;
 
-	virtual bool is_link(String p_file) override { return false; }
-	virtual String read_link(String p_file) override { return p_file; }
-	virtual Error create_link(String p_source, String p_target) override { return FAILED; }
+	bool is_link(String p_file) override { return false; }
+	String read_link(String p_file) override { return p_file; }
+	Error create_link(String p_source, String p_target) override { return FAILED; }
 
-	virtual uint64_t get_space_left() override;
+	uint64_t get_space_left() override;
 
 	static void setup(jobject p_dir_access_handler);
 	static void terminate();
 
 	DirAccessJAndroid();
-	~DirAccessJAndroid();
+	~DirAccessJAndroid() override;
 
 protected:
 	String _get_root_string() const override;

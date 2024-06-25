@@ -65,7 +65,7 @@ class GradientTexture2DEdit : public Control {
 	Handle get_handle_at(const Vector2 &p_pos);
 	void set_fill_pos(const Vector2 &p_pos);
 
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 
 	void _draw();
 
@@ -108,8 +108,8 @@ class EditorInspectorPluginGradientTexture2D : public EditorInspectorPlugin {
 	GDCLASS(EditorInspectorPluginGradientTexture2D, EditorInspectorPlugin);
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual void parse_begin(Object *p_object) override;
+	bool can_handle(Object *p_object) override;
+	void parse_begin(Object *p_object) override;
 };
 
 class GradientTexture2DEditorPlugin : public EditorPlugin {

@@ -111,7 +111,7 @@ public:
 	LineEdit *get_path_box() const;
 
 	EditorAutoloadSettings();
-	~EditorAutoloadSettings();
+	~EditorAutoloadSettings() override;
 };
 
 #endif // EDITOR_AUTOLOAD_SETTINGS_H

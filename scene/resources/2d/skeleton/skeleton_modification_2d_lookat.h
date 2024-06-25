@@ -94,7 +94,7 @@ public:
 	bool get_constraint_in_localspace() const;
 
 	SkeletonModification2DLookAt();
-	~SkeletonModification2DLookAt();
+	~SkeletonModification2DLookAt() override;
 };
 
 #endif // SKELETON_MODIFICATION_2D_LOOKAT_H

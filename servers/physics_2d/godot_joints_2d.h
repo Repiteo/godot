@@ -53,9 +53,9 @@ public:
 	_FORCE_INLINE_ void set_max_bias(real_t p_bias) { max_bias = p_bias; }
 	_FORCE_INLINE_ real_t get_max_bias() const { return max_bias; }
 
-	virtual bool setup(real_t p_step) override { return false; }
-	virtual bool pre_solve(real_t p_step) override { return false; }
-	virtual void solve(real_t p_step) override {}
+	bool setup(real_t p_step) override { return false; }
+	bool pre_solve(real_t p_step) override { return false; }
+	void solve(real_t p_step) override {}
 
 	void copy_settings_from(GodotJoint2D *p_joint);
 
@@ -63,7 +63,7 @@ public:
 	GodotJoint2D(GodotBody2D **p_body_ptr = nullptr, int p_body_count = 0) :
 			GodotConstraint2D(p_body_ptr, p_body_count) {}
 
-	virtual ~GodotJoint2D() {
+	~GodotJoint2D() override {
 		for (int i = 0; i < get_body_count(); i++) {
 			GodotBody2D *body = get_body_ptr()[i];
 			if (body) {
@@ -103,11 +103,11 @@ class GodotPinJoint2D : public GodotJoint2D {
 	bool angular_limit_enabled = false;
 
 public:
-	virtual PhysicsServer2D::JointType get_type() const override { return PhysicsServer2D::JOINT_TYPE_PIN; }
+	PhysicsServer2D::JointType get_type() const override { return PhysicsServer2D::JOINT_TYPE_PIN; }
 
-	virtual bool setup(real_t p_step) override;
-	virtual bool pre_solve(real_t p_step) override;
-	virtual void solve(real_t p_step) override;
+	bool setup(real_t p_step) override;
+	bool pre_solve(real_t p_step) override;
+	void solve(real_t p_step) override;
 
 	void set_param(PhysicsServer2D::PinJointParam p_param, real_t p_value);
 	real_t get_param(PhysicsServer2D::PinJointParam p_param) const;
@@ -143,11 +143,11 @@ class GodotGrooveJoint2D : public GodotJoint2D {
 	bool correct = false;
 
 public:
-	virtual PhysicsServer2D::JointType get_type() const override { return PhysicsServer2D::JOINT_TYPE_GROOVE; }
+	PhysicsServer2D::JointType get_type() const override { return PhysicsServer2D::JOINT_TYPE_GROOVE; }
 
-	virtual bool setup(real_t p_step) override;
-	virtual bool pre_solve(real_t p_step) override;
-	virtual void solve(real_t p_step) override;
+	bool setup(real_t p_step) override;
+	bool pre_solve(real_t p_step) override;
+	void solve(real_t p_step) override;
 
 	GodotGrooveJoint2D(const Vector2 &p_a_groove1, const Vector2 &p_a_groove2, const Vector2 &p_b_anchor, GodotBody2D *p_body_a, GodotBody2D *p_body_b);
 };
@@ -177,11 +177,11 @@ class GodotDampedSpringJoint2D : public GodotJoint2D {
 	real_t v_coef = 0.0;
 
 public:
-	virtual PhysicsServer2D::JointType get_type() const override { return PhysicsServer2D::JOINT_TYPE_DAMPED_SPRING; }
+	PhysicsServer2D::JointType get_type() const override { return PhysicsServer2D::JOINT_TYPE_DAMPED_SPRING; }
 
-	virtual bool setup(real_t p_step) override;
-	virtual bool pre_solve(real_t p_step) override;
-	virtual void solve(real_t p_step) override;
+	bool setup(real_t p_step) override;
+	bool pre_solve(real_t p_step) override;
+	void solve(real_t p_step) override;
 
 	void set_param(PhysicsServer2D::DampedSpringParam p_param, real_t p_value);
 	real_t get_param(PhysicsServer2D::DampedSpringParam p_param) const;

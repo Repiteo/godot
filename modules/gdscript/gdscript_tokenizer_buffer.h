@@ -72,22 +72,22 @@ public:
 	Error set_code_buffer(const Vector<uint8_t> &p_buffer);
 	static Vector<uint8_t> parse_code_string(const String &p_code, CompressMode p_compress_mode);
 
-	virtual int get_cursor_line() const override;
-	virtual int get_cursor_column() const override;
-	virtual void set_cursor_position(int p_line, int p_column) override;
-	virtual void set_multiline_mode(bool p_state) override;
-	virtual bool is_past_cursor() const override;
-	virtual void push_expression_indented_block() override; // For lambdas, or blocks inside expressions.
-	virtual void pop_expression_indented_block() override; // For lambdas, or blocks inside expressions.
-	virtual bool is_text() override { return false; };
+	int get_cursor_line() const override;
+	int get_cursor_column() const override;
+	void set_cursor_position(int p_line, int p_column) override;
+	void set_multiline_mode(bool p_state) override;
+	bool is_past_cursor() const override;
+	void push_expression_indented_block() override; // For lambdas, or blocks inside expressions.
+	void pop_expression_indented_block() override; // For lambdas, or blocks inside expressions.
+	bool is_text() override { return false; };
 
 #ifdef TOOLS_ENABLED
-	virtual const HashMap<int, CommentData> &get_comments() const override {
+	const HashMap<int, CommentData> &get_comments() const override {
 		return dummy;
 	}
 #endif // TOOLS_ENABLED
 
-	virtual Token scan() override;
+	Token scan() override;
 };
 
 #endif // GDSCRIPT_TOKENIZER_BUFFER_H

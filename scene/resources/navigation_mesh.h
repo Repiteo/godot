@@ -205,7 +205,7 @@ public:
 #endif // DEBUG_ENABLED
 
 	NavigationMesh() {}
-	~NavigationMesh() {}
+	~NavigationMesh() override {}
 };
 
 VARIANT_ENUM_CAST(NavigationMesh::SamplePartitionType);

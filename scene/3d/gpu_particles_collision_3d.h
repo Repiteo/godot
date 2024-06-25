@@ -50,7 +50,7 @@ public:
 	void set_cull_mask(uint32_t p_cull_mask);
 	uint32_t get_cull_mask() const;
 
-	~GPUParticlesCollision3D();
+	~GPUParticlesCollision3D() override;
 };
 
 class GPUParticlesCollisionSphere3D : public GPUParticlesCollision3D {
@@ -65,10 +65,10 @@ public:
 	void set_radius(real_t p_radius);
 	real_t get_radius() const;
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 
 	GPUParticlesCollisionSphere3D();
-	~GPUParticlesCollisionSphere3D();
+	~GPUParticlesCollisionSphere3D() override;
 };
 
 class GPUParticlesCollisionBox3D : public GPUParticlesCollision3D {
@@ -87,10 +87,10 @@ public:
 	void set_size(const Vector3 &p_size);
 	Vector3 get_size() const;
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 
 	GPUParticlesCollisionBox3D();
-	~GPUParticlesCollisionBox3D();
+	~GPUParticlesCollisionBox3D() override;
 };
 
 class GPUParticlesCollisionSDF3D : public GPUParticlesCollision3D {
@@ -170,7 +170,7 @@ protected:
 #endif // DISABLE_DEPRECATED
 
 public:
-	virtual PackedStringArray get_configuration_warnings() const override;
+	PackedStringArray get_configuration_warnings() const override;
 
 	void set_thickness(float p_thickness);
 	float get_thickness() const;
@@ -193,14 +193,14 @@ public:
 	Vector3i get_estimated_cell_size() const;
 	Ref<Image> bake();
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 
 	static BakeBeginFunc bake_begin_function;
 	static BakeStepFunc bake_step_function;
 	static BakeEndFunc bake_end_function;
 
 	GPUParticlesCollisionSDF3D();
-	~GPUParticlesCollisionSDF3D();
+	~GPUParticlesCollisionSDF3D() override;
 };
 
 VARIANT_ENUM_CAST(GPUParticlesCollisionSDF3D::Resolution)
@@ -252,10 +252,10 @@ public:
 	void set_follow_camera_enabled(bool p_enabled);
 	bool is_follow_camera_enabled() const;
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 
 	GPUParticlesCollisionHeightField3D();
-	~GPUParticlesCollisionHeightField3D();
+	~GPUParticlesCollisionHeightField3D() override;
 };
 
 VARIANT_ENUM_CAST(GPUParticlesCollisionHeightField3D::Resolution)
@@ -289,7 +289,7 @@ public:
 	void set_directionality(real_t p_directionality);
 	real_t get_directionality() const;
 
-	~GPUParticlesAttractor3D();
+	~GPUParticlesAttractor3D() override;
 };
 
 class GPUParticlesAttractorSphere3D : public GPUParticlesAttractor3D {
@@ -304,10 +304,10 @@ public:
 	void set_radius(real_t p_radius);
 	real_t get_radius() const;
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 
 	GPUParticlesAttractorSphere3D();
-	~GPUParticlesAttractorSphere3D();
+	~GPUParticlesAttractorSphere3D() override;
 };
 
 class GPUParticlesAttractorBox3D : public GPUParticlesAttractor3D {
@@ -326,10 +326,10 @@ public:
 	void set_size(const Vector3 &p_size);
 	Vector3 get_size() const;
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 
 	GPUParticlesAttractorBox3D();
-	~GPUParticlesAttractorBox3D();
+	~GPUParticlesAttractorBox3D() override;
 };
 
 class GPUParticlesAttractorVectorField3D : public GPUParticlesAttractor3D {
@@ -352,10 +352,10 @@ public:
 	void set_texture(const Ref<Texture3D> &p_texture);
 	Ref<Texture3D> get_texture() const;
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 
 	GPUParticlesAttractorVectorField3D();
-	~GPUParticlesAttractorVectorField3D();
+	~GPUParticlesAttractorVectorField3D() override;
 };
 
 #endif // GPU_PARTICLES_COLLISION_3D_H

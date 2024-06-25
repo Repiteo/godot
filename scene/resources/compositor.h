@@ -68,7 +68,7 @@ protected:
 	GDVIRTUAL2(_render_callback, int, const RenderData *)
 
 public:
-	virtual RID get_rid() const override { return rid; }
+	RID get_rid() const override { return rid; }
 
 	void set_enabled(bool p_enabled);
 	bool get_enabled() const;
@@ -92,7 +92,7 @@ public:
 	bool get_needs_separate_specular() const;
 
 	CompositorEffect();
-	~CompositorEffect();
+	~CompositorEffect() override;
 };
 
 VARIANT_ENUM_CAST(CompositorEffect::EffectCallbackType)
@@ -112,10 +112,10 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual RID get_rid() const override { return compositor; }
+	RID get_rid() const override { return compositor; }
 
 	Compositor();
-	~Compositor();
+	~Compositor() override;
 
 	// Compositor effects
 	void set_compositor_effects(const TypedArray<CompositorEffect> &p_compositor_effects);

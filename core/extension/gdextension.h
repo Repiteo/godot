@@ -121,7 +121,7 @@ protected:
 public:
 	HashMap<String, String> class_icon_paths;
 
-	virtual bool editor_can_reload_from_file() override { return false; } // Reloading is handled in a special way.
+	bool editor_can_reload_from_file() override { return false; } // Reloading is handled in a special way.
 
 	static String get_extension_list_config_file();
 	static String find_extension_library(const String &p_path, Ref<ConfigFile> p_config, std::function<bool(String)> p_has_feature, PackedStringArray *r_tags = nullptr);
@@ -172,7 +172,7 @@ public:
 	static void finalize_gdextensions();
 
 	GDExtension();
-	~GDExtension();
+	~GDExtension() override;
 };
 
 VARIANT_ENUM_CAST(GDExtension::InitializationLevel)
@@ -181,10 +181,10 @@ class GDExtensionResourceLoader : public ResourceFormatLoader {
 public:
 	static Error load_gdextension_resource(const String &p_path, Ref<GDExtension> &p_extension);
 
-	virtual Ref<Resource> load(const String &p_path, const String &p_original_path, Error *r_error, bool p_use_sub_threads = false, float *r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE) override;
-	virtual void get_recognized_extensions(List<String> *p_extensions) const override;
-	virtual bool handles_type(const String &p_type) const override;
-	virtual String get_resource_type(const String &p_path) const override;
+	Ref<Resource> load(const String &p_path, const String &p_original_path, Error *r_error, bool p_use_sub_threads = false, float *r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE) override;
+	void get_recognized_extensions(List<String> *p_extensions) const override;
+	bool handles_type(const String &p_type) const override;
+	String get_resource_type(const String &p_path) const override;
 };
 
 #ifdef TOOLS_ENABLED

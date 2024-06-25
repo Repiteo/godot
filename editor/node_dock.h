@@ -67,7 +67,7 @@ public:
 	void update_lists();
 
 	NodeDock();
-	~NodeDock();
+	~NodeDock() override;
 };
 
 #endif // NODE_DOCK_H

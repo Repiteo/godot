@@ -61,7 +61,7 @@ private:
 
 	VisibilityMode visibility = VISIBILITY_ALWAYS;
 
-	virtual void input(const Ref<InputEvent> &p_event) override;
+	void input(const Ref<InputEvent> &p_event) override;
 
 	bool _is_point_inside(const Point2 &p_point);
 
@@ -77,8 +77,8 @@ protected:
 
 public:
 #ifdef TOOLS_ENABLED
-	virtual Rect2 _edit_get_rect() const override;
-	virtual bool _edit_use_rect() const override;
+	Rect2 _edit_get_rect() const override;
+	bool _edit_use_rect() const override;
 #endif
 
 	void set_texture_normal(const Ref<Texture2D> &p_texture);
@@ -110,7 +110,7 @@ public:
 
 	bool is_pressed() const;
 
-	virtual Rect2 get_anchorable_rect() const override;
+	Rect2 get_anchorable_rect() const override;
 
 	TouchScreenButton();
 };

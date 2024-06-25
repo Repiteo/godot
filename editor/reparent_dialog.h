@@ -53,7 +53,7 @@ public:
 	void set_current(const HashSet<Node *> &p_selection);
 
 	ReparentDialog();
-	~ReparentDialog();
+	~ReparentDialog() override;
 };
 
 #endif // REPARENT_DIALOG_H

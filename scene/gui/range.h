@@ -106,7 +106,7 @@ public:
 	PackedStringArray get_configuration_warnings() const override;
 
 	Range();
-	~Range();
+	~Range() override;
 };
 
 #endif // RANGE_H

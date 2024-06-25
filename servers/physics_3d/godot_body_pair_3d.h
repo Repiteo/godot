@@ -105,12 +105,12 @@ class GodotBodyPair3D : public GodotBodyContact3D {
 	bool _test_ccd(real_t p_step, GodotBody3D *p_A, int p_shape_A, const Transform3D &p_xform_A, GodotBody3D *p_B, int p_shape_B, const Transform3D &p_xform_B);
 
 public:
-	virtual bool setup(real_t p_step) override;
-	virtual bool pre_solve(real_t p_step) override;
-	virtual void solve(real_t p_step) override;
+	bool setup(real_t p_step) override;
+	bool pre_solve(real_t p_step) override;
+	void solve(real_t p_step) override;
 
 	GodotBodyPair3D(GodotBody3D *p_A, int p_shape_A, GodotBody3D *p_B, int p_shape_B);
-	~GodotBodyPair3D();
+	~GodotBodyPair3D() override;
 };
 
 class GodotBodySoftBodyPair3D : public GodotBodyContact3D {
@@ -133,15 +133,15 @@ class GodotBodySoftBodyPair3D : public GodotBodyContact3D {
 	void validate_contacts();
 
 public:
-	virtual bool setup(real_t p_step) override;
-	virtual bool pre_solve(real_t p_step) override;
-	virtual void solve(real_t p_step) override;
+	bool setup(real_t p_step) override;
+	bool pre_solve(real_t p_step) override;
+	void solve(real_t p_step) override;
 
-	virtual GodotSoftBody3D *get_soft_body_ptr(int p_index) const override { return soft_body; }
-	virtual int get_soft_body_count() const override { return 1; }
+	GodotSoftBody3D *get_soft_body_ptr(int p_index) const override { return soft_body; }
+	int get_soft_body_count() const override { return 1; }
 
 	GodotBodySoftBodyPair3D(GodotBody3D *p_A, int p_shape_A, GodotSoftBody3D *p_B);
-	~GodotBodySoftBodyPair3D();
+	~GodotBodySoftBodyPair3D() override;
 };
 
 #endif // GODOT_BODY_PAIR_3D_H

@@ -67,7 +67,7 @@ protected:
 	bool _get(const StringName &p_name, Variant &r_ret) const;
 	void _get_property_list(List<PropertyInfo> *p_list) const;
 
-	virtual void reset_state() override;
+	void reset_state() override;
 	static void _bind_methods();
 
 public:
@@ -100,7 +100,7 @@ public:
 	int get_last_unused_item_id() const;
 
 	MeshLibrary();
-	~MeshLibrary();
+	~MeshLibrary() override;
 };
 
 #endif // MESH_LIBRARY_H

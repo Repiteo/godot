@@ -91,15 +91,15 @@ public:
 	static const int DEFAULT_WINDOW_WIDTH = 800;
 	static const int DEFAULT_WINDOW_HEIGHT = 600;
 
-	virtual void initialize_core() override;
-	virtual void initialize() override;
+	void initialize_core() override;
+	void initialize() override;
 
-	virtual void initialize_joypads() override;
+	void initialize_joypads() override;
 
-	virtual void set_main_loop(MainLoop *p_main_loop) override;
-	virtual void delete_main_loop() override;
+	void set_main_loop(MainLoop *p_main_loop) override;
+	void delete_main_loop() override;
 
-	virtual void finalize() override;
+	void finalize() override;
 
 	typedef int64_t ProcessID;
 
@@ -107,18 +107,18 @@ public:
 	GodotJavaWrapper *get_godot_java();
 	GodotIOJavaWrapper *get_godot_io_java();
 
-	virtual bool request_permission(const String &p_name) override;
-	virtual bool request_permissions() override;
-	virtual Vector<String> get_granted_permissions() const override;
+	bool request_permission(const String &p_name) override;
+	bool request_permissions() override;
+	Vector<String> get_granted_permissions() const override;
 
-	virtual void alert(const String &p_alert, const String &p_title) override;
+	void alert(const String &p_alert, const String &p_title) override;
 
-	virtual Error open_dynamic_library(const String &p_path, void *&p_library_handle, GDExtensionData *p_data = nullptr) override;
+	Error open_dynamic_library(const String &p_path, void *&p_library_handle, GDExtensionData *p_data = nullptr) override;
 
-	virtual String get_name() const override;
-	virtual String get_distribution_name() const override;
-	virtual String get_version() const override;
-	virtual MainLoop *get_main_loop() const override;
+	String get_name() const override;
+	String get_distribution_name() const override;
+	String get_version() const override;
+	MainLoop *get_main_loop() const override;
 
 	void main_loop_begin();
 	bool main_loop_iterate(bool *r_should_swap_buffers = nullptr);
@@ -134,46 +134,46 @@ public:
 	void set_native_window(ANativeWindow *p_native_window);
 	ANativeWindow *get_native_window() const;
 
-	virtual Error shell_open(const String &p_uri) override;
+	Error shell_open(const String &p_uri) override;
 
-	virtual Vector<String> get_system_fonts() const override;
-	virtual String get_system_font_path(const String &p_font_name, int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
-	virtual Vector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
-	virtual String get_executable_path() const override;
-	virtual String get_user_data_dir() const override;
-	virtual String get_data_path() const override;
-	virtual String get_cache_path() const override;
-	virtual String get_resource_dir() const override;
-	virtual String get_locale() const override;
-	virtual String get_model_name() const override;
+	Vector<String> get_system_fonts() const override;
+	String get_system_font_path(const String &p_font_name, int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
+	Vector<String> get_system_font_path_for_text(const String &p_font_name, const String &p_text, const String &p_locale = String(), const String &p_script = String(), int p_weight = 400, int p_stretch = 100, bool p_italic = false) const override;
+	String get_executable_path() const override;
+	String get_user_data_dir() const override;
+	String get_data_path() const override;
+	String get_cache_path() const override;
+	String get_resource_dir() const override;
+	String get_locale() const override;
+	String get_model_name() const override;
 
-	virtual String get_unique_id() const override;
+	String get_unique_id() const override;
 
-	virtual String get_system_dir(SystemDir p_dir, bool p_shared_storage = true) const override;
+	String get_system_dir(SystemDir p_dir, bool p_shared_storage = true) const override;
 
-	virtual Error move_to_trash(const String &p_path) override;
+	Error move_to_trash(const String &p_path) override;
 
 	void vibrate_handheld(int p_duration_ms, float p_amplitude = -1.0) override;
 
-	virtual String get_config_path() const override;
+	String get_config_path() const override;
 
-	virtual Error execute(const String &p_path, const List<String> &p_arguments, String *r_pipe = nullptr, int *r_exitcode = nullptr, bool read_stderr = false, Mutex *p_pipe_mutex = nullptr, bool p_open_console = false) override;
-	virtual Error create_process(const String &p_path, const List<String> &p_arguments, ProcessID *r_child_id = nullptr, bool p_open_console = false) override;
-	virtual Error create_instance(const List<String> &p_arguments, ProcessID *r_child_id = nullptr) override;
-	virtual Error kill(const ProcessID &p_pid) override;
-	virtual String get_system_ca_certificates() override;
+	Error execute(const String &p_path, const List<String> &p_arguments, String *r_pipe = nullptr, int *r_exitcode = nullptr, bool read_stderr = false, Mutex *p_pipe_mutex = nullptr, bool p_open_console = false) override;
+	Error create_process(const String &p_path, const List<String> &p_arguments, ProcessID *r_child_id = nullptr, bool p_open_console = false) override;
+	Error create_instance(const List<String> &p_arguments, ProcessID *r_child_id = nullptr) override;
+	Error kill(const ProcessID &p_pid) override;
+	String get_system_ca_certificates() override;
 
-	virtual Error setup_remote_filesystem(const String &p_server_host, int p_port, const String &p_password, String &r_project_path) override;
+	Error setup_remote_filesystem(const String &p_server_host, int p_port, const String &p_password, String &r_project_path) override;
 
-	virtual void benchmark_begin_measure(const String &p_context, const String &p_what) override;
-	virtual void benchmark_end_measure(const String &p_context, const String &p_what) override;
-	virtual void benchmark_dump() override;
+	void benchmark_begin_measure(const String &p_context, const String &p_what) override;
+	void benchmark_end_measure(const String &p_context, const String &p_what) override;
+	void benchmark_dump() override;
 
-	virtual void load_platform_gdextensions() const override;
+	void load_platform_gdextensions() const override;
 
-	virtual bool _check_internal_feature_support(const String &p_feature) override;
+	bool _check_internal_feature_support(const String &p_feature) override;
 	OS_Android(GodotJavaWrapper *p_godot_java, GodotIOJavaWrapper *p_godot_io_java, bool p_use_apk_expansion);
-	~OS_Android();
+	~OS_Android() override;
 
 private:
 	// Location where we relocate external dynamic libraries to make them accessible.

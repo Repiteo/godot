@@ -102,7 +102,7 @@ public:
 	void get_data(Vector<float> &r_vertices, Vector<int> &r_indices, Vector<ProjectedObstruction> &r_projected_obstructions);
 
 	NavigationMeshSourceGeometryData3D() {}
-	~NavigationMeshSourceGeometryData3D() { clear(); }
+	~NavigationMeshSourceGeometryData3D() override { clear(); }
 };
 
 #endif // NAVIGATION_MESH_SOURCE_GEOMETRY_DATA_3D_H

@@ -93,18 +93,18 @@ public:
 	void set_speed_scale(float p_scale);
 	float get_speed_scale() const;
 
-	virtual int get_width() const override;
-	virtual int get_height() const override;
-	virtual RID get_rid() const override;
+	int get_width() const override;
+	int get_height() const override;
+	RID get_rid() const override;
 
-	virtual bool has_alpha() const override;
+	bool has_alpha() const override;
 
-	virtual Ref<Image> get_image() const override;
+	Ref<Image> get_image() const override;
 
 	bool is_pixel_opaque(int p_x, int p_y) const override;
 
 	AnimatedTexture();
-	~AnimatedTexture();
+	~AnimatedTexture() override;
 };
 
 #endif // ANIMATED_TEXTURE_H

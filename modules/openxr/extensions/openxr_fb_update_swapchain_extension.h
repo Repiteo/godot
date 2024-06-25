@@ -47,12 +47,12 @@ public:
 	static OpenXRFBUpdateSwapchainExtension *get_singleton();
 
 	OpenXRFBUpdateSwapchainExtension(const String &p_rendering_driver);
-	virtual ~OpenXRFBUpdateSwapchainExtension() override;
+	~OpenXRFBUpdateSwapchainExtension() override;
 
-	virtual HashMap<String, bool *> get_requested_extensions() override;
+	HashMap<String, bool *> get_requested_extensions() override;
 
-	virtual void on_instance_created(const XrInstance p_instance) override;
-	virtual void on_instance_destroyed() override;
+	void on_instance_created(const XrInstance p_instance) override;
+	void on_instance_destroyed() override;
 
 	bool is_enabled() const;
 

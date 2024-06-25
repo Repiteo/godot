@@ -158,7 +158,7 @@ private:
 	void _update_warning_label();
 
 protected:
-	virtual void _post_popup() override;
+	void _post_popup() override;
 	void _notification(int p_what);
 	static void _bind_methods();
 
@@ -180,20 +180,20 @@ public:
 	bool get_one_shot() const;
 	bool is_editing() const;
 
-	virtual void shortcut_input(const Ref<InputEvent> &p_event) override;
+	void shortcut_input(const Ref<InputEvent> &p_event) override;
 
 	void init(const ConnectionData &p_cd, const PackedStringArray &p_signal_args, bool p_edit = false);
 
 	void popup_dialog(const String &p_for_signal);
 	ConnectDialog();
-	~ConnectDialog();
+	~ConnectDialog() override;
 };
 
 //////////////////////////////////////////
 
 // Custom `Tree` needed to use `EditorHelpBit` to display signal documentation.
 class ConnectionsDockTree : public Tree {
-	virtual Control *make_custom_tooltip(const String &p_text) const;
+	Control *make_custom_tooltip(const String &p_text) const override;
 };
 
 class ConnectionsDock : public VBoxContainer {
@@ -269,7 +269,7 @@ public:
 	void update_tree();
 
 	ConnectionsDock();
-	~ConnectionsDock();
+	~ConnectionsDock() override;
 };
 
 #endif // CONNECTIONS_DIALOG_H

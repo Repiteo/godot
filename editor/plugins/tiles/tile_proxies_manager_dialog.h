@@ -77,7 +77,7 @@ protected:
 	bool _set(const StringName &p_name, const Variant &p_value);
 	bool _get(const StringName &p_name, Variant &r_ret) const;
 	void _unhandled_key_input(Ref<InputEvent> p_event);
-	virtual void cancel_pressed() override;
+	void cancel_pressed() override;
 	static void _bind_methods();
 
 public:

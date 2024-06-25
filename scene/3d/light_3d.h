@@ -89,7 +89,7 @@ private:
 
 	// bind helpers
 
-	virtual void owner_changed_notify() override;
+	void owner_changed_notify() override;
 
 protected:
 	RID light;
@@ -146,11 +146,11 @@ public:
 	float get_temperature() const;
 	Color get_correlated_color() const;
 
-	virtual AABB get_aabb() const override;
-	virtual PackedStringArray get_configuration_warnings() const override;
+	AABB get_aabb() const override;
+	PackedStringArray get_configuration_warnings() const override;
 
 	Light3D();
-	~Light3D();
+	~Light3D() override;
 };
 
 VARIANT_ENUM_CAST(Light3D::Param);

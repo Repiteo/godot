@@ -58,7 +58,7 @@ protected:
 #endif
 
 protected:
-	virtual void gui_input(const Ref<InputEvent> &p_ev) override;
+	void gui_input(const Ref<InputEvent> &p_ev) override;
 	void _notification(int p_what);
 	static void _bind_methods();
 
@@ -85,7 +85,7 @@ public:
 	void set_selectable(bool p_selectable);
 	bool is_selectable();
 
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
 	bool is_resizing() const {
 		return resizing;

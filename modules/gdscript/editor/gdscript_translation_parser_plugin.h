@@ -69,8 +69,8 @@ class GDScriptEditorTranslationParserPlugin : public EditorTranslationParserPlug
 	void _extract_fd_filter_array(const GDScriptParser::ExpressionNode *p_expression);
 
 public:
-	virtual Error parse_file(const String &p_path, Vector<String> *r_ids, Vector<Vector<String>> *r_ids_ctx_plural) override;
-	virtual void get_recognized_extensions(List<String> *r_extensions) const override;
+	Error parse_file(const String &p_path, Vector<String> *r_ids, Vector<Vector<String>> *r_ids_ctx_plural) override;
+	void get_recognized_extensions(List<String> *r_extensions) const override;
 
 	GDScriptEditorTranslationParserPlugin();
 };

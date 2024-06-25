@@ -81,12 +81,12 @@ private:
 	ScriptLanguage *script_language = nullptr; // See GH-89610.
 
 public:
-	virtual void _update_cache() override;
-	virtual Dictionary _get_line_syntax_highlighting_impl(int p_line) override { return highlighter->get_line_syntax_highlighting(p_line); }
+	void _update_cache() override;
+	Dictionary _get_line_syntax_highlighting_impl(int p_line) override { return highlighter->get_line_syntax_highlighting(p_line); }
 
-	virtual String _get_name() const override { return TTR("Standard"); }
+	String _get_name() const override { return TTR("Standard"); }
 
-	virtual Ref<EditorSyntaxHighlighter> _create() const override;
+	Ref<EditorSyntaxHighlighter> _create() const override;
 
 	void _set_script_language(ScriptLanguage *p_script_language) { script_language = p_script_language; }
 
@@ -97,9 +97,9 @@ class EditorPlainTextSyntaxHighlighter : public EditorSyntaxHighlighter {
 	GDCLASS(EditorPlainTextSyntaxHighlighter, EditorSyntaxHighlighter)
 
 public:
-	virtual String _get_name() const override { return TTR("Plain Text"); }
+	String _get_name() const override { return TTR("Plain Text"); }
 
-	virtual Ref<EditorSyntaxHighlighter> _create() const override;
+	Ref<EditorSyntaxHighlighter> _create() const override;
 };
 
 class EditorJSONSyntaxHighlighter : public EditorSyntaxHighlighter {
@@ -109,13 +109,13 @@ private:
 	Ref<CodeHighlighter> highlighter;
 
 public:
-	virtual void _update_cache() override;
-	virtual Dictionary _get_line_syntax_highlighting_impl(int p_line) override { return highlighter->get_line_syntax_highlighting(p_line); }
+	void _update_cache() override;
+	Dictionary _get_line_syntax_highlighting_impl(int p_line) override { return highlighter->get_line_syntax_highlighting(p_line); }
 
-	virtual PackedStringArray _get_supported_languages() const override { return PackedStringArray{ "json" }; }
-	virtual String _get_name() const override { return TTR("JSON"); }
+	PackedStringArray _get_supported_languages() const override { return PackedStringArray{ "json" }; }
+	String _get_name() const override { return TTR("JSON"); }
 
-	virtual Ref<EditorSyntaxHighlighter> _create() const override;
+	Ref<EditorSyntaxHighlighter> _create() const override;
 
 	EditorJSONSyntaxHighlighter() { highlighter.instantiate(); }
 };
@@ -464,8 +464,8 @@ class ScriptEditor : public PanelContainer {
 	bool can_drop_data_fw(const Point2 &p_point, const Variant &p_data, Control *p_from) const;
 	void drop_data_fw(const Point2 &p_point, const Variant &p_data, Control *p_from);
 
-	virtual void input(const Ref<InputEvent> &p_event) override;
-	virtual void shortcut_input(const Ref<InputEvent> &p_event) override;
+	void input(const Ref<InputEvent> &p_event) override;
+	void shortcut_input(const Ref<InputEvent> &p_event) override;
 
 	void _script_list_clicked(int p_item, Vector2 p_local_mouse_pos, MouseButton p_mouse_button_index);
 	void _make_script_list_context_menu();
@@ -577,7 +577,7 @@ public:
 	static void register_create_script_editor_function(CreateScriptEditorFunc p_func);
 
 	ScriptEditor(WindowWrapper *p_wrapper);
-	~ScriptEditor();
+	~ScriptEditor() override;
 };
 
 class ScriptEditorPlugin : public EditorPlugin {
@@ -597,26 +597,26 @@ protected:
 	void _notification(int p_what);
 
 public:
-	virtual String get_name() const override { return "Script"; }
+	String get_name() const override { return "Script"; }
 	bool has_main_screen() const override { return true; }
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
-	virtual void selected_notify() override;
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
+	void selected_notify() override;
 
-	virtual String get_unsaved_status(const String &p_for_scene) const override;
-	virtual void save_external_data() override;
-	virtual void apply_changes() override;
+	String get_unsaved_status(const String &p_for_scene) const override;
+	void save_external_data() override;
+	void apply_changes() override;
 
-	virtual void set_window_layout(Ref<ConfigFile> p_layout) override;
-	virtual void get_window_layout(Ref<ConfigFile> p_layout) override;
+	void set_window_layout(Ref<ConfigFile> p_layout) override;
+	void get_window_layout(Ref<ConfigFile> p_layout) override;
 
-	virtual void get_breakpoints(List<String> *p_breakpoints) override;
+	void get_breakpoints(List<String> *p_breakpoints) override;
 
-	virtual void edited_scene_changed() override;
+	void edited_scene_changed() override;
 
 	ScriptEditorPlugin();
-	~ScriptEditorPlugin();
+	~ScriptEditorPlugin() override;
 };
 
 #endif // SCRIPT_EDITOR_PLUGIN_H

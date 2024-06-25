@@ -54,11 +54,11 @@ protected:
 
 public:
 	void set_aabb(const AABB &p_aabb);
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 	bool is_on_screen() const;
 
 	VisibleOnScreenNotifier3D();
-	~VisibleOnScreenNotifier3D();
+	~VisibleOnScreenNotifier3D() override;
 };
 
 class VisibleOnScreenEnabler3D : public VisibleOnScreenNotifier3D {
@@ -73,8 +73,8 @@ public:
 
 protected:
 	ObjectID node_id;
-	virtual void _screen_enter() override;
-	virtual void _screen_exit() override;
+	void _screen_enter() override;
+	void _screen_exit() override;
 
 	EnableMode enable_mode = ENABLE_MODE_INHERIT;
 	NodePath enable_node_path = NodePath("..");

@@ -96,7 +96,7 @@ private:
 	void _replication_button_clicked(TreeItem *p_item, int p_column, int p_idx, MouseButton p_button);
 
 protected:
-	virtual void _update_theme_item_cache() override;
+	void _update_theme_item_cache() override;
 
 	void _notification(int p_what);
 	static void _bind_methods();

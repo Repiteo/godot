@@ -76,10 +76,10 @@ public:
 	void set_material(const Ref<Material> &p_material);
 	Ref<Material> get_material() const;
 
-	virtual RID get_rid() const override;
+	RID get_rid() const override;
 
 	Sky();
-	~Sky();
+	~Sky() override;
 };
 
 VARIANT_ENUM_CAST(Sky::RadianceSize)

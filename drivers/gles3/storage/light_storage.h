@@ -300,7 +300,7 @@ public:
 	static LightStorage *get_singleton();
 
 	LightStorage();
-	virtual ~LightStorage();
+	~LightStorage() override;
 
 	/* Light API */
 
@@ -309,45 +309,45 @@ public:
 
 	void _light_initialize(RID p_rid, RS::LightType p_type);
 
-	virtual RID directional_light_allocate() override;
-	virtual void directional_light_initialize(RID p_rid) override;
-	virtual RID omni_light_allocate() override;
-	virtual void omni_light_initialize(RID p_rid) override;
-	virtual RID spot_light_allocate() override;
-	virtual void spot_light_initialize(RID p_rid) override;
+	RID directional_light_allocate() override;
+	void directional_light_initialize(RID p_rid) override;
+	RID omni_light_allocate() override;
+	void omni_light_initialize(RID p_rid) override;
+	RID spot_light_allocate() override;
+	void spot_light_initialize(RID p_rid) override;
 
-	virtual void light_free(RID p_rid) override;
+	void light_free(RID p_rid) override;
 
-	virtual void light_set_color(RID p_light, const Color &p_color) override;
-	virtual void light_set_param(RID p_light, RS::LightParam p_param, float p_value) override;
-	virtual void light_set_shadow(RID p_light, bool p_enabled) override;
-	virtual void light_set_projector(RID p_light, RID p_texture) override;
-	virtual void light_set_negative(RID p_light, bool p_enable) override;
-	virtual void light_set_cull_mask(RID p_light, uint32_t p_mask) override;
-	virtual void light_set_distance_fade(RID p_light, bool p_enabled, float p_begin, float p_shadow, float p_length) override;
-	virtual void light_set_reverse_cull_face_mode(RID p_light, bool p_enabled) override;
-	virtual void light_set_bake_mode(RID p_light, RS::LightBakeMode p_bake_mode) override;
-	virtual void light_set_max_sdfgi_cascade(RID p_light, uint32_t p_cascade) override {}
+	void light_set_color(RID p_light, const Color &p_color) override;
+	void light_set_param(RID p_light, RS::LightParam p_param, float p_value) override;
+	void light_set_shadow(RID p_light, bool p_enabled) override;
+	void light_set_projector(RID p_light, RID p_texture) override;
+	void light_set_negative(RID p_light, bool p_enable) override;
+	void light_set_cull_mask(RID p_light, uint32_t p_mask) override;
+	void light_set_distance_fade(RID p_light, bool p_enabled, float p_begin, float p_shadow, float p_length) override;
+	void light_set_reverse_cull_face_mode(RID p_light, bool p_enabled) override;
+	void light_set_bake_mode(RID p_light, RS::LightBakeMode p_bake_mode) override;
+	void light_set_max_sdfgi_cascade(RID p_light, uint32_t p_cascade) override {}
 
-	virtual void light_omni_set_shadow_mode(RID p_light, RS::LightOmniShadowMode p_mode) override;
+	void light_omni_set_shadow_mode(RID p_light, RS::LightOmniShadowMode p_mode) override;
 
-	virtual void light_directional_set_shadow_mode(RID p_light, RS::LightDirectionalShadowMode p_mode) override;
-	virtual void light_directional_set_blend_splits(RID p_light, bool p_enable) override;
-	virtual bool light_directional_get_blend_splits(RID p_light) const override;
-	virtual void light_directional_set_sky_mode(RID p_light, RS::LightDirectionalSkyMode p_mode) override;
-	virtual RS::LightDirectionalSkyMode light_directional_get_sky_mode(RID p_light) const override;
+	void light_directional_set_shadow_mode(RID p_light, RS::LightDirectionalShadowMode p_mode) override;
+	void light_directional_set_blend_splits(RID p_light, bool p_enable) override;
+	bool light_directional_get_blend_splits(RID p_light) const override;
+	void light_directional_set_sky_mode(RID p_light, RS::LightDirectionalSkyMode p_mode) override;
+	RS::LightDirectionalSkyMode light_directional_get_sky_mode(RID p_light) const override;
 
-	virtual RS::LightDirectionalShadowMode light_directional_get_shadow_mode(RID p_light) override;
-	virtual RS::LightOmniShadowMode light_omni_get_shadow_mode(RID p_light) override;
-	virtual RS::LightType light_get_type(RID p_light) const override {
+	RS::LightDirectionalShadowMode light_directional_get_shadow_mode(RID p_light) override;
+	RS::LightOmniShadowMode light_omni_get_shadow_mode(RID p_light) override;
+	RS::LightType light_get_type(RID p_light) const override {
 		const Light *light = light_owner.get_or_null(p_light);
 		ERR_FAIL_NULL_V(light, RS::LIGHT_DIRECTIONAL);
 
 		return light->type;
 	}
-	virtual AABB light_get_aabb(RID p_light) const override;
+	AABB light_get_aabb(RID p_light) const override;
 
-	virtual float light_get_param(RID p_light, RS::LightParam p_param) override {
+	float light_get_param(RID p_light, RS::LightParam p_param) override {
 		const Light *light = light_owner.get_or_null(p_light);
 		ERR_FAIL_NULL_V(light, 0);
 
@@ -361,7 +361,7 @@ public:
 		return light->projector;
 	}
 
-	virtual Color light_get_color(RID p_light) override {
+	Color light_get_color(RID p_light) override {
 		const Light *light = light_owner.get_or_null(p_light);
 		ERR_FAIL_NULL_V(light, Color());
 
@@ -388,14 +388,14 @@ public:
 		return light->distance_fade_length;
 	}
 
-	virtual bool light_has_shadow(RID p_light) const override {
+	bool light_has_shadow(RID p_light) const override {
 		const Light *light = light_owner.get_or_null(p_light);
 		ERR_FAIL_NULL_V(light, RS::LIGHT_DIRECTIONAL);
 
 		return light->shadow;
 	}
 
-	virtual bool light_has_projector(RID p_light) const override {
+	bool light_has_projector(RID p_light) const override {
 		const Light *light = light_owner.get_or_null(p_light);
 		ERR_FAIL_NULL_V(light, RS::LIGHT_DIRECTIONAL);
 
@@ -416,32 +416,32 @@ public:
 		return light->param[RS::LIGHT_PARAM_TRANSMITTANCE_BIAS];
 	}
 
-	virtual bool light_get_reverse_cull_face_mode(RID p_light) const override {
+	bool light_get_reverse_cull_face_mode(RID p_light) const override {
 		const Light *light = light_owner.get_or_null(p_light);
 		ERR_FAIL_NULL_V(light, false);
 
 		return light->reverse_cull;
 	}
 
-	virtual RS::LightBakeMode light_get_bake_mode(RID p_light) override;
-	virtual uint32_t light_get_max_sdfgi_cascade(RID p_light) override { return 0; }
-	virtual uint64_t light_get_version(RID p_light) const override;
-	virtual uint32_t light_get_cull_mask(RID p_light) const override;
+	RS::LightBakeMode light_get_bake_mode(RID p_light) override;
+	uint32_t light_get_max_sdfgi_cascade(RID p_light) override { return 0; }
+	uint64_t light_get_version(RID p_light) const override;
+	uint32_t light_get_cull_mask(RID p_light) const override;
 
 	/* LIGHT INSTANCE API */
 
 	LightInstance *get_light_instance(RID p_rid) { return light_instance_owner.get_or_null(p_rid); };
 	bool owns_light_instance(RID p_rid) { return light_instance_owner.owns(p_rid); };
 
-	virtual RID light_instance_create(RID p_light) override;
-	virtual void light_instance_free(RID p_light_instance) override;
+	RID light_instance_create(RID p_light) override;
+	void light_instance_free(RID p_light_instance) override;
 
-	virtual void light_instance_set_transform(RID p_light_instance, const Transform3D &p_transform) override;
-	virtual void light_instance_set_aabb(RID p_light_instance, const AABB &p_aabb) override;
-	virtual void light_instance_set_shadow_transform(RID p_light_instance, const Projection &p_projection, const Transform3D &p_transform, float p_far, float p_split, int p_pass, float p_shadow_texel_size, float p_bias_scale = 1.0, float p_range_begin = 0, const Vector2 &p_uv_scale = Vector2()) override;
-	virtual void light_instance_mark_visible(RID p_light_instance) override;
+	void light_instance_set_transform(RID p_light_instance, const Transform3D &p_transform) override;
+	void light_instance_set_aabb(RID p_light_instance, const AABB &p_aabb) override;
+	void light_instance_set_shadow_transform(RID p_light_instance, const Projection &p_projection, const Transform3D &p_transform, float p_far, float p_split, int p_pass, float p_shadow_texel_size, float p_bias_scale = 1.0, float p_range_begin = 0, const Vector2 &p_uv_scale = Vector2()) override;
+	void light_instance_mark_visible(RID p_light_instance) override;
 
-	virtual bool light_instance_is_shadow_visible_at_position(RID p_light_instance, const Vector3 &p_position) const override {
+	bool light_instance_is_shadow_visible_at_position(RID p_light_instance, const Vector3 &p_position) const override {
 		const LightInstance *light_instance = light_instance_owner.get_or_null(p_light_instance);
 		ERR_FAIL_NULL_V(light_instance, false);
 		const Light *light = light_owner.get_or_null(light_instance->light);
@@ -632,35 +632,35 @@ public:
 	ReflectionProbe *get_reflection_probe(RID p_rid) { return reflection_probe_owner.get_or_null(p_rid); };
 	bool owns_reflection_probe(RID p_rid) { return reflection_probe_owner.owns(p_rid); };
 
-	virtual RID reflection_probe_allocate() override;
-	virtual void reflection_probe_initialize(RID p_rid) override;
-	virtual void reflection_probe_free(RID p_rid) override;
+	RID reflection_probe_allocate() override;
+	void reflection_probe_initialize(RID p_rid) override;
+	void reflection_probe_free(RID p_rid) override;
 
-	virtual void reflection_probe_set_update_mode(RID p_probe, RS::ReflectionProbeUpdateMode p_mode) override;
-	virtual void reflection_probe_set_intensity(RID p_probe, float p_intensity) override;
-	virtual void reflection_probe_set_ambient_mode(RID p_probe, RS::ReflectionProbeAmbientMode p_mode) override;
-	virtual void reflection_probe_set_ambient_color(RID p_probe, const Color &p_color) override;
-	virtual void reflection_probe_set_ambient_energy(RID p_probe, float p_energy) override;
-	virtual void reflection_probe_set_max_distance(RID p_probe, float p_distance) override;
-	virtual void reflection_probe_set_size(RID p_probe, const Vector3 &p_size) override;
-	virtual void reflection_probe_set_origin_offset(RID p_probe, const Vector3 &p_offset) override;
-	virtual void reflection_probe_set_as_interior(RID p_probe, bool p_enable) override;
-	virtual void reflection_probe_set_enable_box_projection(RID p_probe, bool p_enable) override;
-	virtual void reflection_probe_set_enable_shadows(RID p_probe, bool p_enable) override;
-	virtual void reflection_probe_set_cull_mask(RID p_probe, uint32_t p_layers) override;
-	virtual void reflection_probe_set_reflection_mask(RID p_probe, uint32_t p_layers) override;
-	virtual void reflection_probe_set_resolution(RID p_probe, int p_resolution) override;
-	virtual void reflection_probe_set_mesh_lod_threshold(RID p_probe, float p_ratio) override;
-	virtual float reflection_probe_get_mesh_lod_threshold(RID p_probe) const override;
+	void reflection_probe_set_update_mode(RID p_probe, RS::ReflectionProbeUpdateMode p_mode) override;
+	void reflection_probe_set_intensity(RID p_probe, float p_intensity) override;
+	void reflection_probe_set_ambient_mode(RID p_probe, RS::ReflectionProbeAmbientMode p_mode) override;
+	void reflection_probe_set_ambient_color(RID p_probe, const Color &p_color) override;
+	void reflection_probe_set_ambient_energy(RID p_probe, float p_energy) override;
+	void reflection_probe_set_max_distance(RID p_probe, float p_distance) override;
+	void reflection_probe_set_size(RID p_probe, const Vector3 &p_size) override;
+	void reflection_probe_set_origin_offset(RID p_probe, const Vector3 &p_offset) override;
+	void reflection_probe_set_as_interior(RID p_probe, bool p_enable) override;
+	void reflection_probe_set_enable_box_projection(RID p_probe, bool p_enable) override;
+	void reflection_probe_set_enable_shadows(RID p_probe, bool p_enable) override;
+	void reflection_probe_set_cull_mask(RID p_probe, uint32_t p_layers) override;
+	void reflection_probe_set_reflection_mask(RID p_probe, uint32_t p_layers) override;
+	void reflection_probe_set_resolution(RID p_probe, int p_resolution) override;
+	void reflection_probe_set_mesh_lod_threshold(RID p_probe, float p_ratio) override;
+	float reflection_probe_get_mesh_lod_threshold(RID p_probe) const override;
 
-	virtual AABB reflection_probe_get_aabb(RID p_probe) const override;
-	virtual RS::ReflectionProbeUpdateMode reflection_probe_get_update_mode(RID p_probe) const override;
-	virtual uint32_t reflection_probe_get_cull_mask(RID p_probe) const override;
-	virtual uint32_t reflection_probe_get_reflection_mask(RID p_probe) const override;
-	virtual Vector3 reflection_probe_get_size(RID p_probe) const override;
-	virtual Vector3 reflection_probe_get_origin_offset(RID p_probe) const override;
-	virtual float reflection_probe_get_origin_max_distance(RID p_probe) const override;
-	virtual bool reflection_probe_renders_shadows(RID p_probe) const override;
+	AABB reflection_probe_get_aabb(RID p_probe) const override;
+	RS::ReflectionProbeUpdateMode reflection_probe_get_update_mode(RID p_probe) const override;
+	uint32_t reflection_probe_get_cull_mask(RID p_probe) const override;
+	uint32_t reflection_probe_get_reflection_mask(RID p_probe) const override;
+	Vector3 reflection_probe_get_size(RID p_probe) const override;
+	Vector3 reflection_probe_get_origin_offset(RID p_probe) const override;
+	float reflection_probe_get_origin_max_distance(RID p_probe) const override;
+	bool reflection_probe_renders_shadows(RID p_probe) const override;
 
 	Dependency *reflection_probe_get_dependency(RID p_probe) const;
 
@@ -668,25 +668,25 @@ public:
 
 	bool owns_reflection_atlas(RID p_rid) { return reflection_atlas_owner.owns(p_rid); }
 
-	virtual RID reflection_atlas_create() override;
-	virtual void reflection_atlas_free(RID p_ref_atlas) override;
-	virtual int reflection_atlas_get_size(RID p_ref_atlas) const override;
-	virtual void reflection_atlas_set_size(RID p_ref_atlas, int p_reflection_size, int p_reflection_count) override;
+	RID reflection_atlas_create() override;
+	void reflection_atlas_free(RID p_ref_atlas) override;
+	int reflection_atlas_get_size(RID p_ref_atlas) const override;
+	void reflection_atlas_set_size(RID p_ref_atlas, int p_reflection_size, int p_reflection_count) override;
 
 	/* REFLECTION PROBE INSTANCE */
 
 	bool owns_reflection_probe_instance(RID p_rid) { return reflection_probe_instance_owner.owns(p_rid); }
 
-	virtual RID reflection_probe_instance_create(RID p_probe) override;
-	virtual void reflection_probe_instance_free(RID p_instance) override;
-	virtual void reflection_probe_instance_set_transform(RID p_instance, const Transform3D &p_transform) override;
-	virtual bool reflection_probe_has_atlas_index(RID p_instance) override;
-	virtual void reflection_probe_release_atlas_index(RID p_instance) override;
-	virtual bool reflection_probe_instance_needs_redraw(RID p_instance) override;
-	virtual bool reflection_probe_instance_has_reflection(RID p_instance) override;
-	virtual bool reflection_probe_instance_begin_render(RID p_instance, RID p_reflection_atlas) override;
-	virtual Ref<RenderSceneBuffers> reflection_probe_atlas_get_render_buffers(RID p_reflection_atlas) override;
-	virtual bool reflection_probe_instance_postprocess_step(RID p_instance) override;
+	RID reflection_probe_instance_create(RID p_probe) override;
+	void reflection_probe_instance_free(RID p_instance) override;
+	void reflection_probe_instance_set_transform(RID p_instance, const Transform3D &p_transform) override;
+	bool reflection_probe_has_atlas_index(RID p_instance) override;
+	void reflection_probe_release_atlas_index(RID p_instance) override;
+	bool reflection_probe_instance_needs_redraw(RID p_instance) override;
+	bool reflection_probe_instance_has_reflection(RID p_instance) override;
+	bool reflection_probe_instance_begin_render(RID p_instance, RID p_reflection_atlas) override;
+	Ref<RenderSceneBuffers> reflection_probe_atlas_get_render_buffers(RID p_reflection_atlas) override;
+	bool reflection_probe_instance_postprocess_step(RID p_instance) override;
 
 	_FORCE_INLINE_ RID reflection_probe_instance_get_probe(RID p_instance) {
 		ReflectionProbeInstance *rpi = reflection_probe_instance_owner.get_or_null(p_instance);
@@ -714,42 +714,42 @@ public:
 	Lightmap *get_lightmap(RID p_rid) { return lightmap_owner.get_or_null(p_rid); };
 	bool owns_lightmap(RID p_rid) { return lightmap_owner.owns(p_rid); };
 
-	virtual RID lightmap_allocate() override;
-	virtual void lightmap_initialize(RID p_rid) override;
-	virtual void lightmap_free(RID p_rid) override;
+	RID lightmap_allocate() override;
+	void lightmap_initialize(RID p_rid) override;
+	void lightmap_free(RID p_rid) override;
 
-	virtual void lightmap_set_textures(RID p_lightmap, RID p_light, bool p_uses_spherical_haromics) override;
-	virtual void lightmap_set_probe_bounds(RID p_lightmap, const AABB &p_bounds) override;
-	virtual void lightmap_set_probe_interior(RID p_lightmap, bool p_interior) override;
-	virtual void lightmap_set_probe_capture_data(RID p_lightmap, const PackedVector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree) override;
-	virtual void lightmap_set_baked_exposure_normalization(RID p_lightmap, float p_exposure) override;
-	virtual PackedVector3Array lightmap_get_probe_capture_points(RID p_lightmap) const override;
-	virtual PackedColorArray lightmap_get_probe_capture_sh(RID p_lightmap) const override;
-	virtual PackedInt32Array lightmap_get_probe_capture_tetrahedra(RID p_lightmap) const override;
-	virtual PackedInt32Array lightmap_get_probe_capture_bsp_tree(RID p_lightmap) const override;
-	virtual AABB lightmap_get_aabb(RID p_lightmap) const override;
-	virtual void lightmap_tap_sh_light(RID p_lightmap, const Vector3 &p_point, Color *r_sh) override;
-	virtual bool lightmap_is_interior(RID p_lightmap) const override;
-	virtual void lightmap_set_probe_capture_update_speed(float p_speed) override;
-	virtual float lightmap_get_probe_capture_update_speed() const override;
+	void lightmap_set_textures(RID p_lightmap, RID p_light, bool p_uses_spherical_haromics) override;
+	void lightmap_set_probe_bounds(RID p_lightmap, const AABB &p_bounds) override;
+	void lightmap_set_probe_interior(RID p_lightmap, bool p_interior) override;
+	void lightmap_set_probe_capture_data(RID p_lightmap, const PackedVector3Array &p_points, const PackedColorArray &p_point_sh, const PackedInt32Array &p_tetrahedra, const PackedInt32Array &p_bsp_tree) override;
+	void lightmap_set_baked_exposure_normalization(RID p_lightmap, float p_exposure) override;
+	PackedVector3Array lightmap_get_probe_capture_points(RID p_lightmap) const override;
+	PackedColorArray lightmap_get_probe_capture_sh(RID p_lightmap) const override;
+	PackedInt32Array lightmap_get_probe_capture_tetrahedra(RID p_lightmap) const override;
+	PackedInt32Array lightmap_get_probe_capture_bsp_tree(RID p_lightmap) const override;
+	AABB lightmap_get_aabb(RID p_lightmap) const override;
+	void lightmap_tap_sh_light(RID p_lightmap, const Vector3 &p_point, Color *r_sh) override;
+	bool lightmap_is_interior(RID p_lightmap) const override;
+	void lightmap_set_probe_capture_update_speed(float p_speed) override;
+	float lightmap_get_probe_capture_update_speed() const override;
 
 	/* LIGHTMAP INSTANCE */
 
 	LightmapInstance *get_lightmap_instance(RID p_rid) { return lightmap_instance_owner.get_or_null(p_rid); };
 	bool owns_lightmap_instance(RID p_rid) { return lightmap_instance_owner.owns(p_rid); };
 
-	virtual RID lightmap_instance_create(RID p_lightmap) override;
-	virtual void lightmap_instance_free(RID p_lightmap) override;
-	virtual void lightmap_instance_set_transform(RID p_lightmap, const Transform3D &p_transform) override;
+	RID lightmap_instance_create(RID p_lightmap) override;
+	void lightmap_instance_free(RID p_lightmap) override;
+	void lightmap_instance_set_transform(RID p_lightmap, const Transform3D &p_transform) override;
 
 	/* SHADOW ATLAS API */
 	bool owns_shadow_atlas(RID p_rid) { return shadow_atlas_owner.owns(p_rid); };
 
-	virtual RID shadow_atlas_create() override;
-	virtual void shadow_atlas_free(RID p_atlas) override;
-	virtual void shadow_atlas_set_size(RID p_atlas, int p_size, bool p_16_bits = true) override;
-	virtual void shadow_atlas_set_quadrant_subdivision(RID p_atlas, int p_quadrant, int p_subdivision) override;
-	virtual bool shadow_atlas_update_light(RID p_atlas, RID p_light_intance, float p_coverage, uint64_t p_light_version) override;
+	RID shadow_atlas_create() override;
+	void shadow_atlas_free(RID p_atlas) override;
+	void shadow_atlas_set_size(RID p_atlas, int p_size, bool p_16_bits = true) override;
+	void shadow_atlas_set_quadrant_subdivision(RID p_atlas, int p_quadrant, int p_subdivision) override;
+	bool shadow_atlas_update_light(RID p_atlas, RID p_light_intance, float p_coverage, uint64_t p_light_version) override;
 
 	_FORCE_INLINE_ bool shadow_atlas_owns_light_instance(RID p_atlas, RID p_light_instance) {
 		ShadowAtlas *atlas = shadow_atlas_owner.get_or_null(p_atlas);
@@ -872,11 +872,11 @@ public:
 		return atlas->quadrants[p_quadrant].shadows[p_shadow].owner_is_omni;
 	}
 
-	virtual void shadow_atlas_update(RID p_atlas) override;
+	void shadow_atlas_update(RID p_atlas) override;
 
-	virtual void directional_shadow_atlas_set_size(int p_size, bool p_16_bits = true) override;
-	virtual int get_directional_light_shadow_size(RID p_light_intance) override;
-	virtual void set_directional_shadow_count(int p_count) override;
+	void directional_shadow_atlas_set_size(int p_size, bool p_16_bits = true) override;
+	int get_directional_light_shadow_size(RID p_light_intance) override;
+	void set_directional_shadow_count(int p_count) override;
 
 	Rect2i get_directional_shadow_rect();
 	void update_directional_shadow_atlas();

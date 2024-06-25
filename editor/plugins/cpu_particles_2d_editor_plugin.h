@@ -82,14 +82,14 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual String get_name() const override { return "CPUParticles2D"; }
+	String get_name() const override { return "CPUParticles2D"; }
 	bool has_main_screen() const override { return false; }
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
 
 	CPUParticles2DEditorPlugin();
-	~CPUParticles2DEditorPlugin();
+	~CPUParticles2DEditorPlugin() override;
 };
 
 #endif // CPU_PARTICLES_2D_EDITOR_PLUGIN_H

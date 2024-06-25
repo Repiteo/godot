@@ -51,8 +51,8 @@ private:
 protected:
 	void _update_visibility();
 
-	virtual void add_child_notify(Node *p_child) override;
-	virtual void remove_child_notify(Node *p_child) override;
+	void add_child_notify(Node *p_child) override;
+	void remove_child_notify(Node *p_child) override;
 };
 
 class DockContextPopup;

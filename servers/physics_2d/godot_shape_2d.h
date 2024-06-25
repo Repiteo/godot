@@ -129,19 +129,19 @@ public:
 };
 
 //let the optimizer do the magic
-#define DEFAULT_PROJECT_RANGE_CAST                                                                                                                                  \
-	virtual void project_range_castv(const Vector2 &p_cast, const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override { \
-		project_range_cast(p_cast, p_normal, p_transform, r_min, r_max);                                                                                            \
-	}                                                                                                                                                               \
-	_FORCE_INLINE_ void project_range_cast(const Vector2 &p_cast, const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const {    \
-		real_t mina, maxa;                                                                                                                                          \
-		real_t minb, maxb;                                                                                                                                          \
-		Transform2D ofsb = p_transform;                                                                                                                             \
-		ofsb.columns[2] += p_cast;                                                                                                                                  \
-		project_range(p_normal, p_transform, mina, maxa);                                                                                                           \
-		project_range(p_normal, ofsb, minb, maxb);                                                                                                                  \
-		r_min = MIN(mina, minb);                                                                                                                                    \
-		r_max = MAX(maxa, maxb);                                                                                                                                    \
+#define DEFAULT_PROJECT_RANGE_CAST                                                                                                                               \
+	void project_range_castv(const Vector2 &p_cast, const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override {      \
+		project_range_cast(p_cast, p_normal, p_transform, r_min, r_max);                                                                                         \
+	}                                                                                                                                                            \
+	_FORCE_INLINE_ void project_range_cast(const Vector2 &p_cast, const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const { \
+		real_t mina, maxa;                                                                                                                                       \
+		real_t minb, maxb;                                                                                                                                       \
+		Transform2D ofsb = p_transform;                                                                                                                          \
+		ofsb.columns[2] += p_cast;                                                                                                                               \
+		project_range(p_normal, p_transform, mina, maxa);                                                                                                        \
+		project_range(p_normal, ofsb, minb, maxb);                                                                                                               \
+		r_min = MIN(mina, minb);                                                                                                                                 \
+		r_max = MAX(maxa, maxb);                                                                                                                                 \
 	}
 
 class GodotWorldBoundaryShape2D : public GodotShape2D {
@@ -152,17 +152,17 @@ public:
 	_FORCE_INLINE_ Vector2 get_normal() const { return normal; }
 	_FORCE_INLINE_ real_t get_d() const { return d; }
 
-	virtual PhysicsServer2D::ShapeType get_type() const override { return PhysicsServer2D::SHAPE_WORLD_BOUNDARY; }
+	PhysicsServer2D::ShapeType get_type() const override { return PhysicsServer2D::SHAPE_WORLD_BOUNDARY; }
 
-	virtual void project_rangev(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override { project_range(p_normal, p_transform, r_min, r_max); }
-	virtual void get_supports(const Vector2 &p_normal, Vector2 *r_supports, int &r_amount) const override;
+	void project_rangev(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override { project_range(p_normal, p_transform, r_min, r_max); }
+	void get_supports(const Vector2 &p_normal, Vector2 *r_supports, int &r_amount) const override;
 
-	virtual bool contains_point(const Vector2 &p_point) const override;
-	virtual bool intersect_segment(const Vector2 &p_begin, const Vector2 &p_end, Vector2 &r_point, Vector2 &r_normal) const override;
-	virtual real_t get_moment_of_inertia(real_t p_mass, const Size2 &p_scale) const override;
+	bool contains_point(const Vector2 &p_point) const override;
+	bool intersect_segment(const Vector2 &p_begin, const Vector2 &p_end, Vector2 &r_point, Vector2 &r_normal) const override;
+	real_t get_moment_of_inertia(real_t p_mass, const Size2 &p_scale) const override;
 
-	virtual void set_data(const Variant &p_data) override;
-	virtual Variant get_data() const override;
+	void set_data(const Variant &p_data) override;
+	Variant get_data() const override;
 
 	_FORCE_INLINE_ void project_range(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const {
 		//real large
@@ -170,7 +170,7 @@ public:
 		r_max = 1e10;
 	}
 
-	virtual void project_range_castv(const Vector2 &p_cast, const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override {
+	void project_range_castv(const Vector2 &p_cast, const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override {
 		project_range_cast(p_cast, p_normal, p_transform, r_min, r_max);
 	}
 
@@ -189,19 +189,19 @@ public:
 	_FORCE_INLINE_ real_t get_length() const { return length; }
 	_FORCE_INLINE_ bool get_slide_on_slope() const { return slide_on_slope; }
 
-	virtual PhysicsServer2D::ShapeType get_type() const override { return PhysicsServer2D::SHAPE_SEPARATION_RAY; }
+	PhysicsServer2D::ShapeType get_type() const override { return PhysicsServer2D::SHAPE_SEPARATION_RAY; }
 
-	virtual bool allows_one_way_collision() const override { return false; }
+	bool allows_one_way_collision() const override { return false; }
 
-	virtual void project_rangev(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override { project_range(p_normal, p_transform, r_min, r_max); }
-	virtual void get_supports(const Vector2 &p_normal, Vector2 *r_supports, int &r_amount) const override;
+	void project_rangev(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override { project_range(p_normal, p_transform, r_min, r_max); }
+	void get_supports(const Vector2 &p_normal, Vector2 *r_supports, int &r_amount) const override;
 
-	virtual bool contains_point(const Vector2 &p_point) const override;
-	virtual bool intersect_segment(const Vector2 &p_begin, const Vector2 &p_end, Vector2 &r_point, Vector2 &r_normal) const override;
-	virtual real_t get_moment_of_inertia(real_t p_mass, const Size2 &p_scale) const override;
+	bool contains_point(const Vector2 &p_point) const override;
+	bool intersect_segment(const Vector2 &p_begin, const Vector2 &p_end, Vector2 &r_point, Vector2 &r_normal) const override;
+	real_t get_moment_of_inertia(real_t p_mass, const Size2 &p_scale) const override;
 
-	virtual void set_data(const Variant &p_data) override;
-	virtual Variant get_data() const override;
+	void set_data(const Variant &p_data) override;
+	Variant get_data() const override;
 
 	_FORCE_INLINE_ void project_range(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const {
 		//real large
@@ -228,20 +228,20 @@ public:
 	_FORCE_INLINE_ const Vector2 &get_b() const { return b; }
 	_FORCE_INLINE_ const Vector2 &get_normal() const { return n; }
 
-	virtual PhysicsServer2D::ShapeType get_type() const override { return PhysicsServer2D::SHAPE_SEGMENT; }
+	PhysicsServer2D::ShapeType get_type() const override { return PhysicsServer2D::SHAPE_SEGMENT; }
 
 	_FORCE_INLINE_ Vector2 get_xformed_normal(const Transform2D &p_xform) const {
 		return (p_xform.xform(b) - p_xform.xform(a)).normalized().orthogonal();
 	}
-	virtual void project_rangev(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override { project_range(p_normal, p_transform, r_min, r_max); }
-	virtual void get_supports(const Vector2 &p_normal, Vector2 *r_supports, int &r_amount) const override;
+	void project_rangev(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override { project_range(p_normal, p_transform, r_min, r_max); }
+	void get_supports(const Vector2 &p_normal, Vector2 *r_supports, int &r_amount) const override;
 
-	virtual bool contains_point(const Vector2 &p_point) const override;
-	virtual bool intersect_segment(const Vector2 &p_begin, const Vector2 &p_end, Vector2 &r_point, Vector2 &r_normal) const override;
-	virtual real_t get_moment_of_inertia(real_t p_mass, const Size2 &p_scale) const override;
+	bool contains_point(const Vector2 &p_point) const override;
+	bool intersect_segment(const Vector2 &p_begin, const Vector2 &p_end, Vector2 &r_point, Vector2 &r_normal) const override;
+	real_t get_moment_of_inertia(real_t p_mass, const Size2 &p_scale) const override;
 
-	virtual void set_data(const Variant &p_data) override;
-	virtual Variant get_data() const override;
+	void set_data(const Variant &p_data) override;
+	Variant get_data() const override;
 
 	_FORCE_INLINE_ void project_range(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const {
 		//real large
@@ -268,17 +268,17 @@ class GodotCircleShape2D : public GodotShape2D {
 public:
 	_FORCE_INLINE_ const real_t &get_radius() const { return radius; }
 
-	virtual PhysicsServer2D::ShapeType get_type() const override { return PhysicsServer2D::SHAPE_CIRCLE; }
+	PhysicsServer2D::ShapeType get_type() const override { return PhysicsServer2D::SHAPE_CIRCLE; }
 
-	virtual void project_rangev(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override { project_range(p_normal, p_transform, r_min, r_max); }
-	virtual void get_supports(const Vector2 &p_normal, Vector2 *r_supports, int &r_amount) const override;
+	void project_rangev(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override { project_range(p_normal, p_transform, r_min, r_max); }
+	void get_supports(const Vector2 &p_normal, Vector2 *r_supports, int &r_amount) const override;
 
-	virtual bool contains_point(const Vector2 &p_point) const override;
-	virtual bool intersect_segment(const Vector2 &p_begin, const Vector2 &p_end, Vector2 &r_point, Vector2 &r_normal) const override;
-	virtual real_t get_moment_of_inertia(real_t p_mass, const Size2 &p_scale) const override;
+	bool contains_point(const Vector2 &p_point) const override;
+	bool intersect_segment(const Vector2 &p_begin, const Vector2 &p_end, Vector2 &r_point, Vector2 &r_normal) const override;
+	real_t get_moment_of_inertia(real_t p_mass, const Size2 &p_scale) const override;
 
-	virtual void set_data(const Variant &p_data) override;
-	virtual Variant get_data() const override;
+	void set_data(const Variant &p_data) override;
+	Variant get_data() const override;
 
 	_FORCE_INLINE_ void project_range(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const {
 		//real large
@@ -301,17 +301,17 @@ class GodotRectangleShape2D : public GodotShape2D {
 public:
 	_FORCE_INLINE_ const Vector2 &get_half_extents() const { return half_extents; }
 
-	virtual PhysicsServer2D::ShapeType get_type() const override { return PhysicsServer2D::SHAPE_RECTANGLE; }
+	PhysicsServer2D::ShapeType get_type() const override { return PhysicsServer2D::SHAPE_RECTANGLE; }
 
-	virtual void project_rangev(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override { project_range(p_normal, p_transform, r_min, r_max); }
-	virtual void get_supports(const Vector2 &p_normal, Vector2 *r_supports, int &r_amount) const override;
+	void project_rangev(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override { project_range(p_normal, p_transform, r_min, r_max); }
+	void get_supports(const Vector2 &p_normal, Vector2 *r_supports, int &r_amount) const override;
 
-	virtual bool contains_point(const Vector2 &p_point) const override;
-	virtual bool intersect_segment(const Vector2 &p_begin, const Vector2 &p_end, Vector2 &r_point, Vector2 &r_normal) const override;
-	virtual real_t get_moment_of_inertia(real_t p_mass, const Size2 &p_scale) const override;
+	bool contains_point(const Vector2 &p_point) const override;
+	bool intersect_segment(const Vector2 &p_begin, const Vector2 &p_end, Vector2 &r_point, Vector2 &r_normal) const override;
+	real_t get_moment_of_inertia(real_t p_mass, const Size2 &p_scale) const override;
 
-	virtual void set_data(const Variant &p_data) override;
-	virtual Variant get_data() const override;
+	void set_data(const Variant &p_data) override;
+	Variant get_data() const override;
 
 	_FORCE_INLINE_ void project_range(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const {
 		// no matter the angle, the box is mirrored anyway
@@ -375,17 +375,17 @@ public:
 	_FORCE_INLINE_ const real_t &get_radius() const { return radius; }
 	_FORCE_INLINE_ const real_t &get_height() const { return height; }
 
-	virtual PhysicsServer2D::ShapeType get_type() const override { return PhysicsServer2D::SHAPE_CAPSULE; }
+	PhysicsServer2D::ShapeType get_type() const override { return PhysicsServer2D::SHAPE_CAPSULE; }
 
-	virtual void project_rangev(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override { project_range(p_normal, p_transform, r_min, r_max); }
-	virtual void get_supports(const Vector2 &p_normal, Vector2 *r_supports, int &r_amount) const override;
+	void project_rangev(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override { project_range(p_normal, p_transform, r_min, r_max); }
+	void get_supports(const Vector2 &p_normal, Vector2 *r_supports, int &r_amount) const override;
 
-	virtual bool contains_point(const Vector2 &p_point) const override;
-	virtual bool intersect_segment(const Vector2 &p_begin, const Vector2 &p_end, Vector2 &r_point, Vector2 &r_normal) const override;
-	virtual real_t get_moment_of_inertia(real_t p_mass, const Size2 &p_scale) const override;
+	bool contains_point(const Vector2 &p_point) const override;
+	bool intersect_segment(const Vector2 &p_begin, const Vector2 &p_end, Vector2 &r_point, Vector2 &r_normal) const override;
+	real_t get_moment_of_inertia(real_t p_mass, const Size2 &p_scale) const override;
 
-	virtual void set_data(const Variant &p_data) override;
-	virtual Variant get_data() const override;
+	void set_data(const Variant &p_data) override;
+	Variant get_data() const override;
 
 	_FORCE_INLINE_ void project_range(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const {
 		// no matter the angle, the box is mirrored anyway
@@ -428,17 +428,17 @@ public:
 		return (p_xform.xform(b) - p_xform.xform(a)).normalized().orthogonal();
 	}
 
-	virtual PhysicsServer2D::ShapeType get_type() const override { return PhysicsServer2D::SHAPE_CONVEX_POLYGON; }
+	PhysicsServer2D::ShapeType get_type() const override { return PhysicsServer2D::SHAPE_CONVEX_POLYGON; }
 
-	virtual void project_rangev(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override { project_range(p_normal, p_transform, r_min, r_max); }
-	virtual void get_supports(const Vector2 &p_normal, Vector2 *r_supports, int &r_amount) const override;
+	void project_rangev(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override { project_range(p_normal, p_transform, r_min, r_max); }
+	void get_supports(const Vector2 &p_normal, Vector2 *r_supports, int &r_amount) const override;
 
-	virtual bool contains_point(const Vector2 &p_point) const override;
-	virtual bool intersect_segment(const Vector2 &p_begin, const Vector2 &p_end, Vector2 &r_point, Vector2 &r_normal) const override;
-	virtual real_t get_moment_of_inertia(real_t p_mass, const Size2 &p_scale) const override;
+	bool contains_point(const Vector2 &p_point) const override;
+	bool intersect_segment(const Vector2 &p_begin, const Vector2 &p_end, Vector2 &r_point, Vector2 &r_normal) const override;
+	real_t get_moment_of_inertia(real_t p_mass, const Size2 &p_scale) const override;
 
-	virtual void set_data(const Variant &p_data) override;
-	virtual Variant get_data() const override;
+	void set_data(const Variant &p_data) override;
+	Variant get_data() const override;
 
 	_FORCE_INLINE_ void project_range(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const {
 		if (!points || point_count <= 0) {
@@ -461,12 +461,12 @@ public:
 	DEFAULT_PROJECT_RANGE_CAST
 
 	GodotConvexPolygonShape2D() {}
-	~GodotConvexPolygonShape2D();
+	~GodotConvexPolygonShape2D() override;
 };
 
 class GodotConcaveShape2D : public GodotShape2D {
 public:
-	virtual bool is_concave() const override { return true; }
+	bool is_concave() const override { return true; }
 
 	// Returns true to stop the query.
 	typedef bool (*QueryCallback)(void *p_userdata, GodotShape2D *p_convex);
@@ -505,9 +505,9 @@ class GodotConcavePolygonShape2D : public GodotConcaveShape2D {
 	int _generate_bvh(BVH *p_bvh, int p_len, int p_depth);
 
 public:
-	virtual PhysicsServer2D::ShapeType get_type() const override { return PhysicsServer2D::SHAPE_CONCAVE_POLYGON; }
+	PhysicsServer2D::ShapeType get_type() const override { return PhysicsServer2D::SHAPE_CONCAVE_POLYGON; }
 
-	virtual void project_rangev(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override {
+	void project_rangev(const Vector2 &p_normal, const Transform2D &p_transform, real_t &r_min, real_t &r_max) const override {
 		r_min = 0;
 		r_max = 0;
 		ERR_FAIL_MSG("Unsupported call to project_rangev in GodotConcavePolygonShape2D");
@@ -519,17 +519,17 @@ public:
 		ERR_FAIL_MSG("Unsupported call to project_range in GodotConcavePolygonShape2D");
 	}
 
-	virtual void get_supports(const Vector2 &p_normal, Vector2 *r_supports, int &r_amount) const override;
+	void get_supports(const Vector2 &p_normal, Vector2 *r_supports, int &r_amount) const override;
 
-	virtual bool contains_point(const Vector2 &p_point) const override;
-	virtual bool intersect_segment(const Vector2 &p_begin, const Vector2 &p_end, Vector2 &r_point, Vector2 &r_normal) const override;
+	bool contains_point(const Vector2 &p_point) const override;
+	bool intersect_segment(const Vector2 &p_begin, const Vector2 &p_end, Vector2 &r_point, Vector2 &r_normal) const override;
 
-	virtual real_t get_moment_of_inertia(real_t p_mass, const Size2 &p_scale) const override { return 0; }
+	real_t get_moment_of_inertia(real_t p_mass, const Size2 &p_scale) const override { return 0; }
 
-	virtual void set_data(const Variant &p_data) override;
-	virtual Variant get_data() const override;
+	void set_data(const Variant &p_data) override;
+	Variant get_data() const override;
 
-	virtual void cull(const Rect2 &p_local_aabb, QueryCallback p_callback, void *p_userdata) const override;
+	void cull(const Rect2 &p_local_aabb, QueryCallback p_callback, void *p_userdata) const override;
 
 	DEFAULT_PROJECT_RANGE_CAST
 };

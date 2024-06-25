@@ -56,7 +56,7 @@ public:
 	RID font;
 
 	CharFXTransform();
-	~CharFXTransform();
+	~CharFXTransform() override;
 
 	void set_transform(const Transform2D &p_transform) { transform = p_transform; }
 	const Transform2D &get_transform() { return transform; }

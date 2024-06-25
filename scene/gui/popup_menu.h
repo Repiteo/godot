@@ -121,7 +121,7 @@ class PopupMenu : public Popup {
 	String _get_accel_text(const Item &p_item) const;
 	int _get_mouse_over(const Point2 &p_over) const;
 	void _mouse_over_update(const Point2 &p_over);
-	virtual Size2 _get_contents_minimum_size() const override;
+	Size2 _get_contents_minimum_size() const override;
 
 	int _get_item_height(int p_idx) const;
 	int _get_items_total_height() const;
@@ -211,9 +211,9 @@ class PopupMenu : public Popup {
 	int _get_item_checkable_type(int p_index) const;
 
 protected:
-	virtual void add_child_notify(Node *p_child) override;
-	virtual void remove_child_notify(Node *p_child) override;
-	virtual void _input_from_window(const Ref<InputEvent> &p_event) override;
+	void add_child_notify(Node *p_child) override;
+	void remove_child_notify(Node *p_child) override;
+	void _input_from_window(const Ref<InputEvent> &p_event) override;
 
 	void _notification(int p_what);
 	bool _set(const StringName &p_name, const Variant &p_value);
@@ -239,7 +239,7 @@ public:
 	// this value should be updated to reflect the new size.
 	static const int ITEM_PROPERTY_SIZE = 10;
 
-	virtual void _parent_focused() override;
+	void _parent_focused() override;
 
 	RID bind_global_menu();
 	void unbind_global_menu();
@@ -364,13 +364,13 @@ public:
 	void set_allow_search(bool p_allow);
 	bool get_allow_search() const;
 
-	virtual void popup(const Rect2i &p_bounds = Rect2i()) override;
-	virtual void set_visible(bool p_visible) override;
+	void popup(const Rect2i &p_bounds = Rect2i()) override;
+	void set_visible(bool p_visible) override;
 
 	void take_mouse_focus();
 
 	PopupMenu();
-	~PopupMenu();
+	~PopupMenu() override;
 };
 
 #endif // POPUP_MENU_H

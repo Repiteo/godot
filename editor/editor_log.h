@@ -196,7 +196,7 @@ public:
 	void clear();
 
 	EditorLog();
-	~EditorLog();
+	~EditorLog() override;
 };
 
 VARIANT_ENUM_CAST(EditorLog::MessageType);

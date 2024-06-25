@@ -41,8 +41,8 @@ private:
 	static Ref<Image> load_mem_png(const uint8_t *p_png, int p_size);
 
 public:
-	virtual Error load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField<ImageFormatLoader::LoaderFlags> p_flags, float p_scale);
-	virtual void get_recognized_extensions(List<String> *p_extensions) const;
+	Error load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField<ImageFormatLoader::LoaderFlags> p_flags, float p_scale) override;
+	void get_recognized_extensions(List<String> *p_extensions) const override;
 	ImageLoaderPNG();
 };
 

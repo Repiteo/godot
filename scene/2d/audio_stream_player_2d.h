@@ -144,7 +144,7 @@ public:
 	void set_playback_type(AudioServer::PlaybackType p_playback_type);
 
 	AudioStreamPlayer2D();
-	~AudioStreamPlayer2D();
+	~AudioStreamPlayer2D() override;
 };
 
 #endif // AUDIO_STREAM_PLAYER_2D_H

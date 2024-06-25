@@ -70,7 +70,7 @@ protected:
 
 public:
 	EditorAbout();
-	~EditorAbout();
+	~EditorAbout() override;
 };
 
 #endif // EDITOR_ABOUT_H

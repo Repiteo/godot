@@ -39,7 +39,7 @@ struct ANativeWindow;
 
 class RenderingContextDriverVulkanAndroid : public RenderingContextDriverVulkan {
 private:
-	virtual const char *_get_platform_surface_extension() const override final;
+	const char *_get_platform_surface_extension() const override final;
 
 protected:
 	SurfaceID surface_create(const void *p_platform_data) override final;

@@ -150,7 +150,7 @@ public:
 	void stop();
 
 	DebugAdapterProtocol();
-	~DebugAdapterProtocol();
+	~DebugAdapterProtocol() override;
 };
 
 #endif // DEBUG_ADAPTER_PROTOCOL_H

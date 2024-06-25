@@ -45,7 +45,7 @@ private:
 	Color disabled_branch_color;
 
 public:
-	virtual Dictionary _get_line_syntax_highlighting_impl(int p_line) override;
+	Dictionary _get_line_syntax_highlighting_impl(int p_line) override;
 
 	void add_disabled_branch_region(const Point2i &p_region);
 	void clear_disabled_branch_regions();
@@ -79,15 +79,15 @@ class ShaderTextEditor : public CodeTextEditor {
 protected:
 	void _notification(int p_what);
 	static void _bind_methods();
-	virtual void _load_theme_settings() override;
+	void _load_theme_settings() override;
 
-	virtual void _code_complete_script(const String &p_code, List<ScriptLanguage::CodeCompletionOption> *r_options) override;
+	void _code_complete_script(const String &p_code, List<ScriptLanguage::CodeCompletionOption> *r_options) override;
 
 public:
 	void set_block_shader_changed(bool p_block) { block_shader_changed = p_block; }
 	uint32_t get_dependencies_version() const { return dependencies_version; }
 
-	virtual void _validate_script() override;
+	void _validate_script() override;
 
 	void reload_text();
 	void set_warnings_panel(RichTextLabel *p_warnings_panel);
@@ -204,7 +204,7 @@ public:
 	void tag_saved_version();
 	ShaderTextEditor *get_code_editor() { return code_editor; }
 
-	virtual Size2 get_minimum_size() const override { return Size2(0, 200); }
+	Size2 get_minimum_size() const override { return Size2(0, 200); }
 
 	TextShaderEditor();
 };

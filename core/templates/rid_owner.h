@@ -333,7 +333,7 @@ public:
 		elements_in_chunk = sizeof(T) > p_target_chunk_byte_size ? 1 : (p_target_chunk_byte_size / sizeof(T));
 	}
 
-	~RID_Alloc() {
+	~RID_Alloc() override {
 		if (alloc_count) {
 			print_error(vformat("ERROR: %d RID allocations of type '%s' were leaked at exit.",
 					alloc_count, description ? description : typeid(T).name()));

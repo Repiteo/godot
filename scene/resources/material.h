@@ -81,14 +81,14 @@ public:
 	void set_render_priority(int p_priority);
 	int get_render_priority() const;
 
-	virtual RID get_rid() const override;
+	RID get_rid() const override;
 	virtual RID get_shader_rid() const;
 	virtual Shader::Mode get_shader_mode() const;
 
 	virtual Ref<Resource> create_placeholder() const;
 
 	Material();
-	virtual ~Material();
+	~Material() override;
 };
 
 class ShaderMaterial : public Material {
@@ -111,8 +111,8 @@ protected:
 	void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
 #endif
 
-	virtual bool _can_do_next_pass() const override;
-	virtual bool _can_use_render_priority() const override;
+	bool _can_do_next_pass() const override;
+	bool _can_use_render_priority() const override;
 
 	void _shader_changed();
 
@@ -123,12 +123,12 @@ public:
 	void set_shader_parameter(const StringName &p_param, const Variant &p_value);
 	Variant get_shader_parameter(const StringName &p_param) const;
 
-	virtual Shader::Mode get_shader_mode() const override;
+	Shader::Mode get_shader_mode() const override;
 
-	virtual RID get_shader_rid() const override;
+	RID get_shader_rid() const override;
 
 	ShaderMaterial();
-	~ShaderMaterial();
+	~ShaderMaterial() override;
 };
 
 class StandardMaterial3D;
@@ -561,8 +561,8 @@ private:
 protected:
 	static void _bind_methods();
 	void _validate_property(PropertyInfo &p_property) const;
-	virtual bool _can_do_next_pass() const override { return true; }
-	virtual bool _can_use_render_priority() const override { return true; }
+	bool _can_do_next_pass() const override { return true; }
+	bool _can_use_render_priority() const override { return true; }
 
 public:
 	void set_albedo(const Color &p_albedo);
@@ -775,12 +775,12 @@ public:
 
 	static Ref<Material> get_material_for_2d(bool p_shaded, Transparency p_transparency, bool p_double_sided, bool p_billboard = false, bool p_billboard_y = false, bool p_msdf = false, bool p_no_depth = false, bool p_fixed_size = false, TextureFilter p_filter = TEXTURE_FILTER_LINEAR_WITH_MIPMAPS, AlphaAntiAliasing p_alpha_antialiasing_mode = ALPHA_ANTIALIASING_OFF, RID *r_shader_rid = nullptr);
 
-	virtual RID get_shader_rid() const override;
+	RID get_shader_rid() const override;
 
-	virtual Shader::Mode get_shader_mode() const override;
+	Shader::Mode get_shader_mode() const override;
 
 	BaseMaterial3D(bool p_orm);
-	virtual ~BaseMaterial3D();
+	~BaseMaterial3D() override;
 };
 
 VARIANT_ENUM_CAST(BaseMaterial3D::TextureParam)
@@ -824,8 +824,8 @@ public:
 class PlaceholderMaterial : public Material {
 	GDCLASS(PlaceholderMaterial, Material)
 public:
-	virtual RID get_shader_rid() const override { return RID(); }
-	virtual Shader::Mode get_shader_mode() const override { return Shader::MODE_CANVAS_ITEM; }
+	RID get_shader_rid() const override { return RID(); }
+	Shader::Mode get_shader_mode() const override { return Shader::MODE_CANVAS_ITEM; }
 };
 
 //////////////////////

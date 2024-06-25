@@ -101,7 +101,7 @@ public:
 #endif // TOOLS_ENABLED
 
 	SkeletonModification2DTwoBoneIK();
-	~SkeletonModification2DTwoBoneIK();
+	~SkeletonModification2DTwoBoneIK() override;
 };
 
 #endif // SKELETON_MODIFICATION_2D_TWOBONEIK_H

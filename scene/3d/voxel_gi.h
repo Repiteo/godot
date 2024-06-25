@@ -89,10 +89,10 @@ public:
 	void set_use_two_bounces(bool p_enable);
 	bool is_using_two_bounces() const;
 
-	virtual RID get_rid() const override;
+	RID get_rid() const override;
 
 	VoxelGIData();
-	~VoxelGIData();
+	~VoxelGIData() override;
 };
 
 class VoxelGI : public VisualInstance3D {
@@ -161,12 +161,12 @@ public:
 
 	void bake(Node *p_from_node = nullptr, bool p_create_visual_debug = false);
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 
 	PackedStringArray get_configuration_warnings() const override;
 
 	VoxelGI();
-	~VoxelGI();
+	~VoxelGI() override;
 };
 
 VARIANT_ENUM_CAST(VoxelGI::Subdiv)

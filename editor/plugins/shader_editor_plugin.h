@@ -115,24 +115,24 @@ protected:
 	void _notification(int p_what);
 
 public:
-	virtual String get_name() const override { return "Shader"; }
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
-	virtual void make_visible(bool p_visible) override;
-	virtual void selected_notify() override;
+	String get_name() const override { return "Shader"; }
+	void edit(Object *p_object) override;
+	bool handles(Object *p_object) const override;
+	void make_visible(bool p_visible) override;
+	void selected_notify() override;
 
 	TextShaderEditor *get_shader_editor(const Ref<Shader> &p_for_shader);
 	VisualShaderEditor *get_visual_shader_editor(const Ref<Shader> &p_for_shader);
 
-	virtual void set_window_layout(Ref<ConfigFile> p_layout) override;
-	virtual void get_window_layout(Ref<ConfigFile> p_layout) override;
+	void set_window_layout(Ref<ConfigFile> p_layout) override;
+	void get_window_layout(Ref<ConfigFile> p_layout) override;
 
-	virtual String get_unsaved_status(const String &p_for_scene) const override;
-	virtual void save_external_data() override;
-	virtual void apply_changes() override;
+	String get_unsaved_status(const String &p_for_scene) const override;
+	void save_external_data() override;
+	void apply_changes() override;
 
 	ShaderEditorPlugin();
-	~ShaderEditorPlugin();
+	~ShaderEditorPlugin() override;
 };
 
 #endif // SHADER_EDITOR_PLUGIN_H

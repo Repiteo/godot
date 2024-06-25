@@ -57,7 +57,7 @@ public:
 	PackedStringArray get_configuration_warnings() const override;
 
 	CanvasModulate();
-	~CanvasModulate();
+	~CanvasModulate() override;
 };
 
 #endif // CANVAS_MODULATE_H

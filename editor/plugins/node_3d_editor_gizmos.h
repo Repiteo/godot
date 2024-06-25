@@ -127,11 +127,11 @@ public:
 	bool is_subgizmo_selected(int p_id) const;
 	Vector<int> get_subgizmo_selection() const;
 
-	virtual void clear() override;
-	virtual void create() override;
-	virtual void transform() override;
-	virtual void redraw() override;
-	virtual void free() override;
+	void clear() override;
+	void create() override;
+	void transform() override;
+	void redraw() override;
+	void free() override;
 
 	virtual bool is_editable() const;
 
@@ -139,7 +139,7 @@ public:
 	void set_plugin(EditorNode3DGizmoPlugin *p_plugin);
 
 	EditorNode3DGizmo();
-	~EditorNode3DGizmo();
+	~EditorNode3DGizmo() override;
 };
 
 class EditorNode3DGizmoPlugin : public Resource {
@@ -215,7 +215,7 @@ public:
 	void unregister_gizmo(EditorNode3DGizmo *p_gizmo);
 
 	EditorNode3DGizmoPlugin();
-	virtual ~EditorNode3DGizmoPlugin();
+	~EditorNode3DGizmoPlugin() override;
 };
 
 #endif // NODE_3D_EDITOR_GIZMOS_H

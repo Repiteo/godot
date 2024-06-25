@@ -42,7 +42,7 @@ class AudioEffectDistortionInstance : public AudioEffectInstance {
 	float h[2];
 
 public:
-	virtual void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;
+	void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;
 };
 
 class AudioEffectDistortion : public AudioEffect {

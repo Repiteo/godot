@@ -199,13 +199,13 @@ private:
 
 		bool uses_time = false;
 
-		virtual void set_code(const String &p_Code);
-		virtual bool is_animated() const;
-		virtual bool casts_shadows() const;
-		virtual RS::ShaderNativeSourceCode get_native_source_code() const;
+		void set_code(const String &p_Code) override;
+		bool is_animated() const override;
+		bool casts_shadows() const override;
+		RS::ShaderNativeSourceCode get_native_source_code() const override;
 
 		FogShaderData() {}
-		virtual ~FogShaderData();
+		~FogShaderData() override;
 	};
 
 	struct FogMaterialData : public RendererRD::MaterialStorage::MaterialData {
@@ -213,10 +213,10 @@ private:
 		RID uniform_set;
 		bool uniform_set_updated;
 
-		virtual void set_render_priority(int p_priority) {}
-		virtual void set_next_pass(RID p_pass) {}
-		virtual bool update_parameters(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty);
-		virtual ~FogMaterialData();
+		void set_render_priority(int p_priority) override {}
+		void set_next_pass(RID p_pass) override {}
+		bool update_parameters(const HashMap<StringName, Variant> &p_parameters, bool p_uniform_dirty, bool p_textures_dirty) override;
+		~FogMaterialData() override;
 	};
 
 	RendererRD::MaterialStorage::ShaderData *_create_fog_shader_func();
@@ -229,23 +229,23 @@ public:
 	static Fog *get_singleton() { return singleton; }
 
 	Fog();
-	~Fog();
+	~Fog() override;
 
 	/* FOG VOLUMES */
 
 	bool owns_fog_volume(RID p_rid) { return fog_volume_owner.owns(p_rid); };
 
-	virtual RID fog_volume_allocate() override;
-	virtual void fog_volume_initialize(RID p_rid) override;
-	virtual void fog_volume_free(RID p_rid) override;
+	RID fog_volume_allocate() override;
+	void fog_volume_initialize(RID p_rid) override;
+	void fog_volume_free(RID p_rid) override;
 	Dependency *fog_volume_get_dependency(RID p_fog_volume) const;
 
-	virtual void fog_volume_set_shape(RID p_fog_volume, RS::FogVolumeShape p_shape) override;
-	virtual void fog_volume_set_size(RID p_fog_volume, const Vector3 &p_size) override;
-	virtual void fog_volume_set_material(RID p_fog_volume, RID p_material) override;
-	virtual RS::FogVolumeShape fog_volume_get_shape(RID p_fog_volume) const override;
+	void fog_volume_set_shape(RID p_fog_volume, RS::FogVolumeShape p_shape) override;
+	void fog_volume_set_size(RID p_fog_volume, const Vector3 &p_size) override;
+	void fog_volume_set_material(RID p_fog_volume, RID p_material) override;
+	RS::FogVolumeShape fog_volume_get_shape(RID p_fog_volume) const override;
 	RID fog_volume_get_material(RID p_fog_volume) const;
-	virtual AABB fog_volume_get_aabb(RID p_fog_volume) const override;
+	AABB fog_volume_get_aabb(RID p_fog_volume) const override;
 	Vector3 fog_volume_get_size(RID p_fog_volume) const;
 
 	/* FOG VOLUMES INSTANCE */
@@ -316,13 +316,13 @@ public:
 
 		int last_shadow_filter = -1;
 
-		virtual void configure(RenderSceneBuffersRD *p_render_buffers) override{};
-		virtual void free_data() override{};
+		void configure(RenderSceneBuffersRD *p_render_buffers) override{};
+		void free_data() override{};
 
 		bool sync_gi_dependent_sets_validity(bool p_ensure_freed = false);
 
 		void init(const Vector3i &fog_size, RID p_sky_shader);
-		~VolumetricFog();
+		~VolumetricFog() override;
 	};
 
 	void init_fog_shader(uint32_t p_max_directional_lights, int p_roughness_layers, bool p_is_using_radiance_cubemap_array);

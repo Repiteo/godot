@@ -125,7 +125,7 @@ public:
 	StringName get_bus() const;
 
 	VideoStreamPlayer();
-	~VideoStreamPlayer();
+	~VideoStreamPlayer() override;
 };
 
 #endif // VIDEO_STREAM_PLAYER_H

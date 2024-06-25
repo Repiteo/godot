@@ -140,7 +140,7 @@ private:
 
 	void _notify_transform(CanvasItem *p_node);
 
-	virtual void _physics_interpolated_changed() override;
+	void _physics_interpolated_changed() override;
 
 	static CanvasItem *current_item_drawn;
 	friend class Viewport;
@@ -381,7 +381,7 @@ public:
 	CanvasLayer *get_canvas_layer_node() const;
 
 	CanvasItem();
-	~CanvasItem();
+	~CanvasItem() override;
 };
 
 VARIANT_ENUM_CAST(CanvasItem::TextureFilter)
@@ -428,18 +428,18 @@ public:
 	void set_texture_repeat(CanvasItem::TextureRepeat p_repeat);
 	CanvasItem::TextureRepeat get_texture_repeat() const;
 
-	virtual int get_width() const override;
-	virtual int get_height() const override;
+	int get_width() const override;
+	int get_height() const override;
 
-	virtual bool is_pixel_opaque(int p_x, int p_y) const override;
-	virtual bool has_alpha() const override;
+	bool is_pixel_opaque(int p_x, int p_y) const override;
+	bool has_alpha() const override;
 
-	virtual Ref<Image> get_image() const override;
+	Ref<Image> get_image() const override;
 
-	virtual RID get_rid() const override;
+	RID get_rid() const override;
 
 	CanvasTexture();
-	~CanvasTexture();
+	~CanvasTexture() override;
 };
 
 #endif // CANVAS_ITEM_H

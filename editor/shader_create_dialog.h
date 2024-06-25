@@ -95,7 +95,7 @@ class ShaderCreateDialog : public ConfirmationDialog {
 	void _browse_path();
 	void _file_selected(const String &p_file);
 	String _validate_path(const String &p_path);
-	virtual void ok_pressed() override;
+	void ok_pressed() override;
 	void _create_new();
 	void _load_exist();
 	void _update_dialog();

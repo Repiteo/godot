@@ -141,7 +141,7 @@ public:
 
 	static EditorUndoRedoManager *get_singleton();
 	EditorUndoRedoManager();
-	~EditorUndoRedoManager();
+	~EditorUndoRedoManager() override;
 };
 
 VARIANT_ENUM_CAST(EditorUndoRedoManager::SpecialHistory);

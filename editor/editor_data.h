@@ -325,7 +325,7 @@ public:
 	HashMap<Node *, Object *> &get_selection() { return selection; }
 
 	EditorSelection();
-	~EditorSelection();
+	~EditorSelection() override;
 };
 
 #endif // EDITOR_DATA_H

@@ -336,16 +336,16 @@ private:
 		GeometryInstanceGLES3() :
 				dirty_list_element(this) {}
 
-		virtual void _mark_dirty() override;
-		virtual void set_use_lightmap(RID p_lightmap_instance, const Rect2 &p_lightmap_uv_scale, int p_lightmap_slice_index) override;
-		virtual void set_lightmap_capture(const Color *p_sh9) override;
+		void _mark_dirty() override;
+		void set_use_lightmap(RID p_lightmap_instance, const Rect2 &p_lightmap_uv_scale, int p_lightmap_slice_index) override;
+		void set_lightmap_capture(const Color *p_sh9) override;
 
-		virtual void pair_light_instances(const RID *p_light_instances, uint32_t p_light_instance_count) override;
-		virtual void pair_reflection_probe_instances(const RID *p_reflection_probe_instances, uint32_t p_reflection_probe_instance_count) override;
-		virtual void pair_decal_instances(const RID *p_decal_instances, uint32_t p_decal_instance_count) override {}
-		virtual void pair_voxel_gi_instances(const RID *p_voxel_gi_instances, uint32_t p_voxel_gi_instance_count) override {}
+		void pair_light_instances(const RID *p_light_instances, uint32_t p_light_instance_count) override;
+		void pair_reflection_probe_instances(const RID *p_reflection_probe_instances, uint32_t p_reflection_probe_instance_count) override;
+		void pair_decal_instances(const RID *p_decal_instances, uint32_t p_decal_instance_count) override {}
+		void pair_voxel_gi_instances(const RID *p_voxel_gi_instances, uint32_t p_voxel_gi_instance_count) override {}
 
-		virtual void set_softshadow_projector_pairing(bool p_softshadow, bool p_projector) override {}
+		void set_softshadow_projector_pairing(bool p_softshadow, bool p_projector) override {}
 	};
 
 	enum {
@@ -865,7 +865,7 @@ public:
 	void light_projectors_set_filter(RS::LightProjectorFilter p_filter) override;
 
 	RasterizerSceneGLES3();
-	~RasterizerSceneGLES3();
+	~RasterizerSceneGLES3() override;
 };
 
 #endif // GLES3_ENABLED

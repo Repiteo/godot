@@ -68,15 +68,15 @@ private:
 	Color tint_color = Color(0.3, 0.3, 0.3, 0.75);
 
 protected:
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
-	virtual CursorShape get_cursor_shape(const Point2 &p_pos = Point2i()) const override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
+	CursorShape get_cursor_shape(const Point2 &p_pos = Point2i()) const override;
 
 	void _notification(int p_what);
 	static void _bind_methods();
 
 	void _validate_property(PropertyInfo &p_property) const;
 
-	virtual void _resort() override;
+	void _resort() override;
 
 public:
 	void set_title(const String &p_title);
@@ -99,8 +99,8 @@ public:
 	void set_tint_color(const Color &p_tint_color);
 	Color get_tint_color() const;
 
-	virtual bool has_point(const Point2 &p_point) const override;
-	virtual Size2 get_minimum_size() const override;
+	bool has_point(const Point2 &p_point) const override;
+	Size2 get_minimum_size() const override;
 
 	GraphFrame();
 };

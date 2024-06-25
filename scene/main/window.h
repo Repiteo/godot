@@ -227,7 +227,7 @@ private:
 	void _window_drop_files(const Vector<String> &p_files);
 	void _rect_changed_callback(const Rect2i &p_callback);
 	void _event_callback(DisplayServer::WindowEvent p_event);
-	virtual bool _can_consume_input_events() const override;
+	bool _can_consume_input_events() const override;
 
 	bool mouse_in_window = false;
 	void _update_mouse_over(Vector2 p_pos) override;
@@ -256,8 +256,8 @@ protected:
 	void _get_property_list(List<PropertyInfo> *p_list) const;
 	void _validate_property(PropertyInfo &p_property) const;
 
-	virtual void add_child_notify(Node *p_child) override;
-	virtual void remove_child_notify(Node *p_child) override;
+	void add_child_notify(Node *p_child) override;
+	void remove_child_notify(Node *p_child) override;
 
 	GDVIRTUAL0RC(Vector2, _get_contents_minimum_size)
 
@@ -470,19 +470,19 @@ public:
 
 	//
 
-	virtual Transform2D get_final_transform() const override;
-	virtual Transform2D get_screen_transform_internal(bool p_absolute_position = false) const override;
-	virtual Transform2D get_popup_base_transform() const override;
-	virtual bool is_directly_attached_to_screen() const override;
-	virtual bool is_attached_in_viewport() const override;
+	Transform2D get_final_transform() const override;
+	Transform2D get_screen_transform_internal(bool p_absolute_position = false) const override;
+	Transform2D get_popup_base_transform() const override;
+	bool is_directly_attached_to_screen() const override;
+	bool is_attached_in_viewport() const override;
 
 	Rect2i get_parent_rect() const;
-	virtual DisplayServer::WindowID get_window_id() const override;
+	DisplayServer::WindowID get_window_id() const override;
 
 	virtual Size2 _get_contents_minimum_size() const;
 
 	Window();
-	~Window();
+	~Window() override;
 };
 
 VARIANT_ENUM_CAST(Window::Mode);

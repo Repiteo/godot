@@ -265,7 +265,7 @@ class FileDialogEventHandler : public IFileDialogEvents, public IFileDialogContr
 
 public:
 	// IUnknown methods
-	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void **ppv) {
+	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void **ppv) override {
 		static const QITAB qit[] = {
 #ifdef __MINGW32__
 			{ &__uuidof(IFileDialogEvents), static_cast<decltype(qit[0].dwOffset)>(OFFSETOFCLASS(IFileDialogEvents, FileDialogEventHandler)) },
@@ -279,11 +279,11 @@ public:
 		return QISearch(this, qit, riid, ppv);
 	}
 
-	ULONG STDMETHODCALLTYPE AddRef() {
+	ULONG STDMETHODCALLTYPE AddRef() override {
 		return InterlockedIncrement(&ref_count);
 	}
 
-	ULONG STDMETHODCALLTYPE Release() {
+	ULONG STDMETHODCALLTYPE Release() override {
 		long ref = InterlockedDecrement(&ref_count);
 		if (!ref) {
 			delete this;
@@ -292,10 +292,10 @@ public:
 	}
 
 	// IFileDialogEvents methods
-	HRESULT STDMETHODCALLTYPE OnFileOk(IFileDialog *) { return S_OK; };
-	HRESULT STDMETHODCALLTYPE OnFolderChange(IFileDialog *) { return S_OK; };
+	HRESULT STDMETHODCALLTYPE OnFileOk(IFileDialog *) override { return S_OK; };
+	HRESULT STDMETHODCALLTYPE OnFolderChange(IFileDialog *) override { return S_OK; };
 
-	HRESULT STDMETHODCALLTYPE OnFolderChanging(IFileDialog *p_pfd, IShellItem *p_item) {
+	HRESULT STDMETHODCALLTYPE OnFolderChanging(IFileDialog *p_pfd, IShellItem *p_item) override {
 		if (root.is_empty()) {
 			return S_OK;
 		}
@@ -313,27 +313,27 @@ public:
 	}
 
 	HRESULT STDMETHODCALLTYPE OnHelp(IFileDialog *) { return S_OK; };
-	HRESULT STDMETHODCALLTYPE OnSelectionChange(IFileDialog *) { return S_OK; };
-	HRESULT STDMETHODCALLTYPE OnShareViolation(IFileDialog *, IShellItem *, FDE_SHAREVIOLATION_RESPONSE *) { return S_OK; };
-	HRESULT STDMETHODCALLTYPE OnTypeChange(IFileDialog *pfd) { return S_OK; };
-	HRESULT STDMETHODCALLTYPE OnOverwrite(IFileDialog *, IShellItem *, FDE_OVERWRITE_RESPONSE *) { return S_OK; };
+	HRESULT STDMETHODCALLTYPE OnSelectionChange(IFileDialog *) override { return S_OK; };
+	HRESULT STDMETHODCALLTYPE OnShareViolation(IFileDialog *, IShellItem *, FDE_SHAREVIOLATION_RESPONSE *) override { return S_OK; };
+	HRESULT STDMETHODCALLTYPE OnTypeChange(IFileDialog *pfd) override { return S_OK; };
+	HRESULT STDMETHODCALLTYPE OnOverwrite(IFileDialog *, IShellItem *, FDE_OVERWRITE_RESPONSE *) override { return S_OK; };
 
 	// IFileDialogControlEvents methods
-	HRESULT STDMETHODCALLTYPE OnItemSelected(IFileDialogCustomize *p_pfdc, DWORD p_ctl_id, DWORD p_item_idx) {
+	HRESULT STDMETHODCALLTYPE OnItemSelected(IFileDialogCustomize *p_pfdc, DWORD p_ctl_id, DWORD p_item_idx) override {
 		if (ctls.has(p_ctl_id)) {
 			selected[ctls[p_ctl_id]] = (int)p_item_idx;
 		}
 		return S_OK;
 	}
 
-	HRESULT STDMETHODCALLTYPE OnButtonClicked(IFileDialogCustomize *, DWORD) { return S_OK; };
-	HRESULT STDMETHODCALLTYPE OnCheckButtonToggled(IFileDialogCustomize *p_pfdc, DWORD p_ctl_id, BOOL p_checked) {
+	HRESULT STDMETHODCALLTYPE OnButtonClicked(IFileDialogCustomize *, DWORD) override { return S_OK; };
+	HRESULT STDMETHODCALLTYPE OnCheckButtonToggled(IFileDialogCustomize *p_pfdc, DWORD p_ctl_id, BOOL p_checked) override {
 		if (ctls.has(p_ctl_id)) {
 			selected[ctls[p_ctl_id]] = (bool)p_checked;
 		}
 		return S_OK;
 	}
-	HRESULT STDMETHODCALLTYPE OnControlActivating(IFileDialogCustomize *, DWORD) { return S_OK; };
+	HRESULT STDMETHODCALLTYPE OnControlActivating(IFileDialogCustomize *, DWORD) override { return S_OK; };
 
 	Dictionary get_selected() {
 		return selected;

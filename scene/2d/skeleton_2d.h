@@ -95,7 +95,7 @@ public:
 #endif // TOOLS_ENABLED
 
 	Bone2D();
-	~Bone2D();
+	~Bone2D() override;
 };
 
 class SkeletonModificationStack2D;
@@ -149,7 +149,7 @@ class Skeleton2D : public Node2D {
 	void _ensure_update_interpolation_data();
 
 protected:
-	virtual void _physics_interpolated_changed() override;
+	void _physics_interpolated_changed() override;
 	///////////////////////////////////////////////////////
 
 	void _notification(int p_what);
@@ -172,7 +172,7 @@ public:
 	void execute_modifications(real_t p_delta, int p_execution_mode);
 
 	Skeleton2D();
-	~Skeleton2D();
+	~Skeleton2D() override;
 };
 
 #endif // SKELETON_2D_H

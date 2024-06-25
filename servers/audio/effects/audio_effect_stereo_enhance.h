@@ -49,9 +49,9 @@ class AudioEffectStereoEnhanceInstance : public AudioEffectInstance {
 	unsigned int ringbuff_mask = 0;
 
 public:
-	virtual void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;
+	void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;
 
-	~AudioEffectStereoEnhanceInstance();
+	~AudioEffectStereoEnhanceInstance() override;
 };
 
 class AudioEffectStereoEnhance : public AudioEffect {

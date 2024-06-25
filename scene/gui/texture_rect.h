@@ -67,7 +67,7 @@ private:
 
 protected:
 	void _notification(int p_what);
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 	static void _bind_methods();
 #ifndef DISABLE_DEPRECATED
 	bool _set(const StringName &p_name, const Variant &p_value);
@@ -90,7 +90,7 @@ public:
 	bool is_flipped_v() const;
 
 	TextureRect();
-	~TextureRect();
+	~TextureRect() override;
 };
 
 VARIANT_ENUM_CAST(TextureRect::ExpandMode);

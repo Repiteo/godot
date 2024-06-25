@@ -79,8 +79,8 @@ class EditorInspectorPluginAudioStream : public EditorInspectorPlugin {
 	AudioStreamEditor *editor = nullptr;
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual void parse_begin(Object *p_object) override;
+	bool can_handle(Object *p_object) override;
+	void parse_begin(Object *p_object) override;
 };
 
 class AudioStreamEditorPlugin : public EditorPlugin {

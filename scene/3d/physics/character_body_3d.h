@@ -68,7 +68,7 @@ public:
 	const Vector3 &get_platform_velocity() const;
 	const Vector3 &get_platform_angular_velocity() const;
 
-	virtual Vector3 get_linear_velocity() const override;
+	Vector3 get_linear_velocity() const override;
 
 	int get_slide_collision_count() const;
 	PhysicsServer3D::MotionResult get_slide_collision(int p_bounce) const;

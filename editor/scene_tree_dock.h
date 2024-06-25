@@ -245,8 +245,8 @@ class SceneTreeDock : public VBoxContainer {
 	bool select_node_hovered_at_end_of_drag = false;
 	bool hovered_but_reparenting = false;
 
-	virtual void input(const Ref<InputEvent> &p_event) override;
-	virtual void shortcut_input(const Ref<InputEvent> &p_event) override;
+	void input(const Ref<InputEvent> &p_event) override;
+	void shortcut_input(const Ref<InputEvent> &p_event) override;
 	void _scene_tree_gui_input(Ref<InputEvent> p_event);
 
 	void _new_scene_from(const String &p_file);
@@ -359,7 +359,7 @@ public:
 	}
 
 	SceneTreeDock(Node *p_scene_root, EditorSelection *p_editor_selection, EditorData &p_editor_data);
-	~SceneTreeDock();
+	~SceneTreeDock() override;
 };
 
 #endif // SCENE_TREE_DOCK_H

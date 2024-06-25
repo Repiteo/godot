@@ -164,7 +164,7 @@ public:
 	Vector<int64_t> get_id_path(int64_t p_from_id, int64_t p_to_id, bool p_allow_partial_path = false);
 
 	AStar3D() {}
-	~AStar3D();
+	~AStar3D() override;
 };
 
 class AStar2D : public RefCounted {
@@ -220,7 +220,7 @@ public:
 	Vector<int64_t> get_id_path(int64_t p_from_id, int64_t p_to_id, bool p_allow_partial_path = false);
 
 	AStar2D() {}
-	~AStar2D() {}
+	~AStar2D() override {}
 };
 
 #endif // A_STAR_H

@@ -50,7 +50,7 @@ class GotoLineDialog : public ConfirmationDialog {
 
 	CodeEdit *text_editor = nullptr;
 
-	virtual void ok_pressed() override;
+	void ok_pressed() override;
 
 public:
 	void popup_find_line(CodeEdit *p_edit);
@@ -109,7 +109,7 @@ class FindReplaceBar : public HBoxContainer {
 
 protected:
 	void _notification(int p_what);
-	virtual void unhandled_input(const Ref<InputEvent> &p_event) override;
+	void unhandled_input(const Ref<InputEvent> &p_event) override;
 	void _focus_lost();
 
 	void _update_flags(bool p_direction_backwards);
@@ -181,7 +181,7 @@ class CodeTextEditor : public VBoxContainer {
 	void _complete_request();
 	Ref<Texture2D> _get_completion_icon(const ScriptLanguage::CodeCompletionOption &p_option);
 
-	virtual void input(const Ref<InputEvent> &event) override;
+	void input(const Ref<InputEvent> &event) override;
 	void _text_editor_gui_input(const Ref<InputEvent> &p_event);
 
 	Color completion_font_color;

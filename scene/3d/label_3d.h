@@ -252,11 +252,11 @@ public:
 	void set_texture_filter(StandardMaterial3D::TextureFilter p_filter);
 	StandardMaterial3D::TextureFilter get_texture_filter() const;
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 	Ref<TriangleMesh> generate_triangle_mesh() const;
 
 	Label3D();
-	~Label3D();
+	~Label3D() override;
 };
 
 VARIANT_ENUM_CAST(Label3D::DrawFlags);

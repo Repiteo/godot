@@ -657,7 +657,7 @@ protected:
 	static void _bind_compatibility_methods();
 #endif // DISABLE_DEPRECATED
 
-	virtual void _update_theme_item_cache() override;
+	void _update_theme_item_cache() override;
 
 	/* Internal API for CodeEdit, pending public API. */
 	// Brace matching.
@@ -715,16 +715,16 @@ protected:
 
 public:
 	/* General overrides. */
-	virtual void unhandled_key_input(const Ref<InputEvent> &p_event) override;
-	virtual void gui_input(const Ref<InputEvent> &p_gui_input) override;
+	void unhandled_key_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_gui_input) override;
 	bool alt_input(const Ref<InputEvent> &p_gui_input);
-	virtual Size2 get_minimum_size() const override;
-	virtual bool is_text_field() const override;
-	virtual CursorShape get_cursor_shape(const Point2 &p_pos = Point2i()) const override;
-	virtual Variant get_drag_data(const Point2 &p_point) override;
-	virtual bool can_drop_data(const Point2 &p_point, const Variant &p_data) const override;
-	virtual void drop_data(const Point2 &p_point, const Variant &p_data) override;
-	virtual String get_tooltip(const Point2 &p_pos) const override;
+	Size2 get_minimum_size() const override;
+	bool is_text_field() const override;
+	CursorShape get_cursor_shape(const Point2 &p_pos = Point2i()) const override;
+	Variant get_drag_data(const Point2 &p_point) override;
+	bool can_drop_data(const Point2 &p_point, const Variant &p_data) const override;
+	void drop_data(const Point2 &p_point, const Variant &p_data) override;
+	String get_tooltip(const Point2 &p_pos) const override;
 	void set_tooltip_request_func(const Callable &p_tooltip_callback);
 
 	/* Text */

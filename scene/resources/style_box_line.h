@@ -42,7 +42,7 @@ class StyleBoxLine : public StyleBox {
 	float grow_end = 1.0;
 
 protected:
-	virtual float get_style_margin(Side p_side) const override;
+	float get_style_margin(Side p_side) const override;
 	static void _bind_methods();
 
 public:
@@ -61,10 +61,10 @@ public:
 	void set_grow_end(float p_grow);
 	float get_grow_end() const;
 
-	virtual void draw(RID p_canvas_item, const Rect2 &p_rect) const override;
+	void draw(RID p_canvas_item, const Rect2 &p_rect) const override;
 
 	StyleBoxLine();
-	~StyleBoxLine();
+	~StyleBoxLine() override;
 };
 
 #endif // STYLE_BOX_LINE_H

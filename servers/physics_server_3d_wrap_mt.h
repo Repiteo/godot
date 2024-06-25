@@ -114,12 +114,12 @@ public:
 	}
 
 	FUNC2(space_set_debug_contacts, RID, int);
-	virtual Vector<Vector3> space_get_contacts(RID p_space) const override {
+	Vector<Vector3> space_get_contacts(RID p_space) const override {
 		ERR_FAIL_COND_V(!Thread::is_main_thread(), Vector<Vector3>());
 		return physics_server_3d->space_get_contacts(p_space);
 	}
 
-	virtual int space_get_contact_count(RID p_space) const override {
+	int space_get_contact_count(RID p_space) const override {
 		ERR_FAIL_COND_V(!Thread::is_main_thread(), 0);
 		return physics_server_3d->space_get_contact_count(p_space);
 	}
@@ -378,14 +378,14 @@ public:
 	FUNC1(free, RID);
 	FUNC1(set_active, bool);
 
-	virtual void init() override;
-	virtual void step(real_t p_step) override;
-	virtual void sync() override;
-	virtual void end_sync() override;
-	virtual void flush_queries() override;
-	virtual void finish() override;
+	void init() override;
+	void step(real_t p_step) override;
+	void sync() override;
+	void end_sync() override;
+	void flush_queries() override;
+	void finish() override;
 
-	virtual bool is_flushing_queries() const override {
+	bool is_flushing_queries() const override {
 		return physics_server_3d->is_flushing_queries();
 	}
 
@@ -394,7 +394,7 @@ public:
 	}
 
 	PhysicsServer3DWrapMT(PhysicsServer3D *p_contained, bool p_create_thread);
-	~PhysicsServer3DWrapMT();
+	~PhysicsServer3DWrapMT() override;
 
 #undef ServerNameWrapMT
 #undef ServerName

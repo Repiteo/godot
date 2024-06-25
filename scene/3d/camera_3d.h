@@ -189,7 +189,7 @@ public:
 	RID get_pyramid_shape_rid();
 
 	Camera3D();
-	~Camera3D();
+	~Camera3D() override;
 };
 
 VARIANT_ENUM_CAST(Camera3D::ProjectionType);

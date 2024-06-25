@@ -45,7 +45,7 @@ class AudioEffectEQInstance : public AudioEffectInstance {
 	Vector<float> gains;
 
 public:
-	virtual void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;
+	void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;
 };
 
 class AudioEffectEQ : public AudioEffect {

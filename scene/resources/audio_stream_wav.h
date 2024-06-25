@@ -82,26 +82,26 @@ class AudioStreamPlaybackWAV : public AudioStreamPlayback {
 	Ref<AudioSamplePlayback> sample_playback;
 
 public:
-	virtual void start(double p_from_pos = 0.0) override;
-	virtual void stop() override;
-	virtual bool is_playing() const override;
+	void start(double p_from_pos = 0.0) override;
+	void stop() override;
+	bool is_playing() const override;
 
-	virtual int get_loop_count() const override; //times it looped
+	int get_loop_count() const override; //times it looped
 
-	virtual double get_playback_position() const override;
-	virtual void seek(double p_time) override;
+	double get_playback_position() const override;
+	void seek(double p_time) override;
 
-	virtual int mix(AudioFrame *p_buffer, float p_rate_scale, int p_frames) override;
+	int mix(AudioFrame *p_buffer, float p_rate_scale, int p_frames) override;
 
-	virtual void tag_used_streams() override;
+	void tag_used_streams() override;
 
-	virtual void set_is_sample(bool p_is_sample) override;
-	virtual bool get_is_sample() const override;
-	virtual Ref<AudioSamplePlayback> get_sample_playback() const override;
-	virtual void set_sample_playback(const Ref<AudioSamplePlayback> &p_playback) override;
+	void set_is_sample(bool p_is_sample) override;
+	bool get_is_sample() const override;
+	Ref<AudioSamplePlayback> get_sample_playback() const override;
+	void set_sample_playback(const Ref<AudioSamplePlayback> &p_playback) override;
 
 	AudioStreamPlaybackWAV();
-	~AudioStreamPlaybackWAV();
+	~AudioStreamPlaybackWAV() override;
 };
 
 class AudioStreamWAV : public AudioStream {
@@ -162,25 +162,25 @@ public:
 	void set_stereo(bool p_enable);
 	bool is_stereo() const;
 
-	virtual double get_length() const override; //if supported, otherwise return 0
+	double get_length() const override; //if supported, otherwise return 0
 
-	virtual bool is_monophonic() const override;
+	bool is_monophonic() const override;
 
 	void set_data(const Vector<uint8_t> &p_data);
 	Vector<uint8_t> get_data() const;
 
 	Error save_to_wav(const String &p_path);
 
-	virtual Ref<AudioStreamPlayback> instantiate_playback() override;
-	virtual String get_stream_name() const override;
+	Ref<AudioStreamPlayback> instantiate_playback() override;
+	String get_stream_name() const override;
 
-	virtual bool can_be_sampled() const override {
+	bool can_be_sampled() const override {
 		return true;
 	}
-	virtual Ref<AudioSample> generate_sample() const override;
+	Ref<AudioSample> generate_sample() const override;
 
 	AudioStreamWAV();
-	~AudioStreamWAV();
+	~AudioStreamWAV() override;
 };
 
 VARIANT_ENUM_CAST(AudioStreamWAV::Format)

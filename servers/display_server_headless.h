@@ -180,7 +180,7 @@ public:
 	DisplayServerHeadless() {
 		native_menu = memnew(NativeMenu);
 	}
-	~DisplayServerHeadless() {
+	~DisplayServerHeadless() override {
 		if (native_menu) {
 			memdelete(native_menu);
 			native_menu = nullptr;

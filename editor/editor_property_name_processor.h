@@ -74,7 +74,7 @@ public:
 	String translate_group_name(const String &p_name) const;
 
 	EditorPropertyNameProcessor();
-	~EditorPropertyNameProcessor();
+	~EditorPropertyNameProcessor() override;
 };
 
 #endif // EDITOR_PROPERTY_NAME_PROCESSOR_H

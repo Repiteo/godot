@@ -106,7 +106,7 @@ private:
 	void _texture_changed();
 
 protected:
-	virtual void _update_theme_item_cache() override;
+	void _update_theme_item_cache() override;
 
 	void _set_internal_margin(Side p_side, float p_value);
 	virtual void _queue_update_size_cache();
@@ -118,7 +118,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 
 	Size2 get_minimum_size_for_text_and_icon(const String &p_text, Ref<Texture2D> p_icon) const;
 
@@ -158,7 +158,7 @@ public:
 	VerticalAlignment get_vertical_icon_alignment() const;
 
 	Button(const String &p_text = String());
-	~Button();
+	~Button() override;
 };
 
 #endif // BUTTON_H

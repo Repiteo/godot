@@ -127,7 +127,7 @@ protected:
 
 public:
 	NavigationAgent3D();
-	virtual ~NavigationAgent3D();
+	~NavigationAgent3D() override;
 
 	RID get_rid() const { return agent; }
 

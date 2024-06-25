@@ -52,8 +52,8 @@ class DirectoryCreateDialog : public ConfirmationDialog {
 protected:
 	static void _bind_methods();
 
-	virtual void ok_pressed() override;
-	virtual void _post_popup() override;
+	void ok_pressed() override;
+	void _post_popup() override;
 
 public:
 	void config(const String &p_base_dir);

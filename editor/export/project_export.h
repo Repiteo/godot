@@ -206,7 +206,7 @@ public:
 	bool is_exporting() const { return exporting; };
 
 	ProjectExportDialog();
-	~ProjectExportDialog();
+	~ProjectExportDialog() override;
 };
 
 #endif // PROJECT_EXPORT_H

@@ -22,7 +22,7 @@ public:
 
 protected:
 
-	virtual void _init() override {
+	void _init() override {
 
 		static const char **_uniform_strings=nullptr;
 		static const char* _variant_defines[]={

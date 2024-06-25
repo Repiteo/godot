@@ -51,19 +51,19 @@ protected:
 	Ref<OpenXRAPIExtension> openxr_api;
 
 public:
-	virtual HashMap<String, bool *> get_requested_extensions() override;
+	HashMap<String, bool *> get_requested_extensions() override;
 
 	GDVIRTUAL0R(Dictionary, _get_requested_extensions);
 
-	virtual void *set_system_properties_and_get_next_pointer(void *p_next_pointer) override;
-	virtual void *set_instance_create_info_and_get_next_pointer(void *p_next_pointer) override;
-	virtual void *set_session_create_and_get_next_pointer(void *p_next_pointer) override;
-	virtual void *set_swapchain_create_info_and_get_next_pointer(void *p_next_pointer) override;
-	virtual void *set_hand_joint_locations_and_get_next_pointer(int p_hand_index, void *p_next_pointer) override;
+	void *set_system_properties_and_get_next_pointer(void *p_next_pointer) override;
+	void *set_instance_create_info_and_get_next_pointer(void *p_next_pointer) override;
+	void *set_session_create_and_get_next_pointer(void *p_next_pointer) override;
+	void *set_swapchain_create_info_and_get_next_pointer(void *p_next_pointer) override;
+	void *set_hand_joint_locations_and_get_next_pointer(int p_hand_index, void *p_next_pointer) override;
 
-	virtual int get_composition_layer_count() override;
-	virtual XrCompositionLayerBaseHeader *get_composition_layer(int p_index) override;
-	virtual int get_composition_layer_order(int p_index) override;
+	int get_composition_layer_count() override;
+	XrCompositionLayerBaseHeader *get_composition_layer(int p_index) override;
+	int get_composition_layer_order(int p_index) override;
 
 	//TODO workaround as GDExtensionPtr<void> return type results in build error in godot-cpp
 	GDVIRTUAL1R(uint64_t, _set_system_properties_and_get_next_pointer, GDExtensionPtr<void>);
@@ -75,19 +75,19 @@ public:
 	GDVIRTUAL1R(uint64_t, _get_composition_layer, int);
 	GDVIRTUAL1R(int, _get_composition_layer_order, int);
 
-	virtual PackedStringArray get_suggested_tracker_names() override;
+	PackedStringArray get_suggested_tracker_names() override;
 
 	GDVIRTUAL0R(PackedStringArray, _get_suggested_tracker_names);
 
-	virtual void on_register_metadata() override;
-	virtual void on_before_instance_created() override;
-	virtual void on_instance_created(const XrInstance p_instance) override;
-	virtual void on_instance_destroyed() override;
-	virtual void on_session_created(const XrSession p_session) override;
-	virtual void on_process() override;
-	virtual void on_pre_render() override;
-	virtual void on_main_swapchains_created() override;
-	virtual void on_session_destroyed() override;
+	void on_register_metadata() override;
+	void on_before_instance_created() override;
+	void on_instance_created(const XrInstance p_instance) override;
+	void on_instance_destroyed() override;
+	void on_session_created(const XrSession p_session) override;
+	void on_process() override;
+	void on_pre_render() override;
+	void on_main_swapchains_created() override;
+	void on_session_destroyed() override;
 
 	GDVIRTUAL0(_on_register_metadata);
 	GDVIRTUAL0(_on_before_instance_created);
@@ -99,14 +99,14 @@ public:
 	GDVIRTUAL0(_on_main_swapchains_created);
 	GDVIRTUAL0(_on_session_destroyed);
 
-	virtual void on_state_idle() override;
-	virtual void on_state_ready() override;
-	virtual void on_state_synchronized() override;
-	virtual void on_state_visible() override;
-	virtual void on_state_focused() override;
-	virtual void on_state_stopping() override;
-	virtual void on_state_loss_pending() override;
-	virtual void on_state_exiting() override;
+	void on_state_idle() override;
+	void on_state_ready() override;
+	void on_state_synchronized() override;
+	void on_state_visible() override;
+	void on_state_focused() override;
+	void on_state_stopping() override;
+	void on_state_loss_pending() override;
+	void on_state_exiting() override;
 
 	GDVIRTUAL0(_on_state_idle);
 	GDVIRTUAL0(_on_state_ready);
@@ -117,14 +117,14 @@ public:
 	GDVIRTUAL0(_on_state_loss_pending);
 	GDVIRTUAL0(_on_state_exiting);
 
-	virtual bool on_event_polled(const XrEventDataBuffer &p_event) override;
+	bool on_event_polled(const XrEventDataBuffer &p_event) override;
 
 	GDVIRTUAL1R(bool, _on_event_polled, GDExtensionConstPtr<void>);
 
-	virtual void *set_viewport_composition_layer_and_get_next_pointer(const XrCompositionLayerBaseHeader *p_layer, Dictionary p_property_values, void *p_next_pointer) override;
-	virtual void on_viewport_composition_layer_destroyed(const XrCompositionLayerBaseHeader *p_layer) override;
-	virtual void get_viewport_composition_layer_extension_properties(List<PropertyInfo> *p_property_list) override;
-	virtual Dictionary get_viewport_composition_layer_extension_property_defaults() override;
+	void *set_viewport_composition_layer_and_get_next_pointer(const XrCompositionLayerBaseHeader *p_layer, Dictionary p_property_values, void *p_next_pointer) override;
+	void on_viewport_composition_layer_destroyed(const XrCompositionLayerBaseHeader *p_layer) override;
+	void get_viewport_composition_layer_extension_properties(List<PropertyInfo> *p_property_list) override;
+	Dictionary get_viewport_composition_layer_extension_property_defaults() override;
 
 	GDVIRTUAL3R(uint64_t, _set_viewport_composition_layer_and_get_next_pointer, GDExtensionConstPtr<void>, Dictionary, GDExtensionPtr<void>);
 	GDVIRTUAL1(_on_viewport_composition_layer_destroyed, GDExtensionConstPtr<void>);
@@ -136,7 +136,7 @@ public:
 	void register_extension_wrapper();
 
 	OpenXRExtensionWrapperExtension();
-	virtual ~OpenXRExtensionWrapperExtension() override;
+	~OpenXRExtensionWrapperExtension() override;
 };
 
 #endif // OPENXR_EXTENSION_WRAPPER_EXTENSION_H

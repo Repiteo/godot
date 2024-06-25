@@ -73,8 +73,8 @@ private:
 
 	void _update_light_visibility();
 
-	virtual void owner_changed_notify() override;
-	virtual void _physics_interpolated_changed() override;
+	void owner_changed_notify() override;
+	void _physics_interpolated_changed() override;
 
 protected:
 	_FORCE_INLINE_ RID _get_light() const { return canvas_light; }
@@ -132,7 +132,7 @@ public:
 	BlendMode get_blend_mode() const;
 
 	Light2D();
-	~Light2D();
+	~Light2D() override;
 };
 
 VARIANT_ENUM_CAST(Light2D::ShadowFilter);
@@ -154,17 +154,17 @@ protected:
 
 public:
 #ifdef TOOLS_ENABLED
-	virtual Dictionary _edit_get_state() const override;
-	virtual void _edit_set_state(const Dictionary &p_state) override;
+	Dictionary _edit_get_state() const override;
+	void _edit_set_state(const Dictionary &p_state) override;
 
-	virtual void _edit_set_pivot(const Point2 &p_pivot) override;
-	virtual Point2 _edit_get_pivot() const override;
-	virtual bool _edit_use_pivot() const override;
-	virtual Rect2 _edit_get_rect() const override;
-	virtual bool _edit_use_rect() const override;
+	void _edit_set_pivot(const Point2 &p_pivot) override;
+	Point2 _edit_get_pivot() const override;
+	bool _edit_use_pivot() const override;
+	Rect2 _edit_get_rect() const override;
+	bool _edit_use_rect() const override;
 #endif
 
-	virtual Rect2 get_anchorable_rect() const override;
+	Rect2 get_anchorable_rect() const override;
 
 	void set_texture(const Ref<Texture2D> &p_texture);
 	Ref<Texture2D> get_texture() const;

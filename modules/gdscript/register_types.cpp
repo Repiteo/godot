@@ -86,7 +86,7 @@ class EditorExportGDScript : public EditorExportPlugin {
 	int script_mode = DEFAULT_SCRIPT_MODE;
 
 protected:
-	virtual void _export_begin(const HashSet<String> &p_features, bool p_debug, const String &p_path, int p_flags) override {
+	void _export_begin(const HashSet<String> &p_features, bool p_debug, const String &p_path, int p_flags) override {
 		script_mode = DEFAULT_SCRIPT_MODE;
 
 		const Ref<EditorExportPreset> &preset = get_export_preset();
@@ -95,7 +95,7 @@ protected:
 		}
 	}
 
-	virtual void _export_file(const String &p_path, const String &p_type, const HashSet<String> &p_features) override {
+	void _export_file(const String &p_path, const String &p_type, const HashSet<String> &p_features) override {
 		if (p_path.get_extension() != "gd" || script_mode == EditorExportPreset::MODE_SCRIPT_TEXT) {
 			return;
 		}
@@ -117,7 +117,7 @@ protected:
 	}
 
 public:
-	virtual String get_name() const override { return "GDScript"; }
+	String get_name() const override { return "GDScript"; }
 };
 
 static void _editor_init() {

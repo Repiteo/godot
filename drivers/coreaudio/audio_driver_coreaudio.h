@@ -87,37 +87,37 @@ class AudioDriverCoreAudio : public AudioDriver {
 	void finish_input_device();
 
 public:
-	virtual const char *get_name() const override {
+	const char *get_name() const override {
 		return "CoreAudio";
 	};
 
-	virtual Error init() override;
-	virtual void start() override;
-	virtual int get_mix_rate() const override;
-	virtual SpeakerMode get_speaker_mode() const override;
+	Error init() override;
+	void start() override;
+	int get_mix_rate() const override;
+	SpeakerMode get_speaker_mode() const override;
 
-	virtual void lock() override;
-	virtual void unlock() override;
-	virtual void finish() override;
+	void lock() override;
+	void unlock() override;
+	void finish() override;
 
 #ifdef MACOS_ENABLED
-	virtual PackedStringArray get_output_device_list() override;
-	virtual String get_output_device() override;
-	virtual void set_output_device(const String &p_name) override;
+	PackedStringArray get_output_device_list() override;
+	String get_output_device() override;
+	void set_output_device(const String &p_name) override;
 
-	virtual PackedStringArray get_input_device_list() override;
-	virtual String get_input_device() override;
-	virtual void set_input_device(const String &p_name) override;
+	PackedStringArray get_input_device_list() override;
+	String get_input_device() override;
+	void set_input_device(const String &p_name) override;
 #endif
 
-	virtual Error input_start() override;
-	virtual Error input_stop() override;
+	Error input_start() override;
+	Error input_stop() override;
 
 	bool try_lock();
 	void stop();
 
 	AudioDriverCoreAudio();
-	~AudioDriverCoreAudio() {}
+	~AudioDriverCoreAudio() override {}
 };
 
 #endif // COREAUDIO_ENABLED

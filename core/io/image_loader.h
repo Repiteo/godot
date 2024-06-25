@@ -63,7 +63,7 @@ protected:
 	bool recognize(const String &p_extension) const;
 
 public:
-	virtual ~ImageFormatLoader() {}
+	~ImageFormatLoader() override {}
 };
 
 VARIANT_BITFIELD_CAST(ImageFormatLoader::LoaderFlags);
@@ -75,8 +75,8 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual Error load_image(Ref<Image> p_image, Ref<FileAccess> p_fileaccess, BitField<ImageFormatLoader::LoaderFlags> p_flags = FLAG_NONE, float p_scale = 1.0) override;
-	virtual void get_recognized_extensions(List<String> *p_extensions) const override;
+	Error load_image(Ref<Image> p_image, Ref<FileAccess> p_fileaccess, BitField<ImageFormatLoader::LoaderFlags> p_flags = FLAG_NONE, float p_scale = 1.0) override;
+	void get_recognized_extensions(List<String> *p_extensions) const override;
 
 	void add_format_loader();
 	void remove_format_loader();
@@ -103,10 +103,10 @@ public:
 
 class ResourceFormatLoaderImage : public ResourceFormatLoader {
 public:
-	virtual Ref<Resource> load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr, bool p_use_sub_threads = false, float *r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE) override;
-	virtual void get_recognized_extensions(List<String> *p_extensions) const override;
-	virtual bool handles_type(const String &p_type) const override;
-	virtual String get_resource_type(const String &p_path) const override;
+	Ref<Resource> load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr, bool p_use_sub_threads = false, float *r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE) override;
+	void get_recognized_extensions(List<String> *p_extensions) const override;
+	bool handles_type(const String &p_type) const override;
+	String get_resource_type(const String &p_path) const override;
 };
 
 #endif // IMAGE_LOADER_H

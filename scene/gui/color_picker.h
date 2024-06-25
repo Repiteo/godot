@@ -75,7 +75,7 @@ public:
 	Color get_preset_color() const;
 
 	ColorPresetButton(Color p_color, int p_size);
-	~ColorPresetButton();
+	~ColorPresetButton() override;
 };
 
 class ColorPicker : public VBoxContainer {
@@ -297,7 +297,7 @@ private:
 	void _drop_data_fw(const Point2 &p_point, const Variant &p_data, Control *p_from_control);
 
 protected:
-	virtual void _update_theme_item_cache() override;
+	void _update_theme_item_cache() override;
 
 	void _notification(int);
 	static void _bind_methods();
@@ -371,11 +371,11 @@ public:
 	void set_focus_on_line_edit();
 
 	ColorPicker();
-	~ColorPicker();
+	~ColorPicker() override;
 };
 
 class ColorPickerPopupPanel : public PopupPanel {
-	virtual void _input_from_window(const Ref<InputEvent> &p_event) override;
+	void _input_from_window(const Ref<InputEvent> &p_event) override;
 };
 
 class ColorPickerButton : public Button {
@@ -401,7 +401,7 @@ class ColorPickerButton : public Button {
 	void _color_changed(const Color &p_color);
 	void _modal_closed();
 
-	virtual void pressed() override;
+	void pressed() override;
 
 	void _update_picker();
 

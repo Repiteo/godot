@@ -59,15 +59,15 @@ public:
 	void set_use_hdr(bool p_enabled);
 	bool is_using_hdr() const;
 
-	virtual RID get_rid() const override;
-	virtual int get_height() const override { return 1; }
-	virtual bool has_alpha() const override { return true; }
+	RID get_rid() const override;
+	int get_height() const override { return 1; }
+	bool has_alpha() const override { return true; }
 
-	virtual Ref<Image> get_image() const override;
+	Ref<Image> get_image() const override;
 	void update_now();
 
 	GradientTexture1D();
-	virtual ~GradientTexture1D();
+	~GradientTexture1D() override;
 };
 
 class GradientTexture2D : public Texture2D {
@@ -114,9 +114,9 @@ public:
 	Ref<Gradient> get_gradient() const;
 
 	void set_width(int p_width);
-	virtual int get_width() const override;
+	int get_width() const override;
 	void set_height(int p_height);
-	virtual int get_height() const override;
+	int get_height() const override;
 
 	void set_use_hdr(bool p_enabled);
 	bool is_using_hdr() const;
@@ -131,13 +131,13 @@ public:
 	void set_repeat(Repeat p_repeat);
 	Repeat get_repeat() const;
 
-	virtual RID get_rid() const override;
-	virtual bool has_alpha() const override { return true; }
-	virtual Ref<Image> get_image() const override;
+	RID get_rid() const override;
+	bool has_alpha() const override { return true; }
+	Ref<Image> get_image() const override;
 	void update_now();
 
 	GradientTexture2D();
-	virtual ~GradientTexture2D();
+	~GradientTexture2D() override;
 };
 
 VARIANT_ENUM_CAST(GradientTexture2D::Fill);

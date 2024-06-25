@@ -75,11 +75,11 @@ class OptionButton : public Button {
 	void _refresh_size_cache();
 	void _dummy_setter() {} // Stub for PropertyListHelper (_set() doesn't use it).
 
-	virtual void pressed() override;
+	void pressed() override;
 
 protected:
 	Size2 get_minimum_size() const override;
-	virtual void _queue_update_size_cache() override;
+	void _queue_update_size_cache() override;
 
 	void _notification(int p_what);
 	bool _set(const StringName &p_name, const Variant &p_value);
@@ -90,7 +90,7 @@ protected:
 	void _validate_property(PropertyInfo &p_property) const;
 	static void _bind_methods();
 
-	virtual void shortcut_input(const Ref<InputEvent> &p_event) override;
+	void shortcut_input(const Ref<InputEvent> &p_event) override;
 
 public:
 	// ATTENTION: This is used by the POT generator's scene parser. If the number of properties returned by `_get_items()` ever changes,
@@ -144,7 +144,7 @@ public:
 	void set_disable_shortcuts(bool p_disabled);
 
 	OptionButton(const String &p_text = String());
-	~OptionButton();
+	~OptionButton() override;
 };
 
 #endif // OPTION_BUTTON_H

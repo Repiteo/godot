@@ -104,7 +104,7 @@ class ScrollBar : public Range {
 	void _drag_node_exit();
 	void _drag_node_input(const Ref<InputEvent> &p_input);
 
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 
 protected:
 	void _notification(int p_what);
@@ -124,9 +124,9 @@ public:
 	void set_smooth_scroll_enabled(bool p_enable);
 	bool is_smooth_scroll_enabled() const;
 
-	virtual Size2 get_minimum_size() const override;
+	Size2 get_minimum_size() const override;
 	ScrollBar(Orientation p_orientation = VERTICAL);
-	~ScrollBar();
+	~ScrollBar() override;
 };
 
 class HScrollBar : public ScrollBar {

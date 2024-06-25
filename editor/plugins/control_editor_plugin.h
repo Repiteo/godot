@@ -66,7 +66,7 @@ class ControlPositioningWarning : public MarginContainer {
 
 	void _update_warning();
 	void _update_toggler();
-	virtual void gui_input(const Ref<InputEvent> &p_event) override;
+	void gui_input(const Ref<InputEvent> &p_event) override;
 
 protected:
 	void _notification(int p_notification);
@@ -84,11 +84,11 @@ class EditorPropertyAnchorsPreset : public EditorProperty {
 	void _option_selected(int p_which);
 
 protected:
-	virtual void _set_read_only(bool p_read_only) override;
+	void _set_read_only(bool p_read_only) override;
 
 public:
 	void setup(const Vector<String> &p_options);
-	virtual void update_property() override;
+	void update_property() override;
 	EditorPropertyAnchorsPreset();
 };
 
@@ -117,11 +117,11 @@ class EditorPropertySizeFlags : public EditorProperty {
 	void _flag_toggled();
 
 protected:
-	virtual void _set_read_only(bool p_read_only) override;
+	void _set_read_only(bool p_read_only) override;
 
 public:
 	void setup(const Vector<String> &p_options, bool p_vertical);
-	virtual void update_property() override;
+	void update_property() override;
 	EditorPropertySizeFlags();
 };
 
@@ -131,10 +131,10 @@ class EditorInspectorPluginControl : public EditorInspectorPlugin {
 	bool inside_control_category = false;
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual void parse_category(Object *p_object, const String &p_category) override;
-	virtual void parse_group(Object *p_object, const String &p_group) override;
-	virtual bool parse_property(Object *p_object, const Variant::Type p_type, const String &p_path, const PropertyHint p_hint, const String &p_hint_text, const BitField<PropertyUsageFlags> p_usage, const bool p_wide = false) override;
+	bool can_handle(Object *p_object) override;
+	void parse_category(Object *p_object, const String &p_category) override;
+	void parse_group(Object *p_object, const String &p_group) override;
+	bool parse_property(Object *p_object, const Variant::Type p_type, const String &p_path, const PropertyHint p_hint, const String &p_hint_text, const BitField<PropertyUsageFlags> p_usage, const bool p_wide = false) override;
 };
 
 // Toolbar controls.
@@ -152,8 +152,8 @@ protected:
 	void _notification(int p_what);
 
 public:
-	virtual Size2 get_minimum_size() const override;
-	virtual void toggled(bool p_pressed) override;
+	Size2 get_minimum_size() const override;
+	void toggled(bool p_pressed) override;
 
 	VBoxContainer *get_popup_hbox() const { return popup_vbox; }
 
@@ -179,7 +179,7 @@ public:
 class AnchorPresetPicker : public ControlEditorPresetPicker {
 	GDCLASS(AnchorPresetPicker, ControlEditorPresetPicker);
 
-	virtual void _preset_button_pressed(const int p_preset) override;
+	void _preset_button_pressed(const int p_preset) override;
 
 protected:
 	void _notification(int p_notification);
@@ -196,7 +196,7 @@ class SizeFlagPresetPicker : public ControlEditorPresetPicker {
 
 	bool vertical = false;
 
-	virtual void _preset_button_pressed(const int p_preset) override;
+	void _preset_button_pressed(const int p_preset) override;
 	void _expand_button_pressed();
 
 protected:
@@ -255,7 +255,7 @@ class ControlEditorPlugin : public EditorPlugin {
 	ControlEditorToolbar *toolbar = nullptr;
 
 public:
-	virtual String get_name() const override { return "Control"; }
+	String get_name() const override { return "Control"; }
 
 	ControlEditorPlugin();
 };

@@ -50,12 +50,12 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual int get_width() const override;
-	virtual int get_height() const override;
-	virtual RID get_rid() const override;
-	virtual bool has_alpha() const override;
+	int get_width() const override;
+	int get_height() const override;
+	RID get_rid() const override;
+	bool has_alpha() const override;
 
-	virtual Ref<Image> get_image() const override;
+	Ref<Image> get_image() const override;
 
 	void set_texture_rd_rid(RID p_texture_rd_rid);
 	RID get_texture_rd_rid() const;
@@ -64,7 +64,7 @@ public:
 	void _set_texture_rd_rid(RID p_texture_rd_rid);
 
 	Texture2DRD();
-	~Texture2DRD();
+	~Texture2DRD() override;
 };
 
 class TextureLayeredRD : public TextureLayered {
@@ -84,15 +84,15 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual Image::Format get_format() const override;
-	virtual LayeredType get_layered_type() const override;
-	virtual int get_width() const override;
-	virtual int get_height() const override;
-	virtual int get_layers() const override;
-	virtual bool has_mipmaps() const override;
-	virtual RID get_rid() const override;
+	Image::Format get_format() const override;
+	LayeredType get_layered_type() const override;
+	int get_width() const override;
+	int get_height() const override;
+	int get_layers() const override;
+	bool has_mipmaps() const override;
+	RID get_rid() const override;
 
-	virtual Ref<Image> get_layer_data(int p_layer) const override;
+	Ref<Image> get_layer_data(int p_layer) const override;
 
 	void set_texture_rd_rid(RID p_texture_rd_rid);
 	RID get_texture_rd_rid() const;
@@ -101,7 +101,7 @@ public:
 	void _set_texture_rd_rid(RID p_texture_rd_rid);
 
 	TextureLayeredRD(LayeredType p_layer_type);
-	~TextureLayeredRD();
+	~TextureLayeredRD() override;
 };
 
 class Texture2DArrayRD : public TextureLayeredRD {
@@ -142,12 +142,12 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual Image::Format get_format() const override;
-	virtual int get_width() const override;
-	virtual int get_height() const override;
-	virtual int get_depth() const override;
-	virtual bool has_mipmaps() const override;
-	virtual RID get_rid() const override;
+	Image::Format get_format() const override;
+	int get_width() const override;
+	int get_height() const override;
+	int get_depth() const override;
+	bool has_mipmaps() const override;
+	RID get_rid() const override;
 
 	void set_texture_rd_rid(RID p_texture_rd_rid);
 	RID get_texture_rd_rid() const;
@@ -156,7 +156,7 @@ public:
 	void _set_texture_rd_rid(RID p_texture_rd_rid);
 
 	Texture3DRD();
-	~Texture3DRD();
+	~Texture3DRD() override;
 };
 
 #endif // TEXTURE_RD_H

@@ -53,7 +53,7 @@ public:
 	bool is_using_mipmaps() const;
 
 	CanvasGroup();
-	~CanvasGroup();
+	~CanvasGroup() override;
 };
 
 #endif // CANVAS_GROUP_H

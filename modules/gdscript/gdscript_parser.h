@@ -355,8 +355,8 @@ public:
 		bool is_constant = false;
 		Variant reduced_value;
 
-		virtual bool is_expression() const override { return true; }
-		virtual ~ExpressionNode() {}
+		bool is_expression() const override { return true; }
+		~ExpressionNode() override {}
 
 	protected:
 		ExpressionNode() {}
@@ -405,7 +405,7 @@ public:
 		bool use_conversion_assign = false;
 		int usages = 0;
 
-		virtual ~AssignableNode() {}
+		~AssignableNode() override {}
 
 	protected:
 		AssignableNode() {}

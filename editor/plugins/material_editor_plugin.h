@@ -92,7 +92,7 @@ class MaterialEditor : public Control {
 	void _on_box_switch_pressed();
 
 protected:
-	virtual void _update_theme_item_cache() override;
+	void _update_theme_item_cache() override;
 	void _notification(int p_what);
 	void gui_input(const Ref<InputEvent> &p_event) override;
 	void _update_rotation();
@@ -107,8 +107,8 @@ class EditorInspectorPluginMaterial : public EditorInspectorPlugin {
 	Ref<Environment> env;
 
 public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual void parse_begin(Object *p_object) override;
+	bool can_handle(Object *p_object) override;
+	void parse_begin(Object *p_object) override;
 
 	void _undo_redo_inspector_callback(Object *p_undo_redo, Object *p_edited, const String &p_property, const Variant &p_new_value);
 
@@ -119,7 +119,7 @@ class MaterialEditorPlugin : public EditorPlugin {
 	GDCLASS(MaterialEditorPlugin, EditorPlugin);
 
 public:
-	virtual String get_name() const override { return "Material"; }
+	String get_name() const override { return "Material"; }
 
 	MaterialEditorPlugin();
 };
@@ -128,72 +128,72 @@ class StandardMaterial3DConversionPlugin : public EditorResourceConversionPlugin
 	GDCLASS(StandardMaterial3DConversionPlugin, EditorResourceConversionPlugin);
 
 public:
-	virtual String converts_to() const override;
-	virtual bool handles(const Ref<Resource> &p_resource) const override;
-	virtual Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
+	String converts_to() const override;
+	bool handles(const Ref<Resource> &p_resource) const override;
+	Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
 };
 
 class ORMMaterial3DConversionPlugin : public EditorResourceConversionPlugin {
 	GDCLASS(ORMMaterial3DConversionPlugin, EditorResourceConversionPlugin);
 
 public:
-	virtual String converts_to() const override;
-	virtual bool handles(const Ref<Resource> &p_resource) const override;
-	virtual Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
+	String converts_to() const override;
+	bool handles(const Ref<Resource> &p_resource) const override;
+	Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
 };
 
 class ParticleProcessMaterialConversionPlugin : public EditorResourceConversionPlugin {
 	GDCLASS(ParticleProcessMaterialConversionPlugin, EditorResourceConversionPlugin);
 
 public:
-	virtual String converts_to() const override;
-	virtual bool handles(const Ref<Resource> &p_resource) const override;
-	virtual Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
+	String converts_to() const override;
+	bool handles(const Ref<Resource> &p_resource) const override;
+	Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
 };
 
 class CanvasItemMaterialConversionPlugin : public EditorResourceConversionPlugin {
 	GDCLASS(CanvasItemMaterialConversionPlugin, EditorResourceConversionPlugin);
 
 public:
-	virtual String converts_to() const override;
-	virtual bool handles(const Ref<Resource> &p_resource) const override;
-	virtual Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
+	String converts_to() const override;
+	bool handles(const Ref<Resource> &p_resource) const override;
+	Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
 };
 
 class ProceduralSkyMaterialConversionPlugin : public EditorResourceConversionPlugin {
 	GDCLASS(ProceduralSkyMaterialConversionPlugin, EditorResourceConversionPlugin);
 
 public:
-	virtual String converts_to() const override;
-	virtual bool handles(const Ref<Resource> &p_resource) const override;
-	virtual Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
+	String converts_to() const override;
+	bool handles(const Ref<Resource> &p_resource) const override;
+	Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
 };
 
 class PanoramaSkyMaterialConversionPlugin : public EditorResourceConversionPlugin {
 	GDCLASS(PanoramaSkyMaterialConversionPlugin, EditorResourceConversionPlugin);
 
 public:
-	virtual String converts_to() const override;
-	virtual bool handles(const Ref<Resource> &p_resource) const override;
-	virtual Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
+	String converts_to() const override;
+	bool handles(const Ref<Resource> &p_resource) const override;
+	Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
 };
 
 class PhysicalSkyMaterialConversionPlugin : public EditorResourceConversionPlugin {
 	GDCLASS(PhysicalSkyMaterialConversionPlugin, EditorResourceConversionPlugin);
 
 public:
-	virtual String converts_to() const override;
-	virtual bool handles(const Ref<Resource> &p_resource) const override;
-	virtual Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
+	String converts_to() const override;
+	bool handles(const Ref<Resource> &p_resource) const override;
+	Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
 };
 
 class FogMaterialConversionPlugin : public EditorResourceConversionPlugin {
 	GDCLASS(FogMaterialConversionPlugin, EditorResourceConversionPlugin);
 
 public:
-	virtual String converts_to() const override;
-	virtual bool handles(const Ref<Resource> &p_resource) const override;
-	virtual Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
+	String converts_to() const override;
+	bool handles(const Ref<Resource> &p_resource) const override;
+	Ref<Resource> convert(const Ref<Resource> &p_resource) const override;
 };
 
 #endif // MATERIAL_EDITOR_PLUGIN_H

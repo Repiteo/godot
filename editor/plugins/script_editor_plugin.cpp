@@ -339,7 +339,7 @@ public:
 		return E->value.cache;
 	}
 
-	virtual ~EditorScriptCodeCompletionCache() {}
+	~EditorScriptCodeCompletionCache() override {}
 };
 
 void ScriptEditorQuickOpen::popup_dialog(const Vector<String> &p_functions, bool p_dontclear) {

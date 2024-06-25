@@ -55,13 +55,13 @@ public:
 
 	void get_parameter_list(List<PropertyInfo> *r_list) const override;
 
-	virtual NodeTimeInfo get_node_time_info() const override; // Wrapper of get_parameter().
+	NodeTimeInfo get_node_time_info() const override; // Wrapper of get_parameter().
 
 	static Vector<String> (*get_editable_animation_list)();
 
-	virtual String get_caption() const override;
-	virtual NodeTimeInfo process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
-	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
+	String get_caption() const override;
+	NodeTimeInfo process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
+	NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
 
 	void set_animation(const StringName &p_name);
 	StringName get_animation() const;
@@ -154,11 +154,11 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual void get_parameter_list(List<PropertyInfo> *r_list) const override;
-	virtual Variant get_parameter_default_value(const StringName &p_parameter) const override;
-	virtual bool is_parameter_read_only(const StringName &p_parameter) const override;
+	void get_parameter_list(List<PropertyInfo> *r_list) const override;
+	Variant get_parameter_default_value(const StringName &p_parameter) const override;
+	bool is_parameter_read_only(const StringName &p_parameter) const override;
 
-	virtual String get_caption() const override;
+	String get_caption() const override;
 
 	void set_fade_in_time(double p_time);
 	double get_fade_in_time() const;
@@ -186,8 +186,8 @@ public:
 	void set_break_loop_at_end(bool p_enable);
 	bool is_loop_broken_at_end() const;
 
-	virtual bool has_filter() const override;
-	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
+	bool has_filter() const override;
+	NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
 
 	AnimationNodeOneShot();
 };
@@ -205,12 +205,12 @@ protected:
 
 public:
 	void get_parameter_list(List<PropertyInfo> *r_list) const override;
-	virtual Variant get_parameter_default_value(const StringName &p_parameter) const override;
+	Variant get_parameter_default_value(const StringName &p_parameter) const override;
 
-	virtual String get_caption() const override;
+	String get_caption() const override;
 
-	virtual bool has_filter() const override;
-	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
+	bool has_filter() const override;
+	NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
 
 	AnimationNodeAdd2();
 };
@@ -225,12 +225,12 @@ protected:
 
 public:
 	void get_parameter_list(List<PropertyInfo> *r_list) const override;
-	virtual Variant get_parameter_default_value(const StringName &p_parameter) const override;
+	Variant get_parameter_default_value(const StringName &p_parameter) const override;
 
-	virtual String get_caption() const override;
+	String get_caption() const override;
 
-	virtual bool has_filter() const override;
-	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
+	bool has_filter() const override;
+	NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
 
 	AnimationNodeAdd3();
 };
@@ -244,13 +244,13 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual void get_parameter_list(List<PropertyInfo> *r_list) const override;
-	virtual Variant get_parameter_default_value(const StringName &p_parameter) const override;
+	void get_parameter_list(List<PropertyInfo> *r_list) const override;
+	Variant get_parameter_default_value(const StringName &p_parameter) const override;
 
-	virtual String get_caption() const override;
-	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
+	String get_caption() const override;
+	NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
 
-	virtual bool has_filter() const override;
+	bool has_filter() const override;
 	AnimationNodeBlend2();
 };
 
@@ -263,12 +263,12 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual void get_parameter_list(List<PropertyInfo> *r_list) const override;
-	virtual Variant get_parameter_default_value(const StringName &p_parameter) const override;
+	void get_parameter_list(List<PropertyInfo> *r_list) const override;
+	Variant get_parameter_default_value(const StringName &p_parameter) const override;
 
-	virtual String get_caption() const override;
+	String get_caption() const override;
 
-	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
+	NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
 	AnimationNodeBlend3();
 };
 
@@ -282,12 +282,12 @@ protected:
 
 public:
 	void get_parameter_list(List<PropertyInfo> *r_list) const override;
-	virtual Variant get_parameter_default_value(const StringName &p_parameter) const override;
+	Variant get_parameter_default_value(const StringName &p_parameter) const override;
 
-	virtual String get_caption() const override;
+	String get_caption() const override;
 
-	virtual bool has_filter() const override;
-	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
+	bool has_filter() const override;
+	NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
 
 	AnimationNodeSub2();
 };
@@ -301,12 +301,12 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual void get_parameter_list(List<PropertyInfo> *r_list) const override;
-	virtual Variant get_parameter_default_value(const StringName &p_parameter) const override;
+	void get_parameter_list(List<PropertyInfo> *r_list) const override;
+	Variant get_parameter_default_value(const StringName &p_parameter) const override;
 
-	virtual String get_caption() const override;
+	String get_caption() const override;
 
-	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
+	NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
 
 	AnimationNodeTimeScale();
 };
@@ -320,12 +320,12 @@ protected:
 	static void _bind_methods();
 
 public:
-	virtual void get_parameter_list(List<PropertyInfo> *r_list) const override;
-	virtual Variant get_parameter_default_value(const StringName &p_parameter) const override;
+	void get_parameter_list(List<PropertyInfo> *r_list) const override;
+	Variant get_parameter_default_value(const StringName &p_parameter) const override;
 
-	virtual String get_caption() const override;
+	String get_caption() const override;
 
-	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
+	NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
 
 	AnimationNodeTimeSeek();
 };
@@ -362,17 +362,17 @@ protected:
 	void _get_property_list(List<PropertyInfo> *p_list) const;
 
 public:
-	virtual void get_parameter_list(List<PropertyInfo> *r_list) const override;
-	virtual Variant get_parameter_default_value(const StringName &p_parameter) const override;
-	virtual bool is_parameter_read_only(const StringName &p_parameter) const override;
+	void get_parameter_list(List<PropertyInfo> *r_list) const override;
+	Variant get_parameter_default_value(const StringName &p_parameter) const override;
+	bool is_parameter_read_only(const StringName &p_parameter) const override;
 
-	virtual String get_caption() const override;
+	String get_caption() const override;
 
 	void set_input_count(int p_inputs);
 
-	virtual bool add_input(const String &p_name) override;
-	virtual void remove_input(int p_index) override;
-	virtual bool set_input_name(int p_input, const String &p_name) override;
+	bool add_input(const String &p_name) override;
+	void remove_input(int p_index) override;
+	bool set_input_name(int p_input, const String &p_name) override;
 
 	void set_input_as_auto_advance(int p_input, bool p_enable);
 	bool is_input_set_as_auto_advance(int p_input) const;
@@ -392,7 +392,7 @@ public:
 	void set_allow_transition_to_self(bool p_enable);
 	bool is_allow_transition_to_self() const;
 
-	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
+	NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
 
 	AnimationNodeTransition();
 };
@@ -401,8 +401,8 @@ class AnimationNodeOutput : public AnimationNode {
 	GDCLASS(AnimationNodeOutput, AnimationNode);
 
 public:
-	virtual String get_caption() const override;
-	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
+	String get_caption() const override;
+	NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
 	AnimationNodeOutput();
 };
 
@@ -431,11 +431,11 @@ protected:
 	bool _get(const StringName &p_name, Variant &r_ret) const;
 	void _get_property_list(List<PropertyInfo> *p_list) const;
 
-	virtual void _tree_changed() override;
-	virtual void _animation_node_renamed(const ObjectID &p_oid, const String &p_old_name, const String &p_new_name) override;
-	virtual void _animation_node_removed(const ObjectID &p_oid, const StringName &p_node) override;
+	void _tree_changed() override;
+	void _animation_node_renamed(const ObjectID &p_oid, const String &p_old_name, const String &p_new_name) override;
+	void _animation_node_removed(const ObjectID &p_oid, const StringName &p_node) override;
 
-	virtual void reset_state() override;
+	void reset_state() override;
 
 public:
 	enum ConnectionError {
@@ -459,7 +459,7 @@ public:
 	void set_node_position(const StringName &p_node, const Vector2 &p_position);
 	Vector2 get_node_position(const StringName &p_node) const;
 
-	virtual void get_child_nodes(List<ChildNode> *r_child_nodes) override;
+	void get_child_nodes(List<ChildNode> *r_child_nodes) override;
 
 	void connect_node(const StringName &p_input_node, int p_input_index, const StringName &p_output_node);
 	void disconnect_node(const StringName &p_node, int p_input_index);
@@ -473,22 +473,22 @@ public:
 	ConnectionError can_connect_node(const StringName &p_input_node, int p_input_index, const StringName &p_output_node) const;
 	void get_node_connections(List<NodeConnection> *r_connections) const;
 
-	virtual String get_caption() const override;
-	virtual NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
+	String get_caption() const override;
+	NodeTimeInfo _process(const AnimationMixer::PlaybackInfo p_playback_info, bool p_test_only = false) override;
 
 	void get_node_list(List<StringName> *r_list);
 
 	void set_graph_offset(const Vector2 &p_graph_offset);
 	Vector2 get_graph_offset() const;
 
-	virtual Ref<AnimationNode> get_child_by_name(const StringName &p_name) const override;
+	Ref<AnimationNode> get_child_by_name(const StringName &p_name) const override;
 
 #ifdef TOOLS_ENABLED
-	virtual void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
+	void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const override;
 #endif
 
 	AnimationNodeBlendTree();
-	~AnimationNodeBlendTree();
+	~AnimationNodeBlendTree() override;
 };
 
 VARIANT_ENUM_CAST(AnimationNodeBlendTree::ConnectionError)

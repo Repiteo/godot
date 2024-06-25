@@ -110,7 +110,7 @@ public:
 	bool get_ccdik_joint_editor_draw_gizmo(int p_joint_idx) const;
 
 	SkeletonModification2DCCDIK();
-	~SkeletonModification2DCCDIK();
+	~SkeletonModification2DCCDIK() override;
 };
 
 #endif // SKELETON_MODIFICATION_2D_CCDIK_H

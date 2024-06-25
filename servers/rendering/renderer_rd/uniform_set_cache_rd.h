@@ -223,7 +223,7 @@ public:
 	static UniformSetCacheRD *get_singleton() { return singleton; }
 
 	UniformSetCacheRD();
-	~UniformSetCacheRD();
+	~UniformSetCacheRD() override;
 };
 
 #endif // UNIFORM_SET_CACHE_RD_H

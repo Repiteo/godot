@@ -62,31 +62,31 @@ class AudioStreamPlaybackMP3 : public AudioStreamPlaybackResampled {
 	Ref<AudioSamplePlayback> sample_playback;
 
 protected:
-	virtual int _mix_internal(AudioFrame *p_buffer, int p_frames) override;
-	virtual float get_stream_sampling_rate() override;
+	int _mix_internal(AudioFrame *p_buffer, int p_frames) override;
+	float get_stream_sampling_rate() override;
 
 public:
-	virtual void start(double p_from_pos = 0.0) override;
-	virtual void stop() override;
-	virtual bool is_playing() const override;
+	void start(double p_from_pos = 0.0) override;
+	void stop() override;
+	bool is_playing() const override;
 
-	virtual int get_loop_count() const override; //times it looped
+	int get_loop_count() const override; //times it looped
 
-	virtual double get_playback_position() const override;
-	virtual void seek(double p_time) override;
+	double get_playback_position() const override;
+	void seek(double p_time) override;
 
-	virtual void tag_used_streams() override;
+	void tag_used_streams() override;
 
-	virtual void set_is_sample(bool p_is_sample) override;
-	virtual bool get_is_sample() const override;
-	virtual Ref<AudioSamplePlayback> get_sample_playback() const override;
-	virtual void set_sample_playback(const Ref<AudioSamplePlayback> &p_playback) override;
+	void set_is_sample(bool p_is_sample) override;
+	bool get_is_sample() const override;
+	Ref<AudioSamplePlayback> get_sample_playback() const override;
+	void set_sample_playback(const Ref<AudioSamplePlayback> &p_playback) override;
 
-	virtual void set_parameter(const StringName &p_name, const Variant &p_value) override;
-	virtual Variant get_parameter(const StringName &p_name) const override;
+	void set_parameter(const StringName &p_name, const Variant &p_value) override;
+	Variant get_parameter(const StringName &p_name) const override;
 
 	AudioStreamPlaybackMP3() {}
-	~AudioStreamPlaybackMP3();
+	~AudioStreamPlaybackMP3() override;
 };
 
 class AudioStreamMP3 : public AudioStream {
@@ -115,39 +115,39 @@ protected:
 
 public:
 	void set_loop(bool p_enable);
-	virtual bool has_loop() const override;
+	bool has_loop() const override;
 
 	void set_loop_offset(double p_seconds);
 	double get_loop_offset() const;
 
 	void set_bpm(double p_bpm);
-	virtual double get_bpm() const override;
+	double get_bpm() const override;
 
 	void set_beat_count(int p_beat_count);
-	virtual int get_beat_count() const override;
+	int get_beat_count() const override;
 
 	void set_bar_beats(int p_bar_beats);
-	virtual int get_bar_beats() const override;
+	int get_bar_beats() const override;
 
-	virtual Ref<AudioStreamPlayback> instantiate_playback() override;
-	virtual String get_stream_name() const override;
+	Ref<AudioStreamPlayback> instantiate_playback() override;
+	String get_stream_name() const override;
 
 	void set_data(const Vector<uint8_t> &p_data);
 	Vector<uint8_t> get_data() const;
 
-	virtual double get_length() const override;
+	double get_length() const override;
 
-	virtual bool is_monophonic() const override;
+	bool is_monophonic() const override;
 
-	virtual bool can_be_sampled() const override {
+	bool can_be_sampled() const override {
 		return true;
 	}
-	virtual Ref<AudioSample> generate_sample() const override;
+	Ref<AudioSample> generate_sample() const override;
 
-	virtual void get_parameter_list(List<Parameter> *r_parameters) override;
+	void get_parameter_list(List<Parameter> *r_parameters) override;
 
 	AudioStreamMP3();
-	virtual ~AudioStreamMP3();
+	~AudioStreamMP3() override;
 };
 
 #endif // AUDIO_STREAM_MP3_H

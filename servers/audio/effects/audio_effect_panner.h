@@ -41,7 +41,7 @@ class AudioEffectPannerInstance : public AudioEffectInstance {
 	Ref<AudioEffectPanner> base;
 
 public:
-	virtual void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;
+	void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;
 };
 
 class AudioEffectPanner : public AudioEffect {

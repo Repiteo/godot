@@ -213,7 +213,7 @@ public:
 	void shut_down();
 
 	VersionControlEditorPlugin();
-	~VersionControlEditorPlugin();
+	~VersionControlEditorPlugin() override;
 };
 
 #endif // VERSION_CONTROL_EDITOR_PLUGIN_H

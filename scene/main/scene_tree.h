@@ -310,14 +310,14 @@ public:
 
 	void flush_transform_notifications();
 
-	virtual void initialize() override;
+	void initialize() override;
 
-	virtual void iteration_prepare() override;
+	void iteration_prepare() override;
 
-	virtual bool physics_process(double p_time) override;
-	virtual bool process(double p_time) override;
+	bool physics_process(double p_time) override;
+	bool process(double p_time) override;
 
-	virtual void finalize() override;
+	void finalize() override;
 
 	bool is_auto_accept_quit() const;
 	void set_auto_accept_quit(bool p_enable);
@@ -424,7 +424,7 @@ public:
 	bool is_physics_interpolation_enabled() const;
 
 	SceneTree();
-	~SceneTree();
+	~SceneTree() override;
 };
 
 VARIANT_ENUM_CAST(SceneTree::GroupCallFlags);

@@ -310,7 +310,7 @@ public:
 	static FramebufferCacheRD *get_singleton() { return singleton; }
 
 	FramebufferCacheRD();
-	~FramebufferCacheRD();
+	~FramebufferCacheRD() override;
 };
 
 #endif // FRAMEBUFFER_CACHE_RD_H

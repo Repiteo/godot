@@ -53,7 +53,7 @@ public:
 	virtual void get_recognized_extensions(const Ref<Resource> &p_resource, List<String> *p_extensions) const;
 	virtual bool recognize_path(const Ref<Resource> &p_resource, const String &p_path) const;
 
-	virtual ~ResourceFormatSaver() {}
+	~ResourceFormatSaver() override {}
 };
 
 typedef void (*ResourceSavedCallback)(Ref<Resource> p_resource, const String &p_path);

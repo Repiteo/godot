@@ -49,7 +49,7 @@ class TabContainer;
 class RenameDialog : public ConfirmationDialog {
 	GDCLASS(RenameDialog, ConfirmationDialog);
 
-	virtual void ok_pressed() override { rename(); };
+	void ok_pressed() override { rename(); };
 	void _cancel_pressed() {}
 	void _features_toggled(bool pressed);
 	void _insert_text(const String &text);
@@ -105,7 +105,7 @@ class RenameDialog : public ConfirmationDialog {
 
 protected:
 	static void _bind_methods();
-	virtual void _post_popup() override;
+	void _post_popup() override;
 
 public:
 	void reset();

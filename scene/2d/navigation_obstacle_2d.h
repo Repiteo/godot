@@ -70,7 +70,7 @@ protected:
 
 public:
 	NavigationObstacle2D();
-	virtual ~NavigationObstacle2D();
+	~NavigationObstacle2D() override;
 
 	RID get_rid() const { return obstacle; }
 

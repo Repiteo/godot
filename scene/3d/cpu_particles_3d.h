@@ -314,7 +314,7 @@ public:
 	AABB capture_aabb() const;
 
 	CPUParticles3D();
-	~CPUParticles3D();
+	~CPUParticles3D() override;
 };
 
 VARIANT_ENUM_CAST(CPUParticles3D::DrawOrder)

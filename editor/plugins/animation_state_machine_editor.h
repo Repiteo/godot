@@ -294,11 +294,11 @@ protected:
 public:
 	static AnimationNodeStateMachineEditor *get_singleton() { return singleton; }
 
-	virtual bool can_edit(const Ref<AnimationNode> &p_node) override;
-	virtual void edit(const Ref<AnimationNode> &p_node) override;
+	bool can_edit(const Ref<AnimationNode> &p_node) override;
+	void edit(const Ref<AnimationNode> &p_node) override;
 
-	virtual CursorShape get_cursor_shape(const Point2 &p_pos) const override;
-	virtual String get_tooltip(const Point2 &p_pos) const override;
+	CursorShape get_cursor_shape(const Point2 &p_pos) const override;
+	String get_tooltip(const Point2 &p_pos) const override;
 
 	AnimationNodeStateMachineEditor();
 };

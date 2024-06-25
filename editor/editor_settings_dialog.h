@@ -75,14 +75,14 @@ class EditorSettingsDialog : public AcceptDialog {
 
 	Timer *timer = nullptr;
 
-	virtual void cancel_pressed() override;
-	virtual void ok_pressed() override;
+	void cancel_pressed() override;
+	void ok_pressed() override;
 
 	void _settings_changed();
 	void _settings_property_edited(const String &p_name);
 	void _settings_save();
 
-	virtual void shortcut_input(const Ref<InputEvent> &p_event) override;
+	void shortcut_input(const Ref<InputEvent> &p_event) override;
 	void _notification(int p_what);
 	void _update_icons();
 
@@ -126,7 +126,7 @@ public:
 	void popup_edit_settings();
 
 	EditorSettingsDialog();
-	~EditorSettingsDialog();
+	~EditorSettingsDialog() override;
 };
 
 #endif // EDITOR_SETTINGS_DIALOG_H

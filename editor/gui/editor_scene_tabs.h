@@ -75,11 +75,11 @@ class EditorSceneTabs : public MarginContainer {
 	void _global_menu_scene(const Variant &p_tag);
 	void _global_menu_new_window(const Variant &p_tag);
 
-	virtual void shortcut_input(const Ref<InputEvent> &p_event) override;
+	void shortcut_input(const Ref<InputEvent> &p_event) override;
 
 protected:
 	void _notification(int p_what);
-	virtual void unhandled_key_input(const Ref<InputEvent> &p_event) override;
+	void unhandled_key_input(const Ref<InputEvent> &p_event) override;
 	static void _bind_methods();
 
 public:

@@ -44,14 +44,14 @@ protected:
 	bool _get(const StringName &p_name, Variant &r_property) const;
 #endif // DISABLE_DEPRECATED
 
-	virtual void _update_shape() override;
+	void _update_shape() override;
 
 public:
 	void set_size(const Vector3 &p_size);
 	Vector3 get_size() const;
 
-	virtual Vector<Vector3> get_debug_mesh_lines() const override;
-	virtual real_t get_enclosing_radius() const override;
+	Vector<Vector3> get_debug_mesh_lines() const override;
+	real_t get_enclosing_radius() const override;
 
 	BoxShape3D();
 };

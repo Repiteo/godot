@@ -93,26 +93,26 @@ public:
 
 	void clear_surfaces();
 
-	virtual int get_surface_count() const override;
-	virtual int surface_get_array_len(int p_idx) const override;
-	virtual int surface_get_array_index_len(int p_idx) const override;
-	virtual Array surface_get_arrays(int p_surface) const override;
-	virtual TypedArray<Array> surface_get_blend_shape_arrays(int p_surface) const override;
-	virtual Dictionary surface_get_lods(int p_surface) const override;
-	virtual BitField<ArrayFormat> surface_get_format(int p_idx) const override;
-	virtual PrimitiveType surface_get_primitive_type(int p_idx) const override;
-	virtual void surface_set_material(int p_idx, const Ref<Material> &p_material) override;
-	virtual Ref<Material> surface_get_material(int p_idx) const override;
-	virtual int get_blend_shape_count() const override;
-	virtual StringName get_blend_shape_name(int p_index) const override;
-	virtual void set_blend_shape_name(int p_index, const StringName &p_name) override;
+	int get_surface_count() const override;
+	int surface_get_array_len(int p_idx) const override;
+	int surface_get_array_index_len(int p_idx) const override;
+	Array surface_get_arrays(int p_surface) const override;
+	TypedArray<Array> surface_get_blend_shape_arrays(int p_surface) const override;
+	Dictionary surface_get_lods(int p_surface) const override;
+	BitField<ArrayFormat> surface_get_format(int p_idx) const override;
+	PrimitiveType surface_get_primitive_type(int p_idx) const override;
+	void surface_set_material(int p_idx, const Ref<Material> &p_material) override;
+	Ref<Material> surface_get_material(int p_idx) const override;
+	int get_blend_shape_count() const override;
+	StringName get_blend_shape_name(int p_index) const override;
+	void set_blend_shape_name(int p_index, const StringName &p_name) override;
 
-	virtual AABB get_aabb() const override;
+	AABB get_aabb() const override;
 
-	virtual RID get_rid() const override;
+	RID get_rid() const override;
 
 	ImmediateMesh();
-	~ImmediateMesh();
+	~ImmediateMesh() override;
 };
 
 #endif // IMMEDIATE_MESH_H

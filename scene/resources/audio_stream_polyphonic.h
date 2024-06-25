@@ -45,14 +45,14 @@ class AudioStreamPolyphonic : public AudioStream {
 	static void _bind_methods();
 
 public:
-	virtual Ref<AudioStreamPlayback> instantiate_playback() override;
-	virtual String get_stream_name() const override;
-	virtual bool is_monophonic() const override;
+	Ref<AudioStreamPlayback> instantiate_playback() override;
+	String get_stream_name() const override;
+	bool is_monophonic() const override;
 
 	void set_polyphony(int p_voices);
 	int get_polyphony() const;
 
-	virtual bool is_meta_stream() const override { return true; }
+	bool is_meta_stream() const override { return true; }
 
 	AudioStreamPolyphonic();
 };
@@ -103,18 +103,18 @@ public:
 		INVALID_ID = -1
 	};
 
-	virtual void start(double p_from_pos = 0.0) override;
-	virtual void stop() override;
-	virtual bool is_playing() const override;
+	void start(double p_from_pos = 0.0) override;
+	void stop() override;
+	bool is_playing() const override;
 
-	virtual int get_loop_count() const override; //times it looped
+	int get_loop_count() const override; //times it looped
 
-	virtual double get_playback_position() const override;
-	virtual void seek(double p_time) override;
+	double get_playback_position() const override;
+	void seek(double p_time) override;
 
-	virtual void tag_used_streams() override;
+	void tag_used_streams() override;
 
-	virtual int mix(AudioFrame *p_buffer, float p_rate_scale, int p_frames) override;
+	int mix(AudioFrame *p_buffer, float p_rate_scale, int p_frames) override;
 
 	ID play_stream(const Ref<AudioStream> &p_stream, float p_from_offset = 0, float p_volume_db = 0, float p_pitch_scale = 1.0, AudioServer::PlaybackType p_playback_type = AudioServer::PlaybackType::PLAYBACK_TYPE_DEFAULT, const StringName &p_bus = SceneStringName(Master));
 	void set_stream_volume(ID p_stream_id, float p_volume_db);
@@ -122,10 +122,10 @@ public:
 	bool is_stream_playing(ID p_stream_id) const;
 	void stop_stream(ID p_stream_id);
 
-	virtual void set_is_sample(bool p_is_sample) override;
-	virtual bool get_is_sample() const override;
-	virtual Ref<AudioSamplePlayback> get_sample_playback() const override;
-	virtual void set_sample_playback(const Ref<AudioSamplePlayback> &p_playback) override;
+	void set_is_sample(bool p_is_sample) override;
+	bool get_is_sample() const override;
+	Ref<AudioSamplePlayback> get_sample_playback() const override;
+	void set_sample_playback(const Ref<AudioSamplePlayback> &p_playback) override;
 
 private:
 #ifndef DISABLE_DEPRECATED
