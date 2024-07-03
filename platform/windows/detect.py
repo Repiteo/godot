@@ -306,7 +306,6 @@ def setup_msvc_manual(env: "SConsEnvironment"):
     print("Using VCVARS-determined MSVC, arch %s" % (env_arch))
 
 
-# FIXME: Likely overwrites command-line options for the msvc compiler. See #91883.
 def setup_msvc_auto(env: "SConsEnvironment"):
     """Set up MSVC using SCons's auto-detection logic"""
 
@@ -334,10 +333,26 @@ def setup_msvc_auto(env: "SConsEnvironment"):
     env["MSVS_VERSION"] = None
     env["MSVC_VERSION"] = None
 
+    _CXX = env["CXX"]
+    _CC = env["CC"]
+    _LINK = env["LINK"]
+
     if "msvc_version" in env:
         env["MSVC_VERSION"] = env["msvc_version"]
     env.Tool("msvc")
     env.Tool("mssdk")  # we want the MS SDK
+
+    # Re-add potentially overwritten values.
+    if _CXX:
+        env["CXX"] = _CXX
+    if _CC:
+        env["CC"] = _CC
+    if _LINK:
+        env["LINK"] = _LINK
+    env.AppendUnique(CCFLAGS=env.get("ccflags", "").split())
+    env.AppendUnique(CXXFLAGS=env.get("cxxflags", "").split())
+    env.AppendUnique(CFLAGS=env.get("cflags", "").split())
+    env.AppendUnique(RCFLAGS=env.get("rcflags", "").split())
 
     # Note: actual compiler version can be found in env['MSVC_VERSION'], e.g. "14.1" for VS2015
     print("Using SCons-detected MSVC version %s, arch %s" % (env["MSVC_VERSION"], env["arch"]))
@@ -386,6 +401,15 @@ def configure_msvc(env: "SConsEnvironment", vcvars_msvc_config):
         env.AppendUnique(CPPDEFINES=["WINDOWS_SUBSYSTEM_CONSOLE"])
 
     ## Compile/link flags
+
+    if env["use_llvm"]:
+        env["CC"] = "clang-cl"
+        env["CXX"] = "clang-cl"
+        env["LINK"] = "lld-link"
+        env["AR"] = "llvm-lib"
+
+        env.AppendUnique(CPPDEFINES=["R128_STDC_ONLY"])
+        env.extra_suffix = ".llvm" + env.extra_suffix
 
     env["MAXLINELENGTH"] = 8192  # Windows Vista and beyond, so always applicable.
 
@@ -469,7 +493,6 @@ def configure_msvc(env: "SConsEnvironment", vcvars_msvc_config):
 
     env.AppendUnique(CCFLAGS=["/Gd", "/GR", "/nologo"])
     env.AppendUnique(CCFLAGS=["/utf-8"])  # Force to use Unicode encoding.
-    env.AppendUnique(CXXFLAGS=["/TP"])  # assume all sources are C++
     # Once it was thought that only debug builds would be too large,
     # but this has recently stopped being true. See the mingw function
     # for notes on why this shouldn't be enabled for gcc
@@ -593,6 +616,9 @@ def configure_msvc(env: "SConsEnvironment", vcvars_msvc_config):
     if env["target"] in ["editor", "template_debug"]:
         LIBS += ["psapi", "dbghelp"]
 
+    if env["use_llvm"]:
+        LIBS += [f"clang_rt.builtins-{env['arch']}"]
+
     env.Append(LINKFLAGS=[p + env["LIBSUFFIX"] for p in LIBS])
 
     if vcvars_msvc_config:
@@ -608,14 +634,22 @@ def configure_msvc(env: "SConsEnvironment", vcvars_msvc_config):
 
     if env["lto"] != "none":
         if env["lto"] == "thin":
-            print_error("ThinLTO is only compatible with LLVM, use `use_llvm=yes` or `lto=full`.")
-            sys.exit(255)
-        env.AppendUnique(CCFLAGS=["/GL"])
-        env.AppendUnique(ARFLAGS=["/LTCG"])
-        if env["progress"]:
-            env.AppendUnique(LINKFLAGS=["/LTCG:STATUS"])
+            if not env["use_llvm"]:
+                print("ThinLTO is only compatible with LLVM, use `use_llvm=yes` or `lto=full`.")
+                sys.exit(255)
+
+            env.Append(CCFLAGS=["-flto=thin"])
+            env.Append(LINKFLAGS=["-flto=thin"])
+        elif env["use_llvm"]:
+            env.Append(CCFLAGS=["-flto"])
+            env.Append(LINKFLAGS=["-flto"])
         else:
-            env.AppendUnique(LINKFLAGS=["/LTCG"])
+            env.AppendUnique(CCFLAGS=["/GL"])
+            env.AppendUnique(ARFLAGS=["/LTCG"])
+            if env["progress"]:
+                env.AppendUnique(LINKFLAGS=["/LTCG:STATUS"])
+            else:
+                env.AppendUnique(LINKFLAGS=["/LTCG"])
 
     if vcvars_msvc_config:
         env.Prepend(CPPPATH=[p for p in str(os.getenv("INCLUDE")).split(";")])

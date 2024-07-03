@@ -802,21 +802,20 @@ def get_compiler_version(env):
         "apple_patch3": -1,
     }
 
-    if not env.msvc:
-        # Not using -dumpversion as some GCC distros only return major, and
-        # Clang used to return hardcoded 4.2.1: # https://reviews.llvm.org/D56803
-        try:
-            version = (
-                subprocess.check_output([env.subst(env["CXX"]), "--version"], shell=(os.name == "nt"))
-                .strip()
-                .decode("utf-8")
-            )
-        except (subprocess.CalledProcessError, OSError):
-            print_warning("Couldn't parse CXX environment variable to infer compiler version.")
-            return ret
-    else:
+    if env.msvc and not using_clang(env):
         # TODO: Implement for MSVC
         return ret
+
+    # Not using -dumpversion as some GCC distros only return major, and
+    # Clang used to return hardcoded 4.2.1: # https://reviews.llvm.org/D56803
+    try:
+        version = subprocess.check_output(
+            [env.subst(env["CXX"]), "--version"], shell=(os.name == "nt"), universal_newlines=True
+        ).strip()
+    except (subprocess.CalledProcessError, OSError):
+        print_warning("Couldn't parse CXX environment variable to infer compiler version.")
+        return ret
+
     match = re.search(
         r"(?:(?<=version )|(?<=\) )|(?<=^))"
         r"(?P<major>\d+)"

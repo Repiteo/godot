@@ -796,6 +796,9 @@ if env.msvc:  # MSVC
             ]
         )
 
+        if methods.using_clang(env):
+            env.Append(CCFLAGS=["-Wno-ordered-compare-function-pointers"])
+
     if env["werror"]:
         env.Append(CCFLAGS=["/WX"])
         env.Append(LINKFLAGS=["/WX"])
