@@ -125,7 +125,7 @@ Error ImageLoaderHDR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField
 			}
 		}
 
-		const bool force_linear = p_flags & FLAG_FORCE_LINEAR;
+		const bool force_linear = p_flags.has_flag(FLAG_FORCE_LINEAR);
 
 		//convert
 		for (int i = 0; i < width * height; i++) {

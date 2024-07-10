@@ -302,11 +302,11 @@ void LightmapGI::_find_meshes_and_lights(Node *p_at_node, Vector<MeshesFound> &m
 				if (mesh->surface_get_primitive_type(i) != Mesh::PRIMITIVE_TRIANGLES) {
 					continue;
 				}
-				if (!(mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_TEX_UV2)) {
+				if (!mesh->surface_get_format(i).has_flag(Mesh::ARRAY_FORMAT_TEX_UV2)) {
 					all_have_uv2_and_normal = false;
 					break;
 				}
-				if (!(mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_NORMAL)) {
+				if (!mesh->surface_get_format(i).has_flag(Mesh::ARRAY_FORMAT_NORMAL)) {
 					all_have_uv2_and_normal = false;
 					break;
 				}
