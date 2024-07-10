@@ -184,7 +184,7 @@ Error ImageLoaderSVG::load_image(Ref<Image> p_image, Ref<FileAccess> p_fileacces
 		return err;
 	}
 
-	if (p_flags & FLAG_CONVERT_COLORS) {
+	if (p_flags.has_flag(FLAG_CONVERT_COLORS)) {
 		err = create_image_from_string(p_image, svg, p_scale, false, forced_color_map);
 	} else {
 		err = create_image_from_string(p_image, svg, p_scale, false, HashMap<Color, Color>());
@@ -196,7 +196,7 @@ Error ImageLoaderSVG::load_image(Ref<Image> p_image, Ref<FileAccess> p_fileacces
 		return ERR_INVALID_DATA;
 	}
 
-	if (p_flags & FLAG_FORCE_LINEAR) {
+	if (p_flags.has_flag(FLAG_FORCE_LINEAR)) {
 		p_image->srgb_to_linear();
 	}
 	return OK;

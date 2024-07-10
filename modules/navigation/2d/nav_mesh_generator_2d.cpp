@@ -299,14 +299,14 @@ void NavMeshGenerator2D::generator_parse_meshinstance2d_node(const Ref<Navigatio
 			continue;
 		}
 
-		if (!(mesh->surface_get_format(i) & Mesh::ARRAY_FLAG_USE_2D_VERTICES)) {
+		if (!mesh->surface_get_format(i).has_flag(Mesh::ARRAY_FLAG_USE_2D_VERTICES)) {
 			continue;
 		}
 
 		PathD subject_path;
 
 		int index_count = 0;
-		if (mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_INDEX) {
+		if (mesh->surface_get_format(i).has_flag(Mesh::ARRAY_FORMAT_INDEX)) {
 			index_count = mesh->surface_get_array_index_len(i);
 		} else {
 			index_count = mesh->surface_get_array_len(i);
@@ -318,7 +318,7 @@ void NavMeshGenerator2D::generator_parse_meshinstance2d_node(const Ref<Navigatio
 
 		Vector<Vector2> mesh_vertices = a[Mesh::ARRAY_VERTEX];
 
-		if (mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_INDEX) {
+		if (mesh->surface_get_format(i).has_flag(Mesh::ARRAY_FORMAT_INDEX)) {
 			Vector<int> mesh_indices = a[Mesh::ARRAY_INDEX];
 			for (int vertex_index : mesh_indices) {
 				const Vector2 &vertex = mesh_vertices[vertex_index];
@@ -387,14 +387,14 @@ void NavMeshGenerator2D::generator_parse_multimeshinstance2d_node(const Ref<Navi
 			continue;
 		}
 
-		if (!(mesh->surface_get_format(i) & Mesh::ARRAY_FLAG_USE_2D_VERTICES)) {
+		if (!mesh->surface_get_format(i).has_flag(Mesh::ARRAY_FLAG_USE_2D_VERTICES)) {
 			continue;
 		}
 
 		PathD subject_path;
 
 		int index_count = 0;
-		if (mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_INDEX) {
+		if (mesh->surface_get_format(i).has_flag(Mesh::ARRAY_FORMAT_INDEX)) {
 			index_count = mesh->surface_get_array_index_len(i);
 		} else {
 			index_count = mesh->surface_get_array_len(i);
@@ -406,7 +406,7 @@ void NavMeshGenerator2D::generator_parse_multimeshinstance2d_node(const Ref<Navi
 
 		Vector<Vector2> mesh_vertices = a[Mesh::ARRAY_VERTEX];
 
-		if (mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_INDEX) {
+		if (mesh->surface_get_format(i).has_flag(Mesh::ARRAY_FORMAT_INDEX)) {
 			Vector<int> mesh_indices = a[Mesh::ARRAY_INDEX];
 			for (int vertex_index : mesh_indices) {
 				const Vector2 &vertex = mesh_vertices[vertex_index];

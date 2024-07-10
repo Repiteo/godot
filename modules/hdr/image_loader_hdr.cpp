@@ -131,7 +131,7 @@ Error ImageLoaderHDR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField
 					ptr[1] * exp / 255.0,
 					ptr[2] * exp / 255.0);
 
-			if (p_flags & FLAG_FORCE_LINEAR) {
+			if (p_flags.has_flag(FLAG_FORCE_LINEAR)) {
 				c = c.srgb_to_linear();
 			}
 

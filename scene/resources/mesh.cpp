@@ -293,15 +293,15 @@ Ref<TriangleMesh> Mesh::generate_triangle_mesh() const {
 	for (int i = 0; i < get_surface_count(); i++) {
 		switch (surface_get_primitive_type(i)) {
 			case PRIMITIVE_TRIANGLES: {
-				int len = (surface_get_format(i) & ARRAY_FORMAT_INDEX) ? surface_get_array_index_len(i) : surface_get_array_len(i);
+				int len = surface_get_format(i).has_flag(ARRAY_FORMAT_INDEX) ? surface_get_array_index_len(i) : surface_get_array_len(i);
 				// Don't error if zero, it's valid (we'll just skip it later).
-				ERR_CONTINUE_MSG((len % 3) != 0, vformat("Ignoring surface %d, incorrect %s count: %d (for PRIMITIVE_TRIANGLES).", i, (surface_get_format(i) & ARRAY_FORMAT_INDEX) ? "index" : "vertex", len));
+				ERR_CONTINUE_MSG((len % 3) != 0, vformat("Ignoring surface %d, incorrect %s count: %d (for PRIMITIVE_TRIANGLES).", i, surface_get_format(i).has_flag(ARRAY_FORMAT_INDEX) ? "index" : "vertex", len));
 				faces_size += len;
 			} break;
 			case PRIMITIVE_TRIANGLE_STRIP: {
-				int len = (surface_get_format(i) & ARRAY_FORMAT_INDEX) ? surface_get_array_index_len(i) : surface_get_array_len(i);
+				int len = surface_get_format(i).has_flag(ARRAY_FORMAT_INDEX) ? surface_get_array_index_len(i) : surface_get_array_len(i);
 				// Don't error if zero, it's valid (we'll just skip it later).
-				ERR_CONTINUE_MSG(len != 0 && len < 3, vformat("Ignoring surface %d, incorrect %s count: %d (for PRIMITIVE_TRIANGLE_STRIP).", i, (surface_get_format(i) & ARRAY_FORMAT_INDEX) ? "index" : "vertex", len));
+				ERR_CONTINUE_MSG(len != 0 && len < 3, vformat("Ignoring surface %d, incorrect %s count: %d (for PRIMITIVE_TRIANGLE_STRIP).", i, surface_get_format(i).has_flag(ARRAY_FORMAT_INDEX) ? "index" : "vertex", len));
 				faces_size += (len == 0) ? 0 : (len - 2) * 3;
 			} break;
 			default: {
@@ -327,10 +327,10 @@ Ref<TriangleMesh> Mesh::generate_triangle_mesh() const {
 		if (primitive != PRIMITIVE_TRIANGLES && primitive != PRIMITIVE_TRIANGLE_STRIP) {
 			continue;
 		}
-		int len = (surface_get_format(i) & ARRAY_FORMAT_INDEX) ? surface_get_array_index_len(i) : surface_get_array_len(i);
+		int len = surface_get_format(i).has_flag(ARRAY_FORMAT_INDEX) ? surface_get_array_index_len(i) : surface_get_array_len(i);
 		if ((primitive == PRIMITIVE_TRIANGLES && (len == 0 || (len % 3) != 0)) ||
 				(primitive == PRIMITIVE_TRIANGLE_STRIP && len < 3) ||
-				(surface_get_format(i) & ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY)) {
+				surface_get_format(i).has_flag(ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY)) {
 			// Error was already shown, just skip (including zero).
 			continue;
 		}
@@ -345,7 +345,7 @@ Ref<TriangleMesh> Mesh::generate_triangle_mesh() const {
 
 		int32_t from_index = widx / 3;
 
-		if (surface_get_format(i) & ARRAY_FORMAT_INDEX) {
+		if (surface_get_format(i).has_flag(ARRAY_FORMAT_INDEX)) {
 			int ic = surface_get_array_index_len(i);
 			Vector<int> indices = a[ARRAY_INDEX];
 			const int *ir = indices.ptr();
@@ -408,7 +408,7 @@ Ref<TriangleMesh> Mesh::generate_surface_triangle_mesh(int p_surface) const {
 		return Ref<TriangleMesh>();
 	}
 
-	if (surface_get_format(p_surface) & ARRAY_FORMAT_INDEX) {
+	if (surface_get_format(p_surface).has_flag(ARRAY_FORMAT_INDEX)) {
 		facecount += surface_get_array_index_len(p_surface);
 	} else {
 		facecount += surface_get_array_len(p_surface);
@@ -426,7 +426,7 @@ Ref<TriangleMesh> Mesh::generate_surface_triangle_mesh(int p_surface) const {
 	const Vector3 *vr = vertices.ptr();
 	int widx = 0;
 
-	if (surface_get_format(p_surface) & ARRAY_FORMAT_INDEX) {
+	if (surface_get_format(p_surface).has_flag(ARRAY_FORMAT_INDEX)) {
 		int ic = surface_get_array_index_len(p_surface);
 		Vector<int> indices = a[ARRAY_INDEX];
 		const int *ir = indices.ptr();
@@ -1769,7 +1769,7 @@ void ArrayMesh::add_surface(BitField<ArrayFormat> p_format, PrimitiveType p_prim
 
 	Surface s;
 	s.aabb = p_aabb;
-	s.is_2d = p_format & ARRAY_FLAG_USE_2D_VERTICES;
+	s.is_2d = p_format.has_flag(ARRAY_FLAG_USE_2D_VERTICES);
 	s.primitive = p_primitive;
 	s.array_length = p_vertex_count;
 	s.index_array_length = p_index_count;

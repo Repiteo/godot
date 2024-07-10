@@ -231,7 +231,7 @@ Error ImageLoaderTinyEXR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitF
 							color.a = *a_channel++;
 						}
 
-						if (p_flags & FLAG_FORCE_LINEAR) {
+						if (p_flags.has_flag(FLAG_FORCE_LINEAR)) {
 							color = color.srgb_to_linear();
 						}
 
@@ -262,7 +262,7 @@ Error ImageLoaderTinyEXR::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitF
 							color.a = *a_channel++;
 						}
 
-						if (p_flags & FLAG_FORCE_LINEAR) {
+						if (p_flags.has_flag(FLAG_FORCE_LINEAR)) {
 							color = color.srgb_to_linear();
 						}
 

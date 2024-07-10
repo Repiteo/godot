@@ -196,8 +196,8 @@ TEST_CASE("[SceneTree][ArrayMesh] Surface metadata tests.") {
 
 	SUBCASE("Returns correct format for the mesh") {
 		int format = RS::ARRAY_FORMAT_BLEND_SHAPE_MASK | RS::ARRAY_FORMAT_TEX_UV | RS::ARRAY_FORMAT_INDEX;
-		CHECK((mesh->surface_get_format(0) & format) != 0);
-		CHECK((mesh->surface_get_format(1) & format) != 0);
+		CHECK(mesh->surface_get_format(0).has_flag(Mesh::ArrayFormat(format)));
+		CHECK(mesh->surface_get_format(1).has_flag(Mesh::ArrayFormat(format)));
 	}
 
 	SUBCASE("Set a surface name and retrieve it by name.") {
@@ -334,7 +334,7 @@ TEST_CASE("[SceneTree][ArrayMesh] Get/Set mesh metadata and actions") {
 				surface_data.skin_data, surface_data.vertex_count, surface_data.index_data, surface_data.index_count, surface_data.aabb);
 		CHECK(mesh2->get_surface_count() == 1);
 		CHECK(mesh2->surface_get_primitive_type(0) == Mesh::PRIMITIVE_TRIANGLES);
-		CHECK((mesh2->surface_get_format(0) & surface_data.format) != 0);
+		CHECK(mesh2->surface_get_format(0).has_flag(Mesh::ArrayFormat(surface_data.format)));
 		CHECK(mesh2->get_aabb().is_equal_approx(surface_data.aabb));
 	}
 }

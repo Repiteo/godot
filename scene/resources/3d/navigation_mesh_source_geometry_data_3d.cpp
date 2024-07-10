@@ -98,7 +98,7 @@ void NavigationMeshSourceGeometryData3D::_add_mesh(const Ref<Mesh> &p_mesh, cons
 		}
 
 		int index_count = 0;
-		if (p_mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_INDEX) {
+		if (p_mesh->surface_get_format(i).has_flag(Mesh::ARRAY_FORMAT_INDEX)) {
 			index_count = p_mesh->surface_get_array_index_len(i);
 		} else {
 			index_count = p_mesh->surface_get_array_len(i);
@@ -115,7 +115,7 @@ void NavigationMeshSourceGeometryData3D::_add_mesh(const Ref<Mesh> &p_mesh, cons
 		ERR_CONTINUE(mesh_vertices.is_empty());
 		const Vector3 *vr = mesh_vertices.ptr();
 
-		if (p_mesh->surface_get_format(i) & Mesh::ARRAY_FORMAT_INDEX) {
+		if (p_mesh->surface_get_format(i).has_flag(Mesh::ARRAY_FORMAT_INDEX)) {
 			Vector<int> mesh_indices = a[Mesh::ARRAY_INDEX];
 			ERR_CONTINUE(mesh_indices.is_empty() || (mesh_indices.size() != index_count));
 			const int *ir = mesh_indices.ptr();
