@@ -32,6 +32,7 @@
 #define INPUT_H
 
 #include "core/input/input_event.h"
+#include "core/input/input_handler.h"
 #include "core/object/object.h"
 #include "core/os/keyboard.h"
 #include "core/os/thread_safe.h"
@@ -254,6 +255,7 @@ private:
 #endif
 
 	friend class DisplayServer;
+	friend class InputHandler;
 
 	static void (*set_mouse_mode_func)(MouseMode);
 	static MouseMode (*get_mouse_mode_func)();
@@ -263,6 +265,14 @@ private:
 	static void (*set_custom_mouse_cursor_func)(const Ref<Resource> &, CursorShape, const Vector2 &);
 
 	EventDispatchFunc event_dispatch_function = nullptr;
+
+	HashMap<int, ObjectID> handler_inputs;
+
+	int _claim_device(const ObjectID &p_handler);
+	void _release_device(const ObjectID &p_handler, int p_device);
+	void _set_device_button(const ObjectID &p_handler, int p_device, JoyButton p_button, bool p_pressed);
+	void _set_device_axis(const ObjectID &p_handler, int p_device, JoyAxis p_axis, float p_value);
+	void _set_device_hat(const ObjectID &p_handler, int p_device, BitField<HatMask> p_val);
 
 #ifndef DISABLE_DEPRECATED
 	void _vibrate_handheld_bind_compat_91143(int p_duration_ms = 500);
