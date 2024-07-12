@@ -186,6 +186,7 @@ void register_core_types() {
 	GDREGISTER_CLASS(InputEventMagnifyGesture);
 	GDREGISTER_CLASS(InputEventPanGesture);
 	GDREGISTER_CLASS(InputEventMIDI);
+	GDREGISTER_VIRTUAL_CLASS(InputHandler);
 
 	// Network
 	GDREGISTER_ABSTRACT_CLASS(IP);

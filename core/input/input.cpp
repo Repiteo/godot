@@ -776,6 +776,67 @@ void Input::_parse_input_event_impl(const Ref<InputEvent> &p_event, bool p_is_em
 	}
 }
 
+int Input::_claim_device(const ObjectID &p_handler) {
+	_THREAD_SAFE_METHOD_
+
+	DEV_ASSERT(p_handler.is_valid());
+	int idx = -1;
+
+	for (int i = 0; i < JOYPADS_MAX; i++) {
+		if (!handler_inputs.has(i) || !ObjectDB::get_instance(handler_inputs[i])) {
+			handler_inputs[i] = p_handler;
+			idx = i;
+			break;
+		}
+	}
+
+	if (idx != -1) {
+		call_deferred("emit_signal", SNAME("joy_connection_changed"), idx, true);
+	}
+	return idx;
+}
+
+void Input::_release_device(const ObjectID &p_handler, int p_device) {
+	_THREAD_SAFE_METHOD_
+
+	DEV_ASSERT(p_handler.is_valid());
+	ERR_FAIL_COND_MSG(!handler_inputs.has(p_device) || handler_inputs[p_device] != p_handler,
+			vformat("Input: Handler \"%s\" does not own device %d.", Ref<InputHandler>(ObjectDB::get_instance(p_handler))->get_name(), p_device));
+
+	handler_inputs.erase(p_device);
+
+	for (KeyValue<StringName, ActionState> &E : action_states) {
+		HashMap<int, ActionState::DeviceState>::Iterator it = E.value.device_states.find(p_device);
+		if (it) {
+			E.value.device_states.remove(it);
+			_update_action_cache(E.key, E.value);
+		}
+	}
+
+	call_deferred("emit_signal", SNAME("joy_connection_changed"), p_device, false);
+}
+
+void Input::_set_device_button(const ObjectID &p_handler, int p_device, JoyButton p_button, bool p_pressed) {
+	DEV_ASSERT(p_handler.is_valid());
+	ERR_FAIL_COND_MSG(!handler_inputs.has(p_device) || handler_inputs[p_device] != p_handler,
+			vformat("Input: Handler \"%s\" does not own device %d.", Ref<InputHandler>(ObjectDB::get_instance(p_handler))->get_name(), p_device));
+	joy_button(p_device, p_button, p_pressed);
+}
+
+void Input::_set_device_axis(const ObjectID &p_handler, int p_device, JoyAxis p_axis, float p_value) {
+	DEV_ASSERT(p_handler.is_valid());
+	ERR_FAIL_COND_MSG(!handler_inputs.has(p_device) || handler_inputs[p_device] != p_handler,
+			vformat("Input: Handler \"%s\" does not own device %d.", Ref<InputHandler>(ObjectDB::get_instance(p_handler))->get_name(), p_device));
+	joy_axis(p_device, p_axis, p_value);
+}
+
+void Input::_set_device_hat(const ObjectID &p_handler, int p_device, BitField<HatMask> p_val) {
+	DEV_ASSERT(p_handler.is_valid());
+	ERR_FAIL_COND_MSG(!handler_inputs.has(p_device) || handler_inputs[p_device] != p_handler,
+			vformat("Input: Handler \"%s\" does not own device %d.", Ref<InputHandler>(ObjectDB::get_instance(p_handler))->get_name(), p_device));
+	joy_hat(p_device, p_val);
+}
+
 void Input::set_joy_axis(int p_device, JoyAxis p_axis, float p_value) {
 	_THREAD_SAFE_METHOD_
 	JoyAxis c = _combine_device(p_axis, p_device);
