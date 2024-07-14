@@ -817,7 +817,7 @@ if env.msvc:  # MSVC
         env.Append(CCFLAGS=["/WX"])
         env.Append(LINKFLAGS=["/WX"])
 else:  # GCC, Clang
-    common_warnings = []
+    common_warnings = ["-Wextra-semi"]
 
     if methods.using_gcc(env):
         common_warnings += ["-Wshadow", "-Wno-misleading-indentation"]
@@ -1014,7 +1014,9 @@ if env["vsproj"]:
 if env["compiledb"]:
     if env.scons_version < (4, 0, 0):
         # Generating the compilation DB (`compile_commands.json`) requires SCons 4.0.0 or later.
-        print_error("The `compiledb=yes` option requires SCons 4.0 or later, but your version is %s." % scons_raw_version)
+        print_error(
+            "The `compiledb=yes` option requires SCons 4.0 or later, but your version is %s." % scons_raw_version
+        )
         Exit(255)
 
     env.Tool("compilation_db")

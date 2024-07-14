@@ -135,6 +135,11 @@ inline void __swap_tmpl(T &x, T &y) {
 }
 #endif // SWAP
 
+// Simple means of enforcing a trailing semicolon for a macro within a class/namespace scope.
+#ifndef FORCE_SEMICOLON
+#define FORCE_SEMICOLON static_assert(true)
+#endif
+
 /* Functions to handle powers of 2 and shifting. */
 
 // Function to find the next power of 2 to an integer.
