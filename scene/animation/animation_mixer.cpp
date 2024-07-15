@@ -1117,8 +1117,8 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 		bool is_external_seeking = ai.playback_info.is_external_seeking;
 		real_t weight = ai.playback_info.weight;
 		Vector<real_t> track_weights = ai.playback_info.track_weights;
-		bool backward = signbit(delta); // This flag is used by the root motion calculates or detecting the end of audio stream.
-		bool seeked_backward = signbit(p_delta);
+		bool backward = Math::sign_bit(delta); // This flag is used by the root motion calculates or detecting the end of audio stream.
+		bool seeked_backward = Math::sign_bit(p_delta);
 #ifndef _3D_DISABLED
 		bool calc_root = !seeked || is_external_seeking;
 #endif // _3D_DISABLED
