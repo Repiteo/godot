@@ -196,9 +196,9 @@ FT_Error tvg_svg_in_ot_preset_slot(FT_GlyphSlot p_slot, FT_Bool p_cache, FT_Poin
 	p_slot->bitmap_left = (FT_Int)gl_state.bmp_x;
 	p_slot->bitmap_top = (FT_Int)gl_state.bmp_y;
 
-	float tmp = ceil(gl_state.h);
+	float tmp = Math::ceil(gl_state.h);
 	p_slot->bitmap.rows = (unsigned int)tmp;
-	tmp = ceil(gl_state.w);
+	tmp = Math::ceil(gl_state.w);
 	p_slot->bitmap.width = (unsigned int)tmp;
 	p_slot->bitmap.pitch = (int)p_slot->bitmap.width * 4;
 	p_slot->bitmap.pixel_mode = FT_PIXEL_MODE_BGRA;

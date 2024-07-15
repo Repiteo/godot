@@ -30,6 +30,8 @@
 
 #include "openxr_util.h"
 
+#include "core/math/math_funcs.h"
+
 #include <openxr/openxr_reflection.h>
 
 #include <cmath>
@@ -155,11 +157,11 @@ void OpenXRUtil::XrMatrix4x4f_CreateProjection(XrMatrix4x4f *result, GraphicsAPI
 // Creates a projection matrix based on the specified FOV.
 void OpenXRUtil::XrMatrix4x4f_CreateProjectionFov(XrMatrix4x4f *result, GraphicsAPI graphicsApi, const XrFovf fov,
 		const float nearZ, const float farZ) {
-	const float tanLeft = tanf(fov.angleLeft);
-	const float tanRight = tanf(fov.angleRight);
+	const float tanLeft = Math::tan(fov.angleLeft);
+	const float tanRight = Math::tan(fov.angleRight);
 
-	const float tanDown = tanf(fov.angleDown);
-	const float tanUp = tanf(fov.angleUp);
+	const float tanDown = Math::tan(fov.angleDown);
+	const float tanUp = Math::tan(fov.angleUp);
 
 	XrMatrix4x4f_CreateProjection(result, graphicsApi, tanLeft, tanRight, tanUp, tanDown, nearZ, farZ);
 }

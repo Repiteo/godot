@@ -33,7 +33,6 @@
 
 #include "core/error/error_macros.h"
 #include "core/math/math_defs.h"
-#include "core/math/random_pcg.h"
 #include "core/typedefs.h"
 
 #include "thirdparty/misc/pcg.h"
@@ -42,8 +41,6 @@
 #include <cmath>
 
 class Math {
-	static RandomPCG default_rand;
-
 public:
 	Math() {} // useless to instance
 
@@ -123,6 +120,9 @@ public:
 	static _ALWAYS_INLINE_ double log2(double p_x) { return ::log2(p_x); }
 	static _ALWAYS_INLINE_ float log2(float p_x) { return ::log2f(p_x); }
 
+	static _ALWAYS_INLINE_ double log10(double p_x) { return log(p_x) / log(10.0); }
+	static _ALWAYS_INLINE_ float log10(float p_x) { return log(p_x) / log(10.0f); }
+
 	static _ALWAYS_INLINE_ double exp(double p_x) { return ::exp(p_x); }
 	static _ALWAYS_INLINE_ float exp(float p_x) { return ::expf(p_x); }
 
@@ -138,7 +138,7 @@ public:
 		// (unsigned)(0x7ff0000000000001 >> 32) : 0x7ff00000
 		return ((((unsigned)(ieee754.u >> 32) & 0x7fffffff) + ((unsigned)ieee754.u != 0)) > 0x7ff00000);
 #else
-		return isnan(p_val);
+		return std::isnan(p_val);
 #endif
 	}
 
@@ -161,7 +161,7 @@ public:
 		// -----------------------------------
 		return ((ieee754.u & 0x7fffffff) > 0x7f800000);
 #else
-		return isnan(p_val);
+		return std::isnan(p_val);
 #endif
 	}
 
@@ -178,7 +178,7 @@ public:
 		return ((unsigned)(ieee754.u >> 32) & 0x7fffffff) == 0x7ff00000 &&
 				((unsigned)ieee754.u == 0);
 #else
-		return isinf(p_val);
+		return std::isinf(p_val);
 #endif
 	}
 
@@ -194,7 +194,7 @@ public:
 		ieee754.f = p_val;
 		return (ieee754.u & 0x7fffffff) == 0x7f800000;
 #else
-		return isinf(p_val);
+		return std::isinf(p_val);
 #endif
 	}
 
@@ -214,8 +214,11 @@ public:
 		return (p_num + p_den - 1) / p_den;
 	}
 
-	static _ALWAYS_INLINE_ bool is_finite(double p_val) { return isfinite(p_val); }
-	static _ALWAYS_INLINE_ bool is_finite(float p_val) { return isfinite(p_val); }
+	static _ALWAYS_INLINE_ bool is_finite(double p_val) { return std::isfinite(p_val); }
+	static _ALWAYS_INLINE_ bool is_finite(float p_val) { return std::isfinite(p_val); }
+
+	static _ALWAYS_INLINE_ bool sign_bit(double p_val) { return std::signbit(p_val); }
+	static _ALWAYS_INLINE_ bool sign_bit(float p_val) { return std::signbit(p_val); }
 
 	static _ALWAYS_INLINE_ double abs(double g) { return absd(g); }
 	static _ALWAYS_INLINE_ float abs(float g) { return absf(g); }
