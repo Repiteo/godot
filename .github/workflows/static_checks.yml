@@ -21,11 +21,6 @@ jobs:
         with:
           packages: libxml2-utils
 
-      - name: Install Python dependencies and general setup
-        run: |
-          pip3 install pytest==7.1.2
-          git config diff.wsErrorHighlight all
-
       - name: Get changed files
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -49,10 +44,6 @@ jobs:
         uses: pre-commit/action@v3.0.1
         with:
           extra_args: --verbose --files ${{ env.CHANGED_FILES }}
-
-      - name: Python builders checks via pytest
-        run: |
-          pytest ./tests/python_build
 
       - name: Class reference schema checks
         run: |

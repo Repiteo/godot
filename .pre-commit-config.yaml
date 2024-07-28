@@ -126,6 +126,14 @@ repos:
         args: [--quiet, --config, misc/utility/svgo.config.mjs]
         additional_dependencies: ["svgo@3.3.2"]
 
+      - id: test-builders
+        name: test-builders
+        language: python
+        entry: pytest tests/python_build
+        pass_filenames: false
+        files: .*_builders\.py$
+        additional_dependencies: [pytest, scons]
+
       - id: copyright-headers
         name: copyright-headers
         language: python
