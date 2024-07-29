@@ -24,14 +24,14 @@ jobs:
             cache-name: macos-editor
             target: editor
             tests: true
-            bin: "./bin/godot.macos.editor.universal"
+            # bin: "./bin/godot.macos.editor.universal"
 
           - name: Template (target=template_release)
             cache-name: macos-template
             target: template_release
             tests: true
             sconsflags: debug_symbols=no tests=yes
-            bin: "./bin/godot.macos.template_release.universal"
+            # bin: "./bin/godot.macos.template_release.universal"
 
     steps:
       - uses: actions/checkout@v4
@@ -60,6 +60,7 @@ jobs:
           tests: ${{ matrix.tests }}
 
       - name: Compilation (arm64)
+        id: godot-build
         uses: ./.github/actions/godot-build
         with:
           sconsflags: ${{ env.SCONSFLAGS }} arch=arm64
@@ -88,6 +89,6 @@ jobs:
       - name: Unit tests
         if: ${{ matrix.tests }}
         run: |
-          ${{ matrix.bin }} --version
-          ${{ matrix.bin }} --help
-          ${{ matrix.bin }} --test --force-colors
+          ${{ steps.godot-build.outputs.bin }} --version
+          ${{ steps.godot-build.outputs.bin }} --help
+          ${{ steps.godot-build.outputs.bin }} --test --force-colors
