@@ -7,7 +7,7 @@ on:
 env:
   # Used for the cache key. Add version suffix to force clean build.
   GODOT_BASE_BRANCH: master
-  SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes d3d12=yes "angle_libs=${{github.workspace}}/"
+  SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes d3d12=yes
   SCONS_CACHE_MSVC_CONFIG: true
 
 concurrency:
@@ -22,6 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        arch: [x86_32, x86_64, arm32, arm64]
         include:
           - name: Editor (target=editor, tests=yes)
             cache-name: windows-editor
@@ -29,24 +30,28 @@ jobs:
             tests: true
             # Skip debug symbols, they're way too big with MSVC.
             sconsflags: debug_symbols=no vsproj=yes vsproj_gen_only=no windows_subsystem=console
-            bin: "./bin/godot.windows.editor.x86_64.exe"
+            bin: "./bin/godot.windows.editor.{0}.exe"
 
           - name: Template (target=template_release)
             cache-name: windows-template
             target: template_release
             tests: true
             sconsflags: debug_symbols=no tests=yes
-            bin: "./bin/godot.windows.template_release.x86_64.console.exe"
+            bin: "./bin/godot.windows.template_release.{0}.console.exe"
 
     steps:
       - uses: actions/checkout@v4
+        env:
+          CACHE_NAME: ${{ matrix.cache-name }}-${{ matrix.arch }}
+          BIN_PATH: ${{ format(matrix.bin, matrix.arch) }}
+          ANGLE_LIBS: angle_libs=${{ github.workspace }}/
         with:
           submodules: recursive
 
       - name: Restore Godot build cache
         uses: ./.github/actions/godot-cache-restore
         with:
-          cache-name: ${{ matrix.cache-name }}
+          cache-name: ${{ env.CACHE_NAME }}
         continue-on-error: true
 
       - name: Setup Python and SCons
@@ -72,7 +77,7 @@ jobs:
       - name: Compilation
         uses: ./.github/actions/godot-build
         with:
-          sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }}
+          sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }} arch=${{ matrix.arch }} ${{ matrix.arch == 'x86_64' && env.ANGLE_LIBS || '' }}
           platform: windows
           target: ${{ matrix.target }}
           tests: ${{ matrix.tests }}
@@ -80,7 +85,7 @@ jobs:
       - name: Save Godot build cache
         uses: ./.github/actions/godot-cache-save
         with:
-          cache-name: ${{ matrix.cache-name }}
+          cache-name: ${{ env.CACHE_NAME }}
         continue-on-error: true
 
       - name: Prepare artifact
@@ -90,11 +95,11 @@ jobs:
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
         with:
-          name: ${{ matrix.cache-name }}
+          name: ${{ env.CACHE_NAME }}
 
       - name: Unit tests
         if: ${{ matrix.tests }}
         run: |
-          ${{ matrix.bin }} --version
-          ${{ matrix.bin }} --help
-          ${{ matrix.bin }} --test --force-colors
+          ${{ env.BIN_PATH }} --version
+          ${{ env.BIN_PATH }} --help
+          ${{ env.BIN_PATH }} --test --force-colors
