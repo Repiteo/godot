@@ -692,9 +692,9 @@ protected:
 	void _set_symbol_lookup_word(const String &p_symbol);
 
 	// Theme items.
-	virtual Color _get_brace_mismatch_color() const { return Color(); };
-	virtual Color _get_code_folding_color() const { return Color(); };
-	virtual Ref<Texture2D> _get_folded_eol_icon() const { return Ref<Texture2D>(); };
+	virtual Color _get_brace_mismatch_color() const { return Color(); }
+	virtual Color _get_code_folding_color() const { return Color(); }
+	virtual Ref<Texture2D> _get_folded_eol_icon() const { return Ref<Texture2D>(); }
 
 	/* Text manipulation */
 
@@ -707,12 +707,12 @@ protected:
 	virtual void _paste_internal(int p_caret);
 	virtual void _paste_primary_clipboard_internal(int p_caret);
 
-	GDVIRTUAL2(_handle_unicode_input, int, int)
-	GDVIRTUAL1(_backspace, int)
-	GDVIRTUAL1(_cut, int)
-	GDVIRTUAL1(_copy, int)
-	GDVIRTUAL1(_paste, int)
-	GDVIRTUAL1(_paste_primary_clipboard, int)
+	GDVIRTUAL2(_handle_unicode_input, int, int);
+	GDVIRTUAL1(_backspace, int);
+	GDVIRTUAL1(_cut, int);
+	GDVIRTUAL1(_copy, int);
+	GDVIRTUAL1(_paste, int);
+	GDVIRTUAL1(_paste_primary_clipboard, int);
 
 public:
 	/* General overrides. */

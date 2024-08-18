@@ -35,7 +35,7 @@
 #include "scene/gui/text_edit.h"
 
 class CodeEdit : public TextEdit {
-	GDCLASS(CodeEdit, TextEdit)
+	GDCLASS(CodeEdit, TextEdit);
 
 public:
 	// Keep enums in sync with:
@@ -319,9 +319,9 @@ protected:
 	virtual void _backspace_internal(int p_caret) override;
 	virtual void _cut_internal(int p_caret) override;
 
-	GDVIRTUAL1(_confirm_code_completion, bool)
-	GDVIRTUAL1(_request_code_completion, bool)
-	GDVIRTUAL1RC(TypedArray<Dictionary>, _filter_code_completion_candidates, TypedArray<Dictionary>)
+	GDVIRTUAL1(_confirm_code_completion, bool);
+	GDVIRTUAL1(_request_code_completion, bool);
+	GDVIRTUAL1RC(TypedArray<Dictionary>, _filter_code_completion_candidates, TypedArray<Dictionary>);
 
 public:
 	/* General overrides */

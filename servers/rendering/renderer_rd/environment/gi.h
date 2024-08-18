@@ -441,7 +441,7 @@ public:
 
 	// Struct for use in render buffer
 	class RenderBuffersGI : public RenderBufferCustomDataRD {
-		GDCLASS(RenderBuffersGI, RenderBufferCustomDataRD)
+		GDCLASS(RenderBuffersGI, RenderBufferCustomDataRD);
 
 	private:
 		RID voxel_gi_buffer;
@@ -461,13 +461,13 @@ public:
 
 		RID get_voxel_gi_buffer();
 
-		virtual void configure(RenderSceneBuffersRD *p_render_buffers) override{};
+		virtual void configure(RenderSceneBuffersRD *p_render_buffers) override {}
 		virtual void free_data() override;
 	};
 
 	/* VOXEL GI API */
 
-	bool owns_voxel_gi(RID p_rid) { return voxel_gi_owner.owns(p_rid); };
+	bool owns_voxel_gi(RID p_rid) { return voxel_gi_owner.owns(p_rid); }
 
 	virtual RID voxel_gi_allocate() override;
 	virtual void voxel_gi_free(RID p_voxel_gi) override;
@@ -544,7 +544,7 @@ public:
 	/* SDFGI */
 
 	class SDFGI : public RenderBufferCustomDataRD {
-		GDCLASS(SDFGI, RenderBufferCustomDataRD)
+		GDCLASS(SDFGI, RenderBufferCustomDataRD);
 
 	public:
 		enum {
@@ -675,7 +675,7 @@ public:
 		int32_t cascade_dynamic_light_count[SDFGI::MAX_CASCADES]; //used dynamically
 		RID integrate_sky_uniform_set;
 
-		virtual void configure(RenderSceneBuffersRD *p_render_buffers) override{};
+		virtual void configure(RenderSceneBuffersRD *p_render_buffers) override {}
 		virtual void free_data() override;
 		~SDFGI();
 

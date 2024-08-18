@@ -404,7 +404,7 @@ static const int Full = 1;
  * send.
  */
 static const int Incremental = 2;
-}; // namespace TextDocumentSyncKind
+} // namespace TextDocumentSyncKind
 
 /**
  * Completion options.
@@ -712,7 +712,7 @@ static const int Information = 3;
  * Reports a hint.
  */
 static const int Hint = 4;
-}; // namespace DiagnosticSeverity
+} // namespace DiagnosticSeverity
 
 /**
  * Represents a related message and source code location for a diagnostic. This should be
@@ -806,7 +806,7 @@ struct Diagnostic {
 namespace MarkupKind {
 static const String PlainText = "plaintext";
 static const String Markdown = "markdown";
-}; // namespace MarkupKind
+} // namespace MarkupKind
 
 /**
  * A `MarkupContent` literal represents a string value which content is interpreted base on its
@@ -892,7 +892,7 @@ static const int Struct = 22;
 static const int Event = 23;
 static const int Operator = 24;
 static const int TypeParameter = 25;
-}; // namespace CompletionItemKind
+} // namespace CompletionItemKind
 
 // Use namespace instead of enumeration to follow the LSP specifications.
 /**
@@ -914,7 +914,7 @@ static const int PlainText = 1;
  * that is typing in one will update others too.
  */
 static const int Snippet = 2;
-}; // namespace InsertTextFormat
+} // namespace InsertTextFormat
 
 struct CompletionItem {
 	/**
@@ -1142,7 +1142,7 @@ static const int Struct = 23;
 static const int Event = 24;
 static const int Operator = 25;
 static const int TypeParameter = 26;
-}; // namespace SymbolKind
+} // namespace SymbolKind
 
 /**
  * Represents programming constructs like variables, classes, interfaces etc. that appear in a document. Document symbols can be

@@ -882,7 +882,7 @@ void GraphNode::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_output_port_color", "port_idx"), &GraphNode::get_output_port_color);
 	ClassDB::bind_method(D_METHOD("get_output_port_slot", "port_idx"), &GraphNode::get_output_port_slot);
 
-	GDVIRTUAL_BIND(_draw_port, "slot_index", "position", "left", "color")
+	GDVIRTUAL_BIND(_draw_port, "slot_index", "position", "left", "color");
 
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "title"), "set_title", "get_title");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "ignore_invalid_connection_type"), "set_ignore_invalid_connection_type", "is_ignoring_valid_connection_type");

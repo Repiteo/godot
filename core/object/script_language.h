@@ -197,7 +197,7 @@ public:
 };
 
 class ScriptLanguage : public Object {
-	GDCLASS(ScriptLanguage, Object)
+	GDCLASS(ScriptLanguage, Object);
 
 protected:
 	static void _bind_methods();
@@ -441,8 +441,8 @@ public:
 	virtual Variant::Type get_property_type(const StringName &p_name, bool *r_is_valid = nullptr) const override;
 	virtual void validate_property(PropertyInfo &p_property) const override {}
 
-	virtual bool property_can_revert(const StringName &p_name) const override { return false; };
-	virtual bool property_get_revert(const StringName &p_name, Variant &r_ret) const override { return false; };
+	virtual bool property_can_revert(const StringName &p_name) const override { return false; }
+	virtual bool property_get_revert(const StringName &p_name, Variant &r_ret) const override { return false; }
 
 	virtual void get_method_list(List<MethodInfo> *p_list) const override;
 	virtual bool has_method(const StringName &p_method) const override;

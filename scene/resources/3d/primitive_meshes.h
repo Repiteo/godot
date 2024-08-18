@@ -73,11 +73,11 @@ protected:
 	static void _bind_methods();
 
 	virtual void _create_mesh_array(Array &p_arr) const {}
-	GDVIRTUAL0RC(Array, _create_mesh_array)
+	GDVIRTUAL0RC(Array, _create_mesh_array);
 
 	Vector2 get_uv2_scale(Vector2 p_margin_scale = Vector2(1.0, 1.0)) const;
 	float get_lightmap_texel_size() const;
-	virtual void _update_lightmap_size(){};
+	virtual void _update_lightmap_size() {}
 
 	void _on_settings_changed();
 
@@ -287,7 +287,7 @@ public:
 	PlaneMesh();
 };
 
-VARIANT_ENUM_CAST(PlaneMesh::Orientation)
+VARIANT_ENUM_CAST(PlaneMesh::Orientation);
 
 /*
 	A flat rectangle, inherits from PlaneMesh but defaults to facing the Z-plane.
@@ -419,7 +419,7 @@ public:
 */
 
 class PointMesh : public PrimitiveMesh {
-	GDCLASS(PointMesh, PrimitiveMesh)
+	GDCLASS(PointMesh, PrimitiveMesh);
 
 protected:
 	virtual void _create_mesh_array(Array &p_arr) const override;
@@ -541,7 +541,7 @@ private:
 		Vector2 point;
 		bool sharp = false;
 
-		ContourPoint(){};
+		ContourPoint() {}
 		ContourPoint(const Vector2 &p_pt, bool p_sharp) {
 			point = p_pt;
 			sharp = p_sharp;
@@ -551,7 +551,7 @@ private:
 	struct ContourInfo {
 		real_t length = 0.0;
 		bool ccw = true;
-		ContourInfo(){};
+		ContourInfo() {}
 		ContourInfo(real_t p_len, bool p_ccw) {
 			length = p_len;
 			ccw = p_ccw;
@@ -629,7 +629,7 @@ protected:
 	virtual void _create_mesh_array(Array &p_arr) const override;
 
 public:
-	GDVIRTUAL2RC(TypedArray<Vector3i>, _structured_text_parser, Array, String)
+	GDVIRTUAL2RC(TypedArray<Vector3i>, _structured_text_parser, Array, String);
 
 	TextMesh();
 	~TextMesh();
@@ -690,6 +690,6 @@ public:
 	Point2 get_offset() const;
 };
 
-VARIANT_ENUM_CAST(RibbonTrailMesh::Shape)
+VARIANT_ENUM_CAST(RibbonTrailMesh::Shape);
 
 #endif // PRIMITIVE_MESHES_H

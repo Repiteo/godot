@@ -233,8 +233,8 @@ public:
 #ifdef TOOLS_ENABLED
 	virtual Transform3D get_global_gizmo_transform() const;
 	virtual Transform3D get_local_gizmo_transform() const;
-	virtual void set_transform_gizmo_visible(bool p_enabled) { data.transform_gizmo_visible = p_enabled; };
-	virtual bool is_transform_gizmo_visible() const { return data.transform_gizmo_visible; };
+	virtual void set_transform_gizmo_visible(bool p_enabled) { data.transform_gizmo_visible = p_enabled; }
+	virtual bool is_transform_gizmo_visible() const { return data.transform_gizmo_visible; }
 #endif
 	virtual void reparent(Node *p_parent, bool p_keep_global_transform = true) override;
 
@@ -304,6 +304,6 @@ public:
 	~Node3D();
 };
 
-VARIANT_ENUM_CAST(Node3D::RotationEditMode)
+VARIANT_ENUM_CAST(Node3D::RotationEditMode);
 
 #endif // NODE_3D_H

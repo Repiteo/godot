@@ -64,13 +64,13 @@ class Range : public Control {
 
 protected:
 	virtual void _value_changed(double p_value);
-	void _notify_shared_value_changed() { shared->emit_value_changed(); };
+	void _notify_shared_value_changed() { shared->emit_value_changed(); }
 
 	static void _bind_methods();
 
 	bool _rounded_values = false;
 
-	GDVIRTUAL1(_value_changed, double)
+	GDVIRTUAL1(_value_changed, double);
 
 public:
 	void set_value(double p_val);

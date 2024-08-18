@@ -37,7 +37,7 @@
 #include "servers/audio_server.h"
 
 class AudioStreamPolyphonic : public AudioStream {
-	GDCLASS(AudioStreamPolyphonic, AudioStream)
+	GDCLASS(AudioStreamPolyphonic, AudioStream);
 	int polyphony = 32;
 
 	AudioServer::PlaybackType playback_type;
@@ -58,7 +58,7 @@ public:
 };
 
 class AudioStreamPlaybackPolyphonic : public AudioStreamPlayback {
-	GDCLASS(AudioStreamPlaybackPolyphonic, AudioStreamPlayback)
+	GDCLASS(AudioStreamPlaybackPolyphonic, AudioStreamPlayback);
 
 	constexpr static uint32_t INTERNAL_BUFFER_LEN = 128;
 

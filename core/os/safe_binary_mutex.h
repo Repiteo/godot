@@ -99,10 +99,10 @@ public:
 	_ALWAYS_INLINE_ explicit MutexLock(const SafeBinaryMutex<Tag> &p_mutex) :
 			lock(p_mutex.mutex) {
 		SafeBinaryMutex<Tag>::count++;
-	};
+	}
 	_ALWAYS_INLINE_ ~MutexLock() {
 		SafeBinaryMutex<Tag>::count--;
-	};
+	}
 };
 
 #else // No threads.

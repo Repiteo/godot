@@ -595,7 +595,7 @@ void EditorExportPlatformIOS::_fix_config_file(const Ref<EditorExportPreset> &p_
 			String value = "<key>UILaunchStoryboardName</key>\n<string>Launch Screen</string>";
 			strnew += lines[i].replace("$plist_launch_screen_name", value) + "\n";
 		} else if (lines[i].contains("$pbx_launch_screen_file_reference")) {
-			String value = "90DD2D9D24B36E8000717FE1 = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = \"Launch Screen.storyboard\"; sourceTree = \"<group>\"; };";
+			String value = "90DD2D9D24B36E8000717FE1 = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = \"Launch Screen.storyboard\"; sourceTree = \"<group>\"; }";
 			strnew += lines[i].replace("$pbx_launch_screen_file_reference", value) + "\n";
 		} else if (lines[i].contains("$pbx_launch_screen_copy_files")) {
 			String value = "90DD2D9D24B36E8000717FE1 /* Launch Screen.storyboard */,";
@@ -604,7 +604,7 @@ void EditorExportPlatformIOS::_fix_config_file(const Ref<EditorExportPreset> &p_
 			String value = "90DD2D9E24B36E8000717FE1 /* Launch Screen.storyboard in Resources */,";
 			strnew += lines[i].replace("$pbx_launch_screen_build_phase", value) + "\n";
 		} else if (lines[i].contains("$pbx_launch_screen_build_reference")) {
-			String value = "90DD2D9E24B36E8000717FE1 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90DD2D9D24B36E8000717FE1 /* Launch Screen.storyboard */; };";
+			String value = "90DD2D9E24B36E8000717FE1 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90DD2D9D24B36E8000717FE1 /* Launch Screen.storyboard */; }";
 			strnew += lines[i].replace("$pbx_launch_screen_build_reference", value) + "\n";
 #ifndef DISABLE_DEPRECATED
 		} else if (lines[i].contains("$pbx_launch_image_usage_setting")) {
@@ -654,7 +654,7 @@ void EditorExportPlatformIOS::_fix_config_file(const Ref<EditorExportPreset> &p_
 
 				int index = 0;
 				for (const String &lang : languages) {
-					locale_files += "D0BCFE4518AEBDA2004A" + itos(index).pad_zeros(4) + " /* " + lang + " */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = " + lang + "; path = " + lang + ".lproj/InfoPlist.strings; sourceTree = \"<group>\"; };\n";
+					locale_files += "D0BCFE4518AEBDA2004A" + itos(index).pad_zeros(4) + " /* " + lang + " */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = " + lang + "; path = " + lang + ".lproj/InfoPlist.strings; sourceTree = \"<group>\"; }\n";
 					index++;
 				}
 			}
@@ -691,8 +691,8 @@ void EditorExportPlatformIOS::_fix_config_file(const Ref<EditorExportPreset> &p_
 			strnew += lines[i].replace("$swift_runtime_build_settings", value) + "\n";
 		} else if (lines[i].contains("$swift_runtime_fileref")) {
 			String value = !p_config.use_swift_runtime ? "" : R"(
-                     90B4C2AA2680BC560039117A /* dummy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "dummy.h"; sourceTree = "<group>"; };
-                     90B4C2B52680C7E90039117A /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "dummy.swift"; sourceTree = "<group>"; };
+                     90B4C2AA2680BC560039117A /* dummy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "dummy.h"; sourceTree = "<group>"; }
+                     90B4C2B52680C7E90039117A /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "dummy.swift"; sourceTree = "<group>"; }
                      )";
 			strnew += lines[i].replace("$swift_runtime_fileref", value) + "\n";
 		} else if (lines[i].contains("$swift_runtime_binary_files")) {
@@ -702,7 +702,7 @@ void EditorExportPlatformIOS::_fix_config_file(const Ref<EditorExportPreset> &p_
                      )";
 			strnew += lines[i].replace("$swift_runtime_binary_files", value) + "\n";
 		} else if (lines[i].contains("$swift_runtime_buildfile")) {
-			String value = !p_config.use_swift_runtime ? "" : "90B4C2B62680C7E90039117A /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B4C2B52680C7E90039117A /* dummy.swift */; };";
+			String value = !p_config.use_swift_runtime ? "" : "90B4C2B62680C7E90039117A /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B4C2B52680C7E90039117A /* dummy.swift */; }";
 			strnew += lines[i].replace("$swift_runtime_buildfile", value) + "\n";
 		} else if (lines[i].contains("$swift_runtime_build_phase")) {
 			String value = !p_config.use_swift_runtime ? "" : "90B4C2B62680C7E90039117A /* dummy.swift */,";
@@ -1507,8 +1507,8 @@ void EditorExportPlatformIOS::_add_assets_to_project(const String &p_out_dir, co
 	String pbx_resources_refs;
 	String pbx_embeded_frameworks;
 
-	const String file_info_format = String("$build_id = {isa = PBXBuildFile; fileRef = $ref_id; };\n") +
-			"$ref_id = {isa = PBXFileReference; lastKnownFileType = $file_type; name = \"$name\"; path = \"$file_path\"; sourceTree = \"<group>\"; };\n";
+	const String file_info_format = String("$build_id = {isa = PBXBuildFile; fileRef = $ref_id; }\n") +
+			"$ref_id = {isa = PBXFileReference; lastKnownFileType = $file_type; name = \"$name\"; path = \"$file_path\"; sourceTree = \"<group>\"; }\n";
 
 	for (int i = 0; i < p_additional_assets.size(); ++i) {
 		String additional_asset_info_format = file_info_format;
@@ -1522,7 +1522,7 @@ void EditorExportPlatformIOS::_add_assets_to_project(const String &p_out_dir, co
 		String type;
 		if (asset.exported_path.ends_with(".framework")) {
 			if (asset.should_embed) {
-				additional_asset_info_format += "$framework_id = {isa = PBXBuildFile; fileRef = $ref_id; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };\n";
+				additional_asset_info_format += "$framework_id = {isa = PBXBuildFile; fileRef = $ref_id; settings = {ATTRIBUTES = (CodeSignOnCopy, ); } };\n";
 				framework_id = (++current_id).str();
 				pbx_embeded_frameworks += framework_id + ",\n";
 			}
@@ -1535,7 +1535,7 @@ void EditorExportPlatformIOS::_add_assets_to_project(const String &p_out_dir, co
 			int frameworks = 0;
 			_check_xcframework_content(p_out_dir.path_join(asset.exported_path), total_libs, static_libs, dylibs, frameworks);
 			if (asset.should_embed && static_libs != total_libs) {
-				additional_asset_info_format += "$framework_id = {isa = PBXBuildFile; fileRef = $ref_id; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };\n";
+				additional_asset_info_format += "$framework_id = {isa = PBXBuildFile; fileRef = $ref_id; settings = {ATTRIBUTES = (CodeSignOnCopy, ); } };\n";
 				framework_id = (++current_id).str();
 				pbx_embeded_frameworks += framework_id + ",\n";
 			}

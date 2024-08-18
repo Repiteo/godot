@@ -859,7 +859,7 @@ TEST_SUITE("[TextServer]") {
 		}
 	}
 }
-}; // namespace TestTextServer
+} // namespace TestTextServer
 
 #endif // TOOLS_ENABLED
 

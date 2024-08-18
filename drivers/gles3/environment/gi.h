@@ -89,7 +89,7 @@ public:
 	virtual void sdfgi_reset() override;
 };
 
-}; // namespace GLES3
+} // namespace GLES3
 
 #endif // GLES3_ENABLED
 

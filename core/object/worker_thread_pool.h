@@ -42,7 +42,8 @@
 #include "core/templates/safe_refcount.h"
 
 class WorkerThreadPool : public Object {
-	GDCLASS(WorkerThreadPool, Object)
+	GDCLASS(WorkerThreadPool, Object);
+
 public:
 	enum {
 		INVALID_TASK_ID = -1

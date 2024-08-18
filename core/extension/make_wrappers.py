@@ -3,7 +3,7 @@ proto_mod = """
 virtual $RETVAL _##m_name($FUNCARGS) $CONST; \\
 _FORCE_INLINE_ virtual $RETVAL m_name($FUNCARGS) $CONST override { \\
     $RETX _##m_name($CALLARGS);\\
-}
+} FORCE_SEMICOLON
 """
 
 
@@ -55,12 +55,12 @@ def generate_mod_version(argcount, const=False, returns=False):
 
 proto_ex = """
 #define EXBIND$VER($RETTYPE m_name$ARG) \\
-GDVIRTUAL$VER($RETTYPE_##m_name$ARG)\\
+GDVIRTUAL$VER($RETTYPE_##m_name$ARG);\\
 virtual $RETVAL m_name($FUNCARGS) $CONST override { \\
     $RETPRE\\
     GDVIRTUAL_REQUIRED_CALL(_##m_name$CALLARGS$RETREF);\\
     $RETPOST\\
-}
+} FORCE_SEMICOLON
 """
 
 
@@ -122,6 +122,8 @@ def run(target, source, env):
     txt = """
 #ifndef GDEXTENSION_WRAPPERS_GEN_H
 #define GDEXTENSION_WRAPPERS_GEN_H
+
+#include "core/typedefs.h"
 """
 
     for i in range(max_versions + 1):

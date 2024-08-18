@@ -61,7 +61,7 @@ TEST_CASE("[JSONRPC] process_string invalid") {
 }
 
 class TestClassJSONRPC : public JSONRPC {
-	GDCLASS(TestClassJSONRPC, JSONRPC)
+	GDCLASS(TestClassJSONRPC, JSONRPC);
 
 public:
 	String something(const String &p_in);

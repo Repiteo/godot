@@ -579,8 +579,8 @@ void AStar3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_point_path", "from_id", "to_id", "allow_partial_path"), &AStar3D::get_point_path, DEFVAL(false));
 	ClassDB::bind_method(D_METHOD("get_id_path", "from_id", "to_id", "allow_partial_path"), &AStar3D::get_id_path, DEFVAL(false));
 
-	GDVIRTUAL_BIND(_estimate_cost, "from_id", "to_id")
-	GDVIRTUAL_BIND(_compute_cost, "from_id", "to_id")
+	GDVIRTUAL_BIND(_estimate_cost, "from_id", "to_id");
+	GDVIRTUAL_BIND(_compute_cost, "from_id", "to_id");
 }
 
 AStar3D::~AStar3D() {
@@ -918,6 +918,6 @@ void AStar2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_point_path", "from_id", "to_id", "allow_partial_path"), &AStar2D::get_point_path, DEFVAL(false));
 	ClassDB::bind_method(D_METHOD("get_id_path", "from_id", "to_id", "allow_partial_path"), &AStar2D::get_id_path, DEFVAL(false));
 
-	GDVIRTUAL_BIND(_estimate_cost, "from_id", "to_id")
-	GDVIRTUAL_BIND(_compute_cost, "from_id", "to_id")
+	GDVIRTUAL_BIND(_estimate_cost, "from_id", "to_id");
+	GDVIRTUAL_BIND(_compute_cost, "from_id", "to_id");
 }

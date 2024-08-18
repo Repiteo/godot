@@ -110,50 +110,50 @@
 // 1-based semicolon separated list of ITEMs
 #define SEMIC_SEP_LIST(ITEM, LENGTH) _SEMIC_SEP_LIST_##LENGTH(ITEM)
 #define _SEMIC_SEP_LIST_15(ITEM) \
-	_SEMIC_SEP_LIST_14(ITEM);    \
-	ITEM(15)
+	_SEMIC_SEP_LIST_14(ITEM)     \
+	ITEM(15);
 #define _SEMIC_SEP_LIST_14(ITEM) \
-	_SEMIC_SEP_LIST_13(ITEM);    \
-	ITEM(14)
+	_SEMIC_SEP_LIST_13(ITEM)     \
+	ITEM(14);
 #define _SEMIC_SEP_LIST_13(ITEM) \
-	_SEMIC_SEP_LIST_12(ITEM);    \
-	ITEM(13)
+	_SEMIC_SEP_LIST_12(ITEM)     \
+	ITEM(13);
 #define _SEMIC_SEP_LIST_12(ITEM) \
-	_SEMIC_SEP_LIST_11(ITEM);    \
-	ITEM(12)
+	_SEMIC_SEP_LIST_11(ITEM)     \
+	ITEM(12);
 #define _SEMIC_SEP_LIST_11(ITEM) \
-	_SEMIC_SEP_LIST_10(ITEM);    \
-	ITEM(11)
+	_SEMIC_SEP_LIST_10(ITEM)     \
+	ITEM(11);
 #define _SEMIC_SEP_LIST_10(ITEM) \
-	_SEMIC_SEP_LIST_9(ITEM);     \
-	ITEM(10)
+	_SEMIC_SEP_LIST_9(ITEM)      \
+	ITEM(10);
 #define _SEMIC_SEP_LIST_9(ITEM) \
-	_SEMIC_SEP_LIST_8(ITEM);    \
-	ITEM(9)
+	_SEMIC_SEP_LIST_8(ITEM)     \
+	ITEM(9);
 #define _SEMIC_SEP_LIST_8(ITEM) \
-	_SEMIC_SEP_LIST_7(ITEM);    \
-	ITEM(8)
+	_SEMIC_SEP_LIST_7(ITEM)     \
+	ITEM(8);
 #define _SEMIC_SEP_LIST_7(ITEM) \
-	_SEMIC_SEP_LIST_6(ITEM);    \
-	ITEM(7)
+	_SEMIC_SEP_LIST_6(ITEM)     \
+	ITEM(7);
 #define _SEMIC_SEP_LIST_6(ITEM) \
-	_SEMIC_SEP_LIST_5(ITEM);    \
-	ITEM(6)
+	_SEMIC_SEP_LIST_5(ITEM)     \
+	ITEM(6);
 #define _SEMIC_SEP_LIST_5(ITEM) \
-	_SEMIC_SEP_LIST_4(ITEM);    \
-	ITEM(5)
+	_SEMIC_SEP_LIST_4(ITEM)     \
+	ITEM(5);
 #define _SEMIC_SEP_LIST_4(ITEM) \
-	_SEMIC_SEP_LIST_3(ITEM);    \
-	ITEM(4)
+	_SEMIC_SEP_LIST_3(ITEM)     \
+	ITEM(4);
 #define _SEMIC_SEP_LIST_3(ITEM) \
-	_SEMIC_SEP_LIST_2(ITEM);    \
-	ITEM(3)
+	_SEMIC_SEP_LIST_2(ITEM)     \
+	ITEM(3);
 #define _SEMIC_SEP_LIST_2(ITEM) \
-	_SEMIC_SEP_LIST_1(ITEM);    \
-	ITEM(2)
+	_SEMIC_SEP_LIST_1(ITEM)     \
+	ITEM(2);
 #define _SEMIC_SEP_LIST_1(ITEM) \
 	_SEMIC_SEP_LIST_0(ITEM)     \
-	ITEM(1)
+	ITEM(1);
 #define _SEMIC_SEP_LIST_0(ITEM)
 
 // 1-based space separated list of ITEMs
@@ -215,7 +215,7 @@
 	struct Command##N : public CommandBase {                                 \
 		T *instance;                                                         \
 		M method;                                                            \
-		SEMIC_SEP_LIST(PARAM_DECL, N);                                       \
+		SEMIC_SEP_LIST(PARAM_DECL, N)                                        \
 		virtual void call() override {                                       \
 			(instance->*method)(COMMA_SEP_LIST(ARG, N));                     \
 		}                                                                    \
@@ -227,7 +227,7 @@
 		R *ret;                                                                          \
 		T *instance;                                                                     \
 		M method;                                                                        \
-		SEMIC_SEP_LIST(PARAM_DECL, N);                                                   \
+		SEMIC_SEP_LIST(PARAM_DECL, N)                                                    \
 		virtual void call() override {                                                   \
 			*ret = (instance->*method)(COMMA_SEP_LIST(ARG, N));                          \
 		}                                                                                \
@@ -238,7 +238,7 @@
 	struct CommandSync##N : public SyncCommand {                             \
 		T *instance;                                                         \
 		M method;                                                            \
-		SEMIC_SEP_LIST(PARAM_DECL, N);                                       \
+		SEMIC_SEP_LIST(PARAM_DECL, N)                                        \
 		virtual void call() override {                                       \
 			(instance->*method)(COMMA_SEP_LIST(ARG, N));                     \
 		}                                                                    \
@@ -255,7 +255,7 @@
 		CMD_TYPE(N) *cmd = allocate<CMD_TYPE(N)>();                             \
 		cmd->instance = p_instance;                                             \
 		cmd->method = p_method;                                                 \
-		SEMIC_SEP_LIST(CMD_ASSIGN_PARAM, N);                                    \
+		SEMIC_SEP_LIST(CMD_ASSIGN_PARAM, N)                                     \
 		if (pump_task_id != WorkerThreadPool::INVALID_TASK_ID) {                \
 			WorkerThreadPool::get_singleton()->notify_yield_over(pump_task_id); \
 		}                                                                       \
@@ -270,7 +270,7 @@
 		CMD_RET_TYPE(N) *cmd = allocate<CMD_RET_TYPE(N)>();                                    \
 		cmd->instance = p_instance;                                                            \
 		cmd->method = p_method;                                                                \
-		SEMIC_SEP_LIST(CMD_ASSIGN_PARAM, N);                                                   \
+		SEMIC_SEP_LIST(CMD_ASSIGN_PARAM, N)                                                    \
 		cmd->ret = r_ret;                                                                      \
 		if (pump_task_id != WorkerThreadPool::INVALID_TASK_ID) {                               \
 			WorkerThreadPool::get_singleton()->notify_yield_over(pump_task_id);                \
@@ -288,7 +288,7 @@
 		CMD_SYNC_TYPE(N) *cmd = allocate<CMD_SYNC_TYPE(N)>();                         \
 		cmd->instance = p_instance;                                                   \
 		cmd->method = p_method;                                                       \
-		SEMIC_SEP_LIST(CMD_ASSIGN_PARAM, N);                                          \
+		SEMIC_SEP_LIST(CMD_ASSIGN_PARAM, N)                                           \
 		if (pump_task_id != WorkerThreadPool::INVALID_TASK_ID) {                      \
 			WorkerThreadPool::get_singleton()->notify_yield_over(pump_task_id);       \
 		}                                                                             \

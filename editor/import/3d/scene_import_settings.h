@@ -54,7 +54,7 @@ class EditorInspector;
 class SceneImportSettingsData;
 
 class SceneImportSettingsDialog : public ConfirmationDialog {
-	GDCLASS(SceneImportSettingsDialog, ConfirmationDialog)
+	GDCLASS(SceneImportSettingsDialog, ConfirmationDialog);
 
 	static SceneImportSettingsDialog *singleton;
 

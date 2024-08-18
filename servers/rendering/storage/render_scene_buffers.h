@@ -91,7 +91,7 @@ public:
 	void set_use_debanding(bool p_use_debanding) { use_debanding = p_use_debanding; }
 
 	RenderSceneBuffersConfiguration() {}
-	virtual ~RenderSceneBuffersConfiguration(){};
+	virtual ~RenderSceneBuffersConfiguration() {}
 };
 
 class RenderSceneBuffers : public RefCounted {
@@ -101,8 +101,8 @@ protected:
 	static void _bind_methods();
 
 public:
-	RenderSceneBuffers(){};
-	virtual ~RenderSceneBuffers(){};
+	RenderSceneBuffers() {}
+	virtual ~RenderSceneBuffers() {}
 
 	virtual void configure(const RenderSceneBuffersConfiguration *p_config) = 0;
 
@@ -118,13 +118,13 @@ class RenderSceneBuffersExtension : public RenderSceneBuffers {
 protected:
 	static void _bind_methods();
 
-	GDVIRTUAL1(_configure, const RenderSceneBuffersConfiguration *)
-	GDVIRTUAL1(_set_fsr_sharpness, float)
-	GDVIRTUAL1(_set_texture_mipmap_bias, float)
-	GDVIRTUAL1(_set_use_debanding, bool)
+	GDVIRTUAL1(_configure, const RenderSceneBuffersConfiguration *);
+	GDVIRTUAL1(_set_fsr_sharpness, float);
+	GDVIRTUAL1(_set_texture_mipmap_bias, float);
+	GDVIRTUAL1(_set_use_debanding, bool);
 
 public:
-	virtual ~RenderSceneBuffersExtension(){};
+	virtual ~RenderSceneBuffersExtension() {}
 
 	virtual void configure(const RenderSceneBuffersConfiguration *p_config) override;
 

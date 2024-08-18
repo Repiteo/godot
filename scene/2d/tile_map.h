@@ -47,7 +47,7 @@ enum TileMapDataFormat {
 };
 
 class TileMap : public Node2D {
-	GDCLASS(TileMap, Node2D)
+	GDCLASS(TileMap, Node2D);
 
 public:
 	// Kept for compatibility, but should use TileMapLayer::VisibilityMode instead.

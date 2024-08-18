@@ -371,9 +371,9 @@ struct ObjectGDExtension {
 #define GDVIRTUAL_REQUIRED_CALL_PTR(m_obj, m_name, ...) m_obj->_gdvirtual_##m_name##_call<true>(__VA_ARGS__)
 
 #ifdef DEBUG_METHODS_ENABLED
-#define GDVIRTUAL_BIND(m_name, ...) ::ClassDB::add_virtual_method(get_class_static(), _gdvirtual_##m_name##_get_method_info(), true, sarray(__VA_ARGS__));
+#define GDVIRTUAL_BIND(m_name, ...) ::ClassDB::add_virtual_method(get_class_static(), _gdvirtual_##m_name##_get_method_info(), true, sarray(__VA_ARGS__))
 #else
-#define GDVIRTUAL_BIND(m_name, ...)
+#define GDVIRTUAL_BIND(m_name, ...) FORCE_SEMICOLON
 #endif
 #define GDVIRTUAL_IS_OVERRIDDEN(m_name) _gdvirtual_##m_name##_overridden()
 #define GDVIRTUAL_IS_OVERRIDDEN_PTR(m_obj, m_name) m_obj->_gdvirtual_##m_name##_overridden()
@@ -384,16 +384,16 @@ struct ObjectGDExtension {
  * much alone defines the object model.
  */
 
-#define REVERSE_GET_PROPERTY_LIST                                  \
-public:                                                            \
-	_FORCE_INLINE_ bool _is_gpl_reversed() const { return true; }; \
-                                                                   \
+#define REVERSE_GET_PROPERTY_LIST                                 \
+public:                                                           \
+	_FORCE_INLINE_ bool _is_gpl_reversed() const { return true; } \
+                                                                  \
 private:
 
-#define UNREVERSE_GET_PROPERTY_LIST                                 \
-public:                                                             \
-	_FORCE_INLINE_ bool _is_gpl_reversed() const { return false; }; \
-                                                                    \
+#define UNREVERSE_GET_PROPERTY_LIST                                \
+public:                                                            \
+	_FORCE_INLINE_ bool _is_gpl_reversed() const { return false; } \
+                                                                   \
 private:
 
 #define GDCLASS(m_class, m_inherits)                                                                                                             \
@@ -566,13 +566,15 @@ protected:                                                                      
 		}                                                                                                                                        \
 	}                                                                                                                                            \
                                                                                                                                                  \
-private:
+private:                                                                                                                                         \
+	FORCE_SEMICOLON
 
 #define OBJ_SAVE_TYPE(m_class)                                          \
 public:                                                                 \
 	virtual String get_save_class() const override { return #m_class; } \
                                                                         \
-private:
+private:                                                                \
+	FORCE_SEMICOLON
 
 class ScriptInstance;
 
@@ -697,12 +699,12 @@ protected:
 	_ALWAYS_INLINE_ const ObjectGDExtension *_get_extension() const { return _extension; }
 	_ALWAYS_INLINE_ GDExtensionClassInstancePtr _get_extension_instance() const { return _extension_instance; }
 	virtual void _initialize_classv() { initialize_class(); }
-	virtual bool _setv(const StringName &p_name, const Variant &p_property) { return false; };
-	virtual bool _getv(const StringName &p_name, Variant &r_property) const { return false; };
-	virtual void _get_property_listv(List<PropertyInfo> *p_list, bool p_reversed) const {};
-	virtual void _validate_propertyv(PropertyInfo &p_property) const {};
-	virtual bool _property_can_revertv(const StringName &p_name) const { return false; };
-	virtual bool _property_get_revertv(const StringName &p_name, Variant &r_property) const { return false; };
+	virtual bool _setv(const StringName &p_name, const Variant &p_property) { return false; }
+	virtual bool _getv(const StringName &p_name, Variant &r_property) const { return false; }
+	virtual void _get_property_listv(List<PropertyInfo> *p_list, bool p_reversed) const {}
+	virtual void _validate_propertyv(PropertyInfo &p_property) const {}
+	virtual bool _property_can_revertv(const StringName &p_name) const { return false; }
+	virtual bool _property_get_revertv(const StringName &p_name, Variant &r_property) const { return false; }
 	virtual void _notificationv(int p_notification, bool p_reversed) {}
 
 	static void _bind_methods();
@@ -711,12 +713,12 @@ protected:
 #else
 	static void _bind_compatibility_methods() {}
 #endif
-	bool _set(const StringName &p_name, const Variant &p_property) { return false; };
-	bool _get(const StringName &p_name, Variant &r_property) const { return false; };
-	void _get_property_list(List<PropertyInfo> *p_list) const {};
-	void _validate_property(PropertyInfo &p_property) const {};
-	bool _property_can_revert(const StringName &p_name) const { return false; };
-	bool _property_get_revert(const StringName &p_name, Variant &r_property) const { return false; };
+	bool _set(const StringName &p_name, const Variant &p_property) { return false; }
+	bool _get(const StringName &p_name, Variant &r_property) const { return false; }
+	void _get_property_list(List<PropertyInfo> *p_list) const {}
+	void _validate_property(PropertyInfo &p_property) const {}
+	bool _property_can_revert(const StringName &p_name) const { return false; }
+	bool _property_get_revert(const StringName &p_name, Variant &r_property) const { return false; }
 	void _notification(int p_notification) {}
 
 	_FORCE_INLINE_ static void (*_get_bind_methods())() {

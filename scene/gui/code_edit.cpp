@@ -2690,9 +2690,9 @@ void CodeEdit::_bind_methods() {
 
 	// Overridable
 
-	GDVIRTUAL_BIND(_confirm_code_completion, "replace")
-	GDVIRTUAL_BIND(_request_code_completion, "force")
-	GDVIRTUAL_BIND(_filter_code_completion_candidates, "candidates")
+	GDVIRTUAL_BIND(_confirm_code_completion, "replace");
+	GDVIRTUAL_BIND(_request_code_completion, "force");
+	GDVIRTUAL_BIND(_filter_code_completion_candidates, "candidates");
 
 	/* Line length guidelines */
 	ClassDB::bind_method(D_METHOD("set_line_length_guidelines", "guideline_columns"), &CodeEdit::set_line_length_guidelines);

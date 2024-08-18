@@ -757,10 +757,10 @@ public:
 	FUNC1(sub_surface_scattering_set_quality, SubSurfaceScatteringQuality)
 	FUNC2(sub_surface_scattering_set_scale, float, float)
 
-	FUNC1(positional_soft_shadow_filter_set_quality, ShadowQuality);
-	FUNC1(directional_soft_shadow_filter_set_quality, ShadowQuality);
-	FUNC1(decals_set_filter, RS::DecalFilter);
-	FUNC1(light_projectors_set_filter, RS::LightProjectorFilter);
+	FUNC1(positional_soft_shadow_filter_set_quality, ShadowQuality)
+	FUNC1(directional_soft_shadow_filter_set_quality, ShadowQuality)
+	FUNC1(decals_set_filter, RS::DecalFilter)
+	FUNC1(light_projectors_set_filter, RS::LightProjectorFilter)
 
 	/* CAMERA ATTRIBUTES */
 

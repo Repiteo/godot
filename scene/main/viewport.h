@@ -675,9 +675,9 @@ public:
 	Transform2D get_screen_transform() const;
 	virtual Transform2D get_screen_transform_internal(bool p_absolute_position = false) const;
 	virtual Transform2D get_popup_base_transform() const { return Transform2D(); }
-	virtual bool is_directly_attached_to_screen() const { return false; };
-	virtual bool is_attached_in_viewport() const { return false; };
-	virtual bool is_sub_viewport() const { return false; };
+	virtual bool is_directly_attached_to_screen() const { return false; }
+	virtual bool is_attached_in_viewport() const { return false; }
+	virtual bool is_sub_viewport() const { return false; }
 
 private:
 	// 2D audio, camera, and physics. (don't put World2D here because World2D is needed for Control nodes).
@@ -841,7 +841,7 @@ public:
 	virtual Transform2D get_popup_base_transform() const override;
 	virtual bool is_directly_attached_to_screen() const override;
 	virtual bool is_attached_in_viewport() const override;
-	virtual bool is_sub_viewport() const override { return true; };
+	virtual bool is_sub_viewport() const override { return true; }
 
 	void _validate_property(PropertyInfo &p_property) const;
 	SubViewport();

@@ -293,8 +293,8 @@ public:
 	}
 
 	// IFileDialogEvents methods
-	HRESULT STDMETHODCALLTYPE OnFileOk(IFileDialog *) { return S_OK; };
-	HRESULT STDMETHODCALLTYPE OnFolderChange(IFileDialog *) { return S_OK; };
+	HRESULT STDMETHODCALLTYPE OnFileOk(IFileDialog *) { return S_OK; }
+	HRESULT STDMETHODCALLTYPE OnFolderChange(IFileDialog *) { return S_OK; }
 
 	HRESULT STDMETHODCALLTYPE OnFolderChanging(IFileDialog *p_pfd, IShellItem *p_item) {
 		if (root.is_empty()) {
@@ -313,11 +313,11 @@ public:
 		return S_OK;
 	}
 
-	HRESULT STDMETHODCALLTYPE OnHelp(IFileDialog *) { return S_OK; };
-	HRESULT STDMETHODCALLTYPE OnSelectionChange(IFileDialog *) { return S_OK; };
-	HRESULT STDMETHODCALLTYPE OnShareViolation(IFileDialog *, IShellItem *, FDE_SHAREVIOLATION_RESPONSE *) { return S_OK; };
-	HRESULT STDMETHODCALLTYPE OnTypeChange(IFileDialog *pfd) { return S_OK; };
-	HRESULT STDMETHODCALLTYPE OnOverwrite(IFileDialog *, IShellItem *, FDE_OVERWRITE_RESPONSE *) { return S_OK; };
+	HRESULT STDMETHODCALLTYPE OnHelp(IFileDialog *) { return S_OK; }
+	HRESULT STDMETHODCALLTYPE OnSelectionChange(IFileDialog *) { return S_OK; }
+	HRESULT STDMETHODCALLTYPE OnShareViolation(IFileDialog *, IShellItem *, FDE_SHAREVIOLATION_RESPONSE *) { return S_OK; }
+	HRESULT STDMETHODCALLTYPE OnTypeChange(IFileDialog *pfd) { return S_OK; }
+	HRESULT STDMETHODCALLTYPE OnOverwrite(IFileDialog *, IShellItem *, FDE_OVERWRITE_RESPONSE *) { return S_OK; }
 
 	// IFileDialogControlEvents methods
 	HRESULT STDMETHODCALLTYPE OnItemSelected(IFileDialogCustomize *p_pfdc, DWORD p_ctl_id, DWORD p_item_idx) {
@@ -327,14 +327,14 @@ public:
 		return S_OK;
 	}
 
-	HRESULT STDMETHODCALLTYPE OnButtonClicked(IFileDialogCustomize *, DWORD) { return S_OK; };
+	HRESULT STDMETHODCALLTYPE OnButtonClicked(IFileDialogCustomize *, DWORD) { return S_OK; }
 	HRESULT STDMETHODCALLTYPE OnCheckButtonToggled(IFileDialogCustomize *p_pfdc, DWORD p_ctl_id, BOOL p_checked) {
 		if (ctls.has(p_ctl_id)) {
 			selected[ctls[p_ctl_id]] = (bool)p_checked;
 		}
 		return S_OK;
 	}
-	HRESULT STDMETHODCALLTYPE OnControlActivating(IFileDialogCustomize *, DWORD) { return S_OK; };
+	HRESULT STDMETHODCALLTYPE OnControlActivating(IFileDialogCustomize *, DWORD) { return S_OK; }
 
 	Dictionary get_selected() {
 		return selected;
@@ -370,7 +370,7 @@ public:
 		ctls[cid] = p_name;
 	}
 
-	virtual ~FileDialogEventHandler(){};
+	virtual ~FileDialogEventHandler() {}
 };
 
 #if defined(__GNUC__) && !defined(__clang__)

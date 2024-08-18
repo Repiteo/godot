@@ -45,11 +45,11 @@ class EditorResourcePreviewGenerator : public RefCounted {
 protected:
 	static void _bind_methods();
 
-	GDVIRTUAL1RC(bool, _handles, String)
-	GDVIRTUAL3RC(Ref<Texture2D>, _generate, Ref<Resource>, Vector2i, Dictionary)
-	GDVIRTUAL3RC(Ref<Texture2D>, _generate_from_path, String, Vector2i, Dictionary)
-	GDVIRTUAL0RC(bool, _generate_small_preview_automatically)
-	GDVIRTUAL0RC(bool, _can_generate_small_preview)
+	GDVIRTUAL1RC(bool, _handles, String);
+	GDVIRTUAL3RC(Ref<Texture2D>, _generate, Ref<Resource>, Vector2i, Dictionary);
+	GDVIRTUAL3RC(Ref<Texture2D>, _generate_from_path, String, Vector2i, Dictionary);
+	GDVIRTUAL0RC(bool, _generate_small_preview_automatically);
+	GDVIRTUAL0RC(bool, _can_generate_small_preview);
 
 	class DrawRequester : public Object {
 		Semaphore semaphore;
@@ -65,7 +65,7 @@ public:
 	virtual bool handles(const String &p_type) const;
 	virtual Ref<Texture2D> generate(const Ref<Resource> &p_from, const Size2 &p_size, Dictionary &p_metadata) const;
 	virtual Ref<Texture2D> generate_from_path(const String &p_path, const Size2 &p_size, Dictionary &p_metadata) const;
-	virtual void abort(){};
+	virtual void abort() {}
 
 	virtual bool generate_small_preview_automatically() const;
 	virtual bool can_generate_small_preview() const;

@@ -93,7 +93,8 @@ struct GDExtensionPtr {
 	struct VariantInternalAccessor<GDExtensionPtr<m_type>> {                                                                                                                                       \
 		static _FORCE_INLINE_ const GDExtensionPtr<m_type> &get(const Variant *v) { return *reinterpret_cast<const GDExtensionPtr<m_type> *>(VariantInternal::get_int(v)); }                       \
 		static _FORCE_INLINE_ void set(Variant *v, const GDExtensionPtr<m_type> &p_value) { *VariantInternal::get_int(v) = uint64_t(p_value.data); }                                               \
-	};
+	};                                                                                                                                                                                             \
+	FORCE_SEMICOLON
 
 template <typename T>
 struct GetTypeInfo<GDExtensionConstPtr<T>> {
@@ -134,23 +135,23 @@ struct PtrToArg<GDExtensionPtr<T>> {
 	}
 };
 
-GDVIRTUAL_NATIVE_PTR(void)
-GDVIRTUAL_NATIVE_PTR(AudioFrame)
-GDVIRTUAL_NATIVE_PTR(bool)
-GDVIRTUAL_NATIVE_PTR(char)
-GDVIRTUAL_NATIVE_PTR(char16_t)
-GDVIRTUAL_NATIVE_PTR(char32_t)
-GDVIRTUAL_NATIVE_PTR(wchar_t)
-GDVIRTUAL_NATIVE_PTR(uint8_t)
-GDVIRTUAL_NATIVE_PTR(uint8_t *)
-GDVIRTUAL_NATIVE_PTR(int8_t)
-GDVIRTUAL_NATIVE_PTR(uint16_t)
-GDVIRTUAL_NATIVE_PTR(int16_t)
-GDVIRTUAL_NATIVE_PTR(uint32_t)
-GDVIRTUAL_NATIVE_PTR(int32_t)
-GDVIRTUAL_NATIVE_PTR(int64_t)
-GDVIRTUAL_NATIVE_PTR(uint64_t)
-GDVIRTUAL_NATIVE_PTR(float)
-GDVIRTUAL_NATIVE_PTR(double)
+GDVIRTUAL_NATIVE_PTR(void);
+GDVIRTUAL_NATIVE_PTR(AudioFrame);
+GDVIRTUAL_NATIVE_PTR(bool);
+GDVIRTUAL_NATIVE_PTR(char);
+GDVIRTUAL_NATIVE_PTR(char16_t);
+GDVIRTUAL_NATIVE_PTR(char32_t);
+GDVIRTUAL_NATIVE_PTR(wchar_t);
+GDVIRTUAL_NATIVE_PTR(uint8_t);
+GDVIRTUAL_NATIVE_PTR(uint8_t *);
+GDVIRTUAL_NATIVE_PTR(int8_t);
+GDVIRTUAL_NATIVE_PTR(uint16_t);
+GDVIRTUAL_NATIVE_PTR(int16_t);
+GDVIRTUAL_NATIVE_PTR(uint32_t);
+GDVIRTUAL_NATIVE_PTR(int32_t);
+GDVIRTUAL_NATIVE_PTR(int64_t);
+GDVIRTUAL_NATIVE_PTR(uint64_t);
+GDVIRTUAL_NATIVE_PTR(float);
+GDVIRTUAL_NATIVE_PTR(double);
 
 #endif // NATIVE_PTR_H
