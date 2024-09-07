@@ -17,7 +17,7 @@ concurrency:
 jobs:
   build-windows:
     # Windows 10 with latest image
-    runs-on: "windows-latest"
+    runs-on: ${{ matrix.os || 'windows-latest' }}
     name: ${{ matrix.name }}
     strategy:
       fail-fast: false
@@ -31,6 +31,16 @@ jobs:
             sconsflags: debug_symbols=no vsproj=yes vsproj_gen_only=no windows_subsystem=console
             bin: "./bin/godot.windows.editor.x86_64.exe"
             artifact: true
+
+          - name: Editor w/ VS2019 (target=editor, tests=yes)
+            cache-name: windows-editor-vs2019
+            target: editor
+            tests: true
+            # Skip debug symbols, they're way too big with MSVC.
+            sconsflags: debug_symbols=no vsproj=yes vsproj_gen_only=no windows_subsystem=console
+            bin: "./bin/godot.windows.editor.x86_64.exe"
+            artifact: true
+            os: windows-2019
 
           - name: Editor w/ clang-cl (target=editor, tests=yes, use_llvm=yes)
             cache-name: windows-editor-clang
