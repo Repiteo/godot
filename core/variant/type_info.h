@@ -31,11 +31,11 @@
 #ifndef TYPE_INFO_H
 #define TYPE_INFO_H
 
+#include "core/templates/simple_type.h"
 #include "core/typedefs.h"
 
-#include <type_traits>
-
 namespace GodotTypeInfo {
+
 enum Metadata {
 	METADATA_NONE,
 	METADATA_INT_IS_INT8,
@@ -49,162 +49,246 @@ enum Metadata {
 	METADATA_REAL_IS_FLOAT,
 	METADATA_REAL_IS_DOUBLE
 };
-}
-
-// If the compiler fails because it's trying to instantiate the primary 'GetTypeInfo' template
-// instead of one of the specializations, it's most likely because the type 'T' is not supported.
-// If 'T' is a class that inherits 'Object', make sure it can see the actual class declaration
-// instead of a forward declaration. You can always forward declare 'T' in a header file, and then
-// include the actual declaration of 'T' in the source file where 'GetTypeInfo<T>' is instantiated.
-template <typename T, typename = void>
-struct GetTypeInfo;
-
-#define MAKE_TYPE_INFO(m_type, m_var_type)                                            \
-	template <>                                                                       \
-	struct GetTypeInfo<m_type> {                                                      \
-		static const Variant::Type VARIANT_TYPE = m_var_type;                         \
-		static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE; \
-		static inline PropertyInfo get_class_info() {                                 \
-			return PropertyInfo(VARIANT_TYPE, String());                              \
-		}                                                                             \
-	};                                                                                \
-	template <>                                                                       \
-	struct GetTypeInfo<const m_type &> {                                              \
-		static const Variant::Type VARIANT_TYPE = m_var_type;                         \
-		static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE; \
-		static inline PropertyInfo get_class_info() {                                 \
-			return PropertyInfo(VARIANT_TYPE, String());                              \
-		}                                                                             \
-	};
-
-#define MAKE_TYPE_INFO_WITH_META(m_type, m_var_type, m_metadata)    \
-	template <>                                                     \
-	struct GetTypeInfo<m_type> {                                    \
-		static const Variant::Type VARIANT_TYPE = m_var_type;       \
-		static const GodotTypeInfo::Metadata METADATA = m_metadata; \
-		static inline PropertyInfo get_class_info() {               \
-			return PropertyInfo(VARIANT_TYPE, String());            \
-		}                                                           \
-	};                                                              \
-	template <>                                                     \
-	struct GetTypeInfo<const m_type &> {                            \
-		static const Variant::Type VARIANT_TYPE = m_var_type;       \
-		static const GodotTypeInfo::Metadata METADATA = m_metadata; \
-		static inline PropertyInfo get_class_info() {               \
-			return PropertyInfo(VARIANT_TYPE, String());            \
-		}                                                           \
-	};
-
-MAKE_TYPE_INFO(bool, Variant::BOOL)
-MAKE_TYPE_INFO_WITH_META(uint8_t, Variant::INT, GodotTypeInfo::METADATA_INT_IS_UINT8)
-MAKE_TYPE_INFO_WITH_META(int8_t, Variant::INT, GodotTypeInfo::METADATA_INT_IS_INT8)
-MAKE_TYPE_INFO_WITH_META(uint16_t, Variant::INT, GodotTypeInfo::METADATA_INT_IS_UINT16)
-MAKE_TYPE_INFO_WITH_META(int16_t, Variant::INT, GodotTypeInfo::METADATA_INT_IS_INT16)
-MAKE_TYPE_INFO_WITH_META(uint32_t, Variant::INT, GodotTypeInfo::METADATA_INT_IS_UINT32)
-MAKE_TYPE_INFO_WITH_META(int32_t, Variant::INT, GodotTypeInfo::METADATA_INT_IS_INT32)
-MAKE_TYPE_INFO_WITH_META(uint64_t, Variant::INT, GodotTypeInfo::METADATA_INT_IS_UINT64)
-MAKE_TYPE_INFO_WITH_META(int64_t, Variant::INT, GodotTypeInfo::METADATA_INT_IS_INT64)
-MAKE_TYPE_INFO(char16_t, Variant::INT)
-MAKE_TYPE_INFO(char32_t, Variant::INT)
-MAKE_TYPE_INFO_WITH_META(float, Variant::FLOAT, GodotTypeInfo::METADATA_REAL_IS_FLOAT)
-MAKE_TYPE_INFO_WITH_META(double, Variant::FLOAT, GodotTypeInfo::METADATA_REAL_IS_DOUBLE)
-
-MAKE_TYPE_INFO(String, Variant::STRING)
-MAKE_TYPE_INFO(Vector2, Variant::VECTOR2)
-MAKE_TYPE_INFO(Rect2, Variant::RECT2)
-MAKE_TYPE_INFO(Vector3, Variant::VECTOR3)
-MAKE_TYPE_INFO(Vector2i, Variant::VECTOR2I)
-MAKE_TYPE_INFO(Rect2i, Variant::RECT2I)
-MAKE_TYPE_INFO(Vector3i, Variant::VECTOR3I)
-MAKE_TYPE_INFO(Vector4, Variant::VECTOR4)
-MAKE_TYPE_INFO(Vector4i, Variant::VECTOR4I)
-MAKE_TYPE_INFO(Transform2D, Variant::TRANSFORM2D)
-MAKE_TYPE_INFO(Plane, Variant::PLANE)
-MAKE_TYPE_INFO(Quaternion, Variant::QUATERNION)
-MAKE_TYPE_INFO(AABB, Variant::AABB)
-MAKE_TYPE_INFO(Basis, Variant::BASIS)
-MAKE_TYPE_INFO(Transform3D, Variant::TRANSFORM3D)
-MAKE_TYPE_INFO(Projection, Variant::PROJECTION)
-MAKE_TYPE_INFO(Color, Variant::COLOR)
-MAKE_TYPE_INFO(StringName, Variant::STRING_NAME)
-MAKE_TYPE_INFO(NodePath, Variant::NODE_PATH)
-MAKE_TYPE_INFO(RID, Variant::RID)
-MAKE_TYPE_INFO(Callable, Variant::CALLABLE)
-MAKE_TYPE_INFO(Signal, Variant::SIGNAL)
-MAKE_TYPE_INFO(Dictionary, Variant::DICTIONARY)
-MAKE_TYPE_INFO(Array, Variant::ARRAY)
-MAKE_TYPE_INFO(PackedByteArray, Variant::PACKED_BYTE_ARRAY)
-MAKE_TYPE_INFO(PackedInt32Array, Variant::PACKED_INT32_ARRAY)
-MAKE_TYPE_INFO(PackedInt64Array, Variant::PACKED_INT64_ARRAY)
-MAKE_TYPE_INFO(PackedFloat32Array, Variant::PACKED_FLOAT32_ARRAY)
-MAKE_TYPE_INFO(PackedFloat64Array, Variant::PACKED_FLOAT64_ARRAY)
-MAKE_TYPE_INFO(PackedStringArray, Variant::PACKED_STRING_ARRAY)
-MAKE_TYPE_INFO(PackedVector2Array, Variant::PACKED_VECTOR2_ARRAY)
-MAKE_TYPE_INFO(PackedVector3Array, Variant::PACKED_VECTOR3_ARRAY)
-MAKE_TYPE_INFO(PackedColorArray, Variant::PACKED_COLOR_ARRAY)
-MAKE_TYPE_INFO(PackedVector4Array, Variant::PACKED_VECTOR4_ARRAY)
-
-MAKE_TYPE_INFO(IPAddress, Variant::STRING)
-
-//objectID
-template <>
-struct GetTypeInfo<ObjectID> {
-	static const Variant::Type VARIANT_TYPE = Variant::INT;
-	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_INT_IS_UINT64;
-	static inline PropertyInfo get_class_info() {
-		return PropertyInfo(Variant::INT, String(), PROPERTY_HINT_INT_IS_OBJECTID);
-	}
-};
-
-//for variant
-template <>
-struct GetTypeInfo<Variant> {
-	static const Variant::Type VARIANT_TYPE = Variant::NIL;
-	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;
-	static inline PropertyInfo get_class_info() {
-		return PropertyInfo(Variant::NIL, String(), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_NIL_IS_VARIANT);
-	}
-};
-
-template <>
-struct GetTypeInfo<const Variant &> {
-	static const Variant::Type VARIANT_TYPE = Variant::NIL;
-	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;
-	static inline PropertyInfo get_class_info() {
-		return PropertyInfo(Variant::NIL, String(), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_NIL_IS_VARIANT);
-	}
-};
-
-#define MAKE_TEMPLATE_TYPE_INFO(m_template, m_type, m_var_type)                       \
-	template <>                                                                       \
-	struct GetTypeInfo<m_template<m_type>> {                                          \
-		static const Variant::Type VARIANT_TYPE = m_var_type;                         \
-		static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE; \
-		static inline PropertyInfo get_class_info() {                                 \
-			return PropertyInfo(VARIANT_TYPE, String());                              \
-		}                                                                             \
-	};                                                                                \
-	template <>                                                                       \
-	struct GetTypeInfo<const m_template<m_type> &> {                                  \
-		static const Variant::Type VARIANT_TYPE = m_var_type;                         \
-		static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE; \
-		static inline PropertyInfo get_class_info() {                                 \
-			return PropertyInfo(VARIANT_TYPE, String());                              \
-		}                                                                             \
-	};
-
-MAKE_TEMPLATE_TYPE_INFO(Vector, Variant, Variant::ARRAY)
-MAKE_TEMPLATE_TYPE_INFO(Vector, RID, Variant::ARRAY)
-MAKE_TEMPLATE_TYPE_INFO(Vector, Plane, Variant::ARRAY)
-MAKE_TEMPLATE_TYPE_INFO(Vector, Face3, Variant::PACKED_VECTOR3_ARRAY)
-MAKE_TEMPLATE_TYPE_INFO(Vector, StringName, Variant::PACKED_STRING_ARRAY)
 
 template <typename T>
-struct GetTypeInfo<T *, std::enable_if_t<std::is_base_of_v<Object, T>>> {
-	static const Variant::Type VARIANT_TYPE = Variant::OBJECT;
-	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;
+struct _VariantType {
+	static constexpr Variant::Type value() {
+		if constexpr (std::is_base_of_v<Object, std::remove_pointer_t<T>>) {
+			return Variant::OBJECT;
+		} else if constexpr (std::is_enum_v<T>) {
+			return Variant::INT;
+		} else {
+			static_assert(false, "Value is not a Variant type, or is not yet bound.");
+		}
+	}
+};
+template <typename T>
+inline constexpr Variant::Type variant_type_v = _VariantType<GetSimpleTypeT<T>>::value();
+
+template <typename T>
+struct _Metadata {
+	static constexpr Metadata value() { return METADATA_NONE; }
+};
+template <typename T>
+inline constexpr Metadata metadata_v = _Metadata<GetSimpleTypeT<T>>::value();
+
+template <typename T>
+struct _PropertyHint {
+	static constexpr PropertyHint value() { return PROPERTY_HINT_NONE; }
+};
+template <typename T>
+inline constexpr PropertyHint property_hint_v = _PropertyHint<GetSimpleTypeT<T>>::value();
+
+template <typename T>
+struct _PropertyUsage {
+	static constexpr PropertyUsageFlags value() {
+		if constexpr (std::is_enum_v<T>) {
+			return static_cast<PropertyUsageFlags>(PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CLASS_IS_ENUM);
+		} else {
+			return PROPERTY_USAGE_DEFAULT;
+		}
+	}
+};
+template <typename T>
+inline constexpr PropertyUsageFlags property_usage_v = _PropertyUsage<GetSimpleTypeT<T>>::value();
+
+template <typename T>
+struct _HintString {
+	static inline String value() { return String(); }
+};
+template <typename T>
+inline String hint_string_v = _HintString<GetSimpleTypeT<T>>::value();
+
+template <typename T>
+struct _ClassName {
+	static inline String value() {
+		if constexpr (variant_type_v<T> == Variant::OBJECT) {
+			return std::remove_pointer_t<T>::get_class_static();
+		} else {
+			return String();
+		}
+	}
+};
+template <typename T>
+inline String class_name_v = _ClassName<GetSimpleTypeT<T>>::value();
+
+inline constexpr const char *_variant_names[Variant::VARIANT_MAX] = {
+	"Variant",
+	"bool",
+	"int",
+	"float",
+	"String",
+	"Vector2",
+	"Vector2i",
+	"Rect2",
+	"Rect2i",
+	"Vector3",
+	"Vector3i",
+	"Transform2D",
+	"Vector4",
+	"Vector4i",
+	"Plane",
+	"Quaternion",
+	"AABB",
+	"Basis",
+	"Transform3D",
+	"Projection",
+	"Color",
+	"StringName",
+	"NodePath",
+	"RID",
+	"Object",
+	"Callable",
+	"Signal",
+	"Dictionary",
+	"Array",
+	"PackedByteArray",
+	"PackedInt32Array",
+	"PackedInt64Array",
+	"PackedFloat32Array",
+	"PackedFloat64Array",
+	"PackedStringArray",
+	"PackedVector2Array",
+	"PackedVector3Array",
+	"PackedColorArray",
+	"PackedVector4Array",
+};
+
+template <typename T>
+struct _ConstClassName {
+	static constexpr const char *value() {
+		if constexpr (variant_type_v<T> == Variant::OBJECT) {
+			return std::remove_pointer_t<T>::_get_class_static();
+		} else {
+			return _variant_names[variant_type_v<T>];
+		}
+	}
+};
+template <typename T>
+inline constexpr const char *const_class_name_v = _ConstClassName<GetSimpleTypeT<T>>::value();
+
+} //namespace GodotTypeInfo
+
+#define GTI GodotTypeInfo
+
+#define GTI_TMPL_VARIANT_TYPE(m_template, m_type, m_var_type)         \
+	template <m_template>                                             \
+	struct GodotTypeInfo::_VariantType<m_type> {                      \
+		static constexpr Variant::Type value() { return m_var_type; } \
+	};
+#define GTI_TMPL_METADATA(m_template, m_type, m_metadata)                       \
+	template <m_template>                                                       \
+	struct GodotTypeInfo::_Metadata<m_type> {                                   \
+		static constexpr GodotTypeInfo::Metadata value() { return m_metadata; } \
+	};
+#define GTI_TMPL_HINT_STRING(m_template, m_type, m_hint_string) \
+	template <m_template>                                       \
+	struct GodotTypeInfo::_HintString<m_type> {                 \
+		static inline String value() { return m_hint_string; }  \
+	};
+#define GTI_TMPL_PROPERTY_HINT(m_template, m_type, m_property_hint)       \
+	template <m_template>                                                 \
+	struct GodotTypeInfo::_PropertyHint<m_type> {                         \
+		static constexpr PropertyHint value() { return m_property_hint; } \
+	};
+#define GTI_TMPL_PROPERTY_USAGE(m_template, m_type, m_property_usage)                                             \
+	template <m_template>                                                                                         \
+	struct GodotTypeInfo::_PropertyUsage<m_type> {                                                                \
+		static constexpr PropertyUsageFlags value() { return static_cast<PropertyUsageFlags>(m_property_usage); } \
+	};
+#define GTI_TMPL_CLASS_NAME(m_template, m_type, m_class_name) \
+	template <m_template>                                     \
+	struct GodotTypeInfo::_ClassName<m_type> {                \
+		static inline String value() { return m_class_name; } \
+	};
+
+#define GTI_VARIANT_TYPE(m_type, m_var_type) GTI_TMPL_VARIANT_TYPE(, m_type, m_var_type)
+#define GTI_METADATA(m_type, m_metadata) GTI_TMPL_METADATA(, m_type, m_metadata)
+#define GTI_HINT_STRING(m_type, m_hint_string) GTI_TMPL_HINT_STRING(, m_type, m_hint_string)
+#define GTI_PROPERTY_HINT(m_type, m_property_hint) GTI_TMPL_PROPERTY_HINT(, m_type, m_property_hint)
+#define GTI_PROPERTY_USAGE(m_type, m_property_usage) GTI_TMPL_PROPERTY_USAGE(, m_type, m_property_usage)
+#define GTI_CLASS_NAME(m_type, m_class_name) GTI_TMPL_CLASS_NAME(, m_type, m_class_name)
+
+GTI_VARIANT_TYPE(Variant, Variant::NIL)
+GTI_PROPERTY_USAGE(Variant, PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_NIL_IS_VARIANT)
+GTI_VARIANT_TYPE(bool, Variant::BOOL)
+GTI_VARIANT_TYPE(uint8_t, Variant::INT)
+GTI_METADATA(uint8_t, GodotTypeInfo::METADATA_INT_IS_UINT8)
+GTI_VARIANT_TYPE(int8_t, Variant::INT)
+GTI_METADATA(int8_t, GodotTypeInfo::METADATA_INT_IS_INT8)
+GTI_VARIANT_TYPE(uint16_t, Variant::INT)
+GTI_METADATA(uint16_t, GodotTypeInfo::METADATA_INT_IS_UINT16)
+GTI_VARIANT_TYPE(int16_t, Variant::INT)
+GTI_METADATA(int16_t, GodotTypeInfo::METADATA_INT_IS_INT16)
+GTI_VARIANT_TYPE(uint32_t, Variant::INT)
+GTI_METADATA(uint32_t, GodotTypeInfo::METADATA_INT_IS_UINT32)
+GTI_VARIANT_TYPE(int32_t, Variant::INT)
+GTI_METADATA(int32_t, GodotTypeInfo::METADATA_INT_IS_INT32)
+GTI_VARIANT_TYPE(uint64_t, Variant::INT)
+GTI_METADATA(uint64_t, GodotTypeInfo::METADATA_INT_IS_UINT64)
+GTI_VARIANT_TYPE(int64_t, Variant::INT)
+GTI_METADATA(int64_t, GodotTypeInfo::METADATA_INT_IS_INT64)
+GTI_VARIANT_TYPE(char16_t, Variant::INT)
+GTI_VARIANT_TYPE(char32_t, Variant::INT)
+GTI_VARIANT_TYPE(float, Variant::FLOAT)
+GTI_METADATA(float, GodotTypeInfo::METADATA_REAL_IS_FLOAT)
+GTI_VARIANT_TYPE(double, Variant::FLOAT)
+GTI_METADATA(double, GodotTypeInfo::METADATA_REAL_IS_DOUBLE)
+GTI_VARIANT_TYPE(ObjectID, Variant::INT)
+GTI_METADATA(ObjectID, GodotTypeInfo::METADATA_INT_IS_UINT64)
+GTI_PROPERTY_HINT(ObjectID, PROPERTY_HINT_INT_IS_OBJECTID)
+GTI_VARIANT_TYPE(String, Variant::STRING)
+GTI_VARIANT_TYPE(Vector2, Variant::VECTOR2)
+GTI_VARIANT_TYPE(Rect2, Variant::RECT2)
+GTI_VARIANT_TYPE(Vector3, Variant::VECTOR3)
+GTI_VARIANT_TYPE(Vector2i, Variant::VECTOR2I)
+GTI_VARIANT_TYPE(Rect2i, Variant::RECT2I)
+GTI_VARIANT_TYPE(Vector3i, Variant::VECTOR3I)
+GTI_VARIANT_TYPE(Vector4, Variant::VECTOR4)
+GTI_VARIANT_TYPE(Vector4i, Variant::VECTOR4I)
+GTI_VARIANT_TYPE(Transform2D, Variant::TRANSFORM2D)
+GTI_VARIANT_TYPE(Plane, Variant::PLANE)
+GTI_VARIANT_TYPE(Quaternion, Variant::QUATERNION)
+GTI_VARIANT_TYPE(AABB, Variant::AABB)
+GTI_VARIANT_TYPE(Basis, Variant::BASIS)
+GTI_VARIANT_TYPE(Transform3D, Variant::TRANSFORM3D)
+GTI_VARIANT_TYPE(Projection, Variant::PROJECTION)
+GTI_VARIANT_TYPE(Color, Variant::COLOR)
+GTI_VARIANT_TYPE(StringName, Variant::STRING_NAME)
+GTI_VARIANT_TYPE(NodePath, Variant::NODE_PATH)
+GTI_VARIANT_TYPE(RID, Variant::RID)
+GTI_VARIANT_TYPE(Callable, Variant::CALLABLE)
+GTI_VARIANT_TYPE(Signal, Variant::SIGNAL)
+GTI_VARIANT_TYPE(Dictionary, Variant::DICTIONARY)
+GTI_VARIANT_TYPE(Array, Variant::ARRAY)
+GTI_VARIANT_TYPE(PackedByteArray, Variant::PACKED_BYTE_ARRAY)
+GTI_VARIANT_TYPE(PackedInt32Array, Variant::PACKED_INT32_ARRAY)
+GTI_VARIANT_TYPE(PackedInt64Array, Variant::PACKED_INT64_ARRAY)
+GTI_VARIANT_TYPE(PackedFloat32Array, Variant::PACKED_FLOAT32_ARRAY)
+GTI_VARIANT_TYPE(PackedFloat64Array, Variant::PACKED_FLOAT64_ARRAY)
+GTI_VARIANT_TYPE(PackedStringArray, Variant::PACKED_STRING_ARRAY)
+GTI_VARIANT_TYPE(PackedVector2Array, Variant::PACKED_VECTOR2_ARRAY)
+GTI_VARIANT_TYPE(PackedVector3Array, Variant::PACKED_VECTOR3_ARRAY)
+GTI_VARIANT_TYPE(PackedColorArray, Variant::PACKED_COLOR_ARRAY)
+GTI_VARIANT_TYPE(PackedVector4Array, Variant::PACKED_VECTOR4_ARRAY)
+GTI_VARIANT_TYPE(IPAddress, Variant::STRING)
+GTI_VARIANT_TYPE(Vector<Variant>, Variant::ARRAY)
+GTI_VARIANT_TYPE(Vector<RID>, Variant::ARRAY)
+GTI_VARIANT_TYPE(Vector<Plane>, Variant::ARRAY)
+GTI_VARIANT_TYPE(Vector<Face3>, Variant::PACKED_VECTOR3_ARRAY)
+GTI_VARIANT_TYPE(Vector<StringName>, Variant::PACKED_STRING_ARRAY)
+
+#undef GTI_VARIANT_TYPE
+#undef GTI_VARIANT_TYPE
+
+// Legacy TypeInfo retrieval system.
+
+template <typename T>
+struct GetTypeInfo {
+	static constexpr Variant::Type VARIANT_TYPE = GTI::variant_type_v<T>;
+	static constexpr GodotTypeInfo::Metadata METADATA = GTI::metadata_v<T>;
 	static inline PropertyInfo get_class_info() {
-		return PropertyInfo(StringName(T::get_class_static()));
+		return PropertyInfo(GTI::variant_type_v<T>, String(), GTI::property_hint_v<T>, GTI::hint_string_v<T>, GTI::property_usage_v<T>, GTI::class_name_v<T>);
 	}
 };
 
@@ -221,29 +305,16 @@ inline String enum_qualified_name_to_class_info_name(const String &p_qualified_n
 } // namespace details
 } // namespace godot
 
-#define TEMPL_MAKE_ENUM_TYPE_INFO(m_enum, m_impl)                                                                                            \
-	template <>                                                                                                                              \
-	struct GetTypeInfo<m_impl> {                                                                                                             \
-		static const Variant::Type VARIANT_TYPE = Variant::INT;                                                                              \
-		static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;                                                        \
-		static inline PropertyInfo get_class_info() {                                                                                        \
-			return PropertyInfo(Variant::INT, String(), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CLASS_IS_ENUM, \
-					godot::details::enum_qualified_name_to_class_info_name(String(#m_enum)));                                                \
-		}                                                                                                                                    \
-	};
-
-#define MAKE_ENUM_TYPE_INFO(m_enum)                 \
-	TEMPL_MAKE_ENUM_TYPE_INFO(m_enum, m_enum)       \
-	TEMPL_MAKE_ENUM_TYPE_INFO(m_enum, m_enum const) \
-	TEMPL_MAKE_ENUM_TYPE_INFO(m_enum, m_enum &)     \
-	TEMPL_MAKE_ENUM_TYPE_INFO(m_enum, const m_enum &)
+#define MAKE_ENUM_TYPE_INFO(m_enum) \
+	GTI_CLASS_NAME(m_enum, godot::details::enum_qualified_name_to_class_info_name(String(#m_enum)))
 
 template <typename T>
 inline StringName __constant_get_enum_name(T param, const String &p_constant) {
-	if constexpr (GetTypeInfo<T>::VARIANT_TYPE == Variant::NIL) {
+	String name = GTI::class_name_v<T>;
+	if (name.is_empty()) {
 		ERR_PRINT("Missing VARIANT_ENUM_CAST for constant's enum: " + p_constant);
 	}
-	return GetTypeInfo<T>::get_class_info().class_name;
+	return name;
 }
 
 template <typename T>
@@ -267,38 +338,20 @@ public:
 	_FORCE_INLINE_ BitField<T> operator^(const BitField<T> &p_b) const { return BitField<T>(value ^ p_b.value); }
 };
 
-#define TEMPL_MAKE_BITFIELD_TYPE_INFO(m_enum, m_impl)                                                                                            \
-	template <>                                                                                                                                  \
-	struct GetTypeInfo<m_impl> {                                                                                                                 \
-		static const Variant::Type VARIANT_TYPE = Variant::INT;                                                                                  \
-		static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;                                                            \
-		static inline PropertyInfo get_class_info() {                                                                                            \
-			return PropertyInfo(Variant::INT, String(), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CLASS_IS_BITFIELD, \
-					godot::details::enum_qualified_name_to_class_info_name(String(#m_enum)));                                                    \
-		}                                                                                                                                        \
-	};                                                                                                                                           \
-	template <>                                                                                                                                  \
-	struct GetTypeInfo<BitField<m_impl>> {                                                                                                       \
-		static const Variant::Type VARIANT_TYPE = Variant::INT;                                                                                  \
-		static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;                                                            \
-		static inline PropertyInfo get_class_info() {                                                                                            \
-			return PropertyInfo(Variant::INT, String(), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CLASS_IS_BITFIELD, \
-					godot::details::enum_qualified_name_to_class_info_name(String(#m_enum)));                                                    \
-		}                                                                                                                                        \
-	};
+GTI_TMPL_VARIANT_TYPE(typename T, BitField<T>, Variant::INT)
+GTI_TMPL_PROPERTY_USAGE(typename T, BitField<T>, PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CLASS_IS_BITFIELD)
 
-#define MAKE_BITFIELD_TYPE_INFO(m_enum)                 \
-	TEMPL_MAKE_BITFIELD_TYPE_INFO(m_enum, m_enum)       \
-	TEMPL_MAKE_BITFIELD_TYPE_INFO(m_enum, m_enum const) \
-	TEMPL_MAKE_BITFIELD_TYPE_INFO(m_enum, m_enum &)     \
-	TEMPL_MAKE_BITFIELD_TYPE_INFO(m_enum, const m_enum &)
+#define MAKE_BITFIELD_TYPE_INFO(m_enum)                                                             \
+	GTI_CLASS_NAME(m_enum, godot::details::enum_qualified_name_to_class_info_name(String(#m_enum))) \
+	GTI_CLASS_NAME(BitField<m_enum>, godot::details::enum_qualified_name_to_class_info_name(String(#m_enum)))
 
 template <typename T>
 inline StringName __constant_get_bitfield_name(T param, const String &p_constant) {
-	if (GetTypeInfo<T>::VARIANT_TYPE == Variant::NIL) {
-		ERR_PRINT("Missing VARIANT_ENUM_CAST for constant's bitfield: " + p_constant);
+	String name = GTI::class_name_v<T>;
+	if (name.is_empty()) {
+		ERR_PRINT("Missing VARIANT_BITFIELD_CAST for constant's bitfield: " + p_constant);
 	}
-	return GetTypeInfo<BitField<T>>::get_class_info().class_name;
+	return name;
 }
 #define CLASS_INFO(m_type) (GetTypeInfo<m_type *>::get_class_info())
 

@@ -413,6 +413,7 @@ public:                                                                         
 		static int ptr;                                                                                                                          \
 		return &ptr;                                                                                                                             \
 	}                                                                                                                                            \
+	static constexpr const char *_get_class_static() { return #m_class; }                                                                        \
 	static _FORCE_INLINE_ String get_class_static() {                                                                                            \
 		return String(#m_class);                                                                                                                 \
 	}                                                                                                                                            \
@@ -806,6 +807,7 @@ public:
 	/* TYPE API */
 	static void get_inheritance_list_static(List<String> *p_inheritance_list) { p_inheritance_list->push_back("Object"); }
 
+	static constexpr const char *_get_class_static() { return "Object"; }
 	static String get_class_static() { return "Object"; }
 	static String get_parent_class_static() { return String(); }
 

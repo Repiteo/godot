@@ -271,25 +271,10 @@ struct PtrToArg<const Ref<T> &> {
 	}
 };
 
-template <typename T>
-struct GetTypeInfo<Ref<T>> {
-	static const Variant::Type VARIANT_TYPE = Variant::OBJECT;
-	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;
-
-	static inline PropertyInfo get_class_info() {
-		return PropertyInfo(Variant::OBJECT, String(), PROPERTY_HINT_RESOURCE_TYPE, T::get_class_static());
-	}
-};
-
-template <typename T>
-struct GetTypeInfo<const Ref<T> &> {
-	static const Variant::Type VARIANT_TYPE = Variant::OBJECT;
-	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;
-
-	static inline PropertyInfo get_class_info() {
-		return PropertyInfo(Variant::OBJECT, String(), PROPERTY_HINT_RESOURCE_TYPE, T::get_class_static());
-	}
-};
+GTI_TMPL_VARIANT_TYPE(typename T, Ref<T>, Variant::OBJECT)
+GTI_TMPL_PROPERTY_HINT(typename T, Ref<T>, PROPERTY_HINT_RESOURCE_TYPE)
+GTI_TMPL_HINT_STRING(typename T, Ref<T>, GTI::const_class_name_v<T>)
+GTI_TMPL_CLASS_NAME(typename T, Ref<T>, String())
 
 template <typename T>
 struct VariantInternalAccessor<Ref<T>> {

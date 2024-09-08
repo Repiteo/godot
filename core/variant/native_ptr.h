@@ -95,23 +95,12 @@ struct GDExtensionPtr {
 		static _FORCE_INLINE_ void set(Variant *v, const GDExtensionPtr<m_type> &p_value) { *VariantInternal::get_int(v) = uint64_t(p_value.data); }                                               \
 	};
 
-template <typename T>
-struct GetTypeInfo<GDExtensionConstPtr<T>> {
-	static const Variant::Type VARIANT_TYPE = Variant::NIL;
-	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;
-	static inline PropertyInfo get_class_info() {
-		return PropertyInfo(Variant::INT, String(), PROPERTY_HINT_INT_IS_POINTER, GDExtensionConstPtr<T>::get_name());
-	}
-};
-
-template <typename T>
-struct GetTypeInfo<GDExtensionPtr<T>> {
-	static const Variant::Type VARIANT_TYPE = Variant::NIL;
-	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;
-	static inline PropertyInfo get_class_info() {
-		return PropertyInfo(Variant::INT, String(), PROPERTY_HINT_INT_IS_POINTER, GDExtensionPtr<T>::get_name());
-	}
-};
+GTI_TMPL_VARIANT_TYPE(typename T, GDExtensionConstPtr<T>, Variant::INT)
+GTI_TMPL_PROPERTY_HINT(typename T, GDExtensionConstPtr<T>, PROPERTY_HINT_INT_IS_POINTER)
+GTI_TMPL_HINT_STRING(typename T, GDExtensionConstPtr<T>, GDExtensionConstPtr<T>::get_name())
+GTI_TMPL_VARIANT_TYPE(typename T, GDExtensionPtr<T>, Variant::INT)
+GTI_TMPL_PROPERTY_HINT(typename T, GDExtensionPtr<T>, PROPERTY_HINT_INT_IS_POINTER)
+GTI_TMPL_HINT_STRING(typename T, GDExtensionPtr<T>, GDExtensionPtr<T>::get_name())
 
 template <typename T>
 struct PtrToArg<GDExtensionConstPtr<T>> {
