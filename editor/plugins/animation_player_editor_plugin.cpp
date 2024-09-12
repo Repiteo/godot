@@ -830,8 +830,8 @@ void AnimationPlayerEditor::ensure_visibility() {
 	_animation_edit();
 }
 
-Dictionary AnimationPlayerEditor::get_state() const {
-	Dictionary d;
+TypedDictionary<String, Variant> AnimationPlayerEditor::get_state() const {
+	TypedDictionary<String, Variant> d;
 
 	if (!is_dummy) {
 		d["visible"] = is_visible_in_tree();
@@ -845,7 +845,7 @@ Dictionary AnimationPlayerEditor::get_state() const {
 	return d;
 }
 
-void AnimationPlayerEditor::set_state(const Dictionary &p_state) {
+void AnimationPlayerEditor::set_state(const TypedDictionary<String, Variant> &p_state) {
 	if (!p_state.has("visible") || !p_state["visible"]) {
 		return;
 	}

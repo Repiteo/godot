@@ -209,8 +209,8 @@ private:
 
 	_FORCE_INLINE_ void _repeat_pixel_over_subsequent_memory(uint8_t *p_pixel, int p_pixel_size, int p_count);
 
-	void _set_data(const Dictionary &p_data);
-	Dictionary _get_data() const;
+	void _set_data(const TypedDictionary<String, Variant> &p_data);
+	TypedDictionary<String, Variant> _get_data() const;
 
 	Error _load_from_buffer(const Vector<uint8_t> &p_array, ImageMemLoadFunc p_loader);
 
@@ -451,7 +451,7 @@ public:
 		data = p_image->data;
 	}
 
-	Dictionary compute_image_metrics(const Ref<Image> p_compared_image, bool p_luma_metric = true);
+	TypedDictionary<String, double> compute_image_metrics(const Ref<Image> p_compared_image, bool p_luma_metric = true);
 };
 
 VARIANT_ENUM_CAST(Image::Format)

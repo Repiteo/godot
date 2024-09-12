@@ -36,7 +36,6 @@
 #include "core/os/keyboard.h"
 #include "core/os/thread_safe.h"
 #include "core/templates/rb_set.h"
-#include "core/variant/typed_array.h"
 
 class Input : public Object {
 	GDCLASS(Input, Object);
@@ -170,7 +169,7 @@ private:
 		HatMask last_hat = HatMask::CENTER;
 		int mapping = -1;
 		int hat_current = 0;
-		Dictionary info;
+		TypedDictionary<String, Variant> info;
 	};
 
 	VelocityTrack mouse_velocity_track;
@@ -364,7 +363,7 @@ public:
 	bool is_joy_known(int p_device);
 	String get_joy_guid(int p_device) const;
 	bool should_ignore_device(int p_vendor_id, int p_product_id) const;
-	Dictionary get_joy_info(int p_device) const;
+	TypedDictionary<String, Variant> get_joy_info(int p_device) const;
 	void set_fallback_mapping(const String &p_guid);
 
 #ifdef DEBUG_ENABLED

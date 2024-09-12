@@ -129,7 +129,7 @@
 			</description>
 		</method>
 		<method name="execute_with_pipe">
-			<return type="Dictionary" />
+			<return type="Dictionary[String, Variant]" />
 			<param index="0" name="path" type="String" />
 			<param index="1" name="arguments" type="PackedStringArray" />
 			<param index="2" name="blocking" type="bool" default="true" />
@@ -342,7 +342,7 @@
 			</description>
 		</method>
 		<method name="get_memory_info" qualifiers="const">
-			<return type="Dictionary" />
+			<return type="Dictionary[String, int]" />
 			<description>
 				Returns a [Dictionary] containing information about the current memory with the following entries:
 				- [code]"physical"[/code] - total amount of usable physical memory in bytes. This value can be slightly less than the actual physical memory amount, since it does not include memory reserved by the kernel and devices.

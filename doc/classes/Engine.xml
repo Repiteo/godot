@@ -32,7 +32,7 @@
 			</description>
 		</method>
 		<method name="get_author_info" qualifiers="const">
-			<return type="Dictionary" />
+			<return type="Dictionary[String, PackedStringArray]" />
 			<description>
 				Returns the engine author information as a [Dictionary], where each entry is an [Array] of strings with the names of notable contributors to the Godot Engine: [code]lead_developers[/code], [code]founders[/code], [code]project_managers[/code], and [code]developers[/code].
 			</description>
@@ -48,7 +48,7 @@
 			</description>
 		</method>
 		<method name="get_donor_info" qualifiers="const">
-			<return type="Dictionary" />
+			<return type="Dictionary[String, PackedStringArray]" />
 			<description>
 				Returns a [Dictionary] of categorized donor names. Each entry is an [Array] of strings:
 				{[code]platinum_sponsors[/code], [code]gold_sponsors[/code], [code]silver_sponsors[/code], [code]bronze_sponsors[/code], [code]mini_sponsors[/code], [code]gold_donors[/code], [code]silver_donors[/code], [code]bronze_donors[/code]}
@@ -68,7 +68,7 @@
 			</description>
 		</method>
 		<method name="get_license_info" qualifiers="const">
-			<return type="Dictionary" />
+			<return type="Dictionary[String, String]" />
 			<description>
 				Returns a [Dictionary] of licenses used by Godot and included third party components. Each entry is a license name (such as "[url=https://en.wikipedia.org/wiki/MIT_License#Ambiguity_and_variants]Expat[/url]") and its associated text.
 			</description>
@@ -170,7 +170,7 @@
 			</description>
 		</method>
 		<method name="get_version_info" qualifiers="const">
-			<return type="Dictionary" />
+			<return type="Dictionary[String, Variant]" />
 			<description>
 				Returns the current engine version information as a [Dictionary] containing the following entries:
 				- [code]major[/code] - Major version number as an int;

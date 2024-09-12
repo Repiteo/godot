@@ -352,13 +352,13 @@ bool EditorPlugin::can_auto_hide() const {
 	return true;
 }
 
-Dictionary EditorPlugin::get_state() const {
-	Dictionary state;
+TypedDictionary<String, Variant> EditorPlugin::get_state() const {
+	TypedDictionary<String, Variant> state;
 	GDVIRTUAL_CALL(_get_state, state);
 	return state;
 }
 
-void EditorPlugin::set_state(const Dictionary &p_state) {
+void EditorPlugin::set_state(const TypedDictionary<String, Variant> &p_state) {
 	GDVIRTUAL_CALL(_set_state, p_state);
 }
 

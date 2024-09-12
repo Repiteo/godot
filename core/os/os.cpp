@@ -330,8 +330,8 @@ Error OS::set_cwd(const String &p_cwd) {
 	return ERR_CANT_OPEN;
 }
 
-Dictionary OS::get_memory_info() const {
-	Dictionary meminfo;
+TypedDictionary<String, int64_t> OS::get_memory_info() const {
+	TypedDictionary<String, int64_t> meminfo;
 
 	meminfo["physical"] = -1;
 	meminfo["free"] = -1;

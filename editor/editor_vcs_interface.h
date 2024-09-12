@@ -35,7 +35,6 @@
 #include "core/object/gdvirtual.gen.inc"
 #include "core/string/ustring.h"
 #include "core/variant/type_info.h"
-#include "core/variant/typed_array.h"
 
 class EditorVCSInterface : public Object {
 	GDCLASS(EditorVCSInterface, Object)
@@ -99,11 +98,11 @@ protected:
 
 	static void _bind_methods();
 
-	DiffLine _convert_diff_line(const Dictionary &p_diff_line);
-	DiffHunk _convert_diff_hunk(const Dictionary &p_diff_hunk);
-	DiffFile _convert_diff_file(const Dictionary &p_diff_file);
-	Commit _convert_commit(const Dictionary &p_commit);
-	StatusFile _convert_status_file(const Dictionary &p_status_file);
+	DiffLine _convert_diff_line(const TypedDictionary<String, Variant> &p_diff_line);
+	DiffHunk _convert_diff_hunk(const TypedDictionary<String, Variant> &p_diff_hunk);
+	DiffFile _convert_diff_file(const TypedDictionary<String, Variant> &p_diff_file);
+	Commit _convert_commit(const TypedDictionary<String, Variant> &p_commit);
+	StatusFile _convert_status_file(const TypedDictionary<String, Variant> &p_status_file);
 
 	// Proxy endpoints for extensions to implement
 	GDVIRTUAL1R(bool, _initialize, String);
@@ -166,13 +165,13 @@ public:
 	List<DiffHunk> get_line_diff(const String &p_file_path, const String &p_text);
 
 	// Helper functions to create and convert Dictionary into data structures
-	Dictionary create_diff_line(int p_new_line_no, int p_old_line_no, const String &p_content, const String &p_status);
-	Dictionary create_diff_hunk(int p_old_start, int p_new_start, int p_old_lines, int p_new_lines);
-	Dictionary create_diff_file(const String &p_new_file, const String &p_old_file);
-	Dictionary create_commit(const String &p_msg, const String &p_author, const String &p_id, int64_t p_unix_timestamp, int64_t p_offset_minutes);
-	Dictionary create_status_file(const String &p_file_path, ChangeType p_change, TreeArea p_area);
-	Dictionary add_line_diffs_into_diff_hunk(Dictionary p_diff_hunk, TypedArray<Dictionary> p_line_diffs);
-	Dictionary add_diff_hunks_into_diff_file(Dictionary p_diff_file, TypedArray<Dictionary> p_diff_hunks);
+	TypedDictionary<String, Variant> create_diff_line(int p_new_line_no, int p_old_line_no, const String &p_content, const String &p_status);
+	TypedDictionary<String, Variant> create_diff_hunk(int p_old_start, int p_new_start, int p_old_lines, int p_new_lines);
+	TypedDictionary<String, Variant> create_diff_file(const String &p_new_file, const String &p_old_file);
+	TypedDictionary<String, Variant> create_commit(const String &p_msg, const String &p_author, const String &p_id, int64_t p_unix_timestamp, int64_t p_offset_minutes);
+	TypedDictionary<String, Variant> create_status_file(const String &p_file_path, ChangeType p_change, TreeArea p_area);
+	TypedDictionary<String, Variant> add_line_diffs_into_diff_hunk(TypedDictionary<String, Variant> p_diff_hunk, TypedArray<Dictionary> p_line_diffs);
+	TypedDictionary<String, Variant> add_diff_hunks_into_diff_file(TypedDictionary<String, Variant> p_diff_file, TypedArray<Dictionary> p_diff_hunks);
 
 	void popup_error(const String &p_msg);
 };

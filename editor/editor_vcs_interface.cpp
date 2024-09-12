@@ -195,8 +195,8 @@ String EditorVCSInterface::get_vcs_name() {
 	return result;
 }
 
-Dictionary EditorVCSInterface::create_diff_line(int p_new_line_no, int p_old_line_no, const String &p_content, const String &p_status) {
-	Dictionary diff_line;
+TypedDictionary<String, Variant> EditorVCSInterface::create_diff_line(int p_new_line_no, int p_old_line_no, const String &p_content, const String &p_status) {
+	TypedDictionary<String, Variant> diff_line;
 	diff_line["new_line_no"] = p_new_line_no;
 	diff_line["old_line_no"] = p_old_line_no;
 	diff_line["content"] = p_content;
@@ -205,8 +205,8 @@ Dictionary EditorVCSInterface::create_diff_line(int p_new_line_no, int p_old_lin
 	return diff_line;
 }
 
-Dictionary EditorVCSInterface::create_diff_hunk(int p_old_start, int p_new_start, int p_old_lines, int p_new_lines) {
-	Dictionary diff_hunk;
+TypedDictionary<String, Variant> EditorVCSInterface::create_diff_hunk(int p_old_start, int p_new_start, int p_old_lines, int p_new_lines) {
+	TypedDictionary<String, Variant> diff_hunk;
 	diff_hunk["new_lines"] = p_new_lines;
 	diff_hunk["old_lines"] = p_old_lines;
 	diff_hunk["new_start"] = p_new_start;
@@ -215,21 +215,21 @@ Dictionary EditorVCSInterface::create_diff_hunk(int p_old_start, int p_new_start
 	return diff_hunk;
 }
 
-Dictionary EditorVCSInterface::add_line_diffs_into_diff_hunk(Dictionary p_diff_hunk, TypedArray<Dictionary> p_line_diffs) {
+TypedDictionary<String, Variant> EditorVCSInterface::add_line_diffs_into_diff_hunk(TypedDictionary<String, Variant> p_diff_hunk, TypedArray<Dictionary> p_line_diffs) {
 	p_diff_hunk["diff_lines"] = p_line_diffs;
 	return p_diff_hunk;
 }
 
-Dictionary EditorVCSInterface::create_diff_file(const String &p_new_file, const String &p_old_file) {
-	Dictionary file_diff;
+TypedDictionary<String, Variant> EditorVCSInterface::create_diff_file(const String &p_new_file, const String &p_old_file) {
+	TypedDictionary<String, Variant> file_diff;
 	file_diff["new_file"] = p_new_file;
 	file_diff["old_file"] = p_old_file;
 	file_diff["diff_hunks"] = TypedArray<Dictionary>();
 	return file_diff;
 }
 
-Dictionary EditorVCSInterface::create_commit(const String &p_msg, const String &p_author, const String &p_id, int64_t p_unix_timestamp, int64_t p_offset_minutes) {
-	Dictionary commit_info;
+TypedDictionary<String, Variant> EditorVCSInterface::create_commit(const String &p_msg, const String &p_author, const String &p_id, int64_t p_unix_timestamp, int64_t p_offset_minutes) {
+	TypedDictionary<String, Variant> commit_info;
 	commit_info["message"] = p_msg;
 	commit_info["author"] = p_author;
 	commit_info["unix_timestamp"] = p_unix_timestamp;
@@ -238,20 +238,20 @@ Dictionary EditorVCSInterface::create_commit(const String &p_msg, const String &
 	return commit_info;
 }
 
-Dictionary EditorVCSInterface::add_diff_hunks_into_diff_file(Dictionary p_diff_file, TypedArray<Dictionary> p_diff_hunks) {
+TypedDictionary<String, Variant> EditorVCSInterface::add_diff_hunks_into_diff_file(TypedDictionary<String, Variant> p_diff_file, TypedArray<Dictionary> p_diff_hunks) {
 	p_diff_file["diff_hunks"] = p_diff_hunks;
 	return p_diff_file;
 }
 
-Dictionary EditorVCSInterface::create_status_file(const String &p_file_path, ChangeType p_change, TreeArea p_area) {
-	Dictionary sf;
+TypedDictionary<String, Variant> EditorVCSInterface::create_status_file(const String &p_file_path, ChangeType p_change, TreeArea p_area) {
+	TypedDictionary<String, Variant> sf;
 	sf["file_path"] = p_file_path;
 	sf["change_type"] = p_change;
 	sf["area"] = p_area;
 	return sf;
 }
 
-EditorVCSInterface::DiffLine EditorVCSInterface::_convert_diff_line(const Dictionary &p_diff_line) {
+EditorVCSInterface::DiffLine EditorVCSInterface::_convert_diff_line(const TypedDictionary<String, Variant> &p_diff_line) {
 	DiffLine d;
 	d.new_line_no = p_diff_line["new_line_no"];
 	d.old_line_no = p_diff_line["old_line_no"];
@@ -260,7 +260,7 @@ EditorVCSInterface::DiffLine EditorVCSInterface::_convert_diff_line(const Dictio
 	return d;
 }
 
-EditorVCSInterface::DiffHunk EditorVCSInterface::_convert_diff_hunk(const Dictionary &p_diff_hunk) {
+EditorVCSInterface::DiffHunk EditorVCSInterface::_convert_diff_hunk(const TypedDictionary<String, Variant> &p_diff_hunk) {
 	DiffHunk dh;
 	dh.new_lines = p_diff_hunk["new_lines"];
 	dh.old_lines = p_diff_hunk["old_lines"];
@@ -274,7 +274,7 @@ EditorVCSInterface::DiffHunk EditorVCSInterface::_convert_diff_hunk(const Dictio
 	return dh;
 }
 
-EditorVCSInterface::DiffFile EditorVCSInterface::_convert_diff_file(const Dictionary &p_diff_file) {
+EditorVCSInterface::DiffFile EditorVCSInterface::_convert_diff_file(const TypedDictionary<String, Variant> &p_diff_file) {
 	DiffFile df;
 	df.new_file = p_diff_file["new_file"];
 	df.old_file = p_diff_file["old_file"];
@@ -286,7 +286,7 @@ EditorVCSInterface::DiffFile EditorVCSInterface::_convert_diff_file(const Dictio
 	return df;
 }
 
-EditorVCSInterface::Commit EditorVCSInterface::_convert_commit(const Dictionary &p_commit) {
+EditorVCSInterface::Commit EditorVCSInterface::_convert_commit(const TypedDictionary<String, Variant> &p_commit) {
 	EditorVCSInterface::Commit c;
 	c.msg = p_commit["message"];
 	c.author = p_commit["author"];
@@ -296,7 +296,7 @@ EditorVCSInterface::Commit EditorVCSInterface::_convert_commit(const Dictionary 
 	return c;
 }
 
-EditorVCSInterface::StatusFile EditorVCSInterface::_convert_status_file(const Dictionary &p_status_file) {
+EditorVCSInterface::StatusFile EditorVCSInterface::_convert_status_file(const TypedDictionary<String, Variant> &p_status_file) {
 	StatusFile sf;
 	sf.file_path = p_status_file["file_path"];
 	sf.change_type = (ChangeType)(int)p_status_file["change_type"];

@@ -1631,7 +1631,7 @@ String Input::get_joy_guid(int p_device) const {
 	return joy_names[p_device].uid;
 }
 
-Dictionary Input::get_joy_info(int p_device) const {
+TypedDictionary<String, Variant> Input::get_joy_info(int p_device) const {
 	ERR_FAIL_COND_V(!joy_names.has(p_device), Dictionary());
 	return joy_names[p_device].info;
 }

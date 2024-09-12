@@ -37,11 +37,8 @@
 #include "core/templates/pair.h"
 #include "core/templates/rb_map.h"
 #include "core/templates/safe_refcount.h"
-#include "core/variant/typed_array.h"
 
 class ScriptLanguage;
-template <typename T>
-class TypedArray;
 
 typedef void (*ScriptEditRequestFunction)(const String &p_path);
 
@@ -123,7 +120,7 @@ protected:
 	TypedArray<Dictionary> _get_script_property_list();
 	TypedArray<Dictionary> _get_script_method_list();
 	TypedArray<Dictionary> _get_script_signal_list();
-	Dictionary _get_script_constant_map();
+	TypedDictionary<String, Variant> _get_script_constant_map();
 
 	void _set_debugger_break_language();
 

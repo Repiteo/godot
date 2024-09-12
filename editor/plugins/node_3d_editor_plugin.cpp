@@ -3999,7 +3999,7 @@ void Node3DEditorViewport::update_transform_gizmo_view() {
 	RenderingServer::get_singleton()->instance_set_visible(rotate_gizmo_instance[3], spatial_editor->is_gizmo_visible() && transform_gizmo_visible && (spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_SELECT || spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_ROTATE));
 }
 
-void Node3DEditorViewport::set_state(const Dictionary &p_state) {
+void Node3DEditorViewport::set_state(const TypedDictionary<String, Variant> &p_state) {
 	if (p_state.has("position")) {
 		cursor.pos = p_state["position"];
 	}
@@ -4136,8 +4136,8 @@ void Node3DEditorViewport::set_state(const Dictionary &p_state) {
 	preview_camera->connect(SceneStringName(toggled), callable_mp(this, &Node3DEditorViewport::_toggle_camera_preview));
 }
 
-Dictionary Node3DEditorViewport::get_state() const {
-	Dictionary d;
+TypedDictionary<String, Variant> Node3DEditorViewport::get_state() const {
+	TypedDictionary<String, Variant> d;
 	d["position"] = cursor.pos;
 	d["x_rotation"] = cursor.x_rot;
 	d["y_rotation"] = cursor.y_rot;
@@ -6149,8 +6149,8 @@ void Node3DEditor::_generate_selection_boxes() {
 	selection_box_xray = st_xray->commit();
 }
 
-Dictionary Node3DEditor::get_state() const {
-	Dictionary d;
+TypedDictionary<String, Variant> Node3DEditor::get_state() const {
+	TypedDictionary<String, Variant> d;
 
 	d["snap_enabled"] = snap_enabled;
 	d["translate_snap"] = snap_translate_value;
@@ -6225,8 +6225,8 @@ Dictionary Node3DEditor::get_state() const {
 	return d;
 }
 
-void Node3DEditor::set_state(const Dictionary &p_state) {
-	Dictionary d = p_state;
+void Node3DEditor::set_state(const TypedDictionary<String, Variant> &p_state) {
+	TypedDictionary<String, Variant> d = p_state;
 
 	if (d.has("snap_enabled")) {
 		snap_enabled = d["snap_enabled"];
@@ -9247,11 +9247,11 @@ bool Node3DEditorPlugin::handles(Object *p_object) const {
 	return p_object->is_class("Node3D");
 }
 
-Dictionary Node3DEditorPlugin::get_state() const {
+TypedDictionary<String, Variant> Node3DEditorPlugin::get_state() const {
 	return spatial_editor->get_state();
 }
 
-void Node3DEditorPlugin::set_state(const Dictionary &p_state) {
+void Node3DEditorPlugin::set_state(const TypedDictionary<String, Variant> &p_state) {
 	spatial_editor->set_state(p_state);
 }
 

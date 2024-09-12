@@ -42,8 +42,6 @@
 #include "core/templates/safe_refcount.h"
 
 class MainLoop;
-template <typename T>
-class TypedArray;
 
 namespace core_bind {
 
@@ -167,7 +165,7 @@ public:
 	String get_executable_path() const;
 	String read_string_from_stdin();
 	int execute(const String &p_path, const Vector<String> &p_arguments, Array r_output = ClassDB::default_array_arg, bool p_read_stderr = false, bool p_open_console = false);
-	Dictionary execute_with_pipe(const String &p_path, const Vector<String> &p_arguments, bool p_blocking = true);
+	TypedDictionary<String, Variant> execute_with_pipe(const String &p_path, const Vector<String> &p_arguments, bool p_blocking = true);
 	int create_process(const String &p_path, const Vector<String> &p_arguments, bool p_open_console = false);
 	int create_instance(const Vector<String> &p_arguments);
 	Error kill(int p_pid);
@@ -212,7 +210,7 @@ public:
 
 	uint64_t get_static_memory_usage() const;
 	uint64_t get_static_memory_peak_usage() const;
-	Dictionary get_memory_info() const;
+	TypedDictionary<String, int64_t> get_memory_info() const;
 
 	void delay_usec(int p_usec) const;
 	void delay_msec(int p_msec) const;
@@ -321,7 +319,7 @@ public:
 	TypedArray<PackedVector2Array> offset_polygon(const Vector<Vector2> &p_polygon, real_t p_delta, PolyJoinType p_join_type = JOIN_SQUARE);
 	TypedArray<PackedVector2Array> offset_polyline(const Vector<Vector2> &p_polygon, real_t p_delta, PolyJoinType p_join_type = JOIN_SQUARE, PolyEndType p_end_type = END_SQUARE);
 
-	Dictionary make_atlas(const Vector<Size2> &p_rects);
+	TypedDictionary<String, Variant> make_atlas(const Vector<Size2> &p_rects);
 
 	Geometry2D() { singleton = this; }
 };
@@ -530,11 +528,11 @@ public:
 
 	MainLoop *get_main_loop() const;
 
-	Dictionary get_version_info() const;
-	Dictionary get_author_info() const;
+	TypedDictionary<String, Variant> get_version_info() const;
+	TypedDictionary<String, PackedStringArray> get_author_info() const;
 	TypedArray<Dictionary> get_copyright_info() const;
-	Dictionary get_donor_info() const;
-	Dictionary get_license_info() const;
+	TypedDictionary<String, PackedStringArray> get_donor_info() const;
+	TypedDictionary<String, String> get_license_info() const;
 	String get_license_text() const;
 
 	String get_architecture_name() const;

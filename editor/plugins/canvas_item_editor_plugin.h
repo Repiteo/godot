@@ -560,8 +560,8 @@ public:
 	Transform2D get_canvas_transform() const { return transform; }
 
 	static CanvasItemEditor *get_singleton() { return singleton; }
-	Dictionary get_state() const;
-	void set_state(const Dictionary &p_state);
+	TypedDictionary<String, Variant> get_state() const;
+	void set_state(const TypedDictionary<String, Variant> &p_state);
 	void clear();
 
 	void add_control_to_menu_panel(Control *p_control);
@@ -612,8 +612,8 @@ public:
 	virtual void edit(Object *p_object) override;
 	virtual bool handles(Object *p_object) const override;
 	virtual void make_visible(bool p_visible) override;
-	virtual Dictionary get_state() const override;
-	virtual void set_state(const Dictionary &p_state) override;
+	virtual TypedDictionary<String, Variant> get_state() const override;
+	virtual void set_state(const TypedDictionary<String, Variant> &p_state) override;
 	virtual void clear() override;
 
 	CanvasItemEditor *get_canvas_item_editor() { return canvas_item_editor; }

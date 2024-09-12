@@ -108,10 +108,10 @@ Error HTTPClient::verify_headers(const Vector<String> &p_headers) {
 	return OK;
 }
 
-Dictionary HTTPClient::_get_response_headers_as_dictionary() {
+TypedDictionary<String, String> HTTPClient::_get_response_headers_as_dictionary() {
 	List<String> rh;
 	get_response_headers(&rh);
-	Dictionary ret;
+	TypedDictionary<String, String> ret;
 	for (const String &s : rh) {
 		int sp = s.find(":");
 		if (sp == -1) {

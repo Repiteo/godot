@@ -4880,8 +4880,8 @@ void CanvasItemEditor::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("item_group_status_changed"));
 }
 
-Dictionary CanvasItemEditor::get_state() const {
-	Dictionary state;
+TypedDictionary<String, Variant> CanvasItemEditor::get_state() const {
+	TypedDictionary<String, Variant> state;
 	// Take the editor scale into account.
 	state["zoom"] = zoom / MAX(1, EDSCALE);
 	state["ofs"] = view_offset;
@@ -4917,9 +4917,9 @@ Dictionary CanvasItemEditor::get_state() const {
 	return state;
 }
 
-void CanvasItemEditor::set_state(const Dictionary &p_state) {
+void CanvasItemEditor::set_state(const TypedDictionary<String, Variant> &p_state) {
 	bool update_scrollbars = false;
-	Dictionary state = p_state;
+	TypedDictionary<String, Variant> state = p_state;
 	if (state.has("zoom")) {
 		// Compensate the editor scale, so that the editor scale can be changed
 		// and the zoom level will still be the same (relative to the editor scale).
@@ -5714,11 +5714,11 @@ void CanvasItemEditorPlugin::make_visible(bool p_visible) {
 	}
 }
 
-Dictionary CanvasItemEditorPlugin::get_state() const {
+TypedDictionary<String, Variant> CanvasItemEditorPlugin::get_state() const {
 	return canvas_item_editor->get_state();
 }
 
-void CanvasItemEditorPlugin::set_state(const Dictionary &p_state) {
+void CanvasItemEditorPlugin::set_state(const TypedDictionary<String, Variant> &p_state) {
 	canvas_item_editor->set_state(p_state);
 }
 

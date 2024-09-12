@@ -264,8 +264,8 @@ public:
 		_pin_pressed();
 	}
 	AnimationTrackEditor *get_track_editor() { return track_editor; }
-	Dictionary get_state() const;
-	void set_state(const Dictionary &p_state);
+	TypedDictionary<String, Variant> get_state() const;
+	void set_state(const TypedDictionary<String, Variant> &p_state);
 
 	void ensure_visibility();
 
@@ -296,8 +296,8 @@ protected:
 	void _update_keying();
 
 public:
-	virtual Dictionary get_state() const override { return anim_editor->get_state(); }
-	virtual void set_state(const Dictionary &p_state) override { anim_editor->set_state(p_state); }
+	virtual TypedDictionary<String, Variant> get_state() const override { return anim_editor->get_state(); }
+	virtual void set_state(const TypedDictionary<String, Variant> &p_state) override { anim_editor->set_state(p_state); }
 
 	virtual String get_name() const override { return "Anim"; }
 	bool has_main_screen() const override { return false; }

@@ -43,8 +43,8 @@ class Translation : public Resource {
 	HashMap<StringName, StringName> translation_map;
 
 	virtual Vector<String> _get_message_list() const;
-	virtual Dictionary _get_messages() const;
-	virtual void _set_messages(const Dictionary &p_messages);
+	virtual TypedDictionary<StringName, Variant> _get_messages() const;
+	virtual void _set_messages(const TypedDictionary<StringName, Variant> &p_messages);
 
 	void _notify_translation_changed_if_applies();
 

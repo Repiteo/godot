@@ -42,7 +42,6 @@
 #include "core/math/geometry_3d.h"
 #include "core/os/keyboard.h"
 #include "core/os/thread_safe.h"
-#include "core/variant/typed_array.h"
 
 namespace core_bind {
 
@@ -320,7 +319,7 @@ int OS::execute(const String &p_path, const Vector<String> &p_arguments, Array r
 	return exitcode;
 }
 
-Dictionary OS::execute_with_pipe(const String &p_path, const Vector<String> &p_arguments, bool p_blocking) {
+TypedDictionary<String, Variant> OS::execute_with_pipe(const String &p_path, const Vector<String> &p_arguments, bool p_blocking) {
 	List<String> args;
 	for (const String &arg : p_arguments) {
 		args.push_back(arg);
@@ -492,7 +491,7 @@ uint64_t OS::get_static_memory_peak_usage() const {
 	return ::OS::get_singleton()->get_static_memory_peak_usage();
 }
 
-Dictionary OS::get_memory_info() const {
+TypedDictionary<String, int64_t> OS::get_memory_info() const {
 	return ::OS::get_singleton()->get_memory_info();
 }
 
@@ -891,8 +890,8 @@ TypedArray<PackedVector2Array> Geometry2D::offset_polyline(const Vector<Vector2>
 	return ret;
 }
 
-Dictionary Geometry2D::make_atlas(const Vector<Size2> &p_rects) {
-	Dictionary ret;
+TypedDictionary<String, Variant> Geometry2D::make_atlas(const Vector<Size2> &p_rects) {
+	TypedDictionary<String, Variant> ret;
 
 	Vector<Size2i> rects;
 	for (int i = 0; i < p_rects.size(); i++) {
@@ -1740,11 +1739,11 @@ MainLoop *Engine::get_main_loop() const {
 	return ::OS::get_singleton()->get_main_loop();
 }
 
-Dictionary Engine::get_version_info() const {
+TypedDictionary<String, Variant> Engine::get_version_info() const {
 	return ::Engine::get_singleton()->get_version_info();
 }
 
-Dictionary Engine::get_author_info() const {
+TypedDictionary<String, PackedStringArray> Engine::get_author_info() const {
 	return ::Engine::get_singleton()->get_author_info();
 }
 
@@ -1752,11 +1751,11 @@ TypedArray<Dictionary> Engine::get_copyright_info() const {
 	return ::Engine::get_singleton()->get_copyright_info();
 }
 
-Dictionary Engine::get_donor_info() const {
+TypedDictionary<String, PackedStringArray> Engine::get_donor_info() const {
 	return ::Engine::get_singleton()->get_donor_info();
 }
 
-Dictionary Engine::get_license_info() const {
+TypedDictionary<String, String> Engine::get_license_info() const {
 	return ::Engine::get_singleton()->get_license_info();
 }
 

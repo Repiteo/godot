@@ -124,8 +124,8 @@ protected:
 	GDVIRTUAL1(_make_visible, bool)
 	GDVIRTUAL1(_edit, Object *)
 	GDVIRTUAL1RC(bool, _handles, Object *)
-	GDVIRTUAL0RC(Dictionary, _get_state)
-	GDVIRTUAL1(_set_state, Dictionary)
+	GDVIRTUAL0RC(TypedDictionary<String _COMMA Variant>, _get_state)
+	GDVIRTUAL1(_set_state, TypedDictionary<String _COMMA Variant>)
 	GDVIRTUAL0(_clear)
 	GDVIRTUAL1RC(String, _get_unsaved_status, String)
 	GDVIRTUAL0(_save_external_data)
@@ -191,8 +191,8 @@ public:
 	virtual void edit(Object *p_object);
 	virtual bool handles(Object *p_object) const;
 	virtual bool can_auto_hide() const;
-	virtual Dictionary get_state() const; //save editor state so it can't be reloaded when reloading scene
-	virtual void set_state(const Dictionary &p_state); //restore editor state (likely was saved with the scene)
+	virtual TypedDictionary<String, Variant> get_state() const; //save editor state so it can't be reloaded when reloading scene
+	virtual void set_state(const TypedDictionary<String, Variant> &p_state); //restore editor state (likely was saved with the scene)
 	virtual void clear(); // clear any temporary data in the editor, reset it (likely new scene or load another scene)
 	virtual String get_unsaved_status(const String &p_for_scene = "") const;
 	virtual void save_external_data(); // if editor references external resources/scenes, save them

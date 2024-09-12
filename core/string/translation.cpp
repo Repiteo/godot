@@ -34,8 +34,8 @@
 #include "core/os/thread.h"
 #include "core/string/translation_server.h"
 
-Dictionary Translation::_get_messages() const {
-	Dictionary d;
+TypedDictionary<StringName, Variant> Translation::_get_messages() const {
+	TypedDictionary<StringName, Variant> d;
 	for (const KeyValue<StringName, StringName> &E : translation_map) {
 		d[E.key] = E.value;
 	}
@@ -66,7 +66,7 @@ Vector<String> Translation::get_translated_message_list() const {
 	return msgs;
 }
 
-void Translation::_set_messages(const Dictionary &p_messages) {
+void Translation::_set_messages(const TypedDictionary<StringName, Variant> &p_messages) {
 	List<Variant> keys;
 	p_messages.get_key_list(&keys);
 	for (const Variant &E : keys) {
@@ -164,6 +164,6 @@ void Translation::_bind_methods() {
 	GDVIRTUAL_BIND(_get_plural_message, "src_message", "src_plural_message", "n", "context");
 	GDVIRTUAL_BIND(_get_message, "src_message", "context");
 
-	ADD_PROPERTY(PropertyInfo(Variant::DICTIONARY, "messages", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_messages", "_get_messages");
+	ADD_PROPERTY(PropertyInfo(Variant::DICTIONARY, "messages", PROPERTY_HINT_DICTIONARY_TYPE, "StringName;Variant", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_messages", "_get_messages");
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "locale"), "set_locale", "get_locale");
 }

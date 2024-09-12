@@ -3153,7 +3153,7 @@ Vector<uint8_t> (*Image::basis_universal_packer)(const Ref<Image> &, Image::Used
 Ref<Image> (*Image::basis_universal_unpacker)(const Vector<uint8_t> &) = nullptr;
 Ref<Image> (*Image::basis_universal_unpacker_ptr)(const uint8_t *, int) = nullptr;
 
-void Image::_set_data(const Dictionary &p_data) {
+void Image::_set_data(const TypedDictionary<String, Variant> &p_data) {
 	ERR_FAIL_COND(!p_data.has("width"));
 	ERR_FAIL_COND(!p_data.has("height"));
 	ERR_FAIL_COND(!p_data.has("format"));
@@ -3178,8 +3178,8 @@ void Image::_set_data(const Dictionary &p_data) {
 	initialize_data(dwidth, dheight, dmipmaps, ddformat, ddata);
 }
 
-Dictionary Image::_get_data() const {
-	Dictionary d;
+TypedDictionary<String, Variant> Image::_get_data() const {
+	TypedDictionary<String, Variant> d;
 	d["width"] = width;
 	d["height"] = height;
 	d["format"] = get_format_name(format);
@@ -3626,7 +3626,7 @@ void Image::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("load_svg_from_buffer", "buffer", "scale"), &Image::load_svg_from_buffer, DEFVAL(1.0));
 	ClassDB::bind_method(D_METHOD("load_svg_from_string", "svg_str", "scale"), &Image::load_svg_from_string, DEFVAL(1.0));
 
-	ADD_PROPERTY(PropertyInfo(Variant::DICTIONARY, "data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE), "_set_data", "_get_data");
+	ADD_PROPERTY(PropertyInfo(Variant::DICTIONARY, "data", PROPERTY_HINT_DICTIONARY_TYPE, "String;Variant", PROPERTY_USAGE_STORAGE), "_set_data", "_get_data");
 
 	BIND_CONSTANT(MAX_WIDTH);
 	BIND_CONSTANT(MAX_HEIGHT);
@@ -4198,7 +4198,7 @@ void Image::set_as_black() {
 	memset(data.ptrw(), 0, data.size());
 }
 
-Dictionary Image::compute_image_metrics(const Ref<Image> p_compared_image, bool p_luma_metric) {
+TypedDictionary<String, double> Image::compute_image_metrics(const Ref<Image> p_compared_image, bool p_luma_metric) {
 	// https://github.com/richgel999/bc7enc_rdo/blob/master/LICENSE
 	//
 	// This is free and unencumbered software released into the public domain.
@@ -4218,7 +4218,7 @@ Dictionary Image::compute_image_metrics(const Ref<Image> p_compared_image, bool 
 	// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 	// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-	Dictionary result;
+	TypedDictionary<String, double> result;
 	result["max"] = INFINITY;
 	result["mean"] = INFINITY;
 	result["mean_squared"] = INFINITY;

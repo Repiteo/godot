@@ -96,7 +96,7 @@
 			</description>
 		</method>
 		<method name="compute_image_metrics">
-			<return type="Dictionary" />
+			<return type="Dictionary[String, float]" />
 			<param index="0" name="compared_image" type="Image" />
 			<param index="1" name="use_luma" type="bool" />
 			<description>
@@ -599,7 +599,7 @@
 		</method>
 	</methods>
 	<members>
-		<member name="data" type="Dictionary" setter="_set_data" getter="_get_data" default="{ &quot;data&quot;: PackedByteArray(), &quot;format&quot;: &quot;Lum8&quot;, &quot;height&quot;: 0, &quot;mipmaps&quot;: false, &quot;width&quot;: 0 }">
+		<member name="data" type="Dictionary[String, Variant]" setter="_set_data" getter="_get_data" default="{ &quot;data&quot;: PackedByteArray(), &quot;format&quot;: &quot;Lum8&quot;, &quot;height&quot;: 0, &quot;mipmaps&quot;: false, &quot;width&quot;: 0 }">
 			Holds all the image's color data in a given format. See [enum Format] constants.
 		</member>
 	</members>

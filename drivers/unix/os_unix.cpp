@@ -307,8 +307,8 @@ uint64_t OS_Unix::get_ticks_usec() const {
 	return longtime;
 }
 
-Dictionary OS_Unix::get_memory_info() const {
-	Dictionary meminfo;
+TypedDictionary<String, int64_t> OS_Unix::get_memory_info() const {
+	TypedDictionary<String, int64_t> meminfo;
 
 	meminfo["physical"] = -1;
 	meminfo["free"] = -1;
@@ -493,7 +493,7 @@ Dictionary OS_Unix::get_memory_info() const {
 	return meminfo;
 }
 
-Dictionary OS_Unix::execute_with_pipe(const String &p_path, const List<String> &p_arguments, bool p_blocking) {
+TypedDictionary<String, Variant> OS_Unix::execute_with_pipe(const String &p_path, const List<String> &p_arguments, bool p_blocking) {
 #define CLEAN_PIPES           \
 	if (pipe_in[0] >= 0) {    \
 		::close(pipe_in[0]);  \
@@ -514,7 +514,7 @@ Dictionary OS_Unix::execute_with_pipe(const String &p_path, const List<String> &
 		::close(pipe_err[1]); \
 	}
 
-	Dictionary ret;
+	TypedDictionary<String, Variant> ret;
 #ifdef __EMSCRIPTEN__
 	// Don't compile this code at all to avoid undefined references.
 	// Actual virtual call goes to OS_Web.

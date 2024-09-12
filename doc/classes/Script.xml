@@ -59,7 +59,7 @@
 			</description>
 		</method>
 		<method name="get_script_constant_map">
-			<return type="Dictionary" />
+			<return type="Dictionary[String, Variant]" />
 			<description>
 				Returns a dictionary containing constant names and their values.
 			</description>

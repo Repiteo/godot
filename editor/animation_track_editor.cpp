@@ -3732,8 +3732,8 @@ bool AnimationTrackEditor::has_keying() const {
 	return keying;
 }
 
-Dictionary AnimationTrackEditor::get_state() const {
-	Dictionary state;
+TypedDictionary<String, Variant> AnimationTrackEditor::get_state() const {
+	TypedDictionary<String, Variant> state;
 	state["fps_mode"] = timeline->is_using_fps();
 	state["zoom"] = zoom->get_value();
 	state["offset"] = timeline->get_value();
@@ -3741,7 +3741,7 @@ Dictionary AnimationTrackEditor::get_state() const {
 	return state;
 }
 
-void AnimationTrackEditor::set_state(const Dictionary &p_state) {
+void AnimationTrackEditor::set_state(const TypedDictionary<String, Variant> &p_state) {
 	if (p_state.has("fps_mode")) {
 		bool fps_mode = p_state["fps_mode"];
 		if (fps_mode) {

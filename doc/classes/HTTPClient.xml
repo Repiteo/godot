@@ -57,7 +57,7 @@
 			</description>
 		</method>
 		<method name="get_response_headers_as_dictionary">
-			<return type="Dictionary" />
+			<return type="Dictionary[String, String]" />
 			<description>
 				Returns all response headers as a [Dictionary]. Each entry is composed by the header name, and a [String] containing the values separated by [code]"; "[/code]. The casing is kept the same as the headers were received.
 				[codeblock]

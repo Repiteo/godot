@@ -36,9 +36,6 @@
 #include "core/templates/list.h"
 #include "core/templates/vector.h"
 
-template <typename T>
-class TypedArray;
-
 class Engine {
 public:
 	struct Singleton {
@@ -164,11 +161,11 @@ public:
 	_FORCE_INLINE_ bool is_extension_reloading_enabled() const { return false; }
 #endif
 
-	Dictionary get_version_info() const;
-	Dictionary get_author_info() const;
+	TypedDictionary<String, Variant> get_version_info() const;
+	TypedDictionary<String, PackedStringArray> get_author_info() const;
 	TypedArray<Dictionary> get_copyright_info() const;
-	Dictionary get_donor_info() const;
-	Dictionary get_license_info() const;
+	TypedDictionary<String, PackedStringArray> get_donor_info() const;
+	TypedDictionary<String, String> get_license_info() const;
 	String get_license_text() const;
 
 	void set_write_movie_path(const String &p_path);

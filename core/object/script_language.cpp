@@ -93,8 +93,8 @@ TypedArray<Dictionary> Script::_get_script_signal_list() {
 	return ret;
 }
 
-Dictionary Script::_get_script_constant_map() {
-	Dictionary ret;
+TypedDictionary<String, Variant> Script::_get_script_constant_map() {
+	TypedDictionary<String, Variant> ret;
 	HashMap<StringName, Variant> map;
 	get_constants(&map);
 	for (const KeyValue<StringName, Variant> &E : map) {

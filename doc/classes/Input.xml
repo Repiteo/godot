@@ -122,7 +122,7 @@
 			</description>
 		</method>
 		<method name="get_joy_info" qualifiers="const">
-			<return type="Dictionary" />
+			<return type="Dictionary[String, Variant]" />
 			<param index="0" name="device" type="int" />
 			<description>
 				Returns a dictionary with extra platform-specific information about the device, e.g. the raw gamepad name from the OS or the Steam Input index.

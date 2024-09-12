@@ -708,8 +708,8 @@ public:
 	void update_keying();
 	bool has_keying() const;
 
-	Dictionary get_state() const;
-	void set_state(const Dictionary &p_state);
+	TypedDictionary<String, Variant> get_state() const;
+	void set_state(const TypedDictionary<String, Variant> &p_state);
 
 	void cleanup();
 

@@ -65,10 +65,10 @@ void TranslationPO::print_translation_map() {
 }
 #endif
 
-Dictionary TranslationPO::_get_messages() const {
+TypedDictionary<StringName, Variant> TranslationPO::_get_messages() const {
 	// Return translation_map as a Dictionary.
 
-	Dictionary d;
+	TypedDictionary<StringName, Variant> d;
 
 	for (const KeyValue<StringName, HashMap<StringName, Vector<StringName>>> &E : translation_map) {
 		Dictionary d2;
@@ -83,7 +83,7 @@ Dictionary TranslationPO::_get_messages() const {
 	return d;
 }
 
-void TranslationPO::_set_messages(const Dictionary &p_messages) {
+void TranslationPO::_set_messages(const TypedDictionary<StringName, Variant> &p_messages) {
 	// Construct translation_map from a Dictionary.
 
 	List<Variant> context_l;

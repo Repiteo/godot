@@ -841,8 +841,8 @@ static void _append_to_pipe(char *p_bytes, int p_size, String *r_pipe, Mutex *p_
 	}
 }
 
-Dictionary OS_Windows::get_memory_info() const {
-	Dictionary meminfo;
+TypedDictionary<String, int64_t> OS_Windows::get_memory_info() const {
+	TypedDictionary<String, int64_t> meminfo;
 
 	meminfo["physical"] = -1;
 	meminfo["free"] = -1;
@@ -878,7 +878,7 @@ Dictionary OS_Windows::get_memory_info() const {
 	return meminfo;
 }
 
-Dictionary OS_Windows::execute_with_pipe(const String &p_path, const List<String> &p_arguments, bool p_blocking) {
+TypedDictionary<String, Variant> OS_Windows::execute_with_pipe(const String &p_path, const List<String> &p_arguments, bool p_blocking) {
 #define CLEAN_PIPES               \
 	if (pipe_in[0] != 0) {        \
 		CloseHandle(pipe_in[0]);  \
@@ -899,7 +899,7 @@ Dictionary OS_Windows::execute_with_pipe(const String &p_path, const List<String
 		CloseHandle(pipe_err[1]); \
 	}
 
-	Dictionary ret;
+	TypedDictionary<String, Variant> ret;
 
 	String path = p_path.is_absolute_path() ? fix_path(p_path) : p_path;
 	String command = _quote_command_line_argument(path);

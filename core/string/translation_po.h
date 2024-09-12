@@ -73,8 +73,8 @@ class TranslationPO : public Translation {
 	int _get_plural_index(int p_n) const;
 
 	Vector<String> _get_message_list() const override;
-	Dictionary _get_messages() const override;
-	void _set_messages(const Dictionary &p_messages) override;
+	TypedDictionary<StringName, Variant> _get_messages() const override;
+	void _set_messages(const TypedDictionary<StringName, Variant> &p_messages) override;
 
 protected:
 	static void _bind_methods();

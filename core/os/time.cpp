@@ -192,10 +192,10 @@ Time *Time::get_singleton() {
 	return singleton;
 }
 
-Dictionary Time::get_datetime_dict_from_unix_time(int64_t p_unix_time_val) const {
+TypedDictionary<String, int64_t> Time::get_datetime_dict_from_unix_time(int64_t p_unix_time_val) const {
 	UNIX_TIME_TO_HMS
 	UNIX_TIME_TO_YMD
-	Dictionary datetime;
+	TypedDictionary<String, int64_t> datetime;
 	datetime[YEAR_KEY] = year;
 	datetime[MONTH_KEY] = (uint8_t)month;
 	datetime[DAY_KEY] = day;
@@ -208,9 +208,9 @@ Dictionary Time::get_datetime_dict_from_unix_time(int64_t p_unix_time_val) const
 	return datetime;
 }
 
-Dictionary Time::get_date_dict_from_unix_time(int64_t p_unix_time_val) const {
+TypedDictionary<String, int64_t> Time::get_date_dict_from_unix_time(int64_t p_unix_time_val) const {
 	UNIX_TIME_TO_YMD
-	Dictionary datetime;
+	TypedDictionary<String, int64_t> datetime;
 	datetime[YEAR_KEY] = year;
 	datetime[MONTH_KEY] = (uint8_t)month;
 	datetime[DAY_KEY] = day;
@@ -220,9 +220,9 @@ Dictionary Time::get_date_dict_from_unix_time(int64_t p_unix_time_val) const {
 	return datetime;
 }
 
-Dictionary Time::get_time_dict_from_unix_time(int64_t p_unix_time_val) const {
+TypedDictionary<String, int64_t> Time::get_time_dict_from_unix_time(int64_t p_unix_time_val) const {
 	UNIX_TIME_TO_HMS
-	Dictionary datetime;
+	TypedDictionary<String, int64_t> datetime;
 	datetime[HOUR_KEY] = hour;
 	datetime[MINUTE_KEY] = minute;
 	datetime[SECOND_KEY] = second;
@@ -255,9 +255,9 @@ String Time::get_time_string_from_unix_time(int64_t p_unix_time_val) const {
 	return vformat("%02d:%02d:%02d", hour, minute, second);
 }
 
-Dictionary Time::get_datetime_dict_from_datetime_string(const String &p_datetime, bool p_weekday) const {
+TypedDictionary<String, int64_t> Time::get_datetime_dict_from_datetime_string(const String &p_datetime, bool p_weekday) const {
 	PARSE_ISO8601_STRING(Dictionary())
-	Dictionary dict;
+	TypedDictionary<String, int64_t> dict;
 	dict[YEAR_KEY] = year;
 	dict[MONTH_KEY] = (uint8_t)month;
 	dict[DAY_KEY] = day;
@@ -273,7 +273,7 @@ Dictionary Time::get_datetime_dict_from_datetime_string(const String &p_datetime
 	return dict;
 }
 
-String Time::get_datetime_string_from_datetime_dict(const Dictionary &p_datetime, bool p_use_space) const {
+String Time::get_datetime_string_from_datetime_dict(const TypedDictionary<String, int64_t> &p_datetime, bool p_use_space) const {
 	ERR_FAIL_COND_V_MSG(p_datetime.is_empty(), "", "Invalid datetime Dictionary: Dictionary is empty.");
 	EXTRACT_FROM_DICTIONARY
 	VALIDATE_YMDHMS("")
@@ -287,7 +287,7 @@ String Time::get_datetime_string_from_datetime_dict(const Dictionary &p_datetime
 	return timestamp;
 }
 
-int64_t Time::get_unix_time_from_datetime_dict(const Dictionary &p_datetime) const {
+int64_t Time::get_unix_time_from_datetime_dict(const TypedDictionary<String, int64_t> &p_datetime) const {
 	ERR_FAIL_COND_V_MSG(p_datetime.is_empty(), 0, "Invalid datetime Dictionary: Dictionary is empty");
 	EXTRACT_FROM_DICTIONARY
 	VALIDATE_YMDHMS(0)
@@ -317,9 +317,9 @@ String Time::get_offset_string_from_offset_minutes(int64_t p_offset_minutes) con
 	return vformat("%s%02d:%02d", sign, offset_hours, offset_minutes);
 }
 
-Dictionary Time::get_datetime_dict_from_system(bool p_utc) const {
+TypedDictionary<String, int64_t> Time::get_datetime_dict_from_system(bool p_utc) const {
 	OS::DateTime dt = OS::get_singleton()->get_datetime(p_utc);
-	Dictionary datetime;
+	TypedDictionary<String, int64_t> datetime;
 	datetime[YEAR_KEY] = dt.year;
 	datetime[MONTH_KEY] = (uint8_t)dt.month;
 	datetime[DAY_KEY] = dt.day;
@@ -331,9 +331,9 @@ Dictionary Time::get_datetime_dict_from_system(bool p_utc) const {
 	return datetime;
 }
 
-Dictionary Time::get_date_dict_from_system(bool p_utc) const {
+TypedDictionary<String, int64_t> Time::get_date_dict_from_system(bool p_utc) const {
 	OS::DateTime dt = OS::get_singleton()->get_datetime(p_utc);
-	Dictionary date_dictionary;
+	TypedDictionary<String, int64_t> date_dictionary;
 	date_dictionary[YEAR_KEY] = dt.year;
 	date_dictionary[MONTH_KEY] = (uint8_t)dt.month;
 	date_dictionary[DAY_KEY] = dt.day;
@@ -341,9 +341,9 @@ Dictionary Time::get_date_dict_from_system(bool p_utc) const {
 	return date_dictionary;
 }
 
-Dictionary Time::get_time_dict_from_system(bool p_utc) const {
+TypedDictionary<String, int64_t> Time::get_time_dict_from_system(bool p_utc) const {
 	OS::DateTime dt = OS::get_singleton()->get_datetime(p_utc);
-	Dictionary time_dictionary;
+	TypedDictionary<String, int64_t> time_dictionary;
 	time_dictionary[HOUR_KEY] = dt.hour;
 	time_dictionary[MINUTE_KEY] = dt.minute;
 	time_dictionary[SECOND_KEY] = dt.second;
@@ -374,9 +374,9 @@ String Time::get_time_string_from_system(bool p_utc) const {
 	return vformat("%02d:%02d:%02d", dt.hour, dt.minute, dt.second);
 }
 
-Dictionary Time::get_time_zone_from_system() const {
+TypedDictionary<String, Variant> Time::get_time_zone_from_system() const {
 	OS::TimeZoneInfo info = OS::get_singleton()->get_time_zone_info();
-	Dictionary ret_timezone;
+	TypedDictionary<String, Variant> ret_timezone;
 	ret_timezone["bias"] = info.bias;
 	ret_timezone["name"] = info.name;
 	return ret_timezone;

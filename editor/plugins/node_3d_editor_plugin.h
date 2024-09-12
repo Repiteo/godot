@@ -514,8 +514,8 @@ public:
 	void update_transform_gizmo_view();
 
 	void set_can_preview(Camera3D *p_preview);
-	void set_state(const Dictionary &p_state);
-	Dictionary get_state() const;
+	void set_state(const TypedDictionary<String, Variant> &p_state);
+	TypedDictionary<String, Variant> get_state() const;
 	void reset();
 	bool is_freelook_active() const { return freelook_active; }
 
@@ -914,8 +914,8 @@ public:
 	void select_gizmo_highlight_axis(int p_axis);
 	void set_custom_camera(Node *p_camera) { custom_camera = p_camera; }
 
-	Dictionary get_state() const;
-	void set_state(const Dictionary &p_state);
+	TypedDictionary<String, Variant> get_state() const;
+	void set_state(const TypedDictionary<String, Variant> &p_state);
 
 	Ref<Environment> get_viewport_environment() { return viewport_environment; }
 
@@ -997,8 +997,8 @@ public:
 	virtual void edit(Object *p_object) override;
 	virtual bool handles(Object *p_object) const override;
 
-	virtual Dictionary get_state() const override;
-	virtual void set_state(const Dictionary &p_state) override;
+	virtual TypedDictionary<String, Variant> get_state() const override;
+	virtual void set_state(const TypedDictionary<String, Variant> &p_state) override;
 	virtual void clear() override { spatial_editor->clear(); }
 
 	virtual void edited_scene_changed() override;

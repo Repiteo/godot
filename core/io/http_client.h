@@ -154,7 +154,7 @@ protected:
 	};
 
 	PackedStringArray _get_response_headers();
-	Dictionary _get_response_headers_as_dictionary();
+	TypedDictionary<String, String> _get_response_headers_as_dictionary();
 	Error _request_raw(Method p_method, const String &p_url, const Vector<String> &p_headers, const Vector<uint8_t> &p_body);
 	Error _request(Method p_method, const String &p_url, const Vector<String> &p_headers, const String &p_body = String());
 

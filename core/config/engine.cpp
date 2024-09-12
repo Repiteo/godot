@@ -34,7 +34,6 @@
 #include "core/config/project_settings.h"
 #include "core/donors.gen.h"
 #include "core/license.gen.h"
-#include "core/variant/typed_array.h"
 #include "core/version.h"
 
 void Engine::set_physics_ticks_per_second(int p_ips) {
@@ -113,8 +112,8 @@ double Engine::get_time_scale() const {
 	return _time_scale;
 }
 
-Dictionary Engine::get_version_info() const {
-	Dictionary dict;
+TypedDictionary<String, Variant> Engine::get_version_info() const {
+	TypedDictionary<String, Variant> dict;
 	dict["major"] = VERSION_MAJOR;
 	dict["minor"] = VERSION_MINOR;
 	dict["patch"] = VERSION_PATCH;
@@ -137,24 +136,24 @@ Dictionary Engine::get_version_info() const {
 	return dict;
 }
 
-static Array array_from_info(const char *const *info_list) {
-	Array arr;
+static PackedStringArray array_from_info(const char *const *info_list) {
+	PackedStringArray arr;
 	for (int i = 0; info_list[i] != nullptr; i++) {
 		arr.push_back(String::utf8(info_list[i]));
 	}
 	return arr;
 }
 
-static Array array_from_info_count(const char *const *info_list, int info_count) {
-	Array arr;
+static PackedStringArray array_from_info_count(const char *const *info_list, int info_count) {
+	PackedStringArray arr;
 	for (int i = 0; i < info_count; i++) {
 		arr.push_back(String::utf8(info_list[i]));
 	}
 	return arr;
 }
 
-Dictionary Engine::get_author_info() const {
-	Dictionary dict;
+TypedDictionary<String, PackedStringArray> Engine::get_author_info() const {
+	TypedDictionary<String, PackedStringArray> dict;
 
 	dict["lead_developers"] = array_from_info(AUTHORS_LEAD_DEVELOPERS);
 	dict["project_managers"] = array_from_info(AUTHORS_PROJECT_MANAGERS);
@@ -186,8 +185,8 @@ TypedArray<Dictionary> Engine::get_copyright_info() const {
 	return components;
 }
 
-Dictionary Engine::get_donor_info() const {
-	Dictionary donors;
+TypedDictionary<String, PackedStringArray> Engine::get_donor_info() const {
+	TypedDictionary<String, PackedStringArray> donors;
 	donors["patrons"] = array_from_info(DONORS_PATRONS);
 	donors["platinum_sponsors"] = array_from_info(DONORS_SPONSORS_PLATINUM);
 	donors["gold_sponsors"] = array_from_info(DONORS_SPONSORS_GOLD);
@@ -199,8 +198,8 @@ Dictionary Engine::get_donor_info() const {
 	return donors;
 }
 
-Dictionary Engine::get_license_info() const {
-	Dictionary licenses;
+TypedDictionary<String, String> Engine::get_license_info() const {
+	TypedDictionary<String, String> licenses;
 	for (int i = 0; i < LICENSE_COUNT; i++) {
 		licenses[LICENSE_NAMES[i]] = LICENSE_BODIES[i];
 	}
