@@ -7,6 +7,7 @@ on:
 env:
   # Used for the cache key. Add version suffix to force clean build.
   GODOT_BASE_BRANCH: master
+  GODOT_CPP_BRANCH: 4.3
   SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes d3d12=yes strict_checks=yes "angle_libs=${{ github.workspace }}/"
   SCONS_CACHE_MSVC_CONFIG: true
 
@@ -53,6 +54,15 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Checkout godot-cpp
+        if: matrix.target == 'editor'
+        uses: actions/checkout@v4
+        with:
+          repository: godotengine/godot-cpp
+          ref: ${{ env.GODOT_CPP_BRANCH }}
+          submodules: recursive
+          path: godot-cpp
+
       - name: Restore Godot build cache
         uses: ./.github/actions/godot-cache-restore
         with:
@@ -86,6 +96,8 @@ jobs:
           platform: windows
           target: ${{ matrix.target }}
           tests: ${{ matrix.tests }}
+          godot-cpp: ${{ matrix.target == 'editor' }}
+          bin: ${{ matrix.bin }}
 
       - name: Save Godot build cache
         uses: ./.github/actions/godot-cache-save

@@ -24,6 +24,12 @@ inputs:
     # actions/cache has 10 GiB limit, and GitHub runners have a 14 GiB disk.
     # Limit to 7 GiB to avoid having the extracted cache fill the disk.
     default: 7168
+  godot-cpp:
+    description: Build godot-cpp as well.
+    default: false
+  bin:
+    description: The path to the Godot executable; only required if building godot-cpp.
+    default: ''
 
 runs:
   using: composite
@@ -51,3 +57,31 @@ runs:
 
         scons platform=${{ inputs.platform }} target=${{ inputs.target }} tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
         ls -l bin/
+
+        if [ ${{ inputs.godot-cpp }} = true ]; then
+          ${{ inputs.bin }} --headless --dump-gdextension-interface --dump-extension-api
+          cp -f gdextension_interface.h godot-cpp/gdextension/
+          cp -f extension_api.json godot-cpp/gdextension/
+
+          echo Building with flags: --directory=godot-cpp/test ${{ env.SCONSFLAGS }}
+          scons --directory=godot-cpp/test ${{ env.SCONSFLAGS }}
+        fi
+
+    # - name: SCons Build (godot-cpp)
+    #   if: inputs.godot-cpp
+    #   shell: sh
+    #   env:
+    #     SCONSFLAGS: ${{ inputs.sconsflags }}
+    #     SCONS_CACHE: ${{ inputs.scons-cache }}
+    #     SCONS_CACHE_LIMIT: ${{ inputs.scons-cache-limit }}
+    #   run: |
+    #     echo ${{ inputs.godot-cpp }}
+
+    #     ${{ inputs.bin }} --headless --dump-gdextension-interface --dump-extension-api
+    #     cp -f gdextension_interface.h godot-cpp/gdextension/
+    #     cp -f extension_api.json godot-cpp/gdextension/
+
+    #     # echo Building with flags: --directory=godot-cpp/test platform=${{ inputs.platform }} target=${{ inputs.target }} ${{ env.SCONSFLAGS }}
+    #     # scons --directory=godot-cpp/test platform=${{ inputs.platform }} target=${{ inputs.target }} ${{ env.SCONSFLAGS }}
+    #     echo Building with flags: --directory=godot-cpp/test target=${{ inputs.target }} ${{ env.SCONSFLAGS }}
+    #     scons --directory=godot-cpp/test target=${{ inputs.target }} ${{ env.SCONSFLAGS }}

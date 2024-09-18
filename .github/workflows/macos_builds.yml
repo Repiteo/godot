@@ -6,6 +6,7 @@ on:
 env:
   # Used for the cache key. Add version suffix to force clean build.
   GODOT_BASE_BRANCH: master
+  GODOT_CPP_BRANCH: 4.3
   SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes strict_checks=yes
 
 concurrency:
@@ -39,6 +40,15 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Checkout godot-cpp
+        if: matrix.target == 'editor'
+        uses: actions/checkout@v4
+        with:
+          repository: godotengine/godot-cpp
+          ref: ${{ env.GODOT_CPP_BRANCH }}
+          submodules: recursive
+          path: godot-cpp
+
       - name: Restore Godot build cache
         uses: ./.github/actions/godot-cache-restore
         with:
@@ -59,6 +69,8 @@ jobs:
           platform: macos
           target: ${{ matrix.target }}
           tests: ${{ matrix.tests }}
+          godot-cpp: ${{ matrix.target == 'editor' }}
+          bin: ./bin/godot.macos.${{ matrix.target }}.x86_64
 
       - name: Compilation (arm64)
         uses: ./.github/actions/godot-build
@@ -67,6 +79,8 @@ jobs:
           platform: macos
           target: ${{ matrix.target }}
           tests: ${{ matrix.tests }}
+          godot-cpp: ${{ matrix.target == 'editor' }}
+          bin: ./bin/godot.macos.${{ matrix.target }}.arm64
 
       - name: Save Godot build cache
         uses: ./.github/actions/godot-cache-save
