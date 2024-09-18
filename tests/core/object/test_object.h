@@ -602,6 +602,27 @@ TEST_CASE("[Object] Destruction at the end of the call chain is safe") {
 			"Object was tail-deleted without crashes.");
 }
 
+class ExamplePrzykład : public Object {
+	GDCLASS(ExamplePrzykład, Object);
+
+protected:
+	static void _bind_methods() {
+		ClassDB::bind_method(D_METHOD("get_the_word"), &ExamplePrzykład::get_the_word);
+	}
+
+public:
+	String get_the_word() const {
+		return "słowo to przykład";
+	}
+};
+
+// TEST_CASE("[Object] Unicode class") {
+// 	ExamplePrzykład *unicode_object = memnew(ExamplePrzykład);
+// 	constexpr char char_bytes[] = "słowo to przykład";
+// 	constexpr char16_t char16_bytes[] = u"słowo to przykład";
+// 	constexpr char32_t char32_bytes[] = U"słowo to przykład";
+// }
+
 } // namespace TestObject
 
 #endif // TEST_OBJECT_H
