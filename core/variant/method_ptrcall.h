@@ -35,8 +35,8 @@
 #include "core/typedefs.h"
 #include "core/variant/variant.h"
 
-template <typename T>
-struct PtrToArg {};
+template <typename T, typename = void>
+struct PtrToArg;
 
 #define MAKE_PTRARG(m_type)                                              \
 	template <>                                                          \
@@ -154,6 +154,32 @@ MAKE_PTRARG(PackedVector3Array);
 MAKE_PTRARG(PackedColorArray);
 MAKE_PTRARG(PackedVector4Array);
 MAKE_PTRARG_BY_REFERENCE(Variant);
+
+// This is for Enum/BitField.
+
+template <typename T>
+struct PtrToArg<T, std::enable_if_t<std::is_enum_v<T>>> {
+	using SimpleT = GetSimpleTypeT<T>;
+	_FORCE_INLINE_ static SimpleT convert(const void *p_ptr) {
+		return SimpleT(*reinterpret_cast<const int64_t *>(p_ptr));
+	}
+	typedef int64_t EncodeT;
+	_FORCE_INLINE_ static void encode(SimpleT p_val, const void *p_ptr) {
+		*(int64_t *)p_ptr = (int64_t)p_val;
+	}
+};
+
+template <typename T>
+struct PtrToArg<BitField<T>> {
+	using SimpleT = GetSimpleTypeT<T>;
+	_FORCE_INLINE_ static BitField<SimpleT> convert(const void *p_ptr) {
+		return SimpleT(*reinterpret_cast<const int64_t *>(p_ptr));
+	}
+	typedef int64_t EncodeT;
+	_FORCE_INLINE_ static void encode(BitField<SimpleT> p_val, const void *p_ptr) {
+		*(int64_t *)p_ptr = (int64_t)p_val;
+	}
+};
 
 // This is for Object.
 

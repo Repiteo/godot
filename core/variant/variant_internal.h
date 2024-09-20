@@ -812,9 +812,8 @@ struct VariantGetInternalPtr<PackedVector4Array> {
 	static const PackedVector4Array *get_ptr(const Variant *v) { return VariantInternal::get_vector4_array(v); }
 };
 
-template <typename T>
-struct VariantInternalAccessor {
-};
+template <typename T, typename = void>
+struct VariantInternalAccessor;
 
 template <>
 struct VariantInternalAccessor<bool> {
@@ -1089,6 +1088,20 @@ struct VariantInternalAccessor<Variant> {
 	static _FORCE_INLINE_ Variant &get(Variant *v) { return *v; }
 	static _FORCE_INLINE_ const Variant &get(const Variant *v) { return *v; }
 	static _FORCE_INLINE_ void set(Variant *v, const Variant &p_value) { *v = p_value; }
+};
+
+template <typename T>
+struct VariantInternalAccessor<T, std::enable_if_t<std::is_enum_v<T>>> {
+	using SimpleT = GetSimpleTypeT<T>;
+	static _FORCE_INLINE_ SimpleT get(const Variant *v) { return static_cast<SimpleT>(*VariantInternal::get_int(v)); }
+	static _FORCE_INLINE_ void set(Variant *v, SimpleT p_value) { *VariantInternal::get_int(v) = static_cast<int64_t>(p_value); }
+};
+
+template <typename T>
+struct VariantInternalAccessor<BitField<T>> {
+	using SimpleT = GetSimpleTypeT<T>;
+	static _FORCE_INLINE_ BitField<SimpleT> get(const Variant *v) { return static_cast<SimpleT>(*VariantInternal::get_int(v)); }
+	static _FORCE_INLINE_ void set(Variant *v, BitField<SimpleT> p_value) { *VariantInternal::get_int(v) = static_cast<int64_t>(p_value); }
 };
 
 template <>
