@@ -7,7 +7,15 @@ on:
 env:
   # Used for the cache key. Add version suffix to force clean build.
   GODOT_BASE_BRANCH: master
-  SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes d3d12=yes strict_checks=yes "angle_libs=${{ github.workspace }}/"
+  SCONSFLAGS: >-
+    dev_mode=yes
+    module_text_server_fb_enabled=yes
+    d3d12=yes
+    "angle_libs=${{ github.workspace }}/"
+    debug_symbols=yes
+    separate_debug_symbols=yes
+    vsproj_gen_only=no
+    windows_subsystem=console
   SCONS_CACHE_MSVC_CONFIG: true
 
 concurrency:
@@ -18,34 +26,16 @@ jobs:
   build-windows:
     # Windows 10 with latest image
     runs-on: windows-latest
-    name: ${{ matrix.name }}
+    name: >-
+      ${{ matrix.target == 'editor' && 'Editor' || 'Template'}} -
+      ${{ matrix.compiler == 'msvc' && 'MSVC/cl' || matrix.compiler == 'clang' && 'MSVC/LLVM' || 'MinGW/GCC' }} -
+      ${{ matrix.arch }}
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - name: Editor (target=editor, tests=yes)
-            cache-name: windows-editor
-            target: editor
-            tests: true
-            # Skip debug symbols, they're way too big with MSVC.
-            sconsflags: debug_symbols=no vsproj=yes vsproj_gen_only=no windows_subsystem=console
-            bin: ./bin/godot.windows.editor.x86_64.exe
-            artifact: true
-
-          - name: Editor w/ clang-cl (target=editor, tests=yes, use_llvm=yes)
-            cache-name: windows-editor-clang
-            target: editor
-            tests: true
-            sconsflags: debug_symbols=no windows_subsystem=console use_llvm=yes
-            bin: ./bin/godot.windows.editor.x86_64.llvm.exe
-
-          - name: Template (target=template_release, tests=yes)
-            cache-name: windows-template
-            target: template_release
-            tests: true
-            sconsflags: debug_symbols=no
-            bin: ./bin/godot.windows.template_release.x86_64.console.exe
-            artifact: true
+        target: [editor, template_release]
+        compiler: [msvc, clang, gcc]
+        arch: [x86_64, x86_32] # Add `arm64` when Windows ARM is available as `runs-on` option.
 
     steps:
       - name: Checkout
@@ -53,10 +43,16 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Create environment variables
+        run: |
+          echo "CACHE_NAME=windows-${{ matrix.target }}-${{ matrix.compiler }}-${{ matrix.arch }}" >> $env:GITHUB_ENV
+          # TODO: concatenate variable beforehand
+          echo "BIN=./bin/godot.windows.${{ matrix.target }}.${{ matrix.arch }}${{ matrix.compiler == 'clang' && '.llvm' || '' }}.exe" >> $env:GITHUB_ENV
+
       - name: Restore Godot build cache
         uses: ./.github/actions/godot-cache-restore
         with:
-          cache-name: ${{ matrix.cache-name }}
+          cache-name: ${{ env.CACHE_NAME }}
         continue-on-error: true
 
       - name: Setup Python and SCons
@@ -69,44 +65,58 @@ jobs:
         uses: dsaltares/fetch-gh-release-asset@1.1.2
         with:
           repo: godotengine/godot-angle-static
-          version: tags/chromium/6029
-          file: Windows.6029-1.MSVC_17.x86_64.x86_32.zip
+          version: tags/chromium/6601.2
+          file: godot-angle-static-${{ matrix.arch }}-${{ matrix.compiler == 'gcc' && 'gcc' || 'msvc' }}-release.zip
           target: angle/angle.zip
 
       - name: Extract pre-built ANGLE static libraries
         run: Expand-Archive -Force angle/angle.zip ${{ github.workspace }}/
 
       - name: Setup MSVC problem matcher
+        if: matrix.compiler == 'msvc'
         uses: ammaraskar/msvc-problem-matcher@master
+
+      - name: Setup GCC problem matcher
+        if: matrix.compiler != 'msvc'
+        uses: ammaraskar/gcc-problem-matcher@master
+
+      - name: Setup 32-bit MinGW
+        if: matrix.arch == 'x86_32' && matrix.compiler == 'gcc'
+        shell: bash
+        run: |
+          pacman -S mingw-w64-i686-python3-pip mingw-w64-i686-gcc make
 
       - name: Compilation
         uses: ./.github/actions/godot-build
         with:
-          sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }}
+          sconsflags: >-
+            ${{ env.SCONSFLAGS }}
+            ${{ matrix.sconsflags }}
+            arch=${{ matrix.arch }}
+            vsproj=${{ matrix.compiler == 'msvc' && matrix.target == 'editor' && matrix.arch == 'x86_64' }}
+            use_mingw=${{ matrix.compiler == 'gcc' }}
+            use_llvm=${{ matrix.compiler == 'clang' }}
           platform: windows
           target: ${{ matrix.target }}
-          tests: ${{ matrix.tests }}
+          tests: true
 
       - name: Save Godot build cache
         uses: ./.github/actions/godot-cache-save
         with:
-          cache-name: ${{ matrix.cache-name }}
+          cache-name: ${{ env.CACHE_NAME }}
         continue-on-error: true
 
       - name: Prepare artifact
-        if: ${{ matrix.artifact }}
         run: |
           Remove-Item bin/* -Include *.exp,*.lib,*.pdb -Force
 
       - name: Upload artifact
-        if: ${{ matrix.artifact }}
         uses: ./.github/actions/upload-artifact
         with:
-          name: ${{ matrix.cache-name }}
+          name: ${{ env.CACHE_NAME }}
 
       - name: Unit tests
-        if: matrix.tests
         run: |
-          ${{ matrix.bin }} --version
-          ${{ matrix.bin }} --help
-          ${{ matrix.bin }} --test --force-colors
+          ${{ env.BIN }} --version
+          ${{ env.BIN }} --help
+          ${{ env.BIN }} --test --force-colors

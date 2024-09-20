@@ -727,6 +727,10 @@ def configure_mingw(env: "SConsEnvironment"):
     if os.name == "nt":
         env["TEMPFILEARGESCFUNC"] = tempfile_arg_esc_func
 
+    # FIXME: While MinGW *should* support this limit (documentation is inconsistent), it's only
+    # needed because the GHA for Windows MinGW/GCC fails to recognize the above link method.
+    env["MAXLINELENGTH"] = 32768
+
     ## Build type
 
     if not env["use_llvm"] and not try_cmd("gcc --version", env["mingw_prefix"], env["arch"]):
