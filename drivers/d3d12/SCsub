@@ -6,6 +6,7 @@ from pathlib import Path
 Import("env")
 
 env_d3d12_rdd = env.Clone()
+env_d3d12_rdd.disable_warnings()
 
 thirdparty_obj = []
 
