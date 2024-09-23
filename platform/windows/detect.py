@@ -788,8 +788,8 @@ def configure_mingw(env: "SConsEnvironment"):
         env["CXX"] = mingw_bin_prefix + "g++"
         if try_cmd("as --version", env["mingw_prefix"], env["arch"]):
             env["AS"] = mingw_bin_prefix + "as"
-        if try_cmd("gcc-ar --version", env["mingw_prefix"], env["arch"]):
-            env["AR"] = mingw_bin_prefix + "gcc-ar"
+        # if try_cmd("ar --version", env["mingw_prefix"], env["arch"]):
+        #     env["AR"] = mingw_bin_prefix + "gcc-ar"
         if try_cmd("gcc-ranlib --version", env["mingw_prefix"], env["arch"]):
             env["RANLIB"] = mingw_bin_prefix + "gcc-ranlib"
 
