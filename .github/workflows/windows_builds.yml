@@ -57,6 +57,14 @@ jobs:
             bin: ./bin/godot.windows.template_release.x86_64.console.exe
             compiler: gcc
 
+          - name: Template w/ clang (target=template_release, tests=yes, use_mingw=yes, use_llvm=yes)
+            cache-name: windows-template-llvm
+            target: template_release
+            tests: true
+            sconsflags: debug_symbols=no use_mingw=yes use_llvm=yes mingw_prefix=${{ github.workspace }}/llvm-mingw
+            bin: ./bin/godot.windows.template_release.x86_64.llvm.console.exe
+            compiler: llvm
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -93,6 +101,16 @@ jobs:
       - name: Setup GCC problem matcher
         if: matrix.compiler != 'msvc'
         uses: ammaraskar/gcc-problem-matcher@master
+
+      - name: Download llvm-mingw
+        if: matrix.compiler == 'llvm'
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: mstorsjo/llvm-mingw
+          latest: true
+          extract: true
+          out-file-path: llvm-mingw
+          fileName: llvm-mingw-*-ucrt-x86_64.zip
 
       - name: Compilation
         uses: ./.github/actions/godot-build
