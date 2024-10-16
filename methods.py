@@ -835,6 +835,8 @@ def get_compiler_version(env):
                     ret["metadata1"] = split[1]
         except (subprocess.CalledProcessError, OSError):
             print_warning("Couldn't find vswhere to determine compiler version.")
+        print(version, "---", ret, sep="\n")
+        sys.exit(123)
         return ret
 
     # Not using -dumpversion as some GCC distros only return major, and
@@ -846,6 +848,8 @@ def get_compiler_version(env):
     except (subprocess.CalledProcessError, OSError):
         print_warning("Couldn't parse CXX environment variable to infer compiler version.")
         return ret
+
+    print(version)
 
     match = re.search(
         r"(?:(?<=version )|(?<=\) )|(?<=^))"
@@ -888,6 +892,10 @@ def get_compiler_version(env):
         "apple_patch3",
     ]:
         ret[key] = int(ret[key] or -1)
+
+    print(version, "---", ret, sep="\n")
+    sys.exit(123)
+
     return ret
 
 
