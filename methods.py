@@ -1060,14 +1060,30 @@ def clean_cache(env):
 
 
 def dump(env):
-    # Dumps latest build information for debugging purposes and external tools.
-    from json import dump
+    """
+    Dump the latest build information for debugging purposes and external tools. Integrates an
+    expanded version of the `env.Dump` changes introduced in 4.8.0.
+    """
+    from collections import UserDict, UserList, deque
+    from json import JSONEncoder, dump
 
-    def non_serializable(obj):
-        return "<<non-serializable: %s>>" % (type(obj).__qualname__)
+    class DumpEncoder(JSONEncoder):
+        """SCons special json Dump formatter, modified for use in Godot."""
 
-    with open(".scons_env.json", "w", encoding="utf-8", newline="\n") as f:
-        dump(env.Dictionary(), f, indent=4, default=non_serializable)
+        def _try_split(self, obj):
+            return obj if os.pathsep not in obj else obj.split(os.pathsep)
+
+        def default(self, obj):
+            if isinstance(obj, (UserList, UserDict)):
+                return obj.data
+            if isinstance(obj, deque):
+                return [o for o in obj]
+            if isinstance(obj, os._Environ):
+                return {k: self._try_split(v) for k, v in obj._data.items()}
+            return f"<<non-serializable: {type(obj).__qualname__}>>"
+
+    with open(".scons_env.json", "w", encoding="utf-8", newline="\n") as file:
+        dump(env.Dictionary(), file, indent=4, cls=DumpEncoder)
 
 
 # Custom Visual Studio project generation logic that supports any platform that has a msvs.py
