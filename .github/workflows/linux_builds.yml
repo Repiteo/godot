@@ -94,6 +94,9 @@ jobs:
         with:
           submodules: recursive
 
+      - name: 🪲 Godot CPP
+        uses: ./.github/workflows/godot_cpp_test.yml
+
       # Need newer mesa for lavapipe to work properly.
       - name: Linux dependencies for tests
         if: matrix.proj-test
