@@ -22,6 +22,7 @@ _scu_folders = set()
 # that if output is redirected to a file, it won't contain color codes.
 # Colors are always enabled on continuous integration.
 _colorize = bool(sys.stdout.isatty() or os.environ.get("CI"))
+_is_ci = bool(os.environ.get("CI"))
 
 
 def set_scu_folders(scu_folders):
@@ -65,12 +66,20 @@ class ANSI(Enum):
 
 def print_warning(*values: object) -> None:
     """Prints a warning message with formatting."""
-    print(f"{ANSI.YELLOW}{ANSI.BOLD}WARNING:{ANSI.REGULAR}", *values, ANSI.RESET, file=sys.stderr)
+    global _is_ci
+    if not _is_ci:
+        print(f"{ANSI.YELLOW}{ANSI.BOLD}WARNING:{ANSI.REGULAR}", *values, ANSI.RESET, file=sys.stderr)
+    else:
+        print(f"::warning::{' '.join(str(value) for value in values)}".replace("\n", "%0A"), file=sys.stderr)
 
 
 def print_error(*values: object) -> None:
     """Prints an error message with formatting."""
-    print(f"{ANSI.RED}{ANSI.BOLD}ERROR:{ANSI.REGULAR}", *values, ANSI.RESET, file=sys.stderr)
+    global _is_ci
+    if not _is_ci:
+        print(f"{ANSI.RED}{ANSI.BOLD}ERROR:{ANSI.REGULAR}", *values, ANSI.RESET, file=sys.stderr)
+    else:
+        print(f"::error::{' '.join(str(value) for value in values)}".replace("\n", "%0A"), file=sys.stderr)
 
 
 def add_source_files_orig(self, sources, files, allow_gen=False):

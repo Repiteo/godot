@@ -1120,3 +1120,13 @@ def purge_flaky_files():
 
 
 atexit.register(purge_flaky_files)
+
+print_warning("Test print warning")
+print_error("Test print error")
+print("::notice::Test print notice")
+print("::notice::Test print\nmultiline notice".replace("\n", "%0A"))
+print("::notice::Test\nprint\nseveral\nlines\nnotice".replace("\n", "%0A"))
+print_warning("Test print\nmultiline warning")
+print_error("Test print\nmultiline error")
+
+env.Exit(1)
