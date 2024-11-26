@@ -227,6 +227,15 @@ struct [[nodiscard]] Rect2i {
 	operator String() const;
 	operator Rect2() const;
 
+	_FORCE_INLINE_ Rect2i(const Rect2i &p_other) {
+		position = p_other.position;
+		size = p_other.size;
+	}
+	_FORCE_INLINE_ void operator=(const Rect2i &p_other) {
+		position = p_other.position;
+		size = p_other.size;
+	}
+
 	Rect2i() {}
 	Rect2i(int p_x, int p_y, int p_width, int p_height) :
 			position(Point2i(p_x, p_y)),

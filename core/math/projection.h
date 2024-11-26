@@ -150,6 +150,19 @@ struct [[nodiscard]] Projection {
 
 	real_t get_lod_multiplier() const;
 
+	_FORCE_INLINE_ Projection(const Projection &p_other) {
+		columns[0] = p_other.columns[0];
+		columns[1] = p_other.columns[1];
+		columns[2] = p_other.columns[2];
+		columns[3] = p_other.columns[3];
+	}
+	_FORCE_INLINE_ void operator=(const Projection &p_other) {
+		columns[0] = p_other.columns[0];
+		columns[1] = p_other.columns[1];
+		columns[2] = p_other.columns[2];
+		columns[3] = p_other.columns[3];
+	}
+
 	Projection();
 	Projection(const Vector4 &p_x, const Vector4 &p_y, const Vector4 &p_z, const Vector4 &p_w);
 	Projection(const Transform3D &p_transform);

@@ -624,6 +624,12 @@ public:
 		};
 
 		RenderPassClearValue() {}
+		RenderPassClearValue(const RenderPassClearValue &p_other) {
+			color = p_other.color;
+		}
+		void operator=(const RenderPassClearValue &p_other) {
+			color = p_other.color;
+		}
 	};
 
 	struct AttachmentClear {

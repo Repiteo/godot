@@ -200,11 +200,14 @@ Transform2D Camera2D::get_camera_transform() {
 			ret_camera_pos = smoothed_camera_pos;
 			//camera_pos=camera_pos*(1.0-position_smoothing_speed)+new_camera_pos*position_smoothing_speed;
 		} else {
-			ret_camera_pos = smoothed_camera_pos = camera_pos;
+			smoothed_camera_pos = camera_pos;
+			ret_camera_pos = smoothed_camera_pos;
 		}
 
 	} else {
-		ret_camera_pos = smoothed_camera_pos = camera_pos = new_camera_pos;
+		camera_pos = new_camera_pos;
+		smoothed_camera_pos = camera_pos;
+		ret_camera_pos = smoothed_camera_pos;
 		first = false;
 	}
 

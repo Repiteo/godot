@@ -79,6 +79,17 @@ struct [[nodiscard]] Face3 {
 	_FORCE_INLINE_ bool intersects_aabb2(const AABB &p_aabb) const;
 	operator String() const;
 
+	_FORCE_INLINE_ Face3(const Face3 &p_other) {
+		vertex[0] = p_other.vertex[0];
+		vertex[1] = p_other.vertex[1];
+		vertex[2] = p_other.vertex[2];
+	}
+	_FORCE_INLINE_ void operator=(const Face3 &p_other) {
+		vertex[0] = p_other.vertex[0];
+		vertex[1] = p_other.vertex[1];
+		vertex[2] = p_other.vertex[2];
+	}
+
 	inline Face3() {}
 	inline Face3(const Vector3 &p_v1, const Vector3 &p_v2, const Vector3 &p_v3) {
 		vertex[0] = p_v1;

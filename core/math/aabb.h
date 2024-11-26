@@ -129,6 +129,15 @@ struct [[nodiscard]] AABB {
 
 	operator String() const;
 
+	_FORCE_INLINE_ AABB(const AABB &p_other) {
+		position = p_other.position;
+		size = p_other.size;
+	}
+	_FORCE_INLINE_ void operator=(const AABB &p_other) {
+		position = p_other.position;
+		size = p_other.size;
+	}
+
 	_FORCE_INLINE_ AABB() {}
 	inline AABB(const Vector3 &p_pos, const Vector3 &p_size) :
 			position(p_pos),

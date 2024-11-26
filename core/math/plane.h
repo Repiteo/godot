@@ -80,6 +80,15 @@ struct [[nodiscard]] Plane {
 	_FORCE_INLINE_ bool operator!=(const Plane &p_plane) const;
 	operator String() const;
 
+	_FORCE_INLINE_ Plane(const Plane &p_other) {
+		normal = p_other.normal;
+		d = p_other.d;
+	}
+	_FORCE_INLINE_ void operator=(const Plane &p_other) {
+		normal = p_other.normal;
+		d = p_other.d;
+	}
+
 	_FORCE_INLINE_ Plane() {}
 	_FORCE_INLINE_ Plane(real_t p_a, real_t p_b, real_t p_c, real_t p_d) :
 			normal(p_a, p_b, p_c),

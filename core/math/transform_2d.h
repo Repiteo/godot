@@ -128,6 +128,17 @@ struct [[nodiscard]] Transform2D {
 
 	operator String() const;
 
+	_FORCE_INLINE_ Transform2D(const Transform2D &p_other) {
+		columns[0] = p_other.columns[0];
+		columns[1] = p_other.columns[1];
+		columns[2] = p_other.columns[2];
+	}
+	_FORCE_INLINE_ void operator=(const Transform2D &p_other) {
+		columns[0] = p_other.columns[0];
+		columns[1] = p_other.columns[1];
+		columns[2] = p_other.columns[2];
+	}
+
 	Transform2D(real_t p_xx, real_t p_xy, real_t p_yx, real_t p_yy, real_t p_ox, real_t p_oy) {
 		columns[0][0] = p_xx;
 		columns[0][1] = p_xy;

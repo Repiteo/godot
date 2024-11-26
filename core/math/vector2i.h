@@ -142,6 +142,15 @@ struct [[nodiscard]] Vector2i {
 	operator String() const;
 	operator Vector2() const;
 
+	_FORCE_INLINE_ Vector2i(const Vector2i &p_other) {
+		x = p_other.x;
+		y = p_other.y;
+	}
+	_FORCE_INLINE_ void operator=(const Vector2i &p_other) {
+		x = p_other.x;
+		y = p_other.y;
+	}
+
 	inline Vector2i() {}
 	inline Vector2i(int32_t p_x, int32_t p_y) {
 		x = p_x;

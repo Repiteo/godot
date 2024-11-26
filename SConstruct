@@ -819,7 +819,8 @@ if env.msvc and not methods.using_clang(env):  # MSVC
         env.Append(CCFLAGS=["/w"])
     else:
         if env["warnings"] == "extra":
-            env.Append(CCFLAGS=["/W4"])
+            # C5267 is like -Wdeprecated-copy. Part of /W4 but disabled by default.
+            env.Append(CCFLAGS=["/W4", "/w45267"])
         elif env["warnings"] == "all":
             # C4458 is like -Wshadow. Part of /W4 but let's apply it for the default /W3 too.
             env.Append(CCFLAGS=["/W3", "/w34458"])

@@ -124,6 +124,15 @@ struct [[nodiscard]] Transform3D {
 
 	operator String() const;
 
+	_FORCE_INLINE_ Transform3D(const Transform3D &p_other) {
+		basis = p_other.basis;
+		origin = p_other.origin;
+	}
+	_FORCE_INLINE_ void operator=(const Transform3D &p_other) {
+		basis = p_other.basis;
+		origin = p_other.origin;
+	}
+
 	Transform3D() {}
 	Transform3D(const Basis &p_basis, const Vector3 &p_origin = Vector3());
 	Transform3D(const Vector3 &p_x, const Vector3 &p_y, const Vector3 &p_z, const Vector3 &p_origin);

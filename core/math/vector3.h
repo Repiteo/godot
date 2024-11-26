@@ -160,18 +160,18 @@ struct [[nodiscard]] Vector3 {
 
 	/* Operators */
 
-	_FORCE_INLINE_ Vector3 &operator+=(const Vector3 &p_v);
+	_FORCE_INLINE_ void operator+=(const Vector3 &p_v);
 	_FORCE_INLINE_ Vector3 operator+(const Vector3 &p_v) const;
-	_FORCE_INLINE_ Vector3 &operator-=(const Vector3 &p_v);
+	_FORCE_INLINE_ void operator-=(const Vector3 &p_v);
 	_FORCE_INLINE_ Vector3 operator-(const Vector3 &p_v) const;
-	_FORCE_INLINE_ Vector3 &operator*=(const Vector3 &p_v);
+	_FORCE_INLINE_ void operator*=(const Vector3 &p_v);
 	_FORCE_INLINE_ Vector3 operator*(const Vector3 &p_v) const;
-	_FORCE_INLINE_ Vector3 &operator/=(const Vector3 &p_v);
+	_FORCE_INLINE_ void operator/=(const Vector3 &p_v);
 	_FORCE_INLINE_ Vector3 operator/(const Vector3 &p_v) const;
 
-	_FORCE_INLINE_ Vector3 &operator*=(real_t p_scalar);
+	_FORCE_INLINE_ void operator*=(real_t p_scalar);
 	_FORCE_INLINE_ Vector3 operator*(real_t p_scalar) const;
-	_FORCE_INLINE_ Vector3 &operator/=(real_t p_scalar);
+	_FORCE_INLINE_ void operator/=(real_t p_scalar);
 	_FORCE_INLINE_ Vector3 operator/(real_t p_scalar) const;
 
 	_FORCE_INLINE_ Vector3 operator-() const;
@@ -185,6 +185,17 @@ struct [[nodiscard]] Vector3 {
 
 	operator String() const;
 	operator Vector3i() const;
+
+	_FORCE_INLINE_ Vector3(const Vector3 &p_other) {
+		x = p_other.x;
+		y = p_other.y;
+		z = p_other.z;
+	}
+	_FORCE_INLINE_ void operator=(const Vector3 &p_other) {
+		x = p_other.x;
+		y = p_other.y;
+		z = p_other.z;
+	}
 
 	_FORCE_INLINE_ Vector3() {}
 	_FORCE_INLINE_ Vector3(real_t p_x, real_t p_y, real_t p_z) {
@@ -328,55 +339,50 @@ Vector3 Vector3::direction_to(const Vector3 &p_to) const {
 
 /* Operators */
 
-Vector3 &Vector3::operator+=(const Vector3 &p_v) {
+void Vector3::operator+=(const Vector3 &p_v) {
 	x += p_v.x;
 	y += p_v.y;
 	z += p_v.z;
-	return *this;
 }
 
 Vector3 Vector3::operator+(const Vector3 &p_v) const {
 	return Vector3(x + p_v.x, y + p_v.y, z + p_v.z);
 }
 
-Vector3 &Vector3::operator-=(const Vector3 &p_v) {
+void Vector3::operator-=(const Vector3 &p_v) {
 	x -= p_v.x;
 	y -= p_v.y;
 	z -= p_v.z;
-	return *this;
 }
 
 Vector3 Vector3::operator-(const Vector3 &p_v) const {
 	return Vector3(x - p_v.x, y - p_v.y, z - p_v.z);
 }
 
-Vector3 &Vector3::operator*=(const Vector3 &p_v) {
+void Vector3::operator*=(const Vector3 &p_v) {
 	x *= p_v.x;
 	y *= p_v.y;
 	z *= p_v.z;
-	return *this;
 }
 
 Vector3 Vector3::operator*(const Vector3 &p_v) const {
 	return Vector3(x * p_v.x, y * p_v.y, z * p_v.z);
 }
 
-Vector3 &Vector3::operator/=(const Vector3 &p_v) {
+void Vector3::operator/=(const Vector3 &p_v) {
 	x /= p_v.x;
 	y /= p_v.y;
 	z /= p_v.z;
-	return *this;
 }
 
 Vector3 Vector3::operator/(const Vector3 &p_v) const {
 	return Vector3(x / p_v.x, y / p_v.y, z / p_v.z);
 }
 
-Vector3 &Vector3::operator*=(real_t p_scalar) {
+void Vector3::operator*=(real_t p_scalar) {
 	x *= p_scalar;
 	y *= p_scalar;
 	z *= p_scalar;
-	return *this;
 }
 
 // Multiplication operators required to workaround issues with LLVM using implicit conversion
@@ -402,11 +408,10 @@ Vector3 Vector3::operator*(real_t p_scalar) const {
 	return Vector3(x * p_scalar, y * p_scalar, z * p_scalar);
 }
 
-Vector3 &Vector3::operator/=(real_t p_scalar) {
+void Vector3::operator/=(real_t p_scalar) {
 	x /= p_scalar;
 	y /= p_scalar;
 	z /= p_scalar;
-	return *this;
 }
 
 Vector3 Vector3::operator/(real_t p_scalar) const {

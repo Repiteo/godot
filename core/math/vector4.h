@@ -144,6 +144,19 @@ struct [[nodiscard]] Vector4 {
 	operator String() const;
 	operator Vector4i() const;
 
+	_FORCE_INLINE_ Vector4(const Vector4 &p_other) {
+		x = p_other.x;
+		y = p_other.y;
+		z = p_other.z;
+		w = p_other.w;
+	}
+	_FORCE_INLINE_ void operator=(const Vector4 &p_other) {
+		x = p_other.x;
+		y = p_other.y;
+		z = p_other.z;
+		w = p_other.w;
+	}
+
 	_FORCE_INLINE_ Vector4() {}
 	_FORCE_INLINE_ Vector4(real_t p_x, real_t p_y, real_t p_z, real_t p_w) {
 		x = p_x;

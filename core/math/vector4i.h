@@ -104,22 +104,22 @@ struct [[nodiscard]] Vector4i {
 
 	/* Operators */
 
-	_FORCE_INLINE_ Vector4i &operator+=(const Vector4i &p_v);
+	_FORCE_INLINE_ void operator+=(const Vector4i &p_v);
 	_FORCE_INLINE_ Vector4i operator+(const Vector4i &p_v) const;
-	_FORCE_INLINE_ Vector4i &operator-=(const Vector4i &p_v);
+	_FORCE_INLINE_ void operator-=(const Vector4i &p_v);
 	_FORCE_INLINE_ Vector4i operator-(const Vector4i &p_v) const;
-	_FORCE_INLINE_ Vector4i &operator*=(const Vector4i &p_v);
+	_FORCE_INLINE_ void operator*=(const Vector4i &p_v);
 	_FORCE_INLINE_ Vector4i operator*(const Vector4i &p_v) const;
-	_FORCE_INLINE_ Vector4i &operator/=(const Vector4i &p_v);
+	_FORCE_INLINE_ void operator/=(const Vector4i &p_v);
 	_FORCE_INLINE_ Vector4i operator/(const Vector4i &p_v) const;
-	_FORCE_INLINE_ Vector4i &operator%=(const Vector4i &p_v);
+	_FORCE_INLINE_ void operator%=(const Vector4i &p_v);
 	_FORCE_INLINE_ Vector4i operator%(const Vector4i &p_v) const;
 
-	_FORCE_INLINE_ Vector4i &operator*=(int32_t p_scalar);
+	_FORCE_INLINE_ void operator*=(int32_t p_scalar);
 	_FORCE_INLINE_ Vector4i operator*(int32_t p_scalar) const;
-	_FORCE_INLINE_ Vector4i &operator/=(int32_t p_scalar);
+	_FORCE_INLINE_ void operator/=(int32_t p_scalar);
 	_FORCE_INLINE_ Vector4i operator/(int32_t p_scalar) const;
-	_FORCE_INLINE_ Vector4i &operator%=(int32_t p_scalar);
+	_FORCE_INLINE_ void operator%=(int32_t p_scalar);
 	_FORCE_INLINE_ Vector4i operator%(int32_t p_scalar) const;
 
 	_FORCE_INLINE_ Vector4i operator-() const;
@@ -133,6 +133,19 @@ struct [[nodiscard]] Vector4i {
 
 	operator String() const;
 	operator Vector4() const;
+
+	_FORCE_INLINE_ Vector4i(const Vector4i &p_other) {
+		x = p_other.x;
+		y = p_other.y;
+		z = p_other.z;
+		w = p_other.w;
+	}
+	_FORCE_INLINE_ void operator=(const Vector4i &p_other) {
+		x = p_other.x;
+		y = p_other.y;
+		z = p_other.z;
+		w = p_other.w;
+	}
 
 	_FORCE_INLINE_ Vector4i() {}
 	Vector4i(const Vector4 &p_vec4);
@@ -170,72 +183,66 @@ Vector4i Vector4i::sign() const {
 
 /* Operators */
 
-Vector4i &Vector4i::operator+=(const Vector4i &p_v) {
+void Vector4i::operator+=(const Vector4i &p_v) {
 	x += p_v.x;
 	y += p_v.y;
 	z += p_v.z;
 	w += p_v.w;
-	return *this;
 }
 
 Vector4i Vector4i::operator+(const Vector4i &p_v) const {
 	return Vector4i(x + p_v.x, y + p_v.y, z + p_v.z, w + p_v.w);
 }
 
-Vector4i &Vector4i::operator-=(const Vector4i &p_v) {
+void Vector4i::operator-=(const Vector4i &p_v) {
 	x -= p_v.x;
 	y -= p_v.y;
 	z -= p_v.z;
 	w -= p_v.w;
-	return *this;
 }
 
 Vector4i Vector4i::operator-(const Vector4i &p_v) const {
 	return Vector4i(x - p_v.x, y - p_v.y, z - p_v.z, w - p_v.w);
 }
 
-Vector4i &Vector4i::operator*=(const Vector4i &p_v) {
+void Vector4i::operator*=(const Vector4i &p_v) {
 	x *= p_v.x;
 	y *= p_v.y;
 	z *= p_v.z;
 	w *= p_v.w;
-	return *this;
 }
 
 Vector4i Vector4i::operator*(const Vector4i &p_v) const {
 	return Vector4i(x * p_v.x, y * p_v.y, z * p_v.z, w * p_v.w);
 }
 
-Vector4i &Vector4i::operator/=(const Vector4i &p_v) {
+void Vector4i::operator/=(const Vector4i &p_v) {
 	x /= p_v.x;
 	y /= p_v.y;
 	z /= p_v.z;
 	w /= p_v.w;
-	return *this;
 }
 
 Vector4i Vector4i::operator/(const Vector4i &p_v) const {
 	return Vector4i(x / p_v.x, y / p_v.y, z / p_v.z, w / p_v.w);
 }
 
-Vector4i &Vector4i::operator%=(const Vector4i &p_v) {
+void Vector4i::operator%=(const Vector4i &p_v) {
 	x %= p_v.x;
 	y %= p_v.y;
 	z %= p_v.z;
 	w %= p_v.w;
-	return *this;
 }
 
 Vector4i Vector4i::operator%(const Vector4i &p_v) const {
 	return Vector4i(x % p_v.x, y % p_v.y, z % p_v.z, w % p_v.w);
 }
 
-Vector4i &Vector4i::operator*=(int32_t p_scalar) {
+void Vector4i::operator*=(int32_t p_scalar) {
 	x *= p_scalar;
 	y *= p_scalar;
 	z *= p_scalar;
 	w *= p_scalar;
-	return *this;
 }
 
 Vector4i Vector4i::operator*(int32_t p_scalar) const {
@@ -260,24 +267,22 @@ _FORCE_INLINE_ Vector4i operator*(double p_scalar, const Vector4i &p_vector) {
 	return p_vector * p_scalar;
 }
 
-Vector4i &Vector4i::operator/=(int32_t p_scalar) {
+void Vector4i::operator/=(int32_t p_scalar) {
 	x /= p_scalar;
 	y /= p_scalar;
 	z /= p_scalar;
 	w /= p_scalar;
-	return *this;
 }
 
 Vector4i Vector4i::operator/(int32_t p_scalar) const {
 	return Vector4i(x / p_scalar, y / p_scalar, z / p_scalar, w / p_scalar);
 }
 
-Vector4i &Vector4i::operator%=(int32_t p_scalar) {
+void Vector4i::operator%=(int32_t p_scalar) {
 	x %= p_scalar;
 	y %= p_scalar;
 	z %= p_scalar;
 	w %= p_scalar;
-	return *this;
 }
 
 Vector4i Vector4i::operator%(int32_t p_scalar) const {

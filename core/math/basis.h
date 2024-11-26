@@ -230,6 +230,17 @@ struct [[nodiscard]] Basis {
 	Basis(const Vector3 &p_axis, real_t p_angle, const Vector3 &p_scale) { set_axis_angle_scale(p_axis, p_angle, p_scale); }
 	static Basis from_scale(const Vector3 &p_scale);
 
+	_FORCE_INLINE_ Basis(const Basis &p_other) {
+		rows[0] = p_other.rows[0];
+		rows[1] = p_other.rows[1];
+		rows[2] = p_other.rows[2];
+	}
+	_FORCE_INLINE_ void operator=(const Basis &p_other) {
+		rows[0] = p_other.rows[0];
+		rows[1] = p_other.rows[1];
+		rows[2] = p_other.rows[2];
+	}
+
 	_FORCE_INLINE_ Basis(const Vector3 &p_x_axis, const Vector3 &p_y_axis, const Vector3 &p_z_axis) {
 		set_columns(p_x_axis, p_y_axis, p_z_axis);
 	}

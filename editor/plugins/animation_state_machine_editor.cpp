@@ -335,7 +335,8 @@ void AnimationNodeStateMachineEditor::_state_machine_gui_input(const Ref<InputEv
 	// Start box selecting
 	if (mb.is_valid() && mb->is_pressed() && mb->get_button_index() == MouseButton::LEFT && tool_select->is_pressed()) {
 		box_selecting = true;
-		box_selecting_from = box_selecting_to = state_machine_draw->get_local_mouse_position();
+		box_selecting_to = state_machine_draw->get_local_mouse_position();
+		box_selecting_from = box_selecting_to;
 		box_selecting_rect = Rect2(box_selecting_from.min(box_selecting_to), (box_selecting_from - box_selecting_to).abs());
 
 		if (mb->is_command_or_control_pressed() || mb->is_shift_pressed()) {

@@ -234,6 +234,19 @@ struct [[nodiscard]] Color {
 	_FORCE_INLINE_ void set_ok_hsl_s(float p_s) { set_ok_hsl(get_ok_hsl_h(), p_s, get_ok_hsl_l(), a); }
 	_FORCE_INLINE_ void set_ok_hsl_l(float p_l) { set_ok_hsl(get_ok_hsl_h(), get_ok_hsl_s(), p_l, a); }
 
+	_FORCE_INLINE_ Color(const Color &p_other) {
+		r = p_other.r;
+		g = p_other.g;
+		b = p_other.b;
+		a = p_other.a;
+	}
+	_FORCE_INLINE_ void operator=(const Color &p_other) {
+		r = p_other.r;
+		g = p_other.g;
+		b = p_other.b;
+		a = p_other.a;
+	}
+
 	_FORCE_INLINE_ Color() {}
 
 	/**
