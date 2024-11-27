@@ -133,9 +133,6 @@ jobs:
           python-version: 3.8
           scons-version: 4.0
 
-      - name: Setup GCC problem matcher
-        uses: ammaraskar/gcc-problem-matcher@master
-
       - name: Compilation
         uses: ./.github/actions/godot-build
         with:
