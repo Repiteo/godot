@@ -70,7 +70,7 @@ class Ref;
 struct PropertyInfo;
 struct MethodInfo;
 
-typedef Vector<uint8_t> PackedByteArray;
+// typedef Vector<uint8_t> PackedByteArray;
 typedef Vector<int32_t> PackedInt32Array;
 typedef Vector<int64_t> PackedInt64Array;
 typedef Vector<float> PackedFloat32Array;
