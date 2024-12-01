@@ -16,6 +16,15 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Restore SCons cache directory
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/.github/CODEOWNERS
+          key: windows-editor-master-refs/heads/dotnet/ci-warnings-06b771c2df051630f3767b6e7b69f403ebfe4244
+
+      - name: Force fail
+        run: exit 1
+
       - name: Install APT dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
