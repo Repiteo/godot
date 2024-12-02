@@ -898,6 +898,9 @@ else:  # GCC, Clang
     if env["werror"]:
         env.Append(CCFLAGS=["-Werror"])
 
+    # Ensure proper offset formatting for warnings/errors
+    env.Append(CCFLAGS=["-ftabstop=4"])
+
 if hasattr(detect, "get_program_suffix"):
     suffix = "." + detect.get_program_suffix()
 else:
