@@ -1,0 +1,29 @@
+[configuration]
+
+entry_symbol = "benchmarks_init"
+
+[libraries]
+
+linux.x86_64.debug = "bin/libbenchmarks.linux.template_debug.x86_64.so"
+linux.x86_64.release = "bin/libbenchmarks.linux.template_release.x86_64.so"
+linux.x86_32.debug = "bin/libbenchmarks.linux.template_debug.x86_32.so"
+linux.x86_32.release = "bin/libbenchmarks.linux.template_release.x86_32.so"
+linux.arm64.debug = "bin/libbenchmarks.linux.template_debug.arm64.so"
+linux.arm64.release = "bin/libbenchmarks.linux.template_release.arm64.so"
+linux.rv64.debug = "bin/libbenchmarks.linux.template_debug.rv64.so"
+linux.rv64.release = "bin/libbenchmarks.linux.template_release.rv64.so"
+
+windows.x86_64.debug = "bin/libbenchmarks.windows.template_debug.x86_64.dll"
+windows.x86_64.release = "bin/libbenchmarks.windows.template_release.x86_64.dll"
+windows.x86_32.debug = "bin/libbenchmarks.windows.template_debug.x86_32.dll"
+windows.x86_32.release = "bin/libbenchmarks.windows.template_release.x86_32.dll"
+windows.arm64.debug = "bin/libbenchmarks.windows.template_debug.arm64.dll"
+windows.arm64.release = "bin/libbenchmarks.windows.template_release.arm64.dll"
+
+macos.debug = "bin/libbenchmarks.macos.template_debug.framework"
+macos.release = "bin/libbenchmarks.macos.template_release.framework"
+
+android.debug.x86_64 = "bin/libbenchmarks.android.template_debug.x86_64.so"
+android.release.x86_64 = "bin/libbenchmarks.android.template_release.x86_64.so"
+android.debug.arm64 = "bin/libbenchmarks.android.template_debug.arm64.so"
+android.release.arm64 = "bin/libbenchmarks.android.template_release.arm64.so"

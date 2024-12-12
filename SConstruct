@@ -231,7 +231,10 @@ opts.Add(BoolVariable("custom_modules_recursive", "Detect custom modules recursi
 # Advanced options
 opts.Add(
     BoolVariable(
-        "dev_mode", "Alias for dev options: verbose=yes warnings=extra werror=yes tests=yes strict_checks=yes", False
+        "dev_mode",
+        "Alias for dev options: verbose=yes warnings=extra werror=yes tests=yes"
+        + "strict_checks=yes module_benchmarks_enabled=yes",
+        False,
     )
 )
 opts.Add(BoolVariable("tests", "Build the unit tests", False))
@@ -605,6 +608,7 @@ if env["dev_mode"]:
     env["werror"] = methods.get_cmdline_bool("werror", True)
     env["tests"] = methods.get_cmdline_bool("tests", True)
     env["strict_checks"] = methods.get_cmdline_bool("strict_checks", True)
+    env["module_benchmarks_enabled"] = methods.get_cmdline_bool("module_benchmarks_enabled", True)
 if env["production"]:
     env["use_static_cpp"] = methods.get_cmdline_bool("use_static_cpp", True)
     env["debug_symbols"] = methods.get_cmdline_bool("debug_symbols", False)

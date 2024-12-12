@@ -1,0 +1,37 @@
+import os
+import sys
+
+# SConstruct files lack `__file__` variable, but WILL assume a static working directory.
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))))
+
+from misc.utility.scons_hints import *
+
+env = Environment()
+opts = Variables([], ARGUMENTS)
+opts.Add(
+    PathVariable(
+        ["godot_cpp_path", "godot-cpp_path", "godot_cpp", "godot-cpp"],
+        help="Path to the godot-cpp directory.",
+        default="godot-cpp",
+    )
+)
+opts.Update(env)
+
+env = SConscript(env["godot_cpp_path"])
+
+env.Append(CPPPATH=["../"])
+sources = Glob("../*.cpp")
+sources.extend(Glob("../benchmarks/*.cpp"))
+
+if env["platform"] == "macos":
+    library = env.SharedLibrary(
+        f"./bin/libbenchmarks.{env['platform']}.{env['target']}.framework/benchmarks.{env['platform']}.{env['target']}",
+        source=sources,
+    )
+else:
+    library = env.SharedLibrary(
+        f"./bin/libbenchmarks{env['suffix']}{env['SHLIBSUFFIX']}",
+        source=sources,
+    )
+
+Default(library)

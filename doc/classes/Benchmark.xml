@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="Benchmark" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<members>
+		<member name="benchmark_time" type="int" setter="set_benchmark_time" getter="get_benchmark_time" default="5000000">
+		</member>
+		<member name="test_idle" type="bool" setter="set_test_idle" getter="get_test_idle" default="false">
+		</member>
+		<member name="test_physics" type="bool" setter="set_test_physics" getter="get_test_physics" default="false">
+		</member>
+		<member name="test_render_cpu" type="bool" setter="set_test_render_cpu" getter="get_test_render_cpu" default="false">
+		</member>
+		<member name="test_render_gpu" type="bool" setter="set_test_render_gpu" getter="get_test_render_gpu" default="false">
+		</member>
+	</members>
+</class>
