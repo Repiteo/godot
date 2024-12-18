@@ -16,6 +16,15 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Setup problem matchers
+        run: echo ::add-matcher::misc/utility/problem-matchers.json
+
+      - name: Test problem matchers
+        run: cat misc/utility/problem-matchers.txt
+
+      - name: Force fail
+        run: exit 1
+
       - name: Install APT dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:

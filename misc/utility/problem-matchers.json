@@ -4,7 +4,7 @@
 			"owner": "gcc",
 			"pattern": [
 				{
-					"regexp": "^(?:\\s+\\d+\\>)?(\\S.*?)[\\(:](\\d+)[,:]?(\\d*)(?::{\\d+:\\d+\\-\\d+:\\d+})?\\)?:\\s+(?:fatal\\s+)?(error|warning|info):\\s+(.*?)(?:\\s*\\[(.*)\\])?$",
+					"regexp": "^(?:\\s+\\d+\\>)?(\\S.*?)[\\(:](\\d+)[,:]?(\\d*)(?::{\\d+:\\d+\\-\\d+:\\d+})?\\)?:\\s+(?:(?:fatal|runtime)\\s+)?(error|warning|info):\\s+(.*?)(?:\\s*\\[(.*)\\])?$",
 					"file": 1,
 					"line": 2,
 					"column": 3,
@@ -18,7 +18,7 @@
 			"owner": "msvc",
 			"pattern": [
 				{
-					"regexp": "^(?:\\s+\\d+\\>)?(\\S.*)\\((\\d+),?(\\d*)?(?:,\\d+,\\d+)?\\)\\s*:\\s+(?:fatal\\s+)?(error|warning|info)\\s+(\\w{1,2}\\d+)\\s*:\\s*(.*)$",
+					"regexp": "^(?:\\s+\\d+\\>)?(\\S.*)\\((\\d+),?(\\d*)?(?:,\\d+,\\d+)?\\)\\s*:\\s+(?:(?:fatal|runtime)\\s+)?(error|warning|info)\\s+(\\w{1,2}\\d+)\\s*:\\s*(.*)$",
 					"file": 1,
 					"line": 2,
 					"column": 3,

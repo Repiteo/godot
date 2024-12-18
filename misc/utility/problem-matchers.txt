@@ -1,0 +1,28 @@
+...
+
+MSVC
+
+scons: *** [modules\upnp\register_types.windows.editor.x86_64.obj] Error 2
+modules\upnp\upnp.cpp(38): error C2039: 'is_common_device': is not a member of 'UPNP'
+D:\a\godot\godot\modules\upnp\upnp.h(40): note: see declaration of 'UPNP'
+
+(with color)
+modules\upnp\upnp.cpp(38): [0;32merror[0m C2039: 'is_common_device': is not a member of 'UPNP'
+
+...
+
+GCC
+
+In file included from modules/upnp/register_types.cpp:38:
+modules/upnp/upnp_miniupnp.h:38:10: fatal error: miniupnpc.h: No such file or directory
+   38 | #include <miniupnpc.h>
+      |          ^~~~~~~~~~~~~
+
+...
+
+Multiline
+
+test.js
+  1:0   error  Missing "use strict" statement                 strict
+  5:10  error  'addOne' is defined but never used             no-unused-vars
+✖ 2 problems (2 errors, 0 warnings)
