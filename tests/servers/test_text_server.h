@@ -86,10 +86,10 @@ TEST_SUITE("[TextServer]") {
 				CHECK_FALSE_MESSAGE(gl_size == 0, "Shaping failed");
 				for (int j = 0; j < gl_size; j++) {
 					if (glyphs[j].start < 6) {
-						CHECK_FALSE_MESSAGE(glyphs[j].font_rid != font[1], "Incorrect font selected.");
+						CHECK_FALSE_MESSAGE(glyphs[j].font_rid != (RID)font[1], "Incorrect font selected.");
 					}
 					if ((glyphs[j].start > 6) && (glyphs[j].start < 16)) {
-						CHECK_FALSE_MESSAGE(glyphs[j].font_rid != font[0], "Incorrect font selected.");
+						CHECK_FALSE_MESSAGE(glyphs[j].font_rid != (RID)font[0], "Incorrect font selected.");
 					}
 					if (glyphs[j].start > 16) {
 						CHECK_FALSE_MESSAGE(glyphs[j].font_rid != RID(), "Incorrect font selected.");

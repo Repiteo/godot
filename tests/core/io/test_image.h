@@ -219,11 +219,11 @@ TEST_CASE("[Image] Basic getters") {
 	Ref<Image> image = memnew(Image(8, 4, false, Image::FORMAT_LA8));
 	CHECK(image->get_width() == 8);
 	CHECK(image->get_height() == 4);
-	CHECK(image->get_size() == Vector2(8, 4));
+	CHECK(image->get_size() == Vector2i(8, 4));
 	CHECK(image->get_format() == Image::FORMAT_LA8);
 	CHECK(image->get_used_rect() == Rect2i(0, 0, 0, 0));
 	Ref<Image> image_get_rect = image->get_region(Rect2i(0, 0, 2, 1));
-	CHECK(image_get_rect->get_size() == Vector2(2, 1));
+	CHECK(image_get_rect->get_size() == Vector2i(2, 1));
 }
 
 TEST_CASE("[Image] Resizing") {
@@ -231,7 +231,7 @@ TEST_CASE("[Image] Resizing") {
 	// Crop
 	image->crop(4, 4);
 	CHECK_MESSAGE(
-			image->get_size() == Vector2(4, 4),
+			image->get_size() == Vector2i(4, 4),
 			"get_size() should return the correct size after cropping.");
 	image->set_pixel(0, 0, Color(1, 1, 1, 1));
 
@@ -242,7 +242,7 @@ TEST_CASE("[Image] Resizing") {
 		Image::Interpolation interpolation = static_cast<Image::Interpolation>(i);
 		image_resized->resize(8, 8, interpolation);
 		CHECK_MESSAGE(
-				image_resized->get_size() == Vector2(8, 8),
+				image_resized->get_size() == Vector2i(8, 8),
 				"get_size() should return the correct size after resizing.");
 		CHECK_MESSAGE(
 				image_resized->get_pixel(1, 1).a > 0,
@@ -252,14 +252,14 @@ TEST_CASE("[Image] Resizing") {
 	// shrink_x2()
 	image->shrink_x2();
 	CHECK_MESSAGE(
-			image->get_size() == Vector2(2, 2),
+			image->get_size() == Vector2i(2, 2),
 			"get_size() should return the correct size after shrink_x2().");
 
 	// resize_to_po2()
 	Ref<Image> image_po_2 = memnew(Image(14, 28, false, Image::FORMAT_RGBA8));
 	image_po_2->resize_to_po2();
 	CHECK_MESSAGE(
-			image_po_2->get_size() == Vector2(16, 32),
+			image_po_2->get_size() == Vector2i(16, 32),
 			"get_size() should return the correct size after resize_to_po2().");
 }
 
