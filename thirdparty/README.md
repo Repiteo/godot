@@ -936,6 +936,9 @@ Files extracted from upstream source:
 - `re-spirv.h`
 - `LICENSE`
 
+Patches:
+
+- `0001-anonymous-constructor.patch` ([GH-100749](https://github.com/godotengine/godot/pull/100749))
 
 ## rvo2
 
@@ -1071,6 +1074,7 @@ Patches:
 - `0001-revert-tvglines-bezier-precision.patch` ([GH-96658](https://github.com/godotengine/godot/pull/96658))
 - `0002-use-heap-alloc.patch` ([GH-109530](https://github.com/godotengine/godot/pull/109530))
 - `0003-explicit-includes.patch` ([GH-111557](https://github.com/godotengine/godot/pull/111557))
+- `0004-cpp20-explicit-namespace.patch` ([GH-100749](https://github.com/godotengine/godot/pull/100749))
 
 
 ## tinyexr

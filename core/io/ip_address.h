@@ -84,6 +84,9 @@ public:
 		return false;
 	}
 
+	bool operator==(const String &p_ip) const { return operator==(IPAddress(p_ip)); }
+	bool operator!=(const String &p_ip) const { return operator!=(IPAddress(p_ip)); }
+
 	static bool is_valid_ip_address(const String &p_string);
 
 	void clear();
