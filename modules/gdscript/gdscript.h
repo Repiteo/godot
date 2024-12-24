@@ -488,6 +488,10 @@ public:
 			return;
 		}
 
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 13 && __GNUC__ <= 14
+		GODOT_GCC_WARNING_PUSH_AND_IGNORE("-Wdangling-pointer=") // False positive on GCC 13/14.
+#endif
+
 		call_level->prev = _call_stack;
 		_call_stack = call_level;
 		call_level->stack = p_stack;
@@ -496,6 +500,10 @@ public:
 		call_level->ip = p_ip;
 		call_level->line = p_line;
 		_call_stack_size++;
+
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 13 && __GNUC__ <= 14
+		GODOT_GCC_WARNING_POP
+#endif
 	}
 
 	_FORCE_INLINE_ void exit_function() {
