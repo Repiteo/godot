@@ -2185,7 +2185,7 @@ void DisplayServerMacOS::window_set_max_size(const Size2i p_size, WindowID p_win
 		Size2i size = wd.max_size / screen_get_max_scale();
 		[wd.window_object setContentMaxSize:NSMakeSize(size.x, size.y)];
 	} else {
-		[wd.window_object setContentMaxSize:NSMakeSize(FLT_MAX, FLT_MAX)];
+		[wd.window_object setContentMaxSize:NSMakeSize(Math::max<double>(), Math::max<double>())];
 	}
 }
 
@@ -2362,7 +2362,7 @@ void DisplayServerMacOS::window_set_mode(WindowMode p_mode, WindowID p_window) {
 				[wd.window_object setStyleMask:[wd.window_object styleMask] | NSWindowStyleMaskResizable];
 			}
 			[wd.window_object setContentMinSize:NSMakeSize(0, 0)];
-			[wd.window_object setContentMaxSize:NSMakeSize(FLT_MAX, FLT_MAX)];
+			[wd.window_object setContentMaxSize:NSMakeSize(Math::max<double>(), Math::max<double>())];
 			[wd.window_object toggleFullScreen:nil];
 
 			wd.fullscreen = true;

@@ -187,7 +187,7 @@ void MetalDeviceProperties::init_limits(id<MTLDevice> p_device) {
 
 	limits.maxThreadsPerThreadGroup = p_device.maxThreadsPerThreadgroup;
 	// No effective limits.
-	limits.maxComputeWorkGroupCount = { std::numeric_limits<uint32_t>::max(), std::numeric_limits<uint32_t>::max(), std::numeric_limits<uint32_t>::max() };
+	limits.maxComputeWorkGroupCount = { Math::max<uint32_t>(), Math::max<uint32_t>(), Math::max<uint32_t>() };
 	// https://github.com/KhronosGroup/MoltenVK/blob/568cc3acc0e2299931fdaecaaa1fc3ec5b4af281/MoltenVK/MoltenVK/GPUObjects/MVKDevice.h#L85
 	limits.maxBoundDescriptorSets = SPIRV_CROSS_NAMESPACE::kMaxArgumentBuffers;
 	// FST: Maximum number of color render targets per render pass descriptor.
@@ -211,7 +211,7 @@ void MetalDeviceProperties::init_limits(id<MTLDevice> p_device) {
 
 	// Maximum number of buffers the device can access, per stage, from an argument buffer.
 	if ([p_device supportsFamily:MTLGPUFamilyApple6]) {
-		limits.maxBuffersPerArgumentBuffer = std::numeric_limits<uint64_t>::max();
+		limits.maxBuffersPerArgumentBuffer = Math::max<uint64_t>();
 	} else if ([p_device supportsFamily:MTLGPUFamilyApple4]) {
 		limits.maxBuffersPerArgumentBuffer = 96;
 	} else {
@@ -252,7 +252,7 @@ void MetalDeviceProperties::init_limits(id<MTLDevice> p_device) {
 	limits.maxBufferLength = p_device.maxBufferLength;
 
 	// FST: Maximum size of vertex descriptor layout stride.
-	limits.maxVertexDescriptorLayoutStride = std::numeric_limits<uint64_t>::max();
+	limits.maxVertexDescriptorLayoutStride = Math::max<uint64_t>();
 
 	// Maximum number of viewports.
 	if ([p_device supportsFamily:MTLGPUFamilyApple5]) {
@@ -284,7 +284,7 @@ void MetalDeviceProperties::init_limits(id<MTLDevice> p_device) {
 	limits.minUniformBufferOffsetAlignment = 16;
 #endif
 
-	limits.maxDrawIndexedIndexValue = std::numeric_limits<uint32_t>::max() - 1;
+	limits.maxDrawIndexedIndexValue = Math::max<uint32_t>() - 1;
 }
 
 MetalDeviceProperties::MetalDeviceProperties(id<MTLDevice> p_device) {

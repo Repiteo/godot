@@ -234,38 +234,27 @@ struct [[nodiscard]] Color {
 	_FORCE_INLINE_ void set_ok_hsl_s(float p_s) { set_ok_hsl(get_ok_hsl_h(), p_s, get_ok_hsl_l(), a); }
 	_FORCE_INLINE_ void set_ok_hsl_l(float p_l) { set_ok_hsl(get_ok_hsl_h(), get_ok_hsl_s(), p_l, a); }
 
-	_FORCE_INLINE_ Color() {}
+	constexpr Color() :
+			r(0), g(0), b(0), a(1) {}
 
 	/**
 	 * RGBA construct parameters.
 	 * Alpha is not optional as otherwise we can't bind the RGB version for scripting.
 	 */
-	_FORCE_INLINE_ Color(float p_r, float p_g, float p_b, float p_a) {
-		r = p_r;
-		g = p_g;
-		b = p_b;
-		a = p_a;
-	}
+	constexpr Color(float p_r, float p_g, float p_b, float p_a) :
+			r(p_r), g(p_g), b(p_b), a(p_a) {}
 
 	/**
 	 * RGB construct parameters.
 	 */
-	_FORCE_INLINE_ Color(float p_r, float p_g, float p_b) {
-		r = p_r;
-		g = p_g;
-		b = p_b;
-		a = 1.0f;
-	}
+	constexpr Color(float p_r, float p_g, float p_b) :
+			r(p_r), g(p_g), b(p_b), a(1) {}
 
 	/**
 	 * Construct a Color from another Color, but with the specified alpha value.
 	 */
-	_FORCE_INLINE_ Color(const Color &p_c, float p_a) {
-		r = p_c.r;
-		g = p_c.g;
-		b = p_c.b;
-		a = p_a;
-	}
+	constexpr Color(const Color &p_c, float p_a) :
+			r(p_c.r), g(p_c.g), b(p_c.b), a(p_a) {}
 
 	Color(const String &p_code) {
 		if (html_is_valid(p_code)) {
@@ -300,5 +289,19 @@ bool Color::operator<(const Color &p_color) const {
 _FORCE_INLINE_ Color operator*(float p_scalar, const Color &p_color) {
 	return p_color * p_scalar;
 }
+
+template <>
+class std::numeric_limits<Color> {
+public:
+	[[nodiscard]] static constexpr Color min() { return Color(std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min()); }
+	[[nodiscard]] static constexpr Color max() { return Color(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()); }
+	[[nodiscard]] static constexpr Color lowest() { return Color(std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest()); }
+	[[nodiscard]] static constexpr Color epsilon() { return Color(std::numeric_limits<float>::epsilon(), std::numeric_limits<float>::epsilon(), std::numeric_limits<float>::epsilon(), std::numeric_limits<float>::epsilon()); }
+	[[nodiscard]] static constexpr Color round_error() { return Color(std::numeric_limits<float>::round_error(), std::numeric_limits<float>::round_error(), std::numeric_limits<float>::round_error(), std::numeric_limits<float>::round_error()); }
+	[[nodiscard]] static constexpr Color denorm_min() { return Color(std::numeric_limits<float>::denorm_min(), std::numeric_limits<float>::denorm_min(), std::numeric_limits<float>::denorm_min(), std::numeric_limits<float>::denorm_min()); }
+	[[nodiscard]] static constexpr Color infinity() { return Color(std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity()); }
+	[[nodiscard]] static constexpr Color quiet_NaN() { return Color(std::numeric_limits<float>::quiet_NaN(), std::numeric_limits<float>::quiet_NaN(), std::numeric_limits<float>::quiet_NaN(), std::numeric_limits<float>::quiet_NaN()); }
+	[[nodiscard]] static constexpr Color signaling_NaN() { return Color(std::numeric_limits<float>::signaling_NaN(), std::numeric_limits<float>::signaling_NaN(), std::numeric_limits<float>::signaling_NaN(), std::numeric_limits<float>::signaling_NaN()); }
+};
 
 #endif // COLOR_H

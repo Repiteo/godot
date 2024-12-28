@@ -40,8 +40,6 @@
 #include "scene/gui/view_panner.h"
 #include "scene/resources/text_line.h"
 
-#include <limits.h>
-
 float AnimationBezierTrackEdit::_bezier_h_to_pixel(float p_h) {
 	float h = p_h;
 	h = (h - timeline_v_scroll) / timeline_v_zoom;
@@ -756,8 +754,8 @@ void AnimationBezierTrackEdit::set_filtered(bool p_filtered) {
 
 void AnimationBezierTrackEdit::auto_fit_vertically() {
 	int track_count = animation->get_track_count();
-	real_t minimum_value = INFINITY;
-	real_t maximum_value = -INFINITY;
+	real_t minimum_value = Math::inf<real_t>();
+	real_t maximum_value = -Math::inf<real_t>();
 
 	int nb_track_visible = 0;
 	for (int i = 0; i < track_count; ++i) {
@@ -968,10 +966,10 @@ void AnimationBezierTrackEdit::gui_input(const Ref<InputEvent> &p_event) {
 				return;
 			}
 
-			real_t minimum_time = INFINITY;
-			real_t maximum_time = -INFINITY;
-			real_t minimum_value = INFINITY;
-			real_t maximum_value = -INFINITY;
+			real_t minimum_time = Math::inf<real_t>();
+			real_t maximum_time = -Math::inf<real_t>();
+			real_t minimum_value = Math::inf<real_t>();
+			real_t maximum_value = -Math::inf<real_t>();
 
 			for (const IntPair &E : focused_keys) {
 				IntPair key_pair = E;
@@ -1306,7 +1304,7 @@ void AnimationBezierTrackEdit::gui_input(const Ref<InputEvent> &p_event) {
 			int track_count = animation->get_track_count();
 
 			real_t animation_length = animation->get_length();
-			animation->set_length(real_t(INT_MAX)); // bezier_track_interpolate doesn't find keys if they exist beyond anim length.
+			animation->set_length(Math::max<real_t>()); // bezier_track_interpolate doesn't find keys if they exist beyond anim length.
 
 			real_t time = ((mb->get_position().x - limit) / timeline->get_zoom_scale()) + timeline->get_value();
 

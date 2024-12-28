@@ -150,7 +150,7 @@ void _split_leaf_sort_groups(int &num_a, int &num_b, uint16_t *group_a, uint16_t
 
 	BVHABB_CLASS rest_aabb;
 
-	real_t best_size = FLT_MAX;
+	real_t best_size = Math::max<real_t>();
 	int best_candidate = -1;
 
 	// find most likely from a to move into b

@@ -823,7 +823,7 @@ Vector3 JoltPhysicsDirectSpaceState3D::get_closest_point_to_object_volume(RID p_
 
 	const JPH::RVec3 point = to_jolt_r(p_point);
 
-	float closest_distance_sq = FLT_MAX;
+	float closest_distance_sq = Math::max<float>();
 	JPH::RVec3 closest_point = JPH::RVec3::sZero();
 
 	bool found_point = false;
@@ -859,7 +859,7 @@ Vector3 JoltPhysicsDirectSpaceState3D::get_closest_point_to_object_volume(RID p_
 		JPH::Vec3 point_on_a = JPH::Vec3::sZero();
 		JPH::Vec3 point_on_b = JPH::Vec3::sZero();
 
-		const float distance_sq = gjk.GetClosestPoints(*shape_support, point_support, JPH::cDefaultCollisionTolerance, FLT_MAX, separating_axis, point_on_a, point_on_b);
+		const float distance_sq = gjk.GetClosestPoints(*shape_support, point_support, JPH::cDefaultCollisionTolerance, Math::max<float>(), separating_axis, point_on_a, point_on_b);
 
 		if (distance_sq == 0.0f) {
 			closest_point = point;

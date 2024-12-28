@@ -72,7 +72,7 @@ bool LipO::create_file(const String &p_output_path, const Vector<String> &p_file
 	}
 
 	// Write header.
-	bool is_64 = (max_size >= std::numeric_limits<uint32_t>::max());
+	bool is_64 = (max_size >= Math::max<uint32_t>());
 	if (is_64) {
 		fa->store_32(0xbfbafeca);
 	} else {
@@ -166,7 +166,7 @@ bool LipO::create_file(const String &p_output_path, const Vector<String> &p_file
 	}
 
 	// Write header.
-	bool is_64 = (max_size >= std::numeric_limits<uint32_t>::max());
+	bool is_64 = (max_size >= Math::max<uint32_t>());
 	if (is_64) {
 		fa->store_32(0xbfbafeca);
 	} else {

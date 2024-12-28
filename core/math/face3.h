@@ -79,12 +79,9 @@ struct [[nodiscard]] Face3 {
 	_FORCE_INLINE_ bool intersects_aabb2(const AABB &p_aabb) const;
 	operator String() const;
 
-	inline Face3() {}
-	inline Face3(const Vector3 &p_v1, const Vector3 &p_v2, const Vector3 &p_v3) {
-		vertex[0] = p_v1;
-		vertex[1] = p_v2;
-		vertex[2] = p_v3;
-	}
+	constexpr Face3() = default;
+	constexpr Face3(const Vector3 &p_v1, const Vector3 &p_v2, const Vector3 &p_v3) :
+			vertex{ p_v1, p_v2, p_v3 } {}
 };
 
 bool Face3::intersects_aabb2(const AABB &p_aabb) const {
@@ -237,5 +234,19 @@ bool Face3::intersects_aabb2(const AABB &p_aabb) const {
 	}
 	return true;
 }
+
+template <>
+class std::numeric_limits<Face3> {
+public:
+	[[nodiscard]] static constexpr Face3 min() { return Face3(std::numeric_limits<Vector3>::min(), std::numeric_limits<Vector3>::min(), std::numeric_limits<Vector3>::min()); }
+	[[nodiscard]] static constexpr Face3 max() { return Face3(std::numeric_limits<Vector3>::max(), std::numeric_limits<Vector3>::max(), std::numeric_limits<Vector3>::max()); }
+	[[nodiscard]] static constexpr Face3 lowest() { return Face3(std::numeric_limits<Vector3>::lowest(), std::numeric_limits<Vector3>::lowest(), std::numeric_limits<Vector3>::lowest()); }
+	[[nodiscard]] static constexpr Face3 epsilon() { return Face3(std::numeric_limits<Vector3>::epsilon(), std::numeric_limits<Vector3>::epsilon(), std::numeric_limits<Vector3>::epsilon()); }
+	[[nodiscard]] static constexpr Face3 round_error() { return Face3(std::numeric_limits<Vector3>::round_error(), std::numeric_limits<Vector3>::round_error(), std::numeric_limits<Vector3>::round_error()); }
+	[[nodiscard]] static constexpr Face3 denorm_min() { return Face3(std::numeric_limits<Vector3>::denorm_min(), std::numeric_limits<Vector3>::denorm_min(), std::numeric_limits<Vector3>::denorm_min()); }
+	[[nodiscard]] static constexpr Face3 infinity() { return Face3(std::numeric_limits<Vector3>::infinity(), std::numeric_limits<Vector3>::infinity(), std::numeric_limits<Vector3>::infinity()); }
+	[[nodiscard]] static constexpr Face3 quiet_NaN() { return Face3(std::numeric_limits<Vector3>::quiet_NaN(), std::numeric_limits<Vector3>::quiet_NaN(), std::numeric_limits<Vector3>::quiet_NaN()); }
+	[[nodiscard]] static constexpr Face3 signaling_NaN() { return Face3(std::numeric_limits<Vector3>::signaling_NaN(), std::numeric_limits<Vector3>::signaling_NaN(), std::numeric_limits<Vector3>::signaling_NaN()); }
+};
 
 #endif // FACE3_H

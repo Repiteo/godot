@@ -140,14 +140,20 @@ struct [[nodiscard]] Vector2i {
 	Vector2i snappedi(int32_t p_step) const;
 
 	operator String() const;
-	operator Vector2() const;
 
-	inline Vector2i() {}
-	inline Vector2i(int32_t p_x, int32_t p_y) {
-		x = p_x;
-		y = p_y;
-	}
+	constexpr Vector2i() :
+			x(0), y(0) {}
+	constexpr Vector2i(int32_t p_x, int32_t p_y) :
+			x(p_x), y(p_y) {}
+	constexpr Vector2i(const Vector2 &p_vec);
 };
+
+#ifdef VECTOR2_H
+constexpr Vector2::Vector2(const Vector2i &p_vec) :
+		x(p_vec.x), y(p_vec.y) {}
+constexpr Vector2i::Vector2i(const Vector2 &p_vec) :
+		x(p_vec.x), y(p_vec.y) {}
+#endif // VECTOR2_H
 
 // Multiplication operators required to workaround issues with LLVM using implicit conversion.
 
@@ -169,5 +175,19 @@ _FORCE_INLINE_ Vector2i operator*(double p_scalar, const Vector2i &p_vector) {
 
 typedef Vector2i Size2i;
 typedef Vector2i Point2i;
+
+template <>
+class std::numeric_limits<Vector2i> {
+public:
+	[[nodiscard]] static constexpr Vector2i min() { return Vector2i(std::numeric_limits<int32_t>::min(), std::numeric_limits<int32_t>::min()); }
+	[[nodiscard]] static constexpr Vector2i max() { return Vector2i(std::numeric_limits<int32_t>::max(), std::numeric_limits<int32_t>::max()); }
+	[[nodiscard]] static constexpr Vector2i lowest() { return Vector2i(std::numeric_limits<int32_t>::lowest(), std::numeric_limits<int32_t>::lowest()); }
+	[[nodiscard]] static constexpr Vector2i epsilon() { return Vector2i(std::numeric_limits<int32_t>::epsilon(), std::numeric_limits<int32_t>::epsilon()); }
+	[[nodiscard]] static constexpr Vector2i round_error() { return Vector2i(std::numeric_limits<int32_t>::round_error(), std::numeric_limits<int32_t>::round_error()); }
+	[[nodiscard]] static constexpr Vector2i denorm_min() { return Vector2i(std::numeric_limits<int32_t>::denorm_min(), std::numeric_limits<int32_t>::denorm_min()); }
+	[[nodiscard]] static constexpr Vector2i infinity() { return Vector2i(std::numeric_limits<int32_t>::infinity(), std::numeric_limits<int32_t>::infinity()); }
+	[[nodiscard]] static constexpr Vector2i quiet_NaN() { return Vector2i(std::numeric_limits<int32_t>::quiet_NaN(), std::numeric_limits<int32_t>::quiet_NaN()); }
+	[[nodiscard]] static constexpr Vector2i signaling_NaN() { return Vector2i(std::numeric_limits<int32_t>::signaling_NaN(), std::numeric_limits<int32_t>::signaling_NaN()); }
+};
 
 #endif // VECTOR2I_H

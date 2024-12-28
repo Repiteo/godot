@@ -1040,7 +1040,7 @@ void RenderingDeviceDriverD3D12::_discard_texture_subresources(const TextureInfo
 	D3D12_DISCARD_REGION dr = {};
 	dr.NumRects = p_cmd_buf_info->render_pass_state.region_is_all ? 0 : 1;
 	dr.pRects = p_cmd_buf_info->render_pass_state.region_is_all ? nullptr : &p_cmd_buf_info->render_pass_state.region_rect;
-	dr.FirstSubresource = UINT_MAX;
+	dr.FirstSubresource = Math::max<uint32_t>();
 	dr.NumSubresources = 0;
 	for (uint32_t u = 0; u < planes; u++) {
 		for (uint32_t v = 0; v < p_tex_info->layers; v++) {
@@ -1562,7 +1562,7 @@ void RenderingDeviceDriverD3D12::texture_get_copyable_layout(TextureID p_texture
 uint8_t *RenderingDeviceDriverD3D12::texture_map(TextureID p_texture, const TextureSubresource &p_subresource) {
 	TextureInfo *tex_info = (TextureInfo *)p_texture.id;
 #ifdef DEBUG_ENABLED
-	ERR_FAIL_COND_V(tex_info->mapped_subresource != UINT_MAX, nullptr);
+	ERR_FAIL_COND_V(tex_info->mapped_subresource != Math::max<uint32_t>(), nullptr);
 #endif
 
 	UINT plane = _compute_plane_slice(tex_info->format, p_subresource.aspect);
@@ -1578,10 +1578,10 @@ uint8_t *RenderingDeviceDriverD3D12::texture_map(TextureID p_texture, const Text
 void RenderingDeviceDriverD3D12::texture_unmap(TextureID p_texture) {
 	TextureInfo *tex_info = (TextureInfo *)p_texture.id;
 #ifdef DEBUG_ENABLED
-	ERR_FAIL_COND(tex_info->mapped_subresource == UINT_MAX);
+	ERR_FAIL_COND(tex_info->mapped_subresource == Math::max<uint32_t>());
 #endif
 	tex_info->resource->Unmap(tex_info->mapped_subresource, &VOID_RANGE);
-	tex_info->mapped_subresource = UINT_MAX;
+	tex_info->mapped_subresource = Math::max<uint32_t>();
 }
 
 BitField<RDD::TextureUsageBits> RenderingDeviceDriverD3D12::texture_get_usages_supported_by_format(DataFormat p_format, bool p_cpu_readable) {
@@ -1602,7 +1602,7 @@ BitField<RDD::TextureUsageBits> RenderingDeviceDriverD3D12::texture_get_usages_s
 	}
 
 	// Everything supported by default makes an all-or-nothing check easier for the caller.
-	BitField<RDD::TextureUsageBits> supported = INT64_MAX;
+	BitField<RDD::TextureUsageBits> supported = Math::max<int64_t>();
 
 	// Per https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_format_support1,
 	// as long as the resource can be used as a texture, Sample() will work with point filter at least.
@@ -1687,7 +1687,7 @@ RDD::SamplerID RenderingDeviceDriverD3D12::sampler_create(const SamplerState &p_
 		slot = 1;
 	} else {
 		for (uint32_t i = 1; i < samplers.size(); i++) {
-			if ((int)samplers[i].Filter == INT_MAX) {
+			if ((int)samplers[i].Filter == Math::max<int>()) {
 				slot = i;
 				break;
 			}
@@ -1738,7 +1738,7 @@ RDD::SamplerID RenderingDeviceDriverD3D12::sampler_create(const SamplerState &p_
 }
 
 void RenderingDeviceDriverD3D12::sampler_free(SamplerID p_sampler) {
-	samplers[p_sampler.id].Filter = (D3D12_FILTER)INT_MAX;
+	samplers[p_sampler.id].Filter = static_cast<D3D12_FILTER>(Math::max<int>());
 }
 
 bool RenderingDeviceDriverD3D12::sampler_is_format_supported_for_filter(DataFormat p_format, SamplerFilter p_filter) {

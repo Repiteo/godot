@@ -129,11 +129,9 @@ struct [[nodiscard]] AABB {
 
 	operator String() const;
 
-	_FORCE_INLINE_ AABB() {}
-	inline AABB(const Vector3 &p_pos, const Vector3 &p_size) :
-			position(p_pos),
-			size(p_size) {
-	}
+	constexpr AABB() = default;
+	constexpr AABB(const Vector3 &p_pos, const Vector3 &p_size) :
+			position(p_pos), size(p_size) {}
 };
 
 inline bool AABB::intersects(const AABB &p_aabb) const {
@@ -495,5 +493,19 @@ AABB AABB::quantized(real_t p_unit) const {
 	ret.quantize(p_unit);
 	return ret;
 }
+
+template <>
+class std::numeric_limits<AABB> {
+public:
+	[[nodiscard]] static constexpr AABB min() { return AABB(std::numeric_limits<Vector3>::min(), std::numeric_limits<Vector3>::min()); }
+	[[nodiscard]] static constexpr AABB max() { return AABB(std::numeric_limits<Vector3>::max(), std::numeric_limits<Vector3>::max()); }
+	[[nodiscard]] static constexpr AABB lowest() { return AABB(std::numeric_limits<Vector3>::lowest(), std::numeric_limits<Vector3>::lowest()); }
+	[[nodiscard]] static constexpr AABB epsilon() { return AABB(std::numeric_limits<Vector3>::epsilon(), std::numeric_limits<Vector3>::epsilon()); }
+	[[nodiscard]] static constexpr AABB round_error() { return AABB(std::numeric_limits<Vector3>::round_error(), std::numeric_limits<Vector3>::round_error()); }
+	[[nodiscard]] static constexpr AABB denorm_min() { return AABB(std::numeric_limits<Vector3>::denorm_min(), std::numeric_limits<Vector3>::denorm_min()); }
+	[[nodiscard]] static constexpr AABB infinity() { return AABB(std::numeric_limits<Vector3>::infinity(), std::numeric_limits<Vector3>::infinity()); }
+	[[nodiscard]] static constexpr AABB quiet_NaN() { return AABB(std::numeric_limits<Vector3>::quiet_NaN(), std::numeric_limits<Vector3>::quiet_NaN()); }
+	[[nodiscard]] static constexpr AABB signaling_NaN() { return AABB(std::numeric_limits<Vector3>::signaling_NaN(), std::numeric_limits<Vector3>::signaling_NaN()); }
+};
 
 #endif // AABB_H

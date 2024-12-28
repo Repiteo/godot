@@ -2435,8 +2435,8 @@ int64_t String::hex_to_int() const {
 			ERR_FAIL_V_MSG(0, vformat(R"(Invalid hexadecimal notation character "%c" (U+%04X) in string "%s".)", *s, static_cast<int32_t>(*s), *this));
 		}
 		// Check for overflow/underflow, with special case to ensure INT64_MIN does not result in error
-		bool overflow = ((hex > INT64_MAX / 16) && (sign == 1 || (sign == -1 && hex != (INT64_MAX >> 4) + 1))) || (sign == -1 && hex == (INT64_MAX >> 4) + 1 && c > '0');
-		ERR_FAIL_COND_V_MSG(overflow, sign == 1 ? INT64_MAX : INT64_MIN, "Cannot represent " + *this + " as a 64-bit signed integer, since the value is " + (sign == 1 ? "too large." : "too small."));
+		bool overflow = ((hex > Math::max<int64_t>() / 16) && (sign == 1 || (sign == -1 && hex != (Math::max<int64_t>() >> 4) + 1))) || (sign == -1 && hex == (Math::max<int64_t>() >> 4) + 1 && c > '0');
+		ERR_FAIL_COND_V_MSG(overflow, sign == 1 ? Math::max<int64_t>() : Math::min<int64_t>(), "Cannot represent " + *this + " as a 64-bit signed integer, since the value is " + (sign == 1 ? "too large." : "too small."));
 		hex *= 16;
 		hex += n;
 		s++;
@@ -2474,8 +2474,8 @@ int64_t String::bin_to_int() const {
 			return 0;
 		}
 		// Check for overflow/underflow, with special case to ensure INT64_MIN does not result in error
-		bool overflow = ((binary > INT64_MAX / 2) && (sign == 1 || (sign == -1 && binary != (INT64_MAX >> 1) + 1))) || (sign == -1 && binary == (INT64_MAX >> 1) + 1 && c > '0');
-		ERR_FAIL_COND_V_MSG(overflow, sign == 1 ? INT64_MAX : INT64_MIN, "Cannot represent " + *this + " as a 64-bit signed integer, since the value is " + (sign == 1 ? "too large." : "too small."));
+		bool overflow = ((binary > Math::max<int64_t>() / 2) && (sign == 1 || (sign == -1 && binary != (Math::max<int64_t>() >> 1) + 1))) || (sign == -1 && binary == (Math::max<int64_t>() >> 1) + 1 && c > '0');
+		ERR_FAIL_COND_V_MSG(overflow, sign == 1 ? Math::max<int64_t>() : Math::min<int64_t>(), "Cannot represent " + *this + " as a 64-bit signed integer, since the value is " + (sign == 1 ? "too large." : "too small."));
 		binary *= 2;
 		binary += n;
 		s++;
@@ -2500,8 +2500,8 @@ _ALWAYS_INLINE_ int64_t _to_int(const T &p_in, int to) {
 		if (is_digit(c)) {
 			// No need to do expensive checks unless we're approaching INT64_MAX / INT64_MIN.
 			if (unlikely(digits > 18)) {
-				bool overflow = (integer > INT64_MAX / 10) || (integer == INT64_MAX / 10 && ((positive && c > '7') || (!positive && c > '8')));
-				ERR_FAIL_COND_V_MSG(overflow, positive ? INT64_MAX : INT64_MIN, "Cannot represent " + String(p_in) + " as a 64-bit signed integer, since the value is " + (positive ? "too large." : "too small."));
+				bool overflow = (integer > static_cast<uint64_t>(Math::max<int64_t>()) / 10) || (integer == static_cast<uint64_t>(Math::max<int64_t>()) / 10 && ((positive && c > '7') || (!positive && c > '8')));
+				ERR_FAIL_COND_V_MSG(overflow, positive ? Math::max<int64_t>() : Math::min<int64_t>(), "Cannot represent " + String(p_in) + " as a 64-bit signed integer, since the value is " + (positive ? "too large." : "too small."));
 			}
 
 			integer *= 10;
@@ -2820,8 +2820,8 @@ uint32_t String::num_characters(int64_t p_int) {
 	int r = 1;
 	if (p_int < 0) {
 		r += 1;
-		if (p_int == INT64_MIN) {
-			p_int = INT64_MAX;
+		if (p_int == Math::min<int64_t>()) {
+			p_int = Math::max<int64_t>();
 		} else {
 			p_int = -p_int;
 		}
@@ -2868,7 +2868,7 @@ int64_t String::to_int(const char32_t *p_str, int p_len, bool p_clamp) {
 			}
 			case READING_INT: {
 				if (is_digit(c)) {
-					if (integer > INT64_MAX / 10) {
+					if (integer > Math::max<int64_t>() / 10) {
 						String number("");
 						str = p_str;
 						while (*str && str != limit) {
@@ -2876,12 +2876,12 @@ int64_t String::to_int(const char32_t *p_str, int p_len, bool p_clamp) {
 						}
 						if (p_clamp) {
 							if (sign == 1) {
-								return INT64_MAX;
+								return Math::max<int64_t>();
 							} else {
-								return INT64_MIN;
+								return Math::min<int64_t>();
 							}
 						} else {
-							ERR_FAIL_V_MSG(sign == 1 ? INT64_MAX : INT64_MIN, "Cannot represent " + number + " as a 64-bit signed integer, since the value is " + (sign == 1 ? "too large." : "too small."));
+							ERR_FAIL_V_MSG(sign == 1 ? Math::max<int64_t>() : Math::min<int64_t>(), "Cannot represent " + number + " as a 64-bit signed integer, since the value is " + (sign == 1 ? "too large." : "too small."));
 						}
 					}
 					integer *= 10;
@@ -3959,7 +3959,7 @@ static String _replace_common(const String &p_this, const String &p_key, const S
 
 	while ((result = (p_case_insensitive ? p_this.findn(p_key, search_from) : p_this.find(p_key, search_from))) >= 0) {
 		found.push_back(result);
-		ERR_FAIL_COND_V_MSG((result + key_length) > INT32_MAX, p_this, "Key length too long");
+		ERR_FAIL_COND_V_MSG((result + key_length) > static_cast<size_t>(Math::max<int32_t>()), p_this, "Key length too long");
 		search_from = result + key_length;
 	}
 
@@ -4016,7 +4016,7 @@ static String _replace_common(const String &p_this, char const *p_key, char cons
 
 	while ((result = (p_case_insensitive ? p_this.findn(p_key, search_from) : p_this.find(p_key, search_from))) >= 0) {
 		found.push_back(result);
-		ERR_FAIL_COND_V_MSG((result + key_length) > INT32_MAX, p_this, "Key length too long");
+		ERR_FAIL_COND_V_MSG((result + key_length) > static_cast<size_t>(Math::max<int32_t>()), p_this, "Key length too long");
 		search_from = result + key_length;
 	}
 
@@ -5485,7 +5485,7 @@ String String::sprintf(const Array &values, bool *error) const {
 					} else {
 						uint64_t uvalue = *((uint64_t *)&value);
 						// In unsigned hex, if the value fits in 32 bits, trim it down to that.
-						if (base == 16 && value < 0 && value >= INT32_MIN) {
+						if (base == 16 && value < 0 && value >= Math::min<int32_t>()) {
 							uvalue &= 0xffffffff;
 						}
 						str = String::num_uint64(uvalue, base, capitalize);

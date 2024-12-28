@@ -3249,8 +3249,8 @@ void TextMesh::_create_mesh_array(Array &p_arr) const {
 	Vector<Vector2> uvs;
 	Vector<int32_t> indices;
 
-	Vector2 min_p = Vector2(INFINITY, INFINITY);
-	Vector2 max_p = Vector2(-INFINITY, -INFINITY);
+	Vector2 min_p = Math::inf<Vector2>();
+	Vector2 max_p = -Math::inf<Vector2>();
 
 	int32_t p_size = 0;
 	int32_t i_size = 0;

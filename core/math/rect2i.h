@@ -225,17 +225,34 @@ struct [[nodiscard]] Rect2i {
 	}
 
 	operator String() const;
-	operator Rect2() const;
 
-	Rect2i() {}
-	Rect2i(int p_x, int p_y, int p_width, int p_height) :
-			position(Point2i(p_x, p_y)),
-			size(Size2i(p_width, p_height)) {
-	}
-	Rect2i(const Point2i &p_pos, const Size2i &p_size) :
-			position(p_pos),
-			size(p_size) {
-	}
+	constexpr Rect2i() = default;
+	constexpr Rect2i(int32_t p_x, int32_t p_y, int32_t p_width, int32_t p_height) :
+			position(Point2i(p_x, p_y)), size(Size2i(p_width, p_height)) {}
+	constexpr Rect2i(const Point2i &p_pos, const Size2i &p_size) :
+			position(p_pos), size(p_size) {}
+	constexpr Rect2i(const Rect2 &p_rect);
+};
+
+#ifdef RECT2_H
+constexpr Rect2::Rect2(const Rect2i &p_rect) :
+		position(p_rect.position), size(p_rect.size) {}
+constexpr Rect2i::Rect2i(const Rect2 &p_rect) :
+		position(p_rect.position), size(p_rect.size) {}
+#endif // RECT2_H
+
+template <>
+class std::numeric_limits<Rect2i> {
+public:
+	[[nodiscard]] static constexpr Rect2i min() { return Rect2i(std::numeric_limits<Vector2i>::min(), std::numeric_limits<Vector2i>::min()); }
+	[[nodiscard]] static constexpr Rect2i max() { return Rect2i(std::numeric_limits<Vector2i>::max(), std::numeric_limits<Vector2i>::max()); }
+	[[nodiscard]] static constexpr Rect2i lowest() { return Rect2i(std::numeric_limits<Vector2i>::lowest(), std::numeric_limits<Vector2i>::lowest()); }
+	[[nodiscard]] static constexpr Rect2i epsilon() { return Rect2i(std::numeric_limits<Vector2i>::epsilon(), std::numeric_limits<Vector2i>::epsilon()); }
+	[[nodiscard]] static constexpr Rect2i round_error() { return Rect2i(std::numeric_limits<Vector2i>::round_error(), std::numeric_limits<Vector2i>::round_error()); }
+	[[nodiscard]] static constexpr Rect2i denorm_min() { return Rect2i(std::numeric_limits<Vector2i>::denorm_min(), std::numeric_limits<Vector2i>::denorm_min()); }
+	[[nodiscard]] static constexpr Rect2i infinity() { return Rect2i(std::numeric_limits<Vector2i>::infinity(), std::numeric_limits<Vector2i>::infinity()); }
+	[[nodiscard]] static constexpr Rect2i quiet_NaN() { return Rect2i(std::numeric_limits<Vector2i>::quiet_NaN(), std::numeric_limits<Vector2i>::quiet_NaN()); }
+	[[nodiscard]] static constexpr Rect2i signaling_NaN() { return Rect2i(std::numeric_limits<Vector2i>::signaling_NaN(), std::numeric_limits<Vector2i>::signaling_NaN()); }
 };
 
 #endif // RECT2I_H

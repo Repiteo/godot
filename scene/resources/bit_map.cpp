@@ -36,7 +36,7 @@ void BitMap::create(const Size2i &p_size) {
 	ERR_FAIL_COND(p_size.width < 1);
 	ERR_FAIL_COND(p_size.height < 1);
 
-	ERR_FAIL_COND(static_cast<int64_t>(p_size.width) * static_cast<int64_t>(p_size.height) > INT32_MAX);
+	ERR_FAIL_COND(static_cast<int64_t>(p_size.width) * static_cast<int64_t>(p_size.height) > Math::max<int32_t>());
 
 	Error err = bitmask.resize(Math::division_round_up(p_size.width * p_size.height, 8));
 	ERR_FAIL_COND(err != OK);
@@ -523,7 +523,6 @@ static void fill_bits(const BitMap *p_src, Ref<BitMap> &p_map, const Point2i &p_
 Vector<Vector<Vector2>> BitMap::clip_opaque_to_polygons(const Rect2i &p_rect, float p_epsilon) const {
 	Rect2i r = Rect2i(0, 0, width, height).intersection(p_rect);
 
-	Point2i from;
 	Ref<BitMap> fill;
 	fill.instantiate();
 	fill->create(get_size());

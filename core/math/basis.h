@@ -204,9 +204,6 @@ struct [[nodiscard]] Basis {
 				rows[0].z * p_m[0].y + rows[1].z * p_m[1].y + rows[2].z * p_m[2].y,
 				rows[0].z * p_m[0].z + rows[1].z * p_m[1].z + rows[2].z * p_m[2].z);
 	}
-	Basis(real_t p_xx, real_t p_xy, real_t p_xz, real_t p_yx, real_t p_yy, real_t p_yz, real_t p_zx, real_t p_zy, real_t p_zz) {
-		set(p_xx, p_xy, p_xz, p_yx, p_yy, p_yz, p_zx, p_zy, p_zz);
-	}
 
 	void orthonormalize();
 	Basis orthonormalized() const;
@@ -230,11 +227,19 @@ struct [[nodiscard]] Basis {
 	Basis(const Vector3 &p_axis, real_t p_angle, const Vector3 &p_scale) { set_axis_angle_scale(p_axis, p_angle, p_scale); }
 	static Basis from_scale(const Vector3 &p_scale);
 
-	_FORCE_INLINE_ Basis(const Vector3 &p_x_axis, const Vector3 &p_y_axis, const Vector3 &p_z_axis) {
-		set_columns(p_x_axis, p_y_axis, p_z_axis);
-	}
-
-	_FORCE_INLINE_ Basis() {}
+	constexpr Basis() = default;
+	constexpr Basis(const Vector3 &p_x_axis, const Vector3 &p_y_axis, const Vector3 &p_z_axis) :
+			rows{
+				{ p_x_axis.x, p_y_axis.x, p_z_axis.x },
+				{ p_x_axis.y, p_y_axis.y, p_z_axis.y },
+				{ p_x_axis.z, p_y_axis.z, p_z_axis.z },
+			} {}
+	constexpr Basis(real_t p_xx, real_t p_xy, real_t p_xz, real_t p_yx, real_t p_yy, real_t p_yz, real_t p_zx, real_t p_zy, real_t p_zz) :
+			rows{
+				{ p_xx, p_xy, p_xz },
+				{ p_yx, p_yy, p_yz },
+				{ p_zx, p_zy, p_zz },
+			} {}
 
 private:
 	// Helper method.
@@ -322,5 +327,19 @@ real_t Basis::determinant() const {
 			rows[1][0] * (rows[0][1] * rows[2][2] - rows[2][1] * rows[0][2]) +
 			rows[2][0] * (rows[0][1] * rows[1][2] - rows[1][1] * rows[0][2]);
 }
+
+template <>
+class std::numeric_limits<Basis> {
+public:
+	[[nodiscard]] static constexpr Basis min() { return Basis(std::numeric_limits<Vector3>::min(), std::numeric_limits<Vector3>::min(), std::numeric_limits<Vector3>::min()); }
+	[[nodiscard]] static constexpr Basis max() { return Basis(std::numeric_limits<Vector3>::max(), std::numeric_limits<Vector3>::max(), std::numeric_limits<Vector3>::max()); }
+	[[nodiscard]] static constexpr Basis lowest() { return Basis(std::numeric_limits<Vector3>::lowest(), std::numeric_limits<Vector3>::lowest(), std::numeric_limits<Vector3>::lowest()); }
+	[[nodiscard]] static constexpr Basis epsilon() { return Basis(std::numeric_limits<Vector3>::epsilon(), std::numeric_limits<Vector3>::epsilon(), std::numeric_limits<Vector3>::epsilon()); }
+	[[nodiscard]] static constexpr Basis round_error() { return Basis(std::numeric_limits<Vector3>::round_error(), std::numeric_limits<Vector3>::round_error(), std::numeric_limits<Vector3>::round_error()); }
+	[[nodiscard]] static constexpr Basis denorm_min() { return Basis(std::numeric_limits<Vector3>::denorm_min(), std::numeric_limits<Vector3>::denorm_min(), std::numeric_limits<Vector3>::denorm_min()); }
+	[[nodiscard]] static constexpr Basis infinity() { return Basis(std::numeric_limits<Vector3>::infinity(), std::numeric_limits<Vector3>::infinity(), std::numeric_limits<Vector3>::infinity()); }
+	[[nodiscard]] static constexpr Basis quiet_NaN() { return Basis(std::numeric_limits<Vector3>::quiet_NaN(), std::numeric_limits<Vector3>::quiet_NaN(), std::numeric_limits<Vector3>::quiet_NaN()); }
+	[[nodiscard]] static constexpr Basis signaling_NaN() { return Basis(std::numeric_limits<Vector3>::signaling_NaN(), std::numeric_limits<Vector3>::signaling_NaN(), std::numeric_limits<Vector3>::signaling_NaN()); }
+};
 
 #endif // BASIS_H

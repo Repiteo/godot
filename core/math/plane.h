@@ -80,12 +80,11 @@ struct [[nodiscard]] Plane {
 	_FORCE_INLINE_ bool operator!=(const Plane &p_plane) const;
 	operator String() const;
 
-	_FORCE_INLINE_ Plane() {}
-	_FORCE_INLINE_ Plane(real_t p_a, real_t p_b, real_t p_c, real_t p_d) :
-			normal(p_a, p_b, p_c),
-			d(p_d) {}
-
-	_FORCE_INLINE_ Plane(const Vector3 &p_normal, real_t p_d = 0.0);
+	constexpr Plane() = default;
+	constexpr Plane(real_t p_x, real_t p_y, real_t p_z, real_t p_d) :
+			normal(p_x, p_y, p_z), d(p_d) {}
+	constexpr Plane(const Vector3 &p_normal, real_t p_d = 0.0) :
+			normal(p_normal), d(p_d) {}
 	_FORCE_INLINE_ Plane(const Vector3 &p_normal, const Vector3 &p_point);
 	_FORCE_INLINE_ Plane(const Vector3 &p_point1, const Vector3 &p_point2, const Vector3 &p_point3, ClockDirection p_dir = CLOCKWISE);
 };
@@ -102,11 +101,6 @@ bool Plane::has_point(const Vector3 &p_point, real_t p_tolerance) const {
 	real_t dist = normal.dot(p_point) - d;
 	dist = ABS(dist);
 	return (dist <= p_tolerance);
-}
-
-Plane::Plane(const Vector3 &p_normal, real_t p_d) :
-		normal(p_normal),
-		d(p_d) {
 }
 
 Plane::Plane(const Vector3 &p_normal, const Vector3 &p_point) :
@@ -132,5 +126,19 @@ bool Plane::operator==(const Plane &p_plane) const {
 bool Plane::operator!=(const Plane &p_plane) const {
 	return normal != p_plane.normal || d != p_plane.d;
 }
+
+template <>
+class std::numeric_limits<Plane> {
+public:
+	[[nodiscard]] static constexpr Plane min() { return Plane(std::numeric_limits<Vector3>::min(), std::numeric_limits<real_t>::min()); }
+	[[nodiscard]] static constexpr Plane max() { return Plane(std::numeric_limits<Vector3>::max(), std::numeric_limits<real_t>::max()); }
+	[[nodiscard]] static constexpr Plane lowest() { return Plane(std::numeric_limits<Vector3>::lowest(), std::numeric_limits<real_t>::lowest()); }
+	[[nodiscard]] static constexpr Plane epsilon() { return Plane(std::numeric_limits<Vector3>::epsilon(), std::numeric_limits<real_t>::epsilon()); }
+	[[nodiscard]] static constexpr Plane round_error() { return Plane(std::numeric_limits<Vector3>::round_error(), std::numeric_limits<real_t>::round_error()); }
+	[[nodiscard]] static constexpr Plane denorm_min() { return Plane(std::numeric_limits<Vector3>::denorm_min(), std::numeric_limits<real_t>::denorm_min()); }
+	[[nodiscard]] static constexpr Plane infinity() { return Plane(std::numeric_limits<Vector3>::infinity(), std::numeric_limits<real_t>::infinity()); }
+	[[nodiscard]] static constexpr Plane quiet_NaN() { return Plane(std::numeric_limits<Vector3>::quiet_NaN(), std::numeric_limits<real_t>::quiet_NaN()); }
+	[[nodiscard]] static constexpr Plane signaling_NaN() { return Plane(std::numeric_limits<Vector3>::signaling_NaN(), std::numeric_limits<real_t>::signaling_NaN()); }
+};
 
 #endif // PLANE_H

@@ -32,7 +32,6 @@
 
 #include "main/main.h"
 
-#include <limits.h>
 #include <locale.h>
 #include <stdlib.h>
 #include <unistd.h>

@@ -304,7 +304,7 @@ private:
 
 		TextureInfo *main_texture = nullptr;
 
-		UINT mapped_subresource = UINT_MAX;
+		UINT mapped_subresource = Math::max<uint32_t>();
 		SelfList<TextureInfo> pending_clear{ this };
 	};
 	SelfList<TextureInfo>::List textures_pending_clear;

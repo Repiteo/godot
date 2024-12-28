@@ -950,7 +950,7 @@ CodeSignCodeDirectory::CodeSignCodeDirectory(uint8_t p_hash_size, uint8_t p_hash
 	memset(blob.ptrw() + 8, 0x00, cd_size - 8);
 	CodeDirectoryHeader *cd = reinterpret_cast<CodeDirectoryHeader *>(blob.ptrw() + 8);
 
-	bool is_64_cl = (p_code_limit >= std::numeric_limits<uint32_t>::max());
+	bool is_64_cl = (p_code_limit >= Math::max<uint32_t>());
 
 	// Version and options.
 	cd->version = BSWAP32(0x20500);

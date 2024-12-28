@@ -115,14 +115,10 @@ struct [[nodiscard]] Quaternion {
 
 	operator String() const;
 
-	_FORCE_INLINE_ Quaternion() {}
-
-	_FORCE_INLINE_ Quaternion(real_t p_x, real_t p_y, real_t p_z, real_t p_w) :
-			x(p_x),
-			y(p_y),
-			z(p_z),
-			w(p_w) {
-	}
+	constexpr Quaternion() :
+			x(0), y(0), z(0), w(1) {}
+	constexpr Quaternion(real_t p_x, real_t p_y, real_t p_z, real_t p_w) :
+			x(p_x), y(p_y), z(p_z), w(p_w) {}
 
 	Quaternion(const Vector3 &p_axis, real_t p_angle);
 
@@ -228,5 +224,19 @@ bool Quaternion::operator!=(const Quaternion &p_quaternion) const {
 _FORCE_INLINE_ Quaternion operator*(real_t p_real, const Quaternion &p_quaternion) {
 	return p_quaternion * p_real;
 }
+
+template <>
+class std::numeric_limits<Quaternion> {
+public:
+	[[nodiscard]] static constexpr Quaternion min() { return Quaternion(std::numeric_limits<real_t>::min(), std::numeric_limits<real_t>::min(), std::numeric_limits<real_t>::min(), std::numeric_limits<real_t>::min()); }
+	[[nodiscard]] static constexpr Quaternion max() { return Quaternion(std::numeric_limits<real_t>::max(), std::numeric_limits<real_t>::max(), std::numeric_limits<real_t>::max(), std::numeric_limits<real_t>::max()); }
+	[[nodiscard]] static constexpr Quaternion lowest() { return Quaternion(std::numeric_limits<real_t>::lowest(), std::numeric_limits<real_t>::lowest(), std::numeric_limits<real_t>::lowest(), std::numeric_limits<real_t>::lowest()); }
+	[[nodiscard]] static constexpr Quaternion epsilon() { return Quaternion(std::numeric_limits<real_t>::epsilon(), std::numeric_limits<real_t>::epsilon(), std::numeric_limits<real_t>::epsilon(), std::numeric_limits<real_t>::epsilon()); }
+	[[nodiscard]] static constexpr Quaternion round_error() { return Quaternion(std::numeric_limits<real_t>::round_error(), std::numeric_limits<real_t>::round_error(), std::numeric_limits<real_t>::round_error(), std::numeric_limits<real_t>::round_error()); }
+	[[nodiscard]] static constexpr Quaternion denorm_min() { return Quaternion(std::numeric_limits<real_t>::denorm_min(), std::numeric_limits<real_t>::denorm_min(), std::numeric_limits<real_t>::denorm_min(), std::numeric_limits<real_t>::denorm_min()); }
+	[[nodiscard]] static constexpr Quaternion infinity() { return Quaternion(std::numeric_limits<real_t>::infinity(), std::numeric_limits<real_t>::infinity(), std::numeric_limits<real_t>::infinity(), std::numeric_limits<real_t>::infinity()); }
+	[[nodiscard]] static constexpr Quaternion quiet_NaN() { return Quaternion(std::numeric_limits<real_t>::quiet_NaN(), std::numeric_limits<real_t>::quiet_NaN(), std::numeric_limits<real_t>::quiet_NaN(), std::numeric_limits<real_t>::quiet_NaN()); }
+	[[nodiscard]] static constexpr Quaternion signaling_NaN() { return Quaternion(std::numeric_limits<real_t>::signaling_NaN(), std::numeric_limits<real_t>::signaling_NaN(), std::numeric_limits<real_t>::signaling_NaN(), std::numeric_limits<real_t>::signaling_NaN()); }
+};
 
 #endif // QUATERNION_H

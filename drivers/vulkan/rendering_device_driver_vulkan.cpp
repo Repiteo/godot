@@ -2075,7 +2075,7 @@ BitField<RDD::TextureUsageBits> RenderingDeviceDriverVulkan::texture_get_usages_
 	const VkFormatFeatureFlags &flags = p_cpu_readable ? properties.linearTilingFeatures : properties.optimalTilingFeatures;
 
 	// Everything supported by default makes an all-or-nothing check easier for the caller.
-	BitField<RDD::TextureUsageBits> supported = INT64_MAX;
+	BitField<RDD::TextureUsageBits> supported = Math::max<int64_t>();
 
 	if (!(flags & VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT)) {
 		supported.clear_flag(TEXTURE_USAGE_SAMPLING_BIT);
@@ -2401,7 +2401,7 @@ void RenderingDeviceDriverVulkan::semaphore_free(SemaphoreID p_semaphore) {
 RDD::CommandQueueFamilyID RenderingDeviceDriverVulkan::command_queue_family_get(BitField<CommandQueueFamilyBits> p_cmd_queue_family_bits, RenderingContextDriver::SurfaceID p_surface) {
 	// Pick the queue with the least amount of bits that can fulfill the requirements.
 	VkQueueFlags picked_queue_flags = VK_QUEUE_FLAG_BITS_MAX_ENUM;
-	uint32_t picked_family_index = UINT_MAX;
+	uint32_t picked_family_index = Math::max<uint32_t>();
 	for (uint32_t i = 0; i < queue_family_properties.size(); i++) {
 		if (queue_families[i].is_empty()) {
 			// Ignore empty queue families.
@@ -2440,8 +2440,8 @@ RDD::CommandQueueID RenderingDeviceDriverVulkan::command_queue_create(CommandQue
 	// Make a virtual queue on top of a real queue. Use the queue from the family with the least amount of virtual queues created.
 	uint32_t family_index = p_cmd_queue_family.id - 1;
 	TightLocalVector<Queue> &queue_family = queue_families[family_index];
-	uint32_t picked_queue_index = UINT_MAX;
-	uint32_t picked_virtual_count = UINT_MAX;
+	uint32_t picked_queue_index = Math::max<uint32_t>();
+	uint32_t picked_virtual_count = Math::max<uint32_t>();
 	for (uint32_t i = 0; i < queue_family.size(); i++) {
 		if (queue_family[i].virtual_count < picked_virtual_count) {
 			picked_queue_index = i;
@@ -2620,7 +2620,7 @@ Error RenderingDeviceDriverVulkan::command_queue_execute_and_present(CommandQueu
 		bool any_result_is_out_of_date = false;
 		for (uint32_t i = 0; i < p_swap_chains.size(); i++) {
 			SwapChain *swap_chain = (SwapChain *)(p_swap_chains[i].id);
-			swap_chain->image_index = UINT_MAX;
+			swap_chain->image_index = Math::max<uint32_t>();
 			if (results[i] == VK_ERROR_OUT_OF_DATE_KHR) {
 				context_driver->surface_set_needs_resize(swap_chain->surface, true);
 				any_result_is_out_of_date = true;
@@ -2801,7 +2801,7 @@ void RenderingDeviceDriverVulkan::_swap_chain_release(SwapChain *swap_chain) {
 		vkDestroyImageView(vk_device, view, VKC::get_allocation_callbacks(VK_OBJECT_TYPE_IMAGE_VIEW));
 	}
 
-	swap_chain->image_index = UINT_MAX;
+	swap_chain->image_index = Math::max<uint32_t>();
 	swap_chain->images.clear();
 	swap_chain->image_views.clear();
 	swap_chain->framebuffers.clear();
@@ -5543,7 +5543,7 @@ void RenderingDeviceDriverVulkan::print_lost_device_info() {
 			// The one with the smallest difference is the closest to breadcrumb_id, which means it's
 			// the last written command.
 			uint32_t biggest_id = 0u;
-			uint32_t smallest_id_diff = std::numeric_limits<uint32_t>::max();
+			uint32_t smallest_id_diff = Math::max<uint32_t>();
 			const uint32_t *breadcrumb_ptr32 = reinterpret_cast<const uint32_t *>(breadcrumb_ptr);
 			for (size_t i = 0u; i < BREADCRUMB_BUFFER_ENTRIES; ++i) {
 				const uint32_t id = breadcrumb_ptr32[i * 2u];

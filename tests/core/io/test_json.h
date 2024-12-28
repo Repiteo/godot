@@ -283,8 +283,8 @@ TEST_CASE("[JSON] Serialization") {
 
 	static IntTestCase int_tests[] = {
 		{ 0, "0" },
-		{ INT64_MAX, "9223372036854775807" },
-		{ INT64_MIN, "-9223372036854775808" },
+		{ Math::max<int64_t>(), "9223372036854775807" },
+		{ Math::min<int64_t>(), "-9223372036854775808" },
 	};
 
 	SUBCASE("Floating point default precision") {

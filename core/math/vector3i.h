@@ -130,15 +130,20 @@ struct [[nodiscard]] Vector3i {
 	_FORCE_INLINE_ bool operator>=(const Vector3i &p_v) const;
 
 	operator String() const;
-	operator Vector3() const;
 
-	_FORCE_INLINE_ Vector3i() {}
-	_FORCE_INLINE_ Vector3i(int32_t p_x, int32_t p_y, int32_t p_z) {
-		x = p_x;
-		y = p_y;
-		z = p_z;
-	}
+	constexpr Vector3i() :
+			x(0), y(0), z(0) {}
+	constexpr Vector3i(int32_t p_x, int32_t p_y, int32_t p_z) :
+			x(p_x), y(p_y), z(p_z) {}
+	constexpr Vector3i(const Vector3 &p_vec);
 };
+
+#ifdef VECTOR3_H
+constexpr Vector3::Vector3(const Vector3i &p_vec) :
+		x(p_vec.x), y(p_vec.y), z(p_vec.z) {}
+constexpr Vector3i::Vector3i(const Vector3 &p_vec) :
+		x(p_vec.x), y(p_vec.y), z(p_vec.z) {}
+#endif // VECTOR3_H
 
 int64_t Vector3i::length_squared() const {
 	return x * (int64_t)x + y * (int64_t)y + z * (int64_t)z;
@@ -335,5 +340,19 @@ bool Vector3i::operator>=(const Vector3i &p_v) const {
 void Vector3i::zero() {
 	x = y = z = 0;
 }
+
+template <>
+class std::numeric_limits<Vector3i> {
+public:
+	[[nodiscard]] static constexpr Vector3i min() { return Vector3i(std::numeric_limits<int32_t>::min(), std::numeric_limits<int32_t>::min(), std::numeric_limits<int32_t>::min()); }
+	[[nodiscard]] static constexpr Vector3i max() { return Vector3i(std::numeric_limits<int32_t>::max(), std::numeric_limits<int32_t>::max(), std::numeric_limits<int32_t>::max()); }
+	[[nodiscard]] static constexpr Vector3i lowest() { return Vector3i(std::numeric_limits<int32_t>::lowest(), std::numeric_limits<int32_t>::lowest(), std::numeric_limits<int32_t>::lowest()); }
+	[[nodiscard]] static constexpr Vector3i epsilon() { return Vector3i(std::numeric_limits<int32_t>::epsilon(), std::numeric_limits<int32_t>::epsilon(), std::numeric_limits<int32_t>::epsilon()); }
+	[[nodiscard]] static constexpr Vector3i round_error() { return Vector3i(std::numeric_limits<int32_t>::round_error(), std::numeric_limits<int32_t>::round_error(), std::numeric_limits<int32_t>::round_error()); }
+	[[nodiscard]] static constexpr Vector3i denorm_min() { return Vector3i(std::numeric_limits<int32_t>::denorm_min(), std::numeric_limits<int32_t>::denorm_min(), std::numeric_limits<int32_t>::denorm_min()); }
+	[[nodiscard]] static constexpr Vector3i infinity() { return Vector3i(std::numeric_limits<int32_t>::infinity(), std::numeric_limits<int32_t>::infinity(), std::numeric_limits<int32_t>::infinity()); }
+	[[nodiscard]] static constexpr Vector3i quiet_NaN() { return Vector3i(std::numeric_limits<int32_t>::quiet_NaN(), std::numeric_limits<int32_t>::quiet_NaN(), std::numeric_limits<int32_t>::quiet_NaN()); }
+	[[nodiscard]] static constexpr Vector3i signaling_NaN() { return Vector3i(std::numeric_limits<int32_t>::signaling_NaN(), std::numeric_limits<int32_t>::signaling_NaN(), std::numeric_limits<int32_t>::signaling_NaN()); }
+};
 
 #endif // VECTOR3I_H

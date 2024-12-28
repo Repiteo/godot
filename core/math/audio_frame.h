@@ -133,10 +133,6 @@ struct AudioFrame {
 		return res;
 	}
 
-	_ALWAYS_INLINE_ AudioFrame(float p_left, float p_right) {
-		left = p_left;
-		right = p_right;
-	}
 	_ALWAYS_INLINE_ AudioFrame(const AudioFrame &p_frame) {
 		left = p_frame.left;
 		right = p_frame.right;
@@ -151,11 +147,12 @@ struct AudioFrame {
 		return Vector2(left, right);
 	}
 
-	_ALWAYS_INLINE_ AudioFrame(const Vector2 &p_v2) {
-		left = p_v2.x;
-		right = p_v2.y;
-	}
-	_ALWAYS_INLINE_ AudioFrame() {}
+	constexpr AudioFrame() :
+			left(0), right(0) {}
+	constexpr AudioFrame(float p_left, float p_right) :
+			left(p_left), right(p_right) {}
+	constexpr AudioFrame(const Vector2 &p_v2) :
+			left(p_v2.x), right(p_v2.y) {}
 };
 
 _ALWAYS_INLINE_ AudioFrame operator*(float p_scalar, const AudioFrame &p_frame) {
@@ -169,5 +166,19 @@ _ALWAYS_INLINE_ AudioFrame operator*(int32_t p_scalar, const AudioFrame &p_frame
 _ALWAYS_INLINE_ AudioFrame operator*(int64_t p_scalar, const AudioFrame &p_frame) {
 	return AudioFrame(p_frame.left * p_scalar, p_frame.right * p_scalar);
 }
+
+template <>
+class std::numeric_limits<AudioFrame> {
+public:
+	[[nodiscard]] static constexpr AudioFrame min() { return AudioFrame(std::numeric_limits<real_t>::min(), std::numeric_limits<real_t>::min()); }
+	[[nodiscard]] static constexpr AudioFrame max() { return AudioFrame(std::numeric_limits<real_t>::max(), std::numeric_limits<real_t>::max()); }
+	[[nodiscard]] static constexpr AudioFrame lowest() { return AudioFrame(std::numeric_limits<real_t>::lowest(), std::numeric_limits<real_t>::lowest()); }
+	[[nodiscard]] static constexpr AudioFrame epsilon() { return AudioFrame(std::numeric_limits<real_t>::epsilon(), std::numeric_limits<real_t>::epsilon()); }
+	[[nodiscard]] static constexpr AudioFrame round_error() { return AudioFrame(std::numeric_limits<real_t>::round_error(), std::numeric_limits<real_t>::round_error()); }
+	[[nodiscard]] static constexpr AudioFrame denorm_min() { return AudioFrame(std::numeric_limits<real_t>::denorm_min(), std::numeric_limits<real_t>::denorm_min()); }
+	[[nodiscard]] static constexpr AudioFrame infinity() { return AudioFrame(std::numeric_limits<real_t>::infinity(), std::numeric_limits<real_t>::infinity()); }
+	[[nodiscard]] static constexpr AudioFrame quiet_NaN() { return AudioFrame(std::numeric_limits<real_t>::quiet_NaN(), std::numeric_limits<real_t>::quiet_NaN()); }
+	[[nodiscard]] static constexpr AudioFrame signaling_NaN() { return AudioFrame(std::numeric_limits<real_t>::signaling_NaN(), std::numeric_limits<real_t>::signaling_NaN()); }
+};
 
 #endif // AUDIO_FRAME_H

@@ -435,12 +435,10 @@ private:
 			return;
 		}
 
-		BOUNDS bb;
-
 		typename BVHTREE_CLASS::CullParams params;
 
 		params.result_count_overall = 0;
-		params.result_max = INT_MAX;
+		params.result_max = Math::max<int>();
 		params.result_array = nullptr;
 		params.subindex_array = nullptr;
 

@@ -4175,10 +4175,10 @@ Dictionary Image::compute_image_metrics(const Ref<Image> p_compared_image, bool 
 	// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	Dictionary result;
-	result["max"] = INFINITY;
-	result["mean"] = INFINITY;
-	result["mean_squared"] = INFINITY;
-	result["root_mean_squared"] = INFINITY;
+	result["max"] = Math::inf<double>();
+	result["mean"] = Math::inf<double>();
+	result["mean_squared"] = Math::inf<double>();
+	result["root_mean_squared"] = Math::inf<double>();
 	result["peak_snr"] = 0.0f;
 
 	ERR_FAIL_COND_V(p_compared_image.is_null(), result);

@@ -55,7 +55,7 @@ TEST_CASE("[Math] C++ macros") {
 	CHECK(SIGN(0) == 0.0);
 	CHECK(SIGN(5) == 1.0);
 	// Check that SIGN(NAN) returns 0.0.
-	CHECK(SIGN(NAN) == 0.0);
+	CHECK(SIGN(Math::nan<double>()) == 0.0);
 }
 
 TEST_CASE("[Math] Power of two functions") {
@@ -292,10 +292,10 @@ TEST_CASE_TEMPLATE("[Math] pow/log/log2/exp/sqrt", T, float, double) {
 
 TEST_CASE_TEMPLATE("[Math] is_nan/is_inf", T, float, double) {
 	CHECK(!Math::is_nan((T)0.0));
-	CHECK(Math::is_nan((T)NAN));
+	CHECK(Math::is_nan(Math::nan<T>()));
 
 	CHECK(!Math::is_inf((T)0.0));
-	CHECK(Math::is_inf((T)INFINITY));
+	CHECK(Math::is_inf(Math::inf<T>()));
 }
 
 TEST_CASE_TEMPLATE("[Math] linear_to_db", T, float, double) {

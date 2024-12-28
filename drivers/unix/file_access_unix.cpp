@@ -42,7 +42,6 @@
 #include <unistd.h>
 
 #if defined(TOOLS_ENABLED)
-#include <limits.h>
 #include <stdlib.h>
 #endif
 

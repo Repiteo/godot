@@ -179,7 +179,7 @@ private:
 	uint64_t lc_limit = 0;
 
 	uint64_t exe_limit = 0;
-	uint64_t exe_base = std::numeric_limits<uint64_t>::max(); // Start of first __text section.
+	uint64_t exe_base = Math::max<uint64_t>(); // Start of first __text section.
 	uint32_t align = 0;
 	uint32_t cputype = 0;
 	uint32_t cpusubtype = 0;

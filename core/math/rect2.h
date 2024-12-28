@@ -359,17 +359,34 @@ struct [[nodiscard]] Rect2 {
 	}
 
 	operator String() const;
-	operator Rect2i() const;
 
-	Rect2() {}
-	Rect2(real_t p_x, real_t p_y, real_t p_width, real_t p_height) :
-			position(Point2(p_x, p_y)),
-			size(Size2(p_width, p_height)) {
-	}
-	Rect2(const Point2 &p_pos, const Size2 &p_size) :
-			position(p_pos),
-			size(p_size) {
-	}
+	constexpr Rect2() = default;
+	constexpr Rect2(real_t p_x, real_t p_y, real_t p_width, real_t p_height) :
+			position(Point2(p_x, p_y)), size(Size2(p_width, p_height)) {}
+	constexpr Rect2(const Point2 &p_pos, const Size2 &p_size) :
+			position(p_pos), size(p_size) {}
+	constexpr Rect2(const Rect2i &p_rect);
+};
+
+#ifdef RECT2I_H
+constexpr Rect2::Rect2(const Rect2i &p_rect) :
+		position(p_rect.position), size(p_rect.size) {}
+constexpr Rect2i::Rect2i(const Rect2 &p_rect) :
+		position(p_rect.position), size(p_rect.size) {}
+#endif // RECT2I_H
+
+template <>
+class std::numeric_limits<Rect2> {
+public:
+	[[nodiscard]] static constexpr Rect2 min() { return Rect2(std::numeric_limits<Point2>::min(), std::numeric_limits<Size2>::min()); }
+	[[nodiscard]] static constexpr Rect2 max() { return Rect2(std::numeric_limits<Point2>::max(), std::numeric_limits<Size2>::max()); }
+	[[nodiscard]] static constexpr Rect2 lowest() { return Rect2(std::numeric_limits<Point2>::lowest(), std::numeric_limits<Size2>::lowest()); }
+	[[nodiscard]] static constexpr Rect2 epsilon() { return Rect2(std::numeric_limits<Point2>::epsilon(), std::numeric_limits<Size2>::epsilon()); }
+	[[nodiscard]] static constexpr Rect2 round_error() { return Rect2(std::numeric_limits<Point2>::round_error(), std::numeric_limits<Size2>::round_error()); }
+	[[nodiscard]] static constexpr Rect2 denorm_min() { return Rect2(std::numeric_limits<Point2>::denorm_min(), std::numeric_limits<Size2>::denorm_min()); }
+	[[nodiscard]] static constexpr Rect2 infinity() { return Rect2(std::numeric_limits<Point2>::infinity(), std::numeric_limits<Size2>::infinity()); }
+	[[nodiscard]] static constexpr Rect2 quiet_NaN() { return Rect2(std::numeric_limits<Point2>::quiet_NaN(), std::numeric_limits<Size2>::quiet_NaN()); }
+	[[nodiscard]] static constexpr Rect2 signaling_NaN() { return Rect2(std::numeric_limits<Point2>::signaling_NaN(), std::numeric_limits<Size2>::signaling_NaN()); }
 };
 
 #endif // RECT2_H

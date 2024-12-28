@@ -31,6 +31,8 @@
 #ifndef MATH_DEFS_H
 #define MATH_DEFS_H
 
+#include <limits>
+
 #define CMP_EPSILON 0.00001
 #define CMP_EPSILON2 (CMP_EPSILON * CMP_EPSILON)
 
@@ -136,5 +138,23 @@ typedef double real_t;
 #else
 typedef float real_t;
 #endif
+
+namespace Math {
+
+// Shorthands for common `std::numeric_limits` functions.
+
+template <typename T>
+constexpr T max() { return std::numeric_limits<T>::max(); }
+
+template <typename T>
+constexpr T min() { return std::numeric_limits<T>::min(); }
+
+template <typename T>
+constexpr T inf() { return std::numeric_limits<T>::infinity(); }
+
+template <typename T>
+constexpr T nan() { return std::numeric_limits<T>::quiet_NaN(); }
+
+} // namespace Math
 
 #endif // MATH_DEFS_H

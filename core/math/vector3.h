@@ -184,15 +184,20 @@ struct [[nodiscard]] Vector3 {
 	_FORCE_INLINE_ bool operator>=(const Vector3 &p_v) const;
 
 	operator String() const;
-	operator Vector3i() const;
 
-	_FORCE_INLINE_ Vector3() {}
-	_FORCE_INLINE_ Vector3(real_t p_x, real_t p_y, real_t p_z) {
-		x = p_x;
-		y = p_y;
-		z = p_z;
-	}
+	constexpr Vector3() :
+			x(0), y(0), z(0) {}
+	constexpr Vector3(real_t p_x, real_t p_y, real_t p_z) :
+			x(p_x), y(p_y), z(p_z) {}
+	constexpr Vector3(const Vector3i &p_vec);
 };
+
+#ifdef VECTOR3I_H
+constexpr Vector3::Vector3(const Vector3i &p_vec) :
+		x(p_vec.x), y(p_vec.y), z(p_vec.z) {}
+constexpr Vector3i::Vector3i(const Vector3 &p_vec) :
+		x(p_vec.x), y(p_vec.y), z(p_vec.z) {}
+#endif // VECTOR3I_H
 
 Vector3 Vector3::cross(const Vector3 &p_with) const {
 	Vector3 ret(
@@ -538,5 +543,19 @@ Vector3 Vector3::reflect(const Vector3 &p_normal) const {
 #endif
 	return 2.0f * p_normal * dot(p_normal) - *this;
 }
+
+template <>
+class std::numeric_limits<Vector3> {
+public:
+	[[nodiscard]] static constexpr Vector3 min() { return Vector3(std::numeric_limits<real_t>::min(), std::numeric_limits<real_t>::min(), std::numeric_limits<real_t>::min()); }
+	[[nodiscard]] static constexpr Vector3 max() { return Vector3(std::numeric_limits<real_t>::max(), std::numeric_limits<real_t>::max(), std::numeric_limits<real_t>::max()); }
+	[[nodiscard]] static constexpr Vector3 lowest() { return Vector3(std::numeric_limits<real_t>::lowest(), std::numeric_limits<real_t>::lowest(), std::numeric_limits<real_t>::lowest()); }
+	[[nodiscard]] static constexpr Vector3 epsilon() { return Vector3(std::numeric_limits<real_t>::epsilon(), std::numeric_limits<real_t>::epsilon(), std::numeric_limits<real_t>::epsilon()); }
+	[[nodiscard]] static constexpr Vector3 round_error() { return Vector3(std::numeric_limits<real_t>::round_error(), std::numeric_limits<real_t>::round_error(), std::numeric_limits<real_t>::round_error()); }
+	[[nodiscard]] static constexpr Vector3 denorm_min() { return Vector3(std::numeric_limits<real_t>::denorm_min(), std::numeric_limits<real_t>::denorm_min(), std::numeric_limits<real_t>::denorm_min()); }
+	[[nodiscard]] static constexpr Vector3 infinity() { return Vector3(std::numeric_limits<real_t>::infinity(), std::numeric_limits<real_t>::infinity(), std::numeric_limits<real_t>::infinity()); }
+	[[nodiscard]] static constexpr Vector3 quiet_NaN() { return Vector3(std::numeric_limits<real_t>::quiet_NaN(), std::numeric_limits<real_t>::quiet_NaN(), std::numeric_limits<real_t>::quiet_NaN()); }
+	[[nodiscard]] static constexpr Vector3 signaling_NaN() { return Vector3(std::numeric_limits<real_t>::signaling_NaN(), std::numeric_limits<real_t>::signaling_NaN(), std::numeric_limits<real_t>::signaling_NaN()); }
+};
 
 #endif // VECTOR3_H

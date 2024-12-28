@@ -74,8 +74,8 @@ public:
 
 			float min_depth = (closest_point - p_cam_position).length();
 
-			Vector2 rect_min = Vector2(FLT_MAX, FLT_MAX);
-			Vector2 rect_max = Vector2(FLT_MIN, FLT_MIN);
+			Vector2 rect_min = Math::max<Vector2>();
+			Vector2 rect_max = Math::min<Vector2>();
 
 			for (int j = 0; j < 8; j++) {
 				const Vector3 &c = RendererSceneOcclusionCull::HZBuffer::corners[j];

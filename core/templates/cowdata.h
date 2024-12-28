@@ -32,6 +32,7 @@
 #define COWDATA_H
 
 #include "core/error/error_macros.h"
+#include "core/math/math_defs.h"
 #include "core/os/memory.h"
 #include "core/templates/safe_refcount.h"
 
@@ -69,7 +70,7 @@ class CowData {
 public:
 	typedef int64_t Size;
 	typedef uint64_t USize;
-	static constexpr USize MAX_INT = INT64_MAX;
+	static constexpr USize MAX_INT = Math::max<USize>();
 
 private:
 	// Function to find the next power of 2 to an integer.

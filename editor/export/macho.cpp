@@ -154,7 +154,7 @@ bool MachO::open_file(const String &p_path) {
 	cpusubtype = mach_header.cpusubtype;
 	cputype = mach_header.cputype;
 	align = 0;
-	exe_base = std::numeric_limits<uint64_t>::max();
+	exe_base = Math::max<uint64_t>();
 	exe_limit = 0;
 	lc_limit = 0;
 	link_edit_offset = 0;

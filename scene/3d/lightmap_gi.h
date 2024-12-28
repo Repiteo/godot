@@ -236,7 +236,7 @@ private:
 	};
 
 	struct BSPNode {
-		static const int32_t EMPTY_LEAF = INT32_MIN;
+		static const int32_t EMPTY_LEAF = Math::min<int32_t>();
 		Plane plane;
 		int32_t over = EMPTY_LEAF;
 		int32_t under = EMPTY_LEAF;

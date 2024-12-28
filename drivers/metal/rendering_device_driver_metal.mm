@@ -612,7 +612,7 @@ BitField<RDD::TextureUsageBits> RenderingDeviceDriverMetal::texture_get_usages_s
 	MTLFmtCaps caps = pf.getCapabilities(p_format);
 
 	// Everything supported by default makes an all-or-nothing check easier for the caller.
-	BitField<RDD::TextureUsageBits> supported = INT64_MAX;
+	BitField<RDD::TextureUsageBits> supported = Math::max<int64_t>();
 	supported.clear_flag(TEXTURE_USAGE_VRS_ATTACHMENT_BIT); // No VRS support for Metal.
 
 	if (!flags::any(caps, kMTLFmtCapsColorAtt)) {

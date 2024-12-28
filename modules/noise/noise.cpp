@@ -91,8 +91,8 @@ Vector<Ref<Image>> Noise::_get_image(int p_width, int p_height, int p_depth, boo
 		LocalVector<real_t> values;
 		values.resize(p_width * p_height * p_depth);
 
-		real_t min_val = FLT_MAX;
-		real_t max_val = -FLT_MAX;
+		real_t min_val = Math::max<real_t>();
+		real_t max_val = -Math::max<real_t>();
 		int idx = 0;
 		for (int d = 0; d < p_depth; d++) {
 			for (int y = 0; y < p_height; y++) {

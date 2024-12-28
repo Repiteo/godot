@@ -4207,8 +4207,8 @@ void CanvasItemEditor::_selection_changed() {
 	}
 	selected_from_canvas = false;
 
-	if (temp_pivot != Vector2(INFINITY, INFINITY)) {
-		temp_pivot = Vector2(INFINITY, INFINITY);
+	if (temp_pivot != Vector2(Math::inf<real_t>(), Math::inf<real_t>())) {
+		temp_pivot = Vector2(Math::inf<real_t>(), Math::inf<real_t>());
 		viewport->queue_redraw();
 	}
 }
@@ -4864,7 +4864,6 @@ void CanvasItemEditor::_set_owner_for_node_and_children(Node *p_node, Node *p_ow
 }
 
 void CanvasItemEditor::_focus_selection(int p_op) {
-	Vector2 center(0.f, 0.f);
 	Rect2 rect;
 	int count = 0;
 

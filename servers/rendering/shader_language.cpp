@@ -4577,9 +4577,9 @@ PropertyInfo ShaderLanguage::uniform_to_property_info(const ShaderNode::Uniform 
 				if (p_uniform.hint == ShaderLanguage::ShaderNode::Uniform::HINT_RANGE) {
 					pi.hint_string = rtos(p_uniform.hint_range[0]) + "," + rtos(p_uniform.hint_range[1]) + "," + rtos(p_uniform.hint_range[2]);
 				} else if (p_uniform.type == ShaderLanguage::TYPE_UINT) {
-					pi.hint_string = "0," + itos(UINT32_MAX);
+					pi.hint_string = "0," + itos(Math::max<uint32_t>());
 				} else {
-					pi.hint_string = itos(INT32_MIN) + "," + itos(INT32_MAX);
+					pi.hint_string = itos(Math::min<int32_t>()) + "," + itos(Math::max<int32_t>());
 				}
 			}
 		} break;

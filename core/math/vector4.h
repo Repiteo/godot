@@ -142,16 +142,20 @@ struct [[nodiscard]] Vector4 {
 	_FORCE_INLINE_ bool operator<=(const Vector4 &p_vec4) const;
 
 	operator String() const;
-	operator Vector4i() const;
 
-	_FORCE_INLINE_ Vector4() {}
-	_FORCE_INLINE_ Vector4(real_t p_x, real_t p_y, real_t p_z, real_t p_w) {
-		x = p_x;
-		y = p_y;
-		z = p_z;
-		w = p_w;
-	}
+	constexpr Vector4() :
+			x(0), y(0), z(0), w(0) {}
+	constexpr Vector4(real_t p_x, real_t p_y, real_t p_z, real_t p_w) :
+			x(p_x), y(p_y), z(p_z), w(p_w) {}
+	constexpr Vector4(const Vector4i &p_vec);
 };
+
+#ifdef VECTOR4I_H
+constexpr Vector4::Vector4(const Vector4i &p_vec) :
+		x(p_vec.x), y(p_vec.y), z(p_vec.z), w(p_vec.w) {}
+constexpr Vector4i::Vector4i(const Vector4 &p_vec) :
+		x(p_vec.x), y(p_vec.y), z(p_vec.z), w(p_vec.w) {}
+#endif // VECTOR4I_H
 
 real_t Vector4::dot(const Vector4 &p_vec4) const {
 	return x * p_vec4.x + y * p_vec4.y + z * p_vec4.z + w * p_vec4.w;
@@ -302,5 +306,19 @@ _FORCE_INLINE_ Vector4 operator*(int32_t p_scalar, const Vector4 &p_vec) {
 _FORCE_INLINE_ Vector4 operator*(int64_t p_scalar, const Vector4 &p_vec) {
 	return p_vec * p_scalar;
 }
+
+template <>
+class std::numeric_limits<Vector4> {
+public:
+	[[nodiscard]] static constexpr Vector4 min() { return Vector4(std::numeric_limits<real_t>::min(), std::numeric_limits<real_t>::min(), std::numeric_limits<real_t>::min(), std::numeric_limits<real_t>::min()); }
+	[[nodiscard]] static constexpr Vector4 max() { return Vector4(std::numeric_limits<real_t>::max(), std::numeric_limits<real_t>::max(), std::numeric_limits<real_t>::max(), std::numeric_limits<real_t>::max()); }
+	[[nodiscard]] static constexpr Vector4 lowest() { return Vector4(std::numeric_limits<real_t>::lowest(), std::numeric_limits<real_t>::lowest(), std::numeric_limits<real_t>::lowest(), std::numeric_limits<real_t>::lowest()); }
+	[[nodiscard]] static constexpr Vector4 epsilon() { return Vector4(std::numeric_limits<real_t>::epsilon(), std::numeric_limits<real_t>::epsilon(), std::numeric_limits<real_t>::epsilon(), std::numeric_limits<real_t>::epsilon()); }
+	[[nodiscard]] static constexpr Vector4 round_error() { return Vector4(std::numeric_limits<real_t>::round_error(), std::numeric_limits<real_t>::round_error(), std::numeric_limits<real_t>::round_error(), std::numeric_limits<real_t>::round_error()); }
+	[[nodiscard]] static constexpr Vector4 denorm_min() { return Vector4(std::numeric_limits<real_t>::denorm_min(), std::numeric_limits<real_t>::denorm_min(), std::numeric_limits<real_t>::denorm_min(), std::numeric_limits<real_t>::denorm_min()); }
+	[[nodiscard]] static constexpr Vector4 infinity() { return Vector4(std::numeric_limits<real_t>::infinity(), std::numeric_limits<real_t>::infinity(), std::numeric_limits<real_t>::infinity(), std::numeric_limits<real_t>::infinity()); }
+	[[nodiscard]] static constexpr Vector4 quiet_NaN() { return Vector4(std::numeric_limits<real_t>::quiet_NaN(), std::numeric_limits<real_t>::quiet_NaN(), std::numeric_limits<real_t>::quiet_NaN(), std::numeric_limits<real_t>::quiet_NaN()); }
+	[[nodiscard]] static constexpr Vector4 signaling_NaN() { return Vector4(std::numeric_limits<real_t>::signaling_NaN(), std::numeric_limits<real_t>::signaling_NaN(), std::numeric_limits<real_t>::signaling_NaN(), std::numeric_limits<real_t>::signaling_NaN()); }
+};
 
 #endif // VECTOR4_H
