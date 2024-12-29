@@ -4,17 +4,11 @@ on:
 
 # Global Settings
 env:
-  # Used for the cache key. Add version suffix to force clean build.
-  GODOT_BASE_BRANCH: master
   SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes strict_checks=yes
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   TSAN_OPTIONS: suppressions=misc/error_suppressions/tsan.txt
   UBSAN_OPTIONS: suppressions=misc/error_suppressions/ubsan.txt
-
-concurrency:
-  group: ci-${{ github.actor }}-${{ github.head_ref || github.run_number }}-${{ github.ref }}-linux
-  cancel-in-progress: true
 
 jobs:
   build-linux:
@@ -129,7 +123,7 @@ jobs:
         continue-on-error: true
 
       - name: Setup Python and SCons
-        if: '!matrix.legacy-scons'
+        if: "!matrix.legacy-scons"
         uses: ./.github/actions/godot-deps
 
       - name: Setup Python and SCons (legacy versions)
@@ -150,7 +144,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           # Targeting the oldest version we want to support to ensure it still builds.
-          dotnet-version: '8.0.100'
+          dotnet-version: "8.0.100"
 
       - name: Compilation
         uses: ./.github/actions/godot-build
