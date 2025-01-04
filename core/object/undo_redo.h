@@ -150,6 +150,4 @@ public:
 	~UndoRedo();
 };
 
-VARIANT_ENUM_CAST(UndoRedo::MergeMode);
-
 #endif // UNDO_REDO_H

@@ -287,8 +287,6 @@ public:
 	PlaneMesh();
 };
 
-VARIANT_ENUM_CAST(PlaneMesh::Orientation)
-
 /*
 	A flat rectangle, inherits from PlaneMesh but defaults to facing the Z-plane.
 */
@@ -689,7 +687,5 @@ public:
 	void set_offset(const Point2 &p_offset);
 	Point2 get_offset() const;
 };
-
-VARIANT_ENUM_CAST(RibbonTrailMesh::Shape)
 
 #endif // PRIMITIVE_MESHES_H

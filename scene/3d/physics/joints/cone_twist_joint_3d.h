@@ -58,6 +58,4 @@ public:
 	ConeTwistJoint3D();
 };
 
-VARIANT_ENUM_CAST(ConeTwistJoint3D::Param);
-
 #endif // CONE_TWIST_JOINT_3D_H

@@ -107,6 +107,4 @@ public:
 	SceneReplicationConfig() {}
 };
 
-VARIANT_ENUM_CAST(SceneReplicationConfig::ReplicationMode);
-
 #endif // SCENE_REPLICATION_CONFIG_H

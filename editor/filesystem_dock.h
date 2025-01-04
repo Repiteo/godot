@@ -421,6 +421,4 @@ public:
 	~FileSystemDock();
 };
 
-VARIANT_ENUM_CAST(FileSystemDock::Overwrite);
-
 #endif // FILESYSTEM_DOCK_H

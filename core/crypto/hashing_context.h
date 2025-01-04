@@ -61,6 +61,4 @@ public:
 	~HashingContext();
 };
 
-VARIANT_ENUM_CAST(HashingContext::HashType);
-
 #endif // HASHING_CONTEXT_H

@@ -63,6 +63,4 @@ public:
 	PacketPeerDTLS() {}
 };
 
-VARIANT_ENUM_CAST(PacketPeerDTLS::Status);
-
 #endif // PACKET_PEER_DTLS_H

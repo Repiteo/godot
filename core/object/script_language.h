@@ -448,8 +448,6 @@ public:
 	virtual ~ScriptLanguage() {}
 };
 
-VARIANT_ENUM_CAST(ScriptLanguage::ScriptNameCasing);
-
 extern uint8_t script_encryption_key[32];
 
 class PlaceHolderScriptInstance : public ScriptInstance {

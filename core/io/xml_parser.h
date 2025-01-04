@@ -125,6 +125,4 @@ public:
 	~XMLParser();
 };
 
-VARIANT_ENUM_CAST(XMLParser::NodeType);
-
 #endif // XML_PARSER_H

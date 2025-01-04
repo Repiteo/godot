@@ -387,6 +387,4 @@ public:
 	Error _parse(Ref<GLTFState> p_state, String p_path, Ref<FileAccess> p_file);
 };
 
-VARIANT_ENUM_CAST(GLTFDocument::RootNodeMode);
-
 #endif // GLTF_DOCUMENT_H

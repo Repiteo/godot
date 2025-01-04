@@ -175,7 +175,4 @@ public:
 	void popup_error(const String &p_msg);
 };
 
-VARIANT_ENUM_CAST(EditorVCSInterface::ChangeType);
-VARIANT_ENUM_CAST(EditorVCSInterface::TreeArea);
-
 #endif // EDITOR_VCS_INTERFACE_H

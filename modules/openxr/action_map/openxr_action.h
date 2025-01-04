@@ -82,6 +82,4 @@ public:
 	void parse_toplevel_paths(const String p_toplevel_paths); // Parse and set the top level paths from a comma separated string
 };
 
-VARIANT_ENUM_CAST(OpenXRAction::ActionType);
-
 #endif // OPENXR_ACTION_H

@@ -114,9 +114,4 @@ public:
 	void _notification(int p_what);
 };
 
-VARIANT_ENUM_CAST(OpenXRHand::Hands)
-VARIANT_ENUM_CAST(OpenXRHand::MotionRange)
-VARIANT_ENUM_CAST(OpenXRHand::SkeletonRig)
-VARIANT_ENUM_CAST(OpenXRHand::BoneUpdate)
-
 #endif // OPENXR_HAND_H

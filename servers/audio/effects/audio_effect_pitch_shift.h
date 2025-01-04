@@ -109,6 +109,4 @@ public:
 	FFTSize get_fft_size() const;
 };
 
-VARIANT_ENUM_CAST(AudioEffectPitchShift::FFTSize);
-
 #endif // AUDIO_EFFECT_PITCH_SHIFT_H

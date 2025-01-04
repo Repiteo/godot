@@ -173,8 +173,6 @@ public:
 	~CSGShape3D();
 };
 
-VARIANT_ENUM_CAST(CSGShape3D::Operation)
-
 class CSGCombiner3D : public CSGShape3D {
 	GDCLASS(CSGCombiner3D, CSGShape3D);
 
@@ -459,9 +457,5 @@ public:
 
 	CSGPolygon3D();
 };
-
-VARIANT_ENUM_CAST(CSGPolygon3D::Mode)
-VARIANT_ENUM_CAST(CSGPolygon3D::PathRotation)
-VARIANT_ENUM_CAST(CSGPolygon3D::PathIntervalType)
 
 #endif // CSG_SHAPE_H

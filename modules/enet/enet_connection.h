@@ -137,8 +137,4 @@ public:
 	~ENetConnection();
 };
 
-VARIANT_ENUM_CAST(ENetConnection::CompressionMode);
-VARIANT_ENUM_CAST(ENetConnection::EventType);
-VARIANT_ENUM_CAST(ENetConnection::HostStatistic);
-
 #endif // ENET_CONNECTION_H

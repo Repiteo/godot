@@ -197,6 +197,4 @@ public:
 	~Area2D();
 };
 
-VARIANT_ENUM_CAST(Area2D::SpaceOverride);
-
 #endif // AREA_2D_H

@@ -225,6 +225,4 @@ public:
 	~Theme();
 };
 
-VARIANT_ENUM_CAST(Theme::DataType);
-
 #endif // THEME_H

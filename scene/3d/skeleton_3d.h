@@ -312,6 +312,4 @@ public:
 	~Skeleton3D();
 };
 
-VARIANT_ENUM_CAST(Skeleton3D::ModifierCallbackModeProcess);
-
 #endif // SKELETON_3D_H

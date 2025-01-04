@@ -573,6 +573,4 @@ public:
 	static NavigationServer3D *new_default_server();
 };
 
-VARIANT_ENUM_CAST(NavigationServer3D::ProcessInfo);
-
 #endif // NAVIGATION_SERVER_3D_H

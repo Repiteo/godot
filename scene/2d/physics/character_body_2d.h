@@ -166,7 +166,4 @@ protected:
 	void _validate_property(PropertyInfo &p_property) const;
 };
 
-VARIANT_ENUM_CAST(CharacterBody2D::MotionMode);
-VARIANT_ENUM_CAST(CharacterBody2D::PlatformOnLeave);
-
 #endif // CHARACTER_BODY_2D_H

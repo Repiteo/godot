@@ -147,7 +147,4 @@ public:
 	virtual ~CanvasItemMaterial();
 };
 
-VARIANT_ENUM_CAST(CanvasItemMaterial::BlendMode)
-VARIANT_ENUM_CAST(CanvasItemMaterial::LightMode)
-
 #endif // CANVAS_ITEM_MATERIAL_H

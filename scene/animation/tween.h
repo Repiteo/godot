@@ -189,11 +189,6 @@ public:
 	Tween(bool p_valid);
 };
 
-VARIANT_ENUM_CAST(Tween::TweenPauseMode);
-VARIANT_ENUM_CAST(Tween::TweenProcessMode);
-VARIANT_ENUM_CAST(Tween::TransitionType);
-VARIANT_ENUM_CAST(Tween::EaseType);
-
 class PropertyTweener : public Tweener {
 	GDCLASS(PropertyTweener, Tweener);
 

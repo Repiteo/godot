@@ -199,7 +199,4 @@ public:
 	bool is_target_within_limitation() const;
 };
 
-VARIANT_ENUM_CAST(LookAtModifier3D::BoneAxis);
-VARIANT_ENUM_CAST(LookAtModifier3D::OriginFrom);
-
 #endif // LOOK_AT_MODIFIER_3D_H

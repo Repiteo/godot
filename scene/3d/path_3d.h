@@ -130,6 +130,4 @@ public:
 	PathFollow3D() {}
 };
 
-VARIANT_ENUM_CAST(PathFollow3D::RotationMode);
-
 #endif // PATH_3D_H

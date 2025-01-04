@@ -515,7 +515,4 @@ public:
 	GraphEdit();
 };
 
-VARIANT_ENUM_CAST(GraphEdit::PanningScheme);
-VARIANT_ENUM_CAST(GraphEdit::GridPattern);
-
 #endif // GRAPH_EDIT_H

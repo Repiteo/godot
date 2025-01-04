@@ -183,7 +183,4 @@ protected:
 	void _validate_property(PropertyInfo &p_property) const;
 };
 
-VARIANT_ENUM_CAST(CharacterBody3D::MotionMode);
-VARIANT_ENUM_CAST(CharacterBody3D::PlatformOnLeave);
-
 #endif // CHARACTER_BODY_3D_H

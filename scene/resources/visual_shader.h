@@ -257,9 +257,6 @@ public: // internal methods
 	VisualShader();
 };
 
-VARIANT_ENUM_CAST(VisualShader::Type)
-VARIANT_ENUM_CAST(VisualShader::VaryingMode)
-VARIANT_ENUM_CAST(VisualShader::VaryingType)
 ///
 ///
 ///
@@ -386,8 +383,6 @@ public:
 
 	VisualShaderNode();
 };
-
-VARIANT_ENUM_CAST(VisualShaderNode::PortType)
 
 class VisualShaderNodeCustom : public VisualShaderNode {
 	GDCLASS(VisualShaderNodeCustom, VisualShaderNode);
@@ -633,8 +628,6 @@ public:
 
 	VisualShaderNodeParameter();
 };
-
-VARIANT_ENUM_CAST(VisualShaderNodeParameter::Qualifier)
 
 class VisualShaderNodeParameterRef : public VisualShaderNode {
 	GDCLASS(VisualShaderNodeParameterRef, VisualShaderNode);

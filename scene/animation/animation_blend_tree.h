@@ -105,8 +105,6 @@ private:
 	PlayMode play_mode = PLAY_MODE_FORWARD;
 };
 
-VARIANT_ENUM_CAST(AnimationNodeAnimation::PlayMode)
-
 class AnimationNodeSync : public AnimationNode {
 	GDCLASS(AnimationNodeSync, AnimationNode);
 
@@ -198,9 +196,6 @@ public:
 
 	AnimationNodeOneShot();
 };
-
-VARIANT_ENUM_CAST(AnimationNodeOneShot::OneShotRequest)
-VARIANT_ENUM_CAST(AnimationNodeOneShot::MixMode)
 
 class AnimationNodeAdd2 : public AnimationNodeSync {
 	GDCLASS(AnimationNodeAdd2, AnimationNodeSync);
@@ -483,7 +478,5 @@ public:
 	AnimationNodeBlendTree();
 	~AnimationNodeBlendTree();
 };
-
-VARIANT_ENUM_CAST(AnimationNodeBlendTree::ConnectionError)
 
 #endif // ANIMATION_BLEND_TREE_H

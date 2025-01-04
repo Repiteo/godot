@@ -66,6 +66,4 @@ public:
 	void reset();
 };
 
-VARIANT_ENUM_CAST(NavigationPathQueryResult2D::PathSegmentType);
-
 #endif // NAVIGATION_PATH_QUERY_RESULT_2D_H

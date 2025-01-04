@@ -202,8 +202,4 @@ public:
 	virtual ~HTTPClient() {}
 };
 
-VARIANT_ENUM_CAST(HTTPClient::ResponseCode)
-VARIANT_ENUM_CAST(HTTPClient::Method);
-VARIANT_ENUM_CAST(HTTPClient::Status);
-
 #endif // HTTP_CLIENT_H

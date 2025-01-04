@@ -92,6 +92,4 @@ public:
 	VisibleOnScreenEnabler3D();
 };
 
-VARIANT_ENUM_CAST(VisibleOnScreenEnabler3D::EnableMode);
-
 #endif // VISIBLE_ON_SCREEN_NOTIFIER_3D_H

@@ -113,6 +113,4 @@ public:
 	~PortableCompressedTexture2D();
 };
 
-VARIANT_ENUM_CAST(PortableCompressedTexture2D::CompressionMode)
-
 #endif // PORTABLE_COMPRESSED_TEXTURE_H

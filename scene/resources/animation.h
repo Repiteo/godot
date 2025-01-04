@@ -579,15 +579,4 @@ public:
 	~Animation();
 };
 
-VARIANT_ENUM_CAST(Animation::TrackType);
-VARIANT_ENUM_CAST(Animation::InterpolationType);
-VARIANT_ENUM_CAST(Animation::UpdateMode);
-VARIANT_ENUM_CAST(Animation::LoopMode);
-VARIANT_ENUM_CAST(Animation::LoopedFlag);
-VARIANT_ENUM_CAST(Animation::FindMode);
-#ifdef TOOLS_ENABLED
-VARIANT_ENUM_CAST(Animation::HandleMode);
-VARIANT_ENUM_CAST(Animation::HandleSetMode);
-#endif // TOOLS_ENABLED
-
 #endif // ANIMATION_H

@@ -77,6 +77,4 @@ public:
 	virtual Array get_available_display_refresh_rates() const = 0;
 };
 
-VARIANT_ENUM_CAST(WebXRInterface::TargetRayMode);
-
 #endif // WEBXR_INTERFACE_H

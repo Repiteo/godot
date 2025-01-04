@@ -491,12 +491,4 @@ public:
 	~Window();
 };
 
-VARIANT_ENUM_CAST(Window::Mode);
-VARIANT_ENUM_CAST(Window::Flags);
-VARIANT_ENUM_CAST(Window::ContentScaleMode);
-VARIANT_ENUM_CAST(Window::ContentScaleAspect);
-VARIANT_ENUM_CAST(Window::ContentScaleStretch);
-VARIANT_ENUM_CAST(Window::LayoutDirection);
-VARIANT_ENUM_CAST(Window::WindowInitialPosition);
-
 #endif // WINDOW_H

@@ -89,7 +89,4 @@ private:
 	void _tracker_changed(const StringName &p_tracker_name, XRServer::TrackerType p_tracker_type);
 };
 
-VARIANT_BITFIELD_CAST(XRBodyModifier3D::BodyUpdate)
-VARIANT_ENUM_CAST(XRBodyModifier3D::BoneUpdate)
-
 #endif // XR_BODY_MODIFIER_3D_H

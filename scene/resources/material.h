@@ -796,24 +796,6 @@ public:
 	virtual ~BaseMaterial3D();
 };
 
-VARIANT_ENUM_CAST(BaseMaterial3D::TextureParam)
-VARIANT_ENUM_CAST(BaseMaterial3D::TextureFilter)
-VARIANT_ENUM_CAST(BaseMaterial3D::ShadingMode)
-VARIANT_ENUM_CAST(BaseMaterial3D::Transparency)
-VARIANT_ENUM_CAST(BaseMaterial3D::AlphaAntiAliasing)
-VARIANT_ENUM_CAST(BaseMaterial3D::DetailUV)
-VARIANT_ENUM_CAST(BaseMaterial3D::Feature)
-VARIANT_ENUM_CAST(BaseMaterial3D::BlendMode)
-VARIANT_ENUM_CAST(BaseMaterial3D::DepthDrawMode)
-VARIANT_ENUM_CAST(BaseMaterial3D::CullMode)
-VARIANT_ENUM_CAST(BaseMaterial3D::Flags)
-VARIANT_ENUM_CAST(BaseMaterial3D::DiffuseMode)
-VARIANT_ENUM_CAST(BaseMaterial3D::SpecularMode)
-VARIANT_ENUM_CAST(BaseMaterial3D::BillboardMode)
-VARIANT_ENUM_CAST(BaseMaterial3D::TextureChannel)
-VARIANT_ENUM_CAST(BaseMaterial3D::EmissionOperator)
-VARIANT_ENUM_CAST(BaseMaterial3D::DistanceFadeMode)
-
 class StandardMaterial3D : public BaseMaterial3D {
 	GDCLASS(StandardMaterial3D, BaseMaterial3D)
 protected:

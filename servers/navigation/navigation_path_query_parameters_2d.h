@@ -99,8 +99,4 @@ public:
 	real_t get_simplify_epsilon() const;
 };
 
-VARIANT_ENUM_CAST(NavigationPathQueryParameters2D::PathfindingAlgorithm);
-VARIANT_ENUM_CAST(NavigationPathQueryParameters2D::PathPostProcessing);
-VARIANT_BITFIELD_CAST(NavigationPathQueryParameters2D::PathMetadataFlags);
-
 #endif // NAVIGATION_PATH_QUERY_PARAMETERS_2D_H

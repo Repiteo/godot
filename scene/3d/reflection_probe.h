@@ -130,7 +130,4 @@ public:
 	~ReflectionProbe();
 };
 
-VARIANT_ENUM_CAST(ReflectionProbe::AmbientMode);
-VARIANT_ENUM_CAST(ReflectionProbe::UpdateMode);
-
 #endif // REFLECTION_PROBE_H

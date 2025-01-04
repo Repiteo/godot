@@ -89,6 +89,4 @@ public:
 	virtual ~UPNPDevice() {}
 };
 
-VARIANT_ENUM_CAST(UPNPDevice::IGDStatus)
-
 #endif // UPNP_DEVICE_H

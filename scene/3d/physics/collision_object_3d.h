@@ -179,6 +179,4 @@ public:
 	~CollisionObject3D();
 };
 
-VARIANT_ENUM_CAST(CollisionObject3D::DisableMode);
-
 #endif // COLLISION_OBJECT_3D_H

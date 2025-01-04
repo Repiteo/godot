@@ -320,9 +320,4 @@ public:
 	~CPUParticles3D();
 };
 
-VARIANT_ENUM_CAST(CPUParticles3D::DrawOrder)
-VARIANT_ENUM_CAST(CPUParticles3D::Parameter)
-VARIANT_ENUM_CAST(CPUParticles3D::ParticleFlags)
-VARIANT_ENUM_CAST(CPUParticles3D::EmissionShape)
-
 #endif // CPU_PARTICLES_3D_H

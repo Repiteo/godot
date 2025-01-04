@@ -643,26 +643,6 @@ public:
 
 #define TS TextServerManager::get_singleton()->get_primary_interface()
 
-VARIANT_ENUM_CAST(TextServer::VisibleCharactersBehavior);
-VARIANT_ENUM_CAST(TextServer::AutowrapMode);
-VARIANT_ENUM_CAST(TextServer::OverrunBehavior);
-VARIANT_ENUM_CAST(TextServer::Direction);
-VARIANT_ENUM_CAST(TextServer::Orientation);
-VARIANT_BITFIELD_CAST(TextServer::JustificationFlag);
-VARIANT_BITFIELD_CAST(TextServer::LineBreakFlag);
-VARIANT_BITFIELD_CAST(TextServer::TextOverrunFlag);
-VARIANT_BITFIELD_CAST(TextServer::GraphemeFlag);
-VARIANT_ENUM_CAST(TextServer::Hinting);
-VARIANT_ENUM_CAST(TextServer::SubpixelPositioning);
-VARIANT_ENUM_CAST(TextServer::Feature);
-VARIANT_ENUM_CAST(TextServer::ContourPointTag);
-VARIANT_ENUM_CAST(TextServer::SpacingType);
-VARIANT_BITFIELD_CAST(TextServer::FontStyle);
-VARIANT_ENUM_CAST(TextServer::StructuredTextParser);
-VARIANT_ENUM_CAST(TextServer::FontAntialiasing);
-VARIANT_ENUM_CAST(TextServer::FontLCDSubpixelLayout);
-VARIANT_ENUM_CAST(TextServer::FixedSizeScaleMode);
-
 GDVIRTUAL_NATIVE_PTR(Glyph);
 GDVIRTUAL_NATIVE_PTR(CaretInfo);
 

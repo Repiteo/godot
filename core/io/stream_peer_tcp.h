@@ -91,6 +91,4 @@ public:
 	~StreamPeerTCP();
 };
 
-VARIANT_ENUM_CAST(StreamPeerTCP::Status);
-
 #endif // STREAM_PEER_TCP_H

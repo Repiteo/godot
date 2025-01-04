@@ -66,8 +66,6 @@ public:
 	virtual ~ImageFormatLoader() {}
 };
 
-VARIANT_BITFIELD_CAST(ImageFormatLoader::LoaderFlags);
-
 class ImageFormatLoaderExtension : public ImageFormatLoader {
 	GDCLASS(ImageFormatLoaderExtension, ImageFormatLoader);
 

@@ -1035,26 +1035,6 @@ public:
 	~PhysicsServer3DManager();
 };
 
-VARIANT_ENUM_CAST(PhysicsServer3D::ShapeType);
-VARIANT_ENUM_CAST(PhysicsServer3D::SpaceParameter);
-VARIANT_ENUM_CAST(PhysicsServer3D::AreaParameter);
-VARIANT_ENUM_CAST(PhysicsServer3D::AreaSpaceOverrideMode);
-VARIANT_ENUM_CAST(PhysicsServer3D::BodyMode);
-VARIANT_ENUM_CAST(PhysicsServer3D::BodyParameter);
-VARIANT_ENUM_CAST(PhysicsServer3D::BodyDampMode);
-VARIANT_ENUM_CAST(PhysicsServer3D::BodyState);
-VARIANT_ENUM_CAST(PhysicsServer3D::BodyAxis);
-VARIANT_ENUM_CAST(PhysicsServer3D::PinJointParam);
-VARIANT_ENUM_CAST(PhysicsServer3D::JointType);
-VARIANT_ENUM_CAST(PhysicsServer3D::HingeJointParam);
-VARIANT_ENUM_CAST(PhysicsServer3D::HingeJointFlag);
-VARIANT_ENUM_CAST(PhysicsServer3D::SliderJointParam);
-VARIANT_ENUM_CAST(PhysicsServer3D::ConeTwistJointParam);
-VARIANT_ENUM_CAST(PhysicsServer3D::G6DOFJointAxisParam);
-VARIANT_ENUM_CAST(PhysicsServer3D::G6DOFJointAxisFlag);
-VARIANT_ENUM_CAST(PhysicsServer3D::AreaBodyStatus);
-VARIANT_ENUM_CAST(PhysicsServer3D::ProcessInfo);
-
 #endif // _3D_DISABLED
 
 #endif // PHYSICS_SERVER_3D_H

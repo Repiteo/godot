@@ -117,6 +117,4 @@ public:
 	~AudioStreamPlayer();
 };
 
-VARIANT_ENUM_CAST(AudioStreamPlayer::MixTarget)
-
 #endif // AUDIO_STREAM_PLAYER_H

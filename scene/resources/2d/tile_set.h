@@ -1006,12 +1006,4 @@ public:
 	static PackedVector2Array get_transformed_vertices(const PackedVector2Array &p_vertices, bool p_flip_h, bool p_flip_v, bool p_transpose);
 };
 
-VARIANT_ENUM_CAST(TileSet::CellNeighbor);
-VARIANT_ENUM_CAST(TileSet::TerrainMode);
-VARIANT_ENUM_CAST(TileSet::TileShape);
-VARIANT_ENUM_CAST(TileSet::TileLayout);
-VARIANT_ENUM_CAST(TileSet::TileOffsetAxis);
-
-VARIANT_ENUM_CAST(TileSetAtlasSource::TileAnimationMode);
-
 #endif // TILE_SET_H

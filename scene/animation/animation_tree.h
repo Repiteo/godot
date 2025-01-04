@@ -242,8 +242,6 @@ public:
 	AnimationNode();
 };
 
-VARIANT_ENUM_CAST(AnimationNode::FilterAction)
-
 // Root node does not allow inputs.
 class AnimationRootNode : public AnimationNode {
 	GDCLASS(AnimationRootNode, AnimationNode);
@@ -358,9 +356,5 @@ public:
 	AnimationTree();
 	~AnimationTree();
 };
-
-#ifndef DISABLE_DEPRECATED
-VARIANT_ENUM_CAST(AnimationTree::AnimationProcessCallback);
-#endif // DISABLE_DEPRECATED
 
 #endif // ANIMATION_TREE_H

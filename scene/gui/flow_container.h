@@ -114,7 +114,4 @@ public:
 			FlowContainer(true) { is_fixed = true; }
 };
 
-VARIANT_ENUM_CAST(FlowContainer::AlignmentMode);
-VARIANT_ENUM_CAST(FlowContainer::LastWrapAlignmentMode);
-
 #endif // FLOW_CONTAINER_H

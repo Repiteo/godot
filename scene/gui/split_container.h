@@ -140,8 +140,6 @@ public:
 	SplitContainer(bool p_vertical = false);
 };
 
-VARIANT_ENUM_CAST(SplitContainer::DraggerVisibility);
-
 class HSplitContainer : public SplitContainer {
 	GDCLASS(HSplitContainer, SplitContainer);
 

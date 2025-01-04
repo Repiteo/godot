@@ -137,6 +137,4 @@ public:
 	Performance();
 };
 
-VARIANT_ENUM_CAST(Performance::Monitor);
-
 #endif // PERFORMANCE_H

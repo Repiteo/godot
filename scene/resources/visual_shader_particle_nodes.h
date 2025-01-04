@@ -259,8 +259,6 @@ public:
 	VisualShaderNodeParticleRandomness();
 };
 
-VARIANT_ENUM_CAST(VisualShaderNodeParticleRandomness::OpType)
-
 // Process nodes
 
 class VisualShaderNodeParticleAccelerator : public VisualShaderNode {
@@ -302,8 +300,6 @@ public:
 
 	VisualShaderNodeParticleAccelerator();
 };
-
-VARIANT_ENUM_CAST(VisualShaderNodeParticleAccelerator::Mode)
 
 // Common nodes
 
@@ -366,7 +362,5 @@ public:
 
 	VisualShaderNodeParticleEmit();
 };
-
-VARIANT_ENUM_CAST(VisualShaderNodeParticleEmit::EmitFlags)
 
 #endif // VISUAL_SHADER_PARTICLE_NODES_H

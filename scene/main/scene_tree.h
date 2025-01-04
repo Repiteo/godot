@@ -446,6 +446,4 @@ public:
 	~SceneTree();
 };
 
-VARIANT_ENUM_CAST(SceneTree::GroupCallFlags);
-
 #endif // SCENE_TREE_H

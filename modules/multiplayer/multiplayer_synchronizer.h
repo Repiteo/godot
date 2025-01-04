@@ -124,6 +124,4 @@ public:
 	MultiplayerSynchronizer();
 };
 
-VARIANT_ENUM_CAST(MultiplayerSynchronizer::VisibilityUpdateMode);
-
 #endif // MULTIPLAYER_SYNCHRONIZER_H

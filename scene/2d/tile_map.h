@@ -241,6 +241,4 @@ public:
 	TileMap();
 };
 
-VARIANT_ENUM_CAST(TileMap::VisibilityMode);
-
 #endif // TILE_MAP_H

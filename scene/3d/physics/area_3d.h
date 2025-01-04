@@ -230,6 +230,4 @@ public:
 	~Area3D();
 };
 
-VARIANT_ENUM_CAST(Area3D::SpaceOverride);
-
 #endif // AREA_3D_H

@@ -375,8 +375,4 @@ public:
 	~EditorFileDialog();
 };
 
-VARIANT_ENUM_CAST(EditorFileDialog::FileMode);
-VARIANT_ENUM_CAST(EditorFileDialog::Access);
-VARIANT_ENUM_CAST(EditorFileDialog::DisplayMode);
-
 #endif // EDITOR_FILE_DIALOG_H

@@ -516,6 +516,4 @@ public:
 	~TileMapLayer();
 };
 
-VARIANT_ENUM_CAST(TileMapLayer::DebugVisibilityMode);
-
 #endif // TILE_MAP_LAYER_H

@@ -688,10 +688,6 @@ public:
 	}
 };
 
-VARIANT_ENUM_CAST(ScriptLanguageExtension::LookupResultType)
-VARIANT_ENUM_CAST(ScriptLanguageExtension::CodeCompletionKind)
-VARIANT_ENUM_CAST(ScriptLanguageExtension::CodeCompletionLocation)
-
 class ScriptInstanceExtension : public ScriptInstance {
 public:
 	const GDExtensionScriptInstanceInfo3 *native_info;

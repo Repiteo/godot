@@ -126,7 +126,4 @@ public:
 	~ENetPacketPeer();
 };
 
-VARIANT_ENUM_CAST(ENetPacketPeer::PeerState);
-VARIANT_ENUM_CAST(ENetPacketPeer::PeerStatistic);
-
 #endif // ENET_PACKET_PEER_H

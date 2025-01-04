@@ -212,6 +212,4 @@ private:
 	float blend_shape_values[FT_MAX] = {};
 };
 
-VARIANT_ENUM_CAST(XRFaceTracker::BlendShapeEntry);
-
 #endif // XR_FACE_TRACKER_H

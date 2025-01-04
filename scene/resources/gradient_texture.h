@@ -140,7 +140,4 @@ public:
 	virtual ~GradientTexture2D();
 };
 
-VARIANT_ENUM_CAST(GradientTexture2D::Fill);
-VARIANT_ENUM_CAST(GradientTexture2D::Repeat);
-
 #endif // GRADIENT_TEXTURE_H

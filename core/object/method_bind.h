@@ -33,8 +33,6 @@
 
 #include "core/variant/binder_common.h"
 
-VARIANT_BITFIELD_CAST(MethodFlags)
-
 // some helpers
 
 class MethodBind {

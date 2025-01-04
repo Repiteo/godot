@@ -242,9 +242,4 @@ public:
 	~AnimationPlayer();
 };
 
-#ifndef DISABLE_DEPRECATED
-VARIANT_ENUM_CAST(AnimationPlayer::AnimationProcessCallback);
-VARIANT_ENUM_CAST(AnimationPlayer::AnimationMethodCallMode);
-#endif // DISABLE_DEPRECATED
-
 #endif // ANIMATION_PLAYER_H

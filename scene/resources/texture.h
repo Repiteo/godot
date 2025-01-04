@@ -113,8 +113,6 @@ public:
 	TextureLayered() {}
 };
 
-VARIANT_ENUM_CAST(TextureLayered::LayeredType)
-
 class Texture3D : public Texture {
 	GDCLASS(Texture3D, Texture);
 

@@ -509,9 +509,6 @@ public:
 	virtual ~AudioServer();
 };
 
-VARIANT_ENUM_CAST(AudioServer::SpeakerMode)
-VARIANT_ENUM_CAST(AudioServer::PlaybackType)
-
 class AudioBusLayout : public Resource {
 	GDCLASS(AudioBusLayout, Resource);
 

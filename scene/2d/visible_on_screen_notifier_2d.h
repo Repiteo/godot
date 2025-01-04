@@ -100,6 +100,4 @@ public:
 	VisibleOnScreenEnabler2D();
 };
 
-VARIANT_ENUM_CAST(VisibleOnScreenEnabler2D::EnableMode);
-
 #endif // VISIBLE_ON_SCREEN_NOTIFIER_2D_H

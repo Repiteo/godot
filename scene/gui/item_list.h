@@ -316,7 +316,4 @@ public:
 	~ItemList();
 };
 
-VARIANT_ENUM_CAST(ItemList::SelectMode);
-VARIANT_ENUM_CAST(ItemList::IconMode);
-
 #endif // ITEM_LIST_H

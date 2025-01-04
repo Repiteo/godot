@@ -158,8 +158,6 @@ public:
 	virtual String get_import_settings_string() const { return String(); }
 };
 
-VARIANT_ENUM_CAST(ResourceImporter::ImportOrder);
-
 class ResourceFormatImporterSaver : public ResourceFormatSaver {
 	GDCLASS(ResourceFormatImporterSaver, ResourceFormatSaver)
 

@@ -91,6 +91,4 @@ public:
 	~GDExtensionManager();
 };
 
-VARIANT_ENUM_CAST(GDExtensionManager::LoadStatus)
-
 #endif // GDEXTENSION_MANAGER_H

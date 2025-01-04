@@ -97,8 +97,6 @@ public:
 	~CompositorEffect();
 };
 
-VARIANT_ENUM_CAST(CompositorEffect::EffectCallbackType)
-
 /* Compositor */
 
 class Compositor : public Resource {

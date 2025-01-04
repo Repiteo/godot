@@ -136,6 +136,4 @@ public:
 	ScrollContainer();
 };
 
-VARIANT_ENUM_CAST(ScrollContainer::ScrollMode);
-
 #endif // SCROLL_CONTAINER_H

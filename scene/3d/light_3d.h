@@ -157,9 +157,6 @@ public:
 	~Light3D();
 };
 
-VARIANT_ENUM_CAST(Light3D::Param);
-VARIANT_ENUM_CAST(Light3D::BakeMode);
-
 class DirectionalLight3D : public Light3D {
 	GDCLASS(DirectionalLight3D, Light3D);
 
@@ -198,9 +195,6 @@ public:
 	DirectionalLight3D();
 };
 
-VARIANT_ENUM_CAST(DirectionalLight3D::ShadowMode)
-VARIANT_ENUM_CAST(DirectionalLight3D::SkyMode)
-
 class OmniLight3D : public Light3D {
 	GDCLASS(OmniLight3D, Light3D);
 
@@ -225,8 +219,6 @@ public:
 
 	OmniLight3D();
 };
-
-VARIANT_ENUM_CAST(OmniLight3D::ShadowMode)
 
 class SpotLight3D : public Light3D {
 	GDCLASS(SpotLight3D, Light3D);

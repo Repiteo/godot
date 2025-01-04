@@ -408,8 +408,6 @@ public:
 	~TreeItem();
 };
 
-VARIANT_ENUM_CAST(TreeItem::TreeCellMode);
-
 class VBoxContainer;
 
 class Tree : public Control {
@@ -841,8 +839,5 @@ public:
 	Tree();
 	~Tree();
 };
-
-VARIANT_ENUM_CAST(Tree::SelectMode);
-VARIANT_ENUM_CAST(Tree::DropModeFlags);
 
 #endif // TREE_H

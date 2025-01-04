@@ -872,21 +872,5 @@ public:
 	SubViewport();
 	~SubViewport();
 };
-VARIANT_ENUM_CAST(Viewport::Scaling3DMode);
-VARIANT_ENUM_CAST(SubViewport::UpdateMode);
-VARIANT_ENUM_CAST(Viewport::PositionalShadowAtlasQuadrantSubdiv);
-VARIANT_ENUM_CAST(Viewport::MSAA);
-VARIANT_ENUM_CAST(Viewport::AnisotropicFiltering);
-VARIANT_ENUM_CAST(Viewport::ScreenSpaceAA);
-VARIANT_ENUM_CAST(Viewport::DebugDraw);
-VARIANT_ENUM_CAST(Viewport::SDFScale);
-VARIANT_ENUM_CAST(Viewport::SDFOversize);
-VARIANT_ENUM_CAST(Viewport::VRSMode);
-VARIANT_ENUM_CAST(Viewport::VRSUpdateMode);
-VARIANT_ENUM_CAST(SubViewport::ClearMode);
-VARIANT_ENUM_CAST(Viewport::RenderInfo);
-VARIANT_ENUM_CAST(Viewport::RenderInfoType);
-VARIANT_ENUM_CAST(Viewport::DefaultCanvasItemTextureFilter);
-VARIANT_ENUM_CAST(Viewport::DefaultCanvasItemTextureRepeat);
 
 #endif // VIEWPORT_H

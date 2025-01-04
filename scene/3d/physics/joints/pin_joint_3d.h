@@ -55,6 +55,4 @@ public:
 	PinJoint3D();
 };
 
-VARIANT_ENUM_CAST(PinJoint3D::Param);
-
 #endif // PIN_JOINT_3D_H

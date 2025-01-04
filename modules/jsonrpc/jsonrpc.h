@@ -65,6 +65,4 @@ public:
 	void set_scope(const String &p_scope, Object *p_obj);
 };
 
-VARIANT_ENUM_CAST(JSONRPC::ErrorCode);
-
 #endif // JSONRPC_H

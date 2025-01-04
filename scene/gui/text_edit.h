@@ -1118,12 +1118,4 @@ public:
 	TextEdit(const String &p_placeholder = String());
 };
 
-VARIANT_ENUM_CAST(TextEdit::EditAction);
-VARIANT_ENUM_CAST(TextEdit::CaretType);
-VARIANT_ENUM_CAST(TextEdit::LineWrappingMode);
-VARIANT_ENUM_CAST(TextEdit::SelectionMode);
-VARIANT_ENUM_CAST(TextEdit::GutterType);
-VARIANT_ENUM_CAST(TextEdit::MenuItems);
-VARIANT_ENUM_CAST(TextEdit::SearchFlags);
-
 #endif // TEXT_EDIT_H

@@ -77,7 +77,4 @@ public:
 	virtual Vector<int> get_allowed_size_flags_vertical() const override;
 };
 
-VARIANT_ENUM_CAST(AspectRatioContainer::StretchMode);
-VARIANT_ENUM_CAST(AspectRatioContainer::AlignmentMode);
-
 #endif // ASPECT_RATIO_CONTAINER_H

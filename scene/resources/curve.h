@@ -166,8 +166,6 @@ private:
 	real_t _max_domain = 1.0;
 };
 
-VARIANT_ENUM_CAST(Curve::TangentMode)
-
 class Curve2D : public Resource {
 	GDCLASS(Curve2D, Resource);
 

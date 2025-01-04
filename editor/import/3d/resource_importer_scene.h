@@ -153,8 +153,6 @@ public:
 	EditorScenePostImportPlugin() {}
 };
 
-VARIANT_ENUM_CAST(EditorScenePostImportPlugin::InternalImportCategory)
-
 class ResourceImporterScene : public ResourceImporter {
 	GDCLASS(ResourceImporterScene, ResourceImporter);
 

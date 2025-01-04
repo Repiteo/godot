@@ -136,6 +136,4 @@ public:
 	~SkeletonProfileHumanoid();
 };
 
-VARIANT_ENUM_CAST(SkeletonProfile::TailDirection);
-
 #endif // SKELETON_PROFILE_H

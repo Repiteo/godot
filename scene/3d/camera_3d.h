@@ -224,8 +224,4 @@ public:
 	~Camera3D();
 };
 
-VARIANT_ENUM_CAST(Camera3D::ProjectionType);
-VARIANT_ENUM_CAST(Camera3D::KeepAspect);
-VARIANT_ENUM_CAST(Camera3D::DopplerTracking);
-
 #endif // CAMERA_3D_H

@@ -227,8 +227,6 @@ public:
 	SceneState();
 };
 
-VARIANT_ENUM_CAST(SceneState::GenEditState)
-
 class PackedScene : public Resource {
 	GDCLASS(PackedScene, Resource);
 	RES_BASE_EXTENSION("scn");
@@ -278,7 +276,5 @@ public:
 
 	PackedScene();
 };
-
-VARIANT_ENUM_CAST(PackedScene::GenEditState)
 
 #endif // PACKED_SCENE_H

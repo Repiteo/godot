@@ -135,9 +135,6 @@ public:
 	~Light2D();
 };
 
-VARIANT_ENUM_CAST(Light2D::ShadowFilter);
-VARIANT_ENUM_CAST(Light2D::BlendMode);
-
 class PointLight2D : public Light2D {
 	GDCLASS(PointLight2D, Light2D);
 

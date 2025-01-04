@@ -490,13 +490,4 @@ public:
 	float generic_6dof_joint_get_applied_torque(RID p_joint);
 };
 
-VARIANT_ENUM_CAST(JoltPhysicsServer3D::HingeJointParamJolt)
-VARIANT_ENUM_CAST(JoltPhysicsServer3D::HingeJointFlagJolt)
-VARIANT_ENUM_CAST(JoltPhysicsServer3D::SliderJointParamJolt)
-VARIANT_ENUM_CAST(JoltPhysicsServer3D::SliderJointFlagJolt)
-VARIANT_ENUM_CAST(JoltPhysicsServer3D::ConeTwistJointParamJolt)
-VARIANT_ENUM_CAST(JoltPhysicsServer3D::ConeTwistJointFlagJolt)
-VARIANT_ENUM_CAST(JoltPhysicsServer3D::G6DOFJointAxisParamJolt)
-VARIANT_ENUM_CAST(JoltPhysicsServer3D::G6DOFJointAxisFlagJolt)
-
 #endif // JOLT_PHYSICS_SERVER_3D_H

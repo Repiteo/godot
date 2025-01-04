@@ -89,6 +89,4 @@ private:
 	FillMode mode = FILL_BEGIN_TO_END;
 };
 
-VARIANT_ENUM_CAST(ProgressBar::FillMode);
-
 #endif // PROGRESS_BAR_H

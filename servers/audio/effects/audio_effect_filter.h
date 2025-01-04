@@ -93,8 +93,6 @@ public:
 	AudioEffectFilter(AudioFilterSW::Mode p_mode = AudioFilterSW::LOWPASS);
 };
 
-VARIANT_ENUM_CAST(AudioEffectFilter::FilterDB)
-
 class AudioEffectLowPassFilter : public AudioEffectFilter {
 	GDCLASS(AudioEffectLowPassFilter, AudioEffectFilter);
 

@@ -100,8 +100,6 @@ public:
 	EditorFeatureProfile();
 };
 
-VARIANT_ENUM_CAST(EditorFeatureProfile::Feature)
-
 class EditorFeatureProfileManager : public AcceptDialog {
 	GDCLASS(EditorFeatureProfileManager, AcceptDialog);
 

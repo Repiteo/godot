@@ -63,6 +63,4 @@ public:
 	AESContext();
 };
 
-VARIANT_ENUM_CAST(AESContext::Mode);
-
 #endif // AES_CONTEXT_H

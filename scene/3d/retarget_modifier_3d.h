@@ -117,6 +117,4 @@ public:
 	virtual ~RetargetModifier3D();
 };
 
-VARIANT_BITFIELD_CAST(RetargetModifier3D::TransformFlag);
-
 #endif // RETARGET_MODIFIER_3D_H

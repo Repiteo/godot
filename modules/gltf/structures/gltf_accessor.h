@@ -131,7 +131,4 @@ public:
 	void set_sparse_values_byte_offset(int p_sparse_values_byte_offset);
 };
 
-VARIANT_ENUM_CAST(GLTFAccessor::GLTFAccessorType);
-VARIANT_ENUM_CAST(GLTFAccessor::GLTFComponentType);
-
 #endif // GLTF_ACCESSOR_H

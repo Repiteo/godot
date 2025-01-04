@@ -79,8 +79,6 @@ public:
 	virtual ~MultiplayerAPI() {}
 };
 
-VARIANT_ENUM_CAST(MultiplayerAPI::RPCMode);
-
 class MultiplayerAPIExtension : public MultiplayerAPI {
 	GDCLASS(MultiplayerAPIExtension, MultiplayerAPI);
 

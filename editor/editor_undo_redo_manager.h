@@ -143,6 +143,4 @@ public:
 	~EditorUndoRedoManager();
 };
 
-VARIANT_ENUM_CAST(EditorUndoRedoManager::SpecialHistory);
-
 #endif // EDITOR_UNDO_REDO_MANAGER_H

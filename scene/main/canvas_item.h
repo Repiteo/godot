@@ -400,10 +400,6 @@ public:
 	~CanvasItem();
 };
 
-VARIANT_ENUM_CAST(CanvasItem::TextureFilter)
-VARIANT_ENUM_CAST(CanvasItem::TextureRepeat)
-VARIANT_ENUM_CAST(CanvasItem::ClipChildrenMode)
-
 class CanvasTexture : public Texture2D {
 	GDCLASS(CanvasTexture, Texture2D);
 	OBJ_SAVE_TYPE(Texture2D); // Saves derived classes with common type so they can be interchanged.

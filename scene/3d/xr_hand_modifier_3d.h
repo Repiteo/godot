@@ -82,6 +82,4 @@ private:
 	void _tracker_changed(StringName p_tracker_name, XRServer::TrackerType p_tracker_type);
 };
 
-VARIANT_ENUM_CAST(XRHandModifier3D::BoneUpdate)
-
 #endif // XR_HAND_MODIFIER_3D_H

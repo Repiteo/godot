@@ -205,6 +205,4 @@ private:
 	int _has_pinned_point(int p_point_index) const;
 };
 
-VARIANT_ENUM_CAST(SoftBody3D::DisableMode);
-
 #endif // SOFT_BODY_3D_H

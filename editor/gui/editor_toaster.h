@@ -124,6 +124,4 @@ public:
 	~EditorToaster();
 };
 
-VARIANT_ENUM_CAST(EditorToaster::Severity);
-
 #endif // EDITOR_TOASTER_H

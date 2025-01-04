@@ -207,9 +207,4 @@ public:
 	virtual ~GeometryInstance3D();
 };
 
-VARIANT_ENUM_CAST(GeometryInstance3D::ShadowCastingSetting);
-VARIANT_ENUM_CAST(GeometryInstance3D::GIMode);
-VARIANT_ENUM_CAST(GeometryInstance3D::LightmapScale);
-VARIANT_ENUM_CAST(GeometryInstance3D::VisibilityRangeFadeMode);
-
 #endif // VISUAL_INSTANCE_3D_H

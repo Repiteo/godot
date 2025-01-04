@@ -190,6 +190,4 @@ public:
 	~EditorLog();
 };
 
-VARIANT_ENUM_CAST(EditorLog::MessageType);
-
 #endif // EDITOR_LOG_H

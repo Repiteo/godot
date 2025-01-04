@@ -121,6 +121,4 @@ private:
 	void draw_nine_patch_stretched(const Ref<Texture2D> &p_texture, FillMode p_mode, double p_ratio, const Color &p_modulate);
 };
 
-VARIANT_ENUM_CAST(TextureProgressBar::FillMode);
-
 #endif // TEXTURE_PROGRESS_BAR_H

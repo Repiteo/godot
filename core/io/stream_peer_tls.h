@@ -65,6 +65,4 @@ public:
 	StreamPeerTLS() {}
 };
 
-VARIANT_ENUM_CAST(StreamPeerTLS::Status);
-
 #endif // STREAM_PEER_TLS_H

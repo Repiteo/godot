@@ -446,12 +446,4 @@ public:
 	~Environment();
 };
 
-VARIANT_ENUM_CAST(Environment::BGMode)
-VARIANT_ENUM_CAST(Environment::AmbientSource)
-VARIANT_ENUM_CAST(Environment::ReflectionSource)
-VARIANT_ENUM_CAST(Environment::ToneMapper)
-VARIANT_ENUM_CAST(Environment::SDFGIYScale)
-VARIANT_ENUM_CAST(Environment::GlowBlendMode)
-VARIANT_ENUM_CAST(Environment::FogMode)
-
 #endif // ENVIRONMENT_H

@@ -79,6 +79,4 @@ public:
 	void set_input(const StringName &p_action_name, const Variant &p_value);
 };
 
-VARIANT_ENUM_CAST(XRPositionalTracker::TrackerHand);
-
 #endif // XR_POSITIONAL_TRACKER_H

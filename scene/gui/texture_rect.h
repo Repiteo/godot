@@ -93,7 +93,4 @@ public:
 	~TextureRect();
 };
 
-VARIANT_ENUM_CAST(TextureRect::ExpandMode);
-VARIANT_ENUM_CAST(TextureRect::StretchMode);
-
 #endif // TEXTURE_RECT_H

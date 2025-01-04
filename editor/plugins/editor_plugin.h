@@ -260,10 +260,6 @@ public:
 	virtual ~EditorPlugin() {}
 };
 
-VARIANT_ENUM_CAST(EditorPlugin::CustomControlContainer);
-VARIANT_ENUM_CAST(EditorPlugin::DockSlot);
-VARIANT_ENUM_CAST(EditorPlugin::AfterGUIInput);
-
 typedef EditorPlugin *(*EditorPluginCreateFunc)();
 
 class EditorPlugins {

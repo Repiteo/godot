@@ -210,6 +210,4 @@ public:
 	TabContainer();
 };
 
-VARIANT_ENUM_CAST(TabContainer::TabPosition);
-
 #endif // TAB_CONTAINER_H

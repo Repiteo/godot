@@ -94,6 +94,4 @@ public:
 	~StyleBoxTexture();
 };
 
-VARIANT_ENUM_CAST(StyleBoxTexture::AxisStretchMode)
-
 #endif // STYLE_BOX_TEXTURE_H

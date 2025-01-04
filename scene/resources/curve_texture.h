@@ -76,8 +76,6 @@ public:
 	~CurveTexture();
 };
 
-VARIANT_ENUM_CAST(CurveTexture::TextureMode)
-
 class CurveXYZTexture : public Texture2D {
 	GDCLASS(CurveXYZTexture, Texture2D);
 	RES_BASE_EXTENSION("curvetex")

@@ -88,6 +88,4 @@ public:
 	AudioEffectDistortion();
 };
 
-VARIANT_ENUM_CAST(AudioEffectDistortion::Mode)
-
 #endif // AUDIO_EFFECT_DISTORTION_H

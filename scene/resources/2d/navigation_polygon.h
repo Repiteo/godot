@@ -173,8 +173,4 @@ public:
 	~NavigationPolygon() {}
 };
 
-VARIANT_ENUM_CAST(NavigationPolygon::SamplePartitionType);
-VARIANT_ENUM_CAST(NavigationPolygon::ParsedGeometryType);
-VARIANT_ENUM_CAST(NavigationPolygon::SourceGeometryMode);
-
 #endif // NAVIGATION_POLYGON_H

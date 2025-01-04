@@ -112,6 +112,4 @@ public:
 	OpenXRAPIExtension();
 };
 
-VARIANT_ENUM_CAST(OpenXRAPIExtension::OpenXRAlphaBlendModeSupport);
-
 #endif // OPENXR_API_EXTENSION_H

@@ -109,6 +109,4 @@ public:
 	LinkButton(const String &p_text = String());
 };
 
-VARIANT_ENUM_CAST(LinkButton::UnderlineMode);
-
 #endif // LINK_BUTTON_H

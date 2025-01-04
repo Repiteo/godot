@@ -101,9 +101,6 @@ public:
 	AnimationNodeStateMachineTransition();
 };
 
-VARIANT_ENUM_CAST(AnimationNodeStateMachineTransition::SwitchMode)
-VARIANT_ENUM_CAST(AnimationNodeStateMachineTransition::AdvanceMode)
-
 class AnimationNodeStateMachinePlayback;
 
 class AnimationNodeStateMachine : public AnimationRootNode {
@@ -225,8 +222,6 @@ public:
 
 	AnimationNodeStateMachine();
 };
-
-VARIANT_ENUM_CAST(AnimationNodeStateMachine::StateMachineType);
 
 class AnimationNodeStateMachinePlayback : public Resource {
 	GDCLASS(AnimationNodeStateMachinePlayback, Resource);

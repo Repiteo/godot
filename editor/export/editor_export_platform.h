@@ -337,7 +337,4 @@ public:
 	EditorExportPlatform();
 };
 
-VARIANT_ENUM_CAST(EditorExportPlatform::ExportMessageType)
-VARIANT_BITFIELD_CAST(EditorExportPlatform::DebugFlags);
-
 #endif // EDITOR_EXPORT_PLATFORM_H

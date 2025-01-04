@@ -296,7 +296,4 @@ public:
 	~FileDialog();
 };
 
-VARIANT_ENUM_CAST(FileDialog::FileMode);
-VARIANT_ENUM_CAST(FileDialog::Access);
-
 #endif // FILE_DIALOG_H

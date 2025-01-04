@@ -115,6 +115,4 @@ public:
 	TouchScreenButton();
 };
 
-VARIANT_ENUM_CAST(TouchScreenButton::VisibilityMode);
-
 #endif // TOUCH_SCREEN_BUTTON_H

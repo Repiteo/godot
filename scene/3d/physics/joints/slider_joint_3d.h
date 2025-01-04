@@ -77,6 +77,4 @@ public:
 	SliderJoint3D();
 };
 
-VARIANT_ENUM_CAST(SliderJoint3D::Param);
-
 #endif // SLIDER_JOINT_3D_H

@@ -192,11 +192,6 @@ protected:
 	void _validate_property(PropertyInfo &r_property) const;
 };
 
-VARIANT_ENUM_CAST(AudioStreamInteractive::TransitionFromTime)
-VARIANT_ENUM_CAST(AudioStreamInteractive::TransitionToTime)
-VARIANT_ENUM_CAST(AudioStreamInteractive::AutoAdvanceMode)
-VARIANT_ENUM_CAST(AudioStreamInteractive::FadeMode)
-
 class AudioStreamPlaybackInteractive : public AudioStreamPlayback {
 	GDCLASS(AudioStreamPlaybackInteractive, AudioStreamPlayback)
 	friend class AudioStreamInteractive;

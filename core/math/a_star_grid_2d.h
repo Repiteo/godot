@@ -227,8 +227,4 @@ public:
 	TypedArray<Vector2i> get_id_path(const Vector2i &p_from, const Vector2i &p_to, bool p_allow_partial_path = false);
 };
 
-VARIANT_ENUM_CAST(AStarGrid2D::DiagonalMode);
-VARIANT_ENUM_CAST(AStarGrid2D::Heuristic);
-VARIANT_ENUM_CAST(AStarGrid2D::CellShape)
-
 #endif // A_STAR_GRID_2D_H

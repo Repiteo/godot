@@ -112,6 +112,4 @@ public:
 	virtual ~UPNP() {}
 };
 
-VARIANT_ENUM_CAST(UPNP::UPNPResult)
-
 #endif // UPNP_H

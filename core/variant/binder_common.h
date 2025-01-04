@@ -85,45 +85,6 @@ struct VariantCaster<const T &> {
 #define VARIANT_ENUM_CAST(m_enum) // Deprecated; does nothing.
 #define VARIANT_BITFIELD_CAST(m_enum) // Deprecated; does nothing.
 
-// Object enum casts must go here
-VARIANT_ENUM_CAST(Object::ConnectFlags);
-
-VARIANT_ENUM_CAST(Vector2::Axis);
-VARIANT_ENUM_CAST(Vector2i::Axis);
-VARIANT_ENUM_CAST(Vector3::Axis);
-VARIANT_ENUM_CAST(Vector3i::Axis);
-VARIANT_ENUM_CAST(Vector4::Axis);
-VARIANT_ENUM_CAST(Vector4i::Axis);
-VARIANT_ENUM_CAST(EulerOrder);
-VARIANT_ENUM_CAST(Projection::Planes);
-
-VARIANT_ENUM_CAST(Error);
-VARIANT_ENUM_CAST(Side);
-VARIANT_ENUM_CAST(ClockDirection);
-VARIANT_ENUM_CAST(Corner);
-VARIANT_ENUM_CAST(HatDir);
-VARIANT_BITFIELD_CAST(HatMask);
-VARIANT_ENUM_CAST(JoyAxis);
-VARIANT_ENUM_CAST(JoyButton);
-
-VARIANT_ENUM_CAST(MIDIMessage);
-VARIANT_ENUM_CAST(MouseButton);
-VARIANT_BITFIELD_CAST(MouseButtonMask);
-VARIANT_ENUM_CAST(Orientation);
-VARIANT_ENUM_CAST(HorizontalAlignment);
-VARIANT_ENUM_CAST(VerticalAlignment);
-VARIANT_ENUM_CAST(InlineAlignment);
-VARIANT_ENUM_CAST(PropertyHint);
-VARIANT_BITFIELD_CAST(PropertyUsageFlags);
-VARIANT_ENUM_CAST(Variant::Type);
-VARIANT_ENUM_CAST(Variant::Operator);
-
-// Key
-
-VARIANT_ENUM_CAST(Key);
-VARIANT_BITFIELD_CAST(KeyModifierMask);
-VARIANT_ENUM_CAST(KeyLocation);
-
 static inline Key &operator|=(Key &a, BitField<KeyModifierMask> b) {
 	a = static_cast<Key>(static_cast<int>(a) | static_cast<int>(b.operator int64_t()));
 	return a;

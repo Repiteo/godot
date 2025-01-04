@@ -84,8 +84,6 @@ public:
 	void add_context_submenu_item(const String &p_name, PopupMenu *p_menu, const Ref<Texture2D> &p_texture);
 };
 
-VARIANT_ENUM_CAST(EditorContextMenuPlugin::ContextMenuSlot);
-
 class EditorContextMenuPluginManager : public Object {
 	GDCLASS(EditorContextMenuPluginManager, Object);
 

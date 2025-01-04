@@ -372,6 +372,4 @@ public:
 	~AudioStreamPlaybackRandomizer();
 };
 
-VARIANT_ENUM_CAST(AudioStreamRandomizer::PlaybackMode);
-
 #endif // AUDIO_STREAM_H

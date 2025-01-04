@@ -76,6 +76,4 @@ public:
 	TrackingConfidence get_tracking_confidence() const;
 };
 
-VARIANT_ENUM_CAST(XRPose::TrackingConfidence);
-
 #endif // XR_POSE_H

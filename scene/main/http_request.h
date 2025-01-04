@@ -166,6 +166,4 @@ public:
 	HTTPRequest();
 };
 
-VARIANT_ENUM_CAST(HTTPRequest::Result);
-
 #endif // HTTP_REQUEST_H

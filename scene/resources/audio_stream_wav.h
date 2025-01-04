@@ -302,7 +302,4 @@ public:
 	~AudioStreamWAV();
 };
 
-VARIANT_ENUM_CAST(AudioStreamWAV::Format)
-VARIANT_ENUM_CAST(AudioStreamWAV::LoopMode)
-
 #endif // AUDIO_STREAM_WAV_H

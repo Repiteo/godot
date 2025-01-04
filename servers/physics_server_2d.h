@@ -829,21 +829,4 @@ public:
 	~PhysicsServer2DManager();
 };
 
-VARIANT_ENUM_CAST(PhysicsServer2D::ShapeType);
-VARIANT_ENUM_CAST(PhysicsServer2D::SpaceParameter);
-VARIANT_ENUM_CAST(PhysicsServer2D::AreaParameter);
-VARIANT_ENUM_CAST(PhysicsServer2D::AreaSpaceOverrideMode);
-VARIANT_ENUM_CAST(PhysicsServer2D::BodyMode);
-VARIANT_ENUM_CAST(PhysicsServer2D::BodyParameter);
-VARIANT_ENUM_CAST(PhysicsServer2D::BodyDampMode);
-VARIANT_ENUM_CAST(PhysicsServer2D::BodyState);
-VARIANT_ENUM_CAST(PhysicsServer2D::CCDMode);
-VARIANT_ENUM_CAST(PhysicsServer2D::JointParam);
-VARIANT_ENUM_CAST(PhysicsServer2D::JointType);
-VARIANT_ENUM_CAST(PhysicsServer2D::PinJointParam);
-VARIANT_ENUM_CAST(PhysicsServer2D::PinJointFlag);
-VARIANT_ENUM_CAST(PhysicsServer2D::DampedSpringParam);
-VARIANT_ENUM_CAST(PhysicsServer2D::AreaBodyStatus);
-VARIANT_ENUM_CAST(PhysicsServer2D::ProcessInfo);
-
 #endif // PHYSICS_SERVER_2D_H

@@ -96,6 +96,4 @@ public:
 			BoxContainer(true) { is_fixed = true; }
 };
 
-VARIANT_ENUM_CAST(BoxContainer::AlignmentMode);
-
 #endif // BOX_CONTAINER_H

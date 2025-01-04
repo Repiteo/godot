@@ -242,8 +242,4 @@ private:
 	void _reload_physics_characteristics();
 };
 
-VARIANT_ENUM_CAST(RigidBody3D::FreezeMode);
-VARIANT_ENUM_CAST(RigidBody3D::CenterOfMassMode);
-VARIANT_ENUM_CAST(RigidBody3D::DampMode);
-
 #endif // RIGID_BODY_3D_H

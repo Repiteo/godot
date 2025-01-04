@@ -113,6 +113,4 @@ public:
 	~Decal();
 };
 
-VARIANT_ENUM_CAST(Decal::DecalTexture);
-
 #endif // DECAL_H
