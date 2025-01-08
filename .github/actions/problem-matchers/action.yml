@@ -1,0 +1,28 @@
+name: Handle Problem Matchers
+description: Enable/Disable problem matchers
+
+# inputs:
+#   python-version:
+#     description: The Python version to use.
+#     default: 3.x
+#   python-arch:
+#     description: The Python architecture.
+#     default: x64
+#   scons-version:
+#     description: The SCons version to use.
+#     default: 4.8.1
+
+runs:
+  using: composite
+  steps:
+    - name: Setup problem matchers
+      shell: bash
+      run: echo ::add-matcher::.github/actions/problem-matchers/problem_matchers.jsonc
+
+    - name: Test problem matchers
+      shell: bash
+      run: cat .github/actions/problem-matchers/problem_matchers.txt
+
+    - name: Force fail
+      shell: bash
+      run: exit 1

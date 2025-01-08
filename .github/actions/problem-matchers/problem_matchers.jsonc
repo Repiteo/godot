@@ -1,0 +1,35 @@
+{
+	// COMMON SYNTAX:
+	// - ANSI: \\x1b\\[[=\\?]?[;\\d]+[a-zA-Z]
+	// - ANSI_OR_SPACE: (?:\\s|\\x1b\\[[=\\?]?[;\\d]+[a-zA-Z])*
+	"problemMatcher": [
+		{
+			"owner": "gcc",
+			"pattern": [
+				{
+					"regexp": "^(\\S.*?)[\\(:](\\d+)[,:]?(\\d*)(?::{\\d+:\\d+\\-\\d+:\\d+})?\\)?:\\s+(?:fatal|runtime\\s+)?(error|warning|info):\\s+(.*?)(?:\\s*\\[(.*)\\])?$",
+					"file": 1,
+					"line": 2,
+					"column": 3,
+					"severity": 4,
+					"message": 5,
+					"code": 6
+				}
+			]
+		},
+		{
+			"owner": "msvc",
+			"pattern": [
+				{
+					"regexp": "^(\\S.*?)\\((\\d+),?(\\d*)?(?:,\\d+,\\d+)?\\)\\s*:\\s+(?:fatal|runtime\\s+)?(error|warning|info)\\s+(\\w{1,2}\\d+)\\s*:\\s*(.*)$",
+					"file": 1,
+					"line": 2,
+					"column": 3,
+					"severity": 4,
+					"code": 5,
+					"message": 6
+				}
+			]
+		}
+	]
+}

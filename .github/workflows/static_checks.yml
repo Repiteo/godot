@@ -12,6 +12,9 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Setup problem matchers
+        uses: ./.github/actions/problem-matchers
+
       - name: Install APT dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:

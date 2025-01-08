@@ -1,0 +1,52 @@
+...
+
+MSVC
+
+scons: *** [modules\upnp\register_types.windows.editor.x86_64.obj] Error 2
+modules\upnp\upnp.cpp(38): error C2039: 'is_common_device': is not a member of 'UPNP'
+D:\a\godot\godot\modules\upnp\upnp.h(40): note: see declaration of 'UPNP'
+
+(with color)
+modules\upnp\upnp.cpp(38): [0;32merror[0m C2039: 'is_common_device': is not a member of 'UPNP'
+
+...
+
+GCC
+
+In file included from modules/upnp/register_types.cpp:38:
+modules/upnp/upnp_miniupnp.h:38:10: fatal error: miniupnpc.h: No such file or directory
+   38 | #include <miniupnpc.h>
+      |          ^~~~~~~~~~~~~
+
+...
+
+Multiline
+
+test.js
+  1:0   error  Missing "use strict" statement                 strict
+  5:10  error  'addOne' is defined but never used             no-unused-vars
+✖ 2 problems (2 errors, 0 warnings)
+
+...
+
+[1mcore/core_bind.cpp:1367:31: [0m[0;1;31merror: [0m[1muse of undeclared identifier 'PRIORITY_MAX'; did you mean 'PRIORITY_LOW'?[0m
+ 1367 |         ERR_FAIL_INDEX_V(p_priority, PRIORITY_MAX, ERR_INVALID_PARAMETER);[0m
+      | [0;1;32m                                     ^~~~~~~~~~~~
+[0m      | [0;32m                                     PRIORITY_LOW
+[0m[1m./core/error/error_macros.h:161:37: [0m[0;1;36mnote: [0mexpanded from macro 'ERR_FAIL_INDEX_V'[0m
+  161 |         [0;34mif[0m ((m_index) < [0;32m0[0m || (m_index) >= (m_size)) [[unlikely]] {                                                  \[0m
+      | [0;1;32m                                           ^
+[0m[1mcore/core_bind.h:403:23: [0m[0;1;36mnote: [0m'PRIORITY_LOW' declared here[0m
+  403 |         [0;34musing[0m [0;34menum[0m ::Thread::Priority;[0m
+      | [0;1;32m                             ^
+[0m[1mcore/core_bind.cpp:1367:31: [0m[0;1;31merror: [0m[1muse of undeclared identifier 'PRIORITY_MAX'; did you mean 'PRIORITY_LOW'?[0m
+ 1367 |         ERR_FAIL_INDEX_V(p_priority, PRIORITY_MAX, ERR_INVALID_PARAMETER);[0m
+      | [0;1;32m                                     ^~~~~~~~~~~~
+[0m      | [0;32m                                     PRIORITY_LOW
+[0m[1m./core/error/error_macros.h:162:69: [0m[0;1;36mnote: [0mexpanded from macro 'ERR_FAIL_INDEX_V'[0m
+  162 |                 _err_print_index_error(FUNCTION_STR, __FILE__, __LINE__, m_index, m_size, _STR(m_index), _STR(m_size)); \[0m
+      | [0;1;32m                                                                                  ^
+[0m[1mcore/core_bind.h:403:23: [0m[0;1;36mnote: [0m'PRIORITY_LOW' declared here[0m
+  403 |         [0;34musing[0m [0;34menum[0m ::Thread::Priority;[0m
+      | [0;1;32m                             ^
+version_hash_builder(["core/version_hash.gen.cpp"], ['f337e7576c579f692685bf7615b5354134d2046a'])
