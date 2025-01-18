@@ -15,7 +15,7 @@ env:
 jobs:
   build-linux:
     # Stay one LTS before latest to increase portability of Linux artifacts.
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04-arm
     name: ${{ matrix.name }}
     timeout-minutes: 120
     strategy:
@@ -26,7 +26,7 @@ jobs:
             cache-name: linux-editor-mono
             target: editor
             sconsflags: module_mono_enabled=yes
-            bin: ./bin/godot.linuxbsd.editor.x86_64.mono
+            bin: ./bin/godot.linuxbsd.editor.arm64.mono
             build-mono: true
             tests: false # Disabled due freeze caused by mix Mono build and CI
             doc-test: true
@@ -40,7 +40,7 @@ jobs:
             target: editor
             # Debug symbols disabled as they're huge on this build and we hit the 14 GB limit for runners.
             sconsflags: dev_build=yes scu_build=yes debug_symbols=no precision=double use_asan=yes use_ubsan=yes linker=gold
-            bin: ./bin/godot.linuxbsd.editor.dev.double.x86_64.san
+            bin: ./bin/godot.linuxbsd.editor.dev.double.arm64.san
             build-mono: false
             tests: true
             proj-test: true
@@ -54,7 +54,7 @@ jobs:
             cache-name: linux-editor-llvm-sanitizers
             target: editor
             sconsflags: dev_build=yes use_asan=yes use_ubsan=yes use_llvm=yes linker=lld
-            bin: ./bin/godot.linuxbsd.editor.dev.x86_64.llvm.san
+            bin: ./bin/godot.linuxbsd.editor.dev.arm64.llvm.san
             build-mono: false
             tests: true
             # Skip 2GiB artifact speeding up action.
@@ -68,7 +68,7 @@ jobs:
             target: editor
             tests: true
             sconsflags: dev_build=yes use_tsan=yes use_llvm=yes linker=lld
-            bin: ./bin/godot.linuxbsd.editor.dev.x86_64.llvm.san
+            bin: ./bin/godot.linuxbsd.editor.dev.arm64.llvm.san
             build-mono: false
             # Skip 2GiB artifact speeding up action.
             artifact: false
@@ -78,7 +78,7 @@ jobs:
             cache-name: linux-template-mono
             target: template_release
             sconsflags: module_mono_enabled=yes
-            bin: ./bin/godot.linuxbsd.template_release.x86_64.mono
+            bin: ./bin/godot.linuxbsd.template_release.arm64.mono
             build-mono: false
             tests: true
             artifact: true
@@ -88,7 +88,7 @@ jobs:
             cache-name: linux-template-minimal
             target: template_release
             sconsflags: modules_enabled_by_default=no disable_3d=yes disable_advanced_gui=yes deprecated=no minizip=no
-            bin: ./bin/godot.linuxbsd.template_release.x86_64
+            bin: ./bin/godot.linuxbsd.template_release.arm64
             tests: true
             artifact: true
             cache-limit: 1
