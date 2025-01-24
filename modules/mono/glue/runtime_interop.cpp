@@ -1486,12 +1486,12 @@ void godotsharp_convert(const godot_variant *p_what, int32_t p_type, godot_varia
 	const Variant *args[1] = { reinterpret_cast<const Variant *>(p_what) };
 	Callable::CallError ce;
 	Variant ret;
-	Variant::construct(Variant::Type(p_type), ret, args, 1, ce);
+	Variant::construct(VariantType(p_type), ret, args, 1, ce);
 	if (ce.error != Callable::CallError::CALL_OK) {
 		memnew_placement(r_ret, Variant);
 		ERR_FAIL_MSG("Unable to convert parameter from '" +
 				Variant::get_type_name(reinterpret_cast<const Variant *>(p_what)->get_type()) +
-				"' to '" + Variant::get_type_name(Variant::Type(p_type)) + "'.");
+				"' to '" + Variant::get_type_name(VariantType(p_type)) + "'.");
 	}
 	memnew_placement(r_ret, Variant(ret));
 }

@@ -39,14 +39,14 @@ struct VariantSetterGetterInfo {
 	Variant::ValidatedGetter validated_getter;
 	Variant::PTRSetter ptr_setter;
 	Variant::PTRGetter ptr_getter;
-	Variant::Type member_type;
+	VariantType member_type;
 };
 
-static LocalVector<VariantSetterGetterInfo> variant_setters_getters[Variant::VARIANT_MAX];
-static LocalVector<StringName> variant_setters_getters_names[Variant::VARIANT_MAX]; //one next to another to make it cache friendly
+static LocalVector<VariantSetterGetterInfo> variant_setters_getters[VariantType::VARIANT_MAX];
+static LocalVector<StringName> variant_setters_getters_names[VariantType::VARIANT_MAX]; //one next to another to make it cache friendly
 
 template <typename T>
-static void register_member(Variant::Type p_type, const StringName &p_member) {
+static void register_member(VariantType p_type, const StringName &p_member) {
 	VariantSetterGetterInfo sgi;
 	sgi.setter = T::set;
 	sgi.validated_setter = T::validated_set;
@@ -148,14 +148,14 @@ void register_named_setters_getters() {
 }
 
 void unregister_named_setters_getters() {
-	for (int i = 0; i < Variant::VARIANT_MAX; i++) {
+	for (int i = 0; i < VariantType::VARIANT_MAX; i++) {
 		variant_setters_getters[i].clear();
 		variant_setters_getters_names[i].clear();
 	}
 }
 
-bool Variant::has_member(Variant::Type p_type, const StringName &p_member) {
-	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, false);
+bool Variant::has_member(VariantType p_type, const StringName &p_member) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, false);
 
 	for (const StringName &member : variant_setters_getters_names[p_type]) {
 		if (member == p_member) {
@@ -165,8 +165,8 @@ bool Variant::has_member(Variant::Type p_type, const StringName &p_member) {
 	return false;
 }
 
-Variant::Type Variant::get_member_type(Variant::Type p_type, const StringName &p_member) {
-	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, Variant::VARIANT_MAX);
+VariantType Variant::get_member_type(VariantType p_type, const StringName &p_member) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, VariantType::VARIANT_MAX);
 
 	for (uint32_t i = 0; i < variant_setters_getters_names[p_type].size(); i++) {
 		if (variant_setters_getters_names[p_type][i] == p_member) {
@@ -174,22 +174,22 @@ Variant::Type Variant::get_member_type(Variant::Type p_type, const StringName &p
 		}
 	}
 
-	return Variant::NIL;
+	return VariantType::NIL;
 }
 
-void Variant::get_member_list(Variant::Type p_type, List<StringName> *r_members) {
+void Variant::get_member_list(VariantType p_type, List<StringName> *r_members) {
 	for (const StringName &member : variant_setters_getters_names[p_type]) {
 		r_members->push_back(member);
 	}
 }
 
-int Variant::get_member_count(Type p_type) {
-	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, -1);
+int Variant::get_member_count(VariantType p_type) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, -1);
 	return variant_setters_getters_names[p_type].size();
 }
 
-Variant::ValidatedSetter Variant::get_member_validated_setter(Variant::Type p_type, const StringName &p_member) {
-	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, nullptr);
+Variant::ValidatedSetter Variant::get_member_validated_setter(VariantType p_type, const StringName &p_member) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, nullptr);
 
 	for (uint32_t i = 0; i < variant_setters_getters_names[p_type].size(); i++) {
 		if (variant_setters_getters_names[p_type][i] == p_member) {
@@ -199,8 +199,8 @@ Variant::ValidatedSetter Variant::get_member_validated_setter(Variant::Type p_ty
 
 	return nullptr;
 }
-Variant::ValidatedGetter Variant::get_member_validated_getter(Variant::Type p_type, const StringName &p_member) {
-	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, nullptr);
+Variant::ValidatedGetter Variant::get_member_validated_getter(VariantType p_type, const StringName &p_member) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, nullptr);
 
 	for (uint32_t i = 0; i < variant_setters_getters_names[p_type].size(); i++) {
 		if (variant_setters_getters_names[p_type][i] == p_member) {
@@ -211,8 +211,8 @@ Variant::ValidatedGetter Variant::get_member_validated_getter(Variant::Type p_ty
 	return nullptr;
 }
 
-Variant::PTRSetter Variant::get_member_ptr_setter(Variant::Type p_type, const StringName &p_member) {
-	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, nullptr);
+Variant::PTRSetter Variant::get_member_ptr_setter(VariantType p_type, const StringName &p_member) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, nullptr);
 
 	for (uint32_t i = 0; i < variant_setters_getters_names[p_type].size(); i++) {
 		if (variant_setters_getters_names[p_type][i] == p_member) {
@@ -223,8 +223,8 @@ Variant::PTRSetter Variant::get_member_ptr_setter(Variant::Type p_type, const St
 	return nullptr;
 }
 
-Variant::PTRGetter Variant::get_member_ptr_getter(Variant::Type p_type, const StringName &p_member) {
-	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, nullptr);
+Variant::PTRGetter Variant::get_member_ptr_getter(VariantType p_type, const StringName &p_member) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, nullptr);
 
 	for (uint32_t i = 0; i < variant_setters_getters_names[p_type].size(); i++) {
 		if (variant_setters_getters_names[p_type][i] == p_member) {
@@ -246,7 +246,7 @@ void Variant::set_named(const StringName &p_member, const Variant &p_value, bool
 		}
 		r_valid = false;
 
-	} else if (type == Variant::OBJECT) {
+	} else if (type == VariantType::OBJECT) {
 		Object *obj = get_validated_object();
 		if (!obj) {
 			r_valid = false;
@@ -254,7 +254,7 @@ void Variant::set_named(const StringName &p_member, const Variant &p_value, bool
 			obj->set(p_member, p_value, &r_valid);
 			return;
 		}
-	} else if (type == Variant::DICTIONARY) {
+	} else if (type == VariantType::DICTIONARY) {
 		Dictionary &dict = *VariantGetInternalPtr<Dictionary>::get_ptr(this);
 		r_valid = dict.set(p_member, p_value);
 	} else {
@@ -276,7 +276,7 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 	}
 
 	switch (type) {
-		case Variant::OBJECT: {
+		case VariantType::OBJECT: {
 			Object *obj = get_validated_object();
 			if (!obj) {
 				r_valid = false;
@@ -285,7 +285,7 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 				return obj->get(p_member, &r_valid);
 			}
 		} break;
-		case Variant::DICTIONARY: {
+		case VariantType::DICTIONARY: {
 			const Variant *v = VariantGetInternalPtr<Dictionary>::get_ptr(this)->getptr(p_member);
 			if (v) {
 				r_valid = true;
@@ -390,7 +390,7 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 			OOB_TEST(index, v.size());                                                                                               \
 			v.write[index] = PtrToArg<m_elem_type>::convert(member);                                                                 \
 		}                                                                                                                            \
-		static Variant::Type get_index_type() {                                                                                      \
+		static VariantType get_index_type() {                                                                                        \
 			return GetTypeInfo<m_elem_type>::VARIANT_TYPE;                                                                           \
 		}                                                                                                                            \
 		static uint32_t get_index_usage() {                                                                                          \
@@ -435,9 +435,9 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 				return;                                                                                                              \
 			}                                                                                                                        \
 			m_assign_type num;                                                                                                       \
-			if (value->get_type() == Variant::INT) {                                                                                 \
+			if (value->get_type() == VariantType::INT) {                                                                             \
 				num = (m_assign_type) * VariantGetInternalPtr<int64_t>::get_ptr(value);                                              \
-			} else if (value->get_type() == Variant::FLOAT) {                                                                        \
+			} else if (value->get_type() == VariantType::FLOAT) {                                                                    \
 				num = (m_assign_type) * VariantGetInternalPtr<double>::get_ptr(value);                                               \
 			} else {                                                                                                                 \
 				*oob = false;                                                                                                        \
@@ -468,7 +468,7 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 			OOB_TEST(index, v.size());                                                                                               \
 			v.write[index] = PtrToArg<m_elem_type>::convert(member);                                                                 \
 		}                                                                                                                            \
-		static Variant::Type get_index_type() {                                                                                      \
+		static VariantType get_index_type() {                                                                                        \
 			return GetTypeInfo<m_elem_type>::VARIANT_TYPE;                                                                           \
 		}                                                                                                                            \
 		static uint32_t get_index_usage() {                                                                                          \
@@ -503,9 +503,9 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 				return;                                                                                                        \
 			}                                                                                                                  \
 			m_assign_type num;                                                                                                 \
-			if (value->get_type() == Variant::INT) {                                                                           \
+			if (value->get_type() == VariantType::INT) {                                                                       \
 				num = (m_assign_type) * VariantGetInternalPtr<int64_t>::get_ptr(value);                                        \
-			} else if (value->get_type() == Variant::FLOAT) {                                                                  \
+			} else if (value->get_type() == VariantType::FLOAT) {                                                              \
 				num = (m_assign_type) * VariantGetInternalPtr<double>::get_ptr(value);                                         \
 			} else {                                                                                                           \
 				*oob = false;                                                                                                  \
@@ -530,7 +530,7 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 			OOB_TEST(index, m_max);                                                                                            \
 			v[index] = PtrToArg<m_elem_type>::convert(member);                                                                 \
 		}                                                                                                                      \
-		static Variant::Type get_index_type() {                                                                                \
+		static VariantType get_index_type() {                                                                                  \
 			return GetTypeInfo<m_elem_type>::VARIANT_TYPE;                                                                     \
 		}                                                                                                                      \
 		static uint32_t get_index_usage() {                                                                                    \
@@ -586,7 +586,7 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 			OOB_TEST(index, m_max);                                                                                                       \
 			v m_accessor[index] = PtrToArg<m_elem_type>::convert(member);                                                                 \
 		}                                                                                                                                 \
-		static Variant::Type get_index_type() {                                                                                           \
+		static VariantType get_index_type() {                                                                                             \
 			return GetTypeInfo<m_elem_type>::VARIANT_TYPE;                                                                                \
 		}                                                                                                                                 \
 		static uint32_t get_index_usage() {                                                                                               \
@@ -642,7 +642,7 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 			OOB_TEST(index, m_max);                                                                                                \
 			v.m_set(index, PtrToArg<m_elem_type>::convert(member));                                                                \
 		}                                                                                                                          \
-		static Variant::Type get_index_type() {                                                                                    \
+		static VariantType get_index_type() {                                                                                      \
 			return GetTypeInfo<m_elem_type>::VARIANT_TYPE;                                                                         \
 		}                                                                                                                          \
 		static uint32_t get_index_usage() {                                                                                        \
@@ -719,7 +719,7 @@ struct VariantIndexedSetGet_Array {
 		OOB_TEST(index, v.size());
 		v.set(index, PtrToArg<Variant>::convert(member));
 	}
-	static Variant::Type get_index_type() { return Variant::NIL; }
+	static VariantType get_index_type() { return VariantType::NIL; }
 	static uint32_t get_index_usage() { return PROPERTY_USAGE_NIL_IS_VARIANT; }
 	static uint64_t get_indexed_size(const Variant *base) { return 0; }
 };
@@ -753,7 +753,7 @@ struct VariantIndexedSetGet_Dictionary {
 		Dictionary &v = *reinterpret_cast<Dictionary *>(base);
 		v.set(index, PtrToArg<Variant>::convert(member));
 	}
-	static Variant::Type get_index_type() { return Variant::NIL; }
+	static VariantType get_index_type() { return VariantType::NIL; }
 	static uint32_t get_index_usage() { return PROPERTY_USAGE_DEFAULT; }
 	static uint64_t get_indexed_size(const Variant *base) { return VariantGetInternalPtr<Dictionary>::get_ptr(base)->size(); }
 };
@@ -783,7 +783,7 @@ struct VariantIndexedSetGet_String {
 		PtrToArg<String>::encode(String(&c, 1), member);
 	}
 	static void set(Variant *base, int64_t index, const Variant *value, bool *valid, bool *oob) {
-		if (value->get_type() != Variant::STRING) {
+		if (value->get_type() != VariantType::STRING) {
 			*oob = false;
 			*valid = false;
 			return;
@@ -839,7 +839,7 @@ struct VariantIndexedSetGet_String {
 			v.set(index, m.unicode_at(0));
 		}
 	}
-	static Variant::Type get_index_type() { return Variant::STRING; }
+	static VariantType get_index_type() { return VariantType::STRING; }
 	static uint32_t get_index_usage() { return PROPERTY_USAGE_DEFAULT; }
 	static uint64_t get_indexed_size(const Variant *base) { return VariantInternal::get_string(base)->length(); }
 };
@@ -880,16 +880,16 @@ struct VariantIndexedSetterGetterInfo {
 
 	uint64_t (*get_indexed_size)(const Variant *base) = nullptr;
 
-	Variant::Type index_type = Variant::NIL;
+	VariantType index_type = VariantType::NIL;
 	uint32_t index_usage = PROPERTY_USAGE_DEFAULT;
 
 	bool valid = false;
 };
 
-static VariantIndexedSetterGetterInfo variant_indexed_setters_getters[Variant::VARIANT_MAX];
+static VariantIndexedSetterGetterInfo variant_indexed_setters_getters[VariantType::VARIANT_MAX];
 
 template <typename T>
-static void register_indexed_member(Variant::Type p_type) {
+static void register_indexed_member(VariantType p_type) {
 	VariantIndexedSetterGetterInfo &sgi = variant_indexed_setters_getters[p_type];
 
 	sgi.setter = T::set;
@@ -941,36 +941,36 @@ void register_indexed_setters_getters() {
 static void unregister_indexed_setters_getters() {
 }
 
-bool Variant::has_indexing(Variant::Type p_type) {
-	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, false);
+bool Variant::has_indexing(VariantType p_type) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, false);
 	return variant_indexed_setters_getters[p_type].valid;
 }
 
-Variant::Type Variant::get_indexed_element_type(Variant::Type p_type) {
-	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, Variant::VARIANT_MAX);
+VariantType Variant::get_indexed_element_type(VariantType p_type) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, VariantType::VARIANT_MAX);
 	return variant_indexed_setters_getters[p_type].index_type;
 }
 
-uint32_t Variant::get_indexed_element_usage(Variant::Type p_type) {
-	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, PROPERTY_USAGE_DEFAULT);
+uint32_t Variant::get_indexed_element_usage(VariantType p_type) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, PROPERTY_USAGE_DEFAULT);
 	return variant_indexed_setters_getters[p_type].index_usage;
 }
 
-Variant::ValidatedIndexedSetter Variant::get_member_validated_indexed_setter(Variant::Type p_type) {
-	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, nullptr);
+Variant::ValidatedIndexedSetter Variant::get_member_validated_indexed_setter(VariantType p_type) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, nullptr);
 	return variant_indexed_setters_getters[p_type].validated_setter;
 }
-Variant::ValidatedIndexedGetter Variant::get_member_validated_indexed_getter(Variant::Type p_type) {
-	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, nullptr);
+Variant::ValidatedIndexedGetter Variant::get_member_validated_indexed_getter(VariantType p_type) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, nullptr);
 	return variant_indexed_setters_getters[p_type].validated_getter;
 }
 
-Variant::PTRIndexedSetter Variant::get_member_ptr_indexed_setter(Variant::Type p_type) {
-	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, nullptr);
+Variant::PTRIndexedSetter Variant::get_member_ptr_indexed_setter(VariantType p_type) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, nullptr);
 	return variant_indexed_setters_getters[p_type].ptr_setter;
 }
-Variant::PTRIndexedGetter Variant::get_member_ptr_indexed_getter(Variant::Type p_type) {
-	ERR_FAIL_INDEX_V(p_type, Variant::VARIANT_MAX, nullptr);
+Variant::PTRIndexedGetter Variant::get_member_ptr_indexed_getter(VariantType p_type) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, nullptr);
 	return variant_indexed_setters_getters[p_type].ptr_getter;
 }
 
@@ -1103,10 +1103,10 @@ struct VariantKeyedSetterGetterInfo {
 	bool valid = false;
 };
 
-static VariantKeyedSetterGetterInfo variant_keyed_setters_getters[Variant::VARIANT_MAX];
+static VariantKeyedSetterGetterInfo variant_keyed_setters_getters[VariantType::VARIANT_MAX];
 
 template <typename T>
-static void register_keyed_member(Variant::Type p_type) {
+static void register_keyed_member(VariantType p_type) {
 	VariantKeyedSetterGetterInfo &sgi = variant_keyed_setters_getters[p_type];
 
 	sgi.validated_setter = T::set;
@@ -1122,37 +1122,37 @@ static void register_keyed_member(Variant::Type p_type) {
 }
 
 static void register_keyed_setters_getters() {
-	register_keyed_member<VariantKeyedSetGetDictionary>(Variant::DICTIONARY);
-	register_keyed_member<VariantKeyedSetGetObject>(Variant::OBJECT);
+	register_keyed_member<VariantKeyedSetGetDictionary>(VariantType::DICTIONARY);
+	register_keyed_member<VariantKeyedSetGetObject>(VariantType::OBJECT);
 }
-bool Variant::is_keyed(Variant::Type p_type) {
-	ERR_FAIL_INDEX_V(p_type, VARIANT_MAX, false);
+bool Variant::is_keyed(VariantType p_type) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, false);
 	return variant_keyed_setters_getters[p_type].valid;
 }
 
-Variant::ValidatedKeyedSetter Variant::get_member_validated_keyed_setter(Variant::Type p_type) {
-	ERR_FAIL_INDEX_V(p_type, VARIANT_MAX, nullptr);
+Variant::ValidatedKeyedSetter Variant::get_member_validated_keyed_setter(VariantType p_type) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, nullptr);
 	return variant_keyed_setters_getters[p_type].validated_setter;
 }
-Variant::ValidatedKeyedGetter Variant::get_member_validated_keyed_getter(Variant::Type p_type) {
-	ERR_FAIL_INDEX_V(p_type, VARIANT_MAX, nullptr);
+Variant::ValidatedKeyedGetter Variant::get_member_validated_keyed_getter(VariantType p_type) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, nullptr);
 	return variant_keyed_setters_getters[p_type].validated_getter;
 }
-Variant::ValidatedKeyedChecker Variant::get_member_validated_keyed_checker(Variant::Type p_type) {
-	ERR_FAIL_INDEX_V(p_type, VARIANT_MAX, nullptr);
+Variant::ValidatedKeyedChecker Variant::get_member_validated_keyed_checker(VariantType p_type) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, nullptr);
 	return variant_keyed_setters_getters[p_type].validated_checker;
 }
 
-Variant::PTRKeyedSetter Variant::get_member_ptr_keyed_setter(Variant::Type p_type) {
-	ERR_FAIL_INDEX_V(p_type, VARIANT_MAX, nullptr);
+Variant::PTRKeyedSetter Variant::get_member_ptr_keyed_setter(VariantType p_type) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, nullptr);
 	return variant_keyed_setters_getters[p_type].ptr_setter;
 }
-Variant::PTRKeyedGetter Variant::get_member_ptr_keyed_getter(Variant::Type p_type) {
-	ERR_FAIL_INDEX_V(p_type, VARIANT_MAX, nullptr);
+Variant::PTRKeyedGetter Variant::get_member_ptr_keyed_getter(VariantType p_type) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, nullptr);
 	return variant_keyed_setters_getters[p_type].ptr_getter;
 }
-Variant::PTRKeyedChecker Variant::get_member_ptr_keyed_checker(Variant::Type p_type) {
-	ERR_FAIL_INDEX_V(p_type, VARIANT_MAX, nullptr);
+Variant::PTRKeyedChecker Variant::get_member_ptr_keyed_checker(VariantType p_type) {
+	ERR_FAIL_INDEX_V(p_type, VariantType::VARIANT_MAX, nullptr);
 	return variant_keyed_setters_getters[p_type].ptr_checker;
 }
 
@@ -1186,7 +1186,7 @@ void Variant::set(const Variant &p_index, const Variant &p_value, bool *r_valid,
 	if (err_code) {
 		*err_code = VariantSetError::SET_OK;
 	}
-	if (type == DICTIONARY || type == OBJECT) {
+	if (type == VariantType::DICTIONARY || type == VariantType::OBJECT) {
 		bool valid;
 		set_keyed(p_index, p_value, valid);
 		if (r_valid) {
@@ -1197,12 +1197,12 @@ void Variant::set(const Variant &p_index, const Variant &p_value, bool *r_valid,
 		}
 	} else {
 		bool valid = false;
-		if (p_index.get_type() == STRING_NAME) {
+		if (p_index.get_type() == VariantType::STRING_NAME) {
 			set_named(*VariantGetInternalPtr<StringName>::get_ptr(&p_index), p_value, valid);
 			if (!valid && err_code) {
 				*err_code = VariantSetError::SET_NAMED_ERR;
 			}
-		} else if (p_index.get_type() == INT) {
+		} else if (p_index.get_type() == VariantType::INT) {
 			bool obb;
 			set_indexed(*VariantGetInternalPtr<int64_t>::get_ptr(&p_index), p_value, valid, obb);
 			if (obb) {
@@ -1211,12 +1211,12 @@ void Variant::set(const Variant &p_index, const Variant &p_value, bool *r_valid,
 					*err_code = VariantSetError::SET_INDEXED_ERR;
 				}
 			}
-		} else if (p_index.get_type() == STRING) { // less efficient version of named
+		} else if (p_index.get_type() == VariantType::STRING) { // less efficient version of named
 			set_named(*VariantGetInternalPtr<String>::get_ptr(&p_index), p_value, valid);
 			if (!valid && err_code) {
 				*err_code = VariantSetError::SET_NAMED_ERR;
 			}
-		} else if (p_index.get_type() == FLOAT) { // less efficient version of indexed
+		} else if (p_index.get_type() == VariantType::FLOAT) { // less efficient version of indexed
 			bool obb;
 			set_indexed(*VariantGetInternalPtr<double>::get_ptr(&p_index), p_value, valid, obb);
 			if (obb) {
@@ -1237,7 +1237,7 @@ Variant Variant::get(const Variant &p_index, bool *r_valid, VariantGetError *err
 		*err_code = VariantGetError::GET_OK;
 	}
 	Variant ret;
-	if (type == DICTIONARY || type == OBJECT) {
+	if (type == VariantType::DICTIONARY || type == VariantType::OBJECT) {
 		bool valid;
 		ret = get_keyed(p_index, valid);
 		if (r_valid) {
@@ -1248,12 +1248,12 @@ Variant Variant::get(const Variant &p_index, bool *r_valid, VariantGetError *err
 		}
 	} else {
 		bool valid = false;
-		if (p_index.get_type() == STRING_NAME) {
+		if (p_index.get_type() == VariantType::STRING_NAME) {
 			ret = get_named(*VariantGetInternalPtr<StringName>::get_ptr(&p_index), valid);
 			if (!valid && err_code) {
 				*err_code = VariantGetError::GET_NAMED_ERR;
 			}
-		} else if (p_index.get_type() == INT) {
+		} else if (p_index.get_type() == VariantType::INT) {
 			bool obb;
 			ret = get_indexed(*VariantGetInternalPtr<int64_t>::get_ptr(&p_index), valid, obb);
 			if (obb) {
@@ -1262,12 +1262,12 @@ Variant Variant::get(const Variant &p_index, bool *r_valid, VariantGetError *err
 					*err_code = VariantGetError::GET_INDEXED_ERR;
 				}
 			}
-		} else if (p_index.get_type() == STRING) { // less efficient version of named
+		} else if (p_index.get_type() == VariantType::STRING) { // less efficient version of named
 			ret = get_named(*VariantGetInternalPtr<String>::get_ptr(&p_index), valid);
 			if (!valid && err_code) {
 				*err_code = VariantGetError::GET_NAMED_ERR;
 			}
-		} else if (p_index.get_type() == FLOAT) { // less efficient version of indexed
+		} else if (p_index.get_type() == VariantType::FLOAT) { // less efficient version of indexed
 			bool obb;
 			ret = get_indexed(*VariantGetInternalPtr<double>::get_ptr(&p_index), valid, obb);
 			if (obb) {
@@ -1286,7 +1286,7 @@ Variant Variant::get(const Variant &p_index, bool *r_valid, VariantGetError *err
 }
 
 void Variant::get_property_list(List<PropertyInfo> *p_list) const {
-	if (type == DICTIONARY) {
+	if (type == VariantType::DICTIONARY) {
 		const Dictionary *dic = reinterpret_cast<const Dictionary *>(_data._mem);
 		List<Variant> keys;
 		dic->get_key_list(&keys);
@@ -1295,7 +1295,7 @@ void Variant::get_property_list(List<PropertyInfo> *p_list) const {
 				p_list->push_back(PropertyInfo(dic->get_valid(E).get_type(), E));
 			}
 		}
-	} else if (type == OBJECT) {
+	} else if (type == VariantType::OBJECT) {
 		Object *obj = get_validated_object();
 		ERR_FAIL_NULL(obj);
 		obj->get_property_list(p_list);
@@ -1315,15 +1315,15 @@ void Variant::get_property_list(List<PropertyInfo> *p_list) const {
 bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 	valid = true;
 	switch (type) {
-		case INT: {
+		case VariantType::INT: {
 			r_iter = 0;
 			return _data._int > 0;
 		} break;
-		case FLOAT: {
+		case VariantType::FLOAT: {
 			r_iter = 0.0;
 			return _data._float > 0.0;
 		} break;
-		case VECTOR2: {
+		case VariantType::VECTOR2: {
 			double from = reinterpret_cast<const Vector2 *>(_data._mem)->x;
 			double to = reinterpret_cast<const Vector2 *>(_data._mem)->y;
 
@@ -1331,7 +1331,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 
 			return from < to;
 		} break;
-		case VECTOR2I: {
+		case VariantType::VECTOR2I: {
 			int64_t from = reinterpret_cast<const Vector2i *>(_data._mem)->x;
 			int64_t to = reinterpret_cast<const Vector2i *>(_data._mem)->y;
 
@@ -1339,7 +1339,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 
 			return from < to;
 		} break;
-		case VECTOR3: {
+		case VariantType::VECTOR3: {
 			double from = reinterpret_cast<const Vector3 *>(_data._mem)->x;
 			double to = reinterpret_cast<const Vector3 *>(_data._mem)->y;
 			double step = reinterpret_cast<const Vector3 *>(_data._mem)->z;
@@ -1353,7 +1353,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			}
 			return step < 0;
 		} break;
-		case VECTOR3I: {
+		case VariantType::VECTOR3I: {
 			int64_t from = reinterpret_cast<const Vector3i *>(_data._mem)->x;
 			int64_t to = reinterpret_cast<const Vector3i *>(_data._mem)->y;
 			int64_t step = reinterpret_cast<const Vector3i *>(_data._mem)->z;
@@ -1367,7 +1367,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			}
 			return step < 0;
 		} break;
-		case OBJECT: {
+		case VariantType::OBJECT: {
 			if (!_get_obj().obj) {
 				valid = false;
 				return false;
@@ -1398,7 +1398,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			return ret;
 		} break;
 
-		case STRING: {
+		case VariantType::STRING: {
 			const String *str = reinterpret_cast<const String *>(_data._mem);
 			if (str->is_empty()) {
 				return false;
@@ -1406,7 +1406,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			r_iter = 0;
 			return true;
 		} break;
-		case DICTIONARY: {
+		case VariantType::DICTIONARY: {
 			const Dictionary *dic = reinterpret_cast<const Dictionary *>(_data._mem);
 			if (dic->is_empty()) {
 				return false;
@@ -1417,7 +1417,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			return true;
 
 		} break;
-		case ARRAY: {
+		case VariantType::ARRAY: {
 			const Array *arr = reinterpret_cast<const Array *>(_data._mem);
 			if (arr->is_empty()) {
 				return false;
@@ -1425,7 +1425,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			r_iter = 0;
 			return true;
 		} break;
-		case PACKED_BYTE_ARRAY: {
+		case VariantType::PACKED_BYTE_ARRAY: {
 			const Vector<uint8_t> *arr = &PackedArrayRef<uint8_t>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
@@ -1434,7 +1434,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			return true;
 
 		} break;
-		case PACKED_INT32_ARRAY: {
+		case VariantType::PACKED_INT32_ARRAY: {
 			const Vector<int32_t> *arr = &PackedArrayRef<int32_t>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
@@ -1443,7 +1443,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			return true;
 
 		} break;
-		case PACKED_INT64_ARRAY: {
+		case VariantType::PACKED_INT64_ARRAY: {
 			const Vector<int64_t> *arr = &PackedArrayRef<int64_t>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
@@ -1452,7 +1452,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			return true;
 
 		} break;
-		case PACKED_FLOAT32_ARRAY: {
+		case VariantType::PACKED_FLOAT32_ARRAY: {
 			const Vector<float> *arr = &PackedArrayRef<float>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
@@ -1461,7 +1461,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			return true;
 
 		} break;
-		case PACKED_FLOAT64_ARRAY: {
+		case VariantType::PACKED_FLOAT64_ARRAY: {
 			const Vector<double> *arr = &PackedArrayRef<double>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
@@ -1470,7 +1470,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			return true;
 
 		} break;
-		case PACKED_STRING_ARRAY: {
+		case VariantType::PACKED_STRING_ARRAY: {
 			const Vector<String> *arr = &PackedArrayRef<String>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
@@ -1478,7 +1478,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			r_iter = 0;
 			return true;
 		} break;
-		case PACKED_VECTOR2_ARRAY: {
+		case VariantType::PACKED_VECTOR2_ARRAY: {
 			const Vector<Vector2> *arr = &PackedArrayRef<Vector2>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
@@ -1486,7 +1486,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			r_iter = 0;
 			return true;
 		} break;
-		case PACKED_VECTOR3_ARRAY: {
+		case VariantType::PACKED_VECTOR3_ARRAY: {
 			const Vector<Vector3> *arr = &PackedArrayRef<Vector3>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
@@ -1494,7 +1494,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			r_iter = 0;
 			return true;
 		} break;
-		case PACKED_COLOR_ARRAY: {
+		case VariantType::PACKED_COLOR_ARRAY: {
 			const Vector<Color> *arr = &PackedArrayRef<Color>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
@@ -1503,7 +1503,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 			return true;
 
 		} break;
-		case PACKED_VECTOR4_ARRAY: {
+		case VariantType::PACKED_VECTOR4_ARRAY: {
 			const Vector<Vector4> *arr = &PackedArrayRef<Vector4>::get_array(_data.packed_array);
 			if (arr->size() == 0) {
 				return false;
@@ -1522,7 +1522,7 @@ bool Variant::iter_init(Variant &r_iter, bool &valid) const {
 bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 	valid = true;
 	switch (type) {
-		case INT: {
+		case VariantType::INT: {
 			int64_t idx = r_iter;
 			idx++;
 			if (idx >= _data._int) {
@@ -1531,7 +1531,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case FLOAT: {
+		case VariantType::FLOAT: {
 			double idx = r_iter;
 			idx++;
 			if (idx >= _data._float) {
@@ -1540,7 +1540,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case VECTOR2: {
+		case VariantType::VECTOR2: {
 			double to = reinterpret_cast<const Vector2 *>(_data._mem)->y;
 
 			double idx = r_iter;
@@ -1553,7 +1553,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case VECTOR2I: {
+		case VariantType::VECTOR2I: {
 			int64_t to = reinterpret_cast<const Vector2i *>(_data._mem)->y;
 
 			int64_t idx = r_iter;
@@ -1566,7 +1566,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case VECTOR3: {
+		case VariantType::VECTOR3: {
 			double to = reinterpret_cast<const Vector3 *>(_data._mem)->y;
 			double step = reinterpret_cast<const Vector3 *>(_data._mem)->z;
 
@@ -1584,7 +1584,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case VECTOR3I: {
+		case VariantType::VECTOR3I: {
 			int64_t to = reinterpret_cast<const Vector3i *>(_data._mem)->y;
 			int64_t step = reinterpret_cast<const Vector3i *>(_data._mem)->z;
 
@@ -1602,7 +1602,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case OBJECT: {
+		case VariantType::OBJECT: {
 			if (!_get_obj().obj) {
 				valid = false;
 				return false;
@@ -1634,7 +1634,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			return ret;
 		} break;
 
-		case STRING: {
+		case VariantType::STRING: {
 			const String *str = reinterpret_cast<const String *>(_data._mem);
 			int idx = r_iter;
 			idx++;
@@ -1644,7 +1644,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case DICTIONARY: {
+		case VariantType::DICTIONARY: {
 			const Dictionary *dic = reinterpret_cast<const Dictionary *>(_data._mem);
 			const Variant *next = dic->next(&r_iter);
 			if (!next) {
@@ -1655,7 +1655,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			return true;
 
 		} break;
-		case ARRAY: {
+		case VariantType::ARRAY: {
 			const Array *arr = reinterpret_cast<const Array *>(_data._mem);
 			int idx = r_iter;
 			idx++;
@@ -1665,7 +1665,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case PACKED_BYTE_ARRAY: {
+		case VariantType::PACKED_BYTE_ARRAY: {
 			const Vector<uint8_t> *arr = &PackedArrayRef<uint8_t>::get_array(_data.packed_array);
 			int idx = r_iter;
 			idx++;
@@ -1676,7 +1676,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			return true;
 
 		} break;
-		case PACKED_INT32_ARRAY: {
+		case VariantType::PACKED_INT32_ARRAY: {
 			const Vector<int32_t> *arr = &PackedArrayRef<int32_t>::get_array(_data.packed_array);
 			int32_t idx = r_iter;
 			idx++;
@@ -1687,7 +1687,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			return true;
 
 		} break;
-		case PACKED_INT64_ARRAY: {
+		case VariantType::PACKED_INT64_ARRAY: {
 			const Vector<int64_t> *arr = &PackedArrayRef<int64_t>::get_array(_data.packed_array);
 			int64_t idx = r_iter;
 			idx++;
@@ -1698,7 +1698,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			return true;
 
 		} break;
-		case PACKED_FLOAT32_ARRAY: {
+		case VariantType::PACKED_FLOAT32_ARRAY: {
 			const Vector<float> *arr = &PackedArrayRef<float>::get_array(_data.packed_array);
 			int idx = r_iter;
 			idx++;
@@ -1709,7 +1709,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			return true;
 
 		} break;
-		case PACKED_FLOAT64_ARRAY: {
+		case VariantType::PACKED_FLOAT64_ARRAY: {
 			const Vector<double> *arr = &PackedArrayRef<double>::get_array(_data.packed_array);
 			int idx = r_iter;
 			idx++;
@@ -1720,7 +1720,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			return true;
 
 		} break;
-		case PACKED_STRING_ARRAY: {
+		case VariantType::PACKED_STRING_ARRAY: {
 			const Vector<String> *arr = &PackedArrayRef<String>::get_array(_data.packed_array);
 			int idx = r_iter;
 			idx++;
@@ -1730,7 +1730,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case PACKED_VECTOR2_ARRAY: {
+		case VariantType::PACKED_VECTOR2_ARRAY: {
 			const Vector<Vector2> *arr = &PackedArrayRef<Vector2>::get_array(_data.packed_array);
 			int idx = r_iter;
 			idx++;
@@ -1740,7 +1740,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case PACKED_VECTOR3_ARRAY: {
+		case VariantType::PACKED_VECTOR3_ARRAY: {
 			const Vector<Vector3> *arr = &PackedArrayRef<Vector3>::get_array(_data.packed_array);
 			int idx = r_iter;
 			idx++;
@@ -1750,7 +1750,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case PACKED_COLOR_ARRAY: {
+		case VariantType::PACKED_COLOR_ARRAY: {
 			const Vector<Color> *arr = &PackedArrayRef<Color>::get_array(_data.packed_array);
 			int idx = r_iter;
 			idx++;
@@ -1760,7 +1760,7 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 			r_iter = idx;
 			return true;
 		} break;
-		case PACKED_VECTOR4_ARRAY: {
+		case VariantType::PACKED_VECTOR4_ARRAY: {
 			const Vector<Vector4> *arr = &PackedArrayRef<Vector4>::get_array(_data.packed_array);
 			int idx = r_iter;
 			idx++;
@@ -1781,25 +1781,25 @@ bool Variant::iter_next(Variant &r_iter, bool &valid) const {
 Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 	r_valid = true;
 	switch (type) {
-		case INT: {
+		case VariantType::INT: {
 			return r_iter;
 		} break;
-		case FLOAT: {
+		case VariantType::FLOAT: {
 			return r_iter;
 		} break;
-		case VECTOR2: {
+		case VariantType::VECTOR2: {
 			return r_iter;
 		} break;
-		case VECTOR2I: {
+		case VariantType::VECTOR2I: {
 			return r_iter;
 		} break;
-		case VECTOR3: {
+		case VariantType::VECTOR3: {
 			return r_iter;
 		} break;
-		case VECTOR3I: {
+		case VariantType::VECTOR3I: {
 			return r_iter;
 		} break;
-		case OBJECT: {
+		case VariantType::OBJECT: {
 			if (!_get_obj().obj) {
 				r_valid = false;
 				return Variant();
@@ -1826,15 +1826,15 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 			return ret;
 		} break;
 
-		case STRING: {
+		case VariantType::STRING: {
 			const String *str = reinterpret_cast<const String *>(_data._mem);
 			return str->substr(r_iter, 1);
 		} break;
-		case DICTIONARY: {
+		case VariantType::DICTIONARY: {
 			return r_iter; //iterator is the same as the key
 
 		} break;
-		case ARRAY: {
+		case VariantType::ARRAY: {
 			const Array *arr = reinterpret_cast<const Array *>(_data._mem);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
@@ -1845,7 +1845,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 #endif
 			return arr->get(idx);
 		} break;
-		case PACKED_BYTE_ARRAY: {
+		case VariantType::PACKED_BYTE_ARRAY: {
 			const Vector<uint8_t> *arr = &PackedArrayRef<uint8_t>::get_array(_data.packed_array);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
@@ -1856,7 +1856,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 #endif
 			return arr->get(idx);
 		} break;
-		case PACKED_INT32_ARRAY: {
+		case VariantType::PACKED_INT32_ARRAY: {
 			const Vector<int32_t> *arr = &PackedArrayRef<int32_t>::get_array(_data.packed_array);
 			int32_t idx = r_iter;
 #ifdef DEBUG_ENABLED
@@ -1867,7 +1867,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 #endif
 			return arr->get(idx);
 		} break;
-		case PACKED_INT64_ARRAY: {
+		case VariantType::PACKED_INT64_ARRAY: {
 			const Vector<int64_t> *arr = &PackedArrayRef<int64_t>::get_array(_data.packed_array);
 			int64_t idx = r_iter;
 #ifdef DEBUG_ENABLED
@@ -1878,7 +1878,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 #endif
 			return arr->get(idx);
 		} break;
-		case PACKED_FLOAT32_ARRAY: {
+		case VariantType::PACKED_FLOAT32_ARRAY: {
 			const Vector<float> *arr = &PackedArrayRef<float>::get_array(_data.packed_array);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
@@ -1889,7 +1889,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 #endif
 			return arr->get(idx);
 		} break;
-		case PACKED_FLOAT64_ARRAY: {
+		case VariantType::PACKED_FLOAT64_ARRAY: {
 			const Vector<double> *arr = &PackedArrayRef<double>::get_array(_data.packed_array);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
@@ -1900,7 +1900,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 #endif
 			return arr->get(idx);
 		} break;
-		case PACKED_STRING_ARRAY: {
+		case VariantType::PACKED_STRING_ARRAY: {
 			const Vector<String> *arr = &PackedArrayRef<String>::get_array(_data.packed_array);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
@@ -1911,7 +1911,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 #endif
 			return arr->get(idx);
 		} break;
-		case PACKED_VECTOR2_ARRAY: {
+		case VariantType::PACKED_VECTOR2_ARRAY: {
 			const Vector<Vector2> *arr = &PackedArrayRef<Vector2>::get_array(_data.packed_array);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
@@ -1922,7 +1922,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 #endif
 			return arr->get(idx);
 		} break;
-		case PACKED_VECTOR3_ARRAY: {
+		case VariantType::PACKED_VECTOR3_ARRAY: {
 			const Vector<Vector3> *arr = &PackedArrayRef<Vector3>::get_array(_data.packed_array);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
@@ -1933,7 +1933,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 #endif
 			return arr->get(idx);
 		} break;
-		case PACKED_COLOR_ARRAY: {
+		case VariantType::PACKED_COLOR_ARRAY: {
 			const Vector<Color> *arr = &PackedArrayRef<Color>::get_array(_data.packed_array);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
@@ -1944,7 +1944,7 @@ Variant Variant::iter_get(const Variant &r_iter, bool &r_valid) const {
 #endif
 			return arr->get(idx);
 		} break;
-		case PACKED_VECTOR4_ARRAY: {
+		case VariantType::PACKED_VECTOR4_ARRAY: {
 			const Vector<Vector4> *arr = &PackedArrayRef<Vector4>::get_array(_data.packed_array);
 			int idx = r_iter;
 #ifdef DEBUG_ENABLED
@@ -1969,7 +1969,7 @@ Variant Variant::duplicate(bool p_deep) const {
 
 Variant Variant::recursive_duplicate(bool p_deep, int recursion_count) const {
 	switch (type) {
-		case OBJECT: {
+		case VariantType::OBJECT: {
 			/*  breaks stuff :(
 			if (p_deep && !_get_obj().ref.is_null()) {
 				Ref<Resource> resource = _get_obj().ref;
@@ -1980,29 +1980,29 @@ Variant Variant::recursive_duplicate(bool p_deep, int recursion_count) const {
 			*/
 			return *this;
 		} break;
-		case DICTIONARY:
+		case VariantType::DICTIONARY:
 			return operator Dictionary().recursive_duplicate(p_deep, recursion_count);
-		case ARRAY:
+		case VariantType::ARRAY:
 			return operator Array().recursive_duplicate(p_deep, recursion_count);
-		case PACKED_BYTE_ARRAY:
+		case VariantType::PACKED_BYTE_ARRAY:
 			return operator Vector<uint8_t>().duplicate();
-		case PACKED_INT32_ARRAY:
+		case VariantType::PACKED_INT32_ARRAY:
 			return operator Vector<int32_t>().duplicate();
-		case PACKED_INT64_ARRAY:
+		case VariantType::PACKED_INT64_ARRAY:
 			return operator Vector<int64_t>().duplicate();
-		case PACKED_FLOAT32_ARRAY:
+		case VariantType::PACKED_FLOAT32_ARRAY:
 			return operator Vector<float>().duplicate();
-		case PACKED_FLOAT64_ARRAY:
+		case VariantType::PACKED_FLOAT64_ARRAY:
 			return operator Vector<double>().duplicate();
-		case PACKED_STRING_ARRAY:
+		case VariantType::PACKED_STRING_ARRAY:
 			return operator Vector<String>().duplicate();
-		case PACKED_VECTOR2_ARRAY:
+		case VariantType::PACKED_VECTOR2_ARRAY:
 			return operator Vector<Vector2>().duplicate();
-		case PACKED_VECTOR3_ARRAY:
+		case VariantType::PACKED_VECTOR3_ARRAY:
 			return operator Vector<Vector3>().duplicate();
-		case PACKED_COLOR_ARRAY:
+		case VariantType::PACKED_COLOR_ARRAY:
 			return operator Vector<Color>().duplicate();
-		case PACKED_VECTOR4_ARRAY:
+		case VariantType::PACKED_VECTOR4_ARRAY:
 			return operator Vector<Vector4>().duplicate();
 		default:
 			return *this;

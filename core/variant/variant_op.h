@@ -51,7 +51,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(PtrToArg<A>::convert(left) + PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A, typename B>
@@ -69,7 +69,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(PtrToArg<A>::convert(left) - PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A, typename B>
@@ -87,7 +87,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(PtrToArg<A>::convert(left) * PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A, typename B>
@@ -105,7 +105,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(R(Math::pow((double)PtrToArg<A>::convert(left), (double)PtrToArg<B>::convert(right))), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A, typename B>
@@ -123,7 +123,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(PtrToArg<A>::convert(left).xform(PtrToArg<B>::convert(right)), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A, typename B>
@@ -141,7 +141,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(PtrToArg<B>::convert(right).xform_inv(PtrToArg<A>::convert(left)), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A, typename B>
@@ -159,7 +159,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(PtrToArg<A>::convert(left) / PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A, typename B>
@@ -182,7 +182,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(PtrToArg<A>::convert(left) / PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <>
@@ -206,7 +206,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<Vector2i>::encode(PtrToArg<Vector2i>::convert(left) / PtrToArg<Vector2i>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<Vector2i>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<Vector2i>::VARIANT_TYPE; }
 };
 
 template <>
@@ -230,7 +230,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<Vector3i>::encode(PtrToArg<Vector3i>::convert(left) / PtrToArg<Vector3i>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<Vector3i>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<Vector3i>::VARIANT_TYPE; }
 };
 
 template <>
@@ -254,7 +254,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<Vector4i>::encode(PtrToArg<Vector4i>::convert(left) / PtrToArg<Vector4i>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<Vector4i>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<Vector4i>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A, typename B>
@@ -272,7 +272,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(PtrToArg<A>::convert(left) % PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A, typename B>
@@ -295,7 +295,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(PtrToArg<A>::convert(left) % PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <>
@@ -319,7 +319,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<Vector2i>::encode(PtrToArg<Vector2i>::convert(left) % PtrToArg<Vector2i>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<Vector2i>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<Vector2i>::VARIANT_TYPE; }
 };
 
 template <>
@@ -343,7 +343,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<Vector3i>::encode(PtrToArg<Vector3i>::convert(left) % PtrToArg<Vector3i>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<Vector3i>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<Vector3i>::VARIANT_TYPE; }
 };
 
 template <>
@@ -367,7 +367,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<Vector4i>::encode(PtrToArg<Vector4i>::convert(left) % PtrToArg<Vector4i>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<Vector4i>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<Vector4i>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A>
@@ -384,7 +384,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(-PtrToArg<A>::convert(left), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A>
@@ -401,7 +401,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(PtrToArg<A>::convert(left), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A, typename B>
@@ -427,7 +427,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(PtrToArg<A>::convert(left) << PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A, typename B>
@@ -453,7 +453,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(PtrToArg<A>::convert(left) >> PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A, typename B>
@@ -471,7 +471,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(PtrToArg<A>::convert(left) | PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A, typename B>
@@ -489,7 +489,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(PtrToArg<A>::convert(left) & PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A, typename B>
@@ -507,7 +507,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(PtrToArg<A>::convert(left) ^ PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <typename R, typename A>
@@ -524,7 +524,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<R>::encode(~PtrToArg<A>::convert(left), r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<R>::VARIANT_TYPE; }
 };
 
 template <typename A, typename B>
@@ -542,7 +542,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<A>::convert(left) == PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 class OperatorEvaluatorEqualObject {
@@ -561,7 +561,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<Object *>::convert(left) == PtrToArg<Object *>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 class OperatorEvaluatorEqualObjectNil {
@@ -578,7 +578,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<Object *>::convert(left) == nullptr, r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 class OperatorEvaluatorEqualNilObject {
@@ -595,7 +595,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(nullptr == PtrToArg<Object *>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 template <typename A, typename B>
@@ -613,7 +613,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<A>::convert(left) != PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 class OperatorEvaluatorNotEqualObject {
@@ -632,7 +632,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<Object *>::convert(left) != PtrToArg<Object *>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 class OperatorEvaluatorNotEqualObjectNil {
@@ -649,7 +649,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<Object *>::convert(left) != nullptr, r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 class OperatorEvaluatorNotEqualNilObject {
@@ -666,7 +666,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(nullptr != PtrToArg<Object *>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 template <typename A, typename B>
@@ -684,7 +684,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<A>::convert(left) < PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 template <typename A, typename B>
@@ -702,7 +702,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<A>::convert(left) <= PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 template <typename A, typename B>
@@ -720,7 +720,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<A>::convert(left) > PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 template <typename A, typename B>
@@ -738,7 +738,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<A>::convert(left) >= PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 template <typename A, typename B>
@@ -756,7 +756,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<A>::convert(left) && PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 template <typename A, typename B>
@@ -774,7 +774,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<A>::convert(left) || PtrToArg<B>::convert(right), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 #define XOR_OP(m_a, m_b) (((m_a) || (m_b)) && !((m_a) && (m_b)))
@@ -796,7 +796,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(xor_op(PtrToArg<A>::convert(left), PtrToArg<B>::convert(right)), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 template <typename A>
@@ -813,7 +813,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<A>::convert(left) == A(), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 //// CUSTOM ////
@@ -853,7 +853,7 @@ public:
 		_add_arrays(ret, PtrToArg<Array>::convert(left), PtrToArg<Array>::convert(right));
 		PtrToArg<Array>::encode(ret, r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::ARRAY; }
+	static VariantType get_return_type() { return VariantType::ARRAY; }
 };
 
 template <typename T>
@@ -876,7 +876,7 @@ public:
 		sum.append_array(PtrToArg<Vector<T>>::convert(right));
 		PtrToArg<Vector<T>>::encode(sum, r_ret);
 	}
-	static Variant::Type get_return_type() { return GetTypeInfo<Vector<T>>::VARIANT_TYPE; }
+	static VariantType get_return_type() { return GetTypeInfo<Vector<T>>::VARIANT_TYPE; }
 };
 
 template <typename Left, typename Right>
@@ -898,7 +898,7 @@ public:
 		const String b(PtrToArg<Right>::convert(right));
 		PtrToArg<String>::encode(a + b, r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::STRING; }
+	static VariantType get_return_type() { return VariantType::STRING; }
 };
 
 template <typename S, typename T>
@@ -932,7 +932,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<String>::encode(do_mod(PtrToArg<S>::convert(left), nullptr), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::STRING; }
+	static VariantType get_return_type() { return VariantType::STRING; }
 };
 
 template <typename S>
@@ -960,7 +960,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<String>::encode(do_mod(PtrToArg<S>::convert(left), PtrToArg<Array>::convert(right), nullptr), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::STRING; }
+	static VariantType get_return_type() { return VariantType::STRING; }
 };
 
 template <typename S>
@@ -991,7 +991,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<String>::encode(do_mod(PtrToArg<S>::convert(left), PtrToArg<Object *>::convert(right), nullptr), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::STRING; }
+	static VariantType get_return_type() { return VariantType::STRING; }
 };
 
 template <typename S, typename T>
@@ -1021,10 +1021,10 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<String>::encode(do_mod(PtrToArg<S>::convert(left), PtrToArg<T>::convert(right), nullptr), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::STRING; }
+	static VariantType get_return_type() { return VariantType::STRING; }
 };
 
-template <Variant::Operator op, Variant::Type type_left, Variant::Type type_right>
+template <VariantOperator op, VariantType type_left, VariantType type_right>
 class OperatorEvaluatorAlwaysTrue {
 public:
 	static void evaluate(const Variant &p_left, const Variant &p_right, Variant *r_ret, bool &r_valid) {
@@ -1037,10 +1037,10 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(true, r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
-template <Variant::Operator op, Variant::Type type_left, Variant::Type type_right>
+template <VariantOperator op, VariantType type_left, VariantType type_right>
 class OperatorEvaluatorAlwaysFalse {
 public:
 	static void evaluate(const Variant &p_left, const Variant &p_right, Variant *r_ret, bool &r_valid) {
@@ -1053,7 +1053,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(false, r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 ///// OR ///////
@@ -1126,8 +1126,8 @@ _FORCE_INLINE_ static bool _operate_get_ptr_object(const void *p_ptr) {
 			PtrToArg<bool>::encode(m_op(_operate_get_ptr_##m_left(left), _operate_get_ptr_##m_right(right)), r_ret);         \
 		}                                                                                                                    \
                                                                                                                              \
-		static Variant::Type get_return_type() {                                                                             \
-			return Variant::BOOL;                                                                                            \
+		static VariantType get_return_type() {                                                                               \
+			return VariantType::BOOL;                                                                                        \
 		}                                                                                                                    \
 	};
 
@@ -1278,7 +1278,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(!PtrToArg<bool>::convert(left), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 class OperatorEvaluatorNotInt {
@@ -1293,7 +1293,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(!PtrToArg<int64_t>::convert(left), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 class OperatorEvaluatorNotFloat {
@@ -1308,7 +1308,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(!PtrToArg<double>::convert(left), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 class OperatorEvaluatorNotObject {
@@ -1323,7 +1323,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<Object *>::convert(left) == nullptr, r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 ////
@@ -1349,7 +1349,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<String>::convert(right).find(PtrToArg<Left>::convert(left)) != -1, r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 template <typename Left>
@@ -1370,7 +1370,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<StringName>::convert(right).operator String().find(PtrToArg<Left>::convert(left)) != -1, r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 template <typename A, typename B>
@@ -1391,7 +1391,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<B>::convert(right).find(PtrToArg<A>::convert(left)) != -1, r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 class OperatorEvaluatorInArrayFindNil {
@@ -1408,7 +1408,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<Array>::convert(right).find(Variant()) != -1, r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 class OperatorEvaluatorInArrayFindObject {
@@ -1425,7 +1425,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<Array>::convert(right).find(PtrToArg<Object *>::convert(left)) != -1, r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 template <typename A>
@@ -1446,7 +1446,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<Dictionary>::convert(right).has(PtrToArg<A>::convert(left)), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 class OperatorEvaluatorInDictionaryHasNil {
@@ -1464,7 +1464,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<Dictionary>::convert(right).has(Variant()), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 class OperatorEvaluatorInDictionaryHasObject {
@@ -1482,7 +1482,7 @@ public:
 	static void ptr_evaluate(const void *left, const void *right, void *r_ret) {
 		PtrToArg<bool>::encode(PtrToArg<Dictionary>::convert(right).has(PtrToArg<Object *>::convert(left)), r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 class OperatorEvaluatorObjectHasPropertyString {
@@ -1519,7 +1519,7 @@ public:
 		PtrToArg<Object *>::convert(right)->get(PtrToArg<String>::convert(left), &valid);
 		PtrToArg<bool>::encode(valid, r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 class OperatorEvaluatorObjectHasPropertyStringName {
@@ -1556,7 +1556,7 @@ public:
 		PtrToArg<Object *>::convert(right)->get(PtrToArg<StringName>::convert(left), &valid);
 		PtrToArg<bool>::encode(valid, r_ret);
 	}
-	static Variant::Type get_return_type() { return Variant::BOOL; }
+	static VariantType get_return_type() { return VariantType::BOOL; }
 };
 
 #endif // VARIANT_OP_H

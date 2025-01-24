@@ -407,8 +407,8 @@ void GDExtensionManager::_bind_methods() {
 	BIND_ENUM_CONSTANT(LOAD_STATUS_NEEDS_RESTART);
 
 	ADD_SIGNAL(MethodInfo("extensions_reloaded"));
-	ADD_SIGNAL(MethodInfo("extension_loaded", PropertyInfo(Variant::OBJECT, "extension", PROPERTY_HINT_RESOURCE_TYPE, "GDExtension")));
-	ADD_SIGNAL(MethodInfo("extension_unloading", PropertyInfo(Variant::OBJECT, "extension", PROPERTY_HINT_RESOURCE_TYPE, "GDExtension")));
+	ADD_SIGNAL(MethodInfo("extension_loaded", PropertyInfo(VariantType::OBJECT, "extension", PROPERTY_HINT_RESOURCE_TYPE, "GDExtension")));
+	ADD_SIGNAL(MethodInfo("extension_unloading", PropertyInfo(VariantType::OBJECT, "extension", PROPERTY_HINT_RESOURCE_TYPE, "GDExtension")));
 }
 
 GDExtensionManager *GDExtensionManager::singleton = nullptr;

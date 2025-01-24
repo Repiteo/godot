@@ -320,14 +320,14 @@ void ScriptEditorBase::_bind_methods() {
 
 	ADD_SIGNAL(MethodInfo("name_changed"));
 	ADD_SIGNAL(MethodInfo("edited_script_changed"));
-	ADD_SIGNAL(MethodInfo("request_help", PropertyInfo(Variant::STRING, "topic")));
-	ADD_SIGNAL(MethodInfo("request_open_script_at_line", PropertyInfo(Variant::OBJECT, "script"), PropertyInfo(Variant::INT, "line")));
+	ADD_SIGNAL(MethodInfo("request_help", PropertyInfo(VariantType::STRING, "topic")));
+	ADD_SIGNAL(MethodInfo("request_open_script_at_line", PropertyInfo(VariantType::OBJECT, "script"), PropertyInfo(VariantType::INT, "line")));
 	ADD_SIGNAL(MethodInfo("request_save_history"));
-	ADD_SIGNAL(MethodInfo("request_save_previous_state", PropertyInfo(Variant::DICTIONARY, "state")));
-	ADD_SIGNAL(MethodInfo("go_to_help", PropertyInfo(Variant::STRING, "what")));
-	ADD_SIGNAL(MethodInfo("search_in_files_requested", PropertyInfo(Variant::STRING, "text")));
-	ADD_SIGNAL(MethodInfo("replace_in_files_requested", PropertyInfo(Variant::STRING, "text")));
-	ADD_SIGNAL(MethodInfo("go_to_method", PropertyInfo(Variant::OBJECT, "script"), PropertyInfo(Variant::STRING, "method")));
+	ADD_SIGNAL(MethodInfo("request_save_previous_state", PropertyInfo(VariantType::DICTIONARY, "state")));
+	ADD_SIGNAL(MethodInfo("go_to_help", PropertyInfo(VariantType::STRING, "what")));
+	ADD_SIGNAL(MethodInfo("search_in_files_requested", PropertyInfo(VariantType::STRING, "text")));
+	ADD_SIGNAL(MethodInfo("replace_in_files_requested", PropertyInfo(VariantType::STRING, "text")));
+	ADD_SIGNAL(MethodInfo("go_to_method", PropertyInfo(VariantType::OBJECT, "script"), PropertyInfo(VariantType::STRING, "method")));
 }
 
 class EditorScriptCodeCompletionCache : public ScriptCodeCompletionCache {
@@ -468,7 +468,7 @@ void ScriptEditorQuickOpen::_notification(int p_what) {
 }
 
 void ScriptEditorQuickOpen::_bind_methods() {
-	ADD_SIGNAL(MethodInfo("goto_line", PropertyInfo(Variant::INT, "line")));
+	ADD_SIGNAL(MethodInfo("goto_line", PropertyInfo(VariantType::INT, "line")));
 }
 
 ScriptEditorQuickOpen::ScriptEditorQuickOpen() {
@@ -4112,8 +4112,8 @@ void ScriptEditor::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("goto_help", "topic"), &ScriptEditor::goto_help);
 	ClassDB::bind_method(D_METHOD("update_docs_from_script", "script"), &ScriptEditor::update_docs_from_script);
 
-	ADD_SIGNAL(MethodInfo("editor_script_changed", PropertyInfo(Variant::OBJECT, "script", PROPERTY_HINT_RESOURCE_TYPE, "Script")));
-	ADD_SIGNAL(MethodInfo("script_close", PropertyInfo(Variant::OBJECT, "script", PROPERTY_HINT_RESOURCE_TYPE, "Script")));
+	ADD_SIGNAL(MethodInfo("editor_script_changed", PropertyInfo(VariantType::OBJECT, "script", PROPERTY_HINT_RESOURCE_TYPE, "Script")));
+	ADD_SIGNAL(MethodInfo("script_close", PropertyInfo(VariantType::OBJECT, "script", PROPERTY_HINT_RESOURCE_TYPE, "Script")));
 }
 
 ScriptEditor::ScriptEditor(WindowWrapper *p_wrapper) {

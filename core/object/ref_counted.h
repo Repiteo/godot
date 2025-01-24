@@ -248,21 +248,21 @@ struct PtrToArg<const Ref<T> &> {
 
 template <typename T>
 struct GetTypeInfo<Ref<T>> {
-	static const Variant::Type VARIANT_TYPE = Variant::OBJECT;
+	static const VariantType VARIANT_TYPE = VariantType::OBJECT;
 	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;
 
 	static inline PropertyInfo get_class_info() {
-		return PropertyInfo(Variant::OBJECT, String(), PROPERTY_HINT_RESOURCE_TYPE, T::get_class_static());
+		return PropertyInfo(VariantType::OBJECT, String(), PROPERTY_HINT_RESOURCE_TYPE, T::get_class_static());
 	}
 };
 
 template <typename T>
 struct GetTypeInfo<const Ref<T> &> {
-	static const Variant::Type VARIANT_TYPE = Variant::OBJECT;
+	static const VariantType VARIANT_TYPE = VariantType::OBJECT;
 	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;
 
 	static inline PropertyInfo get_class_info() {
-		return PropertyInfo(Variant::OBJECT, String(), PROPERTY_HINT_RESOURCE_TYPE, T::get_class_static());
+		return PropertyInfo(VariantType::OBJECT, String(), PROPERTY_HINT_RESOURCE_TYPE, T::get_class_static());
 	}
 };
 

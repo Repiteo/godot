@@ -2176,21 +2176,21 @@ void EditorFileDialog::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("invalidate"), &EditorFileDialog::invalidate);
 
-	ADD_SIGNAL(MethodInfo("file_selected", PropertyInfo(Variant::STRING, "path")));
-	ADD_SIGNAL(MethodInfo("files_selected", PropertyInfo(Variant::PACKED_STRING_ARRAY, "paths")));
-	ADD_SIGNAL(MethodInfo("dir_selected", PropertyInfo(Variant::STRING, "dir")));
-	ADD_SIGNAL(MethodInfo("filename_filter_changed", PropertyInfo(Variant::STRING, "filter")));
+	ADD_SIGNAL(MethodInfo("file_selected", PropertyInfo(VariantType::STRING, "path")));
+	ADD_SIGNAL(MethodInfo("files_selected", PropertyInfo(VariantType::PACKED_STRING_ARRAY, "paths")));
+	ADD_SIGNAL(MethodInfo("dir_selected", PropertyInfo(VariantType::STRING, "dir")));
+	ADD_SIGNAL(MethodInfo("filename_filter_changed", PropertyInfo(VariantType::STRING, "filter")));
 
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "access", PROPERTY_HINT_ENUM, "Resources,User data,File system"), "set_access", "get_access");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "display_mode", PROPERTY_HINT_ENUM, "Thumbnails,List"), "set_display_mode", "get_display_mode");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "file_mode", PROPERTY_HINT_ENUM, "Open one,Open many,Open folder,Open any,Save"), "set_file_mode", "get_file_mode");
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "current_dir", PROPERTY_HINT_DIR, "", PROPERTY_USAGE_NONE), "set_current_dir", "get_current_dir");
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "current_file", PROPERTY_HINT_FILE, "*", PROPERTY_USAGE_NONE), "set_current_file", "get_current_file");
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "current_path", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_current_path", "get_current_path");
-	ADD_PROPERTY(PropertyInfo(Variant::PACKED_STRING_ARRAY, "filters"), "set_filters", "get_filters");
+	ADD_PROPERTY(PropertyInfo(VariantType::INT, "access", PROPERTY_HINT_ENUM, "Resources,User data,File system"), "set_access", "get_access");
+	ADD_PROPERTY(PropertyInfo(VariantType::INT, "display_mode", PROPERTY_HINT_ENUM, "Thumbnails,List"), "set_display_mode", "get_display_mode");
+	ADD_PROPERTY(PropertyInfo(VariantType::INT, "file_mode", PROPERTY_HINT_ENUM, "Open one,Open many,Open folder,Open any,Save"), "set_file_mode", "get_file_mode");
+	ADD_PROPERTY(PropertyInfo(VariantType::STRING, "current_dir", PROPERTY_HINT_DIR, "", PROPERTY_USAGE_NONE), "set_current_dir", "get_current_dir");
+	ADD_PROPERTY(PropertyInfo(VariantType::STRING, "current_file", PROPERTY_HINT_FILE, "*", PROPERTY_USAGE_NONE), "set_current_file", "get_current_file");
+	ADD_PROPERTY(PropertyInfo(VariantType::STRING, "current_path", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_current_path", "get_current_path");
+	ADD_PROPERTY(PropertyInfo(VariantType::PACKED_STRING_ARRAY, "filters"), "set_filters", "get_filters");
 	ADD_ARRAY_COUNT("Options", "option_count", "set_option_count", "get_option_count", "option_");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "show_hidden_files"), "set_show_hidden_files", "is_showing_hidden_files");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "disable_overwrite_warning"), "set_disable_overwrite_warning", "is_overwrite_warning_disabled");
+	ADD_PROPERTY(PropertyInfo(VariantType::BOOL, "show_hidden_files"), "set_show_hidden_files", "is_showing_hidden_files");
+	ADD_PROPERTY(PropertyInfo(VariantType::BOOL, "disable_overwrite_warning"), "set_disable_overwrite_warning", "is_overwrite_warning_disabled");
 
 	BIND_ENUM_CONSTANT(FILE_MODE_OPEN_FILE);
 	BIND_ENUM_CONSTANT(FILE_MODE_OPEN_FILES);
@@ -2209,9 +2209,9 @@ void EditorFileDialog::_bind_methods() {
 
 	base_property_helper.set_prefix("option_");
 	base_property_helper.set_array_length_getter(&EditorFileDialog::get_option_count);
-	base_property_helper.register_property(PropertyInfo(Variant::STRING, "name"), defaults.name, &EditorFileDialog::set_option_name, &EditorFileDialog::get_option_name);
-	base_property_helper.register_property(PropertyInfo(Variant::PACKED_STRING_ARRAY, "values"), defaults.values, &EditorFileDialog::set_option_values, &EditorFileDialog::get_option_values);
-	base_property_helper.register_property(PropertyInfo(Variant::INT, "default"), defaults.default_idx, &EditorFileDialog::set_option_default, &EditorFileDialog::get_option_default);
+	base_property_helper.register_property(PropertyInfo(VariantType::STRING, "name"), defaults.name, &EditorFileDialog::set_option_name, &EditorFileDialog::get_option_name);
+	base_property_helper.register_property(PropertyInfo(VariantType::PACKED_STRING_ARRAY, "values"), defaults.values, &EditorFileDialog::set_option_values, &EditorFileDialog::get_option_values);
+	base_property_helper.register_property(PropertyInfo(VariantType::INT, "default"), defaults.default_idx, &EditorFileDialog::set_option_default, &EditorFileDialog::get_option_default);
 	PropertyListHelper::register_base_helper(&base_property_helper);
 }
 

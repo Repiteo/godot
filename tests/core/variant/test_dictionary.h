@@ -66,7 +66,7 @@ TEST_CASE("[Dictionary] Assignment using bracket notation ([])") {
 
 	map[StringName("HelloName")] = 6;
 	CHECK(int(map[StringName("HelloName")]) == 6);
-	CHECK(int(map.find_key(6).get_type()) == Variant::STRING_NAME);
+	CHECK(int(map.find_key(6).get_type()) == VariantType::STRING_NAME);
 	map[StringName("HelloName")] = 7;
 	CHECK(int(map[StringName("HelloName")]) == 7);
 
@@ -91,7 +91,7 @@ TEST_CASE("[Dictionary] Assignment using bracket notation ([])") {
 	// Ensure read-only maps aren't modified by non-existing keys.
 	const int length = map.size();
 	map.make_read_only();
-	CHECK(int(map["This key does not exist"].get_type()) == Variant::NIL);
+	CHECK(int(map["This key does not exist"].get_type()) == VariantType::NIL);
 	CHECK(map.size() == length);
 }
 

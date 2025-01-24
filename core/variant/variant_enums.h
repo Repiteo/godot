@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*  tool_button_editor_plugin.h                                           */
+/*  variant_enums.h                                                       */
 /**************************************************************************/
 /*                         This file is part of:                          */
 /*                             GODOT ENGINE                               */
@@ -28,30 +28,115 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef TOOL_BUTTON_EDITOR_PLUGIN_H
-#define TOOL_BUTTON_EDITOR_PLUGIN_H
+#ifndef VARIANT_ENUMS_H
+#define VARIANT_ENUMS_H
 
-#include "editor/editor_inspector.h"
-#include "editor/plugins/editor_plugin.h"
+// HACK: By wrapping these enums in a namespace, we're able to hoist the enumeration itself into
+// the global namespace while keeping the enumeration constants constrained. This has a similar
+// effect to the behavior of scoped enums, where the constants will require the type preceding it,
+// but does so without changing the existing type/conversion properties. This workaround can be
+// removed if these enums ever become scoped (ie: enum class).
 
-class EditorInspectorToolButtonPlugin : public EditorInspectorPlugin {
-	GDCLASS(EditorInspectorToolButtonPlugin, EditorInspectorPlugin);
+namespace godot {
+namespace details {
 
-	void _update_action_icon(Button *p_action_button, const String &p_action_icon);
-	void _call_action(const Variant &p_object, const StringName &p_property);
+// WARNING: If this changes, the table in variant_op must be updated.
+enum VariantType {
+	NIL,
 
-public:
-	virtual bool can_handle(Object *p_object) override;
-	virtual bool parse_property(Object *p_object, const VariantType p_type, const String &p_path, const PropertyHint p_hint, const String &p_hint_text, const BitField<PropertyUsageFlags> p_usage, const bool p_wide = false) override;
+	// Atomic types.
+	BOOL,
+	INT,
+	FLOAT,
+	STRING,
+
+	// Math types.
+	VECTOR2,
+	VECTOR2I,
+	RECT2,
+	RECT2I,
+	VECTOR3,
+	VECTOR3I,
+	TRANSFORM2D,
+	VECTOR4,
+	VECTOR4I,
+	PLANE,
+	QUATERNION,
+	AABB,
+	BASIS,
+	TRANSFORM3D,
+	PROJECTION,
+
+	// Misc types.
+	COLOR,
+	STRING_NAME,
+	NODE_PATH,
+	RID,
+	OBJECT,
+	CALLABLE,
+	SIGNAL,
+	DICTIONARY,
+	ARRAY,
+
+	// Packed arrays.
+	PACKED_BYTE_ARRAY,
+	PACKED_INT32_ARRAY,
+	PACKED_INT64_ARRAY,
+	PACKED_FLOAT32_ARRAY,
+	PACKED_FLOAT64_ARRAY,
+	PACKED_STRING_ARRAY,
+	PACKED_VECTOR2_ARRAY,
+	PACKED_VECTOR3_ARRAY,
+	PACKED_COLOR_ARRAY,
+	PACKED_VECTOR4_ARRAY,
+
+	VARIANT_MAX,
 };
 
-class ToolButtonEditorPlugin : public EditorPlugin {
-	GDCLASS(ToolButtonEditorPlugin, EditorPlugin);
+// WARNING: If this changes, the table in variant_op must be updated.
+enum VariantOperator {
+	// Comparison operators.
+	OP_EQUAL,
+	OP_NOT_EQUAL,
+	OP_LESS,
+	OP_LESS_EQUAL,
+	OP_GREATER,
+	OP_GREATER_EQUAL,
 
-public:
-	virtual String get_plugin_name() const override { return "ToolButtonEditorPlugin"; }
+	// Mathematic operators.
+	OP_ADD,
+	OP_SUBTRACT,
+	OP_MULTIPLY,
+	OP_DIVIDE,
+	OP_NEGATE,
+	OP_POSITIVE,
+	OP_MODULE,
+	OP_POWER,
 
-	ToolButtonEditorPlugin();
+	// Bitwise operators.
+	OP_SHIFT_LEFT,
+	OP_SHIFT_RIGHT,
+	OP_BIT_AND,
+	OP_BIT_OR,
+	OP_BIT_XOR,
+	OP_BIT_NEGATE,
+
+	// Logical operators.
+	OP_AND,
+	OP_OR,
+	OP_XOR,
+	OP_NOT,
+
+	// Containment operators.
+	OP_IN,
+
+	OP_MAX,
 };
 
-#endif // TOOL_BUTTON_EDITOR_PLUGIN_H
+} // namespace details
+} // namespace godot
+
+using VariantType = godot::details::VariantType;
+using VariantOperator = godot::details::VariantOperator;
+
+#endif // VARIANT_ENUMS_H

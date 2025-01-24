@@ -3834,13 +3834,13 @@ bool String::matchn(const String &p_wildcard) const {
 String String::format(const Variant &values, const String &placeholder) const {
 	String new_string = String(ptr());
 
-	if (values.get_type() == Variant::ARRAY) {
+	if (values.get_type() == VariantType::ARRAY) {
 		Array values_arr = values;
 
 		for (int i = 0; i < values_arr.size(); i++) {
 			String i_as_str = String::num_int64(i);
 
-			if (values_arr[i].get_type() == Variant::ARRAY) { //Array in Array structure [["name","RobotGuy"],[0,"godot"],["strength",9000.91]]
+			if (values_arr[i].get_type() == VariantType::ARRAY) { //Array in Array structure [["name","RobotGuy"],[0,"godot"],["strength",9000.91]]
 				Array value_arr = values_arr[i];
 
 				if (value_arr.size() == 2) {
@@ -3865,7 +3865,7 @@ String String::format(const Variant &values, const String &placeholder) const {
 				}
 			}
 		}
-	} else if (values.get_type() == Variant::DICTIONARY) {
+	} else if (values.get_type() == VariantType::DICTIONARY) {
 		Dictionary d = values;
 		List<Variant> keys;
 		d.get_key_list(&keys);
@@ -3873,7 +3873,7 @@ String String::format(const Variant &values, const String &placeholder) const {
 		for (const Variant &key : keys) {
 			new_string = new_string.replace(placeholder.replace("_", key), d[key]);
 		}
-	} else if (values.get_type() == Variant::OBJECT) {
+	} else if (values.get_type() == VariantType::OBJECT) {
 		Object *obj = values.get_validated_object();
 		ERR_FAIL_NULL_V(obj, new_string);
 
@@ -5516,16 +5516,16 @@ String String::sprintf(const Array &values, bool *error) const {
 
 					int count;
 					switch (values[value_index].get_type()) {
-						case Variant::VECTOR2:
-						case Variant::VECTOR2I: {
+						case VariantType::VECTOR2:
+						case VariantType::VECTOR2I: {
 							count = 2;
 						} break;
-						case Variant::VECTOR3:
-						case Variant::VECTOR3I: {
+						case VariantType::VECTOR3:
+						case VariantType::VECTOR3I: {
 							count = 3;
 						} break;
-						case Variant::VECTOR4:
-						case Variant::VECTOR4I: {
+						case VariantType::VECTOR4:
+						case VariantType::VECTOR4I: {
 							count = 4;
 						} break;
 						default: {
@@ -5614,7 +5614,7 @@ String String::sprintf(const Array &values, bool *error) const {
 							return "unsigned integer is greater than maximum";
 						}
 						str = chr(values[value_index]);
-					} else if (values[value_index].get_type() == Variant::STRING) {
+					} else if (values[value_index].get_type() == VariantType::STRING) {
 						str = values[value_index];
 						if (str.length() != 1) {
 							return "%c requires number or single-character string";
@@ -5689,11 +5689,11 @@ String String::sprintf(const Array &values, bool *error) const {
 						return "not enough arguments for format string";
 					}
 
-					Variant::Type value_type = values[value_index].get_type();
+					VariantType value_type = values[value_index].get_type();
 					if (!values[value_index].is_num() &&
-							value_type != Variant::VECTOR2 && value_type != Variant::VECTOR2I &&
-							value_type != Variant::VECTOR3 && value_type != Variant::VECTOR3I &&
-							value_type != Variant::VECTOR4 && value_type != Variant::VECTOR4I) {
+							value_type != VariantType::VECTOR2 && value_type != VariantType::VECTOR2I &&
+							value_type != VariantType::VECTOR3 && value_type != VariantType::VECTOR3I &&
+							value_type != VariantType::VECTOR4 && value_type != VariantType::VECTOR4I) {
 						return "* wants number or vector";
 					}
 

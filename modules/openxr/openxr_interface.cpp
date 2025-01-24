@@ -48,28 +48,28 @@ void OpenXRInterface::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("session_loss_pending"));
 	ADD_SIGNAL(MethodInfo("instance_exiting"));
 	ADD_SIGNAL(MethodInfo("pose_recentered"));
-	ADD_SIGNAL(MethodInfo("refresh_rate_changed", PropertyInfo(Variant::FLOAT, "refresh_rate")));
+	ADD_SIGNAL(MethodInfo("refresh_rate_changed", PropertyInfo(VariantType::FLOAT, "refresh_rate")));
 
 	// Display refresh rate
 	ClassDB::bind_method(D_METHOD("get_display_refresh_rate"), &OpenXRInterface::get_display_refresh_rate);
 	ClassDB::bind_method(D_METHOD("set_display_refresh_rate", "refresh_rate"), &OpenXRInterface::set_display_refresh_rate);
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "display_refresh_rate"), "set_display_refresh_rate", "get_display_refresh_rate");
+	ADD_PROPERTY(PropertyInfo(VariantType::FLOAT, "display_refresh_rate"), "set_display_refresh_rate", "get_display_refresh_rate");
 
 	// Render Target size multiplier
 	ClassDB::bind_method(D_METHOD("get_render_target_size_multiplier"), &OpenXRInterface::get_render_target_size_multiplier);
 	ClassDB::bind_method(D_METHOD("set_render_target_size_multiplier", "multiplier"), &OpenXRInterface::set_render_target_size_multiplier);
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "render_target_size_multiplier"), "set_render_target_size_multiplier", "get_render_target_size_multiplier");
+	ADD_PROPERTY(PropertyInfo(VariantType::FLOAT, "render_target_size_multiplier"), "set_render_target_size_multiplier", "get_render_target_size_multiplier");
 
 	// Foveation level
 	ClassDB::bind_method(D_METHOD("is_foveation_supported"), &OpenXRInterface::is_foveation_supported);
 
 	ClassDB::bind_method(D_METHOD("get_foveation_level"), &OpenXRInterface::get_foveation_level);
 	ClassDB::bind_method(D_METHOD("set_foveation_level", "foveation_level"), &OpenXRInterface::set_foveation_level);
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "foveation_level"), "set_foveation_level", "get_foveation_level");
+	ADD_PROPERTY(PropertyInfo(VariantType::INT, "foveation_level"), "set_foveation_level", "get_foveation_level");
 
 	ClassDB::bind_method(D_METHOD("get_foveation_dynamic"), &OpenXRInterface::get_foveation_dynamic);
 	ClassDB::bind_method(D_METHOD("set_foveation_dynamic", "foveation_dynamic"), &OpenXRInterface::set_foveation_dynamic);
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "foveation_dynamic"), "set_foveation_dynamic", "get_foveation_dynamic");
+	ADD_PROPERTY(PropertyInfo(VariantType::BOOL, "foveation_dynamic"), "set_foveation_dynamic", "get_foveation_dynamic");
 
 	// Action sets
 	ClassDB::bind_method(D_METHOD("is_action_set_active", "name"), &OpenXRInterface::is_action_set_active);
@@ -105,8 +105,8 @@ void OpenXRInterface::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_vrs_strength", "strength"), &OpenXRInterface::set_vrs_strength);
 
 	ADD_GROUP("Vulkan VRS", "vrs_");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "vrs_min_radius", PROPERTY_HINT_RANGE, "1.0,100.0,1.0"), "set_vrs_min_radius", "get_vrs_min_radius");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "vrs_strength", PROPERTY_HINT_RANGE, "0.1,10.0,0.1"), "set_vrs_strength", "get_vrs_strength");
+	ADD_PROPERTY(PropertyInfo(VariantType::FLOAT, "vrs_min_radius", PROPERTY_HINT_RANGE, "1.0,100.0,1.0"), "set_vrs_min_radius", "get_vrs_min_radius");
+	ADD_PROPERTY(PropertyInfo(VariantType::FLOAT, "vrs_strength", PROPERTY_HINT_RANGE, "0.1,10.0,0.1"), "set_vrs_strength", "get_vrs_strength");
 
 	BIND_ENUM_CONSTANT(HAND_LEFT);
 	BIND_ENUM_CONSTANT(HAND_RIGHT);

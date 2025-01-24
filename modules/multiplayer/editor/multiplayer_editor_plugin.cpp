@@ -40,7 +40,7 @@
 #include "editor/gui/editor_bottom_panel.h"
 
 void MultiplayerEditorDebugger::_bind_methods() {
-	ADD_SIGNAL(MethodInfo("open_request", PropertyInfo(Variant::STRING, "path")));
+	ADD_SIGNAL(MethodInfo("open_request", PropertyInfo(VariantType::STRING, "path")));
 }
 
 bool MultiplayerEditorDebugger::has_capture(const String &p_capture) const {

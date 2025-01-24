@@ -162,11 +162,11 @@ void EditorSceneExporterGLTFSettings::generate_property_list(Ref<GLTFDocument> p
 		}
 	}
 	// Add top-level properties (in addition to what _bind_methods registers).
-	PropertyInfo image_format_prop = PropertyInfo(Variant::STRING, "image_format", PROPERTY_HINT_ENUM, image_format_hint_string);
+	PropertyInfo image_format_prop = PropertyInfo(VariantType::STRING, "image_format", PROPERTY_HINT_ENUM, image_format_hint_string);
 	_property_list.push_back(image_format_prop);
-	PropertyInfo lossy_quality_prop = PropertyInfo(Variant::FLOAT, "lossy_quality", PROPERTY_HINT_RANGE, "0,1,0.01");
+	PropertyInfo lossy_quality_prop = PropertyInfo(VariantType::FLOAT, "lossy_quality", PROPERTY_HINT_RANGE, "0,1,0.01");
 	_property_list.push_back(lossy_quality_prop);
-	PropertyInfo root_node_mode_prop = PropertyInfo(Variant::INT, "root_node_mode", PROPERTY_HINT_ENUM, "Single Root,Keep Root,Multi Root");
+	PropertyInfo root_node_mode_prop = PropertyInfo(VariantType::INT, "root_node_mode", PROPERTY_HINT_ENUM, "Single Root,Keep Root,Multi Root");
 	_property_list.push_back(root_node_mode_prop);
 }
 
@@ -181,11 +181,11 @@ void EditorSceneExporterGLTFSettings::set_copyright(const String &p_copyright) {
 void EditorSceneExporterGLTFSettings::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_copyright"), &EditorSceneExporterGLTFSettings::get_copyright);
 	ClassDB::bind_method(D_METHOD("set_copyright", "copyright"), &EditorSceneExporterGLTFSettings::set_copyright);
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "copyright", PROPERTY_HINT_PLACEHOLDER_TEXT, "Example: 2014 Godette"), "set_copyright", "get_copyright");
+	ADD_PROPERTY(PropertyInfo(VariantType::STRING, "copyright", PROPERTY_HINT_PLACEHOLDER_TEXT, "Example: 2014 Godette"), "set_copyright", "get_copyright");
 
 	ClassDB::bind_method(D_METHOD("get_bake_fps"), &EditorSceneExporterGLTFSettings::get_bake_fps);
 	ClassDB::bind_method(D_METHOD("set_bake_fps", "bake_fps"), &EditorSceneExporterGLTFSettings::set_bake_fps);
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "bake_fps"), "set_bake_fps", "get_bake_fps");
+	ADD_PROPERTY(PropertyInfo(VariantType::FLOAT, "bake_fps"), "set_bake_fps", "get_bake_fps");
 }
 
 double EditorSceneExporterGLTFSettings::get_bake_fps() const {

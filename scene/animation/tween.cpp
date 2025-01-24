@@ -78,9 +78,9 @@ void Tweener::_bind_methods() {
 bool Tween::_validate_type_match(const Variant &p_from, Variant &r_to) {
 	if (p_from.get_type() != r_to.get_type()) {
 		// Cast r_to between double and int to avoid minor annoyances.
-		if (p_from.get_type() == Variant::FLOAT && r_to.get_type() == Variant::INT) {
+		if (p_from.get_type() == VariantType::FLOAT && r_to.get_type() == VariantType::INT) {
 			r_to = double(r_to);
-		} else if (p_from.get_type() == Variant::INT && r_to.get_type() == Variant::FLOAT) {
+		} else if (p_from.get_type() == VariantType::INT && r_to.get_type() == VariantType::FLOAT) {
 			r_to = int(r_to);
 		} else {
 			ERR_FAIL_V_MSG(false, "Type mismatch between initial and final value: " + Variant::get_type_name(p_from.get_type()) + " and " + Variant::get_type_name(r_to.get_type()));
@@ -503,8 +503,8 @@ void Tween::_bind_methods() {
 
 	ClassDB::bind_static_method("Tween", D_METHOD("interpolate_value", "initial_value", "delta_value", "elapsed_time", "duration", "trans_type", "ease_type"), &Tween::interpolate_variant);
 
-	ADD_SIGNAL(MethodInfo("step_finished", PropertyInfo(Variant::INT, "idx")));
-	ADD_SIGNAL(MethodInfo("loop_finished", PropertyInfo(Variant::INT, "loop_count")));
+	ADD_SIGNAL(MethodInfo("step_finished", PropertyInfo(VariantType::INT, "idx")));
+	ADD_SIGNAL(MethodInfo("loop_finished", PropertyInfo(VariantType::INT, "loop_count")));
 	ADD_SIGNAL(MethodInfo("finished"));
 
 	BIND_ENUM_CONSTANT(TWEEN_PROCESS_PHYSICS);
@@ -645,7 +645,7 @@ bool PropertyTweener::step(double &r_delta) {
 			custom_method.callp(&argptr, 1, result, ce);
 			if (ce.error != Callable::CallError::CALL_OK) {
 				ERR_FAIL_V_MSG(false, "Error calling custom method from PropertyTweener: " + Variant::get_callable_error_text(custom_method, &argptr, 1, ce) + ".");
-			} else if (result.get_type() != Variant::FLOAT) {
+			} else if (result.get_type() != VariantType::FLOAT) {
 				ERR_FAIL_V_MSG(false, vformat("Wrong return type in PropertyTweener custom method. Expected float, got %s.", Variant::get_type_name(result.get_type())));
 			}
 

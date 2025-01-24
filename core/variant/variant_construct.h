@@ -141,11 +141,11 @@ public:
 		return sizeof...(P);
 	}
 
-	static Variant::Type get_argument_type(int p_arg) {
+	static VariantType get_argument_type(int p_arg) {
 		return call_get_argument_type<P...>(p_arg);
 	}
 
-	static Variant::Type get_base_type() {
+	static VariantType get_base_type() {
 		return GetTypeInfo<T>::VARIANT_TYPE;
 	}
 };
@@ -153,12 +153,12 @@ public:
 class VariantConstructorObject {
 public:
 	static void construct(Variant &r_ret, const Variant **p_args, Callable::CallError &r_error) {
-		if (p_args[0]->get_type() == Variant::NIL) {
+		if (p_args[0]->get_type() == VariantType::NIL) {
 			VariantInternal::clear(&r_ret);
 			VariantTypeChanger<Object *>::change(&r_ret);
 			VariantInternal::object_reset_data(&r_ret);
 			r_error.error = Callable::CallError::CALL_OK;
-		} else if (p_args[0]->get_type() == Variant::OBJECT) {
+		} else if (p_args[0]->get_type() == VariantType::OBJECT) {
 			VariantTypeChanger<Object *>::change(&r_ret);
 			VariantInternal::object_assign(&r_ret, p_args[0]);
 			r_error.error = Callable::CallError::CALL_OK;
@@ -166,7 +166,7 @@ public:
 			VariantInternal::clear(&r_ret);
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
-			r_error.expected = Variant::OBJECT;
+			r_error.expected = VariantType::OBJECT;
 		}
 	}
 
@@ -182,22 +182,22 @@ public:
 		return 1;
 	}
 
-	static Variant::Type get_argument_type(int p_arg) {
-		return Variant::OBJECT;
+	static VariantType get_argument_type(int p_arg) {
+		return VariantType::OBJECT;
 	}
 
-	static Variant::Type get_base_type() {
-		return Variant::OBJECT;
+	static VariantType get_base_type() {
+		return VariantType::OBJECT;
 	}
 };
 
 class VariantConstructorNilObject {
 public:
 	static void construct(Variant &r_ret, const Variant **p_args, Callable::CallError &r_error) {
-		if (p_args[0]->get_type() != Variant::NIL) {
+		if (p_args[0]->get_type() != VariantType::NIL) {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
-			r_error.expected = Variant::NIL;
+			r_error.expected = VariantType::NIL;
 		}
 
 		VariantInternal::clear(&r_ret);
@@ -218,12 +218,12 @@ public:
 		return 1;
 	}
 
-	static Variant::Type get_argument_type(int p_arg) {
-		return Variant::NIL;
+	static VariantType get_argument_type(int p_arg) {
+		return VariantType::NIL;
 	}
 
-	static Variant::Type get_base_type() {
-		return Variant::OBJECT;
+	static VariantType get_base_type() {
+		return VariantType::OBJECT;
 	}
 };
 
@@ -234,16 +234,16 @@ public:
 		if (!p_args[0]->is_string()) {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
-			r_error.expected = Variant::STRING;
+			r_error.expected = VariantType::STRING;
 			return;
 		}
 
 		VariantTypeChanger<T>::change(&r_ret);
 		const String src_str = *p_args[0];
 
-		if (r_ret.get_type() == Variant::Type::INT) {
+		if (r_ret.get_type() == VariantType::INT) {
 			r_ret = src_str.to_int();
-		} else if (r_ret.get_type() == Variant::Type::FLOAT) {
+		} else if (r_ret.get_type() == VariantType::FLOAT) {
 			r_ret = src_str.to_float();
 		}
 	}
@@ -252,9 +252,9 @@ public:
 		VariantTypeChanger<T>::change(r_ret);
 		const String &src_str = *VariantGetInternalPtr<String>::get_ptr(p_args[0]);
 		T ret = Variant();
-		if (r_ret->get_type() == Variant::Type::INT) {
+		if (r_ret->get_type() == VariantType::INT) {
 			ret = src_str.to_int();
-		} else if (r_ret->get_type() == Variant::Type::FLOAT) {
+		} else if (r_ret->get_type() == VariantType::FLOAT) {
 			ret = src_str.to_float();
 		}
 		*r_ret = ret;
@@ -264,9 +264,9 @@ public:
 		String src_str = PtrToArg<String>::convert(p_args[0]);
 		T dst_var = Variant();
 		Variant type_test = Variant(dst_var);
-		if (type_test.get_type() == Variant::Type::INT) {
+		if (type_test.get_type() == VariantType::INT) {
 			dst_var = src_str.to_int();
-		} else if (type_test.get_type() == Variant::Type::FLOAT) {
+		} else if (type_test.get_type() == VariantType::FLOAT) {
 			dst_var = src_str.to_float();
 		}
 		PtrConstruct<T>::construct(dst_var, base);
@@ -276,11 +276,11 @@ public:
 		return 1;
 	}
 
-	static Variant::Type get_argument_type(int p_arg) {
-		return Variant::STRING;
+	static VariantType get_argument_type(int p_arg) {
+		return VariantType::STRING;
 	}
 
-	static Variant::Type get_base_type() {
+	static VariantType get_base_type() {
 		return GetTypeInfo<T>::VARIANT_TYPE;
 	}
 };
@@ -291,25 +291,25 @@ public:
 		ObjectID object_id;
 		StringName method;
 
-		if (p_args[0]->get_type() == Variant::NIL) {
+		if (p_args[0]->get_type() == VariantType::NIL) {
 			// leave as is
-		} else if (p_args[0]->get_type() == Variant::OBJECT) {
+		} else if (p_args[0]->get_type() == VariantType::OBJECT) {
 			object_id = VariantInternal::get_object_id(p_args[0]);
 		} else {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
-			r_error.expected = Variant::OBJECT;
+			r_error.expected = VariantType::OBJECT;
 			return;
 		}
 
-		if (p_args[1]->get_type() == Variant::STRING_NAME) {
+		if (p_args[1]->get_type() == VariantType::STRING_NAME) {
 			method = *VariantGetInternalPtr<StringName>::get_ptr(p_args[1]);
-		} else if (p_args[1]->get_type() == Variant::STRING) {
+		} else if (p_args[1]->get_type() == VariantType::STRING) {
 			method = *VariantGetInternalPtr<String>::get_ptr(p_args[1]);
 		} else {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 1;
-			r_error.expected = Variant::STRING_NAME;
+			r_error.expected = VariantType::STRING_NAME;
 			return;
 		}
 
@@ -329,16 +329,16 @@ public:
 		return 2;
 	}
 
-	static Variant::Type get_argument_type(int p_arg) {
+	static VariantType get_argument_type(int p_arg) {
 		if (p_arg == 0) {
-			return Variant::OBJECT;
+			return VariantType::OBJECT;
 		} else {
-			return Variant::STRING_NAME;
+			return VariantType::STRING_NAME;
 		}
 	}
 
-	static Variant::Type get_base_type() {
-		return Variant::CALLABLE;
+	static VariantType get_base_type() {
+		return VariantType::CALLABLE;
 	}
 };
 
@@ -348,25 +348,25 @@ public:
 		ObjectID object_id;
 		StringName method;
 
-		if (p_args[0]->get_type() == Variant::NIL) {
+		if (p_args[0]->get_type() == VariantType::NIL) {
 			// leave as is
-		} else if (p_args[0]->get_type() == Variant::OBJECT) {
+		} else if (p_args[0]->get_type() == VariantType::OBJECT) {
 			object_id = VariantInternal::get_object_id(p_args[0]);
 		} else {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
-			r_error.expected = Variant::OBJECT;
+			r_error.expected = VariantType::OBJECT;
 			return;
 		}
 
-		if (p_args[1]->get_type() == Variant::STRING_NAME) {
+		if (p_args[1]->get_type() == VariantType::STRING_NAME) {
 			method = *VariantGetInternalPtr<StringName>::get_ptr(p_args[1]);
-		} else if (p_args[1]->get_type() == Variant::STRING) {
+		} else if (p_args[1]->get_type() == VariantType::STRING) {
 			method = *VariantGetInternalPtr<String>::get_ptr(p_args[1]);
 		} else {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 1;
-			r_error.expected = Variant::STRING_NAME;
+			r_error.expected = VariantType::STRING_NAME;
 			return;
 		}
 
@@ -386,54 +386,54 @@ public:
 		return 2;
 	}
 
-	static Variant::Type get_argument_type(int p_arg) {
+	static VariantType get_argument_type(int p_arg) {
 		if (p_arg == 0) {
-			return Variant::OBJECT;
+			return VariantType::OBJECT;
 		} else {
-			return Variant::STRING_NAME;
+			return VariantType::STRING_NAME;
 		}
 	}
 
-	static Variant::Type get_base_type() {
-		return Variant::SIGNAL;
+	static VariantType get_base_type() {
+		return VariantType::SIGNAL;
 	}
 };
 
 class VariantConstructorTypedDictionary {
 public:
 	static void construct(Variant &r_ret, const Variant **p_args, Callable::CallError &r_error) {
-		if (p_args[0]->get_type() != Variant::DICTIONARY) {
+		if (p_args[0]->get_type() != VariantType::DICTIONARY) {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
-			r_error.expected = Variant::DICTIONARY;
+			r_error.expected = VariantType::DICTIONARY;
 			return;
 		}
 
-		if (p_args[1]->get_type() != Variant::INT) {
+		if (p_args[1]->get_type() != VariantType::INT) {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 1;
-			r_error.expected = Variant::INT;
+			r_error.expected = VariantType::INT;
 			return;
 		}
 
-		if (p_args[2]->get_type() != Variant::STRING_NAME) {
+		if (p_args[2]->get_type() != VariantType::STRING_NAME) {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 2;
-			r_error.expected = Variant::STRING_NAME;
+			r_error.expected = VariantType::STRING_NAME;
 			return;
 		}
 
-		if (p_args[4]->get_type() != Variant::INT) {
+		if (p_args[4]->get_type() != VariantType::INT) {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 4;
-			r_error.expected = Variant::INT;
+			r_error.expected = VariantType::INT;
 			return;
 		}
 
-		if (p_args[5]->get_type() != Variant::STRING_NAME) {
+		if (p_args[5]->get_type() != VariantType::STRING_NAME) {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 5;
-			r_error.expected = Variant::STRING_NAME;
+			r_error.expected = VariantType::STRING_NAME;
 			return;
 		}
 
@@ -471,61 +471,61 @@ public:
 		return 7;
 	}
 
-	static Variant::Type get_argument_type(int p_arg) {
+	static VariantType get_argument_type(int p_arg) {
 		switch (p_arg) {
 			case 0: {
-				return Variant::DICTIONARY;
+				return VariantType::DICTIONARY;
 			} break;
 			case 1: {
-				return Variant::INT;
+				return VariantType::INT;
 			} break;
 			case 2: {
-				return Variant::STRING_NAME;
+				return VariantType::STRING_NAME;
 			} break;
 			case 3: {
-				return Variant::NIL;
+				return VariantType::NIL;
 			} break;
 			case 4: {
-				return Variant::INT;
+				return VariantType::INT;
 			} break;
 			case 5: {
-				return Variant::STRING_NAME;
+				return VariantType::STRING_NAME;
 			} break;
 			case 6: {
-				return Variant::NIL;
+				return VariantType::NIL;
 			} break;
 			default: {
-				return Variant::NIL;
+				return VariantType::NIL;
 			} break;
 		}
 	}
 
-	static Variant::Type get_base_type() {
-		return Variant::DICTIONARY;
+	static VariantType get_base_type() {
+		return VariantType::DICTIONARY;
 	}
 };
 
 class VariantConstructorTypedArray {
 public:
 	static void construct(Variant &r_ret, const Variant **p_args, Callable::CallError &r_error) {
-		if (p_args[0]->get_type() != Variant::ARRAY) {
+		if (p_args[0]->get_type() != VariantType::ARRAY) {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
-			r_error.expected = Variant::ARRAY;
+			r_error.expected = VariantType::ARRAY;
 			return;
 		}
 
-		if (p_args[1]->get_type() != Variant::INT) {
+		if (p_args[1]->get_type() != VariantType::INT) {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 1;
-			r_error.expected = Variant::INT;
+			r_error.expected = VariantType::INT;
 			return;
 		}
 
 		if (!p_args[2]->is_string()) {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 2;
-			r_error.expected = Variant::STRING_NAME;
+			r_error.expected = VariantType::STRING_NAME;
 			return;
 		}
 
@@ -555,28 +555,28 @@ public:
 		return 4;
 	}
 
-	static Variant::Type get_argument_type(int p_arg) {
+	static VariantType get_argument_type(int p_arg) {
 		switch (p_arg) {
 			case 0: {
-				return Variant::ARRAY;
+				return VariantType::ARRAY;
 			} break;
 			case 1: {
-				return Variant::INT;
+				return VariantType::INT;
 			} break;
 			case 2: {
-				return Variant::STRING_NAME;
+				return VariantType::STRING_NAME;
 			} break;
 			case 3: {
-				return Variant::NIL;
+				return VariantType::NIL;
 			} break;
 			default: {
-				return Variant::NIL;
+				return VariantType::NIL;
 			} break;
 		}
 	}
 
-	static Variant::Type get_base_type() {
-		return Variant::ARRAY;
+	static VariantType get_base_type() {
+		return VariantType::ARRAY;
 	}
 };
 
@@ -630,12 +630,12 @@ public:
 		return 1;
 	}
 
-	static Variant::Type get_argument_type(int p_arg) {
+	static VariantType get_argument_type(int p_arg) {
 		return GetTypeInfo<T>::VARIANT_TYPE;
 	}
 
-	static Variant::Type get_base_type() {
-		return Variant::ARRAY;
+	static VariantType get_base_type() {
+		return VariantType::ARRAY;
 	}
 };
 
@@ -643,10 +643,10 @@ template <typename T>
 class VariantConstructorFromArray {
 public:
 	static void construct(Variant &r_ret, const Variant **p_args, Callable::CallError &r_error) {
-		if (p_args[0]->get_type() != Variant::ARRAY) {
+		if (p_args[0]->get_type() != VariantType::ARRAY) {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
-			r_error.expected = Variant::ARRAY;
+			r_error.expected = VariantType::ARRAY;
 			return;
 		}
 
@@ -689,11 +689,11 @@ public:
 		return 1;
 	}
 
-	static Variant::Type get_argument_type(int p_arg) {
-		return Variant::ARRAY;
+	static VariantType get_argument_type(int p_arg) {
+		return VariantType::ARRAY;
 	}
 
-	static Variant::Type get_base_type() {
+	static VariantType get_base_type() {
 		return GetTypeInfo<T>::VARIANT_TYPE;
 	}
 };
@@ -701,10 +701,10 @@ public:
 class VariantConstructorNil {
 public:
 	static void construct(Variant &r_ret, const Variant **p_args, Callable::CallError &r_error) {
-		if (p_args[0]->get_type() != Variant::NIL) {
+		if (p_args[0]->get_type() != VariantType::NIL) {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
-			r_error.expected = Variant::NIL;
+			r_error.expected = VariantType::NIL;
 			return;
 		}
 
@@ -723,12 +723,12 @@ public:
 		return 1;
 	}
 
-	static Variant::Type get_argument_type(int p_arg) {
-		return Variant::NIL;
+	static VariantType get_argument_type(int p_arg) {
+		return VariantType::NIL;
 	}
 
-	static Variant::Type get_base_type() {
-		return Variant::NIL;
+	static VariantType get_base_type() {
+		return VariantType::NIL;
 	}
 };
 
@@ -751,11 +751,11 @@ public:
 		return 0;
 	}
 
-	static Variant::Type get_argument_type(int p_arg) {
-		return Variant::NIL;
+	static VariantType get_argument_type(int p_arg) {
+		return VariantType::NIL;
 	}
 
-	static Variant::Type get_base_type() {
+	static VariantType get_base_type() {
 		return GetTypeInfo<T>::VARIANT_TYPE;
 	}
 };
@@ -778,12 +778,12 @@ public:
 		return 0;
 	}
 
-	static Variant::Type get_argument_type(int p_arg) {
-		return Variant::NIL;
+	static VariantType get_argument_type(int p_arg) {
+		return VariantType::NIL;
 	}
 
-	static Variant::Type get_base_type() {
-		return Variant::NIL;
+	static VariantType get_base_type() {
+		return VariantType::NIL;
 	}
 };
 
@@ -805,12 +805,12 @@ public:
 		return 0;
 	}
 
-	static Variant::Type get_argument_type(int p_arg) {
-		return Variant::NIL;
+	static VariantType get_argument_type(int p_arg) {
+		return VariantType::NIL;
 	}
 
-	static Variant::Type get_base_type() {
-		return Variant::OBJECT;
+	static VariantType get_base_type() {
+		return VariantType::OBJECT;
 	}
 };
 

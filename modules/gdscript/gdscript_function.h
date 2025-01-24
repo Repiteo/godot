@@ -59,7 +59,7 @@ public:
 	Kind kind = UNINITIALIZED;
 
 	bool has_type = false;
-	Variant::Type builtin_type = Variant::NIL;
+	VariantType builtin_type = VariantType::NIL;
 	StringName native_type;
 	Script *script_type = nullptr;
 	Ref<Script> script_type_ref;
@@ -73,13 +73,13 @@ public:
 			case UNINITIALIZED:
 				break;
 			case BUILTIN: {
-				Variant::Type var_type = p_variant.get_type();
+				VariantType var_type = p_variant.get_type();
 				bool valid = builtin_type == var_type;
-				if (valid && builtin_type == Variant::ARRAY && has_container_element_type(0)) {
+				if (valid && builtin_type == VariantType::ARRAY && has_container_element_type(0)) {
 					Array array = p_variant;
 					if (array.is_typed()) {
 						const GDScriptDataType &elem_type = container_element_types[0];
-						Variant::Type array_builtin_type = (Variant::Type)array.get_typed_builtin();
+						VariantType array_builtin_type = (VariantType)array.get_typed_builtin();
 						StringName array_native_type = array.get_typed_class_name();
 						Ref<Script> array_script_type_ref = array.get_typed_script();
 
@@ -93,12 +93,12 @@ public:
 					} else {
 						valid = false;
 					}
-				} else if (valid && builtin_type == Variant::DICTIONARY && has_container_element_types()) {
+				} else if (valid && builtin_type == VariantType::DICTIONARY && has_container_element_types()) {
 					Dictionary dictionary = p_variant;
 					if (dictionary.is_typed()) {
 						if (dictionary.is_typed_key()) {
 							GDScriptDataType key = get_container_element_type_or_variant(0);
-							Variant::Type key_builtin_type = (Variant::Type)dictionary.get_typed_key_builtin();
+							VariantType key_builtin_type = (VariantType)dictionary.get_typed_key_builtin();
 							StringName key_native_type = dictionary.get_typed_key_class_name();
 							Ref<Script> key_script_type_ref = dictionary.get_typed_key_script();
 
@@ -113,7 +113,7 @@ public:
 
 						if (valid && dictionary.is_typed_value()) {
 							GDScriptDataType value = get_container_element_type_or_variant(1);
-							Variant::Type value_builtin_type = (Variant::Type)dictionary.get_typed_value_builtin();
+							VariantType value_builtin_type = (VariantType)dictionary.get_typed_value_builtin();
 							StringName value_native_type = dictionary.get_typed_value_class_name();
 							Ref<Script> value_script_type_ref = dictionary.get_typed_value_script();
 
@@ -134,10 +134,10 @@ public:
 				return valid;
 			} break;
 			case NATIVE: {
-				if (p_variant.get_type() == Variant::NIL) {
+				if (p_variant.get_type() == VariantType::NIL) {
 					return true;
 				}
-				if (p_variant.get_type() != Variant::OBJECT) {
+				if (p_variant.get_type() != VariantType::OBJECT) {
 					return false;
 				}
 
@@ -154,10 +154,10 @@ public:
 			} break;
 			case SCRIPT:
 			case GDSCRIPT: {
-				if (p_variant.get_type() == Variant::NIL) {
+				if (p_variant.get_type() == VariantType::NIL) {
 					return true;
 				}
-				if (p_variant.get_type() != Variant::OBJECT) {
+				if (p_variant.get_type() != VariantType::OBJECT) {
 					return false;
 				}
 
@@ -185,18 +185,18 @@ public:
 	bool can_contain_object() const {
 		if (has_type && kind == BUILTIN) {
 			switch (builtin_type) {
-				case Variant::ARRAY:
+				case VariantType::ARRAY:
 					if (has_container_element_type(0)) {
 						return container_element_types[0].can_contain_object();
 					}
 					return true;
-				case Variant::DICTIONARY:
+				case VariantType::DICTIONARY:
 					if (has_container_element_types()) {
 						return get_container_element_type_or_variant(0).can_contain_object() || get_container_element_type_or_variant(1).can_contain_object();
 					}
 					return true;
-				case Variant::NIL:
-				case Variant::OBJECT:
+				case VariantType::NIL:
+				case VariantType::OBJECT:
 					return true;
 				default:
 					return false;
@@ -462,7 +462,7 @@ private:
 
 	SelfList<GDScriptFunction> function_list{ this };
 	mutable Variant nil;
-	HashMap<int, Variant::Type> temporary_slots;
+	HashMap<int, VariantType> temporary_slots;
 	List<StackDebug> stack_debug;
 
 	Vector<int> code;

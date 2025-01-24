@@ -206,7 +206,7 @@ void ConnectDialog::_method_selected() {
  * Adds a new parameter bind to connection.
  */
 void ConnectDialog::_add_bind() {
-	Variant::Type type = (Variant::Type)type_list->get_item_id(type_list->get_selected());
+	VariantType type = (VariantType)type_list->get_item_id(type_list->get_selected());
 
 	Variant value;
 	Callable::CallError err;
@@ -282,7 +282,7 @@ List<MethodInfo> ConnectDialog::_filter_method_list(const List<MethodInfo> &p_me
 	bool check_signal = compatible_methods_only->is_pressed();
 	List<MethodInfo> ret;
 
-	List<Pair<Variant::Type, StringName>> effective_args;
+	List<Pair<VariantType, StringName>> effective_args;
 	int unbind = get_unbinds();
 	for (int i = 0; i < p_signal.arguments.size() - unbind; i++) {
 		PropertyInfo pi = p_signal.arguments.get(i);
@@ -312,17 +312,17 @@ List<MethodInfo> ConnectDialog::_filter_method_list(const List<MethodInfo> &p_me
 			}
 
 			bool type_mismatch = false;
-			const List<Pair<Variant::Type, StringName>>::Element *E = effective_args.front();
+			const List<Pair<VariantType, StringName>>::Element *E = effective_args.front();
 			for (const List<PropertyInfo>::Element *F = mi.arguments.front(); F; F = F->next(), E = E->next()) {
-				Variant::Type stype = E->get().first;
-				Variant::Type mtype = F->get().type;
+				VariantType stype = E->get().first;
+				VariantType mtype = F->get().type;
 
-				if (stype != Variant::NIL && mtype != Variant::NIL && stype != mtype) {
+				if (stype != VariantType::NIL && mtype != VariantType::NIL && stype != mtype) {
 					type_mismatch = true;
 					break;
 				}
 
-				if (stype == Variant::OBJECT && mtype == Variant::OBJECT && !ClassDB::is_parent_class(E->get().second, F->get().class_name)) {
+				if (stype == VariantType::OBJECT && mtype == VariantType::OBJECT && !ClassDB::is_parent_class(E->get().second, F->get().class_name)) {
 					type_mismatch = true;
 					break;
 				}
@@ -483,7 +483,7 @@ void ConnectDialog::_notification(int p_what) {
 		}
 		case NOTIFICATION_THEME_CHANGED: {
 			for (int i = 0; i < type_list->get_item_count(); i++) {
-				String type_name = Variant::get_type_name((Variant::Type)type_list->get_item_id(i));
+				String type_name = Variant::get_type_name((VariantType)type_list->get_item_id(i));
 				type_list->set_item_icon(i, get_editor_theme_icon(type_name));
 			}
 
@@ -555,24 +555,24 @@ String ConnectDialog::get_signature(const MethodInfo &p_method, PackedStringArra
 		const PropertyInfo &pi = *itr;
 		String type_name;
 		switch (pi.type) {
-			case Variant::NIL:
+			case VariantType::NIL:
 				type_name = "Variant";
 				break;
-			case Variant::INT:
+			case VariantType::INT:
 				if ((pi.usage & PROPERTY_USAGE_CLASS_IS_ENUM) && pi.class_name != StringName() && !String(pi.class_name).begins_with("res://")) {
 					type_name = pi.class_name;
 				} else {
 					type_name = "int";
 				}
 				break;
-			case Variant::ARRAY:
+			case VariantType::ARRAY:
 				if (pi.hint == PROPERTY_HINT_ARRAY_TYPE && !pi.hint_string.is_empty() && !pi.hint_string.begins_with("res://")) {
 					type_name = "Array[" + pi.hint_string + "]";
 				} else {
 					type_name = "Array";
 				}
 				break;
-			case Variant::DICTIONARY:
+			case VariantType::DICTIONARY:
 				type_name = "Dictionary";
 				if (pi.hint == PROPERTY_HINT_DICTIONARY_TYPE && !pi.hint_string.is_empty()) {
 					String key_hint = pi.hint_string.get_slice(";", 0);
@@ -588,7 +588,7 @@ String ConnectDialog::get_signature(const MethodInfo &p_method, PackedStringArra
 					}
 				}
 				break;
-			case Variant::OBJECT:
+			case VariantType::OBJECT:
 				if (pi.class_name != StringName()) {
 					type_name = pi.class_name;
 				} else {
@@ -821,13 +821,13 @@ ConnectDialog::ConnectDialog() {
 	type_list = memnew(OptionButton);
 	type_list->set_h_size_flags(Control::SIZE_EXPAND_FILL);
 	add_bind_hb->add_child(type_list);
-	for (int i = 0; i < Variant::VARIANT_MAX; i++) {
-		if (i == Variant::NIL || i == Variant::OBJECT || i == Variant::CALLABLE || i == Variant::SIGNAL || i == Variant::RID) {
+	for (int i = 0; i < VariantType::VARIANT_MAX; i++) {
+		if (i == VariantType::NIL || i == VariantType::OBJECT || i == VariantType::CALLABLE || i == VariantType::SIGNAL || i == VariantType::RID) {
 			// These types can't be constructed or serialized properly, so skip them.
 			continue;
 		}
 
-		type_list->add_item(Variant::get_type_name(Variant::Type(i)), i);
+		type_list->add_item(Variant::get_type_name(VariantType(i)), i);
 	}
 	bind_controls.push_back(type_list);
 

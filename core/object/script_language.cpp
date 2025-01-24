@@ -143,7 +143,7 @@ PropertyInfo Script::get_class_category() const {
 		}
 	}
 
-	return PropertyInfo(Variant::NIL, scr_name, PROPERTY_HINT_NONE, path, PROPERTY_USAGE_CATEGORY);
+	return PropertyInfo(VariantType::NIL, scr_name, PROPERTY_HINT_NONE, path, PROPERTY_USAGE_CATEGORY);
 }
 
 #endif // TOOLS_ENABLED
@@ -174,7 +174,7 @@ void Script::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("get_rpc_config"), &Script::get_rpc_config);
 
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "source_code", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_source_code", "get_source_code");
+	ADD_PROPERTY(PropertyInfo(VariantType::STRING, "source_code", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_source_code", "get_source_code");
 }
 
 void Script::reload_from_file() {
@@ -628,7 +628,7 @@ bool PlaceHolderScriptInstance::set(const StringName &p_name, const Variant &p_v
 		if (script->get_property_default_value(p_name, defval)) {
 			// The evaluate function ensures that a NIL variant is equal to e.g. an empty Resource.
 			// Simply doing defval == p_value does not do this.
-			if (Variant::evaluate(Variant::OP_EQUAL, defval, p_value)) {
+			if (Variant::evaluate(VariantOperator::OP_EQUAL, defval, p_value)) {
 				values.erase(p_name);
 				return true;
 			}
@@ -638,7 +638,7 @@ bool PlaceHolderScriptInstance::set(const StringName &p_name, const Variant &p_v
 	} else {
 		Variant defval;
 		if (script->get_property_default_value(p_name, defval)) {
-			if (Variant::evaluate(Variant::OP_NOT_EQUAL, defval, p_value)) {
+			if (Variant::evaluate(VariantOperator::OP_NOT_EQUAL, defval, p_value)) {
 				values[p_name] = p_value;
 			}
 			return true;
@@ -682,7 +682,7 @@ void PlaceHolderScriptInstance::get_property_list(List<PropertyInfo> *p_properti
 	}
 }
 
-Variant::Type PlaceHolderScriptInstance::get_property_type(const StringName &p_name, bool *r_is_valid) const {
+VariantType PlaceHolderScriptInstance::get_property_type(const StringName &p_name, bool *r_is_valid) const {
 	if (values.has(p_name)) {
 		if (r_is_valid) {
 			*r_is_valid = true;
@@ -701,7 +701,7 @@ Variant::Type PlaceHolderScriptInstance::get_property_type(const StringName &p_n
 		*r_is_valid = false;
 	}
 
-	return Variant::NIL;
+	return VariantType::NIL;
 }
 
 void PlaceHolderScriptInstance::get_method_list(List<MethodInfo> *p_list) const {

@@ -177,11 +177,11 @@ private:
 			const bool p_for_vertex);
 	Vector<Variant> _decode_accessor_as_variant(Ref<GLTFState> p_state,
 			const GLTFAccessorIndex p_accessor,
-			Variant::Type p_variant_type,
+			VariantType p_variant_type,
 			GLTFAccessor::GLTFAccessorType p_accessor_type);
 	GLTFAccessorIndex _encode_accessor_as_variant(Ref<GLTFState> p_state,
 			Vector<Variant> p_attribs,
-			Variant::Type p_variant_type,
+			VariantType p_variant_type,
 			GLTFAccessor::GLTFAccessorType p_accessor_type,
 			GLTFAccessor::GLTFComponentType p_component_type = GLTFAccessor::COMPONENT_TYPE_SINGLE_FLOAT);
 	Error _parse_meshes(Ref<GLTFState> p_state);

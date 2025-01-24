@@ -699,12 +699,12 @@ void GDScript::_static_default_init() {
 		if (!type.has_type || type.kind != GDScriptDataType::BUILTIN) {
 			continue;
 		}
-		if (type.builtin_type == Variant::ARRAY && type.has_container_element_type(0)) {
+		if (type.builtin_type == VariantType::ARRAY && type.has_container_element_type(0)) {
 			const GDScriptDataType element_type = type.get_container_element_type(0);
 			Array default_value;
 			default_value.set_typed(element_type.builtin_type, element_type.native_type, element_type.script_type);
 			static_variables.write[E.value.index] = default_value;
-		} else if (type.builtin_type == Variant::DICTIONARY && type.has_container_element_types()) {
+		} else if (type.builtin_type == VariantType::DICTIONARY && type.has_container_element_types()) {
 			const GDScriptDataType key_type = type.get_container_element_type_or_variant(0);
 			const GDScriptDataType value_type = type.get_container_element_type_or_variant(1);
 			Dictionary default_value;
@@ -1046,7 +1046,7 @@ bool GDScript::_set(const StringName &p_name, const Variant &p_value) {
 }
 
 void GDScript::_get_property_list(List<PropertyInfo> *p_properties) const {
-	p_properties->push_back(PropertyInfo(Variant::STRING, "script/source", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
+	p_properties->push_back(PropertyInfo(VariantType::STRING, "script/source", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL));
 
 	List<const GDScript *> classes;
 	const GDScript *top = this;
@@ -1748,7 +1748,7 @@ bool GDScriptInstance::set(const StringName &p_name, const Variant &p_value) {
 
 				Callable::CallError err;
 				Variant ret = E->value->call(this, (const Variant **)args, 2, err);
-				if (err.error == Callable::CallError::CALL_OK && ret.get_type() == Variant::BOOL && ret.operator bool()) {
+				if (err.error == Callable::CallError::CALL_OK && ret.get_type() == VariantType::BOOL && ret.operator bool()) {
 					return true;
 				}
 			}
@@ -1835,7 +1835,7 @@ bool GDScriptInstance::get(const StringName &p_name, Variant &r_ret) const {
 
 				Callable::CallError err;
 				Variant ret = E->value->call(const_cast<GDScriptInstance *>(this), (const Variant **)args, 1, err);
-				if (err.error == Callable::CallError::CALL_OK && ret.get_type() != Variant::NIL) {
+				if (err.error == Callable::CallError::CALL_OK && ret.get_type() != VariantType::NIL) {
 					r_ret = ret;
 					return true;
 				}
@@ -1847,7 +1847,7 @@ bool GDScriptInstance::get(const StringName &p_name, Variant &r_ret) const {
 	return false;
 }
 
-Variant::Type GDScriptInstance::get_property_type(const StringName &p_name, bool *r_is_valid) const {
+VariantType GDScriptInstance::get_property_type(const StringName &p_name, bool *r_is_valid) const {
 	if (script->member_indices.has(p_name)) {
 		if (r_is_valid) {
 			*r_is_valid = true;
@@ -1858,7 +1858,7 @@ Variant::Type GDScriptInstance::get_property_type(const StringName &p_name, bool
 	if (r_is_valid) {
 		*r_is_valid = false;
 	}
-	return Variant::NIL;
+	return VariantType::NIL;
 }
 
 void GDScriptInstance::validate_property(PropertyInfo &p_property) const {
@@ -1895,7 +1895,7 @@ void GDScriptInstance::get_property_list(List<PropertyInfo> *p_properties) const
 				Callable::CallError err;
 				Variant ret = E->value->call(const_cast<GDScriptInstance *>(this), nullptr, 0, err);
 				if (err.error == Callable::CallError::CALL_OK) {
-					ERR_FAIL_COND_MSG(ret.get_type() != Variant::ARRAY, "Wrong type for _get_property_list, must be an array of dictionaries.");
+					ERR_FAIL_COND_MSG(ret.get_type() != VariantType::ARRAY, "Wrong type for _get_property_list, must be an array of dictionaries.");
 
 					Array arr = ret;
 					for (int i = 0; i < arr.size(); i++) {
@@ -1905,7 +1905,7 @@ void GDScriptInstance::get_property_list(List<PropertyInfo> *p_properties) const
 
 						PropertyInfo pinfo;
 						pinfo.name = d["name"];
-						pinfo.type = Variant::Type(d["type"].operator int());
+						pinfo.type = VariantType(d["type"].operator int());
 						if (d.has("hint")) {
 							pinfo.hint = PropertyHint(d["hint"].operator int());
 						}
@@ -1920,7 +1920,7 @@ void GDScriptInstance::get_property_list(List<PropertyInfo> *p_properties) const
 						}
 
 						ERR_CONTINUE(pinfo.name.is_empty() && (pinfo.usage & PROPERTY_USAGE_STORAGE));
-						ERR_CONTINUE(pinfo.type < 0 || pinfo.type >= Variant::VARIANT_MAX);
+						ERR_CONTINUE(pinfo.type < 0 || pinfo.type >= VariantType::VARIANT_MAX);
 
 						props.push_back(pinfo);
 					}
@@ -1973,7 +1973,7 @@ bool GDScriptInstance::property_can_revert(const StringName &p_name) const {
 			if (E) {
 				Callable::CallError err;
 				Variant ret = E->value->call(const_cast<GDScriptInstance *>(this), args, 1, err);
-				if (err.error == Callable::CallError::CALL_OK && ret.get_type() == Variant::BOOL && ret.operator bool()) {
+				if (err.error == Callable::CallError::CALL_OK && ret.get_type() == VariantType::BOOL && ret.operator bool()) {
 					return true;
 				}
 			}
@@ -1995,7 +1995,7 @@ bool GDScriptInstance::property_get_revert(const StringName &p_name, Variant &r_
 			if (E) {
 				Callable::CallError err;
 				Variant ret = E->value->call(const_cast<GDScriptInstance *>(this), args, 1, err);
-				if (err.error == Callable::CallError::CALL_OK && ret.get_type() != Variant::NIL) {
+				if (err.error == Callable::CallError::CALL_OK && ret.get_type() != VariantType::NIL) {
 					r_ret = ret;
 					return true;
 				}
@@ -2118,7 +2118,7 @@ String GDScriptInstance::to_string(bool *r_valid) {
 		Callable::CallError ce;
 		Variant ret = callp(CoreStringName(_to_string), nullptr, 0, ce);
 		if (ce.error == Callable::CallError::CALL_OK) {
-			if (ret.get_type() != Variant::STRING) {
+			if (ret.get_type() != VariantType::STRING) {
 				if (r_valid) {
 					*r_valid = false;
 				}
@@ -2235,7 +2235,7 @@ void GDScriptLanguage::_remove_global(const StringName &p_name) {
 		return;
 	}
 	global_array_empty_indexes.push_back(globals[p_name]);
-	global_array.write[globals[p_name]] = Variant::NIL;
+	global_array.write[globals[p_name]] = VariantType::NIL;
 	globals.erase(p_name);
 }
 
@@ -2959,7 +2959,7 @@ GDScriptLanguage::GDScriptLanguage() {
 	script_frame_time = 0;
 #endif
 
-	int dmcs = GLOBAL_DEF(PropertyInfo(Variant::INT, "debug/settings/gdscript/max_call_stack", PROPERTY_HINT_RANGE, "512," + itos(GDScriptFunction::MAX_CALL_DEPTH - 1) + ",1"), 1024);
+	int dmcs = GLOBAL_DEF(PropertyInfo(VariantType::INT, "debug/settings/gdscript/max_call_stack", PROPERTY_HINT_RANGE, "512," + itos(GDScriptFunction::MAX_CALL_DEPTH - 1) + ",1"), 1024);
 
 	if (EngineDebugger::is_active()) {
 		//debugging enabled!

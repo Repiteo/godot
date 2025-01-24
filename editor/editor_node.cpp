@@ -1548,7 +1548,7 @@ void EditorNode::_load_editor_plugin_states_from_config(const Ref<ConfigFile> &p
 	Dictionary md;
 	for (const String &E : esl) {
 		Variant st = p_config_file->get_value("editor_states", E);
-		if (st.get_type() != Variant::NIL) {
+		if (st.get_type() != VariantType::NIL) {
 			md[E] = st;
 		}
 	}
@@ -1630,7 +1630,7 @@ bool EditorNode::_find_and_save_edited_subresources(Object *obj, HashMap<Ref<Res
 		}
 
 		switch (E.type) {
-			case Variant::OBJECT: {
+			case VariantType::OBJECT: {
 				Ref<Resource> res = obj->get(E.name);
 
 				if (_find_and_save_resource(res, processed, flags)) {
@@ -1638,7 +1638,7 @@ bool EditorNode::_find_and_save_edited_subresources(Object *obj, HashMap<Ref<Res
 				}
 
 			} break;
-			case Variant::ARRAY: {
+			case VariantType::ARRAY: {
 				Array varray = obj->get(E.name);
 				int len = varray.size();
 				for (int i = 0; i < len; i++) {
@@ -1650,7 +1650,7 @@ bool EditorNode::_find_and_save_edited_subresources(Object *obj, HashMap<Ref<Res
 				}
 
 			} break;
-			case Variant::DICTIONARY: {
+			case VariantType::DICTIONARY: {
 				Dictionary d = obj->get(E.name);
 				List<Variant> keys;
 				d.get_key_list(&keys);
@@ -3473,7 +3473,7 @@ void EditorNode::replace_resources_in_object(Object *p_object, const Vector<Ref<
 		}
 
 		switch (E.type) {
-			case Variant::OBJECT: {
+			case VariantType::OBJECT: {
 				if (E.hint == PROPERTY_HINT_RESOURCE_TYPE) {
 					const Variant &v = p_object->get(E.name);
 					Ref<Resource> res = v;
@@ -3488,7 +3488,7 @@ void EditorNode::replace_resources_in_object(Object *p_object, const Vector<Ref<
 					}
 				}
 			} break;
-			case Variant::ARRAY: {
+			case VariantType::ARRAY: {
 				Array varray = p_object->get(E.name);
 				int len = varray.size();
 				bool array_requires_updating = false;
@@ -3510,7 +3510,7 @@ void EditorNode::replace_resources_in_object(Object *p_object, const Vector<Ref<
 					p_object->set(E.name, varray);
 				}
 			} break;
-			case Variant::DICTIONARY: {
+			case VariantType::DICTIONARY: {
 				Dictionary d = p_object->get(E.name);
 				List<Variant> keys;
 				bool dictionary_requires_updating = false;
@@ -4153,7 +4153,7 @@ HashMap<StringName, Variant> EditorNode::get_modified_properties_for_node(Node *
 	p_node->get_property_list(&pinfo);
 	for (const PropertyInfo &E : pinfo) {
 		if (E.usage & PROPERTY_USAGE_STORAGE) {
-			bool node_reference = (E.type == Variant::OBJECT && E.hint == PROPERTY_HINT_NODE_TYPE);
+			bool node_reference = (E.type == VariantType::OBJECT && E.hint == PROPERTY_HINT_NODE_TYPE);
 			if (p_node_references_only && !node_reference) {
 				continue;
 			}
@@ -4186,7 +4186,7 @@ HashMap<StringName, Variant> EditorNode::get_modified_properties_reference_to_no
 	p_node->get_property_list(&pinfo);
 	for (const PropertyInfo &E : pinfo) {
 		if (E.usage & PROPERTY_USAGE_STORAGE) {
-			if (E.type != Variant::OBJECT || E.hint != PROPERTY_HINT_NODE_TYPE) {
+			if (E.type != VariantType::OBJECT || E.hint != PROPERTY_HINT_NODE_TYPE) {
 				continue;
 			}
 			Variant current_value = p_node->get(E.name);
@@ -4216,7 +4216,7 @@ void EditorNode::update_node_from_node_modification_entry(Node *p_node, Modifica
 		HashMap<StringName, bool> property_node_reference_table;
 		for (const PropertyInfo &E : pinfo) {
 			if (E.usage & PROPERTY_USAGE_STORAGE) {
-				if (E.type == Variant::OBJECT && E.hint == PROPERTY_HINT_NODE_TYPE) {
+				if (E.type == VariantType::OBJECT && E.hint == PROPERTY_HINT_NODE_TYPE) {
 					property_node_reference_table[E.name] = true;
 				} else {
 					property_node_reference_table[E.name] = false;
@@ -4231,7 +4231,7 @@ void EditorNode::update_node_from_node_modification_entry(Node *p_node, Modifica
 				// If the property is a node reference, attempt to restore from the node path instead.
 				bool is_node_reference = *property_node_reference_table_entry;
 				if (is_node_reference) {
-					if (E.value.get_type() == Variant::NODE_PATH) {
+					if (E.value.get_type() == VariantType::NODE_PATH) {
 						p_node->set(E.key, p_node->get_node_or_null(E.value));
 					}
 				} else {
@@ -6697,11 +6697,11 @@ void EditorNode::_bind_methods() {
 	ClassDB::bind_method("stop_child_process", &EditorNode::stop_child_process);
 
 	ADD_SIGNAL(MethodInfo("request_help_search"));
-	ADD_SIGNAL(MethodInfo("script_add_function_request", PropertyInfo(Variant::OBJECT, "obj"), PropertyInfo(Variant::STRING, "function"), PropertyInfo(Variant::PACKED_STRING_ARRAY, "args")));
-	ADD_SIGNAL(MethodInfo("resource_saved", PropertyInfo(Variant::OBJECT, "obj")));
-	ADD_SIGNAL(MethodInfo("scene_saved", PropertyInfo(Variant::STRING, "path")));
+	ADD_SIGNAL(MethodInfo("script_add_function_request", PropertyInfo(VariantType::OBJECT, "obj"), PropertyInfo(VariantType::STRING, "function"), PropertyInfo(VariantType::PACKED_STRING_ARRAY, "args")));
+	ADD_SIGNAL(MethodInfo("resource_saved", PropertyInfo(VariantType::OBJECT, "obj")));
+	ADD_SIGNAL(MethodInfo("scene_saved", PropertyInfo(VariantType::STRING, "path")));
 	ADD_SIGNAL(MethodInfo("scene_changed"));
-	ADD_SIGNAL(MethodInfo("scene_closed", PropertyInfo(Variant::STRING, "path")));
+	ADD_SIGNAL(MethodInfo("scene_closed", PropertyInfo(VariantType::STRING, "path")));
 }
 
 static Node *_resource_get_edited_scene() {

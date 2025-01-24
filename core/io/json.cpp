@@ -63,13 +63,13 @@ String JSON::_stringify(const Variant &p_var, const String &p_indent, int p_cur_
 	}
 
 	switch (p_var.get_type()) {
-		case Variant::NIL:
+		case VariantType::NIL:
 			return "null";
-		case Variant::BOOL:
+		case VariantType::BOOL:
 			return p_var.operator bool() ? "true" : "false";
-		case Variant::INT:
+		case VariantType::INT:
 			return itos(p_var);
-		case Variant::FLOAT: {
+		case VariantType::FLOAT: {
 			double num = p_var;
 
 			// Only for exactly 0. If we have approximately 0 let the user decide how much
@@ -84,12 +84,12 @@ String JSON::_stringify(const Variant &p_var, const String &p_indent, int p_cur_
 
 			return String::num(num, precision);
 		}
-		case Variant::PACKED_INT32_ARRAY:
-		case Variant::PACKED_INT64_ARRAY:
-		case Variant::PACKED_FLOAT32_ARRAY:
-		case Variant::PACKED_FLOAT64_ARRAY:
-		case Variant::PACKED_STRING_ARRAY:
-		case Variant::ARRAY: {
+		case VariantType::PACKED_INT32_ARRAY:
+		case VariantType::PACKED_INT64_ARRAY:
+		case VariantType::PACKED_FLOAT32_ARRAY:
+		case VariantType::PACKED_FLOAT64_ARRAY:
+		case VariantType::PACKED_STRING_ARRAY:
+		case VariantType::ARRAY: {
 			Array a = p_var;
 			if (a.is_empty()) {
 				return "[]";
@@ -114,7 +114,7 @@ String JSON::_stringify(const Variant &p_var, const String &p_indent, int p_cur_
 			p_markers.erase(a.id());
 			return s;
 		}
-		case Variant::DICTIONARY: {
+		case VariantType::DICTIONARY: {
 			String s = "{";
 			s += end_statement;
 			Dictionary d = p_var;
@@ -597,7 +597,7 @@ void JSON::_bind_methods() {
 	ClassDB::bind_static_method("JSON", D_METHOD("from_native", "variant", "full_objects"), &JSON::from_native, DEFVAL(false));
 	ClassDB::bind_static_method("JSON", D_METHOD("to_native", "json", "allow_objects"), &JSON::to_native, DEFVAL(false));
 
-	ADD_PROPERTY(PropertyInfo(Variant::NIL, "data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_NIL_IS_VARIANT), "set_data", "get_data"); // Ensures that it can be serialized as binary.
+	ADD_PROPERTY(PropertyInfo(VariantType::NIL, "data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_NIL_IS_VARIANT), "set_data", "get_data"); // Ensures that it can be serialized as binary.
 }
 
 #define TYPE "type"
@@ -608,7 +608,7 @@ void JSON::_bind_methods() {
 #define PROPS "props"
 
 static bool _encode_container_type(Dictionary &r_dict, const String &p_key, const ContainerType &p_type, bool p_full_objects) {
-	if (p_type.builtin_type != Variant::NIL) {
+	if (p_type.builtin_type != VariantType::NIL) {
 		if (p_type.script.is_valid()) {
 			ERR_FAIL_COND_V(!p_full_objects, false);
 			const String path = p_type.script->get_path();
@@ -618,7 +618,7 @@ static bool _encode_container_type(Dictionary &r_dict, const String &p_key, cons
 			ERR_FAIL_COND_V(!p_full_objects, false);
 			r_dict[p_key] = String(p_type.class_name);
 		} else {
-			// No need to check `p_full_objects` since `class_name` should be non-empty for `builtin_type == Variant::OBJECT`.
+			// No need to check `p_full_objects` since `class_name` should be non-empty for `builtin_type == VariantType::OBJECT`.
 			r_dict[p_key] = Variant::get_type_name(p_type.builtin_type);
 		}
 	}
@@ -633,36 +633,36 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 	return ret
 
 	switch (p_variant.get_type()) {
-		case Variant::NIL:
-		case Variant::BOOL: {
+		case VariantType::NIL:
+		case VariantType::BOOL: {
 			return p_variant;
 		} break;
 
-		case Variant::INT: {
+		case VariantType::INT: {
 			return "i:" + String(p_variant);
 		} break;
-		case Variant::FLOAT: {
+		case VariantType::FLOAT: {
 			return "f:" + String(p_variant);
 		} break;
-		case Variant::STRING: {
+		case VariantType::STRING: {
 			return "s:" + String(p_variant);
 		} break;
-		case Variant::STRING_NAME: {
+		case VariantType::STRING_NAME: {
 			return "sn:" + String(p_variant);
 		} break;
-		case Variant::NODE_PATH: {
+		case VariantType::NODE_PATH: {
 			return "np:" + String(p_variant);
 		} break;
 
-		case Variant::RID:
-		case Variant::CALLABLE:
-		case Variant::SIGNAL: {
+		case VariantType::RID:
+		case VariantType::CALLABLE:
+		case VariantType::SIGNAL: {
 			Dictionary ret;
 			ret[TYPE] = Variant::get_type_name(p_variant.get_type());
 			return ret;
 		} break;
 
-		case Variant::VECTOR2: {
+		case VariantType::VECTOR2: {
 			const Vector2 v = p_variant;
 
 			Array args;
@@ -671,7 +671,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::VECTOR2I: {
+		case VariantType::VECTOR2I: {
 			const Vector2i v = p_variant;
 
 			Array args;
@@ -680,7 +680,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::RECT2: {
+		case VariantType::RECT2: {
 			const Rect2 r = p_variant;
 
 			Array args;
@@ -691,7 +691,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::RECT2I: {
+		case VariantType::RECT2I: {
 			const Rect2i r = p_variant;
 
 			Array args;
@@ -702,7 +702,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::VECTOR3: {
+		case VariantType::VECTOR3: {
 			const Vector3 v = p_variant;
 
 			Array args;
@@ -712,7 +712,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::VECTOR3I: {
+		case VariantType::VECTOR3I: {
 			const Vector3i v = p_variant;
 
 			Array args;
@@ -722,7 +722,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::TRANSFORM2D: {
+		case VariantType::TRANSFORM2D: {
 			const Transform2D t = p_variant;
 
 			Array args;
@@ -735,7 +735,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::VECTOR4: {
+		case VariantType::VECTOR4: {
 			const Vector4 v = p_variant;
 
 			Array args;
@@ -746,7 +746,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::VECTOR4I: {
+		case VariantType::VECTOR4I: {
 			const Vector4i v = p_variant;
 
 			Array args;
@@ -757,7 +757,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::PLANE: {
+		case VariantType::PLANE: {
 			const Plane p = p_variant;
 
 			Array args;
@@ -768,7 +768,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::QUATERNION: {
+		case VariantType::QUATERNION: {
 			const Quaternion q = p_variant;
 
 			Array args;
@@ -779,7 +779,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::AABB: {
+		case VariantType::AABB: {
 			const AABB aabb = p_variant;
 
 			Array args;
@@ -792,7 +792,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::BASIS: {
+		case VariantType::BASIS: {
 			const Basis b = p_variant;
 
 			Array args;
@@ -808,7 +808,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::TRANSFORM3D: {
+		case VariantType::TRANSFORM3D: {
 			const Transform3D t = p_variant;
 
 			Array args;
@@ -827,7 +827,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::PROJECTION: {
+		case VariantType::PROJECTION: {
 			const Projection p = p_variant;
 
 			Array args;
@@ -850,7 +850,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::COLOR: {
+		case VariantType::COLOR: {
 			const Color c = p_variant;
 
 			Array args;
@@ -862,7 +862,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 			RETURN_ARGS;
 		} break;
 
-		case Variant::OBJECT: {
+		case VariantType::OBJECT: {
 			ERR_FAIL_COND_V(!p_full_objects, Variant());
 
 			ERR_FAIL_COND_V_MSG(p_depth > Variant::MAX_RECURSION_DEPTH, Variant(), "Variant is too deep. Bailing.");
@@ -905,7 +905,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 			return ret;
 		} break;
 
-		case Variant::DICTIONARY: {
+		case VariantType::DICTIONARY: {
 			const Dictionary dict = p_variant;
 
 			Array args;
@@ -933,7 +933,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 			return ret;
 		} break;
 
-		case Variant::ARRAY: {
+		case VariantType::ARRAY: {
 			const Array arr = p_variant;
 
 			Variant ret;
@@ -960,7 +960,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 			return ret;
 		} break;
 
-		case Variant::PACKED_BYTE_ARRAY: {
+		case VariantType::PACKED_BYTE_ARRAY: {
 			const PackedByteArray arr = p_variant;
 
 			Array args;
@@ -970,7 +970,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::PACKED_INT32_ARRAY: {
+		case VariantType::PACKED_INT32_ARRAY: {
 			const PackedInt32Array arr = p_variant;
 
 			Array args;
@@ -980,7 +980,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::PACKED_INT64_ARRAY: {
+		case VariantType::PACKED_INT64_ARRAY: {
 			const PackedInt64Array arr = p_variant;
 
 			Array args;
@@ -990,7 +990,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::PACKED_FLOAT32_ARRAY: {
+		case VariantType::PACKED_FLOAT32_ARRAY: {
 			const PackedFloat32Array arr = p_variant;
 
 			Array args;
@@ -1000,7 +1000,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::PACKED_FLOAT64_ARRAY: {
+		case VariantType::PACKED_FLOAT64_ARRAY: {
 			const PackedFloat64Array arr = p_variant;
 
 			Array args;
@@ -1010,7 +1010,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::PACKED_STRING_ARRAY: {
+		case VariantType::PACKED_STRING_ARRAY: {
 			const PackedStringArray arr = p_variant;
 
 			Array args;
@@ -1020,7 +1020,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::PACKED_VECTOR2_ARRAY: {
+		case VariantType::PACKED_VECTOR2_ARRAY: {
 			const PackedVector2Array arr = p_variant;
 
 			Array args;
@@ -1032,7 +1032,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::PACKED_VECTOR3_ARRAY: {
+		case VariantType::PACKED_VECTOR3_ARRAY: {
 			const PackedVector3Array arr = p_variant;
 
 			Array args;
@@ -1045,7 +1045,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::PACKED_COLOR_ARRAY: {
+		case VariantType::PACKED_COLOR_ARRAY: {
 			const PackedColorArray arr = p_variant;
 
 			Array args;
@@ -1059,7 +1059,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 
 			RETURN_ARGS;
 		} break;
-		case Variant::PACKED_VECTOR4_ARRAY: {
+		case VariantType::PACKED_VECTOR4_ARRAY: {
 			const PackedVector4Array arr = p_variant;
 
 			Array args;
@@ -1074,7 +1074,7 @@ Variant JSON::_from_native(const Variant &p_variant, bool p_full_objects, int p_
 			RETURN_ARGS;
 		} break;
 
-		case Variant::VARIANT_MAX: {
+		case VariantType::VARIANT_MAX: {
 			// Nothing to do.
 		} break;
 	}
@@ -1091,8 +1091,8 @@ static bool _decode_container_type(const Dictionary &p_dict, const String &p_key
 
 	const String type_name = p_dict[p_key];
 
-	const Variant::Type builtin_type = Variant::get_type_by_name(type_name);
-	if (builtin_type < Variant::VARIANT_MAX && builtin_type != Variant::OBJECT) {
+	const VariantType builtin_type = Variant::get_type_by_name(type_name);
+	if (builtin_type < VariantType::VARIANT_MAX && builtin_type != VariantType::OBJECT) {
 		r_type.builtin_type = builtin_type;
 		return true;
 	}
@@ -1100,7 +1100,7 @@ static bool _decode_container_type(const Dictionary &p_dict, const String &p_key
 	if (ClassDB::class_exists(type_name)) {
 		ERR_FAIL_COND_V(!p_allow_objects, false);
 
-		r_type.builtin_type = Variant::OBJECT;
+		r_type.builtin_type = VariantType::OBJECT;
 		r_type.class_name = type_name;
 		return true;
 	}
@@ -1112,7 +1112,7 @@ static bool _decode_container_type(const Dictionary &p_dict, const String &p_key
 		const Ref<Script> script = ResourceLoader::load(type_name, "Script");
 		ERR_FAIL_COND_V_MSG(script.is_null(), false, vformat(R"(Can't load script at path "%s".)", type_name));
 
-		r_type.builtin_type = Variant::OBJECT;
+		r_type.builtin_type = VariantType::OBJECT;
 		r_type.class_name = script->get_instance_base_type();
 		r_type.script = script;
 		return true;
@@ -1123,12 +1123,12 @@ static bool _decode_container_type(const Dictionary &p_dict, const String &p_key
 
 Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_depth) {
 	switch (p_json.get_type()) {
-		case Variant::NIL:
-		case Variant::BOOL: {
+		case VariantType::NIL:
+		case VariantType::BOOL: {
 			return p_json;
 		} break;
 
-		case Variant::STRING: {
+		case VariantType::STRING: {
 			const String s = p_json;
 
 			if (s.begins_with("i:")) {
@@ -1146,7 +1146,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 			ERR_FAIL_V_MSG(Variant(), "Invalid string, the type prefix is not recognized.");
 		} break;
 
-		case Variant::DICTIONARY: {
+		case VariantType::DICTIONARY: {
 			const Dictionary dict = p_json;
 
 			ERR_FAIL_COND_V(!dict.has(TYPE), Variant());
@@ -1166,30 +1166,30 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 	ERR_FAIL_COND_V(args.size() % (m_factor) != 0, Variant())
 
 			switch (Variant::get_type_by_name(dict[TYPE])) {
-				case Variant::NIL:
-				case Variant::BOOL: {
+				case VariantType::NIL:
+				case VariantType::BOOL: {
 					ERR_FAIL_V_MSG(Variant(), vformat(R"(Unexpected "%s": Variant type "%s" is JSON-compliant.)", TYPE, dict[TYPE]));
 				} break;
 
-				case Variant::INT:
-				case Variant::FLOAT:
-				case Variant::STRING:
-				case Variant::STRING_NAME:
-				case Variant::NODE_PATH: {
+				case VariantType::INT:
+				case VariantType::FLOAT:
+				case VariantType::STRING:
+				case VariantType::STRING_NAME:
+				case VariantType::NODE_PATH: {
 					ERR_FAIL_V_MSG(Variant(), vformat(R"(Unexpected "%s": Variant type "%s" must be represented as a string.)", TYPE, dict[TYPE]));
 				} break;
 
-				case Variant::RID: {
+				case VariantType::RID: {
 					return RID();
 				} break;
-				case Variant::CALLABLE: {
+				case VariantType::CALLABLE: {
 					return Callable();
 				} break;
-				case Variant::SIGNAL: {
+				case VariantType::SIGNAL: {
 					return Signal();
 				} break;
 
-				case Variant::VECTOR2: {
+				case VariantType::VECTOR2: {
 					LOAD_ARGS_CHECK_SIZE(2);
 
 					Vector2 v;
@@ -1198,7 +1198,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return v;
 				} break;
-				case Variant::VECTOR2I: {
+				case VariantType::VECTOR2I: {
 					LOAD_ARGS_CHECK_SIZE(2);
 
 					Vector2i v;
@@ -1207,7 +1207,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return v;
 				} break;
-				case Variant::RECT2: {
+				case VariantType::RECT2: {
 					LOAD_ARGS_CHECK_SIZE(4);
 
 					Rect2 r;
@@ -1216,7 +1216,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return r;
 				} break;
-				case Variant::RECT2I: {
+				case VariantType::RECT2I: {
 					LOAD_ARGS_CHECK_SIZE(4);
 
 					Rect2i r;
@@ -1225,7 +1225,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return r;
 				} break;
-				case Variant::VECTOR3: {
+				case VariantType::VECTOR3: {
 					LOAD_ARGS_CHECK_SIZE(3);
 
 					Vector3 v;
@@ -1235,7 +1235,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return v;
 				} break;
-				case Variant::VECTOR3I: {
+				case VariantType::VECTOR3I: {
 					LOAD_ARGS_CHECK_SIZE(3);
 
 					Vector3i v;
@@ -1245,7 +1245,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return v;
 				} break;
-				case Variant::TRANSFORM2D: {
+				case VariantType::TRANSFORM2D: {
 					LOAD_ARGS_CHECK_SIZE(6);
 
 					Transform2D t;
@@ -1255,7 +1255,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return t;
 				} break;
-				case Variant::VECTOR4: {
+				case VariantType::VECTOR4: {
 					LOAD_ARGS_CHECK_SIZE(4);
 
 					Vector4 v;
@@ -1266,7 +1266,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return v;
 				} break;
-				case Variant::VECTOR4I: {
+				case VariantType::VECTOR4I: {
 					LOAD_ARGS_CHECK_SIZE(4);
 
 					Vector4i v;
@@ -1277,7 +1277,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return v;
 				} break;
-				case Variant::PLANE: {
+				case VariantType::PLANE: {
 					LOAD_ARGS_CHECK_SIZE(4);
 
 					Plane p;
@@ -1286,7 +1286,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return p;
 				} break;
-				case Variant::QUATERNION: {
+				case VariantType::QUATERNION: {
 					LOAD_ARGS_CHECK_SIZE(4);
 
 					Quaternion q;
@@ -1297,7 +1297,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return q;
 				} break;
-				case Variant::AABB: {
+				case VariantType::AABB: {
 					LOAD_ARGS_CHECK_SIZE(6);
 
 					AABB aabb;
@@ -1306,7 +1306,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return aabb;
 				} break;
-				case Variant::BASIS: {
+				case VariantType::BASIS: {
 					LOAD_ARGS_CHECK_SIZE(9);
 
 					Basis b;
@@ -1316,7 +1316,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return b;
 				} break;
-				case Variant::TRANSFORM3D: {
+				case VariantType::TRANSFORM3D: {
 					LOAD_ARGS_CHECK_SIZE(12);
 
 					Transform3D t;
@@ -1327,7 +1327,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return t;
 				} break;
-				case Variant::PROJECTION: {
+				case VariantType::PROJECTION: {
 					LOAD_ARGS_CHECK_SIZE(16);
 
 					Projection p;
@@ -1338,7 +1338,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return p;
 				} break;
-				case Variant::COLOR: {
+				case VariantType::COLOR: {
 					LOAD_ARGS_CHECK_SIZE(4);
 
 					Color c;
@@ -1350,11 +1350,11 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 					return c;
 				} break;
 
-				case Variant::OBJECT: {
+				case VariantType::OBJECT: {
 					// Nothing to do at this stage. `Object` should be treated as a class, not as a built-in type.
 				} break;
 
-				case Variant::DICTIONARY: {
+				case VariantType::DICTIONARY: {
 					LOAD_ARGS_CHECK_FACTOR(2);
 
 					ContainerType key_type;
@@ -1369,7 +1369,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					Dictionary ret;
 
-					if (key_type.builtin_type != Variant::NIL || value_type.builtin_type != Variant::NIL) {
+					if (key_type.builtin_type != VariantType::NIL || value_type.builtin_type != VariantType::NIL) {
 						ret.set_typed(key_type, value_type);
 					}
 
@@ -1382,7 +1382,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 					return ret;
 				} break;
 
-				case Variant::ARRAY: {
+				case VariantType::ARRAY: {
 					LOAD_ARGS();
 
 					ContainerType elem_type;
@@ -1392,7 +1392,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					Array ret;
 
-					if (elem_type.builtin_type != Variant::NIL) {
+					if (elem_type.builtin_type != VariantType::NIL) {
 						ret.set_typed(elem_type);
 					}
 
@@ -1406,7 +1406,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 					return ret;
 				} break;
 
-				case Variant::PACKED_BYTE_ARRAY: {
+				case VariantType::PACKED_BYTE_ARRAY: {
 					LOAD_ARGS();
 
 					PackedByteArray arr;
@@ -1417,7 +1417,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return arr;
 				} break;
-				case Variant::PACKED_INT32_ARRAY: {
+				case VariantType::PACKED_INT32_ARRAY: {
 					LOAD_ARGS();
 
 					PackedInt32Array arr;
@@ -1428,7 +1428,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return arr;
 				} break;
-				case Variant::PACKED_INT64_ARRAY: {
+				case VariantType::PACKED_INT64_ARRAY: {
 					LOAD_ARGS();
 
 					PackedInt64Array arr;
@@ -1439,7 +1439,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return arr;
 				} break;
-				case Variant::PACKED_FLOAT32_ARRAY: {
+				case VariantType::PACKED_FLOAT32_ARRAY: {
 					LOAD_ARGS();
 
 					PackedFloat32Array arr;
@@ -1450,7 +1450,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return arr;
 				} break;
-				case Variant::PACKED_FLOAT64_ARRAY: {
+				case VariantType::PACKED_FLOAT64_ARRAY: {
 					LOAD_ARGS();
 
 					PackedFloat64Array arr;
@@ -1461,7 +1461,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return arr;
 				} break;
-				case Variant::PACKED_STRING_ARRAY: {
+				case VariantType::PACKED_STRING_ARRAY: {
 					LOAD_ARGS();
 
 					PackedStringArray arr;
@@ -1472,7 +1472,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return arr;
 				} break;
-				case Variant::PACKED_VECTOR2_ARRAY: {
+				case VariantType::PACKED_VECTOR2_ARRAY: {
 					LOAD_ARGS_CHECK_FACTOR(2);
 
 					PackedVector2Array arr;
@@ -1483,7 +1483,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return arr;
 				} break;
-				case Variant::PACKED_VECTOR3_ARRAY: {
+				case VariantType::PACKED_VECTOR3_ARRAY: {
 					LOAD_ARGS_CHECK_FACTOR(3);
 
 					PackedVector3Array arr;
@@ -1494,7 +1494,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return arr;
 				} break;
-				case Variant::PACKED_COLOR_ARRAY: {
+				case VariantType::PACKED_COLOR_ARRAY: {
 					LOAD_ARGS_CHECK_FACTOR(4);
 
 					PackedColorArray arr;
@@ -1505,7 +1505,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 
 					return arr;
 				} break;
-				case Variant::PACKED_VECTOR4_ARRAY: {
+				case VariantType::PACKED_VECTOR4_ARRAY: {
 					LOAD_ARGS_CHECK_FACTOR(4);
 
 					PackedVector4Array arr;
@@ -1517,7 +1517,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 					return arr;
 				} break;
 
-				case Variant::VARIANT_MAX: {
+				case VariantType::VARIANT_MAX: {
 					// Nothing to do.
 				} break;
 			}
@@ -1554,7 +1554,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 					const StringName name = props[i * 2 + 0];
 					const Variant value = _to_native(props[i * 2 + 1], p_allow_objects, p_depth + 1);
 
-					if (name == CoreStringName(script) && value.get_type() != Variant::NIL) {
+					if (name == CoreStringName(script) && value.get_type() != VariantType::NIL) {
 						const String path = value;
 						ERR_FAIL_COND_V_MSG(path.is_empty() || !path.begins_with("res://") || !ResourceLoader::exists(path, "Script"),
 								Variant(),
@@ -1575,7 +1575,7 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 			ERR_FAIL_V_MSG(Variant(), vformat(R"(Invalid type "%s".)", dict[TYPE]));
 		} break;
 
-		case Variant::ARRAY: {
+		case VariantType::ARRAY: {
 			ERR_FAIL_COND_V_MSG(p_depth > Variant::MAX_RECURSION_DEPTH, Array(), "Variant is too deep. Bailing.");
 
 			const Array arr = p_json;

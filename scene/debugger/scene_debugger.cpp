@@ -280,7 +280,7 @@ Error SceneDebugger::parse_message(void *p_user, const String &p_msg, const Arra
 
 	} else if (p_msg.begins_with("runtime_node_select_")) { /// Runtime Node Selection
 		if (p_msg == "runtime_node_select_setup") {
-			ERR_FAIL_COND_V(p_args.is_empty() || p_args[0].get_type() != Variant::DICTIONARY, ERR_INVALID_DATA);
+			ERR_FAIL_COND_V(p_args.is_empty() || p_args[0].get_type() != VariantType::DICTIONARY, ERR_INVALID_DATA);
 			runtime_node_select->_setup(p_args[0]);
 
 		} else if (p_msg == "runtime_node_select_set_type") {
@@ -458,16 +458,16 @@ SceneDebuggerObject::SceneDebuggerObject(ObjectID p_id) {
 	if (Node *node = Object::cast_to<Node>(obj)) {
 		// For debugging multiplayer.
 		{
-			PropertyInfo pi(Variant::INT, String("Node/multiplayer_authority"), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_READ_ONLY);
+			PropertyInfo pi(VariantType::INT, String("Node/multiplayer_authority"), PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_READ_ONLY);
 			properties.push_back(SceneDebuggerProperty(pi, node->get_multiplayer_authority()));
 		}
 
 		// Add specialized NodePath info (if inside tree).
 		if (node->is_inside_tree()) {
-			PropertyInfo pi(Variant::NODE_PATH, String("Node/path"));
+			PropertyInfo pi(VariantType::NODE_PATH, String("Node/path"));
 			properties.push_back(SceneDebuggerProperty(pi, node->get_path()));
 		} else { // Can't ask for path if a node is not in tree.
-			PropertyInfo pi(Variant::STRING, String("Node/path"));
+			PropertyInfo pi(VariantType::STRING, String("Node/path"));
 			properties.push_back(SceneDebuggerProperty(pi, "[Orphan]"));
 		}
 	} else if (Script *s = Object::cast_to<Script>(obj)) {
@@ -527,7 +527,7 @@ void SceneDebuggerObject::_parse_script_properties(Script *p_script, ScriptInsta
 	for (KeyValue<const Script *, HashMap<StringName, Variant>> &sc : constants) {
 		for (const KeyValue<StringName, Variant> &E : sc.value) {
 			String script_path = sc.key == p_script ? "" : sc.key->get_path().get_file() + "/";
-			if (E.value.get_type() == Variant::OBJECT) {
+			if (E.value.get_type() == VariantType::OBJECT) {
 				Variant inst_id = ((Object *)E.value)->get_instance_id();
 				PropertyInfo pi(inst_id.get_type(), "Constants/" + E.key, PROPERTY_HINT_OBJECT_ID, "Object");
 				properties.push_back(SceneDebuggerProperty(pi, inst_id));
@@ -576,7 +576,7 @@ void SceneDebuggerObject::serialize(Array &r_arr, int p_max_size) {
 }
 
 void SceneDebuggerObject::deserialize(const Array &p_arr) {
-#define CHECK_TYPE(p_what, p_type) ERR_FAIL_COND(p_what.get_type() != Variant::p_type);
+#define CHECK_TYPE(p_what, p_type) ERR_FAIL_COND(p_what.get_type() != VariantType::p_type);
 	ERR_FAIL_COND(p_arr.size() < 3);
 	CHECK_TYPE(p_arr[0], INT);
 	CHECK_TYPE(p_arr[1], STRING);
@@ -599,16 +599,16 @@ void SceneDebuggerObject::deserialize(const Array &p_arr) {
 
 		PropertyInfo pinfo;
 		pinfo.name = prop[0];
-		pinfo.type = Variant::Type(int(prop[1]));
+		pinfo.type = VariantType(int(prop[1]));
 		pinfo.hint = PropertyHint(int(prop[2]));
 		pinfo.hint_string = prop[3];
 		pinfo.usage = PropertyUsageFlags(int(prop[4]));
 		Variant var = prop[5];
 
-		if (pinfo.type == Variant::OBJECT) {
+		if (pinfo.type == VariantType::OBJECT) {
 			if (var.is_zero()) {
 				var = Ref<Resource>();
-			} else if (var.get_type() == Variant::OBJECT) {
+			} else if (var.get_type() == VariantType::OBJECT) {
 				if (((Object *)var)->is_class("EncodedObjectAsID")) {
 					var = Object::cast_to<EncodedObjectAsID>(var)->get_object_id();
 					pinfo.type = var.get_type();
@@ -644,13 +644,13 @@ SceneDebuggerTree::SceneDebuggerTree(Node *p_root) {
 			is_root = false;
 		} else if (n->has_method(is_visible_sn)) {
 			const Variant visible = n->call(is_visible_sn);
-			if (visible.get_type() == Variant::BOOL) {
+			if (visible.get_type() == VariantType::BOOL) {
 				view_flags = RemoteNode::VIEW_HAS_VISIBLE_METHOD;
 				view_flags |= uint8_t(visible) * RemoteNode::VIEW_VISIBLE;
 			}
 			if (n->has_method(is_visible_in_tree_sn)) {
 				const Variant visible_in_tree = n->call(is_visible_in_tree_sn);
-				if (visible_in_tree.get_type() == Variant::BOOL) {
+				if (visible_in_tree.get_type() == VariantType::BOOL) {
 					view_flags |= uint8_t(visible_in_tree) * RemoteNode::VIEW_VISIBLE_IN_TREE;
 				}
 			}

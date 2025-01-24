@@ -3957,14 +3957,14 @@ void FileSystemDock::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("_save_layout_to_config"), &FileSystemDock::_save_layout_to_config);
 	ClassDB::bind_method(D_METHOD("_load_layout_from_config"), &FileSystemDock::_load_layout_from_config);
 
-	ADD_SIGNAL(MethodInfo("inherit", PropertyInfo(Variant::STRING, "file")));
-	ADD_SIGNAL(MethodInfo("instantiate", PropertyInfo(Variant::PACKED_STRING_ARRAY, "files")));
+	ADD_SIGNAL(MethodInfo("inherit", PropertyInfo(VariantType::STRING, "file")));
+	ADD_SIGNAL(MethodInfo("instantiate", PropertyInfo(VariantType::PACKED_STRING_ARRAY, "files")));
 
-	ADD_SIGNAL(MethodInfo("resource_removed", PropertyInfo(Variant::OBJECT, "resource", PROPERTY_HINT_RESOURCE_TYPE, "Resource")));
-	ADD_SIGNAL(MethodInfo("file_removed", PropertyInfo(Variant::STRING, "file")));
-	ADD_SIGNAL(MethodInfo("folder_removed", PropertyInfo(Variant::STRING, "folder")));
-	ADD_SIGNAL(MethodInfo("files_moved", PropertyInfo(Variant::STRING, "old_file"), PropertyInfo(Variant::STRING, "new_file")));
-	ADD_SIGNAL(MethodInfo("folder_moved", PropertyInfo(Variant::STRING, "old_folder"), PropertyInfo(Variant::STRING, "new_folder")));
+	ADD_SIGNAL(MethodInfo("resource_removed", PropertyInfo(VariantType::OBJECT, "resource", PROPERTY_HINT_RESOURCE_TYPE, "Resource")));
+	ADD_SIGNAL(MethodInfo("file_removed", PropertyInfo(VariantType::STRING, "file")));
+	ADD_SIGNAL(MethodInfo("folder_removed", PropertyInfo(VariantType::STRING, "folder")));
+	ADD_SIGNAL(MethodInfo("files_moved", PropertyInfo(VariantType::STRING, "old_file"), PropertyInfo(VariantType::STRING, "new_file")));
+	ADD_SIGNAL(MethodInfo("folder_moved", PropertyInfo(VariantType::STRING, "old_folder"), PropertyInfo(VariantType::STRING, "new_folder")));
 	ADD_SIGNAL(MethodInfo("folder_color_changed"));
 
 	ADD_SIGNAL(MethodInfo("display_mode_changed"));

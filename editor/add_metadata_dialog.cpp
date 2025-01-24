@@ -77,11 +77,11 @@ void AddMetadataDialog::_complete_init(const StringName &p_title) {
 	}
 
 	// Theme icons can be retrieved only the Window has been initialized.
-	for (int i = 0; i < Variant::VARIANT_MAX; i++) {
-		if (i == Variant::NIL || i == Variant::RID || i == Variant::CALLABLE || i == Variant::SIGNAL) {
+	for (int i = 0; i < VariantType::VARIANT_MAX; i++) {
+		if (i == VariantType::NIL || i == VariantType::RID || i == VariantType::CALLABLE || i == VariantType::SIGNAL) {
 			continue; //not editable by inspector.
 		}
-		String type = i == Variant::OBJECT ? String("Resource") : Variant::get_type_name(Variant::Type(i));
+		String type = i == VariantType::OBJECT ? String("Resource") : Variant::get_type_name(VariantType(i));
 
 		add_meta_type->add_icon_item(get_editor_theme_icon(type), type, i);
 	}
@@ -101,7 +101,7 @@ StringName AddMetadataDialog::get_meta_name() {
 Variant AddMetadataDialog::get_meta_defval() {
 	Variant defval;
 	Callable::CallError ce;
-	Variant::construct(Variant::Type(add_meta_type->get_selected_id()), defval, nullptr, 0, ce);
+	Variant::construct(VariantType(add_meta_type->get_selected_id()), defval, nullptr, 0, ce);
 	return defval;
 }
 

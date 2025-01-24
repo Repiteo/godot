@@ -88,7 +88,7 @@ void PropertySelector::_update_search() {
 
 		if (instance) {
 			instance->get_property_list(&props, true);
-		} else if (type != Variant::NIL) {
+		} else if (type != VariantType::NIL) {
 			Variant v;
 			Callable::CallError ce;
 			Variant::construct(type, v, nullptr, 0, ce);
@@ -97,13 +97,13 @@ void PropertySelector::_update_search() {
 		} else {
 			Object *obj = ObjectDB::get_instance(script);
 			if (Object::cast_to<Script>(obj)) {
-				props.push_back(PropertyInfo(Variant::NIL, "Script Variables", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_CATEGORY));
+				props.push_back(PropertyInfo(VariantType::NIL, "Script Variables", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_CATEGORY));
 				Object::cast_to<Script>(obj)->get_script_property_list(&props);
 			}
 
 			StringName base = base_type;
 			while (base) {
-				props.push_back(PropertyInfo(Variant::NIL, base, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_CATEGORY));
+				props.push_back(PropertyInfo(VariantType::NIL, base, PROPERTY_HINT_NONE, "", PROPERTY_USAGE_CATEGORY));
 				ClassDB::get_property_list(base, &props, true);
 				base = ClassDB::get_parent_class(base);
 			}
@@ -174,7 +174,7 @@ void PropertySelector::_update_search() {
 	} else {
 		List<MethodInfo> methods;
 
-		if (type != Variant::NIL) {
+		if (type != VariantType::NIL) {
 			Variant v;
 			Callable::CallError ce;
 			Variant::construct(type, v, nullptr, 0, ce);
@@ -261,7 +261,7 @@ void PropertySelector::_update_search() {
 			if (mi.name.contains_char(':')) {
 				desc = mi.name.get_slice(":", 1) + " ";
 				mi.name = mi.name.get_slice(":", 0);
-			} else if (mi.return_val.type != Variant::NIL) {
+			} else if (mi.return_val.type != VariantType::NIL) {
 				desc = Variant::get_type_name(mi.return_val.type);
 			} else {
 				desc = "void";
@@ -276,7 +276,7 @@ void PropertySelector::_update_search() {
 
 				desc += arg_itr->name;
 
-				if (arg_itr->type == Variant::NIL) {
+				if (arg_itr->type == VariantType::NIL) {
 					desc += ": Variant";
 				} else if (arg_itr->name.contains_char(':')) {
 					desc += vformat(": %s", arg_itr->name.get_slice(":", 1));
@@ -343,7 +343,7 @@ void PropertySelector::_item_selected() {
 	String name = item->get_metadata(0);
 
 	String class_type;
-	if (type != Variant::NIL) {
+	if (type != VariantType::NIL) {
 		class_type = Variant::get_type_name(type);
 	} else if (!base_type.is_empty()) {
 		class_type = base_type;
@@ -374,113 +374,113 @@ void PropertySelector::_hide_requested() {
 	_cancel_pressed(); // From AcceptDialog.
 }
 
-void PropertySelector::_create_subproperties(TreeItem *p_parent_item, Variant::Type p_type) {
+void PropertySelector::_create_subproperties(TreeItem *p_parent_item, VariantType p_type) {
 	switch (p_type) {
-		case Variant::VECTOR2: {
-			_create_subproperty(p_parent_item, "x", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "y", Variant::FLOAT);
+		case VariantType::VECTOR2: {
+			_create_subproperty(p_parent_item, "x", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "y", VariantType::FLOAT);
 		} break;
 
-		case Variant::VECTOR2I: {
-			_create_subproperty(p_parent_item, "x", Variant::INT);
-			_create_subproperty(p_parent_item, "y", Variant::INT);
+		case VariantType::VECTOR2I: {
+			_create_subproperty(p_parent_item, "x", VariantType::INT);
+			_create_subproperty(p_parent_item, "y", VariantType::INT);
 		} break;
 
-		case Variant::RECT2: {
-			_create_subproperty(p_parent_item, "position", Variant::VECTOR2);
-			_create_subproperty(p_parent_item, "size", Variant::VECTOR2);
-			_create_subproperty(p_parent_item, "end", Variant::VECTOR2);
+		case VariantType::RECT2: {
+			_create_subproperty(p_parent_item, "position", VariantType::VECTOR2);
+			_create_subproperty(p_parent_item, "size", VariantType::VECTOR2);
+			_create_subproperty(p_parent_item, "end", VariantType::VECTOR2);
 		} break;
 
-		case Variant::RECT2I: {
-			_create_subproperty(p_parent_item, "position", Variant::VECTOR2I);
-			_create_subproperty(p_parent_item, "size", Variant::VECTOR2I);
-			_create_subproperty(p_parent_item, "end", Variant::VECTOR2I);
+		case VariantType::RECT2I: {
+			_create_subproperty(p_parent_item, "position", VariantType::VECTOR2I);
+			_create_subproperty(p_parent_item, "size", VariantType::VECTOR2I);
+			_create_subproperty(p_parent_item, "end", VariantType::VECTOR2I);
 		} break;
 
-		case Variant::VECTOR3: {
-			_create_subproperty(p_parent_item, "x", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "y", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "z", Variant::FLOAT);
+		case VariantType::VECTOR3: {
+			_create_subproperty(p_parent_item, "x", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "y", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "z", VariantType::FLOAT);
 		} break;
 
-		case Variant::VECTOR3I: {
-			_create_subproperty(p_parent_item, "x", Variant::INT);
-			_create_subproperty(p_parent_item, "y", Variant::INT);
-			_create_subproperty(p_parent_item, "z", Variant::INT);
+		case VariantType::VECTOR3I: {
+			_create_subproperty(p_parent_item, "x", VariantType::INT);
+			_create_subproperty(p_parent_item, "y", VariantType::INT);
+			_create_subproperty(p_parent_item, "z", VariantType::INT);
 		} break;
 
-		case Variant::TRANSFORM2D: {
-			_create_subproperty(p_parent_item, "origin", Variant::VECTOR2);
-			_create_subproperty(p_parent_item, "x", Variant::VECTOR2);
-			_create_subproperty(p_parent_item, "y", Variant::VECTOR2);
+		case VariantType::TRANSFORM2D: {
+			_create_subproperty(p_parent_item, "origin", VariantType::VECTOR2);
+			_create_subproperty(p_parent_item, "x", VariantType::VECTOR2);
+			_create_subproperty(p_parent_item, "y", VariantType::VECTOR2);
 		} break;
 
-		case Variant::VECTOR4: {
-			_create_subproperty(p_parent_item, "x", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "y", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "z", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "w", Variant::FLOAT);
+		case VariantType::VECTOR4: {
+			_create_subproperty(p_parent_item, "x", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "y", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "z", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "w", VariantType::FLOAT);
 		} break;
 
-		case Variant::VECTOR4I: {
-			_create_subproperty(p_parent_item, "x", Variant::INT);
-			_create_subproperty(p_parent_item, "y", Variant::INT);
-			_create_subproperty(p_parent_item, "z", Variant::INT);
-			_create_subproperty(p_parent_item, "w", Variant::INT);
+		case VariantType::VECTOR4I: {
+			_create_subproperty(p_parent_item, "x", VariantType::INT);
+			_create_subproperty(p_parent_item, "y", VariantType::INT);
+			_create_subproperty(p_parent_item, "z", VariantType::INT);
+			_create_subproperty(p_parent_item, "w", VariantType::INT);
 		} break;
 
-		case Variant::PLANE: {
-			_create_subproperty(p_parent_item, "x", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "y", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "z", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "normal", Variant::VECTOR3);
-			_create_subproperty(p_parent_item, "d", Variant::FLOAT);
+		case VariantType::PLANE: {
+			_create_subproperty(p_parent_item, "x", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "y", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "z", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "normal", VariantType::VECTOR3);
+			_create_subproperty(p_parent_item, "d", VariantType::FLOAT);
 		} break;
 
-		case Variant::QUATERNION: {
-			_create_subproperty(p_parent_item, "x", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "y", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "z", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "w", Variant::FLOAT);
+		case VariantType::QUATERNION: {
+			_create_subproperty(p_parent_item, "x", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "y", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "z", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "w", VariantType::FLOAT);
 		} break;
 
-		case Variant::AABB: {
-			_create_subproperty(p_parent_item, "position", Variant::VECTOR3);
-			_create_subproperty(p_parent_item, "size", Variant::VECTOR3);
-			_create_subproperty(p_parent_item, "end", Variant::VECTOR3);
+		case VariantType::AABB: {
+			_create_subproperty(p_parent_item, "position", VariantType::VECTOR3);
+			_create_subproperty(p_parent_item, "size", VariantType::VECTOR3);
+			_create_subproperty(p_parent_item, "end", VariantType::VECTOR3);
 		} break;
 
-		case Variant::BASIS: {
-			_create_subproperty(p_parent_item, "x", Variant::VECTOR3);
-			_create_subproperty(p_parent_item, "y", Variant::VECTOR3);
-			_create_subproperty(p_parent_item, "z", Variant::VECTOR3);
+		case VariantType::BASIS: {
+			_create_subproperty(p_parent_item, "x", VariantType::VECTOR3);
+			_create_subproperty(p_parent_item, "y", VariantType::VECTOR3);
+			_create_subproperty(p_parent_item, "z", VariantType::VECTOR3);
 		} break;
 
-		case Variant::TRANSFORM3D: {
-			_create_subproperty(p_parent_item, "basis", Variant::BASIS);
-			_create_subproperty(p_parent_item, "origin", Variant::VECTOR3);
+		case VariantType::TRANSFORM3D: {
+			_create_subproperty(p_parent_item, "basis", VariantType::BASIS);
+			_create_subproperty(p_parent_item, "origin", VariantType::VECTOR3);
 		} break;
 
-		case Variant::PROJECTION: {
-			_create_subproperty(p_parent_item, "x", Variant::VECTOR4);
-			_create_subproperty(p_parent_item, "y", Variant::VECTOR4);
-			_create_subproperty(p_parent_item, "z", Variant::VECTOR4);
-			_create_subproperty(p_parent_item, "w", Variant::VECTOR4);
+		case VariantType::PROJECTION: {
+			_create_subproperty(p_parent_item, "x", VariantType::VECTOR4);
+			_create_subproperty(p_parent_item, "y", VariantType::VECTOR4);
+			_create_subproperty(p_parent_item, "z", VariantType::VECTOR4);
+			_create_subproperty(p_parent_item, "w", VariantType::VECTOR4);
 		} break;
 
-		case Variant::COLOR: {
-			_create_subproperty(p_parent_item, "r", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "g", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "b", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "a", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "r8", Variant::INT);
-			_create_subproperty(p_parent_item, "g8", Variant::INT);
-			_create_subproperty(p_parent_item, "b8", Variant::INT);
-			_create_subproperty(p_parent_item, "a8", Variant::INT);
-			_create_subproperty(p_parent_item, "h", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "s", Variant::FLOAT);
-			_create_subproperty(p_parent_item, "v", Variant::FLOAT);
+		case VariantType::COLOR: {
+			_create_subproperty(p_parent_item, "r", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "g", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "b", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "a", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "r8", VariantType::INT);
+			_create_subproperty(p_parent_item, "g8", VariantType::INT);
+			_create_subproperty(p_parent_item, "b8", VariantType::INT);
+			_create_subproperty(p_parent_item, "a8", VariantType::INT);
+			_create_subproperty(p_parent_item, "h", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "s", VariantType::FLOAT);
+			_create_subproperty(p_parent_item, "v", VariantType::FLOAT);
 		} break;
 
 		default: {
@@ -488,7 +488,7 @@ void PropertySelector::_create_subproperties(TreeItem *p_parent_item, Variant::T
 	}
 }
 
-void PropertySelector::_create_subproperty(TreeItem *p_parent_item, const String &p_name, Variant::Type p_type) {
+void PropertySelector::_create_subproperty(TreeItem *p_parent_item, const String &p_name, VariantType p_type) {
 	if (!type_filter.is_empty() && !type_filter.has(p_type)) {
 		return;
 	}
@@ -516,7 +516,7 @@ void PropertySelector::_notification(int p_what) {
 void PropertySelector::select_method_from_base_type(const String &p_base, const String &p_current, bool p_virtuals_only) {
 	base_type = p_base;
 	selected = p_current;
-	type = Variant::NIL;
+	type = VariantType::NIL;
 	script = ObjectID();
 	properties = false;
 	instance = nullptr;
@@ -532,7 +532,7 @@ void PropertySelector::select_method_from_script(const Ref<Script> &p_script, co
 	ERR_FAIL_COND(p_script.is_null());
 	base_type = p_script->get_instance_base_type();
 	selected = p_current;
-	type = Variant::NIL;
+	type = VariantType::NIL;
 	script = p_script->get_instance_id();
 	properties = false;
 	instance = nullptr;
@@ -544,8 +544,8 @@ void PropertySelector::select_method_from_script(const Ref<Script> &p_script, co
 	_update_search();
 }
 
-void PropertySelector::select_method_from_basic_type(Variant::Type p_type, const String &p_current) {
-	ERR_FAIL_COND(p_type == Variant::NIL);
+void PropertySelector::select_method_from_basic_type(VariantType p_type, const String &p_current) {
+	ERR_FAIL_COND(p_type == VariantType::NIL);
 	base_type = "";
 	selected = p_current;
 	type = p_type;
@@ -563,7 +563,7 @@ void PropertySelector::select_method_from_basic_type(Variant::Type p_type, const
 void PropertySelector::select_method_from_instance(Object *p_instance, const String &p_current) {
 	base_type = p_instance->get_class();
 	selected = p_current;
-	type = Variant::NIL;
+	type = VariantType::NIL;
 	script = ObjectID();
 	{
 		Ref<Script> scr = p_instance->get_script();
@@ -584,7 +584,7 @@ void PropertySelector::select_method_from_instance(Object *p_instance, const Str
 void PropertySelector::select_property_from_base_type(const String &p_base, const String &p_current) {
 	base_type = p_base;
 	selected = p_current;
-	type = Variant::NIL;
+	type = VariantType::NIL;
 	script = ObjectID();
 	properties = true;
 	instance = nullptr;
@@ -601,7 +601,7 @@ void PropertySelector::select_property_from_script(const Ref<Script> &p_script, 
 
 	base_type = p_script->get_instance_base_type();
 	selected = p_current;
-	type = Variant::NIL;
+	type = VariantType::NIL;
 	script = p_script->get_instance_id();
 	properties = true;
 	instance = nullptr;
@@ -613,8 +613,8 @@ void PropertySelector::select_property_from_script(const Ref<Script> &p_script, 
 	_update_search();
 }
 
-void PropertySelector::select_property_from_basic_type(Variant::Type p_type, const String &p_current) {
-	ERR_FAIL_COND(p_type == Variant::NIL);
+void PropertySelector::select_property_from_basic_type(VariantType p_type, const String &p_current) {
+	ERR_FAIL_COND(p_type == VariantType::NIL);
 	base_type = "";
 	selected = p_current;
 	type = p_type;
@@ -632,7 +632,7 @@ void PropertySelector::select_property_from_basic_type(Variant::Type p_type, con
 void PropertySelector::select_property_from_instance(Object *p_instance, const String &p_current) {
 	base_type = "";
 	selected = p_current;
-	type = Variant::NIL;
+	type = VariantType::NIL;
 	script = ObjectID();
 	properties = true;
 	instance = p_instance;
@@ -644,12 +644,12 @@ void PropertySelector::select_property_from_instance(Object *p_instance, const S
 	_update_search();
 }
 
-void PropertySelector::set_type_filter(const Vector<Variant::Type> &p_type_filter) {
+void PropertySelector::set_type_filter(const Vector<VariantType> &p_type_filter) {
 	type_filter = p_type_filter;
 }
 
 void PropertySelector::_bind_methods() {
-	ADD_SIGNAL(MethodInfo("selected", PropertyInfo(Variant::STRING, "name")));
+	ADD_SIGNAL(MethodInfo("selected", PropertyInfo(VariantType::STRING, "name")));
 }
 
 PropertySelector::PropertySelector() {

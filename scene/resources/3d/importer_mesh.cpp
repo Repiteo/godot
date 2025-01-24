@@ -185,24 +185,24 @@ static void _remap_arrays(Array &r_arrays, const Vector<uint32_t> &p_remap, uint
 		}
 
 		switch (r_arrays[i].get_type()) {
-			case Variant::NIL:
+			case VariantType::NIL:
 				break;
-			case Variant::PACKED_VECTOR3_ARRAY:
+			case VariantType::PACKED_VECTOR3_ARRAY:
 				r_arrays[i] = _remap_array<Vector3>(r_arrays[i], p_remap, p_vertex_count);
 				break;
-			case Variant::PACKED_VECTOR2_ARRAY:
+			case VariantType::PACKED_VECTOR2_ARRAY:
 				r_arrays[i] = _remap_array<Vector2>(r_arrays[i], p_remap, p_vertex_count);
 				break;
-			case Variant::PACKED_FLOAT32_ARRAY:
+			case VariantType::PACKED_FLOAT32_ARRAY:
 				r_arrays[i] = _remap_array<float>(r_arrays[i], p_remap, p_vertex_count);
 				break;
-			case Variant::PACKED_INT32_ARRAY:
+			case VariantType::PACKED_INT32_ARRAY:
 				r_arrays[i] = _remap_array<int32_t>(r_arrays[i], p_remap, p_vertex_count);
 				break;
-			case Variant::PACKED_BYTE_ARRAY:
+			case VariantType::PACKED_BYTE_ARRAY:
 				r_arrays[i] = _remap_array<uint8_t>(r_arrays[i], p_remap, p_vertex_count);
 				break;
-			case Variant::PACKED_COLOR_ARRAY:
+			case VariantType::PACKED_COLOR_ARRAY:
 				r_arrays[i] = _remap_array<Color>(r_arrays[i], p_remap, p_vertex_count);
 				break;
 			default:
@@ -302,7 +302,7 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, Array p_bone_transf
 
 	LocalVector<Transform3D> bone_transform_vector;
 	for (int i = 0; i < p_bone_transform_array.size(); i++) {
-		ERR_FAIL_COND(p_bone_transform_array[i].get_type() != Variant::TRANSFORM3D);
+		ERR_FAIL_COND(p_bone_transform_array[i].get_type() != VariantType::TRANSFORM3D);
 		bone_transform_vector.push_back(p_bone_transform_array[i]);
 	}
 
@@ -593,10 +593,10 @@ void ImporterMesh::create_shadow_mesh() {
 	}
 	//no shadow mesh for skeletons
 	for (int i = 0; i < surfaces.size(); i++) {
-		if (surfaces[i].arrays[RS::ARRAY_BONES].get_type() != Variant::NIL) {
+		if (surfaces[i].arrays[RS::ARRAY_BONES].get_type() != VariantType::NIL) {
 			return;
 		}
-		if (surfaces[i].arrays[RS::ARRAY_WEIGHTS].get_type() != Variant::NIL) {
+		if (surfaces[i].arrays[RS::ARRAY_WEIGHTS].get_type() != VariantType::NIL) {
 			return;
 		}
 	}
@@ -1210,5 +1210,5 @@ void ImporterMesh::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_lightmap_size_hint", "size"), &ImporterMesh::set_lightmap_size_hint);
 	ClassDB::bind_method(D_METHOD("get_lightmap_size_hint"), &ImporterMesh::get_lightmap_size_hint);
 
-	ADD_PROPERTY(PropertyInfo(Variant::DICTIONARY, "_data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_data", "_get_data");
+	ADD_PROPERTY(PropertyInfo(VariantType::DICTIONARY, "_data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_data", "_get_data");
 }

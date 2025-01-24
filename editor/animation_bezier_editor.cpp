@@ -1978,8 +1978,8 @@ void AnimationBezierTrackEdit::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("_update_locked_tracks_after"), &AnimationBezierTrackEdit::_update_locked_tracks_after);
 	ClassDB::bind_method(D_METHOD("_bezier_track_insert_key_at_anim"), &AnimationBezierTrackEdit::_bezier_track_insert_key_at_anim);
 
-	ADD_SIGNAL(MethodInfo("select_key", PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::BOOL, "single"), PropertyInfo(Variant::INT, "track")));
-	ADD_SIGNAL(MethodInfo("deselect_key", PropertyInfo(Variant::INT, "index"), PropertyInfo(Variant::INT, "track")));
+	ADD_SIGNAL(MethodInfo("select_key", PropertyInfo(VariantType::INT, "index"), PropertyInfo(VariantType::BOOL, "single"), PropertyInfo(VariantType::INT, "track")));
+	ADD_SIGNAL(MethodInfo("deselect_key", PropertyInfo(VariantType::INT, "index"), PropertyInfo(VariantType::INT, "track")));
 	ADD_SIGNAL(MethodInfo("clear_selection"));
 }
 

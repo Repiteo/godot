@@ -565,7 +565,7 @@ void EditorFeatureProfileManager::_class_list_item_selected() {
 	Variant md = item->get_metadata(0);
 	if (md.is_string()) {
 		description_bit->parse_symbol("class|" + md.operator String() + "|");
-	} else if (md.get_type() == Variant::INT) {
+	} else if (md.get_type() == VariantType::INT) {
 		String feature_description = EditorFeatureProfile::get_feature_description(EditorFeatureProfile::Feature((int)md));
 		description_bit->set_custom_text(TTR(item->get_text(0)), String(), TTRGET(feature_description));
 		return;
@@ -653,7 +653,7 @@ void EditorFeatureProfileManager::_class_list_item_edited() {
 		edited->set_disable_class(class_selected, !checked);
 		_save_and_update();
 		_update_profile_tree_from(item);
-	} else if (md.get_type() == Variant::INT) {
+	} else if (md.get_type() == VariantType::INT) {
 		int feature_selected = md;
 		edited->set_disable_feature(EditorFeatureProfile::Feature(feature_selected), !checked);
 		_save_and_update();
@@ -709,7 +709,7 @@ void EditorFeatureProfileManager::_property_item_edited() {
 		edited->set_disable_class_property(class_name, property_selected, !checked);
 		_save_and_update();
 		_update_profile_tree_from(class_list->get_selected());
-	} else if (md.get_type() == Variant::INT) {
+	} else if (md.get_type() == VariantType::INT) {
 		int feature_selected = md;
 		switch (feature_selected) {
 			case CLASS_OPTION_DISABLE_EDITOR: {
@@ -739,7 +739,7 @@ void EditorFeatureProfileManager::_update_selected_profile() {
 		Variant md = class_list->get_selected()->get_metadata(0);
 		if (md.is_string()) {
 			class_selected = md;
-		} else if (md.get_type() == Variant::INT) {
+		} else if (md.get_type() == VariantType::INT) {
 			feature_selected = md;
 		}
 	}

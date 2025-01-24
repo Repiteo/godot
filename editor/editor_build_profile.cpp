@@ -650,7 +650,7 @@ void EditorBuildProfileManager::_class_list_item_selected() {
 	Variant md = item->get_metadata(0);
 	if (md.is_string()) {
 		description_bit->parse_symbol("class|" + md.operator String() + "|");
-	} else if (md.get_type() == Variant::INT) {
+	} else if (md.get_type() == VariantType::INT) {
 		String build_option_description = EditorBuildProfile::get_build_option_description(EditorBuildProfile::BuildOption((int)md));
 		description_bit->set_custom_text(TTR(item->get_text(0)), String(), TTRGET(build_option_description));
 	}
@@ -673,7 +673,7 @@ void EditorBuildProfileManager::_class_list_item_edited() {
 		String class_selected = md;
 		edited->set_disable_class(class_selected, !checked);
 		_update_edited_profile();
-	} else if (md.get_type() == Variant::INT) {
+	} else if (md.get_type() == VariantType::INT) {
 		int build_option_selected = md;
 		edited->set_disable_build_option(EditorBuildProfile::BuildOption(build_option_selected), !checked);
 	}
@@ -707,7 +707,7 @@ void EditorBuildProfileManager::_update_edited_profile() {
 		Variant md = class_list->get_selected()->get_metadata(0);
 		if (md.is_string()) {
 			class_selected = md;
-		} else if (md.get_type() == Variant::INT) {
+		} else if (md.get_type() == VariantType::INT) {
 			build_option_selected = md;
 		}
 	}

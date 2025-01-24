@@ -461,15 +461,15 @@ void Curve::set_data(const Array p_input) {
 
 	// Validate input
 	for (int i = 0; i < p_input.size(); i += ELEMS) {
-		ERR_FAIL_COND(p_input[i].get_type() != Variant::VECTOR2);
+		ERR_FAIL_COND(p_input[i].get_type() != VariantType::VECTOR2);
 		ERR_FAIL_COND(!p_input[i + 1].is_num());
-		ERR_FAIL_COND(p_input[i + 2].get_type() != Variant::FLOAT);
+		ERR_FAIL_COND(p_input[i + 2].get_type() != VariantType::FLOAT);
 
-		ERR_FAIL_COND(p_input[i + 3].get_type() != Variant::INT);
+		ERR_FAIL_COND(p_input[i + 3].get_type() != VariantType::INT);
 		int left_mode = p_input[i + 3];
 		ERR_FAIL_COND(left_mode < 0 || left_mode >= TANGENT_MODE_COUNT);
 
-		ERR_FAIL_COND(p_input[i + 4].get_type() != Variant::INT);
+		ERR_FAIL_COND(p_input[i + 4].get_type() != VariantType::INT);
 		int right_mode = p_input[i + 4];
 		ERR_FAIL_COND(right_mode < 0 || right_mode >= TANGENT_MODE_COUNT);
 	}
@@ -632,26 +632,26 @@ bool Curve::_get(const StringName &p_name, Variant &r_ret) const {
 
 void Curve::_get_property_list(List<PropertyInfo> *p_list) const {
 	for (uint32_t i = 0; i < _points.size(); i++) {
-		PropertyInfo pi = PropertyInfo(Variant::VECTOR2, vformat("point_%d/position", i));
+		PropertyInfo pi = PropertyInfo(VariantType::VECTOR2, vformat("point_%d/position", i));
 		pi.usage &= ~PROPERTY_USAGE_STORAGE;
 		p_list->push_back(pi);
 
 		if (i != 0) {
-			pi = PropertyInfo(Variant::FLOAT, vformat("point_%d/left_tangent", i));
+			pi = PropertyInfo(VariantType::FLOAT, vformat("point_%d/left_tangent", i));
 			pi.usage &= ~PROPERTY_USAGE_STORAGE;
 			p_list->push_back(pi);
 
-			pi = PropertyInfo(Variant::INT, vformat("point_%d/left_mode", i), PROPERTY_HINT_ENUM, "Free,Linear");
+			pi = PropertyInfo(VariantType::INT, vformat("point_%d/left_mode", i), PROPERTY_HINT_ENUM, "Free,Linear");
 			pi.usage &= ~PROPERTY_USAGE_STORAGE;
 			p_list->push_back(pi);
 		}
 
 		if (i != _points.size() - 1) {
-			pi = PropertyInfo(Variant::FLOAT, vformat("point_%d/right_tangent", i));
+			pi = PropertyInfo(VariantType::FLOAT, vformat("point_%d/right_tangent", i));
 			pi.usage &= ~PROPERTY_USAGE_STORAGE;
 			p_list->push_back(pi);
 
-			pi = PropertyInfo(Variant::INT, vformat("point_%d/right_mode", i), PROPERTY_HINT_ENUM, "Free,Linear");
+			pi = PropertyInfo(VariantType::INT, vformat("point_%d/right_mode", i), PROPERTY_HINT_ENUM, "Free,Linear");
 			pi.usage &= ~PROPERTY_USAGE_STORAGE;
 			p_list->push_back(pi);
 		}
@@ -696,13 +696,13 @@ void Curve::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("_get_data"), &Curve::get_data);
 	ClassDB::bind_method(D_METHOD("_set_data", "data"), &Curve::set_data);
 
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "min_domain", PROPERTY_HINT_RANGE, "-1024,1024,0.01,or_greater,or_less", PROPERTY_USAGE_EDITOR), "set_min_domain", "get_min_domain");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "max_domain", PROPERTY_HINT_RANGE, "-1024,1024,0.01,or_greater,or_less", PROPERTY_USAGE_EDITOR), "set_max_domain", "get_max_domain");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "min_value", PROPERTY_HINT_RANGE, "-1024,1024,0.01,or_greater,or_less", PROPERTY_USAGE_EDITOR), "set_min_value", "get_min_value");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "max_value", PROPERTY_HINT_RANGE, "-1024,1024,0.01,or_greater,or_less", PROPERTY_USAGE_EDITOR), "set_max_value", "get_max_value");
-	ADD_PROPERTY(PropertyInfo(Variant::NIL, "_limits", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_limits", "_get_limits");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "bake_resolution", PROPERTY_HINT_RANGE, "1,1000,1"), "set_bake_resolution", "get_bake_resolution");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "_data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_data", "_get_data");
+	ADD_PROPERTY(PropertyInfo(VariantType::FLOAT, "min_domain", PROPERTY_HINT_RANGE, "-1024,1024,0.01,or_greater,or_less", PROPERTY_USAGE_EDITOR), "set_min_domain", "get_min_domain");
+	ADD_PROPERTY(PropertyInfo(VariantType::FLOAT, "max_domain", PROPERTY_HINT_RANGE, "-1024,1024,0.01,or_greater,or_less", PROPERTY_USAGE_EDITOR), "set_max_domain", "get_max_domain");
+	ADD_PROPERTY(PropertyInfo(VariantType::FLOAT, "min_value", PROPERTY_HINT_RANGE, "-1024,1024,0.01,or_greater,or_less", PROPERTY_USAGE_EDITOR), "set_min_value", "get_min_value");
+	ADD_PROPERTY(PropertyInfo(VariantType::FLOAT, "max_value", PROPERTY_HINT_RANGE, "-1024,1024,0.01,or_greater,or_less", PROPERTY_USAGE_EDITOR), "set_max_value", "get_max_value");
+	ADD_PROPERTY(PropertyInfo(VariantType::NIL, "_limits", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_limits", "_get_limits");
+	ADD_PROPERTY(PropertyInfo(VariantType::INT, "bake_resolution", PROPERTY_HINT_RANGE, "1,1000,1"), "set_bake_resolution", "get_bake_resolution");
+	ADD_PROPERTY(PropertyInfo(VariantType::INT, "_data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_data", "_get_data");
 	ADD_ARRAY_COUNT("Points", "point_count", "set_point_count", "get_point_count", "point_");
 
 	ADD_SIGNAL(MethodInfo(SIGNAL_RANGE_CHANGED));
@@ -1366,18 +1366,18 @@ bool Curve2D::_get(const StringName &p_name, Variant &r_ret) const {
 
 void Curve2D::_get_property_list(List<PropertyInfo> *p_list) const {
 	for (uint32_t i = 0; i < points.size(); i++) {
-		PropertyInfo pi = PropertyInfo(Variant::VECTOR2, vformat("point_%d/position", i));
+		PropertyInfo pi = PropertyInfo(VariantType::VECTOR2, vformat("point_%d/position", i));
 		pi.usage &= ~PROPERTY_USAGE_STORAGE;
 		p_list->push_back(pi);
 
 		if (i != 0) {
-			pi = PropertyInfo(Variant::VECTOR2, vformat("point_%d/in", i));
+			pi = PropertyInfo(VariantType::VECTOR2, vformat("point_%d/in", i));
 			pi.usage &= ~PROPERTY_USAGE_STORAGE;
 			p_list->push_back(pi);
 		}
 
 		if (i != points.size() - 1) {
-			pi = PropertyInfo(Variant::VECTOR2, vformat("point_%d/out", i));
+			pi = PropertyInfo(VariantType::VECTOR2, vformat("point_%d/out", i));
 			pi.usage &= ~PROPERTY_USAGE_STORAGE;
 			p_list->push_back(pi);
 		}
@@ -1414,8 +1414,8 @@ void Curve2D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("_get_data"), &Curve2D::_get_data);
 	ClassDB::bind_method(D_METHOD("_set_data", "data"), &Curve2D::_set_data);
 
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "bake_interval", PROPERTY_HINT_RANGE, "0.01,512,0.01"), "set_bake_interval", "get_bake_interval");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "_data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_data", "_get_data");
+	ADD_PROPERTY(PropertyInfo(VariantType::FLOAT, "bake_interval", PROPERTY_HINT_RANGE, "0.01,512,0.01"), "set_bake_interval", "get_bake_interval");
+	ADD_PROPERTY(PropertyInfo(VariantType::INT, "_data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_data", "_get_data");
 	ADD_ARRAY_COUNT("Points", "point_count", "set_point_count", "get_point_count", "point_");
 }
 
@@ -2415,23 +2415,23 @@ bool Curve3D::_get(const StringName &p_name, Variant &r_ret) const {
 
 void Curve3D::_get_property_list(List<PropertyInfo> *p_list) const {
 	for (uint32_t i = 0; i < points.size(); i++) {
-		PropertyInfo pi = PropertyInfo(Variant::VECTOR3, vformat("point_%d/position", i));
+		PropertyInfo pi = PropertyInfo(VariantType::VECTOR3, vformat("point_%d/position", i));
 		pi.usage &= ~PROPERTY_USAGE_STORAGE;
 		p_list->push_back(pi);
 
 		if (closed || i != 0) {
-			pi = PropertyInfo(Variant::VECTOR3, vformat("point_%d/in", i));
+			pi = PropertyInfo(VariantType::VECTOR3, vformat("point_%d/in", i));
 			pi.usage &= ~PROPERTY_USAGE_STORAGE;
 			p_list->push_back(pi);
 		}
 
 		if (closed || i != points.size() - 1) {
-			pi = PropertyInfo(Variant::VECTOR3, vformat("point_%d/out", i));
+			pi = PropertyInfo(VariantType::VECTOR3, vformat("point_%d/out", i));
 			pi.usage &= ~PROPERTY_USAGE_STORAGE;
 			p_list->push_back(pi);
 		}
 
-		pi = PropertyInfo(Variant::FLOAT, vformat("point_%d/tilt", i));
+		pi = PropertyInfo(VariantType::FLOAT, vformat("point_%d/tilt", i));
 		pi.usage &= ~PROPERTY_USAGE_STORAGE;
 		p_list->push_back(pi);
 	}
@@ -2476,14 +2476,14 @@ void Curve3D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("_get_data"), &Curve3D::_get_data);
 	ClassDB::bind_method(D_METHOD("_set_data", "data"), &Curve3D::_set_data);
 
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "closed"), "set_closed", "is_closed");
+	ADD_PROPERTY(PropertyInfo(VariantType::BOOL, "closed"), "set_closed", "is_closed");
 
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "bake_interval", PROPERTY_HINT_RANGE, "0.01,512,0.01"), "set_bake_interval", "get_bake_interval");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "_data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_data", "_get_data");
+	ADD_PROPERTY(PropertyInfo(VariantType::FLOAT, "bake_interval", PROPERTY_HINT_RANGE, "0.01,512,0.01"), "set_bake_interval", "get_bake_interval");
+	ADD_PROPERTY(PropertyInfo(VariantType::INT, "_data", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_INTERNAL), "_set_data", "_get_data");
 	ADD_ARRAY_COUNT("Points", "point_count", "set_point_count", "get_point_count", "point_");
 
 	ADD_GROUP("Up Vector", "up_vector_");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "up_vector_enabled"), "set_up_vector_enabled", "is_up_vector_enabled");
+	ADD_PROPERTY(PropertyInfo(VariantType::BOOL, "up_vector_enabled"), "set_up_vector_enabled", "is_up_vector_enabled");
 }
 
 Curve3D::Curve3D() {}

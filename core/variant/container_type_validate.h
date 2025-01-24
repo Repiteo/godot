@@ -35,13 +35,13 @@
 #include "core/variant/variant.h"
 
 struct ContainerType {
-	Variant::Type builtin_type = Variant::NIL;
+	VariantType builtin_type = VariantType::NIL;
 	StringName class_name;
 	Ref<Script> script;
 };
 
 struct ContainerTypeValidate {
-	Variant::Type type = Variant::NIL;
+	VariantType type = VariantType::NIL;
 	StringName class_name;
 	Ref<Script> script;
 	const char *where = "container";
@@ -49,7 +49,7 @@ struct ContainerTypeValidate {
 	_FORCE_INLINE_ bool can_reference(const ContainerTypeValidate &p_type) const {
 		if (type != p_type.type) {
 			return false;
-		} else if (type != Variant::OBJECT) {
+		} else if (type != VariantType::OBJECT) {
 			return true;
 		}
 
@@ -81,21 +81,21 @@ struct ContainerTypeValidate {
 
 	// Coerces String and StringName into each other and int into float when needed.
 	_FORCE_INLINE_ bool validate(Variant &inout_variant, const char *p_operation = "use") const {
-		if (type == Variant::NIL) {
+		if (type == VariantType::NIL) {
 			return true;
 		}
 
 		if (type != inout_variant.get_type()) {
-			if (inout_variant.get_type() == Variant::NIL && type == Variant::OBJECT) {
+			if (inout_variant.get_type() == VariantType::NIL && type == VariantType::OBJECT) {
 				return true;
 			}
-			if (type == Variant::STRING && inout_variant.get_type() == Variant::STRING_NAME) {
+			if (type == VariantType::STRING && inout_variant.get_type() == VariantType::STRING_NAME) {
 				inout_variant = String(inout_variant);
 				return true;
-			} else if (type == Variant::STRING_NAME && inout_variant.get_type() == Variant::STRING) {
+			} else if (type == VariantType::STRING_NAME && inout_variant.get_type() == VariantType::STRING) {
 				inout_variant = StringName(inout_variant);
 				return true;
-			} else if (type == Variant::FLOAT && inout_variant.get_type() == Variant::INT) {
+			} else if (type == VariantType::FLOAT && inout_variant.get_type() == VariantType::INT) {
 				inout_variant = (float)inout_variant;
 				return true;
 			}
@@ -103,7 +103,7 @@ struct ContainerTypeValidate {
 			ERR_FAIL_V_MSG(false, vformat("Attempted to %s a variable of type '%s' into a %s of type '%s'.", String(p_operation), Variant::get_type_name(inout_variant.get_type()), where, Variant::get_type_name(type)));
 		}
 
-		if (type != Variant::OBJECT) {
+		if (type != VariantType::OBJECT) {
 			return true;
 		}
 
@@ -111,7 +111,7 @@ struct ContainerTypeValidate {
 	}
 
 	_FORCE_INLINE_ bool validate_object(const Variant &p_variant, const char *p_operation = "use") const {
-		ERR_FAIL_COND_V(p_variant.get_type() != Variant::OBJECT, false);
+		ERR_FAIL_COND_V(p_variant.get_type() != VariantType::OBJECT, false);
 
 #ifdef DEBUG_ENABLED
 		ObjectID object_id = p_variant;

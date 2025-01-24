@@ -35,7 +35,7 @@
 bool _hashmap_variant_less_than(const Variant &p_left, const Variant &p_right) {
 	bool valid = false;
 	Variant res;
-	Variant::evaluate(Variant::OP_LESS, p_left, p_right, res, valid);
+	Variant::evaluate(VariantOperator::OP_LESS, p_left, p_right, res, valid);
 	if (!valid) {
 		res = false;
 	}

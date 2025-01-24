@@ -240,18 +240,18 @@ void Resource::reload_from_file() {
 
 void Resource::_dupe_sub_resources(Variant &r_variant, Node *p_for_scene, HashMap<Ref<Resource>, Ref<Resource>> &p_remap_cache) {
 	switch (r_variant.get_type()) {
-		case Variant::ARRAY: {
+		case VariantType::ARRAY: {
 			Array a = r_variant;
 			for (int i = 0; i < a.size(); i++) {
 				_dupe_sub_resources(a[i], p_for_scene, p_remap_cache);
 			}
 		} break;
-		case Variant::DICTIONARY: {
+		case VariantType::DICTIONARY: {
 			Dictionary d = r_variant;
 			List<Variant> keys;
 			d.get_key_list(&keys);
 			for (Variant &k : keys) {
-				if (k.get_type() == Variant::OBJECT) {
+				if (k.get_type() == VariantType::OBJECT) {
 					// Replace in dictionary key.
 					Ref<Resource> sr = k;
 					if (sr.is_valid() && sr->is_local_to_scene()) {
@@ -272,7 +272,7 @@ void Resource::_dupe_sub_resources(Variant &r_variant, Node *p_for_scene, HashMa
 				_dupe_sub_resources(d[k], p_for_scene, p_remap_cache);
 			}
 		} break;
-		case Variant::OBJECT: {
+		case VariantType::OBJECT: {
 			Ref<Resource> sr = r_variant;
 			if (sr.is_valid() && sr->is_local_to_scene()) {
 				if (p_remap_cache.has(sr)) {
@@ -314,13 +314,13 @@ Ref<Resource> Resource::duplicate_for_local_scene(Node *p_for_scene, HashMap<Ref
 
 void Resource::_find_sub_resources(const Variant &p_variant, HashSet<Ref<Resource>> &p_resources_found) {
 	switch (p_variant.get_type()) {
-		case Variant::ARRAY: {
+		case VariantType::ARRAY: {
 			Array a = p_variant;
 			for (int i = 0; i < a.size(); i++) {
 				_find_sub_resources(a[i], p_resources_found);
 			}
 		} break;
-		case Variant::DICTIONARY: {
+		case VariantType::DICTIONARY: {
 			Dictionary d = p_variant;
 			List<Variant> keys;
 			d.get_key_list(&keys);
@@ -329,7 +329,7 @@ void Resource::_find_sub_resources(const Variant &p_variant, HashSet<Ref<Resourc
 				_find_sub_resources(d[k], p_resources_found);
 			}
 		} break;
-		case Variant::OBJECT: {
+		case VariantType::OBJECT: {
 			Ref<Resource> r = p_variant;
 			if (r.is_valid()) {
 				p_resources_found.insert(r);
@@ -381,22 +381,22 @@ Ref<Resource> Resource::duplicate(bool p_subresources) const {
 		Variant p = get(E.name);
 
 		switch (p.get_type()) {
-			case Variant::Type::DICTIONARY:
-			case Variant::Type::ARRAY:
-			case Variant::Type::PACKED_BYTE_ARRAY:
-			case Variant::Type::PACKED_COLOR_ARRAY:
-			case Variant::Type::PACKED_INT32_ARRAY:
-			case Variant::Type::PACKED_INT64_ARRAY:
-			case Variant::Type::PACKED_FLOAT32_ARRAY:
-			case Variant::Type::PACKED_FLOAT64_ARRAY:
-			case Variant::Type::PACKED_STRING_ARRAY:
-			case Variant::Type::PACKED_VECTOR2_ARRAY:
-			case Variant::Type::PACKED_VECTOR3_ARRAY:
-			case Variant::Type::PACKED_VECTOR4_ARRAY: {
+			case VariantType::DICTIONARY:
+			case VariantType::ARRAY:
+			case VariantType::PACKED_BYTE_ARRAY:
+			case VariantType::PACKED_COLOR_ARRAY:
+			case VariantType::PACKED_INT32_ARRAY:
+			case VariantType::PACKED_INT64_ARRAY:
+			case VariantType::PACKED_FLOAT32_ARRAY:
+			case VariantType::PACKED_FLOAT64_ARRAY:
+			case VariantType::PACKED_STRING_ARRAY:
+			case VariantType::PACKED_VECTOR2_ARRAY:
+			case VariantType::PACKED_VECTOR3_ARRAY:
+			case VariantType::PACKED_VECTOR4_ARRAY: {
 				r->set(E.name, p.duplicate(p_subresources));
 			} break;
 
-			case Variant::Type::OBJECT: {
+			case VariantType::OBJECT: {
 				if (!(E.usage & PROPERTY_USAGE_NEVER_DUPLICATE) && (p_subresources || (E.usage & PROPERTY_USAGE_ALWAYS_DUPLICATE))) {
 					Ref<Resource> sr = p;
 					if (sr.is_valid()) {
@@ -445,7 +445,7 @@ uint32_t Resource::hash_edited_version_for_preview() const {
 	get_property_list(&plist);
 
 	for (const PropertyInfo &E : plist) {
-		if (E.usage & PROPERTY_USAGE_STORAGE && E.type == Variant::OBJECT && E.hint == PROPERTY_HINT_RESOURCE_TYPE) {
+		if (E.usage & PROPERTY_USAGE_STORAGE && E.type == VariantType::OBJECT && E.hint == PROPERTY_HINT_RESOURCE_TYPE) {
 			Ref<Resource> res = get(E.name);
 			if (res.is_valid()) {
 				hash = hash_murmur3_one_32(res->hash_edited_version_for_preview(), hash);
@@ -565,10 +565,10 @@ void Resource::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("setup_local_to_scene_requested"));
 
 	ADD_GROUP("Resource", "resource_");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "resource_local_to_scene"), "set_local_to_scene", "is_local_to_scene");
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "resource_path", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_EDITOR), "set_path", "get_path");
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "resource_name"), "set_name", "get_name");
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "resource_scene_unique_id", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_scene_unique_id", "get_scene_unique_id");
+	ADD_PROPERTY(PropertyInfo(VariantType::BOOL, "resource_local_to_scene"), "set_local_to_scene", "is_local_to_scene");
+	ADD_PROPERTY(PropertyInfo(VariantType::STRING, "resource_path", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_EDITOR), "set_path", "get_path");
+	ADD_PROPERTY(PropertyInfo(VariantType::STRING, "resource_name"), "set_name", "get_name");
+	ADD_PROPERTY(PropertyInfo(VariantType::STRING, "resource_scene_unique_id", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_scene_unique_id", "get_scene_unique_id");
 
 	GDVIRTUAL_BIND(_setup_local_to_scene);
 	GDVIRTUAL_BIND(_get_rid);
