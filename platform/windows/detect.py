@@ -156,10 +156,12 @@ def detect_build_env_arch():
 
 
 def get_tools(env: "SConsEnvironment"):
-    if os.name != "nt" or env["use_mingw"]:
+    if os.name != "nt" or env.get("use_mingw"):
         return ["mingw"]
     else:
-        return ["default"]
+        if env.get("msvc_version"):
+            env["MSVC_VERSION"] = env["msvc_version"]
+        return ["msvc", "mslink", "mslib", "mssdk"]
 
 
 def get_opts():
@@ -285,25 +287,25 @@ def setup_msvc_auto(env: "SConsEnvironment"):
     else:
         env["TARGET_ARCH"] = env["arch"]
 
-    # The env may have already been set up with default MSVC tools, so
-    # reset a few things so we can set it up with the tools we want.
-    # (Ideally we'd decide on the tool config before configuring any
-    # environment, and just set the env up once, but this function runs
-    # on an existing env so this is the simplest way.)
-    env["MSVC_SETUP_RUN"] = False  # Need to set this to re-run the tool
-    env["MSVS_VERSION"] = None
-    env["MSVC_VERSION"] = None
+    # # The env may have already been set up with default MSVC tools, so
+    # # reset a few things so we can set it up with the tools we want.
+    # # (Ideally we'd decide on the tool config before configuring any
+    # # environment, and just set the env up once, but this function runs
+    # # on an existing env so this is the simplest way.)
+    # env["MSVC_SETUP_RUN"] = False  # Need to set this to re-run the tool
+    # env["MSVS_VERSION"] = None
+    # env["MSVC_VERSION"] = None
 
-    if "msvc_version" in env:
-        env["MSVC_VERSION"] = env["msvc_version"]
-    env.Tool("msvc")
-    env.Tool("mssdk")  # we want the MS SDK
+    # if "msvc_version" in env:
+    #     env["MSVC_VERSION"] = env["msvc_version"]
+    # env.Tool("msvc")
+    # env.Tool("mssdk")  # we want the MS SDK
 
-    # Re-add potentially overwritten flags.
-    env.AppendUnique(CCFLAGS=env.get("ccflags", "").split())
-    env.AppendUnique(CXXFLAGS=env.get("cxxflags", "").split())
-    env.AppendUnique(CFLAGS=env.get("cflags", "").split())
-    env.AppendUnique(RCFLAGS=env.get("rcflags", "").split())
+    # # Re-add potentially overwritten flags.
+    # env.AppendUnique(CCFLAGS=env.get("ccflags", "").split())
+    # env.AppendUnique(CXXFLAGS=env.get("cxxflags", "").split())
+    # env.AppendUnique(CFLAGS=env.get("cflags", "").split())
+    # env.AppendUnique(RCFLAGS=env.get("rcflags", "").split())
 
     # Note: actual compiler version can be found in env['MSVC_VERSION'], e.g. "14.1" for VS2015
     print("Using SCons-detected MSVC version %s, arch %s" % (env["MSVC_VERSION"], env["arch"]))

@@ -923,6 +923,9 @@ def dump(env):
     with open(".scons_env.json", "w", encoding="utf-8", newline="\n") as f:
         dump(env.Dictionary(), f, indent=4, default=non_serializable)
 
+    print(env["TOOLS"])
+    env.Exit(123)
+
 
 # Custom Visual Studio project generation logic that supports any platform that has a msvs.py
 # script, so Visual Studio can be used to run scons for any platform, with the right defines per target.
