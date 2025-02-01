@@ -316,4 +316,8 @@ struct BuildIndexSequence<0, Is...> : IndexSequence<Is...> {};
 #define ___gd_is_defined(val) ____gd_is_defined(__GDARG_PLACEHOLDER_##val)
 #define GD_IS_DEFINED(x) ___gd_is_defined(x)
 
+inline constexpr size_t count_first = __COUNTER__;
+inline constexpr size_t count_second = __COUNTER__;
+static_assert(count_first == count_second, "shouldn't pass");
+
 #endif // TYPEDEFS_H
