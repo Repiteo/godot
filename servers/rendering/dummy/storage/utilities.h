@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef UTILITIES_DUMMY_H
-#define UTILITIES_DUMMY_H
+#pragma once
 
 #include "light_storage.h"
 #include "material_storage.h"
@@ -131,5 +130,3 @@ public:
 };
 
 } // namespace RendererDummy
-
-#endif // UTILITIES_DUMMY_H

@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef PARTICLES_STORAGE_DUMMY_H
-#define PARTICLES_STORAGE_DUMMY_H
+#pragma once
 
 #include "servers/rendering/storage/particles_storage.h"
 
@@ -124,5 +123,3 @@ public:
 };
 
 } // namespace RendererDummy
-
-#endif // PARTICLES_STORAGE_DUMMY_H
