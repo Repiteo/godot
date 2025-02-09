@@ -146,7 +146,7 @@ public:
 	}
 
 	static Variant::Type get_base_type() {
-		return GetTypeInfo<T>::VARIANT_TYPE;
+		return variant_type_v<T>;
 	}
 };
 
@@ -281,7 +281,7 @@ public:
 	}
 
 	static Variant::Type get_base_type() {
-		return GetTypeInfo<T>::VARIANT_TYPE;
+		return variant_type_v<T>;
 	}
 };
 
@@ -584,10 +584,10 @@ template <typename T>
 class VariantConstructorToArray {
 public:
 	static void construct(Variant &r_ret, const Variant **p_args, Callable::CallError &r_error) {
-		if (p_args[0]->get_type() != GetTypeInfo<T>::VARIANT_TYPE) {
+		if (p_args[0]->get_type() != variant_type_v<T>) {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
 			r_error.argument = 0;
-			r_error.expected = GetTypeInfo<T>::VARIANT_TYPE;
+			r_error.expected = variant_type_v<T>;
 			return;
 		}
 
@@ -631,7 +631,7 @@ public:
 	}
 
 	static Variant::Type get_argument_type(int p_arg) {
-		return GetTypeInfo<T>::VARIANT_TYPE;
+		return variant_type_v<T>;
 	}
 
 	static Variant::Type get_base_type() {
@@ -694,7 +694,7 @@ public:
 	}
 
 	static Variant::Type get_base_type() {
-		return GetTypeInfo<T>::VARIANT_TYPE;
+		return variant_type_v<T>;
 	}
 };
 
@@ -756,7 +756,7 @@ public:
 	}
 
 	static Variant::Type get_base_type() {
-		return GetTypeInfo<T>::VARIANT_TYPE;
+		return variant_type_v<T>;
 	}
 };
 

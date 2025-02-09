@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*  variant_destruct.h                                                    */
+/*  variant_enums.h                                                       */
 /**************************************************************************/
 /*                         This file is part of:                          */
 /*                             GODOT ENGINE                               */
@@ -28,45 +28,115 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef VARIANT_DESTRUCT_H
-#define VARIANT_DESTRUCT_H
+#ifndef VARIANT_ENUMS_H
+#define VARIANT_ENUMS_H
 
-#include "core/variant/variant.h"
+// HACK: By wrapping these enums in a namespace, we're able to hoist the enumeration itself into
+// the global namespace while keeping the enumeration constants constrained. This has a similar
+// effect to the behavior of scoped enums, where the constants will require the type preceding it,
+// but does so without changing the existing type/conversion properties. This workaround can be
+// removed if these enums ever become scoped (ie: enum class).
 
-#include "core/object/class_db.h"
+namespace godot {
+namespace details {
 
-template <typename T>
-struct VariantDestruct {};
+// WARNING: If this changes, the table in variant_op must be updated.
+enum VariantType {
+	NIL,
 
-#define MAKE_PTRDESTRUCT(m_type)                               \
-	template <>                                                \
-	struct VariantDestruct<m_type> {                           \
-		_FORCE_INLINE_ static void ptr_destruct(void *p_ptr) { \
-			reinterpret_cast<m_type *>(p_ptr)->~m_type();      \
-		}                                                      \
-		_FORCE_INLINE_ static Variant::Type get_base_type() {  \
-			return variant_type_v<m_type>;                     \
-		}                                                      \
-	}
+	// Atomic types.
+	BOOL,
+	INT,
+	FLOAT,
+	STRING,
 
-MAKE_PTRDESTRUCT(String);
-MAKE_PTRDESTRUCT(StringName);
-MAKE_PTRDESTRUCT(NodePath);
-MAKE_PTRDESTRUCT(Callable);
-MAKE_PTRDESTRUCT(Signal);
-MAKE_PTRDESTRUCT(Dictionary);
-MAKE_PTRDESTRUCT(Array);
-MAKE_PTRDESTRUCT(PackedByteArray);
-MAKE_PTRDESTRUCT(PackedInt32Array);
-MAKE_PTRDESTRUCT(PackedInt64Array);
-MAKE_PTRDESTRUCT(PackedFloat32Array);
-MAKE_PTRDESTRUCT(PackedFloat64Array);
-MAKE_PTRDESTRUCT(PackedStringArray);
-MAKE_PTRDESTRUCT(PackedVector2Array);
-MAKE_PTRDESTRUCT(PackedVector3Array);
-MAKE_PTRDESTRUCT(PackedColorArray);
-MAKE_PTRDESTRUCT(PackedVector4Array);
+	// Math types.
+	VECTOR2,
+	VECTOR2I,
+	RECT2,
+	RECT2I,
+	VECTOR3,
+	VECTOR3I,
+	TRANSFORM2D,
+	VECTOR4,
+	VECTOR4I,
+	PLANE,
+	QUATERNION,
+	AABB,
+	BASIS,
+	TRANSFORM3D,
+	PROJECTION,
 
-#undef MAKE_PTRDESTRUCT
+	// Misc types.
+	COLOR,
+	STRING_NAME,
+	NODE_PATH,
+	RID,
+	OBJECT,
+	CALLABLE,
+	SIGNAL,
+	DICTIONARY,
+	ARRAY,
 
-#endif // VARIANT_DESTRUCT_H
+	// Packed arrays.
+	PACKED_BYTE_ARRAY,
+	PACKED_INT32_ARRAY,
+	PACKED_INT64_ARRAY,
+	PACKED_FLOAT32_ARRAY,
+	PACKED_FLOAT64_ARRAY,
+	PACKED_STRING_ARRAY,
+	PACKED_VECTOR2_ARRAY,
+	PACKED_VECTOR3_ARRAY,
+	PACKED_COLOR_ARRAY,
+	PACKED_VECTOR4_ARRAY,
+
+	VARIANT_MAX,
+};
+
+// WARNING: If this changes, the table in variant_op must be updated.
+enum VariantOperator {
+	// Comparison operators.
+	OP_EQUAL,
+	OP_NOT_EQUAL,
+	OP_LESS,
+	OP_LESS_EQUAL,
+	OP_GREATER,
+	OP_GREATER_EQUAL,
+
+	// Mathematic operators.
+	OP_ADD,
+	OP_SUBTRACT,
+	OP_MULTIPLY,
+	OP_DIVIDE,
+	OP_NEGATE,
+	OP_POSITIVE,
+	OP_MODULE,
+	OP_POWER,
+
+	// Bitwise operators.
+	OP_SHIFT_LEFT,
+	OP_SHIFT_RIGHT,
+	OP_BIT_AND,
+	OP_BIT_OR,
+	OP_BIT_XOR,
+	OP_BIT_NEGATE,
+
+	// Logical operators.
+	OP_AND,
+	OP_OR,
+	OP_XOR,
+	OP_NOT,
+
+	// Containment operators.
+	OP_IN,
+
+	OP_MAX,
+};
+
+} // namespace details
+} // namespace godot
+
+using VariantType = godot::details::VariantType;
+using VariantOperator = godot::details::VariantOperator;
+
+#endif // VARIANT_ENUMS_H

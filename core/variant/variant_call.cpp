@@ -274,12 +274,12 @@ static _FORCE_INLINE_ Variant::Type vc_get_argument_type_static(R (*method)(P...
 
 template <typename R, typename T, typename... P>
 static _FORCE_INLINE_ Variant::Type vc_get_return_type(R (T::*method)(P...)) {
-	return GetTypeInfo<R>::VARIANT_TYPE;
+	return variant_type_v<R>;
 }
 
 template <typename R, typename T, typename... P>
 static _FORCE_INLINE_ Variant::Type vc_get_return_type(R (T::*method)(P...) const) {
-	return GetTypeInfo<R>::VARIANT_TYPE;
+	return variant_type_v<R>;
 }
 
 template <typename T, typename... P>
@@ -294,7 +294,7 @@ static _FORCE_INLINE_ Variant::Type vc_get_return_type(void (T::*method)(P...) c
 
 template <typename R, typename... P>
 static _FORCE_INLINE_ Variant::Type vc_get_return_type(R (*method)(P...)) {
-	return GetTypeInfo<R>::VARIANT_TYPE;
+	return variant_type_v<R>;
 }
 
 template <typename... P>
@@ -352,21 +352,21 @@ static _FORCE_INLINE_ bool vc_is_const(void (T::*method)(P...) const) {
 
 template <typename R, typename T, typename... P>
 static _FORCE_INLINE_ Variant::Type vc_get_base_type(R (T::*method)(P...)) {
-	return GetTypeInfo<T>::VARIANT_TYPE;
+	return variant_type_v<T>;
 }
 template <typename R, typename T, typename... P>
 static _FORCE_INLINE_ Variant::Type vc_get_base_type(R (T::*method)(P...) const) {
-	return GetTypeInfo<T>::VARIANT_TYPE;
+	return variant_type_v<T>;
 }
 
 template <typename T, typename... P>
 static _FORCE_INLINE_ Variant::Type vc_get_base_type(void (T::*method)(P...)) {
-	return GetTypeInfo<T>::VARIANT_TYPE;
+	return variant_type_v<T>;
 }
 
 template <typename T, typename... P>
 static _FORCE_INLINE_ Variant::Type vc_get_base_type(void (T::*method)(P...) const) {
-	return GetTypeInfo<T>::VARIANT_TYPE;
+	return variant_type_v<T>;
 }
 
 #define METHOD_CLASS(m_class, m_method_name, m_method_ptr)                                                                                                        \
@@ -442,7 +442,7 @@ static _FORCE_INLINE_ Variant::Type vc_get_base_type(void (T::*method)(P...) con
 			return false;                                                                                                                                         \
 		}                                                                                                                                                         \
 		static Variant::Type get_base_type() {                                                                                                                    \
-			return GetTypeInfo<m_class>::VARIANT_TYPE;                                                                                                            \
+			return variant_type_v<m_class>;                                                                                                                       \
 		}                                                                                                                                                         \
 		static StringName get_name() {                                                                                                                            \
 			return #m_method_name;                                                                                                                                \
@@ -492,7 +492,7 @@ static _FORCE_INLINE_ void vc_static_ptrcall(void (*method)(P...), const void **
 			return false;                                                                                                                                         \
 		}                                                                                                                                                         \
 		static Variant::Type get_base_type() {                                                                                                                    \
-			return GetTypeInfo<m_class>::VARIANT_TYPE;                                                                                                            \
+			return variant_type_v<m_class>;                                                                                                                       \
 		}                                                                                                                                                         \
 		static StringName get_name() {                                                                                                                            \
 			return #m_method_name;                                                                                                                                \
@@ -542,7 +542,7 @@ static _FORCE_INLINE_ void vc_ptrcall(void (*method)(T *, P...), void *p_base, c
 			return false;                                                                                                                                         \
 		}                                                                                                                                                         \
 		static Variant::Type get_base_type() {                                                                                                                    \
-			return GetTypeInfo<m_class>::VARIANT_TYPE;                                                                                                            \
+			return variant_type_v<m_class>;                                                                                                                       \
 		}                                                                                                                                                         \
 		static StringName get_name() {                                                                                                                            \
 			return #m_method_name;                                                                                                                                \
@@ -583,7 +583,7 @@ static _FORCE_INLINE_ void vc_ptrcall(void (*method)(T *, P...), void *p_base, c
 			return Variant::NIL;                                                                                                                                  \
 		}                                                                                                                                                         \
 		static Variant::Type get_return_type() {                                                                                                                  \
-			return GetTypeInfo<m_return_type>::VARIANT_TYPE;                                                                                                      \
+			return variant_type_v<m_return_type>;                                                                                                                 \
 		}                                                                                                                                                         \
 		static bool has_return_type() {                                                                                                                           \
 			return m_has_return;                                                                                                                                  \
@@ -598,7 +598,7 @@ static _FORCE_INLINE_ void vc_ptrcall(void (*method)(T *, P...), void *p_base, c
 			return true;                                                                                                                                          \
 		}                                                                                                                                                         \
 		static Variant::Type get_base_type() {                                                                                                                    \
-			return GetTypeInfo<m_class>::VARIANT_TYPE;                                                                                                            \
+			return variant_type_v<m_class>;                                                                                                                       \
 		}                                                                                                                                                         \
 		static StringName get_name() {                                                                                                                            \
 			return #m_method_name;                                                                                                                                \
@@ -650,7 +650,7 @@ static _FORCE_INLINE_ void vc_ptrcall(void (*method)(T *, P...), void *p_base, c
 			return true;                                                                                                                                          \
 		}                                                                                                                                                         \
 		static Variant::Type get_base_type() {                                                                                                                    \
-			return GetTypeInfo<m_class>::VARIANT_TYPE;                                                                                                            \
+			return variant_type_v<m_class>;                                                                                                                       \
 		}                                                                                                                                                         \
 		static StringName get_name() {                                                                                                                            \
 			return #m_method_name;                                                                                                                                \

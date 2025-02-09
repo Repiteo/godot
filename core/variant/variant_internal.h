@@ -214,7 +214,7 @@ public:
 
 	template <typename T>
 	_FORCE_INLINE_ static void init_generic(Variant *v) {
-		v->type = GetTypeInfo<T>::VARIANT_TYPE;
+		v->type = variant_type_v<T>;
 	}
 
 	// Should be in the same order as Variant::Type for consistency.
@@ -1539,13 +1539,13 @@ struct VariantDefaultInitializer<PackedVector4Array> {
 template <typename T>
 struct VariantTypeChanger {
 	static _FORCE_INLINE_ void change(Variant *v) {
-		if (v->get_type() != GetTypeInfo<T>::VARIANT_TYPE || GetTypeInfo<T>::VARIANT_TYPE >= Variant::PACKED_BYTE_ARRAY) { //second condition removed by optimizer
+		if (v->get_type() != variant_type_v<T> || variant_type_v<T> >= Variant::PACKED_BYTE_ARRAY) { //second condition removed by optimizer
 			VariantInternal::clear(v);
 			VariantInitializer<T>::init(v);
 		}
 	}
 	static _FORCE_INLINE_ void change_and_reset(Variant *v) {
-		if (v->get_type() != GetTypeInfo<T>::VARIANT_TYPE || GetTypeInfo<T>::VARIANT_TYPE >= Variant::PACKED_BYTE_ARRAY) { //second condition removed by optimizer
+		if (v->get_type() != variant_type_v<T> || variant_type_v<T> >= Variant::PACKED_BYTE_ARRAY) { //second condition removed by optimizer
 			VariantInternal::clear(v);
 			VariantInitializer<T>::init(v);
 		}

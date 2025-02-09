@@ -263,7 +263,7 @@ struct VariantObjectClassChecker<const Ref<T> &> {
 template <typename T>
 struct VariantCasterAndValidate {
 	static _FORCE_INLINE_ T cast(const Variant **p_args, uint32_t p_arg_idx, Callable::CallError &r_error) {
-		Variant::Type argtype = GetTypeInfo<T>::VARIANT_TYPE;
+		Variant::Type argtype = variant_type_v<T>;
 		if (!Variant::can_convert_strict(p_args[p_arg_idx]->get_type(), argtype) ||
 				!VariantObjectClassChecker<T>::check(*p_args[p_arg_idx])) {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
@@ -278,7 +278,7 @@ struct VariantCasterAndValidate {
 template <typename T>
 struct VariantCasterAndValidate<T &> {
 	static _FORCE_INLINE_ T cast(const Variant **p_args, uint32_t p_arg_idx, Callable::CallError &r_error) {
-		Variant::Type argtype = GetTypeInfo<T>::VARIANT_TYPE;
+		Variant::Type argtype = variant_type_v<T>;
 		if (!Variant::can_convert_strict(p_args[p_arg_idx]->get_type(), argtype) ||
 				!VariantObjectClassChecker<T>::check(*p_args[p_arg_idx])) {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
@@ -293,7 +293,7 @@ struct VariantCasterAndValidate<T &> {
 template <typename T>
 struct VariantCasterAndValidate<const T &> {
 	static _FORCE_INLINE_ T cast(const Variant **p_args, uint32_t p_arg_idx, Callable::CallError &r_error) {
-		Variant::Type argtype = GetTypeInfo<T>::VARIANT_TYPE;
+		Variant::Type argtype = variant_type_v<T>;
 		if (!Variant::can_convert_strict(p_args[p_arg_idx]->get_type(), argtype) ||
 				!VariantObjectClassChecker<T>::check(*p_args[p_arg_idx])) {
 			r_error.error = Callable::CallError::CALL_ERROR_INVALID_ARGUMENT;
@@ -698,7 +698,7 @@ void call_with_validated_object_instance_args_static_retc(T *base, R (*p_method)
 template <typename Q>
 void call_get_argument_type_helper(int p_arg, int &index, Variant::Type &type) {
 	if (p_arg == index) {
-		type = GetTypeInfo<Q>::VARIANT_TYPE;
+		type = variant_type_v<Q>;
 	}
 	index++;
 }
@@ -737,7 +737,7 @@ void call_get_argument_type_info(int p_arg, PropertyInfo &info) {
 template <typename Q>
 void call_get_argument_metadata_helper(int p_arg, int &index, GodotTypeInfo::Metadata &md) {
 	if (p_arg == index) {
-		md = GetTypeInfo<Q>::METADATA;
+		md = metadata_v<Q>;
 	}
 	index++;
 }

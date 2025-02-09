@@ -63,7 +63,7 @@ static void register_member(Variant::Type p_type, const StringName &p_member) {
 }
 
 void register_named_setters_getters() {
-#define REGISTER_MEMBER(m_base_type, m_member) register_member<VariantSetGet_##m_base_type##_##m_member>(GetTypeInfo<m_base_type>::VARIANT_TYPE, #m_member)
+#define REGISTER_MEMBER(m_base_type, m_member) register_member<VariantSetGet_##m_base_type##_##m_member>(variant_type_v<m_base_type>, #m_member)
 
 	REGISTER_MEMBER(Vector2, x);
 	REGISTER_MEMBER(Vector2, y);
@@ -352,7 +352,7 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 			PtrToArg<m_elem_type>::encode(v[index], member);                                                                         \
 		}                                                                                                                            \
 		static void set(Variant *base, int64_t index, const Variant *value, bool *valid, bool *oob) {                                \
-			if (value->get_type() != GetTypeInfo<m_elem_type>::VARIANT_TYPE) {                                                       \
+			if (value->get_type() != variant_type_v<m_elem_type>) {                                                                  \
 				*oob = false;                                                                                                        \
 				*valid = false;                                                                                                      \
 				return;                                                                                                              \
@@ -391,7 +391,7 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 			v.write[index] = PtrToArg<m_elem_type>::convert(member);                                                                 \
 		}                                                                                                                            \
 		static Variant::Type get_index_type() {                                                                                      \
-			return GetTypeInfo<m_elem_type>::VARIANT_TYPE;                                                                           \
+			return variant_type_v<m_elem_type>;                                                                                      \
 		}                                                                                                                            \
 		static uint32_t get_index_usage() {                                                                                          \
 			return GetTypeInfo<m_elem_type>::get_class_info().usage;                                                                 \
@@ -469,7 +469,7 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 			v.write[index] = PtrToArg<m_elem_type>::convert(member);                                                                 \
 		}                                                                                                                            \
 		static Variant::Type get_index_type() {                                                                                      \
-			return GetTypeInfo<m_elem_type>::VARIANT_TYPE;                                                                           \
+			return variant_type_v<m_elem_type>;                                                                                      \
 		}                                                                                                                            \
 		static uint32_t get_index_usage() {                                                                                          \
 			return GetTypeInfo<m_elem_type>::get_class_info().usage;                                                                 \
@@ -531,7 +531,7 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 			v[index] = PtrToArg<m_elem_type>::convert(member);                                                                 \
 		}                                                                                                                      \
 		static Variant::Type get_index_type() {                                                                                \
-			return GetTypeInfo<m_elem_type>::VARIANT_TYPE;                                                                     \
+			return variant_type_v<m_elem_type>;                                                                                \
 		}                                                                                                                      \
 		static uint32_t get_index_usage() {                                                                                    \
 			return GetTypeInfo<m_elem_type>::get_class_info().usage;                                                           \
@@ -559,7 +559,7 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 			PtrToArg<m_elem_type>::encode(v m_accessor[index], member);                                                                   \
 		}                                                                                                                                 \
 		static void set(Variant *base, int64_t index, const Variant *value, bool *valid, bool *oob) {                                     \
-			if (value->get_type() != GetTypeInfo<m_elem_type>::VARIANT_TYPE) {                                                            \
+			if (value->get_type() != variant_type_v<m_elem_type>) {                                                                       \
 				*oob = false;                                                                                                             \
 				*valid = false;                                                                                                           \
 			}                                                                                                                             \
@@ -587,7 +587,7 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 			v m_accessor[index] = PtrToArg<m_elem_type>::convert(member);                                                                 \
 		}                                                                                                                                 \
 		static Variant::Type get_index_type() {                                                                                           \
-			return GetTypeInfo<m_elem_type>::VARIANT_TYPE;                                                                                \
+			return variant_type_v<m_elem_type>;                                                                                           \
 		}                                                                                                                                 \
 		static uint32_t get_index_usage() {                                                                                               \
 			return GetTypeInfo<m_elem_type>::get_class_info().usage;                                                                      \
@@ -615,7 +615,7 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 			PtrToArg<m_elem_type>::encode(v.m_get(index), member);                                                                 \
 		}                                                                                                                          \
 		static void set(Variant *base, int64_t index, const Variant *value, bool *valid, bool *oob) {                              \
-			if (value->get_type() != GetTypeInfo<m_elem_type>::VARIANT_TYPE) {                                                     \
+			if (value->get_type() != variant_type_v<m_elem_type>) {                                                                \
 				*oob = false;                                                                                                      \
 				*valid = false;                                                                                                    \
 			}                                                                                                                      \
@@ -643,7 +643,7 @@ Variant Variant::get_named(const StringName &p_member, bool &r_valid) const {
 			v.m_set(index, PtrToArg<m_elem_type>::convert(member));                                                                \
 		}                                                                                                                          \
 		static Variant::Type get_index_type() {                                                                                    \
-			return GetTypeInfo<m_elem_type>::VARIANT_TYPE;                                                                         \
+			return variant_type_v<m_elem_type>;                                                                                    \
 		}                                                                                                                          \
 		static uint32_t get_index_usage() {                                                                                        \
 			return GetTypeInfo<m_elem_type>::get_class_info().usage;                                                               \
@@ -908,7 +908,7 @@ static void register_indexed_member(Variant::Type p_type) {
 }
 
 void register_indexed_setters_getters() {
-#define REGISTER_INDEXED_MEMBER(m_base_type) register_indexed_member<VariantIndexedSetGet_##m_base_type>(GetTypeInfo<m_base_type>::VARIANT_TYPE)
+#define REGISTER_INDEXED_MEMBER(m_base_type) register_indexed_member<VariantIndexedSetGet_##m_base_type>(variant_type_v<m_base_type>)
 
 	REGISTER_INDEXED_MEMBER(String);
 	REGISTER_INDEXED_MEMBER(Vector2);

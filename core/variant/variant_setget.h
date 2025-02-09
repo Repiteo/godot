@@ -52,7 +52,7 @@
 			PtrToArg<m_member_type>::encode(PtrToArg<m_base_type>::convert(base).m_member, member);                                  \
 		}                                                                                                                            \
 		static void set(Variant *base, const Variant *value, bool &valid) {                                                          \
-			if (value->get_type() == GetTypeInfo<m_member_type>::VARIANT_TYPE) {                                                     \
+			if (value->get_type() == variant_type_v<m_member_type>) {                                                                \
 				VariantGetInternalPtr<m_base_type>::get_ptr(base)->m_member = *VariantGetInternalPtr<m_member_type>::get_ptr(value); \
 				valid = true;                                                                                                        \
 			} else {                                                                                                                 \
@@ -68,7 +68,7 @@
 			PtrToArg<m_base_type>::encode(b, base);                                                                                  \
 		}                                                                                                                            \
 		static Variant::Type get_type() {                                                                                            \
-			return GetTypeInfo<m_member_type>::VARIANT_TYPE;                                                                         \
+			return variant_type_v<m_member_type>;                                                                                    \
 		}                                                                                                                            \
 	};
 
@@ -104,7 +104,7 @@
 			PtrToArg<m_base_type>::encode(b, base);                                                                               \
 		}                                                                                                                         \
 		static Variant::Type get_type() {                                                                                         \
-			return GetTypeInfo<m_member_type>::VARIANT_TYPE;                                                                      \
+			return variant_type_v<m_member_type>;                                                                                 \
 		}                                                                                                                         \
 	};
 
@@ -121,7 +121,7 @@
 			PtrToArg<m_member_type>::encode(PtrToArg<m_base_type>::convert(base).m_custom, member);                                  \
 		}                                                                                                                            \
 		static void set(Variant *base, const Variant *value, bool &valid) {                                                          \
-			if (value->get_type() == GetTypeInfo<m_member_type>::VARIANT_TYPE) {                                                     \
+			if (value->get_type() == variant_type_v<m_member_type>) {                                                                \
 				VariantGetInternalPtr<m_base_type>::get_ptr(base)->m_custom = *VariantGetInternalPtr<m_member_type>::get_ptr(value); \
 				valid = true;                                                                                                        \
 			} else {                                                                                                                 \
@@ -137,7 +137,7 @@
 			PtrToArg<m_base_type>::encode(b, base);                                                                                  \
 		}                                                                                                                            \
 		static Variant::Type get_type() {                                                                                            \
-			return GetTypeInfo<m_member_type>::VARIANT_TYPE;                                                                         \
+			return variant_type_v<m_member_type>;                                                                                    \
 		}                                                                                                                            \
 	};
 
@@ -173,7 +173,7 @@
 			PtrToArg<m_base_type>::encode(b, base);                                                                               \
 		}                                                                                                                         \
 		static Variant::Type get_type() {                                                                                         \
-			return GetTypeInfo<m_member_type>::VARIANT_TYPE;                                                                      \
+			return variant_type_v<m_member_type>;                                                                                 \
 		}                                                                                                                         \
 	};
 
@@ -190,7 +190,7 @@
 			PtrToArg<m_member_type>::encode(PtrToArg<m_base_type>::convert(base).m_getter(), member);                               \
 		}                                                                                                                           \
 		static void set(Variant *base, const Variant *value, bool &valid) {                                                         \
-			if (value->get_type() == GetTypeInfo<m_member_type>::VARIANT_TYPE) {                                                    \
+			if (value->get_type() == variant_type_v<m_member_type>) {                                                               \
 				VariantGetInternalPtr<m_base_type>::get_ptr(base)->m_setter(*VariantGetInternalPtr<m_member_type>::get_ptr(value)); \
 				valid = true;                                                                                                       \
 			} else {                                                                                                                \
@@ -206,7 +206,7 @@
 			PtrToArg<m_base_type>::encode(b, base);                                                                                 \
 		}                                                                                                                           \
 		static Variant::Type get_type() {                                                                                           \
-			return GetTypeInfo<m_member_type>::VARIANT_TYPE;                                                                        \
+			return variant_type_v<m_member_type>;                                                                                   \
 		}                                                                                                                           \
 	};
 
@@ -242,7 +242,7 @@
 			PtrToArg<m_base_type>::encode(b, base);                                                                                 \
 		}                                                                                                                           \
 		static Variant::Type get_type() {                                                                                           \
-			return GetTypeInfo<m_member_type>::VARIANT_TYPE;                                                                        \
+			return variant_type_v<m_member_type>;                                                                                   \
 		}                                                                                                                           \
 	};
 
@@ -259,7 +259,7 @@
 			PtrToArg<m_member_type>::encode(PtrToArg<m_base_type>::convert(base).m_getter(m_index), member);                                 \
 		}                                                                                                                                    \
 		static void set(Variant *base, const Variant *value, bool &valid) {                                                                  \
-			if (value->get_type() == GetTypeInfo<m_member_type>::VARIANT_TYPE) {                                                             \
+			if (value->get_type() == variant_type_v<m_member_type>) {                                                                        \
 				VariantGetInternalPtr<m_base_type>::get_ptr(base)->m_setter(m_index, *VariantGetInternalPtr<m_member_type>::get_ptr(value)); \
 				valid = true;                                                                                                                \
 			} else {                                                                                                                         \
@@ -275,7 +275,7 @@
 			PtrToArg<m_base_type>::encode(b, base);                                                                                          \
 		}                                                                                                                                    \
 		static Variant::Type get_type() {                                                                                                    \
-			return GetTypeInfo<m_member_type>::VARIANT_TYPE;                                                                                 \
+			return variant_type_v<m_member_type>;                                                                                            \
 		}                                                                                                                                    \
 	};
 

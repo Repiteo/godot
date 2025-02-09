@@ -488,7 +488,7 @@ protected:
 		if (p_arg >= 0 && p_arg < (int)sizeof...(P)) {
 			return call_get_argument_type<P...>(p_arg);
 		} else {
-			return GetTypeInfo<R>::VARIANT_TYPE;
+			return variant_type_v<R>;
 		}
 	}
 
@@ -508,7 +508,7 @@ public:
 		if (p_arg >= 0) {
 			return call_get_argument_metadata<P...>(p_arg);
 		} else {
-			return GetTypeInfo<R>::METADATA;
+			return metadata_v<R>;
 		}
 	}
 #endif
@@ -584,7 +584,7 @@ protected:
 		if (p_arg >= 0 && p_arg < (int)sizeof...(P)) {
 			return call_get_argument_type<P...>(p_arg);
 		} else {
-			return GetTypeInfo<R>::VARIANT_TYPE;
+			return variant_type_v<R>;
 		}
 	}
 
@@ -604,7 +604,7 @@ public:
 		if (p_arg >= 0) {
 			return call_get_argument_metadata<P...>(p_arg);
 		} else {
-			return GetTypeInfo<R>::METADATA;
+			return metadata_v<R>;
 		}
 	}
 #endif
@@ -736,7 +736,7 @@ protected:
 		if (p_arg >= 0 && p_arg < (int)sizeof...(P)) {
 			return call_get_argument_type<P...>(p_arg);
 		} else {
-			return GetTypeInfo<R>::VARIANT_TYPE;
+			return variant_type_v<R>;
 		}
 	}
 
@@ -756,7 +756,7 @@ public:
 		if (p_arg >= 0) {
 			return call_get_argument_metadata<P...>(p_arg);
 		} else {
-			return GetTypeInfo<R>::METADATA;
+			return metadata_v<R>;
 		}
 	}
 

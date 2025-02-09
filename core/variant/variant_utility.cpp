@@ -1289,7 +1289,7 @@ static _FORCE_INLINE_ Variant::Type get_arg_type_helperr(R (*p_func)(P...), int 
 
 template <typename R, typename... P>
 static _FORCE_INLINE_ Variant::Type get_ret_type_helperr(R (*p_func)(P...)) {
-	return GetTypeInfo<R>::VARIANT_TYPE;
+	return variant_type_v<R>;
 }
 
 // WITHOUT RET
