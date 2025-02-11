@@ -1278,7 +1278,7 @@ void gdextension_array_set_typed(GDExtensionTypePtr p_self, GDExtensionVariantTy
 	Array *self = reinterpret_cast<Array *>(p_self);
 	const StringName *class_name = reinterpret_cast<const StringName *>(p_class_name);
 	const Variant *script = reinterpret_cast<const Variant *>(p_script);
-	self->set_typed((uint32_t)p_type, *class_name, *script);
+	self->set_typed((VariantType)p_type, *class_name, *script);
 }
 
 /* Dictionary functions */
@@ -1299,7 +1299,7 @@ void gdextension_dictionary_set_typed(GDExtensionTypePtr p_self, GDExtensionVari
 	const Variant *key_script = reinterpret_cast<const Variant *>(p_key_script);
 	const StringName *value_class_name = reinterpret_cast<const StringName *>(p_value_class_name);
 	const Variant *value_script = reinterpret_cast<const Variant *>(p_value_script);
-	self->set_typed((uint32_t)p_key_type, *key_class_name, *key_script, (uint32_t)p_value_type, *value_class_name, *value_script);
+	self->set_typed((VariantType)p_key_type, *key_class_name, *key_script, (VariantType)p_value_type, *value_class_name, *value_script);
 }
 
 /* OBJECT API */

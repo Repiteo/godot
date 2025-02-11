@@ -438,28 +438,28 @@ public:
 		}
 
 		const Dictionary &base_dict = *VariantGetInternalPtr<Dictionary>::get_ptr(p_args[0]);
-		const uint32_t key_type = p_args[1]->operator uint32_t();
+		const VariantType key_type = VariantType(p_args[1]->operator uint32_t());
 		const StringName &key_class_name = *VariantGetInternalPtr<StringName>::get_ptr(p_args[2]);
-		const uint32_t value_type = p_args[4]->operator uint32_t();
+		const VariantType value_type = VariantType(p_args[4]->operator uint32_t());
 		const StringName &value_class_name = *VariantGetInternalPtr<StringName>::get_ptr(p_args[5]);
 		r_ret = Dictionary(base_dict, key_type, key_class_name, *p_args[3], value_type, value_class_name, *p_args[6]);
 	}
 
 	static inline void validated_construct(Variant *r_ret, const Variant **p_args) {
 		const Dictionary &base_dict = *VariantGetInternalPtr<Dictionary>::get_ptr(p_args[0]);
-		const uint32_t key_type = p_args[1]->operator uint32_t();
+		const VariantType key_type = VariantType(p_args[1]->operator uint32_t());
 		const StringName &key_class_name = *VariantGetInternalPtr<StringName>::get_ptr(p_args[2]);
-		const uint32_t value_type = p_args[4]->operator uint32_t();
+		const VariantType value_type = VariantType(p_args[4]->operator uint32_t());
 		const StringName &value_class_name = *VariantGetInternalPtr<StringName>::get_ptr(p_args[5]);
 		*r_ret = Dictionary(base_dict, key_type, key_class_name, *p_args[3], value_type, value_class_name, *p_args[6]);
 	}
 
 	static void ptr_construct(void *base, const void **p_args) {
 		const Dictionary &base_dict = PtrToArg<Dictionary>::convert(p_args[0]);
-		const uint32_t key_type = PtrToArg<uint32_t>::convert(p_args[1]);
+		const VariantType key_type = PtrToArg<VariantType>::convert(p_args[1]);
 		const StringName &key_class_name = PtrToArg<StringName>::convert(p_args[2]);
 		const Variant &key_script = PtrToArg<Variant>::convert(p_args[3]);
-		const uint32_t value_type = PtrToArg<uint32_t>::convert(p_args[4]);
+		const VariantType value_type = PtrToArg<VariantType>::convert(p_args[4]);
 		const StringName &value_class_name = PtrToArg<StringName>::convert(p_args[5]);
 		const Variant &value_script = PtrToArg<Variant>::convert(p_args[6]);
 		Dictionary dst_arr = Dictionary(base_dict, key_type, key_class_name, key_script, value_type, value_class_name, value_script);
@@ -530,20 +530,20 @@ public:
 		}
 
 		const Array &base_arr = *VariantGetInternalPtr<Array>::get_ptr(p_args[0]);
-		const uint32_t type = p_args[1]->operator uint32_t();
+		const VariantType type = VariantType(p_args[1]->operator uint32_t());
 		r_ret = Array(base_arr, type, *p_args[2], *p_args[3]);
 	}
 
 	static inline void validated_construct(Variant *r_ret, const Variant **p_args) {
 		const Array &base_arr = *VariantGetInternalPtr<Array>::get_ptr(p_args[0]);
-		const uint32_t type = p_args[1]->operator uint32_t();
+		const VariantType type = VariantType(p_args[1]->operator uint32_t());
 		const StringName &class_name = *VariantGetInternalPtr<StringName>::get_ptr(p_args[2]);
 		*r_ret = Array(base_arr, type, class_name, *p_args[3]);
 	}
 
 	static void ptr_construct(void *base, const void **p_args) {
 		const Array &base_arr = PtrToArg<Array>::convert(p_args[0]);
-		const uint32_t type = PtrToArg<uint32_t>::convert(p_args[1]);
+		const VariantType type = PtrToArg<VariantType>::convert(p_args[1]);
 		const StringName &class_name = PtrToArg<StringName>::convert(p_args[2]);
 		const Variant &script = PtrToArg<Variant>::convert(p_args[3]);
 		Array dst_arr = Array(base_arr, type, class_name, script);

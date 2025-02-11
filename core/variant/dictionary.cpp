@@ -599,7 +599,7 @@ void Dictionary::set_typed(const ContainerType &p_key_type, const ContainerType 
 	set_typed(p_key_type.builtin_type, p_key_type.class_name, p_key_type.script, p_value_type.builtin_type, p_value_type.class_name, p_key_type.script);
 }
 
-void Dictionary::set_typed(uint32_t p_key_type, const StringName &p_key_class_name, const Variant &p_key_script, uint32_t p_value_type, const StringName &p_value_class_name, const Variant &p_value_script) {
+void Dictionary::set_typed(VariantType p_key_type, const StringName &p_key_class_name, const Variant &p_key_script, VariantType p_value_type, const StringName &p_value_class_name, const Variant &p_value_script) {
 	ERR_FAIL_COND_MSG(_p->read_only, "Dictionary is in read-only state.");
 	ERR_FAIL_COND_MSG(_p->variant_map.size() > 0, "Type can only be set when dictionary is empty.");
 	ERR_FAIL_COND_MSG(_p->refcount.get() > 1, "Type can only be set when dictionary has no more than one user.");
@@ -610,12 +610,12 @@ void Dictionary::set_typed(uint32_t p_key_type, const StringName &p_key_class_na
 	Ref<Script> value_script = p_value_script;
 	ERR_FAIL_COND_MSG(value_script.is_valid() && p_value_class_name == StringName(), "Script class can only be set together with base class name.");
 
-	_p->typed_key.type = Variant::Type(p_key_type);
+	_p->typed_key.type = p_key_type;
 	_p->typed_key.class_name = p_key_class_name;
 	_p->typed_key.script = key_script;
 	_p->typed_key.where = "TypedDictionary.Key";
 
-	_p->typed_value.type = Variant::Type(p_value_type);
+	_p->typed_value.type = p_value_type;
 	_p->typed_value.class_name = p_value_class_name;
 	_p->typed_value.script = value_script;
 	_p->typed_value.where = "TypedDictionary.Value";
@@ -661,11 +661,11 @@ ContainerType Dictionary::get_value_type() const {
 	return type;
 }
 
-uint32_t Dictionary::get_typed_key_builtin() const {
+VariantType Dictionary::get_typed_key_builtin() const {
 	return _p->typed_key.type;
 }
 
-uint32_t Dictionary::get_typed_value_builtin() const {
+VariantType Dictionary::get_typed_value_builtin() const {
 	return _p->typed_value.type;
 }
 
@@ -696,7 +696,7 @@ const void *Dictionary::id() const {
 	return _p;
 }
 
-Dictionary::Dictionary(const Dictionary &p_base, uint32_t p_key_type, const StringName &p_key_class_name, const Variant &p_key_script, uint32_t p_value_type, const StringName &p_value_class_name, const Variant &p_value_script) {
+Dictionary::Dictionary(const Dictionary &p_base, VariantType p_key_type, const StringName &p_key_class_name, const Variant &p_key_script, VariantType p_value_type, const StringName &p_value_class_name, const Variant &p_value_script) {
 	_p = memnew(DictionaryPrivate);
 	_p->refcount.init();
 	set_typed(p_key_type, p_key_class_name, p_key_script, p_value_type, p_value_class_name, p_value_script);

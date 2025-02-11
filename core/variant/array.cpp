@@ -834,7 +834,7 @@ const void *Array::id() const {
 	return _p;
 }
 
-Array::Array(const Array &p_from, uint32_t p_type, const StringName &p_class_name, const Variant &p_script) {
+Array::Array(const Array &p_from, VariantType p_type, const StringName &p_class_name, const Variant &p_script) {
 	_p = memnew(ArrayPrivate);
 	_p->refcount.init();
 	set_typed(p_type, p_class_name, p_script);
@@ -845,7 +845,7 @@ void Array::set_typed(const ContainerType &p_element_type) {
 	set_typed(p_element_type.builtin_type, p_element_type.class_name, p_element_type.script);
 }
 
-void Array::set_typed(uint32_t p_type, const StringName &p_class_name, const Variant &p_script) {
+void Array::set_typed(VariantType p_type, const StringName &p_class_name, const Variant &p_script) {
 	ERR_FAIL_COND_MSG(_p->read_only, "Array is in read-only state.");
 	ERR_FAIL_COND_MSG(_p->array.size() > 0, "Type can only be set when array is empty.");
 	ERR_FAIL_COND_MSG(_p->refcount.get() > 1, "Type can only be set when array has no more than one user.");
@@ -854,7 +854,7 @@ void Array::set_typed(uint32_t p_type, const StringName &p_class_name, const Var
 	Ref<Script> script = p_script;
 	ERR_FAIL_COND_MSG(script.is_valid() && p_class_name == StringName(), "Script class can only be set together with base class name");
 
-	_p->typed.type = Variant::Type(p_type);
+	_p->typed.type = p_type;
 	_p->typed.class_name = p_class_name;
 	_p->typed.script = script;
 	_p->typed.where = "TypedArray";
@@ -880,7 +880,7 @@ ContainerType Array::get_element_type() const {
 	return type;
 }
 
-uint32_t Array::get_typed_builtin() const {
+VariantType Array::get_typed_builtin() const {
 	return _p->typed.type;
 }
 
