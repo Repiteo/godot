@@ -19,7 +19,7 @@ jobs:
 
       - name: Install Python dependencies and general setup
         run: |
-          pip3 install pytest==7.1.2
+          pip3 install pytest==7.1.2 scons==4.8.1
           git config diff.wsErrorHighlight all
 
       - name: Get changed files
@@ -57,3 +57,14 @@ jobs:
       - name: Run C compiler on `gdextension_interface.h`
         run: |
           gcc -c core/extension/gdextension_interface.h
+
+      - name: SCons dry-run
+        if: github.event_name == 'pull_request'
+        run: |
+          scons -n dev_mode=yes dev_build=yes compiledb=yes
+
+      - name: Clang Tidy review
+        if: github.event_name == 'pull_request'
+        uses: ZedThree/clang-tidy-review@v0.20.1
+        with:
+          exclude: "thirdparty/*,*-so_wrap.[ch],*.gen.*"
