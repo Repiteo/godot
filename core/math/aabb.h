@@ -129,11 +129,9 @@ struct [[nodiscard]] AABB {
 
 	operator String() const;
 
-	_FORCE_INLINE_ AABB() {}
-	inline AABB(const Vector3 &p_pos, const Vector3 &p_size) :
-			position(p_pos),
-			size(p_size) {
-	}
+	AABB() = default;
+	constexpr AABB(const Vector3 &p_pos, const Vector3 &p_size) :
+			position(p_pos), size(p_size) {}
 };
 
 inline bool AABB::intersects(const AABB &p_aabb) const {
@@ -496,5 +494,4 @@ AABB AABB::quantized(real_t p_unit) const {
 	return ret;
 }
 
-template <>
-struct is_zero_constructible<AABB> : std::true_type {};
+static_assert(std::is_trivially_constructible_v<AABB>);

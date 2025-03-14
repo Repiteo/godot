@@ -662,7 +662,7 @@ Rect2 TextParagraph::get_line_object_rect(int p_line, Variant p_key) const {
 	_shape_lines();
 	ERR_FAIL_COND_V(p_line < 0 || p_line >= (int)lines_rid.size(), Rect2());
 
-	Vector2 ofs;
+	Vector2 ofs = Vector2();
 
 	float h_offset = 0.f;
 	if (TS->shaped_text_get_orientation(dropcap_rid) == TextServer::ORIENTATION_HORIZONTAL) {
@@ -1022,7 +1022,7 @@ int TextParagraph::hit_test(const Point2 &p_coords) const {
 	_THREAD_SAFE_METHOD_
 
 	_shape_lines();
-	Vector2 ofs;
+	Vector2 ofs = Vector2();
 	if (TS->shaped_text_get_orientation(rid) == TextServer::ORIENTATION_HORIZONTAL) {
 		if (ofs.y < 0) {
 			return 0;

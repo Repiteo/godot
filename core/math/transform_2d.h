@@ -52,7 +52,11 @@ struct [[nodiscard]] Transform2D {
 	// WARNING: Be aware that unlike 3D code, 2D code uses a left-handed coordinate system:
 	// Y-axis points down, and angle is measure from +X to +Y in a clockwise-fashion.
 
-	Vector2 columns[3];
+	Vector2 columns[3] = {
+		{ 1, 0 },
+		{ 0, 1 },
+		{ 0, 0 },
+	};
 
 	_FORCE_INLINE_ real_t tdotx(const Vector2 &p_v) const { return columns[0][0] * p_v.x + columns[1][0] * p_v.y; }
 	_FORCE_INLINE_ real_t tdoty(const Vector2 &p_v) const { return columns[0][1] * p_v.x + columns[1][1] * p_v.y; }
@@ -147,10 +151,7 @@ struct [[nodiscard]] Transform2D {
 
 	Transform2D(real_t p_rot, const Size2 &p_scale, real_t p_skew, const Vector2 &p_pos);
 
-	Transform2D() {
-		columns[0][0] = 1.0;
-		columns[1][1] = 1.0;
-	}
+	Transform2D() = default;
 };
 
 Vector2 Transform2D::basis_xform(const Vector2 &p_vec) const {

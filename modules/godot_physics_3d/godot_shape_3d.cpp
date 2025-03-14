@@ -429,14 +429,14 @@ bool GodotBoxShape3D::intersect_point(const Vector3 &p_point) const {
 
 Vector3 GodotBoxShape3D::get_closest_point_to(const Vector3 &p_point) const {
 	int outside = 0;
-	Vector3 min_point;
+	Vector3 min_point = Vector3();
 
 	for (int i = 0; i < 3; i++) {
 		if (Math::abs(p_point[i]) > half_extents[i]) {
 			outside++;
 			if (outside == 1) {
 				//use plane if only one side matches
-				Vector3 n;
+				Vector3 n = Vector3();
 				n[i] = SIGN(p_point[i]);
 
 				Plane p(n, half_extents[i]);
@@ -555,10 +555,10 @@ bool GodotCapsuleShape3D::intersect_segment(const Vector3 &p_begin, const Vector
 	Vector3 norm = (p_end - p_begin).normalized();
 	real_t min_d = 1e20;
 
-	Vector3 res, n;
+	Vector3 res = Vector3(), n = Vector3();
 	bool collision = false;
 
-	Vector3 auxres, auxn;
+	Vector3 auxres = Vector3(), auxn = Vector3();
 	bool collided;
 
 	// test against cylinder and spheres :-|
@@ -1062,7 +1062,7 @@ Vector3 GodotConvexPolygonShape3D::get_closest_point_to(const Vector3 &p_point) 
 	}
 
 	real_t min_distance = 1e20;
-	Vector3 min_point;
+	Vector3 min_point = Vector3();
 
 	//check edges
 	const Geometry3D::MeshData::Edge *edges = mesh.edges.ptr();
@@ -1550,7 +1550,7 @@ _Volume_BVH *_volume_build_bvh(_Volume_BVH_Element *p_elements, int p_size, int 
 		bvh->face_index = -1;
 	}
 
-	AABB aabb;
+	AABB aabb = AABB();
 	for (int i = 0; i < p_size; i++) {
 		if (i == 0) {
 			aabb = p_elements[i].aabb;

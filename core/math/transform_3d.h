@@ -37,7 +37,7 @@
 
 struct [[nodiscard]] Transform3D {
 	Basis basis;
-	Vector3 origin;
+	Vector3 origin = Vector3();
 
 	void invert();
 	Transform3D inverse() const;
@@ -124,7 +124,7 @@ struct [[nodiscard]] Transform3D {
 
 	operator String() const;
 
-	Transform3D() {}
+	Transform3D() = default;
 	Transform3D(const Basis &p_basis, const Vector3 &p_origin = Vector3());
 	Transform3D(const Vector3 &p_x, const Vector3 &p_y, const Vector3 &p_z, const Vector3 &p_origin);
 	Transform3D(real_t p_xx, real_t p_xy, real_t p_xz, real_t p_yx, real_t p_yy, real_t p_yz, real_t p_zx, real_t p_zy, real_t p_zz, real_t p_ox, real_t p_oy, real_t p_oz);

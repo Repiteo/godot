@@ -60,11 +60,11 @@ void VelocityTracker3D::update_position(const Vector3 &p_position) {
 }
 
 Vector3 VelocityTracker3D::get_tracked_linear_velocity() const {
-	Vector3 linear_velocity;
+	Vector3 linear_velocity = Vector3();
 
 	double max_time = 1 / 5.0; //maximum time to interpolate a velocity
 
-	Vector3 distance_accum;
+	Vector3 distance_accum = Vector3();
 	double time_accum = 0.0;
 	double base_time = 0.0;
 

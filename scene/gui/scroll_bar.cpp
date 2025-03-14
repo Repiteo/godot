@@ -254,7 +254,7 @@ void ScrollBar::_notification(int p_what) {
 				grabber = theme_cache.grabber_style;
 			}
 
-			Point2 ofs;
+			Point2 ofs = Point2();
 
 			decr->draw(ci, Point2());
 

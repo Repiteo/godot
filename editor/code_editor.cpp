@@ -232,11 +232,8 @@ void FindReplaceBar::_replace() {
 	text_editor->begin_complex_operation();
 	text_editor->remove_secondary_carets();
 	bool selection_enabled = text_editor->has_selection(0);
-	Point2i selection_begin, selection_end;
-	if (selection_enabled) {
-		selection_begin = Point2i(text_editor->get_selection_from_line(0), text_editor->get_selection_from_column(0));
-		selection_end = Point2i(text_editor->get_selection_to_line(0), text_editor->get_selection_to_column(0));
-	}
+	Point2i selection_begin = selection_enabled ? Point2i(text_editor->get_selection_from_line(0), text_editor->get_selection_from_column(0)) : Point2i();
+	Point2i selection_end = selection_enabled ? Point2i(text_editor->get_selection_to_line(0), text_editor->get_selection_to_column(0)) : Point2i();
 
 	String repl_text = get_replace_text();
 	int search_text_len = get_search_text().length();
@@ -295,11 +292,8 @@ void FindReplaceBar::_replace_all() {
 		result_col = -1;
 	}
 
-	Point2i selection_begin, selection_end;
-	if (selection_enabled) {
-		selection_begin = Point2i(text_editor->get_selection_from_line(0), text_editor->get_selection_from_column(0));
-		selection_end = Point2i(text_editor->get_selection_to_line(0), text_editor->get_selection_to_column(0));
-	}
+	Point2i selection_begin = selection_enabled ? Point2i(text_editor->get_selection_from_line(0), text_editor->get_selection_from_column(0)) : Point2i();
+	Point2i selection_end = selection_enabled ? Point2i(text_editor->get_selection_to_line(0), text_editor->get_selection_to_column(0)) : Point2i();
 
 	int vsval = text_editor->get_v_scroll();
 

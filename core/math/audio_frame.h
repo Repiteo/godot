@@ -62,7 +62,7 @@ struct AudioFrame {
 			float r;
 		};
 #endif
-		float levels[2] = { 0.0 };
+		float levels[2];
 	};
 
 	_ALWAYS_INLINE_ const float &operator[](int p_idx) const {
@@ -132,10 +132,10 @@ struct AudioFrame {
 		return res;
 	}
 
-	_ALWAYS_INLINE_ AudioFrame(float p_left, float p_right) {
-		left = p_left;
-		right = p_right;
-	}
+	AudioFrame() = default;
+	constexpr AudioFrame(float p_left, float p_right) :
+			left(p_left), right(p_right) {}
+
 	_ALWAYS_INLINE_ AudioFrame(const AudioFrame &p_frame) {
 		left = p_frame.left;
 		right = p_frame.right;
@@ -154,7 +154,6 @@ struct AudioFrame {
 		left = p_v2.x;
 		right = p_v2.y;
 	}
-	_ALWAYS_INLINE_ AudioFrame() {}
 };
 
 _ALWAYS_INLINE_ AudioFrame operator*(float p_scalar, const AudioFrame &p_frame) {
@@ -169,5 +168,4 @@ _ALWAYS_INLINE_ AudioFrame operator*(int64_t p_scalar, const AudioFrame &p_frame
 	return AudioFrame(p_frame.left * p_scalar, p_frame.right * p_scalar);
 }
 
-template <>
-struct is_zero_constructible<AudioFrame> : std::true_type {};
+static_assert(std::is_trivially_constructible_v<AudioFrame>);

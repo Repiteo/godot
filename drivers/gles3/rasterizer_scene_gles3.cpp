@@ -2036,7 +2036,7 @@ void RasterizerSceneGLES3::_render_shadow_pass(RID p_light, RID p_shadow_atlas, 
 	Projection light_projection;
 	Transform3D light_transform;
 	GLuint shadow_fb = 0;
-	Rect2i atlas_rect;
+	Rect2i atlas_rect = Rect2i();
 
 	if (light_storage->light_get_type(base) == RS::LIGHT_DIRECTIONAL) {
 		// Set pssm stuff.

@@ -98,7 +98,7 @@ void CodeEdit::_notification(int p_what) {
 				const bool draw_code_hint = !code_hint.is_empty();
 
 				/* Code hint */
-				Size2 code_hint_minsize;
+				Size2 code_hint_minsize = Size2();
 				if (draw_code_hint) {
 					const int font_height = theme_cache.font->get_height(theme_cache.font_size);
 

@@ -49,14 +49,14 @@ void AtlasMergingDialog::_generate_merged(const Vector<Ref<TileSetAtlasSource>> 
 		Ref<Image> output_image = Image::create_empty(1, 1, false, Image::FORMAT_RGBA8);
 
 		// Compute the new texture region size.
-		Vector2i new_texture_region_size;
+		Vector2i new_texture_region_size = Vector2i();
 		for (int source_index = 0; source_index < p_atlas_sources.size(); source_index++) {
 			const Ref<TileSetAtlasSource> &atlas_source = p_atlas_sources[source_index];
 			new_texture_region_size = new_texture_region_size.max(atlas_source->get_texture_region_size());
 		}
 
 		// Generate the new texture.
-		Vector2i atlas_offset;
+		Vector2i atlas_offset = Vector2i();
 		int line_height = 0;
 		for (int source_index = 0; source_index < p_atlas_sources.size(); source_index++) {
 			const Ref<TileSetAtlasSource> &atlas_source = p_atlas_sources[source_index];
@@ -67,7 +67,7 @@ void AtlasMergingDialog::_generate_merged(const Vector<Ref<TileSetAtlasSource>> 
 			merged_mapping.push_back(HashMap<Vector2i, Vector2i>());
 
 			// Layout the tiles.
-			Vector2i atlas_size;
+			Vector2i atlas_size = Vector2i();
 
 			for (int tile_index = 0; tile_index < atlas_source->get_tiles_count(); tile_index++) {
 				Vector2i tile_id = atlas_source->get_tile_id(tile_index);

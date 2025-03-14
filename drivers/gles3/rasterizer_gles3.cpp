@@ -480,7 +480,7 @@ void RasterizerGLES3::set_boot_image(const Ref<Image> &p_image, const Color &p_c
 	texture_storage->texture_2d_initialize(texture, p_image);
 
 	Rect2 imgrect(0, 0, p_image->get_width(), p_image->get_height());
-	Rect2 screenrect;
+	Rect2 screenrect = Rect2();
 	if (p_scale) {
 		if (win_size.width > win_size.height) {
 			//scale horizontally

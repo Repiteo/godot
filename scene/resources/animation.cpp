@@ -4844,10 +4844,10 @@ void Animation::compress(uint32_t p_page_size, uint32_t p_fps, float p_split_tol
 		base_page_size += (type == TYPE_BLEND_SHAPE) ? 4 : 8; // at least the end of track packet (at much 8 bytes). This could be less, but have to be pessimistic.
 		tracks_to_compress.push_back(i);
 
-		AABB bounds;
+		AABB bounds = AABB();
 
 		if (type == TYPE_POSITION_3D) {
-			AABB aabb;
+			AABB aabb = AABB();
 			int kcount = track_get_key_count(i);
 			for (int j = 0; j < kcount; j++) {
 				Vector3 pos;

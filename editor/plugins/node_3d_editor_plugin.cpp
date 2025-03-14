@@ -4347,7 +4347,7 @@ void Node3DEditorViewport::reset() {
 }
 
 void Node3DEditorViewport::focus_selection() {
-	Vector3 center;
+	Vector3 center = Vector3();
 	int count = 0;
 
 	const List<Node *> &selection = editor_selection->get_selected_node_list();
@@ -5394,7 +5394,7 @@ void Node3DEditorViewport::update_transform(bool p_shift) {
 }
 
 void Node3DEditorViewport::update_transform_numeric() {
-	Vector3 motion;
+	Vector3 motion = Vector3();
 	switch (_edit.plane) {
 		case TRANSFORM_VIEW: {
 			switch (_edit.mode) {

@@ -234,7 +234,7 @@ Size2 PopupMenu::_get_contents_minimum_size() const {
 	bool has_check = false;
 
 	for (int i = 0; i < items.size(); i++) {
-		Size2 item_size;
+		Size2 item_size = Size2();
 		_shape_item(i);
 
 		Size2 icon_size = _get_item_icon_size(i);
@@ -816,7 +816,7 @@ void PopupMenu::_draw_items() {
 		check_ofs += theme_cache.h_separation;
 	}
 
-	Point2 ofs;
+	Point2 ofs = Point2();
 
 	// Loop through all items and draw each.
 	for (int i = 0; i < items.size(); i++) {

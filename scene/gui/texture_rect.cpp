@@ -37,9 +37,9 @@ void TextureRect::_notification(int p_what) {
 				return;
 			}
 
-			Size2 size;
-			Point2 offset;
-			Rect2 region;
+			Size2 size = Size2();
+			Point2 offset = Point2();
+			Rect2 region = Rect2();
 			bool tile = false;
 
 			switch (stretch_mode) {

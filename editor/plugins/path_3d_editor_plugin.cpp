@@ -555,7 +555,7 @@ EditorPlugin::AfterGUIInput Path3DEditorPlugin::forward_3d_gui_input(Camera3D *p
 			Vector<Vector3> v3a = c->tessellate();
 			int rc = v3a.size();
 			int closest_seg = -1;
-			Vector3 closest_seg_point;
+			Vector3 closest_seg_point = Vector3();
 
 			if (rc >= 2) {
 				int idx = 0;

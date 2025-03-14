@@ -3404,7 +3404,7 @@ void TileSet::_compatibility_conversion() {
 				atlas_source->set_margins(ctd->region.get_position());
 				atlas_source->set_texture_region_size(ctd->region.get_size());
 
-				Vector2i coords;
+				Vector2i coords = Vector2i();
 				for (int flags = 0; flags < 8; flags++) {
 					bool flip_h = flags & 1;
 					bool flip_v = flags & 2;
@@ -4756,7 +4756,7 @@ Vector2i TileSetAtlasSource::get_atlas_grid_size() const {
 	Size2i valid_area = txt->get_size() - margins;
 
 	// Compute the number of valid tiles in the tiles atlas
-	Size2i grid_size;
+	Size2i grid_size = Size2i();
 	if (valid_area.x >= texture_region_size.x && valid_area.y >= texture_region_size.y) {
 		valid_area -= texture_region_size;
 		grid_size = Size2i(1, 1) + valid_area / (texture_region_size + separation);
@@ -5274,7 +5274,7 @@ PackedVector2Array TileSetAtlasSource::get_tiles_to_be_removed_on_change(Ref<Tex
 	ERR_FAIL_COND_V(p_texture_region_size.x <= 0 || p_texture_region_size.y <= 0, PackedVector2Array());
 
 	// Compute the new atlas grid size.
-	Size2 new_grid_size;
+	Size2 new_grid_size = Size2();
 	if (p_texture.is_valid()) {
 		Size2i valid_area = p_texture->get_size() - p_margins;
 

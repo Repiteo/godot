@@ -37,7 +37,7 @@ Size2 SubViewportContainer::get_minimum_size() const {
 	if (stretch) {
 		return Size2();
 	}
-	Size2 ms;
+	Size2 ms = Size2();
 	for (int i = 0; i < get_child_count(); i++) {
 		SubViewport *c = Object::cast_to<SubViewport>(get_child(i));
 		if (!c) {

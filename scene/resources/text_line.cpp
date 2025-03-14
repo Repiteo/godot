@@ -237,7 +237,7 @@ Array TextLine::get_objects() const {
 }
 
 Rect2 TextLine::get_object_rect(Variant p_key) const {
-	Vector2 ofs;
+	Vector2 ofs = Vector2();
 
 	float length = TS->shaped_text_get_width(rid);
 	if (width > 0) {

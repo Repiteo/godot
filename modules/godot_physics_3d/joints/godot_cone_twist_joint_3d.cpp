@@ -111,11 +111,8 @@ bool GodotConeTwistJoint3D::setup(real_t p_timestep) {
 		}
 	}
 
-	Vector3 b1Axis1, b1Axis2, b1Axis3;
-	Vector3 b2Axis1, b2Axis2;
-
-	b1Axis1 = A->get_transform().basis.xform(m_rbAFrame.basis.get_column(0));
-	b2Axis1 = B->get_transform().basis.xform(m_rbBFrame.basis.get_column(0));
+	Vector3 b1Axis1 = A->get_transform().basis.xform(m_rbAFrame.basis.get_column(0)), b1Axis2 = Vector3(), b1Axis3 = Vector3();
+	Vector3 b2Axis1 = B->get_transform().basis.xform(m_rbBFrame.basis.get_column(0));
 
 	real_t swing1 = real_t(0.), swing2 = real_t(0.);
 

@@ -290,11 +290,11 @@ void NavMapBuilder3D::_build_step_navlink_connections(NavMapIterationBuild3D &r_
 
 		Polygon *closest_start_polygon = nullptr;
 		real_t closest_start_sqr_dist = link_connection_radius_sqr;
-		Vector3 closest_start_point;
+		Vector3 closest_start_point = Vector3();
 
 		Polygon *closest_end_polygon = nullptr;
 		real_t closest_end_sqr_dist = link_connection_radius_sqr;
-		Vector3 closest_end_point;
+		Vector3 closest_end_point = Vector3();
 
 		for (NavRegionIteration3D &region : map_iteration->region_iterations) {
 			if (!region.get_enabled()) {

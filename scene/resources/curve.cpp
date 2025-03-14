@@ -1139,7 +1139,7 @@ Vector2 Curve2D::get_closest_point(const Vector2 &p_to_point) const {
 
 	const Vector2 *r = baked_point_cache.ptr();
 
-	Vector2 nearest;
+	Vector2 nearest = Vector2();
 	real_t nearest_dist = -1.0f;
 
 	for (int i = 0; i < pc - 1; i++) {
@@ -2118,7 +2118,7 @@ Vector3 Curve3D::get_closest_point(const Vector3 &p_to_point) const {
 
 	const Vector3 *r = baked_point_cache.ptr();
 
-	Vector3 nearest;
+	Vector3 nearest = Vector3();
 	real_t nearest_dist = -1.0f;
 
 	for (int i = 0; i < pc - 1; i++) {

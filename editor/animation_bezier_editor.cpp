@@ -125,7 +125,7 @@ void AnimationBezierTrackEdit::_draw_track(int p_track, const Color &p_color) {
 
 		Vector<Vector2> lines;
 
-		Vector2 prev_pos;
+		Vector2 prev_pos = Vector2();
 
 		for (int j = from_x; j <= to_x; j++) {
 			float t = (j - limit) / scale + timeline->get_value();

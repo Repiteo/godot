@@ -90,6 +90,7 @@ jobs:
           tests: ${{ matrix.tests }}
 
       - name: Save Godot build cache
+        if: "!cancelled()"
         uses: ./.github/actions/godot-cache-save
         with:
           cache-name: ${{ matrix.cache-name }}

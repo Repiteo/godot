@@ -430,7 +430,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 					const Vector2 *src = array.ptr();
 
 					// Setting vertices means regenerating the AABB.
-					Rect2 aabb;
+					Rect2 aabb = Rect2();
 
 					{
 						for (int i = 0; i < p_vertex_array_len; i++) {

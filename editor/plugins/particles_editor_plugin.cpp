@@ -333,7 +333,7 @@ void GPUParticles2DEditorPlugin::_generate_visibility_rect() {
 		OS::get_singleton()->delay_usec(1000);
 	}
 
-	Rect2 rect;
+	Rect2 rect = Rect2();
 	while (running < time) {
 		uint64_t ticks = OS::get_singleton()->get_ticks_usec();
 		ep.step(TTR("Generating..."), int(running), true);
@@ -425,10 +425,7 @@ void GPUParticles2DEditorPlugin::_generate_emission_mask() {
 	texdata.resize(w * h * 2 * sizeof(float));
 
 	{
-		Vector2 offset;
-		if (emission_mask_centered->is_pressed()) {
-			offset = Vector2(-image_size.width * 0.5, -image_size.height * 0.5);
-		}
+		Vector2 offset = emission_mask_centered->is_pressed() ? Vector2(-image_size.width * 0.5, -image_size.height * 0.5) : Vector2();
 
 		uint8_t *tw = texdata.ptrw();
 		float *twf = reinterpret_cast<float *>(tw);

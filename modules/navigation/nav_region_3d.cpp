@@ -226,7 +226,7 @@ void NavRegion3D::update_polygons() {
 	navmesh_polygons.resize(pending_navmesh_polygons.size());
 
 	real_t _new_region_surface_area = 0.0;
-	AABB _new_bounds;
+	AABB _new_bounds = AABB();
 
 	bool first_vertex = true;
 	int navigation_mesh_polygon_index = 0;

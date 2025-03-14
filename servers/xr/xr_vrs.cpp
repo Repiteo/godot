@@ -137,7 +137,7 @@ RID XRVRS::make_vrs_texture(const Size2 &p_target_size, const PackedVector2Array
 		eye_foci = p_eye_foci;
 
 		Size2 region_ratio = Size2(1.0, 1.0);
-		Point2i region_offset;
+		Point2i region_offset = Point2i();
 		if (vrs_render_region != Rect2i()) {
 			region_ratio = (Size2)vrs_render_region.size / p_target_size;
 			region_offset = (Point2)vrs_render_region.position / p_target_size * vrs_sizei;

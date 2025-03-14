@@ -186,7 +186,7 @@ Vector2 AudioEffectSpectrumAnalyzerInstance::get_magnitude_for_frequency_range(f
 	const AudioFrame *r = fft_history[fft_index].ptr();
 
 	if (p_mode == MAGNITUDE_AVERAGE) {
-		Vector2 avg;
+		Vector2 avg = Vector2();
 
 		for (int i = begin_pos; i <= end_pos; i++) {
 			avg += Vector2(r[i]);
@@ -196,7 +196,7 @@ Vector2 AudioEffectSpectrumAnalyzerInstance::get_magnitude_for_frequency_range(f
 
 		return avg;
 	} else {
-		Vector2 max;
+		Vector2 max = Vector2();
 
 		for (int i = begin_pos; i <= end_pos; i++) {
 			max.x = MAX(max.x, r[i].left);

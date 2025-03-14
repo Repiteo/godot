@@ -305,36 +305,9 @@ inline StringName __constant_get_bitfield_name(T param, const String &p_constant
 
 template <typename T>
 struct ZeroInitializer {
-	static void initialize(T &value) {} //no initialization by default
+	static void initialize(T &value) {
+		if constexpr (std::is_trivially_constructible_v<T>) {
+			value = {};
+		}
+	}
 };
-
-template <>
-struct ZeroInitializer<bool> {
-	static void initialize(bool &value) { value = false; }
-};
-
-template <typename T>
-struct ZeroInitializer<T *> {
-	static void initialize(T *&value) { value = nullptr; }
-};
-
-#define ZERO_INITIALIZER_NUMBER(m_type)         \
-	template <>                                 \
-	struct ZeroInitializer<m_type> {            \
-		static void initialize(m_type &value) { \
-			value = 0;                          \
-		}                                       \
-	};
-
-ZERO_INITIALIZER_NUMBER(uint8_t)
-ZERO_INITIALIZER_NUMBER(int8_t)
-ZERO_INITIALIZER_NUMBER(uint16_t)
-ZERO_INITIALIZER_NUMBER(int16_t)
-ZERO_INITIALIZER_NUMBER(uint32_t)
-ZERO_INITIALIZER_NUMBER(int32_t)
-ZERO_INITIALIZER_NUMBER(uint64_t)
-ZERO_INITIALIZER_NUMBER(int64_t)
-ZERO_INITIALIZER_NUMBER(char16_t)
-ZERO_INITIALIZER_NUMBER(char32_t)
-ZERO_INITIALIZER_NUMBER(float)
-ZERO_INITIALIZER_NUMBER(double)

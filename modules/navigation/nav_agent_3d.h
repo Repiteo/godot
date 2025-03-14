@@ -52,7 +52,6 @@ class NavAgent3D : public NavRid3D {
 	real_t time_horizon_obstacles = 0.0;
 	int max_neighbors = 5;
 	real_t neighbor_distance = 5.0;
-	Vector3 safe_velocity;
 	bool clamp_speed = true; // Experimental, clamps velocity to max_speed.
 
 	NavMap3D *map = nullptr;

@@ -379,8 +379,8 @@ Error BetsyCompressor::_compress(BetsyFormat p_format, Image *r_img) {
 
 	BetsyShaderType shader_type = FORMAT_TO_TYPE[p_format];
 	BetsyShader shader = cached_shaders[shader_type];
-	BetsyShader secondary_shader; // The secondary shader is used for alpha blocks. For BC it's BC4U and for ETC it's ETC2_RU (8-bit variant).
-	BetsyShader stitch_shader;
+	BetsyShader secondary_shader = BetsyShader(); // The secondary shader is used for alpha blocks. For BC it's BC4U and for ETC it's ETC2_RU (8-bit variant).
+	BetsyShader stitch_shader = BetsyShader();
 	bool needs_alpha_block = false;
 
 	switch (p_format) {

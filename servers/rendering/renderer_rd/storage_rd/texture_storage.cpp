@@ -4177,7 +4177,7 @@ void TextureStorage::render_target_gen_back_buffer_mipmaps(RID p_render_target, 
 		_create_render_target_backbuffer(rt);
 	}
 
-	Rect2i region;
+	Rect2i region = Rect2i();
 	if (p_region == Rect2i()) {
 		region.size = rt->size;
 	} else {

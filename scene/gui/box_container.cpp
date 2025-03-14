@@ -238,7 +238,7 @@ void BoxContainer::_resort() {
 Size2 BoxContainer::get_minimum_size() const {
 	/* Calculate MINIMUM SIZE */
 
-	Size2i minimum;
+	Size2i minimum = Size2i();
 
 	bool first = true;
 

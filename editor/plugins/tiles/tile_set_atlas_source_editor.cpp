@@ -972,7 +972,7 @@ void TileSetAtlasSourceEditor::_update_atlas_view() {
 	}
 
 	if (tools_button_group->get_pressed_button() != tool_paint_button) {
-		Vector2i pos;
+		Vector2i pos = Vector2i();
 		Vector2 texture_region_base_size = tile_set_atlas_source->get_texture_region_size();
 		int texture_region_base_size_min = MIN(texture_region_base_size.x, texture_region_base_size.y);
 		for (int i = 0; i < tile_set_atlas_source->get_tiles_count(); i++) {

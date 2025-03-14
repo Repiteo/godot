@@ -828,7 +828,7 @@ Size2 MenuBar::get_minimum_size() const {
 
 	Ref<StyleBox> style = theme_cache.normal;
 
-	Vector2 size;
+	Vector2 size = Vector2();
 	for (int i = 0; i < menu_cache.size(); i++) {
 		if (menu_cache[i].hidden) {
 			continue;

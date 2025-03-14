@@ -817,7 +817,7 @@ void TileMapLayerEditorTilesPlugin::forward_canvas_draw_over_viewport(Control *p
 	// Handle the preview of the tiles to be placed.
 	if ((tiles_bottom_panel->is_visible_in_tree() || patterns_bottom_panel->is_visible_in_tree()) && CanvasItemEditor::get_singleton()->get_current_tool() == CanvasItemEditor::TOOL_SELECT && has_mouse) { // Only if the tilemap editor is opened and the viewport is hovered.
 		HashMap<Vector2i, TileMapCell> preview;
-		Rect2i drawn_grid_rect;
+		Rect2i drawn_grid_rect = Rect2i();
 
 		if (drag_type == DRAG_TYPE_PICK) {
 			// Draw the area being picked.
@@ -1195,10 +1195,7 @@ HashMap<Vector2i, TileMapCell> TileMapLayerEditorTilesPlugin::_draw_bucket_fill(
 		TileMapCell source_cell = edited_layer->get_cell(p_coords);
 
 		// If we are filling empty tiles, compute the tilemap boundaries.
-		Rect2i boundaries;
-		if (source_cell.source_id == TileSet::INVALID_SOURCE) {
-			boundaries = edited_layer->get_used_rect();
-		}
+		Rect2i boundaries = source_cell.source_id == TileSet::INVALID_SOURCE ? edited_layer->get_used_rect() : Rect2i();
 
 		if (p_contiguous) {
 			// Replace continuous tiles like the source.
@@ -2717,10 +2714,7 @@ RBSet<Vector2i> TileMapLayerEditorTerrainsPlugin::_get_cells_for_bucket_fill(Vec
 	}
 
 	// If we are filling empty tiles, compute the tilemap boundaries.
-	Rect2i boundaries;
-	if (source_cell.source_id == TileSet::INVALID_SOURCE) {
-		boundaries = edited_layer->get_used_rect();
-	}
+	Rect2i boundaries = source_cell.source_id == TileSet::INVALID_SOURCE ? edited_layer->get_used_rect() : Rect2i();
 
 	RBSet<Vector2i> output;
 	if (p_contiguous) {
@@ -3173,7 +3167,7 @@ void TileMapLayerEditorTerrainsPlugin::forward_canvas_draw_over_viewport(Control
 	// Handle the preview of the tiles to be placed.
 	if (main_vbox_container->is_visible_in_tree() && has_mouse) { // Only if the tilemap editor is opened and the viewport is hovered.
 		RBSet<Vector2i> preview;
-		Rect2i drawn_grid_rect;
+		Rect2i drawn_grid_rect = Rect2i();
 
 		if (drag_type == DRAG_TYPE_PICK) {
 			// Draw the area being picked.

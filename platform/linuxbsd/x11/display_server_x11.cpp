@@ -1337,7 +1337,7 @@ Rect2i DisplayServerX11::screen_get_usable_rect(int p_screen) const {
 				if ((format == 32) && (clients_len > 0) && clients_data) {
 					Window *windows_data = (Window *)clients_data;
 
-					Rect2i desktop_rect;
+					Rect2i desktop_rect = Rect2i();
 					bool desktop_valid = false;
 
 					// Get full desktop size.

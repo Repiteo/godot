@@ -1574,7 +1574,7 @@ struct PointComparator {
 };
 
 void ConvexHullInternal::compute(const Vector3 *p_coords, int32_t p_count) {
-	AABB aabb;
+	AABB aabb = AABB();
 	for (int32_t i = 0; i < p_count; i++) {
 		Vector3 p = p_coords[i];
 		if (i == 0) {

@@ -154,7 +154,7 @@ Size2 NativeMenuWindows::get_size(const RID &p_rid) const {
 	const MenuData *md = menus.get_or_null(p_rid);
 	ERR_FAIL_NULL_V(md, Size2());
 
-	Size2 size;
+	Size2 size = Size2();
 	int count = GetMenuItemCount(md->menu);
 	for (int i = 0; i < count; i++) {
 		RECT rect;

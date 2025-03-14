@@ -90,7 +90,7 @@ void AudioStreamInteractiveTransitionEditor::_update_selection() {
 	updating_selection = false;
 	int clip_count = audio_stream_interactive->get_clip_count();
 	selected.clear();
-	Vector2i editing;
+	Vector2i editing = Vector2i();
 	int editing_order = -1;
 	for (int i = 0; i <= clip_count; i++) {
 		for (int j = 0; j <= clip_count; j++) {

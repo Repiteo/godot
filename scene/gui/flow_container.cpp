@@ -54,7 +54,7 @@ void FlowContainer::_resort() {
 
 	Vector<_LineData> lines_data;
 
-	Vector2i ofs;
+	Vector2i ofs = Vector2i();
 	int line_height = 0;
 	int line_length = 0;
 	float line_stretch_ratio_total = 0;
@@ -265,7 +265,7 @@ void FlowContainer::_resort() {
 }
 
 Size2 FlowContainer::get_minimum_size() const {
-	Size2i minimum;
+	Size2i minimum = Size2i();
 
 	for (int i = 0; i < get_child_count(); i++) {
 		Control *c = as_sortable_control(get_child(i), SortableVisibilityMode::VISIBLE);

@@ -480,7 +480,7 @@ CSGBrush *CSGShape3D::_get_brush() {
 		n = memnew(CSGBrush);
 		_unpack_manifold(manifold_result, mesh_materials, n);
 	}
-	AABB aabb;
+	AABB aabb = AABB();
 	if (n && !n->faces.is_empty()) {
 		aabb.position = n->faces[0].vertices[0];
 		for (const CSGBrush::Face &face : n->faces) {

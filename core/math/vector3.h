@@ -54,7 +54,7 @@ struct [[nodiscard]] Vector3 {
 			real_t z;
 		};
 
-		real_t coord[3] = { 0 };
+		real_t coord[3];
 	};
 
 	_FORCE_INLINE_ const real_t &operator[](int p_axis) const {
@@ -187,12 +187,9 @@ struct [[nodiscard]] Vector3 {
 	operator String() const;
 	operator Vector3i() const;
 
-	_FORCE_INLINE_ Vector3() {}
-	_FORCE_INLINE_ Vector3(real_t p_x, real_t p_y, real_t p_z) {
-		x = p_x;
-		y = p_y;
-		z = p_z;
-	}
+	Vector3() = default;
+	constexpr Vector3(real_t p_x, real_t p_y, real_t p_z) :
+			x(p_x), y(p_y), z(p_z) {}
 };
 
 Vector3 Vector3::cross(const Vector3 &p_with) const {
@@ -550,5 +547,4 @@ Vector3 Vector3::reflect(const Vector3 &p_normal) const {
 	return 2.0f * p_normal * dot(p_normal) - *this;
 }
 
-template <>
-struct is_zero_constructible<Vector3> : std::true_type {};
+static_assert(std::is_trivially_constructible_v<Vector3>);

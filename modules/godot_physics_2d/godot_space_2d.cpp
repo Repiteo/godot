@@ -118,18 +118,15 @@ int GodotPhysicsDirectSpaceState2D::intersect_point(const PointParameters &p_par
 bool GodotPhysicsDirectSpaceState2D::intersect_ray(const RayParameters &p_parameters, RayResult &r_result) {
 	ERR_FAIL_COND_V(space->locked, false);
 
-	Vector2 begin, end;
-	Vector2 normal;
-	begin = p_parameters.from;
-	end = p_parameters.to;
-	normal = (end - begin).normalized();
+	Vector2 begin = p_parameters.from, end = p_parameters.to;
+	Vector2 normal = (end - begin).normalized();
 
 	int amount = space->broadphase->cull_segment(begin, end, space->intersection_query_results, GodotSpace2D::INTERSECTION_QUERY_MAX, space->intersection_query_subindex_results);
 
 	//todo, create another array that references results, compute AABBs and check closest point to ray origin, sort, and stop evaluating results when beyond first collision
 
 	bool collided = false;
-	Vector2 res_point, res_normal;
+	Vector2 res_point = Vector2(), res_normal = Vector2();
 	int res_shape = -1;
 	const GodotCollisionObject2D *res_obj = nullptr;
 	real_t min_d = 1e10;
@@ -153,7 +150,7 @@ bool GodotPhysicsDirectSpaceState2D::intersect_ray(const RayParameters &p_parame
 
 		const GodotShape2D *shape = col_obj->get_shape(shape_idx);
 
-		Vector2 shape_point, shape_normal;
+		Vector2 shape_point = Vector2(), shape_normal = Vector2();
 
 		if (shape->contains_point(local_from)) {
 			if (p_parameters.hit_from_inside) {

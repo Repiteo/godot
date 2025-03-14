@@ -786,7 +786,7 @@ int RichTextLabel::_draw_line(ItemFrame *p_frame, int p_line, const Vector2 &p_o
 	ERR_FAIL_NULL_V(p_frame, 0);
 	ERR_FAIL_COND_V(p_line < 0 || p_line >= (int)p_frame->lines.size(), 0);
 
-	Vector2 off;
+	Vector2 off = Vector2();
 
 	Line &l = p_frame->lines[p_line];
 	MutexLock lock(l.text_buf->get_mutex());
@@ -1505,7 +1505,7 @@ void RichTextLabel::_find_click(ItemFrame *p_frame, const Point2i &p_click, Item
 }
 
 float RichTextLabel::_find_click_in_line(ItemFrame *p_frame, int p_line, const Vector2 &p_ofs, int p_width, float p_vsep, const Point2i &p_click, ItemFrame **r_click_frame, int *r_click_line, Item **r_click_item, int *r_click_char, bool p_table, bool p_meta) {
-	Vector2 off;
+	Vector2 off = Vector2();
 
 	bool line_clicked = false;
 	float text_rect_begin = 0.0;
@@ -1519,7 +1519,7 @@ float RichTextLabel::_find_click_in_line(ItemFrame *p_frame, int p_line, const V
 
 	// Table hit test results.
 	bool table_hit = false;
-	Vector2i table_range;
+	Vector2i table_range = Vector2i();
 	float table_offy = 0.f;
 	ItemFrame *table_click_frame = nullptr;
 	int table_click_line = -1;
@@ -6824,7 +6824,7 @@ int RichTextLabel::get_total_glyph_count() const {
 
 Size2 RichTextLabel::get_minimum_size() const {
 	Size2 sb_min_size = theme_cache.normal_style->get_minimum_size();
-	Size2 min_size;
+	Size2 min_size = Size2();
 
 	if (fit_content) {
 		min_size.x = get_content_width();

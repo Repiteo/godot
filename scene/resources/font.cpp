@@ -1929,10 +1929,10 @@ Error FontFile::_load_bitmap_font(const String &p_path, List<String> *r_image_fi
 				}
 			} else if (type == "char") {
 				char32_t idx = 0;
-				Vector2 advance;
-				Vector2 size;
-				Vector2 offset;
-				Rect2 uv_rect;
+				Vector2 advance = Vector2();
+				Vector2 size = Vector2();
+				Vector2 offset = Vector2();
+				Rect2 uv_rect = Rect2();
 				int texture_idx = -1;
 				uint8_t channel = 15;
 
@@ -2012,7 +2012,7 @@ Error FontFile::_load_bitmap_font(const String &p_path, List<String> *r_image_fi
 					set_glyph_texture_idx(0, Vector2i(base_size, 1), idx, texture_idx * (packed ? 4 : 1) + ch_off);
 				}
 			} else if (type == "kerning") {
-				Vector2i kpk;
+				Vector2i kpk = Vector2i();
 				if (keys.has("first")) {
 					kpk.x = keys["first"].to_int();
 				}

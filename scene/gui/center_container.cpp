@@ -34,7 +34,7 @@ Size2 CenterContainer::get_minimum_size() const {
 	if (use_top_left) {
 		return Size2();
 	}
-	Size2 ms;
+	Size2 ms = Size2();
 	for (int i = 0; i < get_child_count(); i++) {
 		Control *c = as_sortable_control(get_child(i), SortableVisibilityMode::VISIBLE);
 		if (!c) {

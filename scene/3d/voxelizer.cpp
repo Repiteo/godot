@@ -84,7 +84,7 @@ void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, co
 		Vector3 normal = plane.normal;
 
 		for (int i = 0; i < 3; i++) {
-			Vector3 axis;
+			Vector3 axis = Vector3();
 			axis[i] = 1.0;
 			real_t dot = ABS(normal.dot(axis));
 			if (i == 0 || dot > closest_dot) {
@@ -93,11 +93,11 @@ void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, co
 			}
 		}
 
-		Vector3 axis;
+		Vector3 axis = Vector3();
 		axis[closest_axis] = 1.0;
-		Vector3 t1;
+		Vector3 t1 = Vector3();
 		t1[(closest_axis + 1) % 3] = 1.0;
-		Vector3 t2;
+		Vector3 t2 = Vector3();
 		t2[(closest_axis + 2) % 3] = 1.0;
 
 		t1 *= p_aabb.size[(closest_axis + 1) % 3] / real_t(color_scan_cell_width);
@@ -105,7 +105,7 @@ void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, co
 
 		Color albedo_accum;
 		Color emission_accum;
-		Vector3 normal_accum;
+		Vector3 normal_accum = Vector3();
 
 		float alpha = 0.0;
 
@@ -133,7 +133,7 @@ void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, co
 					SWAP(ray_from, ray_to);
 				}
 
-				Vector3 intersection;
+				Vector3 intersection = Vector3();
 
 				if (!plane.intersects_segment(ray_from, ray_to, &intersection)) {
 					if (ABS(plane.distance_to(ray_from)) < ABS(plane.distance_to(ray_to))) {
@@ -145,8 +145,8 @@ void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, co
 
 				intersection = Face3(p_vtx[0], p_vtx[1], p_vtx[2]).get_closest_point_to(intersection);
 
-				Vector2 uv;
-				Vector3 lnormal;
+				Vector2 uv = Vector2();
+				Vector3 lnormal = Vector3();
 				get_uv_and_normal(intersection, p_vtx, p_uv, p_normal, uv, lnormal);
 				if (lnormal == Vector3()) { //just in case normal is not provided
 					lnormal = normal;
@@ -177,8 +177,8 @@ void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, co
 			Face3 f(p_vtx[0], p_vtx[1], p_vtx[2]);
 			Vector3 inters = f.get_closest_point_to(p_aabb.get_center());
 
-			Vector3 lnormal;
-			Vector2 uv;
+			Vector3 lnormal = Vector3();
+			Vector2 uv = Vector2();
 			get_uv_and_normal(inters, p_vtx, p_uv, p_normal, uv, normal);
 			if (lnormal == Vector3()) { //just in case normal is not provided
 				lnormal = normal;

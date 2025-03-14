@@ -54,7 +54,7 @@ struct [[nodiscard]] Vector4i {
 			int32_t w;
 		};
 
-		int32_t coord[4] = { 0 };
+		int32_t coord[4];
 	};
 
 	_FORCE_INLINE_ const int32_t &operator[](int p_axis) const {
@@ -133,14 +133,10 @@ struct [[nodiscard]] Vector4i {
 	operator String() const;
 	operator Vector4() const;
 
-	_FORCE_INLINE_ Vector4i() {}
+	Vector4i() = default;
 	Vector4i(const Vector4 &p_vec4);
-	_FORCE_INLINE_ Vector4i(int32_t p_x, int32_t p_y, int32_t p_z, int32_t p_w) {
-		x = p_x;
-		y = p_y;
-		z = p_z;
-		w = p_w;
-	}
+	constexpr Vector4i(int32_t p_x, int32_t p_y, int32_t p_z, int32_t p_w) :
+			x(p_x), y(p_y), z(p_z), w(p_w) {}
 };
 
 int64_t Vector4i::length_squared() const {
@@ -363,5 +359,4 @@ void Vector4i::zero() {
 	x = y = z = w = 0;
 }
 
-template <>
-struct is_zero_constructible<Vector4i> : std::true_type {};
+static_assert(std::is_trivially_constructible_v<Vector4i>);

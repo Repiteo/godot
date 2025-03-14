@@ -56,7 +56,7 @@ struct [[nodiscard]] Vector2i {
 			};
 		};
 
-		int32_t coord[2] = { 0 };
+		int32_t coord[2];
 	};
 
 	_FORCE_INLINE_ int32_t &operator[](int p_axis) {
@@ -141,11 +141,9 @@ struct [[nodiscard]] Vector2i {
 	operator String() const;
 	operator Vector2() const;
 
-	inline Vector2i() {}
-	inline Vector2i(int32_t p_x, int32_t p_y) {
-		x = p_x;
-		y = p_y;
-	}
+	Vector2i() = default;
+	constexpr Vector2i(int32_t p_x, int32_t p_y) :
+			x(p_x), y(p_y) {}
 };
 
 // Multiplication operators required to workaround issues with LLVM using implicit conversion.
@@ -169,5 +167,4 @@ _FORCE_INLINE_ Vector2i operator*(double p_scalar, const Vector2i &p_vector) {
 typedef Vector2i Size2i;
 typedef Vector2i Point2i;
 
-template <>
-struct is_zero_constructible<Vector2i> : std::true_type {};
+static_assert(std::is_trivially_constructible_v<Vector2i>);

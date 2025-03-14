@@ -697,10 +697,10 @@ AABB MeshStorage::mesh_get_aabb(RID p_mesh, RID p_skeleton) {
 		return mesh->aabb;
 	}
 
-	AABB aabb;
+	AABB aabb = AABB();
 
 	for (uint32_t i = 0; i < mesh->surface_count; i++) {
-		AABB laabb;
+		AABB laabb = AABB();
 		const Mesh::Surface &surface = *mesh->surfaces[i];
 		if ((surface.format & RS::ARRAY_FORMAT_BONES) && surface.bone_aabbs.size()) {
 			int bs = surface.bone_aabbs.size();
@@ -1779,7 +1779,7 @@ void MeshStorage::_multimesh_re_create_aabb(MultiMesh *multimesh, const float *p
 	if (multimesh->custom_aabb != AABB()) {
 		return;
 	}
-	AABB aabb;
+	AABB aabb = AABB();
 	AABB mesh_aabb = mesh_get_aabb(multimesh->mesh);
 	for (int i = 0; i < p_instances; i++) {
 		const float *data = p_data + multimesh->stride_cache * i;

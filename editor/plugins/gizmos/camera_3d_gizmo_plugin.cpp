@@ -210,7 +210,6 @@ void Camera3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 			Vector3 right, up;
 			Vector3 back(0, 0, -1.0);
-			Vector3 front(0, 0, 0);
 
 			if (aspect == Camera3D::KeepAspect::KEEP_WIDTH) {
 				right = Vector3(keep_size, 0, 0);
@@ -269,7 +268,7 @@ float Camera3DGizmoPlugin::_find_closest_angle_to_half_pi_arc(const Vector3 &p_f
 	//bleh, discrete is simpler
 	static const int arc_test_points = 64;
 	float min_d = 1e20;
-	Vector3 min_p;
+	Vector3 min_p = Vector3();
 
 	for (int i = 0; i < arc_test_points; i++) {
 		float a = i * Math_PI * 0.5 / arc_test_points;

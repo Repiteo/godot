@@ -4872,8 +4872,7 @@ void CanvasItemEditor::_set_owner_for_node_and_children(Node *p_node, Node *p_ow
 }
 
 void CanvasItemEditor::_focus_selection(int p_op) {
-	Vector2 center(0.f, 0.f);
-	Rect2 rect;
+	Rect2 rect = Rect2();
 	int count = 0;
 
 	const HashMap<Node *, Object *> &selection = editor_selection->get_selection();

@@ -53,7 +53,7 @@ const Rect2 &RendererCanvasRender::Item::get_rect() const {
 	const Item::Command *c = commands;
 
 	while (c) {
-		Rect2 r;
+		Rect2 r = Rect2();
 
 		switch (c->type) {
 			case Item::Command::TYPE_RECT: {

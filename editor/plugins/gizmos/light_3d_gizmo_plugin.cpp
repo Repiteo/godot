@@ -292,7 +292,7 @@ float Light3DGizmoPlugin::_find_closest_angle_to_half_pi_arc(const Vector3 &p_fr
 	//bleh, discrete is simpler
 	static const int arc_test_points = 64;
 	float min_d = 1e20;
-	Vector3 min_p;
+	Vector3 min_p = Vector3();
 
 	for (int i = 0; i < arc_test_points; i++) {
 		float a = i * Math_PI * 0.5 / arc_test_points;

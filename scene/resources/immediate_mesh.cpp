@@ -172,7 +172,7 @@ void ImmediateMesh::surface_end() {
 		normal_tangent_stride += sizeof(uint32_t);
 	}
 
-	AABB aabb;
+	AABB aabb = AABB();
 
 	{
 		surface_vertex_create_cache.resize((vertex_stride + normal_tangent_stride) * vertices.size());

@@ -2836,7 +2836,7 @@ RID RenderingDevice::framebuffer_create_multipass(const Vector<RID> &p_texture_a
 	LocalVector<RDD::TextureID> textures;
 	LocalVector<RDG::ResourceTracker *> trackers;
 	attachments.resize(p_texture_attachments.size());
-	Size2i size;
+	Size2i size = Size2i();
 	bool size_set = false;
 	for (int i = 0; i < p_texture_attachments.size(); i++) {
 		AttachmentFormat af;

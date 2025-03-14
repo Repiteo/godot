@@ -54,7 +54,7 @@ struct [[nodiscard]] Vector4 {
 			real_t z;
 			real_t w;
 		};
-		real_t coord[4] = { 0, 0, 0, 0 };
+		real_t coord[4];
 	};
 
 	_FORCE_INLINE_ real_t &operator[](int p_axis) {
@@ -144,13 +144,9 @@ struct [[nodiscard]] Vector4 {
 	operator String() const;
 	operator Vector4i() const;
 
-	_FORCE_INLINE_ Vector4() {}
-	_FORCE_INLINE_ Vector4(real_t p_x, real_t p_y, real_t p_z, real_t p_w) {
-		x = p_x;
-		y = p_y;
-		z = p_z;
-		w = p_w;
-	}
+	Vector4() = default;
+	constexpr Vector4(real_t p_x, real_t p_y, real_t p_z, real_t p_w) :
+			x(p_x), y(p_y), z(p_z), w(p_w) {}
 };
 
 real_t Vector4::dot(const Vector4 &p_vec4) const {
@@ -303,5 +299,4 @@ _FORCE_INLINE_ Vector4 operator*(int64_t p_scalar, const Vector4 &p_vec) {
 	return p_vec * p_scalar;
 }
 
-template <>
-struct is_zero_constructible<Vector4> : std::true_type {};
+static_assert(std::is_trivially_constructible_v<Vector4>);

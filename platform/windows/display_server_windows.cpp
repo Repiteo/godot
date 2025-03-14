@@ -6472,7 +6472,7 @@ Vector2i _get_device_ids(const String &p_device_name) {
 		return Vector2i();
 	}
 
-	Vector2i ids;
+	Vector2i ids = Vector2i();
 
 	const String gpu_device_class_query = vformat("SELECT * FROM Win32_PnPSignedDriver WHERE DeviceName = \"%s\"", p_device_name);
 	BSTR query = SysAllocString((const WCHAR *)gpu_device_class_query.utf16().get_data());

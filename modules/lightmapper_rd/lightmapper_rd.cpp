@@ -259,7 +259,7 @@ Lightmapper::BakeError LightmapperRD::_blit_meshes_into_atlas(int p_max_texture_
 
 	atlas_size = Size2i(max, max);
 
-	Size2i best_atlas_size;
+	Size2i best_atlas_size = Size2i();
 	int best_atlas_slices = 0;
 	int best_atlas_memory = 0x7FFFFFFF;
 	Vector<Vector3i> best_atlas_offsets;
@@ -402,7 +402,7 @@ void LightmapperRD::_create_acceleration_structures(RenderingDevice *rd, Size2i 
 			Vector2 uvs[3] = { mi.data.uv2[i + 0] * uv_scale + uv_offset, mi.data.uv2[i + 1] * uv_scale + uv_offset, mi.data.uv2[i + 2] * uv_scale + uv_offset };
 			Vector3 normal[3] = { mi.data.normal[i + 0], mi.data.normal[i + 1], mi.data.normal[i + 2] };
 
-			AABB taabb;
+			AABB taabb = AABB();
 			Triangle t;
 			t.slice = mi.slice;
 			for (int k = 0; k < 3; k++) {

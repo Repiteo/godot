@@ -377,7 +377,7 @@ void Button::_notification(int p_what) {
 
 				if (icon_size.width > 0.0f) {
 					// Calculate the drawing position of the icon.
-					Point2 icon_ofs;
+					Point2 icon_ofs = Point2();
 
 					switch (icon_align_rtl_checked) {
 						case HORIZONTAL_ALIGNMENT_CENTER: {
@@ -440,7 +440,7 @@ void Button::_notification(int p_what) {
 				}
 				text_buf->set_width(text_buf_width);
 
-				Point2 text_ofs;
+				Point2 text_ofs = Point2();
 
 				switch (align_rtl_checked) {
 					case HORIZONTAL_ALIGNMENT_CENTER: {

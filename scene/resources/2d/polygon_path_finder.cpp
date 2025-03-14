@@ -137,7 +137,7 @@ Vector<Vector2> PolygonPathFinder::find_path(const Vector2 &p_from, const Vector
 
 	if (!_is_point_inside(from)) {
 		float closest_dist = 1e20f;
-		Vector2 closest_point;
+		Vector2 closest_point = Vector2();
 
 		for (const Edge &E : edges) {
 			const Edge &e = E;
@@ -161,7 +161,7 @@ Vector<Vector2> PolygonPathFinder::find_path(const Vector2 &p_from, const Vector
 
 	if (!_is_point_inside(to)) {
 		float closest_dist = 1e20f;
-		Vector2 closest_point;
+		Vector2 closest_point = Vector2();
 
 		for (const Edge &E : edges) {
 			const Edge &e = E;
@@ -489,7 +489,7 @@ bool PolygonPathFinder::is_point_inside(const Vector2 &p_point) const {
 
 Vector2 PolygonPathFinder::get_closest_point(const Vector2 &p_point) const {
 	float closest_dist = 1e20f;
-	Vector2 closest_point;
+	Vector2 closest_point = Vector2();
 
 	for (const Edge &E : edges) {
 		const Edge &e = E;

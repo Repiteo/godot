@@ -284,7 +284,7 @@ float GradientTexture2D::_get_gradient_offset_at(int x, int y) const {
 		return 0;
 	}
 	float ofs = 0;
-	Vector2 pos;
+	Vector2 pos = Vector2();
 	if (width > 1) {
 		pos.x = static_cast<float>(x) / (width - 1);
 	}

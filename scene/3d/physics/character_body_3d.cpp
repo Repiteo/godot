@@ -153,7 +153,7 @@ void CharacterBody3D::_move_and_slide_grounded(double p_delta, bool p_was_on_flo
 	bool apply_ceiling_velocity = false;
 	bool first_slide = true;
 	bool vel_dir_facing_up = velocity.dot(up_direction) > 0;
-	Vector3 total_travel;
+	Vector3 total_travel = Vector3();
 
 	for (int iteration = 0; iteration < max_slides; ++iteration) {
 		PhysicsServer3D::MotionParameters parameters(get_global_transform(), motion, margin);
@@ -527,8 +527,8 @@ void CharacterBody3D::_set_collision_direction(const PhysicsServer3D::MotionResu
 	bool was_on_wall = collision_state.wall;
 	Vector3 prev_wall_normal = wall_normal;
 	int wall_collision_count = 0;
-	Vector3 combined_wall_normal;
-	Vector3 tmp_wall_col; // Avoid duplicate on average calculation.
+	Vector3 combined_wall_normal = Vector3();
+	Vector3 tmp_wall_col = Vector3(); // Avoid duplicate on average calculation.
 
 	for (int i = p_result.collision_count - 1; i >= 0; i--) {
 		const PhysicsServer3D::MotionCollision &collision = p_result.collisions[i];

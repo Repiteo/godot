@@ -2586,8 +2586,6 @@ void OpenXRAPI::set_foveation_dynamic(bool p_foveation_dynamic) {
 }
 
 Size2 OpenXRAPI::get_play_space_bounds() const {
-	Size2 ret;
-
 	ERR_FAIL_COND_V(session == XR_NULL_HANDLE, Size2());
 
 	XrExtent2Df extents;
@@ -2595,13 +2593,10 @@ Size2 OpenXRAPI::get_play_space_bounds() const {
 	XrResult result = xrGetReferenceSpaceBoundsRect(session, reference_space, &extents);
 	if (XR_FAILED(result)) {
 		print_line("OpenXR: failed to get play space bounds! [", get_error_string(result), "]");
-		return ret;
+		return Size2();
 	}
 
-	ret.width = extents.width;
-	ret.height = extents.height;
-
-	return ret;
+	return Size2(extents.width, extents.height);
 }
 
 PackedInt64Array OpenXRAPI::get_supported_swapchain_formats() {
@@ -2713,7 +2708,6 @@ Transform3D OpenXRAPI::transform_from_pose(const XrPosef &p_pose) {
 template <typename T>
 XRPose::TrackingConfidence _transform_from_location(const T &p_location, Transform3D &r_transform) {
 	Basis basis;
-	Vector3 origin;
 	XRPose::TrackingConfidence confidence = XRPose::XR_TRACKING_CONFIDENCE_NONE;
 	const XrPosef &pose = p_location.pose;
 

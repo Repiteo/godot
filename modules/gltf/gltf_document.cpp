@@ -7134,21 +7134,9 @@ void GLTFDocument::_import_animation(Ref<GLTFState> p_state, AnimationPlayer *p_
 			const double increment = 1.0 / p_state->get_bake_fps();
 			double time = anim_start;
 
-			Vector3 base_pos;
-			Quaternion base_rot;
-			Vector3 base_scale = Vector3(1, 1, 1);
-
-			if (rotation_idx == -1) {
-				base_rot = gltf_node->get_rotation();
-			}
-
-			if (position_idx == -1) {
-				base_pos = gltf_node->get_position();
-			}
-
-			if (scale_idx == -1) {
-				base_scale = gltf_node->get_scale();
-			}
+			Vector3 base_pos = position_idx == -1 ? gltf_node->get_position() : Vector3();
+			Quaternion base_rot = rotation_idx == -1 ? gltf_node->get_rotation() : Quaternion();
+			Vector3 base_scale = scale_idx == -1 ? gltf_node->get_scale() : Vector3(1, 1, 1);
 
 			bool last = false;
 			while (true) {

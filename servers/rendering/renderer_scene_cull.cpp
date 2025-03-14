@@ -2046,7 +2046,7 @@ void RendererSceneCull::_unpair_instance(Instance *p_instance) {
 }
 
 void RendererSceneCull::_update_instance_aabb(Instance *p_instance) const {
-	AABB new_aabb;
+	AABB new_aabb = AABB();
 
 	ERR_FAIL_COND(p_instance->base_type != RS::INSTANCE_NONE && !p_instance->base.is_valid());
 

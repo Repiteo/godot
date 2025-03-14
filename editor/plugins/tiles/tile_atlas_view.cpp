@@ -61,23 +61,22 @@ Size2i TileAtlasView::_compute_base_tiles_control_size() {
 		return Size2i();
 	}
 	// Update the texture.
-	Vector2i size;
 	Ref<Texture2D> texture = tile_set_atlas_source->get_texture();
-	if (texture.is_valid()) {
-		size = texture->get_size();
+	if (texture.is_null()) {
+		return Size2i();
 	}
-	return size;
+	return texture->get_size();
 }
 
 Size2i TileAtlasView::_compute_alternative_tiles_control_size() {
 	if (tile_set_atlas_source.is_null()) {
 		return Size2i();
 	}
-	Vector2i size;
+	Vector2i size = Vector2i();
 	for (int i = 0; i < tile_set_atlas_source->get_tiles_count(); i++) {
 		Vector2i tile_id = tile_set_atlas_source->get_tile_id(i);
 		int alternatives_count = tile_set_atlas_source->get_alternative_tiles_count(tile_id);
-		Vector2i line_size;
+		Vector2i line_size = Vector2i();
 		Size2i texture_region_size = tile_set_atlas_source->get_tile_texture_region(tile_id).size;
 		for (int j = 1; j < alternatives_count; j++) {
 			int alternative_id = tile_set_atlas_source->get_alternative_tile_id(tile_id, j);
@@ -408,7 +407,7 @@ void TileAtlasView::_draw_alternatives() {
 	// Draw the alternative tiles.
 	Ref<Texture2D> texture = tile_set_atlas_source->get_texture();
 	if (texture.is_valid()) {
-		Vector2 current_pos;
+		Vector2 current_pos = Vector2();
 		for (int i = 0; i < tile_set_atlas_source->get_tiles_count(); i++) {
 			Vector2i atlas_coords = tile_set_atlas_source->get_tile_id(i);
 			current_pos.x = 0;
@@ -541,7 +540,7 @@ void TileAtlasView::_update_alternative_tiles_rect_cache() {
 
 	alternative_tiles_rect_cache.clear();
 
-	Rect2i current;
+	Rect2i current = Rect2i();
 	for (int i = 0; i < tile_set_atlas_source->get_tiles_count(); i++) {
 		Vector2i tile_id = tile_set_atlas_source->get_tile_id(i);
 		int alternatives_count = tile_set_atlas_source->get_alternative_tiles_count(tile_id);

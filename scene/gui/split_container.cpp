@@ -253,7 +253,7 @@ void SplitContainer::_resort() {
 }
 
 Size2 SplitContainer::get_minimum_size() const {
-	Size2i minimum;
+	Size2i minimum = Size2i();
 	int sep = _get_separation();
 
 	for (int i = 0; i < 2; i++) {

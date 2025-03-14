@@ -1612,7 +1612,7 @@ GridMapEditor::GridMapEditor() {
 
 		for (int i = 0; i < 12; i++) {
 			AABB base(Vector3(0, 0, 0), Vector3(1, 1, 1));
-			Vector3 a, b;
+			Vector3 a = Vector3(), b = Vector3();
 			base.get_edge(i, a, b);
 			lines.push_back(a);
 			lines.push_back(b);
@@ -1624,7 +1624,7 @@ GridMapEditor::GridMapEditor() {
 				static const bool orderx[4] = { false, true, true, false };
 				static const bool ordery[4] = { false, false, true, true };
 
-				Vector3 sp;
+				Vector3 sp = Vector3();
 				if (orderx[j]) {
 					sp[(i + 1) % 3] = 1.0;
 				}
@@ -1636,7 +1636,7 @@ GridMapEditor::GridMapEditor() {
 			}
 
 			for (int j = 0; j < 4; j++) {
-				Vector3 ofs;
+				Vector3 ofs = Vector3();
 				ofs[i] += 0.01;
 				square[i].push_back(points[j] - ofs);
 				square[i].push_back(points[(j + 1) % 4] - ofs);

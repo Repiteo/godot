@@ -110,8 +110,8 @@ int GodotPhysicsDirectSpaceState3D::intersect_point(const PointParameters &p_par
 bool GodotPhysicsDirectSpaceState3D::intersect_ray(const RayParameters &p_parameters, RayResult &r_result) {
 	ERR_FAIL_COND_V(space->locked, false);
 
-	Vector3 begin, end;
-	Vector3 normal;
+	Vector3 begin = p_parameters.from, end = p_parameters.to;
+	Vector3 normal = (end - begin).normalized();
 	begin = p_parameters.from;
 	end = p_parameters.to;
 	normal = (end - begin).normalized();
@@ -121,7 +121,7 @@ bool GodotPhysicsDirectSpaceState3D::intersect_ray(const RayParameters &p_parame
 	//todo, create another array that references results, compute AABBs and check closest point to ray origin, sort, and stop evaluating results when beyond first collision
 
 	bool collided = false;
-	Vector3 res_point, res_normal;
+	Vector3 res_point = Vector3(), res_normal = Vector3();
 	int res_face_index = -1;
 	int res_shape = -1;
 	const GodotCollisionObject3D *res_obj = nullptr;
@@ -150,7 +150,7 @@ bool GodotPhysicsDirectSpaceState3D::intersect_ray(const RayParameters &p_parame
 
 		const GodotShape3D *shape = col_obj->get_shape(shape_idx);
 
-		Vector3 shape_point, shape_normal;
+		Vector3 shape_point = Vector3(), shape_normal = Vector3();
 		int shape_face_index = -1;
 
 		if (shape->intersect_point(local_from)) {
@@ -581,7 +581,7 @@ Vector3 GodotPhysicsDirectSpaceState3D::get_closest_point_to_object_volume(RID p
 	ERR_FAIL_COND_V(obj->get_space() != space, Vector3());
 
 	real_t min_distance = 1e20;
-	Vector3 min_point;
+	Vector3 min_point = Vector3();
 
 	bool shapes_found = false;
 

@@ -507,7 +507,7 @@ int32_t LightmapGI::_compute_bsp_tree(const Vector<Vector3> &p_points, const Loc
 	bsp_nodes.push_back(BSPNode());
 
 	//test with all the simplex planes
-	Plane best_plane;
+	Plane best_plane = Plane();
 	float best_plane_score = -1.0;
 
 	for (const int idx : p_simplex_indices) {
@@ -696,7 +696,7 @@ int32_t LightmapGI::_compute_bsp_tree(const Vector<Vector3> &p_points, const Loc
 		}
 	}
 
-	BSPNode node;
+	BSPNode node = BSPNode();
 	node.plane = best_plane;
 
 	if (indices_under.size() == 0) {
@@ -1130,7 +1130,7 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 		LocalVector<Vector3> new_probe_positions;
 		HashMap<Vector3i, bool> positions_used;
 		for (uint32_t i = 0; i < 8; i++) { //insert bounding endpoints
-			Vector3i pos;
+			Vector3i pos = Vector3i();
 			if (i & 1) {
 				pos.x += bound_limit.x;
 			}

@@ -81,7 +81,7 @@ Rect2 ConcavePolygonShape2D::get_rect() const {
 		return Rect2();
 	}
 
-	Rect2 rect;
+	Rect2 rect = Rect2();
 
 	const Vector2 *r = s.ptr();
 	for (int i = 0; i < len; i++) {

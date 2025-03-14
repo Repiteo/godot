@@ -986,8 +986,8 @@ void RendererCanvasCull::canvas_item_add_polyline(RID p_item, const Vector<Point
 	int polyline_point_count = point_count * 2;
 
 	bool loop = p_points[0].is_equal_approx(p_points[point_count - 1]);
-	Vector2 first_segment_dir;
-	Vector2 last_segment_dir;
+	Vector2 first_segment_dir = Vector2();
+	Vector2 last_segment_dir = Vector2();
 
 	// Search for first non-zero vector between two segments.
 	for (int i = 1; i < point_count; i++) {
@@ -1050,7 +1050,7 @@ void RendererCanvasCull::canvas_item_add_polyline(RID p_item, const Vector<Point
 		Vector2 *points_right_ptr = points_right.ptrw();
 		Color *colors_right_ptr = colors_right.ptrw();
 
-		Vector2 prev_segment_dir;
+		Vector2 prev_segment_dir = Vector2();
 		for (int i = 0; i < point_count; i++) {
 			bool is_first_point = (i == 0);
 			bool is_last_point = (i == point_count - 1);

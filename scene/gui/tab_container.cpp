@@ -890,7 +890,7 @@ Ref<Texture2D> TabContainer::get_tab_button_icon(int p_tab) const {
 }
 
 Size2 TabContainer::get_minimum_size() const {
-	Size2 ms;
+	Size2 ms = Size2();
 
 	if (tabs_visible) {
 		ms = tab_bar->get_minimum_size();
@@ -908,7 +908,7 @@ Size2 TabContainer::get_minimum_size() const {
 	}
 
 	Vector<Control *> controls = _get_tab_controls();
-	Size2 largest_child_min_size;
+	Size2 largest_child_min_size = Size2();
 	for (int i = 0; i < controls.size(); i++) {
 		Control *c = controls[i];
 

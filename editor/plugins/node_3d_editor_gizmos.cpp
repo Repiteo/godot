@@ -701,7 +701,7 @@ bool EditorNode3DGizmo::intersect_ray(Camera3D *p_camera, const Point2 &p_point,
 			t.set_look_at(t.origin, t.origin - p_camera->get_transform().basis.get_column(2), p_camera->get_transform().basis.get_column(1));
 		}
 
-		Vector3 cp;
+		Vector3 cp = Vector3();
 		float cpd = 1e20;
 
 		for (int i = 0; i < vc / 2; i++) {

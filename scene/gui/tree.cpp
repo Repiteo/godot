@@ -4221,7 +4221,7 @@ void Tree::set_editor_selection(int p_from_line, int p_to_line, int p_from_colum
 }
 
 Size2 Tree::get_internal_min_size() const {
-	Size2i size;
+	Size2i size = Size2i();
 	if (root) {
 		size.height += get_item_height(root);
 	}

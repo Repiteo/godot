@@ -330,10 +330,10 @@ void Label3D::_generate_glyph_surfaces(const Glyph &p_glyph, Vector2 &r_offset, 
 		return;
 	}
 
-	Vector2 gl_of;
-	Vector2 gl_sz;
-	Rect2 gl_uv;
-	Size2 texs;
+	Vector2 gl_of = Vector2();
+	Vector2 gl_sz = Vector2();
+	Rect2 gl_uv = Rect2();
+	Size2 texs = Size2();
 	RID tex;
 
 	if (p_glyph.font_rid.is_valid()) {

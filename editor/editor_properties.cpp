@@ -1017,7 +1017,7 @@ void EditorPropertyLayersGrid::_notification(int p_what) {
 
 			uint32_t layer_index = 0;
 
-			Point2 arrow_pos;
+			Point2 arrow_pos = Point2();
 
 			Point2 block_ofs(4, vofs);
 

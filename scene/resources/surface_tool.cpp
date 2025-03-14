@@ -1085,7 +1085,7 @@ int SurfaceTool::mikktGetNumVerticesOfFace(const SMikkTSpaceContext *pContext, c
 
 void SurfaceTool::mikktGetPosition(const SMikkTSpaceContext *pContext, float fvPosOut[], const int iFace, const int iVert) {
 	TangentGenerationContextUserData &triangle_data = *reinterpret_cast<TangentGenerationContextUserData *>(pContext->m_pUserData);
-	Vector3 v;
+	Vector3 v = Vector3();
 	if (triangle_data.indices->size() > 0) {
 		uint32_t index = triangle_data.indices->operator[](iFace * 3 + iVert);
 		if (index < triangle_data.vertices->size()) {
@@ -1102,7 +1102,7 @@ void SurfaceTool::mikktGetPosition(const SMikkTSpaceContext *pContext, float fvP
 
 void SurfaceTool::mikktGetNormal(const SMikkTSpaceContext *pContext, float fvNormOut[], const int iFace, const int iVert) {
 	TangentGenerationContextUserData &triangle_data = *reinterpret_cast<TangentGenerationContextUserData *>(pContext->m_pUserData);
-	Vector3 v;
+	Vector3 v = Vector3();
 	if (triangle_data.indices->size() > 0) {
 		uint32_t index = triangle_data.indices->operator[](iFace * 3 + iVert);
 		if (index < triangle_data.vertices->size()) {
@@ -1119,7 +1119,7 @@ void SurfaceTool::mikktGetNormal(const SMikkTSpaceContext *pContext, float fvNor
 
 void SurfaceTool::mikktGetTexCoord(const SMikkTSpaceContext *pContext, float fvTexcOut[], const int iFace, const int iVert) {
 	TangentGenerationContextUserData &triangle_data = *reinterpret_cast<TangentGenerationContextUserData *>(pContext->m_pUserData);
-	Vector2 v;
+	Vector2 v = Vector2();
 	if (triangle_data.indices->size() > 0) {
 		uint32_t index = triangle_data.indices->operator[](iFace * 3 + iVert);
 		if (index < triangle_data.vertices->size()) {
@@ -1297,7 +1297,7 @@ void SurfaceTool::optimize_indices_for_cache() {
 AABB SurfaceTool::get_aabb() const {
 	ERR_FAIL_COND_V(vertex_array.is_empty(), AABB());
 
-	AABB aabb;
+	AABB aabb = AABB();
 	for (uint32_t i = 0; i < vertex_array.size(); i++) {
 		if (i == 0) {
 			aabb.position = vertex_array[i].vertex;

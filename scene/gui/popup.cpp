@@ -264,7 +264,7 @@ void PopupPanel::_input_from_window(const Ref<InputEvent> &p_event) {
 }
 
 Size2 PopupPanel::_get_contents_minimum_size() const {
-	Size2 ms;
+	Size2 ms = Size2();
 
 	for (int i = 0; i < get_child_count(); i++) {
 		Control *c = Object::cast_to<Control>(get_child(i));

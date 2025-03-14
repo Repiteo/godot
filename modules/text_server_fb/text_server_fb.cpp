@@ -2037,7 +2037,7 @@ Vector2 TextServerFallback::_font_get_glyph_advance(const RID &p_font_rid, int64
 		return Vector2(); // Invalid or non graphicl glyph, do not display errors.
 	}
 
-	Vector2 ea;
+	Vector2 ea = Vector2();
 	if (fd->embolden != 0.0) {
 		ea.x = fd->embolden * double(size.x) / 64.0;
 	}

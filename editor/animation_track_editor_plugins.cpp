@@ -452,7 +452,7 @@ void AnimationTrackEditSpriteFrame::draw_key(int p_index, float p_pixels_sec, in
 	}
 
 	Ref<Texture2D> texture;
-	Rect2 region;
+	Rect2 region = Rect2();
 
 	if (Object::cast_to<Sprite2D>(object) || Object::cast_to<Sprite3D>(object)) {
 		texture = object->call("get_texture");

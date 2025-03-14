@@ -36,7 +36,7 @@ class Variant;
 
 struct [[nodiscard]] Plane {
 	Vector3 normal;
-	real_t d = 0;
+	real_t d;
 
 	void set_normal(const Vector3 &p_normal);
 	_FORCE_INLINE_ Vector3 get_normal() const { return normal; }
@@ -80,10 +80,9 @@ struct [[nodiscard]] Plane {
 	_FORCE_INLINE_ bool operator!=(const Plane &p_plane) const;
 	operator String() const;
 
-	_FORCE_INLINE_ Plane() {}
-	_FORCE_INLINE_ Plane(real_t p_a, real_t p_b, real_t p_c, real_t p_d) :
-			normal(p_a, p_b, p_c),
-			d(p_d) {}
+	Plane() = default;
+	constexpr Plane(real_t p_a, real_t p_b, real_t p_c, real_t p_d) :
+			normal(p_a, p_b, p_c), d(p_d) {}
 
 	_FORCE_INLINE_ Plane(const Vector3 &p_normal, real_t p_d = 0.0);
 	_FORCE_INLINE_ Plane(const Vector3 &p_normal, const Vector3 &p_point);
@@ -133,5 +132,4 @@ bool Plane::operator!=(const Plane &p_plane) const {
 	return normal != p_plane.normal || d != p_plane.d;
 }
 
-template <>
-struct is_zero_constructible<Plane> : std::true_type {};
+static_assert(std::is_trivially_constructible_v<Plane>);

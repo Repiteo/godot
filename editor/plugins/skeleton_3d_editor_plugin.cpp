@@ -628,8 +628,8 @@ void Skeleton3DEditor::_file_selected(const String &p_file) {
 	sp->set_group_size(1);
 
 	Vector<Vector2> handle_positions;
-	Vector2 position_max;
-	Vector2 position_min;
+	Vector2 position_max = Vector2();
+	Vector2 position_min = Vector2();
 
 	const int bone_count = skeleton->get_bone_count();
 	sp->set_bone_size(bone_count);

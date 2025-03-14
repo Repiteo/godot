@@ -1281,8 +1281,8 @@ void ItemList::_notification(int p_what) {
 					}
 				}
 
-				Vector2 text_ofs;
-				Size2 icon_size;
+				Vector2 text_ofs = Vector2();
+				Size2 icon_size = Size2();
 				if (items[i].icon.is_valid()) {
 					if (fixed_icon_size.x > 0 && fixed_icon_size.y > 0) {
 						icon_size = fixed_icon_size * icon_scale;
@@ -1290,7 +1290,7 @@ void ItemList::_notification(int p_what) {
 						icon_size = items[i].get_icon_size() * icon_scale;
 					}
 
-					Vector2 icon_ofs;
+					Vector2 icon_ofs = Vector2();
 
 					Point2 pos = items[i].rect_cache.position + icon_ofs + base_ofs;
 
@@ -1487,7 +1487,7 @@ void ItemList::force_update_list_size() {
 
 	//1- compute item minimum sizes
 	for (int i = 0; i < items.size(); i++) {
-		Size2 minsize;
+		Size2 minsize = Size2();
 		if (items[i].icon.is_valid()) {
 			if (fixed_icon_size.x > 0 && fixed_icon_size.y > 0) {
 				minsize = fixed_icon_size * icon_scale;
@@ -1553,7 +1553,7 @@ void ItemList::force_update_list_size() {
 	// Repeat until all items fit.
 	while (true) {
 		bool all_fit = true;
-		Vector2 ofs;
+		Vector2 ofs = Vector2();
 		int col = 0;
 		int max_w = 0;
 		int max_h = 0;

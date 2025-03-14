@@ -56,7 +56,7 @@ struct [[nodiscard]] Vector2 {
 			};
 		};
 
-		real_t coord[2] = { 0 };
+		real_t coord[2];
 	};
 
 	_FORCE_INLINE_ real_t &operator[](int p_axis) {
@@ -184,11 +184,9 @@ struct [[nodiscard]] Vector2 {
 	operator String() const;
 	operator Vector2i() const;
 
-	_FORCE_INLINE_ Vector2() {}
-	_FORCE_INLINE_ Vector2(real_t p_x, real_t p_y) {
-		x = p_x;
-		y = p_y;
-	}
+	Vector2() = default;
+	constexpr Vector2(real_t p_x, real_t p_y) :
+			x(p_x), y(p_y) {}
 };
 
 _FORCE_INLINE_ Vector2 Vector2::plane_project(real_t p_d, const Vector2 &p_vec) const {
@@ -327,5 +325,4 @@ _FORCE_INLINE_ Vector2 operator*(int64_t p_scalar, const Vector2 &p_vec) {
 typedef Vector2 Size2;
 typedef Vector2 Point2;
 
-template <>
-struct is_zero_constructible<Vector2> : std::true_type {};
+static_assert(std::is_trivially_constructible_v<Vector2>);

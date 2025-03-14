@@ -385,8 +385,8 @@ Vector<AudioFrame> AudioStreamPlayer3D::_update_panning() {
 
 		float dist = local_pos.length();
 
-		Vector3 area_sound_pos;
-		Vector3 listener_area_pos;
+		Vector3 area_sound_pos = Vector3();
+		Vector3 listener_area_pos = Vector3();
 
 		Area3D *area = _get_overriding_area();
 

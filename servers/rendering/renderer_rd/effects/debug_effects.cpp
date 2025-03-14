@@ -29,6 +29,7 @@
 /**************************************************************************/
 
 #include "debug_effects.h"
+#include "core/math/vector2.h"
 #include "servers/rendering/renderer_rd/storage_rd/light_storage.h"
 #include "servers/rendering/renderer_rd/storage_rd/material_storage.h"
 #include "servers/rendering/renderer_rd/uniform_set_cache_rd.h"
@@ -204,7 +205,7 @@ void DebugEffects::draw_shadow_frustum(RID p_light, const Projection &p_cam_proj
 	bool is_orthogonal = p_cam_projection.is_orthogonal();
 	real_t aspect = p_cam_projection.get_aspect();
 	real_t fov = 0.0;
-	Vector2 vp_he;
+	Vector2 vp_he = Vector2();
 	if (is_orthogonal) {
 		vp_he = p_cam_projection.get_viewport_half_extents();
 	} else {

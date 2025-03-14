@@ -371,7 +371,7 @@ Vector2 AnimationNodeBlendSpace2D::get_closest_point(const Vector2 &p_point) {
 		return Vector2();
 	}
 
-	Vector2 best_point;
+	Vector2 best_point = Vector2();
 	bool first = true;
 
 	for (int i = 0; i < triangles.size(); i++) {
