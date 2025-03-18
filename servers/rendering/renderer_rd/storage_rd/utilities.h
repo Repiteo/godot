@@ -33,7 +33,7 @@
 #include "core/templates/rid_owner.h"
 #include "servers/rendering/storage/utilities.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 
 /* VISIBILITY NOTIFIER */
 
@@ -120,4 +120,4 @@ public:
 	virtual uint64_t get_maximum_uniform_buffer_size() const override;
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

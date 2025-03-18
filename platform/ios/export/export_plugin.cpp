@@ -2577,7 +2577,7 @@ bool EditorExportPlatformIOS::has_valid_project_configuration(const Ref<EditorEx
 		}
 	}
 
-	if (!ResourceImporterTextureSettings::should_import_etc2_astc()) {
+	if (!resource_importer_texture_settings::should_import_etc2_astc()) {
 		valid = false;
 	}
 

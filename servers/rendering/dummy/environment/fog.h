@@ -32,7 +32,7 @@
 
 #include "servers/rendering/environment/renderer_fog.h"
 
-namespace RendererDummy {
+namespace renderer_dummy {
 
 class Fog : public RendererFog {
 public:
@@ -49,4 +49,4 @@ public:
 	virtual RS::FogVolumeShape fog_volume_get_shape(RID p_fog_volume) const override { return RS::FOG_VOLUME_SHAPE_BOX; }
 };
 
-} // namespace RendererDummy
+} // namespace renderer_dummy

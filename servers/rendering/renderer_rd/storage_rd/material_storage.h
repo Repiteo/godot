@@ -41,7 +41,7 @@
 #include "servers/rendering/storage/material_storage.h"
 #include "servers/rendering/storage/utilities.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class MaterialStorage : public RendererMaterialStorage {
 public:
@@ -88,7 +88,7 @@ public:
 	};
 
 	struct MaterialData {
-		Vector<RendererRD::TextureStorage::RenderTarget *> render_target_cache;
+		Vector<renderer_rd::TextureStorage::RenderTarget *> render_target_cache;
 		void update_uniform_buffer(const HashMap<StringName, ShaderLanguage::ShaderNode::Uniform> &p_uniforms, const uint32_t *p_uniform_offsets, const HashMap<StringName, Variant> &p_parameters, uint8_t *p_buffer, uint32_t p_buffer_size, bool p_use_linear_color);
 		void update_textures(const HashMap<StringName, Variant> &p_parameters, const HashMap<StringName, HashMap<int, RID>> &p_default_textures, const Vector<ShaderCompiler::GeneratedCode::Texture> &p_texture_uniforms, RID *p_textures, bool p_use_linear_color, bool p_3d_material);
 		void set_as_used();
@@ -467,4 +467,4 @@ public:
 	}
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

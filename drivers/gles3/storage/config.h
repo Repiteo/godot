@@ -46,7 +46,7 @@ typedef void (*PFNGLFRAMEBUFFERTEXTUREMULTISAMPLEMULTIVIEWOVRPROC)(GLenum, GLenu
 typedef void (*PFNEGLIMAGETARGETTEXTURE2DOESPROC)(GLenum, void *);
 #endif
 
-namespace GLES3 {
+namespace gles3 {
 
 class Config {
 private:
@@ -119,6 +119,6 @@ public:
 	~Config();
 };
 
-} // namespace GLES3
+} //namespace gles3
 
 #endif // GLES3_ENABLED

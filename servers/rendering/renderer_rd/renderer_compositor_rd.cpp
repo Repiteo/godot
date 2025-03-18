@@ -310,13 +310,13 @@ RendererCompositorRD::RendererCompositorRD() {
 	ERR_FAIL_COND_MSG(singleton != nullptr, "A RendererCompositorRD singleton already exists.");
 	singleton = this;
 
-	utilities = memnew(RendererRD::Utilities);
-	texture_storage = memnew(RendererRD::TextureStorage);
-	material_storage = memnew(RendererRD::MaterialStorage);
-	mesh_storage = memnew(RendererRD::MeshStorage);
-	light_storage = memnew(RendererRD::LightStorage);
-	particles_storage = memnew(RendererRD::ParticlesStorage);
-	fog = memnew(RendererRD::Fog);
+	utilities = memnew(renderer_rd::Utilities);
+	texture_storage = memnew(renderer_rd::TextureStorage);
+	material_storage = memnew(renderer_rd::MaterialStorage);
+	mesh_storage = memnew(renderer_rd::MeshStorage);
+	light_storage = memnew(renderer_rd::LightStorage);
+	particles_storage = memnew(renderer_rd::ParticlesStorage);
+	fog = memnew(renderer_rd::Fog);
 	canvas = memnew(RendererCanvasRenderRD());
 
 	String rendering_method = OS::get_singleton()->get_current_rendering_method();
@@ -326,13 +326,13 @@ RendererCompositorRD::RendererCompositorRD() {
 		if (rendering_method == "forward_plus") {
 			WARN_PRINT_ONCE("Platform supports less than 48 textures per stage which is less than required by the Clustered renderer. Defaulting to Mobile renderer.");
 		}
-		scene = memnew(RendererSceneRenderImplementation::RenderForwardMobile());
+		scene = memnew(renderer_scene_render_implementation::RenderForwardMobile());
 	} else if (rendering_method == "forward_plus") {
-		scene = memnew(RendererSceneRenderImplementation::RenderForwardClustered());
+		scene = memnew(renderer_scene_render_implementation::RenderForwardClustered());
 	} else {
 		// Fall back to our high end renderer.
 		ERR_PRINT(vformat("Cannot instantiate RenderingDevice-based renderer with renderer type '%s'. Defaulting to Forward+ renderer.", rendering_method));
-		scene = memnew(RendererSceneRenderImplementation::RenderForwardClustered());
+		scene = memnew(renderer_scene_render_implementation::RenderForwardClustered());
 	}
 
 	scene->init();

@@ -50,13 +50,13 @@ protected:
 	UniformSetCacheRD *uniform_set_cache = nullptr;
 	FramebufferCacheRD *framebuffer_cache = nullptr;
 	RendererCanvasRenderRD *canvas = nullptr;
-	RendererRD::Utilities *utilities = nullptr;
-	RendererRD::LightStorage *light_storage = nullptr;
-	RendererRD::MaterialStorage *material_storage = nullptr;
-	RendererRD::MeshStorage *mesh_storage = nullptr;
-	RendererRD::ParticlesStorage *particles_storage = nullptr;
-	RendererRD::TextureStorage *texture_storage = nullptr;
-	RendererRD::Fog *fog = nullptr;
+	renderer_rd::Utilities *utilities = nullptr;
+	renderer_rd::LightStorage *light_storage = nullptr;
+	renderer_rd::MaterialStorage *material_storage = nullptr;
+	renderer_rd::MeshStorage *mesh_storage = nullptr;
+	renderer_rd::ParticlesStorage *particles_storage = nullptr;
+	renderer_rd::TextureStorage *texture_storage = nullptr;
+	renderer_rd::Fog *fog = nullptr;
 	RendererSceneRenderRD *scene = nullptr;
 
 	enum BlitMode {

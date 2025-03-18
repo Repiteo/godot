@@ -34,7 +34,7 @@
 #include "servers/rendering/renderer_rd/pipeline_hash_map_rd.h"
 #include "servers/rendering/renderer_rd/shaders/forward_clustered/scene_forward_clustered.glsl.gen.h"
 
-namespace RendererSceneRenderImplementation {
+namespace renderer_scene_render_implementation {
 
 class SceneShaderForwardClustered {
 private:
@@ -141,7 +141,7 @@ public:
 		};
 	};
 
-	struct ShaderData : public RendererRD::MaterialStorage::ShaderData {
+	struct ShaderData : public renderer_rd::MaterialStorage::ShaderData {
 		enum DepthDraw {
 			DEPTH_DRAW_DISABLED,
 			DEPTH_DRAW_OPAQUE,
@@ -290,12 +290,12 @@ public:
 
 	SelfList<ShaderData>::List shader_list;
 
-	RendererRD::MaterialStorage::ShaderData *_create_shader_func();
-	static RendererRD::MaterialStorage::ShaderData *_create_shader_funcs() {
+	renderer_rd::MaterialStorage::ShaderData *_create_shader_func();
+	static renderer_rd::MaterialStorage::ShaderData *_create_shader_funcs() {
 		return static_cast<SceneShaderForwardClustered *>(singleton)->_create_shader_func();
 	}
 
-	struct MaterialData : public RendererRD::MaterialStorage::MaterialData {
+	struct MaterialData : public renderer_rd::MaterialStorage::MaterialData {
 		ShaderData *shader_data = nullptr;
 		RID uniform_set;
 		uint64_t last_pass = 0;
@@ -308,8 +308,8 @@ public:
 		virtual ~MaterialData();
 	};
 
-	RendererRD::MaterialStorage::MaterialData *_create_material_func(ShaderData *p_shader);
-	static RendererRD::MaterialStorage::MaterialData *_create_material_funcs(RendererRD::MaterialStorage::ShaderData *p_shader) {
+	renderer_rd::MaterialStorage::MaterialData *_create_material_func(ShaderData *p_shader);
+	static renderer_rd::MaterialStorage::MaterialData *_create_material_funcs(renderer_rd::MaterialStorage::ShaderData *p_shader) {
 		return static_cast<SceneShaderForwardClustered *>(singleton)->_create_material_func(static_cast<ShaderData *>(p_shader));
 	}
 
@@ -354,4 +354,4 @@ public:
 	uint32_t get_pipeline_compilations(RS::PipelineSource p_source);
 };
 
-} // namespace RendererSceneRenderImplementation
+} // namespace renderer_scene_render_implementation

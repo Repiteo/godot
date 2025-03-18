@@ -41,21 +41,21 @@ protected:
 
 public:
 	enum PathfindingAlgorithm {
-		PATHFINDING_ALGORITHM_ASTAR = NavigationUtilities::PATHFINDING_ALGORITHM_ASTAR,
+		PATHFINDING_ALGORITHM_ASTAR = navigation_utilities::PATHFINDING_ALGORITHM_ASTAR,
 	};
 
 	enum PathPostProcessing {
-		PATH_POSTPROCESSING_CORRIDORFUNNEL = NavigationUtilities::PATH_POSTPROCESSING_CORRIDORFUNNEL,
-		PATH_POSTPROCESSING_EDGECENTERED = NavigationUtilities::PATH_POSTPROCESSING_EDGECENTERED,
-		PATH_POSTPROCESSING_NONE = NavigationUtilities::PATH_POSTPROCESSING_NONE,
+		PATH_POSTPROCESSING_CORRIDORFUNNEL = navigation_utilities::PATH_POSTPROCESSING_CORRIDORFUNNEL,
+		PATH_POSTPROCESSING_EDGECENTERED = navigation_utilities::PATH_POSTPROCESSING_EDGECENTERED,
+		PATH_POSTPROCESSING_NONE = navigation_utilities::PATH_POSTPROCESSING_NONE,
 	};
 
 	enum PathMetadataFlags {
-		PATH_METADATA_INCLUDE_NONE = NavigationUtilities::PathMetadataFlags::PATH_INCLUDE_NONE,
-		PATH_METADATA_INCLUDE_TYPES = NavigationUtilities::PathMetadataFlags::PATH_INCLUDE_TYPES,
-		PATH_METADATA_INCLUDE_RIDS = NavigationUtilities::PathMetadataFlags::PATH_INCLUDE_RIDS,
-		PATH_METADATA_INCLUDE_OWNERS = NavigationUtilities::PathMetadataFlags::PATH_INCLUDE_OWNERS,
-		PATH_METADATA_INCLUDE_ALL = NavigationUtilities::PathMetadataFlags::PATH_INCLUDE_ALL
+		PATH_METADATA_INCLUDE_NONE = navigation_utilities::PathMetadataFlags::PATH_INCLUDE_NONE,
+		PATH_METADATA_INCLUDE_TYPES = navigation_utilities::PathMetadataFlags::PATH_INCLUDE_TYPES,
+		PATH_METADATA_INCLUDE_RIDS = navigation_utilities::PathMetadataFlags::PATH_INCLUDE_RIDS,
+		PATH_METADATA_INCLUDE_OWNERS = navigation_utilities::PathMetadataFlags::PATH_INCLUDE_OWNERS,
+		PATH_METADATA_INCLUDE_ALL = navigation_utilities::PathMetadataFlags::PATH_INCLUDE_ALL
 	};
 
 private:

@@ -37,7 +37,7 @@
 
 #include <string.h>
 
-namespace WebPCommon {
+namespace webp_common {
 Vector<uint8_t> _webp_lossy_pack(const Ref<Image> &p_image, float p_quality) {
 	ERR_FAIL_COND_V(p_image.is_null() || p_image->is_empty(), Vector<uint8_t>());
 
@@ -178,4 +178,4 @@ Error webp_load_image_from_buffer(Image *p_image, const uint8_t *p_buffer, int p
 
 	return OK;
 }
-} // namespace WebPCommon
+} // namespace webp_common

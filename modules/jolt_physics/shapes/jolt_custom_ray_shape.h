@@ -58,17 +58,17 @@ public:
 	static void register_type();
 
 	JoltCustomRayShape() :
-			JPH::ConvexShape(JoltCustomShapeSubType::RAY) {}
+			JPH::ConvexShape(jolt_custom_shape_sub_type::RAY) {}
 
 	JoltCustomRayShape(const JoltCustomRayShapeSettings &p_settings, JPH::Shape::ShapeResult &p_result) :
-			JPH::ConvexShape(JoltCustomShapeSubType::RAY, p_settings, p_result), material(p_settings.material), length(p_settings.length), slide_on_slope(p_settings.slide_on_slope) {
+			JPH::ConvexShape(jolt_custom_shape_sub_type::RAY, p_settings, p_result), material(p_settings.material), length(p_settings.length), slide_on_slope(p_settings.slide_on_slope) {
 		if (!p_result.HasError()) {
 			p_result.Set(this);
 		}
 	}
 
 	JoltCustomRayShape(float p_length, bool p_slide_on_slope, const JPH::PhysicsMaterial *p_material = nullptr) :
-			JPH::ConvexShape(JoltCustomShapeSubType::RAY), material(p_material), length(p_length), slide_on_slope(p_slide_on_slope) {}
+			JPH::ConvexShape(jolt_custom_shape_sub_type::RAY), material(p_material), length(p_length), slide_on_slope(p_slide_on_slope) {}
 
 	virtual JPH::AABox GetLocalBounds() const override;
 

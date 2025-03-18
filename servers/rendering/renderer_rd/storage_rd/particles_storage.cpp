@@ -34,7 +34,7 @@
 #include "servers/rendering/rendering_server_globals.h"
 #include "texture_storage.h"
 
-using namespace RendererRD;
+using namespace renderer_rd;
 
 ParticlesStorage *ParticlesStorage::singleton = nullptr;
 
@@ -598,7 +598,7 @@ void ParticlesStorage::particles_emit(RID p_particles, const Transform3D &p_tran
 
 	int32_t idx = particles->emission_buffer->particle_count;
 	if (idx < particles->emission_buffer->particle_max) {
-		RendererRD::MaterialStorage::store_transform(p_transform, particles->emission_buffer->data[idx].xform);
+		renderer_rd::MaterialStorage::store_transform(p_transform, particles->emission_buffer->data[idx].xform);
 
 		particles->emission_buffer->data[idx].velocity[0] = p_velocity.x;
 		particles->emission_buffer->data[idx].velocity[1] = p_velocity.y;
@@ -846,9 +846,9 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 	frame_params.randomness = p_particles->randomness;
 
 	if (p_particles->use_local_coords) {
-		RendererRD::MaterialStorage::store_transform(Transform3D(), frame_params.emission_transform);
+		renderer_rd::MaterialStorage::store_transform(Transform3D(), frame_params.emission_transform);
 	} else {
-		RendererRD::MaterialStorage::store_transform(p_particles->emission_transform, frame_params.emission_transform);
+		renderer_rd::MaterialStorage::store_transform(p_particles->emission_transform, frame_params.emission_transform);
 	}
 
 	frame_params.cycle = p_particles->cycle_number;
@@ -951,7 +951,7 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 
 				ParticlesFrameParams::Attractor &attr = frame_params.attractors[frame_params.attractor_count];
 
-				RendererRD::MaterialStorage::store_transform(to_collider, attr.transform);
+				renderer_rd::MaterialStorage::store_transform(to_collider, attr.transform);
 				attr.strength = pc->attractor_strength;
 				attr.attenuation = pc->attractor_attenuation;
 				attr.directionality = pc->attractor_directionality;
@@ -999,7 +999,7 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 
 				ParticlesFrameParams::Collider &col = frame_params.colliders[frame_params.collider_count];
 
-				RendererRD::MaterialStorage::store_transform(to_collider, col.transform);
+				renderer_rd::MaterialStorage::store_transform(to_collider, col.transform);
 				switch (pc->type) {
 					case RS::PARTICLES_COLLISION_TYPE_SPHERE_COLLIDE: {
 						col.type = ParticlesFrameParams::COLLISION_TYPE_SPHERE;
@@ -1528,7 +1528,7 @@ void ParticlesStorage::update_particles() {
 				}
 
 				for (int i = 0; i < particles->trail_bind_poses.size(); i++) {
-					RendererRD::MaterialStorage::store_transform(particles->trail_bind_poses[i], &particles_shader.pose_update_buffer[i * 16]);
+					renderer_rd::MaterialStorage::store_transform(particles->trail_bind_poses[i], &particles_shader.pose_update_buffer[i * 16]);
 				}
 
 				RD::get_singleton()->buffer_update(particles->trail_bind_pose_buffer, 0, particles->trail_bind_poses.size() * 16 * sizeof(float), particles_shader.pose_update_buffer.ptr());
@@ -1608,14 +1608,14 @@ void ParticlesStorage::update_particles() {
 				// In local mode, particle positions are calculated locally (relative to the node position)
 				// and they're also drawn locally.
 				// It works as expected, so we just pass an identity transform.
-				RendererRD::MaterialStorage::store_transform(Transform3D(), copy_push_constant.inv_emission_transform);
+				renderer_rd::MaterialStorage::store_transform(Transform3D(), copy_push_constant.inv_emission_transform);
 			} else {
 				// In global mode, particle positions are calculated globally (relative to the canvas origin)
 				// but they're drawn locally.
 				// So, we need to pass the inverse of the emission transform to bring the
 				// particles to local coordinates before drawing.
 				Transform3D inv = particles->emission_transform.affine_inverse();
-				RendererRD::MaterialStorage::store_transform(inv, copy_push_constant.inv_emission_transform);
+				renderer_rd::MaterialStorage::store_transform(inv, copy_push_constant.inv_emission_transform);
 			}
 
 			copy_push_constant.total_particles = total_amount;

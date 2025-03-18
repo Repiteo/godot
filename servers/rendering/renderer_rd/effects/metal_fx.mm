@@ -37,7 +37,7 @@
 #import <Metal/Metal.h>
 #import <MetalFX/MetalFX.h>
 
-using namespace RendererRD;
+using namespace renderer_rd;
 
 #pragma mark - Spatial Scaler
 
@@ -169,7 +169,7 @@ MFXTemporalContext *MFXTemporalEffect::create_context(CreateParams p_params) con
 	return context;
 }
 
-void MFXTemporalEffect::process(RendererRD::MFXTemporalContext *p_ctx, RendererRD::MFXTemporalEffect::Params p_params) {
+void MFXTemporalEffect::process(renderer_rd::MFXTemporalContext *p_ctx, renderer_rd::MFXTemporalEffect::Params p_params) {
 	CallbackArgs *userdata = args_allocator.alloc(
 			this,
 			RDD::TextureID(RD::get_singleton()->get_driver_resource(RDC::DRIVER_RESOURCE_TEXTURE, p_params.src)),

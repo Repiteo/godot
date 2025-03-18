@@ -36,7 +36,7 @@
 
 #define RB_SCOPE_MOBILE SNAME("mobile")
 
-namespace RendererSceneRenderImplementation {
+namespace renderer_scene_render_implementation {
 
 class RenderForwardMobile : public RendererSceneRenderRD {
 	friend SceneShaderForwardMobile;
@@ -158,7 +158,7 @@ private:
 
 	/* Render Scene */
 
-	RID _setup_render_pass_uniform_set(RenderListType p_render_list, const RenderDataRD *p_render_data, RID p_radiance_texture, const RendererRD::MaterialStorage::Samplers &p_samplers, bool p_use_directional_shadow_atlas = false, int p_index = 0);
+	RID _setup_render_pass_uniform_set(RenderListType p_render_list, const RenderDataRD *p_render_data, RID p_radiance_texture, const renderer_rd::MaterialStorage::Samplers &p_samplers, bool p_use_directional_shadow_atlas = false, int p_index = 0);
 	void _pre_opaque_render(RenderDataRD *p_render_data);
 
 	uint64_t lightmap_texture_array_version = 0xFFFFFFFF;
@@ -508,13 +508,13 @@ protected:
 
 		// culled light info
 		uint32_t reflection_probe_count = 0;
-		RendererRD::ForwardID reflection_probes[MAX_RDL_CULL];
+		renderer_rd::ForwardID reflection_probes[MAX_RDL_CULL];
 		uint32_t omni_light_count = 0;
-		RendererRD::ForwardID omni_lights[MAX_RDL_CULL];
+		renderer_rd::ForwardID omni_lights[MAX_RDL_CULL];
 		uint32_t spot_light_count = 0;
-		RendererRD::ForwardID spot_lights[MAX_RDL_CULL];
+		renderer_rd::ForwardID spot_lights[MAX_RDL_CULL];
 		uint32_t decals_count = 0;
-		RendererRD::ForwardID decals[MAX_RDL_CULL];
+		renderer_rd::ForwardID decals[MAX_RDL_CULL];
 
 		GeometryInstanceSurfaceDataCache *surface_caches = nullptr;
 
@@ -548,7 +548,7 @@ protected:
 
 	/* Forward ID */
 
-	class ForwardIDStorageMobile : public RendererRD::ForwardIDStorage {
+	class ForwardIDStorageMobile : public renderer_rd::ForwardIDStorage {
 	public:
 		struct ForwardIDAllocator {
 			LocalVector<bool> allocations;
@@ -556,12 +556,12 @@ protected:
 			LocalVector<uint64_t> last_pass;
 		};
 
-		ForwardIDAllocator forward_id_allocators[RendererRD::FORWARD_ID_MAX];
+		ForwardIDAllocator forward_id_allocators[renderer_rd::FORWARD_ID_MAX];
 
 	public:
-		virtual RendererRD::ForwardID allocate_forward_id(RendererRD::ForwardIDType p_type) override;
-		virtual void free_forward_id(RendererRD::ForwardIDType p_type, RendererRD::ForwardID p_id) override;
-		virtual void map_forward_id(RendererRD::ForwardIDType p_type, RendererRD::ForwardID p_id, uint32_t p_index, uint64_t p_last_pass) override;
+		virtual renderer_rd::ForwardID allocate_forward_id(renderer_rd::ForwardIDType p_type) override;
+		virtual void free_forward_id(renderer_rd::ForwardIDType p_type, renderer_rd::ForwardID p_id) override;
+		virtual void map_forward_id(renderer_rd::ForwardIDType p_type, renderer_rd::ForwardID p_id, uint32_t p_index, uint64_t p_last_pass) override;
 		virtual bool uses_forward_ids() const override { return true; }
 	};
 
@@ -569,14 +569,14 @@ protected:
 
 	void fill_push_constant_instance_indices(SceneState::InstanceData *p_instance_data, const GeometryInstanceForwardMobile *p_instance);
 
-	virtual RendererRD::ForwardIDStorage *create_forward_id_storage() override {
+	virtual renderer_rd::ForwardIDStorage *create_forward_id_storage() override {
 		forward_id_storage_mobile = memnew(ForwardIDStorageMobile);
 		return forward_id_storage_mobile;
 	}
 
 	struct ForwardIDByMapSort {
 		uint8_t map;
-		RendererRD::ForwardID forward_id;
+		renderer_rd::ForwardID forward_id;
 		bool operator<(const ForwardIDByMapSort &p_sort) const {
 			return map > p_sort.map;
 		}
@@ -682,4 +682,4 @@ public:
 	RenderForwardMobile();
 	~RenderForwardMobile();
 };
-} // namespace RendererSceneRenderImplementation
+} // namespace renderer_scene_render_implementation

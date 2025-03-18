@@ -35,7 +35,7 @@
 #include "servers/rendering/renderer_rd/renderer_compositor_rd.h"
 #include "servers/rendering/renderer_rd/storage_rd/material_storage.h"
 
-using namespace RendererSceneRenderImplementation;
+using namespace renderer_scene_render_implementation;
 
 /* ShaderData */
 
@@ -421,7 +421,7 @@ SceneShaderForwardMobile::ShaderData::~ShaderData() {
 	}
 }
 
-RendererRD::MaterialStorage::ShaderData *SceneShaderForwardMobile::_create_shader_func() {
+renderer_rd::MaterialStorage::ShaderData *SceneShaderForwardMobile::_create_shader_func() {
 	MutexLock lock(SceneShaderForwardMobile::singleton_mutex);
 	ShaderData *shader_data = memnew(ShaderData);
 	singleton->shader_list.add(&shader_data->shader_list_element);
@@ -449,7 +449,7 @@ SceneShaderForwardMobile::MaterialData::~MaterialData() {
 	free_parameters_uniform_set(uniform_set);
 }
 
-RendererRD::MaterialStorage::MaterialData *SceneShaderForwardMobile::_create_material_func(ShaderData *p_shader) {
+renderer_rd::MaterialStorage::MaterialData *SceneShaderForwardMobile::_create_material_func(ShaderData *p_shader) {
 	MaterialData *material_data = memnew(MaterialData);
 	material_data->shader_data = p_shader;
 	//update will happen later anyway so do nothing.
@@ -467,7 +467,7 @@ SceneShaderForwardMobile::SceneShaderForwardMobile() {
 }
 
 void SceneShaderForwardMobile::init(const String p_defines) {
-	RendererRD::MaterialStorage *material_storage = RendererRD::MaterialStorage::get_singleton();
+	renderer_rd::MaterialStorage *material_storage = renderer_rd::MaterialStorage::get_singleton();
 
 	// Immutable samplers : create the shadow sampler to be passed when creating the pipeline.
 	{
@@ -514,8 +514,8 @@ void SceneShaderForwardMobile::init(const String p_defines) {
 		}
 	}
 
-	material_storage->shader_set_data_request_function(RendererRD::MaterialStorage::SHADER_TYPE_3D, _create_shader_funcs);
-	material_storage->material_set_data_request_function(RendererRD::MaterialStorage::SHADER_TYPE_3D, _create_material_funcs);
+	material_storage->shader_set_data_request_function(renderer_rd::MaterialStorage::SHADER_TYPE_3D, _create_shader_funcs);
+	material_storage->material_set_data_request_function(renderer_rd::MaterialStorage::SHADER_TYPE_3D, _create_material_funcs);
 
 	{
 		//shader compiler
@@ -737,7 +737,7 @@ void fragment() {
 		material_storage->material_initialize(default_material);
 		material_storage->material_set_shader(default_material, default_shader);
 
-		MaterialData *md = static_cast<MaterialData *>(material_storage->material_get_data(default_material, RendererRD::MaterialStorage::SHADER_TYPE_3D));
+		MaterialData *md = static_cast<MaterialData *>(material_storage->material_get_data(default_material, renderer_rd::MaterialStorage::SHADER_TYPE_3D));
 		default_shader_rd = shader.version_get_shader(md->shader_data->version, SHADER_VERSION_COLOR_PASS);
 
 		default_material_shader_ptr = md->shader_data;
@@ -764,7 +764,7 @@ void fragment() {
 		material_storage->material_initialize(overdraw_material);
 		material_storage->material_set_shader(overdraw_material, overdraw_material_shader);
 
-		MaterialData *md = static_cast<MaterialData *>(material_storage->material_get_data(overdraw_material, RendererRD::MaterialStorage::SHADER_TYPE_3D));
+		MaterialData *md = static_cast<MaterialData *>(material_storage->material_get_data(overdraw_material, renderer_rd::MaterialStorage::SHADER_TYPE_3D));
 		overdraw_material_shader_ptr = md->shader_data;
 		overdraw_material_uniform_set = md->uniform_set;
 	}
@@ -788,7 +788,7 @@ void fragment() {
 		material_storage->material_initialize(debug_shadow_splits_material);
 		material_storage->material_set_shader(debug_shadow_splits_material, debug_shadow_splits_material_shader);
 
-		MaterialData *md = static_cast<MaterialData *>(material_storage->material_get_data(debug_shadow_splits_material, RendererRD::MaterialStorage::SHADER_TYPE_3D));
+		MaterialData *md = static_cast<MaterialData *>(material_storage->material_get_data(debug_shadow_splits_material, renderer_rd::MaterialStorage::SHADER_TYPE_3D));
 		debug_shadow_splits_material_shader_ptr = md->shader_data;
 		debug_shadow_splits_material_uniform_set = md->uniform_set;
 	}
@@ -824,7 +824,7 @@ bool SceneShaderForwardMobile::is_multiview_enabled() const {
 }
 
 SceneShaderForwardMobile::~SceneShaderForwardMobile() {
-	RendererRD::MaterialStorage *material_storage = RendererRD::MaterialStorage::get_singleton();
+	renderer_rd::MaterialStorage *material_storage = renderer_rd::MaterialStorage::get_singleton();
 
 	RD::get_singleton()->free(default_vec4_xform_buffer);
 	RD::get_singleton()->free(shadow_sampler);

@@ -146,19 +146,19 @@ Vector<uint8_t> Utilities::buffer_get_data(GLenum p_target, GLuint p_buffer, uin
 /* INSTANCES */
 
 RS::InstanceType Utilities::get_base_type(RID p_rid) const {
-	if (GLES3::MeshStorage::get_singleton()->owns_mesh(p_rid)) {
+	if (gles3::MeshStorage::get_singleton()->owns_mesh(p_rid)) {
 		return RS::INSTANCE_MESH;
-	} else if (GLES3::MeshStorage::get_singleton()->owns_multimesh(p_rid)) {
+	} else if (gles3::MeshStorage::get_singleton()->owns_multimesh(p_rid)) {
 		return RS::INSTANCE_MULTIMESH;
-	} else if (GLES3::LightStorage::get_singleton()->owns_light(p_rid)) {
+	} else if (gles3::LightStorage::get_singleton()->owns_light(p_rid)) {
 		return RS::INSTANCE_LIGHT;
-	} else if (GLES3::LightStorage::get_singleton()->owns_lightmap(p_rid)) {
+	} else if (gles3::LightStorage::get_singleton()->owns_lightmap(p_rid)) {
 		return RS::INSTANCE_LIGHTMAP;
-	} else if (GLES3::ParticlesStorage::get_singleton()->owns_particles(p_rid)) {
+	} else if (gles3::ParticlesStorage::get_singleton()->owns_particles(p_rid)) {
 		return RS::INSTANCE_PARTICLES;
-	} else if (GLES3::LightStorage::get_singleton()->owns_reflection_probe(p_rid)) {
+	} else if (gles3::LightStorage::get_singleton()->owns_reflection_probe(p_rid)) {
 		return RS::INSTANCE_REFLECTION_PROBE;
-	} else if (GLES3::ParticlesStorage::get_singleton()->owns_particles_collision(p_rid)) {
+	} else if (gles3::ParticlesStorage::get_singleton()->owns_particles_collision(p_rid)) {
 		return RS::INSTANCE_PARTICLES_COLLISION;
 	} else if (owns_visibility_notifier(p_rid)) {
 		return RS::INSTANCE_VISIBLITY_NOTIFIER;
@@ -167,56 +167,56 @@ RS::InstanceType Utilities::get_base_type(RID p_rid) const {
 }
 
 bool Utilities::free(RID p_rid) {
-	if (GLES3::TextureStorage::get_singleton()->owns_render_target(p_rid)) {
-		GLES3::TextureStorage::get_singleton()->render_target_free(p_rid);
+	if (gles3::TextureStorage::get_singleton()->owns_render_target(p_rid)) {
+		gles3::TextureStorage::get_singleton()->render_target_free(p_rid);
 		return true;
-	} else if (GLES3::TextureStorage::get_singleton()->owns_texture(p_rid)) {
-		GLES3::TextureStorage::get_singleton()->texture_free(p_rid);
+	} else if (gles3::TextureStorage::get_singleton()->owns_texture(p_rid)) {
+		gles3::TextureStorage::get_singleton()->texture_free(p_rid);
 		return true;
-	} else if (GLES3::TextureStorage::get_singleton()->owns_canvas_texture(p_rid)) {
-		GLES3::TextureStorage::get_singleton()->canvas_texture_free(p_rid);
+	} else if (gles3::TextureStorage::get_singleton()->owns_canvas_texture(p_rid)) {
+		gles3::TextureStorage::get_singleton()->canvas_texture_free(p_rid);
 		return true;
-	} else if (GLES3::MaterialStorage::get_singleton()->owns_shader(p_rid)) {
-		GLES3::MaterialStorage::get_singleton()->shader_free(p_rid);
+	} else if (gles3::MaterialStorage::get_singleton()->owns_shader(p_rid)) {
+		gles3::MaterialStorage::get_singleton()->shader_free(p_rid);
 		return true;
-	} else if (GLES3::MaterialStorage::get_singleton()->owns_material(p_rid)) {
-		GLES3::MaterialStorage::get_singleton()->material_free(p_rid);
+	} else if (gles3::MaterialStorage::get_singleton()->owns_material(p_rid)) {
+		gles3::MaterialStorage::get_singleton()->material_free(p_rid);
 		return true;
-	} else if (GLES3::MeshStorage::get_singleton()->owns_mesh(p_rid)) {
-		GLES3::MeshStorage::get_singleton()->mesh_free(p_rid);
+	} else if (gles3::MeshStorage::get_singleton()->owns_mesh(p_rid)) {
+		gles3::MeshStorage::get_singleton()->mesh_free(p_rid);
 		return true;
-	} else if (GLES3::MeshStorage::get_singleton()->owns_multimesh(p_rid)) {
-		GLES3::MeshStorage::get_singleton()->multimesh_free(p_rid);
+	} else if (gles3::MeshStorage::get_singleton()->owns_multimesh(p_rid)) {
+		gles3::MeshStorage::get_singleton()->multimesh_free(p_rid);
 		return true;
-	} else if (GLES3::MeshStorage::get_singleton()->owns_mesh_instance(p_rid)) {
-		GLES3::MeshStorage::get_singleton()->mesh_instance_free(p_rid);
+	} else if (gles3::MeshStorage::get_singleton()->owns_mesh_instance(p_rid)) {
+		gles3::MeshStorage::get_singleton()->mesh_instance_free(p_rid);
 		return true;
-	} else if (GLES3::LightStorage::get_singleton()->owns_light(p_rid)) {
-		GLES3::LightStorage::get_singleton()->light_free(p_rid);
+	} else if (gles3::LightStorage::get_singleton()->owns_light(p_rid)) {
+		gles3::LightStorage::get_singleton()->light_free(p_rid);
 		return true;
-	} else if (GLES3::LightStorage::get_singleton()->owns_lightmap(p_rid)) {
-		GLES3::LightStorage::get_singleton()->lightmap_free(p_rid);
+	} else if (gles3::LightStorage::get_singleton()->owns_lightmap(p_rid)) {
+		gles3::LightStorage::get_singleton()->lightmap_free(p_rid);
 		return true;
-	} else if (GLES3::LightStorage::get_singleton()->owns_reflection_probe(p_rid)) {
-		GLES3::LightStorage::get_singleton()->reflection_probe_free(p_rid);
+	} else if (gles3::LightStorage::get_singleton()->owns_reflection_probe(p_rid)) {
+		gles3::LightStorage::get_singleton()->reflection_probe_free(p_rid);
 		return true;
-	} else if (GLES3::LightStorage::get_singleton()->owns_reflection_atlas(p_rid)) {
-		GLES3::LightStorage::get_singleton()->reflection_atlas_free(p_rid);
+	} else if (gles3::LightStorage::get_singleton()->owns_reflection_atlas(p_rid)) {
+		gles3::LightStorage::get_singleton()->reflection_atlas_free(p_rid);
 		return true;
-	} else if (GLES3::LightStorage::get_singleton()->owns_reflection_probe_instance(p_rid)) {
-		GLES3::LightStorage::get_singleton()->reflection_probe_instance_free(p_rid);
+	} else if (gles3::LightStorage::get_singleton()->owns_reflection_probe_instance(p_rid)) {
+		gles3::LightStorage::get_singleton()->reflection_probe_instance_free(p_rid);
 		return true;
-	} else if (GLES3::ParticlesStorage::get_singleton()->owns_particles(p_rid)) {
-		GLES3::ParticlesStorage::get_singleton()->particles_free(p_rid);
+	} else if (gles3::ParticlesStorage::get_singleton()->owns_particles(p_rid)) {
+		gles3::ParticlesStorage::get_singleton()->particles_free(p_rid);
 		return true;
-	} else if (GLES3::ParticlesStorage::get_singleton()->owns_particles_collision(p_rid)) {
-		GLES3::ParticlesStorage::get_singleton()->particles_collision_free(p_rid);
+	} else if (gles3::ParticlesStorage::get_singleton()->owns_particles_collision(p_rid)) {
+		gles3::ParticlesStorage::get_singleton()->particles_collision_free(p_rid);
 		return true;
-	} else if (GLES3::ParticlesStorage::get_singleton()->owns_particles_collision_instance(p_rid)) {
-		GLES3::ParticlesStorage::get_singleton()->particles_collision_instance_free(p_rid);
+	} else if (gles3::ParticlesStorage::get_singleton()->owns_particles_collision_instance(p_rid)) {
+		gles3::ParticlesStorage::get_singleton()->particles_collision_instance_free(p_rid);
 		return true;
-	} else if (GLES3::MeshStorage::get_singleton()->owns_skeleton(p_rid)) {
-		GLES3::MeshStorage::get_singleton()->skeleton_free(p_rid);
+	} else if (gles3::MeshStorage::get_singleton()->owns_skeleton(p_rid)) {
+		gles3::MeshStorage::get_singleton()->skeleton_free(p_rid);
 		return true;
 	} else if (owns_visibility_notifier(p_rid)) {
 		visibility_notifier_free(p_rid);

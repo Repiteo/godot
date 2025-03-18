@@ -34,7 +34,7 @@
 
 #include "drivers/gles3/shaders/effects/cubemap_filter.glsl.gen.h"
 
-namespace GLES3 {
+namespace gles3 {
 
 class CubemapFilter {
 private:
@@ -62,6 +62,6 @@ public:
 	void filter_radiance(GLuint p_source_cubemap, GLuint p_dest_cubemap, GLuint p_dest_framebuffer, int p_source_size, int p_mipmap_count, int p_layer);
 };
 
-} //namespace GLES3
+} //namespace gles3
 
 #endif // GLES3_ENABLED

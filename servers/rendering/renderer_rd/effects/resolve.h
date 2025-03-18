@@ -32,7 +32,7 @@
 
 #include "servers/rendering/renderer_rd/shaders/effects/resolve.glsl.gen.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class Resolve {
 private:
@@ -64,4 +64,4 @@ public:
 	void resolve_depth(RID p_source_depth, RID p_dest_depth, Vector2i p_screen_size, int p_samples);
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

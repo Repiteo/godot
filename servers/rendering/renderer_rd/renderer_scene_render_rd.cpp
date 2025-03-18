@@ -174,23 +174,23 @@ RID RendererSceneRenderRD::reflection_probe_create_framebuffer(RID p_color, RID 
 /* FOG VOLUME INSTANCE */
 
 RID RendererSceneRenderRD::fog_volume_instance_create(RID p_fog_volume) {
-	return RendererRD::Fog::get_singleton()->fog_volume_instance_create(p_fog_volume);
+	return renderer_rd::Fog::get_singleton()->fog_volume_instance_create(p_fog_volume);
 }
 
 void RendererSceneRenderRD::fog_volume_instance_set_transform(RID p_fog_volume_instance, const Transform3D &p_transform) {
-	RendererRD::Fog::get_singleton()->fog_volume_instance_set_transform(p_fog_volume_instance, p_transform);
+	renderer_rd::Fog::get_singleton()->fog_volume_instance_set_transform(p_fog_volume_instance, p_transform);
 }
 
 void RendererSceneRenderRD::fog_volume_instance_set_active(RID p_fog_volume_instance, bool p_active) {
-	RendererRD::Fog::get_singleton()->fog_volume_instance_set_active(p_fog_volume_instance, p_active);
+	renderer_rd::Fog::get_singleton()->fog_volume_instance_set_active(p_fog_volume_instance, p_active);
 }
 
 RID RendererSceneRenderRD::fog_volume_instance_get_volume(RID p_fog_volume_instance) const {
-	return RendererRD::Fog::get_singleton()->fog_volume_instance_get_volume(p_fog_volume_instance);
+	return renderer_rd::Fog::get_singleton()->fog_volume_instance_get_volume(p_fog_volume_instance);
 }
 
 Vector3 RendererSceneRenderRD::fog_volume_instance_get_position(RID p_fog_volume_instance) const {
-	return RendererRD::Fog::get_singleton()->fog_volume_instance_get_position(p_fog_volume_instance);
+	return renderer_rd::Fog::get_singleton()->fog_volume_instance_get_position(p_fog_volume_instance);
 }
 
 /* VOXEL GI */
@@ -230,7 +230,7 @@ void RendererSceneRenderRD::_debug_sdfgi_probes(Ref<RenderSceneBuffersRD> p_rend
 		return; //nothing to debug
 	}
 
-	Ref<RendererRD::GI::SDFGI> sdfgi = p_render_buffers->get_custom_data(RB_SCOPE_SDFGI);
+	Ref<renderer_rd::GI::SDFGI> sdfgi = p_render_buffers->get_custom_data(RB_SCOPE_SDFGI);
 
 	sdfgi->debug_probes(p_framebuffer, p_view_count, p_camera_with_transforms);
 }
@@ -413,7 +413,7 @@ void RendererSceneRenderRD::_render_buffers_copy_depth_texture(const RenderDataR
 }
 
 void RendererSceneRenderRD::_render_buffers_post_process_and_tonemap(const RenderDataRD *p_render_data) {
-	RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
+	renderer_rd::TextureStorage *texture_storage = renderer_rd::TextureStorage::get_singleton();
 
 	ERR_FAIL_NULL(p_render_data);
 
@@ -454,7 +454,7 @@ void RendererSceneRenderRD::_render_buffers_post_process_and_tonemap(const Rende
 
 		rb->allocate_blur_textures();
 
-		RendererRD::BokehDOF::BokehBuffers buffers;
+		renderer_rd::BokehDOF::BokehBuffers buffers;
 
 		// Textures we use
 		buffers.base_texture_size = color_size;
@@ -506,7 +506,7 @@ void RendererSceneRenderRD::_render_buffers_post_process_and_tonemap(const Rende
 
 		RD::get_singleton()->draw_command_begin_label("Auto exposure");
 
-		Ref<RendererRD::Luminance::LuminanceBuffers> luminance_buffers = luminance->get_luminance_buffers(rb);
+		Ref<renderer_rd::Luminance::LuminanceBuffers> luminance_buffers = luminance->get_luminance_buffers(rb);
 
 		uint64_t auto_exposure_version = RSG::camera_attributes->camera_attributes_get_auto_exposure_version(p_render_data->camera_attributes);
 		bool set_immediate = auto_exposure_version != rb->get_auto_exposure_version();
@@ -583,19 +583,19 @@ void RendererSceneRenderRD::_render_buffers_post_process_and_tonemap(const Rende
 		RENDER_TIMESTAMP("Tonemap");
 		RD::get_singleton()->draw_command_begin_label("Tonemap");
 
-		RendererRD::ToneMapper::TonemapSettings tonemap;
+		renderer_rd::ToneMapper::TonemapSettings tonemap;
 
 		tonemap.exposure_texture = luminance->get_current_luminance_buffer(rb);
 		if (can_use_effects && RSG::camera_attributes->camera_attributes_uses_auto_exposure(p_render_data->camera_attributes) && tonemap.exposure_texture.is_valid()) {
 			tonemap.use_auto_exposure = true;
 			tonemap.auto_exposure_scale = auto_exposure_scale;
 		} else {
-			tonemap.exposure_texture = texture_storage->texture_rd_get_default(RendererRD::TextureStorage::DEFAULT_RD_TEXTURE_WHITE);
+			tonemap.exposure_texture = texture_storage->texture_rd_get_default(renderer_rd::TextureStorage::DEFAULT_RD_TEXTURE_WHITE);
 		}
 
 		if (can_use_effects && p_render_data->environment.is_valid() && environment_get_glow_enabled(p_render_data->environment)) {
 			tonemap.use_glow = true;
-			tonemap.glow_mode = RendererRD::ToneMapper::TonemapSettings::GlowMode(environment_get_glow_blend_mode(p_render_data->environment));
+			tonemap.glow_mode = renderer_rd::ToneMapper::TonemapSettings::GlowMode(environment_get_glow_blend_mode(p_render_data->environment));
 			tonemap.glow_intensity = environment_get_glow_blend_mode(p_render_data->environment) == RS::ENV_GLOW_BLEND_MODE_MIX ? environment_get_glow_mix(p_render_data->environment) : environment_get_glow_intensity(p_render_data->environment);
 			for (int i = 0; i < RS::MAX_GLOW_LEVELS; i++) {
 				tonemap.glow_levels[i] = environment_get_glow_levels(p_render_data->environment)[i];
@@ -611,12 +611,12 @@ void RendererSceneRenderRD::_render_buffers_post_process_and_tonemap(const Rende
 				tonemap.glow_map = texture_storage->texture_get_rd_texture(environment_get_glow_map(p_render_data->environment));
 			} else {
 				tonemap.glow_map_strength = 0.0f;
-				tonemap.glow_map = texture_storage->texture_rd_get_default(RendererRD::TextureStorage::DEFAULT_RD_TEXTURE_WHITE);
+				tonemap.glow_map = texture_storage->texture_rd_get_default(renderer_rd::TextureStorage::DEFAULT_RD_TEXTURE_WHITE);
 			}
 
 		} else {
-			tonemap.glow_texture = texture_storage->texture_rd_get_default(RendererRD::TextureStorage::DEFAULT_RD_TEXTURE_BLACK);
-			tonemap.glow_map = texture_storage->texture_rd_get_default(RendererRD::TextureStorage::DEFAULT_RD_TEXTURE_WHITE);
+			tonemap.glow_texture = texture_storage->texture_rd_get_default(renderer_rd::TextureStorage::DEFAULT_RD_TEXTURE_BLACK);
+			tonemap.glow_map = texture_storage->texture_rd_get_default(renderer_rd::TextureStorage::DEFAULT_RD_TEXTURE_WHITE);
 		}
 
 		if (rb->get_screen_space_aa() == RS::VIEWPORT_SCREEN_SPACE_AA_FXAA) {
@@ -634,7 +634,7 @@ void RendererSceneRenderRD::_render_buffers_post_process_and_tonemap(const Rende
 
 		tonemap.use_color_correction = false;
 		tonemap.use_1d_color_correction = false;
-		tonemap.color_correction_texture = texture_storage->texture_rd_get_default(RendererRD::TextureStorage::DEFAULT_RD_TEXTURE_3D_WHITE);
+		tonemap.color_correction_texture = texture_storage->texture_rd_get_default(renderer_rd::TextureStorage::DEFAULT_RD_TEXTURE_3D_WHITE);
 
 		if (can_use_effects && p_render_data->environment.is_valid()) {
 			tonemap.use_bcs = environment_get_adjustments_enabled(p_render_data->environment);
@@ -705,7 +705,7 @@ void RendererSceneRenderRD::_render_buffers_post_process_and_tonemap(const Rende
 }
 
 void RendererSceneRenderRD::_post_process_subpass(RID p_source_texture, RID p_framebuffer, const RenderDataRD *p_render_data) {
-	RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
+	renderer_rd::TextureStorage *texture_storage = renderer_rd::TextureStorage::get_singleton();
 	RD::get_singleton()->draw_command_begin_label("Post Process Subpass");
 
 	Ref<RenderSceneBuffersRD> rb = p_render_data->render_buffers;
@@ -718,7 +718,7 @@ void RendererSceneRenderRD::_post_process_subpass(RID p_source_texture, RID p_fr
 
 	RD::DrawListID draw_list = RD::get_singleton()->draw_list_switch_to_next_pass();
 
-	RendererRD::ToneMapper::TonemapSettings tonemap;
+	renderer_rd::ToneMapper::TonemapSettings tonemap;
 
 	if (p_render_data->environment.is_valid()) {
 		tonemap.tonemap_mode = environment_get_tone_mapper(p_render_data->environment);
@@ -738,14 +738,14 @@ void RendererSceneRenderRD::_post_process_subpass(RID p_source_texture, RID p_fr
 	}
 
 	tonemap.use_glow = false;
-	tonemap.glow_texture = texture_storage->texture_rd_get_default(RendererRD::TextureStorage::DEFAULT_RD_TEXTURE_BLACK);
-	tonemap.glow_map = texture_storage->texture_rd_get_default(RendererRD::TextureStorage::DEFAULT_RD_TEXTURE_WHITE);
+	tonemap.glow_texture = texture_storage->texture_rd_get_default(renderer_rd::TextureStorage::DEFAULT_RD_TEXTURE_BLACK);
+	tonemap.glow_map = texture_storage->texture_rd_get_default(renderer_rd::TextureStorage::DEFAULT_RD_TEXTURE_WHITE);
 	tonemap.use_auto_exposure = false;
-	tonemap.exposure_texture = texture_storage->texture_rd_get_default(RendererRD::TextureStorage::DEFAULT_RD_TEXTURE_WHITE);
+	tonemap.exposure_texture = texture_storage->texture_rd_get_default(renderer_rd::TextureStorage::DEFAULT_RD_TEXTURE_WHITE);
 
 	tonemap.use_color_correction = false;
 	tonemap.use_1d_color_correction = false;
-	tonemap.color_correction_texture = texture_storage->texture_rd_get_default(RendererRD::TextureStorage::DEFAULT_RD_TEXTURE_3D_WHITE);
+	tonemap.color_correction_texture = texture_storage->texture_rd_get_default(renderer_rd::TextureStorage::DEFAULT_RD_TEXTURE_3D_WHITE);
 
 	if (can_use_effects && p_render_data->environment.is_valid()) {
 		tonemap.use_bcs = environment_get_adjustments_enabled(p_render_data->environment);
@@ -775,7 +775,7 @@ void RendererSceneRenderRD::_post_process_subpass(RID p_source_texture, RID p_fr
 void RendererSceneRenderRD::_disable_clear_request(const RenderDataRD *p_render_data) {
 	ERR_FAIL_COND(p_render_data->render_buffers.is_null());
 
-	RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
+	renderer_rd::TextureStorage *texture_storage = renderer_rd::TextureStorage::get_singleton();
 	texture_storage->render_target_disable_clear_request(p_render_data->render_buffers->get_render_target());
 }
 
@@ -830,8 +830,8 @@ bool RendererSceneRenderRD::_debug_draw_can_use_effects(RS::ViewportDebugDraw p_
 }
 
 void RendererSceneRenderRD::_render_buffers_debug_draw(const RenderDataRD *p_render_data) {
-	RendererRD::LightStorage *light_storage = RendererRD::LightStorage::get_singleton();
-	RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
+	renderer_rd::LightStorage *light_storage = renderer_rd::LightStorage::get_singleton();
+	renderer_rd::TextureStorage *texture_storage = renderer_rd::TextureStorage::get_singleton();
 
 	Ref<RenderSceneBuffersRD> rb = p_render_data->render_buffers;
 	ERR_FAIL_COND(rb.is_null());
@@ -840,10 +840,10 @@ void RendererSceneRenderRD::_render_buffers_debug_draw(const RenderDataRD *p_ren
 
 	if (debug_draw == RS::VIEWPORT_DEBUG_DRAW_SHADOW_ATLAS) {
 		if (p_render_data->shadow_atlas.is_valid()) {
-			RID shadow_atlas_texture = RendererRD::LightStorage::get_singleton()->shadow_atlas_get_texture(p_render_data->shadow_atlas);
+			RID shadow_atlas_texture = renderer_rd::LightStorage::get_singleton()->shadow_atlas_get_texture(p_render_data->shadow_atlas);
 
 			if (shadow_atlas_texture.is_null()) {
-				shadow_atlas_texture = texture_storage->texture_rd_get_default(RendererRD::TextureStorage::DEFAULT_RD_TEXTURE_BLACK);
+				shadow_atlas_texture = texture_storage->texture_rd_get_default(renderer_rd::TextureStorage::DEFAULT_RD_TEXTURE_BLACK);
 			}
 
 			Size2 rtsize = texture_storage->render_target_get_size(render_target);
@@ -852,8 +852,8 @@ void RendererSceneRenderRD::_render_buffers_debug_draw(const RenderDataRD *p_ren
 	}
 
 	if (debug_draw == RS::VIEWPORT_DEBUG_DRAW_DIRECTIONAL_SHADOW_ATLAS) {
-		if (RendererRD::LightStorage::get_singleton()->directional_shadow_get_texture().is_valid()) {
-			RID shadow_atlas_texture = RendererRD::LightStorage::get_singleton()->directional_shadow_get_texture();
+		if (renderer_rd::LightStorage::get_singleton()->directional_shadow_get_texture().is_valid()) {
+			RID shadow_atlas_texture = renderer_rd::LightStorage::get_singleton()->directional_shadow_get_texture();
 			Size2i rtsize = texture_storage->render_target_get_size(render_target);
 			RID dest_fb = texture_storage->render_target_get_rd_framebuffer(render_target);
 
@@ -880,7 +880,7 @@ void RendererSceneRenderRD::_render_buffers_debug_draw(const RenderDataRD *p_ren
 	}
 
 	if (debug_draw == RS::VIEWPORT_DEBUG_DRAW_DECAL_ATLAS) {
-		RID decal_atlas = RendererRD::TextureStorage::get_singleton()->decal_atlas_get_texture();
+		RID decal_atlas = renderer_rd::TextureStorage::get_singleton()->decal_atlas_get_texture();
 
 		if (decal_atlas.is_valid()) {
 			Size2i rtsize = texture_storage->render_target_get_size(render_target);
@@ -1082,7 +1082,7 @@ void RendererSceneRenderRD::_update_vrs(Ref<RenderSceneBuffersRD> p_render_buffe
 	}
 
 	if (vrs) {
-		RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
+		renderer_rd::TextureStorage *texture_storage = renderer_rd::TextureStorage::get_singleton();
 
 		RS::ViewportVRSMode vrs_mode = texture_storage->render_target_get_vrs_mode(render_target);
 		if (vrs_mode != RS::VIEWPORT_VRS_DISABLED) {
@@ -1122,14 +1122,14 @@ void RendererSceneRenderRD::_post_prepass_render(RenderDataRD *p_render_data, bo
 			return;
 		}
 
-		Ref<RendererRD::GI::SDFGI> sdfgi = p_render_data->render_buffers->get_custom_data(RB_SCOPE_SDFGI);
+		Ref<renderer_rd::GI::SDFGI> sdfgi = p_render_data->render_buffers->get_custom_data(RB_SCOPE_SDFGI);
 		sdfgi->update_probes(p_render_data->environment, sky.sky_owner.get_or_null(environment_get_sky(p_render_data->environment)));
 	}
 }
 
 void RendererSceneRenderRD::render_scene(const Ref<RenderSceneBuffers> &p_render_buffers, const CameraData *p_camera_data, const CameraData *p_prev_camera_data, const PagedArray<RenderGeometryInstance *> &p_instances, const PagedArray<RID> &p_lights, const PagedArray<RID> &p_reflection_probes, const PagedArray<RID> &p_voxel_gi_instances, const PagedArray<RID> &p_decals, const PagedArray<RID> &p_lightmaps, const PagedArray<RID> &p_fog_volumes, RID p_environment, RID p_camera_attributes, RID p_compositor, RID p_shadow_atlas, RID p_occluder_debug_tex, RID p_reflection_atlas, RID p_reflection_probe, int p_reflection_probe_pass, float p_screen_mesh_lod_threshold, const RenderShadowData *p_render_shadows, int p_render_shadow_count, const RenderSDFGIData *p_render_sdfgi_regions, int p_render_sdfgi_region_count, const RenderSDFGIUpdateData *p_sdfgi_update_data, RenderingMethod::RenderInfo *r_render_info) {
-	RendererRD::LightStorage *light_storage = RendererRD::LightStorage::get_singleton();
-	RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
+	renderer_rd::LightStorage *light_storage = renderer_rd::LightStorage::get_singleton();
+	renderer_rd::TextureStorage *texture_storage = renderer_rd::TextureStorage::get_singleton();
 
 	// getting this here now so we can direct call a bunch of things more easily
 	ERR_FAIL_COND(p_render_buffers.is_null());
@@ -1264,7 +1264,7 @@ void RendererSceneRenderRD::render_material(const Transform3D &p_cam_transform, 
 }
 
 void RendererSceneRenderRD::render_particle_collider_heightfield(RID p_collider, const Transform3D &p_transform, const PagedArray<RenderGeometryInstance *> &p_instances) {
-	RendererRD::ParticlesStorage *particles_storage = RendererRD::ParticlesStorage::get_singleton();
+	renderer_rd::ParticlesStorage *particles_storage = renderer_rd::ParticlesStorage::get_singleton();
 
 	ERR_FAIL_COND(!particles_storage->particles_collision_is_heightfield(p_collider));
 	Vector3 extents = particles_storage->particles_collision_get_extents(p_collider) * p_transform.basis.get_scale();
@@ -1296,8 +1296,8 @@ bool RendererSceneRenderRD::free(RID p_rid) {
 	} else if (sky.sky_owner.owns(p_rid)) {
 		sky.update_dirty_skys();
 		sky.free_sky(p_rid);
-	} else if (RendererRD::Fog::get_singleton()->owns_fog_volume_instance(p_rid)) {
-		RendererRD::Fog::get_singleton()->fog_instance_free(p_rid);
+	} else if (renderer_rd::Fog::get_singleton()->owns_fog_volume_instance(p_rid)) {
+		renderer_rd::Fog::get_singleton()->fog_instance_free(p_rid);
 	} else {
 		return false;
 	}
@@ -1461,7 +1461,7 @@ RendererSceneRenderRD::RendererSceneRenderRD() {
 
 void RendererSceneRenderRD::init() {
 	max_cluster_elements = get_max_elements();
-	RendererRD::LightStorage::get_singleton()->set_max_cluster_elements(max_cluster_elements);
+	renderer_rd::LightStorage::get_singleton()->set_max_cluster_elements(max_cluster_elements);
 
 	/* Forward ID */
 	forward_id_storage = create_forward_id_storage();
@@ -1484,14 +1484,14 @@ void RendererSceneRenderRD::init() {
 	}
 
 	{ //decals
-		RendererRD::TextureStorage::get_singleton()->set_max_decals(max_cluster_elements);
+		renderer_rd::TextureStorage::get_singleton()->set_max_decals(max_cluster_elements);
 	}
 
 	{ //lights
 	}
 
 	if (is_volumetric_supported()) {
-		RendererRD::Fog::get_singleton()->init_fog_shader(RendererRD::LightStorage::get_singleton()->get_max_directional_lights(), get_roughness_layers(), is_using_radiance_cubemap_array());
+		renderer_rd::Fog::get_singleton()->init_fog_shader(renderer_rd::LightStorage::get_singleton()->get_max_directional_lights(), get_roughness_layers(), is_using_radiance_cubemap_array());
 	}
 
 	RSG::camera_attributes->camera_attributes_set_dof_blur_bokeh_shape(RS::DOFBokehShape(int(GLOBAL_GET("rendering/camera/depth_of_field/depth_of_field_bokeh_shape"))));
@@ -1521,19 +1521,19 @@ void RendererSceneRenderRD::init() {
 
 	bool can_use_storage = _render_buffers_can_be_storage();
 	bool can_use_vrs = is_vrs_supported();
-	bokeh_dof = memnew(RendererRD::BokehDOF(!can_use_storage));
-	copy_effects = memnew(RendererRD::CopyEffects(!can_use_storage));
-	debug_effects = memnew(RendererRD::DebugEffects);
-	luminance = memnew(RendererRD::Luminance(!can_use_storage));
-	tone_mapper = memnew(RendererRD::ToneMapper);
+	bokeh_dof = memnew(renderer_rd::BokehDOF(!can_use_storage));
+	copy_effects = memnew(renderer_rd::CopyEffects(!can_use_storage));
+	debug_effects = memnew(renderer_rd::DebugEffects);
+	luminance = memnew(renderer_rd::Luminance(!can_use_storage));
+	tone_mapper = memnew(renderer_rd::ToneMapper);
 	if (can_use_vrs) {
-		vrs = memnew(RendererRD::VRS);
+		vrs = memnew(renderer_rd::VRS);
 	}
 	if (can_use_storage) {
-		fsr = memnew(RendererRD::FSR);
+		fsr = memnew(renderer_rd::FSR);
 	}
 #ifdef METAL_ENABLED
-	mfx_spatial = memnew(RendererRD::MFXSpatialEffect);
+	mfx_spatial = memnew(renderer_rd::MFXSpatialEffect);
 #endif
 }
 
@@ -1578,7 +1578,7 @@ RendererSceneRenderRD::~RendererSceneRenderRD() {
 	}
 
 	if (is_volumetric_supported()) {
-		RendererRD::Fog::get_singleton()->free_fog_shader();
+		renderer_rd::Fog::get_singleton()->free_fog_shader();
 	}
 
 	memdelete_arr(directional_penumbra_shadow_kernel);

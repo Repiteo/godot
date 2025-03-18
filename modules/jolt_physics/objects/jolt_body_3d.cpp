@@ -77,15 +77,15 @@ bool integrate(TValue &p_value, PhysicsServer3D::AreaSpaceOverrideMode p_mode, T
 JPH::BroadPhaseLayer JoltBody3D::_get_broad_phase_layer() const {
 	switch (mode) {
 		case PhysicsServer3D::BODY_MODE_STATIC: {
-			return _is_big() ? JoltBroadPhaseLayer::BODY_STATIC_BIG : JoltBroadPhaseLayer::BODY_STATIC;
+			return _is_big() ? jolt_broad_phase_layer::BODY_STATIC_BIG : jolt_broad_phase_layer::BODY_STATIC;
 		}
 		case PhysicsServer3D::BODY_MODE_KINEMATIC:
 		case PhysicsServer3D::BODY_MODE_RIGID:
 		case PhysicsServer3D::BODY_MODE_RIGID_LINEAR: {
-			return JoltBroadPhaseLayer::BODY_DYNAMIC;
+			return jolt_broad_phase_layer::BODY_DYNAMIC;
 		}
 		default: {
-			ERR_FAIL_V_MSG(JoltBroadPhaseLayer::BODY_STATIC, vformat("Unhandled body mode: '%d'. This should not happen. Please report this.", mode));
+			ERR_FAIL_V_MSG(jolt_broad_phase_layer::BODY_STATIC, vformat("Unhandled body mode: '%d'. This should not happen. Please report this.", mode));
 		}
 	}
 }

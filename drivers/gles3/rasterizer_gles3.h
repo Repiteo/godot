@@ -65,20 +65,20 @@ private:
 	static bool gles_over_gl;
 
 protected:
-	GLES3::Config *config = nullptr;
-	GLES3::Utilities *utilities = nullptr;
-	GLES3::TextureStorage *texture_storage = nullptr;
-	GLES3::MaterialStorage *material_storage = nullptr;
-	GLES3::MeshStorage *mesh_storage = nullptr;
-	GLES3::ParticlesStorage *particles_storage = nullptr;
-	GLES3::LightStorage *light_storage = nullptr;
-	GLES3::GI *gi = nullptr;
-	GLES3::Fog *fog = nullptr;
-	GLES3::CopyEffects *copy_effects = nullptr;
-	GLES3::CubemapFilter *cubemap_filter = nullptr;
-	GLES3::Glow *glow = nullptr;
-	GLES3::PostEffects *post_effects = nullptr;
-	GLES3::FeedEffects *feed_effects = nullptr;
+	gles3::Config *config = nullptr;
+	gles3::Utilities *utilities = nullptr;
+	gles3::TextureStorage *texture_storage = nullptr;
+	gles3::MaterialStorage *material_storage = nullptr;
+	gles3::MeshStorage *mesh_storage = nullptr;
+	gles3::ParticlesStorage *particles_storage = nullptr;
+	gles3::LightStorage *light_storage = nullptr;
+	gles3::GI *gi = nullptr;
+	gles3::Fog *fog = nullptr;
+	gles3::CopyEffects *copy_effects = nullptr;
+	gles3::CubemapFilter *cubemap_filter = nullptr;
+	gles3::Glow *glow = nullptr;
+	gles3::PostEffects *post_effects = nullptr;
+	gles3::FeedEffects *feed_effects = nullptr;
 	RasterizerCanvasGLES3 *canvas = nullptr;
 	RasterizerSceneGLES3 *scene = nullptr;
 	static RasterizerGLES3 *singleton;

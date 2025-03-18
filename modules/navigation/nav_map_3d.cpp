@@ -78,7 +78,7 @@ void NavMap3D::set_cell_size(real_t p_cell_size) {
 	if (cell_size == p_cell_size) {
 		return;
 	}
-	cell_size = MAX(p_cell_size, NavigationDefaults3D::navmesh_cell_size_min);
+	cell_size = MAX(p_cell_size, navigation_defaults_3d::navmesh_cell_size_min);
 	_update_merge_rasterizer_cell_dimensions();
 	map_settings_dirty = true;
 }
@@ -87,7 +87,7 @@ void NavMap3D::set_cell_height(real_t p_cell_height) {
 	if (cell_height == p_cell_height) {
 		return;
 	}
-	cell_height = MAX(p_cell_height, NavigationDefaults3D::navmesh_cell_size_min);
+	cell_height = MAX(p_cell_height, navigation_defaults_3d::navmesh_cell_size_min);
 	_update_merge_rasterizer_cell_dimensions();
 	map_settings_dirty = true;
 }
@@ -96,7 +96,7 @@ void NavMap3D::set_merge_rasterizer_cell_scale(float p_value) {
 	if (merge_rasterizer_cell_scale == p_value) {
 		return;
 	}
-	merge_rasterizer_cell_scale = MAX(p_value, NavigationDefaults3D::navmesh_cell_size_min);
+	merge_rasterizer_cell_scale = MAX(p_value, navigation_defaults_3d::navmesh_cell_size_min);
 	_update_merge_rasterizer_cell_dimensions();
 	map_settings_dirty = true;
 }

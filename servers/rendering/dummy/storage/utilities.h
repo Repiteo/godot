@@ -32,7 +32,7 @@
 
 #include "servers/rendering/storage/utilities.h"
 
-namespace RendererDummy {
+namespace renderer_dummy {
 
 class Utilities : public RendererUtilities {
 private:
@@ -97,4 +97,4 @@ public:
 	virtual uint64_t get_maximum_uniform_buffer_size() const override { return 65536; } // Fair assumption for all devices.
 };
 
-} // namespace RendererDummy
+} // namespace renderer_dummy

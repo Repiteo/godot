@@ -124,14 +124,14 @@ private:
 	int breakpoint_id = 0;
 	int stackframe_id = 0;
 	DAPVarID variable_id = 0;
-	List<DAP::Breakpoint> breakpoint_list;
-	HashMap<DAP::StackFrame, List<int>, DAP::StackFrame> stackframe_list;
+	List<dap::Breakpoint> breakpoint_list;
+	HashMap<dap::StackFrame, List<int>, dap::StackFrame> stackframe_list;
 	HashMap<DAPVarID, Array> variable_list;
 
 	HashMap<ObjectID, DAPVarID> object_list;
 	HashSet<ObjectID> object_pending_set;
 
-	HashMap<String, DAP::Variable> eval_list;
+	HashMap<String, dap::Variable> eval_list;
 	HashSet<String> eval_pending_list;
 
 public:
@@ -156,7 +156,7 @@ public:
 	void notify_continued();
 	void notify_output(const String &p_message, RemoteDebugger::MessageType p_type);
 	void notify_custom_data(const String &p_msg, const Array &p_data);
-	void notify_breakpoint(const DAP::Breakpoint &p_breakpoint, const bool &p_enabled);
+	void notify_breakpoint(const dap::Breakpoint &p_breakpoint, const bool &p_enabled);
 
 	Array update_breakpoints(const String &p_path, const Array &p_lines);
 

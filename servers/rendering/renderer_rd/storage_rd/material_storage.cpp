@@ -37,7 +37,7 @@
 #include "servers/rendering/storage/variant_converters.h"
 #include "texture_storage.h"
 
-using namespace RendererRD;
+using namespace renderer_rd;
 
 ///////////////////////////////////////////////////////////////////////////
 // UBI helper functions
@@ -2317,17 +2317,17 @@ bool MaterialStorage::material_casts_shadows(RID p_material) {
 	return true; //by default everything casts shadows
 }
 
-RS::CullMode RendererRD::MaterialStorage::material_get_cull_mode(RID p_material) const {
+RS::CullMode renderer_rd::MaterialStorage::material_get_cull_mode(RID p_material) const {
 	Material *material = material_owner.get_or_null(p_material);
 	ERR_FAIL_NULL_V(material, RS::CULL_MODE_DISABLED);
 	ERR_FAIL_NULL_V(material->shader, RS::CULL_MODE_DISABLED);
 	if (material->shader->type == ShaderType::SHADER_TYPE_3D && material->shader->data) {
-		RendererSceneRenderImplementation::SceneShaderForwardClustered::ShaderData *sd_clustered = dynamic_cast<RendererSceneRenderImplementation::SceneShaderForwardClustered::ShaderData *>(material->shader->data);
+		renderer_scene_render_implementation::SceneShaderForwardClustered::ShaderData *sd_clustered = dynamic_cast<renderer_scene_render_implementation::SceneShaderForwardClustered::ShaderData *>(material->shader->data);
 		if (sd_clustered) {
 			return (RS::CullMode)sd_clustered->cull_mode;
 		}
 
-		RendererSceneRenderImplementation::SceneShaderForwardMobile::ShaderData *sd_mobile = dynamic_cast<RendererSceneRenderImplementation::SceneShaderForwardMobile::ShaderData *>(material->shader->data);
+		renderer_scene_render_implementation::SceneShaderForwardMobile::ShaderData *sd_mobile = dynamic_cast<renderer_scene_render_implementation::SceneShaderForwardMobile::ShaderData *>(material->shader->data);
 		if (sd_mobile) {
 			return (RS::CullMode)sd_mobile->cull_mode;
 		}

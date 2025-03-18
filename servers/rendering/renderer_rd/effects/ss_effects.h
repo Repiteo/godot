@@ -67,7 +67,7 @@
 
 class RenderSceneBuffersRD;
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class SSEffects {
 private:
@@ -525,4 +525,4 @@ private:
 	} sss;
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

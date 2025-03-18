@@ -448,7 +448,7 @@ bool EditorExportPlatformWeb::has_valid_project_configuration(const Ref<EditorEx
 	// Validate the project configuration.
 
 	if (p_preset->get("vram_texture_compression/for_mobile")) {
-		if (!ResourceImporterTextureSettings::should_import_etc2_astc()) {
+		if (!resource_importer_texture_settings::should_import_etc2_astc()) {
 			valid = false;
 		}
 	}

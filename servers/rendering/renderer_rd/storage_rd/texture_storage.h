@@ -38,7 +38,7 @@
 #include "servers/rendering/storage/texture_storage.h"
 #include "servers/rendering/storage/utilities.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class LightStorage;
 class MaterialStorage;
@@ -307,7 +307,7 @@ private:
 		Transform3D transform;
 		float sorting_offset = 0.0;
 		uint32_t cull_mask = 0;
-		RendererRD::ForwardID forward_id = -1;
+		renderer_rd::ForwardID forward_id = -1;
 	};
 
 	mutable RID_Owner<DecalInstance> decal_instance_owner;
@@ -563,7 +563,7 @@ public:
 
 	//internal usage
 	_FORCE_INLINE_ TextureType texture_get_type(RID p_texture) {
-		RendererRD::TextureStorage::Texture *tex = texture_owner.get_or_null(p_texture);
+		renderer_rd::TextureStorage::Texture *tex = texture_owner.get_or_null(p_texture);
 		if (tex == nullptr) {
 			return TYPE_2D;
 		}
@@ -572,7 +572,7 @@ public:
 	}
 
 	_FORCE_INLINE_ int texture_get_layers(RID p_texture) {
-		RendererRD::TextureStorage::Texture *tex = texture_owner.get_or_null(p_texture);
+		renderer_rd::TextureStorage::Texture *tex = texture_owner.get_or_null(p_texture);
 		if (tex == nullptr) {
 			return 1;
 		}
@@ -584,7 +584,7 @@ public:
 		if (p_texture.is_null()) {
 			return Size2i();
 		}
-		RendererRD::TextureStorage::Texture *tex = texture_owner.get_or_null(p_texture);
+		renderer_rd::TextureStorage::Texture *tex = texture_owner.get_or_null(p_texture);
 
 		if (!tex) {
 			return Size2i();
@@ -707,7 +707,7 @@ public:
 		return di->decal;
 	}
 
-	_FORCE_INLINE_ RendererRD::ForwardID decal_instance_get_forward_id(RID p_decal_instance) const {
+	_FORCE_INLINE_ renderer_rd::ForwardID decal_instance_get_forward_id(RID p_decal_instance) const {
 		DecalInstance *di = decal_instance_owner.get_or_null(p_decal_instance);
 		return di->forward_id;
 	}
@@ -818,4 +818,4 @@ public:
 	static uint32_t render_target_get_color_usage_bits(bool p_msaa);
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

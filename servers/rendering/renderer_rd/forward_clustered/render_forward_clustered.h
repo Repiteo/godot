@@ -53,7 +53,7 @@
 #define RB_TEX_VOXEL_GI SNAME("voxel_gi")
 #define RB_TEX_VOXEL_GI_MSAA SNAME("voxel_gi_msaa")
 
-namespace RendererSceneRenderImplementation {
+namespace renderer_scene_render_implementation {
 
 class RenderForwardClustered : public RendererSceneRenderRD {
 	friend SceneShaderForwardClustered;
@@ -93,9 +93,9 @@ public:
 
 	private:
 		RenderSceneBuffersRD *render_buffers = nullptr;
-		RendererRD::FSR2Context *fsr2_context = nullptr;
+		renderer_rd::FSR2Context *fsr2_context = nullptr;
 #ifdef METAL_ENABLED
-		RendererRD::MFXTemporalContext *mfx_temporal_context = nullptr;
+		renderer_rd::MFXTemporalContext *mfx_temporal_context = nullptr;
 #endif
 
 	public:
@@ -105,9 +105,9 @@ public:
 			Projection last_frame_projections[RendererSceneRender::MAX_RENDER_VIEWS];
 			Transform3D last_frame_transform;
 
-			RendererRD::SSEffects::SSILRenderBuffers ssil;
-			RendererRD::SSEffects::SSAORenderBuffers ssao;
-			RendererRD::SSEffects::SSRRenderBuffers ssr;
+			renderer_rd::SSEffects::SSILRenderBuffers ssil;
+			renderer_rd::SSEffects::SSAORenderBuffers ssao;
+			renderer_rd::SSEffects::SSRRenderBuffers ssr;
 		} ss_effects_data;
 
 		enum DepthFrameBufferType {
@@ -137,12 +137,12 @@ public:
 		RID get_voxelgi(uint32_t p_layer) { return render_buffers->get_texture_slice(RB_SCOPE_FORWARD_CLUSTERED, RB_TEX_VOXEL_GI, p_layer, 0); }
 		RID get_voxelgi_msaa(uint32_t p_layer) { return render_buffers->get_texture_slice(RB_SCOPE_FORWARD_CLUSTERED, RB_TEX_VOXEL_GI_MSAA, p_layer, 0); }
 
-		void ensure_fsr2(RendererRD::FSR2Effect *p_effect);
-		RendererRD::FSR2Context *get_fsr2_context() const { return fsr2_context; }
+		void ensure_fsr2(renderer_rd::FSR2Effect *p_effect);
+		renderer_rd::FSR2Context *get_fsr2_context() const { return fsr2_context; }
 
 #ifdef METAL_ENABLED
-		bool ensure_mfx_temporal(RendererRD::MFXTemporalEffect *p_effect);
-		RendererRD::MFXTemporalContext *get_mfx_temporal_context() const { return mfx_temporal_context; }
+		bool ensure_mfx_temporal(renderer_rd::MFXTemporalEffect *p_effect);
+		renderer_rd::MFXTemporalContext *get_mfx_temporal_context() const { return mfx_temporal_context; }
 #endif
 
 		RID get_color_only_fb();
@@ -170,8 +170,8 @@ private:
 	uint64_t lightmap_texture_array_version = 0xFFFFFFFF;
 
 	void _update_render_base_uniform_set();
-	RID _setup_sdfgi_render_pass_uniform_set(RID p_albedo_texture, RID p_emission_texture, RID p_emission_aniso_texture, RID p_geom_facing_texture, const RendererRD::MaterialStorage::Samplers &p_samplers);
-	RID _setup_render_pass_uniform_set(RenderListType p_render_list, const RenderDataRD *p_render_data, RID p_radiance_texture, const RendererRD::MaterialStorage::Samplers &p_samplers, bool p_use_directional_shadow_atlas = false, int p_index = 0);
+	RID _setup_sdfgi_render_pass_uniform_set(RID p_albedo_texture, RID p_emission_texture, RID p_emission_aniso_texture, RID p_geom_facing_texture, const renderer_rd::MaterialStorage::Samplers &p_samplers);
+	RID _setup_render_pass_uniform_set(RenderListType p_render_list, const RenderDataRD *p_render_data, RID p_radiance_texture, const renderer_rd::MaterialStorage::Samplers &p_samplers, bool p_use_directional_shadow_atlas = false, int p_index = 0);
 
 	struct BestFitNormal {
 		BestFitNormalShaderRD shader;
@@ -693,15 +693,15 @@ private:
 
 	/* Effects */
 
-	RendererRD::Resolve *resolve_effects = nullptr;
-	RendererRD::TAA *taa = nullptr;
-	RendererRD::FSR2Effect *fsr2_effect = nullptr;
-	RendererRD::SSEffects *ss_effects = nullptr;
+	renderer_rd::Resolve *resolve_effects = nullptr;
+	renderer_rd::TAA *taa = nullptr;
+	renderer_rd::FSR2Effect *fsr2_effect = nullptr;
+	renderer_rd::SSEffects *ss_effects = nullptr;
 
 #ifdef METAL_ENABLED
-	RendererRD::MFXTemporalEffect *mfx_temporal_effect = nullptr;
+	renderer_rd::MFXTemporalEffect *mfx_temporal_effect = nullptr;
 #endif
-	RendererRD::MotionVectorsStore *motion_vectors_store = nullptr;
+	renderer_rd::MotionVectorsStore *motion_vectors_store = nullptr;
 
 	/* Cluster builder */
 
@@ -762,7 +762,7 @@ public:
 	static RenderForwardClustered *get_singleton() { return singleton; }
 
 	ClusterBuilderSharedDataRD *get_cluster_builder_shared() { return &cluster_builder_shared; }
-	RendererRD::SSEffects *get_ss_effects() { return ss_effects; }
+	renderer_rd::SSEffects *get_ss_effects() { return ss_effects; }
 
 	/* callback from updating our lighting UBOs, used to populate cluster builder */
 	virtual void setup_added_reflection_probe(const Transform3D &p_transform, const Vector3 &p_half_size) override;
@@ -798,4 +798,4 @@ public:
 	RenderForwardClustered();
 	~RenderForwardClustered();
 };
-} // namespace RendererSceneRenderImplementation
+} // namespace renderer_scene_render_implementation

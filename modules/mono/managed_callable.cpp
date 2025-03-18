@@ -31,7 +31,7 @@
 #include "managed_callable.h"
 
 #include "csharp_script.h"
-#include "mono_gd/gd_mono_cache.h"
+#include "mono_gd/gdmono_cache.h"
 
 #ifdef GD_MONO_HOT_RELOAD
 SelfList<ManagedCallable>::List ManagedCallable::instances;
@@ -51,7 +51,7 @@ bool ManagedCallable::compare_equal(const CallableCustom *p_a, const CallableCus
 	}
 
 	// Call Delegate's 'Equals'
-	return GDMonoCache::managed_callbacks.DelegateUtils_DelegateEquals(
+	return gdmono_cache::managed_callbacks.DelegateUtils_DelegateEquals(
 			a->delegate_handle, b->delegate_handle);
 }
 
@@ -63,7 +63,7 @@ bool ManagedCallable::compare_less(const CallableCustom *p_a, const CallableCust
 }
 
 uint32_t ManagedCallable::hash() const {
-	return GDMonoCache::managed_callbacks.DelegateUtils_DelegateHash(delegate_handle);
+	return gdmono_cache::managed_callbacks.DelegateUtils_DelegateHash(delegate_handle);
 }
 
 String ManagedCallable::get_as_text() const {
@@ -86,7 +86,7 @@ ObjectID ManagedCallable::get_object() const {
 }
 
 int ManagedCallable::get_argument_count(bool &r_is_valid) const {
-	return GDMonoCache::managed_callbacks.DelegateUtils_GetArgumentCount(delegate_handle, &r_is_valid);
+	return gdmono_cache::managed_callbacks.DelegateUtils_GetArgumentCount(delegate_handle, &r_is_valid);
 }
 
 void ManagedCallable::call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const {
@@ -95,7 +95,7 @@ void ManagedCallable::call(const Variant **p_arguments, int p_argcount, Variant 
 
 	ERR_FAIL_NULL(delegate_handle.value);
 
-	GDMonoCache::managed_callbacks.DelegateUtils_InvokeWithVariantArgs(
+	gdmono_cache::managed_callbacks.DelegateUtils_InvokeWithVariantArgs(
 			delegate_handle, trampoline, p_arguments, p_argcount, &r_return_value);
 
 	r_call_error.error = Callable::CallError::CALL_OK;
@@ -103,7 +103,7 @@ void ManagedCallable::call(const Variant **p_arguments, int p_argcount, Variant 
 
 void ManagedCallable::release_delegate_handle() {
 	if (delegate_handle.value) {
-		GDMonoCache::managed_callbacks.GCHandleBridge_FreeGCHandle(delegate_handle);
+		gdmono_cache::managed_callbacks.GCHandleBridge_FreeGCHandle(delegate_handle);
 		delegate_handle = { nullptr };
 	}
 }

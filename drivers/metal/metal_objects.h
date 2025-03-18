@@ -67,7 +67,7 @@
 
 // These types can be used in Vector and other containers that use
 // pointer operations not supported by ARC.
-namespace MTL {
+namespace mtl {
 #define MTL_CLASS(name)                               \
 	class name {                                      \
 	public:                                           \
@@ -80,7 +80,7 @@ namespace MTL {
 
 MTL_CLASS(Texture)
 
-} //namespace MTL
+} //namespace mtl
 
 /// Metal buffer index for the view mask when rendering multi-view.
 const uint32_t VIEW_MASK_BUFFER_INDEX = 24;
@@ -903,16 +903,16 @@ public:
 };
 
 class API_AVAILABLE(macos(11.0), ios(14.0), tvos(14.0)) MDFrameBuffer {
-	Vector<MTL::Texture> textures;
+	Vector<mtl::Texture> textures;
 
 public:
 	Size2i size;
-	MDFrameBuffer(Vector<MTL::Texture> p_textures, Size2i p_size) :
+	MDFrameBuffer(Vector<mtl::Texture> p_textures, Size2i p_size) :
 			textures(p_textures), size(p_size) {}
 	MDFrameBuffer() {}
 
 	/// Returns the texture at the given index.
-	_ALWAYS_INLINE_ MTL::Texture get_texture(uint32_t p_idx) const {
+	_ALWAYS_INLINE_ mtl::Texture get_texture(uint32_t p_idx) const {
 		return textures[p_idx];
 	}
 
@@ -922,7 +922,7 @@ public:
 	}
 
 	/// Set the texture at the given index.
-	_ALWAYS_INLINE_ void set_texture(uint32_t p_idx, MTL::Texture p_texture) {
+	_ALWAYS_INLINE_ void set_texture(uint32_t p_idx, mtl::Texture p_texture) {
 		textures.write[p_idx] = p_texture;
 	}
 

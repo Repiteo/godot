@@ -60,19 +60,19 @@ extern "C" {
 #endif
 
 void godot_icall_GodotSharpDirs_ResMetadataDir(godot_string *r_dest) {
-	memnew_placement(r_dest, String(GodotSharpDirs::get_res_metadata_dir()));
+	memnew_placement(r_dest, String(godot_sharp_dirs::get_res_metadata_dir()));
 }
 
 void godot_icall_GodotSharpDirs_MonoUserDir(godot_string *r_dest) {
-	memnew_placement(r_dest, String(GodotSharpDirs::get_mono_user_dir()));
+	memnew_placement(r_dest, String(godot_sharp_dirs::get_mono_user_dir()));
 }
 
 void godot_icall_GodotSharpDirs_BuildLogsDirs(godot_string *r_dest) {
-	memnew_placement(r_dest, String(GodotSharpDirs::get_build_logs_dir()));
+	memnew_placement(r_dest, String(godot_sharp_dirs::get_build_logs_dir()));
 }
 
 void godot_icall_GodotSharpDirs_DataEditorToolsDir(godot_string *r_dest) {
-	memnew_placement(r_dest, String(GodotSharpDirs::get_data_editor_tools_dir()));
+	memnew_placement(r_dest, String(godot_sharp_dirs::get_data_editor_tools_dir()));
 }
 
 void godot_icall_GodotSharpDirs_CSharpProjectName(godot_string *r_dest) {

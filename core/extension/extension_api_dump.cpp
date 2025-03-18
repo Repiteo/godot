@@ -87,7 +87,7 @@ static String get_property_info_type_name(const PropertyInfo &p_info) {
 	return get_builtin_or_variant_type_name(p_info.type);
 }
 
-static String get_type_meta_name(const GodotTypeInfo::Metadata metadata) {
+static String get_type_meta_name(const godot_type_info::Metadata metadata) {
 	static const char *argmeta[13] = { "none", "int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "uint64", "float", "double", "char16", "char32" };
 	return argmeta[metadata];
 }
@@ -1046,7 +1046,7 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 							d3["type"] = get_property_info_type_name(pinfo);
 
 							if (mi.get_argument_meta(-1) > 0) {
-								d3["meta"] = get_type_meta_name((GodotTypeInfo::Metadata)mi.get_argument_meta(-1));
+								d3["meta"] = get_type_meta_name((godot_type_info::Metadata)mi.get_argument_meta(-1));
 							}
 
 							d2["return_value"] = d3;
@@ -1062,7 +1062,7 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 							d3["type"] = get_property_info_type_name(pinfo);
 
 							if (mi.get_argument_meta(i) > 0) {
-								d3["meta"] = get_type_meta_name((GodotTypeInfo::Metadata)mi.get_argument_meta(i));
+								d3["meta"] = get_type_meta_name((godot_type_info::Metadata)mi.get_argument_meta(i));
 							}
 
 							arguments.push_back(d3);
@@ -1184,7 +1184,7 @@ Dictionary GDExtensionAPIDump::generate_extension_api(bool p_include_docs) {
 						d3["name"] = F.arguments[i].name;
 						d3["type"] = get_property_info_type_name(F.arguments[i]);
 						if (F.get_argument_meta(i) > 0) {
-							d3["meta"] = get_type_meta_name((GodotTypeInfo::Metadata)F.get_argument_meta(i));
+							d3["meta"] = get_type_meta_name((godot_type_info::Metadata)F.get_argument_meta(i));
 						}
 						arguments.push_back(d3);
 					}

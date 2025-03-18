@@ -35,7 +35,7 @@
 #include "core/variant/dictionary.h"
 #include "core/variant/typed_array.h"
 
-namespace GLTFTemplateConvert {
+namespace gltf_template_convert {
 template <typename T>
 static Array to_array(const Vector<T> &p_inp) {
 	Array ret;
@@ -89,4 +89,4 @@ static void set_from_dictionary(HashMap<K, V> &r_out, const Dictionary &p_inp) {
 		r_out[keys[i]] = p_inp[keys[i]];
 	}
 }
-} //namespace GLTFTemplateConvert
+} //namespace gltf_template_convert

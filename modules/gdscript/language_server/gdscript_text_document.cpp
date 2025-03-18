@@ -201,34 +201,34 @@ Array GDScriptTextDocument::completion(const Dictionary &p_params) {
 
 			switch (option.kind) {
 				case ScriptLanguage::CODE_COMPLETION_KIND_ENUM:
-					item.kind = lsp::CompletionItemKind::Enum;
+					item.kind = lsp::completion_item_kind::Enum;
 					break;
 				case ScriptLanguage::CODE_COMPLETION_KIND_CLASS:
-					item.kind = lsp::CompletionItemKind::Class;
+					item.kind = lsp::completion_item_kind::Class;
 					break;
 				case ScriptLanguage::CODE_COMPLETION_KIND_MEMBER:
-					item.kind = lsp::CompletionItemKind::Property;
+					item.kind = lsp::completion_item_kind::Property;
 					break;
 				case ScriptLanguage::CODE_COMPLETION_KIND_FUNCTION:
-					item.kind = lsp::CompletionItemKind::Method;
+					item.kind = lsp::completion_item_kind::Method;
 					break;
 				case ScriptLanguage::CODE_COMPLETION_KIND_SIGNAL:
-					item.kind = lsp::CompletionItemKind::Event;
+					item.kind = lsp::completion_item_kind::Event;
 					break;
 				case ScriptLanguage::CODE_COMPLETION_KIND_CONSTANT:
-					item.kind = lsp::CompletionItemKind::Constant;
+					item.kind = lsp::completion_item_kind::Constant;
 					break;
 				case ScriptLanguage::CODE_COMPLETION_KIND_VARIABLE:
-					item.kind = lsp::CompletionItemKind::Variable;
+					item.kind = lsp::completion_item_kind::Variable;
 					break;
 				case ScriptLanguage::CODE_COMPLETION_KIND_FILE_PATH:
-					item.kind = lsp::CompletionItemKind::File;
+					item.kind = lsp::completion_item_kind::File;
 					break;
 				case ScriptLanguage::CODE_COMPLETION_KIND_NODE_PATH:
-					item.kind = lsp::CompletionItemKind::Snippet;
+					item.kind = lsp::completion_item_kind::Snippet;
 					break;
 				case ScriptLanguage::CODE_COMPLETION_KIND_PLAIN_TEXT:
-					item.kind = lsp::CompletionItemKind::Text;
+					item.kind = lsp::completion_item_kind::Text;
 					break;
 				default: {
 				}
@@ -302,7 +302,7 @@ Dictionary GDScriptTextDocument::resolve(const Dictionary &p_params) {
 
 	if (data.get_type() == Variant::DICTIONARY) {
 		params.load(p_params["data"]);
-		symbol = GDScriptLanguageProtocol::get_singleton()->get_workspace()->resolve_symbol(params, item.label, item.kind == lsp::CompletionItemKind::Method || item.kind == lsp::CompletionItemKind::Function);
+		symbol = GDScriptLanguageProtocol::get_singleton()->get_workspace()->resolve_symbol(params, item.label, item.kind == lsp::completion_item_kind::Method || item.kind == lsp::completion_item_kind::Function);
 
 	} else if (data.is_string()) {
 		String query = data;
@@ -335,15 +335,15 @@ Dictionary GDScriptTextDocument::resolve(const Dictionary &p_params) {
 		item.documentation = symbol->render();
 	}
 
-	if (item.kind == lsp::CompletionItemKind::Event) {
-		if (params.context.triggerKind == lsp::CompletionTriggerKind::TriggerCharacter && (params.context.triggerCharacter == "(")) {
+	if (item.kind == lsp::completion_item_kind::Event) {
+		if (params.context.triggerKind == lsp::completion_trigger_kind::TriggerCharacter && (params.context.triggerCharacter == "(")) {
 			const String quote_style = EDITOR_GET("text_editor/completion/use_single_quotes") ? "'" : "\"";
 			item.insertText = item.label.quote(quote_style);
 		}
 	}
 
-	if (item.kind == lsp::CompletionItemKind::Method) {
-		bool is_trigger_character = params.context.triggerKind == lsp::CompletionTriggerKind::TriggerCharacter;
+	if (item.kind == lsp::completion_item_kind::Method) {
+		bool is_trigger_character = params.context.triggerKind == lsp::completion_trigger_kind::TriggerCharacter;
 		bool is_quote_character = params.context.triggerCharacter == "\"" || params.context.triggerCharacter == "'";
 
 		if (is_trigger_character && is_quote_character && item.insertText.is_quoted()) {
@@ -430,21 +430,21 @@ Variant GDScriptTextDocument::declaration(const Dictionary &p_params) {
 		if (GDScriptLanguageProtocol::get_singleton()->is_goto_native_symbols_enabled()) {
 			String id;
 			switch (symbol->kind) {
-				case lsp::SymbolKind::Class:
+				case lsp::symbol_kind::Class:
 					id = "class_name:" + symbol->name;
 					break;
-				case lsp::SymbolKind::Constant:
+				case lsp::symbol_kind::Constant:
 					id = "class_constant:" + symbol->native_class + ":" + symbol->name;
 					break;
-				case lsp::SymbolKind::Property:
-				case lsp::SymbolKind::Variable:
+				case lsp::symbol_kind::Property:
+				case lsp::symbol_kind::Variable:
 					id = "class_property:" + symbol->native_class + ":" + symbol->name;
 					break;
-				case lsp::SymbolKind::Enum:
+				case lsp::symbol_kind::Enum:
 					id = "class_enum:" + symbol->native_class + ":" + symbol->name;
 					break;
-				case lsp::SymbolKind::Method:
-				case lsp::SymbolKind::Function:
+				case lsp::symbol_kind::Method:
+				case lsp::symbol_kind::Function:
 					id = "class_method:" + symbol->native_class + ":" + symbol->name;
 					break;
 				default:

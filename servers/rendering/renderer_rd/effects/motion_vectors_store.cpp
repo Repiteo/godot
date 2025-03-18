@@ -32,7 +32,7 @@
 
 #include "servers/rendering/renderer_rd/uniform_set_cache_rd.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 
 MotionVectorsStore::MotionVectorsStore() {
 	Vector<String> modes;
@@ -68,7 +68,7 @@ void MotionVectorsStore::process(Ref<RenderSceneBuffersRD> p_render_buffers,
 		Projection correction;
 		correction.set_depth_correction(true, true, false);
 		Projection reprojection = (correction * p_previous_projection) * p_previous_transform.affine_inverse() * p_current_transform * (correction * p_current_projection).inverse();
-		RendererRD::MaterialStorage::store_camera(reprojection, push_constant.reprojection_matrix);
+		renderer_rd::MaterialStorage::store_camera(reprojection, push_constant.reprojection_matrix);
 	}
 
 	RID default_sampler = material_storage->sampler_rd_get_default(RS::CANVAS_ITEM_TEXTURE_FILTER_NEAREST, RS::CANVAS_ITEM_TEXTURE_REPEAT_DISABLED);
@@ -98,4 +98,4 @@ void MotionVectorsStore::process(Ref<RenderSceneBuffersRD> p_render_buffers,
 	RD::get_singleton()->draw_command_end_label();
 }
 
-} //namespace RendererRD
+} //namespace renderer_rd

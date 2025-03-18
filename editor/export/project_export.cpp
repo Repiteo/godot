@@ -363,9 +363,9 @@ void ProjectExportDialog::_edit_preset(int p_index) {
 	_update_export_all();
 	child_controls_changed();
 
-	if ((feature_set.has("s3tc") || feature_set.has("bptc")) && !ResourceImporterTextureSettings::should_import_s3tc_bptc()) {
+	if ((feature_set.has("s3tc") || feature_set.has("bptc")) && !resource_importer_texture_settings::should_import_s3tc_bptc()) {
 		export_texture_format_error->show_for_texture_format("S3TC/BPTC", "rendering/textures/vram_compression/import_s3tc_bptc");
-	} else if ((feature_set.has("etc2") || feature_set.has("astc")) && !ResourceImporterTextureSettings::should_import_etc2_astc()) {
+	} else if ((feature_set.has("etc2") || feature_set.has("astc")) && !resource_importer_texture_settings::should_import_etc2_astc()) {
 		export_texture_format_error->show_for_texture_format("ETC2/ASTC", "rendering/textures/vram_compression/import_etc2_astc");
 	} else {
 		export_texture_format_error->hide();

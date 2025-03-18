@@ -33,7 +33,7 @@
 #include "../storage_rd/material_storage.h"
 #include "../uniform_set_cache_rd.h"
 
-using namespace RendererRD;
+using namespace renderer_rd;
 
 #ifndef _MSC_VER
 #include <wchar.h>
@@ -808,7 +808,7 @@ FSR2Effect::~FSR2Effect() {
 }
 
 FSR2Context *FSR2Effect::create_context(Size2i p_internal_size, Size2i p_target_size) {
-	FSR2Context *context = memnew(RendererRD::FSR2Context);
+	FSR2Context *context = memnew(renderer_rd::FSR2Context);
 	context->fsr_desc.flags = FFX_FSR2_ENABLE_HIGH_DYNAMIC_RANGE | FFX_FSR2_ENABLE_DEPTH_INVERTED;
 	context->fsr_desc.maxRenderSize.width = p_internal_size.x;
 	context->fsr_desc.maxRenderSize.height = p_internal_size.y;
@@ -880,7 +880,7 @@ void FSR2Effect::upscale(const Parameters &p_params) {
 	dispatch_desc.autoReactiveScale = 1.0f;
 	dispatch_desc.autoReactiveMax = 1.0f;
 
-	RendererRD::MaterialStorage::store_camera(p_params.reprojection, dispatch_desc.reprojectionMatrix);
+	renderer_rd::MaterialStorage::store_camera(p_params.reprojection, dispatch_desc.reprojectionMatrix);
 
 	FfxErrorCode result = ffxFsr2ContextDispatch(&p_params.context->fsr_context, &dispatch_desc);
 	ERR_FAIL_COND(result != FFX_OK);

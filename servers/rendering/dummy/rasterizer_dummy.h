@@ -54,14 +54,14 @@ private:
 
 protected:
 	RasterizerCanvasDummy canvas;
-	RendererDummy::Utilities utilities;
-	RendererDummy::LightStorage light_storage;
-	RendererDummy::MaterialStorage material_storage;
-	RendererDummy::MeshStorage mesh_storage;
-	RendererDummy::ParticlesStorage particles_storage;
-	RendererDummy::TextureStorage texture_storage;
-	RendererDummy::GI gi;
-	RendererDummy::Fog fog;
+	renderer_dummy::Utilities utilities;
+	renderer_dummy::LightStorage light_storage;
+	renderer_dummy::MaterialStorage material_storage;
+	renderer_dummy::MeshStorage mesh_storage;
+	renderer_dummy::ParticlesStorage particles_storage;
+	renderer_dummy::TextureStorage texture_storage;
+	renderer_dummy::GI gi;
+	renderer_dummy::Fog fog;
 	RasterizerSceneDummy scene;
 
 public:

@@ -492,8 +492,8 @@ void ResourceImporterLayeredTexture::_check_compress_ctex(const String &p_source
 	// Must import in all formats, in order of priority (so platform chooses the best supported one. IE, etc2 over etc).
 	// Android, GLES 2.x
 
-	const bool can_s3tc_bptc = ResourceImporterTextureSettings::should_import_s3tc_bptc();
-	const bool can_etc2_astc = ResourceImporterTextureSettings::should_import_etc2_astc();
+	const bool can_s3tc_bptc = resource_importer_texture_settings::should_import_s3tc_bptc();
+	const bool can_etc2_astc = resource_importer_texture_settings::should_import_etc2_astc();
 
 	// Add list of formats imported
 	if (can_s3tc_bptc) {

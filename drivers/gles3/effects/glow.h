@@ -34,7 +34,7 @@
 
 #include "drivers/gles3/shaders/effects/glow.glsl.gen.h"
 
-namespace GLES3 {
+namespace gles3 {
 
 class Glow {
 private:
@@ -81,6 +81,6 @@ public:
 	void process_glow(GLuint p_source_color, Size2i p_size, const GLOWLEVEL *p_glow_buffers, uint32_t p_view = 0, bool p_use_multiview = false);
 };
 
-} //namespace GLES3
+} //namespace gles3
 
 #endif // GLES3_ENABLED

@@ -199,7 +199,7 @@ void CubemapFilter::filter_radiance(GLuint p_source_cubemap, GLuint p_dest_cubem
 #ifdef DEBUG_ENABLED
 		GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 		if (status != GL_FRAMEBUFFER_COMPLETE) {
-			WARN_PRINT("Could not bind sky radiance face: " + itos(i) + ", status: " + GLES3::TextureStorage::get_singleton()->get_framebuffer_error(status));
+			WARN_PRINT("Could not bind sky radiance face: " + itos(i) + ", status: " + gles3::TextureStorage::get_singleton()->get_framebuffer_error(status));
 		}
 #endif
 		cubemap_filter.shader.version_set_uniform(CubemapFilterShaderGLES3::FACE_ID, i, cubemap_filter.shader_version, mode);
@@ -207,7 +207,7 @@ void CubemapFilter::filter_radiance(GLuint p_source_cubemap, GLuint p_dest_cubem
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 	}
 	glBindVertexArray(0);
-	glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 }
 
 #endif // GLES3_ENABLED

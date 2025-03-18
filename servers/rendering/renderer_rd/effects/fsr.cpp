@@ -32,7 +32,7 @@
 #include "../storage_rd/material_storage.h"
 #include "../uniform_set_cache_rd.h"
 
-using namespace RendererRD;
+using namespace renderer_rd;
 
 FSR::FSR() {
 	Vector<String> FSR_upscale_modes;

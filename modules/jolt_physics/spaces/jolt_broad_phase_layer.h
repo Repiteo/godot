@@ -36,7 +36,7 @@
 
 #include <stdint.h>
 
-namespace JoltBroadPhaseLayer {
+namespace jolt_broad_phase_layer {
 
 constexpr JPH::BroadPhaseLayer BODY_STATIC(0);
 constexpr JPH::BroadPhaseLayer BODY_STATIC_BIG(1);
@@ -46,4 +46,4 @@ constexpr JPH::BroadPhaseLayer AREA_UNDETECTABLE(4);
 
 constexpr uint32_t COUNT = 5;
 
-} // namespace JoltBroadPhaseLayer
+} // namespace jolt_broad_phase_layer

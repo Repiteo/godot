@@ -52,7 +52,7 @@
 #define FSR2_MAX_BUFFERED_DESCRIPTORS (FFX_FSR2_PASS_COUNT * FSR2_MAX_QUEUED_FRAMES)
 #define FSR2_UBO_RING_BUFFER_SIZE (FSR2_MAX_BUFFERED_DESCRIPTORS * FSR2_MAX_UNIFORM_BUFFERS)
 
-namespace RendererRD {
+namespace renderer_rd {
 class FSR2Context {
 public:
 	enum ResourceID : uint32_t {
@@ -193,4 +193,4 @@ private:
 	Device device;
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

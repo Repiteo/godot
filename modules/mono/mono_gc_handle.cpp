@@ -31,20 +31,20 @@
 #include "mono_gc_handle.h"
 
 #include "mono_gd/gd_mono.h"
-#include "mono_gd/gd_mono_cache.h"
+#include "mono_gd/gdmono_cache.h"
 
 void MonoGCHandleData::release() {
 #ifdef DEBUG_ENABLED
 	CRASH_COND(handle.value && GDMono::get_singleton() == nullptr);
 #endif
 
-	if (handle.value && GDMonoCache::godot_api_cache_updated &&
+	if (handle.value && gdmono_cache::godot_api_cache_updated &&
 			GDMono::get_singleton()->is_runtime_initialized()) {
 		free_gchandle(handle);
 		handle.value = nullptr;
 	}
 }
 void MonoGCHandleData::free_gchandle(GCHandleIntPtr p_gchandle) {
-	CRASH_COND(!GDMonoCache::godot_api_cache_updated);
-	GDMonoCache::managed_callbacks.GCHandleBridge_FreeGCHandle(p_gchandle);
+	CRASH_COND(!gdmono_cache::godot_api_cache_updated);
+	gdmono_cache::managed_callbacks.GCHandleBridge_FreeGCHandle(p_gchandle);
 }

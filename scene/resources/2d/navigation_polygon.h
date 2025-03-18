@@ -50,7 +50,7 @@ class NavigationPolygon : public Resource {
 	// Navigation mesh
 	Ref<NavigationMesh> navigation_mesh;
 
-	real_t cell_size = NavigationDefaults2D::navmesh_cell_size;
+	real_t cell_size = navigation_defaults_2d::navmesh_cell_size;
 	real_t border_size = 0.0f;
 
 	Rect2 baking_rect;

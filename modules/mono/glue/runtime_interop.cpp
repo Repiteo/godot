@@ -33,7 +33,7 @@
 #include "../csharp_script.h"
 #include "../interop_types.h"
 #include "../managed_callable.h"
-#include "../mono_gd/gd_mono_cache.h"
+#include "../mono_gd/gdmono_cache.h"
 #include "../signal_awaiter_utils.h"
 #include "../utils/path_utils.h"
 
@@ -276,7 +276,7 @@ GCHandleIntPtr godotsharp_internal_unmanaged_instance_binding_create_managed(Obj
 			"Type inherits from native type '" + script_binding.type_name + "', so it can't be instantiated in object of type: '" + p_unmanaged->get_class() + "'.");
 
 	GCHandleIntPtr strong_gchandle =
-			GDMonoCache::managed_callbacks.ScriptManagerBridge_CreateManagedForGodotObjectBinding(
+			gdmono_cache::managed_callbacks.ScriptManagerBridge_CreateManagedForGodotObjectBinding(
 					&script_binding.type_name, p_unmanaged);
 
 	ERR_FAIL_NULL_V(strong_gchandle.value, { nullptr });

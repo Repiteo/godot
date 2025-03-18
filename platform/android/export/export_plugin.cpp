@@ -1694,7 +1694,7 @@ void EditorExportPlatformAndroid::_fix_resources(const Ref<EditorExportPreset> &
 
 void EditorExportPlatformAndroid::_load_image_data(const Ref<Image> &p_splash_image, Vector<uint8_t> &p_data) {
 	Vector<uint8_t> png_buffer;
-	Error err = PNGDriverCommon::image_to_png(p_splash_image, png_buffer);
+	Error err = png_driver_common::image_to_png(p_splash_image, png_buffer);
 	if (err == OK) {
 		p_data.resize(png_buffer.size());
 		memcpy(p_data.ptrw(), png_buffer.ptr(), p_data.size());
@@ -1713,7 +1713,7 @@ void EditorExportPlatformAndroid::_process_launcher_icons(const String &p_file_n
 	}
 
 	Vector<uint8_t> png_buffer;
-	Error err = PNGDriverCommon::image_to_png(working_image, png_buffer);
+	Error err = png_driver_common::image_to_png(working_image, png_buffer);
 	if (err == OK) {
 		p_data.resize(png_buffer.size());
 		memcpy(p_data.ptrw(), png_buffer.ptr(), p_data.size());
@@ -2785,7 +2785,7 @@ bool EditorExportPlatformAndroid::has_valid_project_configuration(const Ref<Edit
 		}
 	}
 
-	if (!ResourceImporterTextureSettings::should_import_etc2_astc()) {
+	if (!resource_importer_texture_settings::should_import_etc2_astc()) {
 		valid = false;
 	}
 

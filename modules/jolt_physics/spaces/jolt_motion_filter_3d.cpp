@@ -51,13 +51,13 @@ bool JoltMotionFilter3D::ShouldCollide(JPH::BroadPhaseLayer p_broad_phase_layer)
 	const JPH::BroadPhaseLayer::Type broad_phase_layer = (JPH::BroadPhaseLayer::Type)p_broad_phase_layer;
 
 	switch (broad_phase_layer) {
-		case (JPH::BroadPhaseLayer::Type)JoltBroadPhaseLayer::BODY_STATIC:
-		case (JPH::BroadPhaseLayer::Type)JoltBroadPhaseLayer::BODY_STATIC_BIG:
-		case (JPH::BroadPhaseLayer::Type)JoltBroadPhaseLayer::BODY_DYNAMIC: {
+		case (JPH::BroadPhaseLayer::Type)jolt_broad_phase_layer::BODY_STATIC:
+		case (JPH::BroadPhaseLayer::Type)jolt_broad_phase_layer::BODY_STATIC_BIG:
+		case (JPH::BroadPhaseLayer::Type)jolt_broad_phase_layer::BODY_DYNAMIC: {
 			return true;
 		} break;
-		case (JPH::BroadPhaseLayer::Type)JoltBroadPhaseLayer::AREA_DETECTABLE:
-		case (JPH::BroadPhaseLayer::Type)JoltBroadPhaseLayer::AREA_UNDETECTABLE: {
+		case (JPH::BroadPhaseLayer::Type)jolt_broad_phase_layer::AREA_DETECTABLE:
+		case (JPH::BroadPhaseLayer::Type)jolt_broad_phase_layer::AREA_UNDETECTABLE: {
 			return false;
 		} break;
 		default: {
@@ -67,7 +67,7 @@ bool JoltMotionFilter3D::ShouldCollide(JPH::BroadPhaseLayer p_broad_phase_layer)
 }
 
 bool JoltMotionFilter3D::ShouldCollide(JPH::ObjectLayer p_object_layer) const {
-	JPH::BroadPhaseLayer object_broad_phase_layer = JoltBroadPhaseLayer::BODY_STATIC;
+	JPH::BroadPhaseLayer object_broad_phase_layer = jolt_broad_phase_layer::BODY_STATIC;
 	uint32_t object_collision_layer = 0;
 	uint32_t object_collision_mask = 0;
 
@@ -105,7 +105,7 @@ bool JoltMotionFilter3D::ShouldCollide(const JPH::Shape *p_jolt_shape_self, cons
 
 	const JoltCustomMotionShape *motion_shape = static_cast<const JoltCustomMotionShape *>(p_jolt_shape_self);
 	const JPH::ConvexShape &actual_shape_self = motion_shape->get_inner_shape();
-	if (actual_shape_self.GetSubType() == JoltCustomShapeSubType::RAY) {
+	if (actual_shape_self.GetSubType() == jolt_custom_shape_sub_type::RAY) {
 		// When `slide_on_slope` is enabled the ray shape acts as a regular shape.
 		return static_cast<const JoltCustomRayShape &>(actual_shape_self).slide_on_slope;
 	}

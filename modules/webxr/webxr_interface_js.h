@@ -40,7 +40,7 @@
 	The WebXR interface is a VR/AR interface that can be used on the web.
 */
 
-namespace GLES3 {
+namespace gles3 {
 class TextureStorage;
 }
 

@@ -85,21 +85,21 @@ void RenderSceneDataRD::update_ubo(RID p_uniform_buffer, RS::ViewportDebugDraw p
 	Projection projection = correction * cam_projection;
 
 	//store camera into ubo
-	RendererRD::MaterialStorage::store_camera(projection, ubo.projection_matrix);
-	RendererRD::MaterialStorage::store_camera(projection.inverse(), ubo.inv_projection_matrix);
-	RendererRD::MaterialStorage::store_transform(cam_transform, ubo.inv_view_matrix);
-	RendererRD::MaterialStorage::store_transform(cam_transform.affine_inverse(), ubo.view_matrix);
+	renderer_rd::MaterialStorage::store_camera(projection, ubo.projection_matrix);
+	renderer_rd::MaterialStorage::store_camera(projection.inverse(), ubo.inv_projection_matrix);
+	renderer_rd::MaterialStorage::store_transform(cam_transform, ubo.inv_view_matrix);
+	renderer_rd::MaterialStorage::store_transform(cam_transform.affine_inverse(), ubo.view_matrix);
 
 #ifdef REAL_T_IS_DOUBLE
-	RendererRD::MaterialStorage::split_double(-cam_transform.origin.x, &ubo.inv_view_matrix[12], &ubo.inv_view_matrix[3]);
-	RendererRD::MaterialStorage::split_double(-cam_transform.origin.y, &ubo.inv_view_matrix[13], &ubo.inv_view_matrix[7]);
-	RendererRD::MaterialStorage::split_double(-cam_transform.origin.z, &ubo.inv_view_matrix[14], &ubo.inv_view_matrix[11]);
+	renderer_rd::MaterialStorage::split_double(-cam_transform.origin.x, &ubo.inv_view_matrix[12], &ubo.inv_view_matrix[3]);
+	renderer_rd::MaterialStorage::split_double(-cam_transform.origin.y, &ubo.inv_view_matrix[13], &ubo.inv_view_matrix[7]);
+	renderer_rd::MaterialStorage::split_double(-cam_transform.origin.z, &ubo.inv_view_matrix[14], &ubo.inv_view_matrix[11]);
 #endif
 
 	for (uint32_t v = 0; v < view_count; v++) {
 		projection = correction * view_projection[v];
-		RendererRD::MaterialStorage::store_camera(projection, ubo.projection_matrix_view[v]);
-		RendererRD::MaterialStorage::store_camera(projection.inverse(), ubo.inv_projection_matrix_view[v]);
+		renderer_rd::MaterialStorage::store_camera(projection, ubo.projection_matrix_view[v]);
+		renderer_rd::MaterialStorage::store_camera(projection.inverse(), ubo.inv_projection_matrix_view[v]);
 
 		ubo.eye_offset[v][0] = view_eye_offset[v].x;
 		ubo.eye_offset[v][1] = view_eye_offset[v].y;
@@ -107,7 +107,7 @@ void RenderSceneDataRD::update_ubo(RID p_uniform_buffer, RS::ViewportDebugDraw p
 		ubo.eye_offset[v][3] = 0.0;
 	}
 
-	RendererRD::MaterialStorage::store_transform(main_cam_transform, ubo.main_cam_inv_view_matrix);
+	renderer_rd::MaterialStorage::store_transform(main_cam_transform, ubo.main_cam_inv_view_matrix);
 
 	ubo.taa_jitter[0] = taa_jitter.x;
 	ubo.taa_jitter[1] = taa_jitter.y;
@@ -118,10 +118,10 @@ void RenderSceneDataRD::update_ubo(RID p_uniform_buffer, RS::ViewportDebugDraw p
 
 	ubo.pancake_shadows = p_pancake_shadows;
 
-	RendererRD::MaterialStorage::store_soft_shadow_kernel(render_scene_render->directional_penumbra_shadow_kernel_get(), ubo.directional_penumbra_shadow_kernel);
-	RendererRD::MaterialStorage::store_soft_shadow_kernel(render_scene_render->directional_soft_shadow_kernel_get(), ubo.directional_soft_shadow_kernel);
-	RendererRD::MaterialStorage::store_soft_shadow_kernel(render_scene_render->penumbra_shadow_kernel_get(), ubo.penumbra_shadow_kernel);
-	RendererRD::MaterialStorage::store_soft_shadow_kernel(render_scene_render->soft_shadow_kernel_get(), ubo.soft_shadow_kernel);
+	renderer_rd::MaterialStorage::store_soft_shadow_kernel(render_scene_render->directional_penumbra_shadow_kernel_get(), ubo.directional_penumbra_shadow_kernel);
+	renderer_rd::MaterialStorage::store_soft_shadow_kernel(render_scene_render->directional_soft_shadow_kernel_get(), ubo.directional_soft_shadow_kernel);
+	renderer_rd::MaterialStorage::store_soft_shadow_kernel(render_scene_render->penumbra_shadow_kernel_get(), ubo.penumbra_shadow_kernel);
+	renderer_rd::MaterialStorage::store_soft_shadow_kernel(render_scene_render->soft_shadow_kernel_get(), ubo.soft_shadow_kernel);
 	ubo.camera_visible_layers = camera_visible_layers;
 	ubo.pass_alpha_multiplier = p_opaque_render_buffers && p_apply_alpha_multiplier ? 0.0f : 1.0f;
 
@@ -185,7 +185,7 @@ void RenderSceneDataRD::update_ubo(RID p_uniform_buffer, RS::ViewportDebugDraw p
 
 			Basis sky_transform = render_scene_render->environment_get_sky_orientation(p_env);
 			sky_transform = sky_transform.inverse() * cam_transform.basis;
-			RendererRD::MaterialStorage::store_transform_3x3(sky_transform, ubo.radiance_inverse_xform);
+			renderer_rd::MaterialStorage::store_transform_3x3(sky_transform, ubo.radiance_inverse_xform);
 
 			ubo.use_ambient_cubemap = (ambient_src == RS::ENV_AMBIENT_SOURCE_BG && env_bg == RS::ENV_BG_SKY) || ambient_src == RS::ENV_AMBIENT_SOURCE_SKY;
 			ubo.use_ambient_light = ubo.use_ambient_cubemap || ambient_src == RS::ENV_AMBIENT_SOURCE_COLOR;
@@ -219,7 +219,7 @@ void RenderSceneDataRD::update_ubo(RID p_uniform_buffer, RS::ViewportDebugDraw p
 
 		ubo.fog_sun_scatter = render_scene_render->environment_get_fog_sun_scatter(p_env);
 	} else {
-		if (p_reflection_probe_instance.is_valid() && RendererRD::LightStorage::get_singleton()->reflection_probe_is_interior(p_reflection_probe_instance)) {
+		if (p_reflection_probe_instance.is_valid() && renderer_rd::LightStorage::get_singleton()->reflection_probe_is_interior(p_reflection_probe_instance)) {
 			ubo.use_ambient_light = false;
 		} else {
 			ubo.use_ambient_light = true;
@@ -269,21 +269,21 @@ void RenderSceneDataRD::update_ubo(RID p_uniform_buffer, RS::ViewportDebugDraw p
 		Projection prev_projection = prev_correction * prev_cam_projection;
 
 		//store camera into ubo
-		RendererRD::MaterialStorage::store_camera(prev_projection, prev_ubo.projection_matrix);
-		RendererRD::MaterialStorage::store_camera(prev_projection.inverse(), prev_ubo.inv_projection_matrix);
-		RendererRD::MaterialStorage::store_transform(prev_cam_transform, prev_ubo.inv_view_matrix);
-		RendererRD::MaterialStorage::store_transform(prev_cam_transform.affine_inverse(), prev_ubo.view_matrix);
+		renderer_rd::MaterialStorage::store_camera(prev_projection, prev_ubo.projection_matrix);
+		renderer_rd::MaterialStorage::store_camera(prev_projection.inverse(), prev_ubo.inv_projection_matrix);
+		renderer_rd::MaterialStorage::store_transform(prev_cam_transform, prev_ubo.inv_view_matrix);
+		renderer_rd::MaterialStorage::store_transform(prev_cam_transform.affine_inverse(), prev_ubo.view_matrix);
 
 #ifdef REAL_T_IS_DOUBLE
-		RendererRD::MaterialStorage::split_double(-prev_cam_transform.origin.x, &prev_ubo.inv_view_matrix[12], &prev_ubo.inv_view_matrix[3]);
-		RendererRD::MaterialStorage::split_double(-prev_cam_transform.origin.y, &prev_ubo.inv_view_matrix[13], &prev_ubo.inv_view_matrix[7]);
-		RendererRD::MaterialStorage::split_double(-prev_cam_transform.origin.z, &prev_ubo.inv_view_matrix[14], &prev_ubo.inv_view_matrix[11]);
+		renderer_rd::MaterialStorage::split_double(-prev_cam_transform.origin.x, &prev_ubo.inv_view_matrix[12], &prev_ubo.inv_view_matrix[3]);
+		renderer_rd::MaterialStorage::split_double(-prev_cam_transform.origin.y, &prev_ubo.inv_view_matrix[13], &prev_ubo.inv_view_matrix[7]);
+		renderer_rd::MaterialStorage::split_double(-prev_cam_transform.origin.z, &prev_ubo.inv_view_matrix[14], &prev_ubo.inv_view_matrix[11]);
 #endif
 
 		for (uint32_t v = 0; v < view_count; v++) {
 			prev_projection = prev_correction * view_projection[v];
-			RendererRD::MaterialStorage::store_camera(prev_projection, prev_ubo.projection_matrix_view[v]);
-			RendererRD::MaterialStorage::store_camera(prev_projection.inverse(), prev_ubo.inv_projection_matrix_view[v]);
+			renderer_rd::MaterialStorage::store_camera(prev_projection, prev_ubo.projection_matrix_view[v]);
+			renderer_rd::MaterialStorage::store_camera(prev_projection.inverse(), prev_ubo.inv_projection_matrix_view[v]);
 		}
 		prev_ubo.taa_jitter[0] = prev_taa_jitter.x;
 		prev_ubo.taa_jitter[1] = prev_taa_jitter.y;

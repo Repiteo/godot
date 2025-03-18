@@ -35,7 +35,7 @@
 #include "servers/rendering/storage/material_storage.h"
 #include "servers/rendering/storage/utilities.h"
 
-namespace RendererDummy {
+namespace renderer_dummy {
 
 class MaterialStorage : public RendererMaterialStorage {
 private:
@@ -126,4 +126,4 @@ public:
 	virtual void material_update_dependency(RID p_material, DependencyTracker *p_instance) override {}
 };
 
-} // namespace RendererDummy
+} // namespace renderer_dummy

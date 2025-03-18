@@ -291,7 +291,7 @@ Error GDScriptWorkspace::initialize() {
 		String class_name = E.key;
 		class_symbol.name = class_name;
 		class_symbol.native_class = class_name;
-		class_symbol.kind = lsp::SymbolKind::Class;
+		class_symbol.kind = lsp::symbol_kind::Class;
 		class_symbol.detail = String("<Native> class ") + class_name;
 		if (!class_data.inherits.is_empty()) {
 			class_symbol.detail += " extends " + class_data.inherits;
@@ -303,7 +303,7 @@ Error GDScriptWorkspace::initialize() {
 			lsp::DocumentSymbol symbol;
 			symbol.name = const_data.name;
 			symbol.native_class = class_name;
-			symbol.kind = lsp::SymbolKind::Constant;
+			symbol.kind = lsp::symbol_kind::Constant;
 			symbol.detail = "const " + class_name + "." + const_data.name;
 			if (const_data.enumeration.length()) {
 				symbol.detail += ": " + const_data.enumeration;
@@ -318,7 +318,7 @@ Error GDScriptWorkspace::initialize() {
 			lsp::DocumentSymbol symbol;
 			symbol.name = data.name;
 			symbol.native_class = class_name;
-			symbol.kind = lsp::SymbolKind::Property;
+			symbol.kind = lsp::symbol_kind::Property;
 			symbol.detail = "var " + class_name + "." + data.name;
 			if (data.enumeration.length()) {
 				symbol.detail += ": " + data.enumeration;
@@ -334,7 +334,7 @@ Error GDScriptWorkspace::initialize() {
 			lsp::DocumentSymbol symbol;
 			symbol.name = data.name;
 			symbol.native_class = class_name;
-			symbol.kind = lsp::SymbolKind::Property;
+			symbol.kind = lsp::symbol_kind::Property;
 			symbol.detail = "<Theme> var " + class_name + "." + data.name + ": " + data.type;
 			symbol.documentation = data.description;
 			class_symbol.children.push_back(symbol);
@@ -353,7 +353,7 @@ Error GDScriptWorkspace::initialize() {
 			lsp::DocumentSymbol symbol;
 			symbol.name = data.name;
 			symbol.native_class = class_name;
-			symbol.kind = i >= signal_start_idx ? lsp::SymbolKind::Event : lsp::SymbolKind::Method;
+			symbol.kind = i >= signal_start_idx ? lsp::symbol_kind::Event : lsp::symbol_kind::Method;
 
 			String params = "";
 			bool arg_default_value_started = false;
@@ -362,7 +362,7 @@ Error GDScriptWorkspace::initialize() {
 
 				lsp::DocumentSymbol symbol_arg;
 				symbol_arg.name = arg.name;
-				symbol_arg.kind = lsp::SymbolKind::Variable;
+				symbol_arg.kind = lsp::symbol_kind::Variable;
 				symbol_arg.detail = arg.type;
 
 				if (!arg_default_value_started && !arg.default_value.is_empty()) {
@@ -712,7 +712,7 @@ const lsp::DocumentSymbol *GDScriptWorkspace::resolve_symbol(const lsp::TextDocu
 
 							if (symbol) {
 								switch (symbol->kind) {
-									case lsp::SymbolKind::Function: {
+									case lsp::symbol_kind::Function: {
 										if (symbol->name != symbol_identifier) {
 											symbol = get_parameter_symbol(symbol, symbol_identifier);
 										}
@@ -820,7 +820,7 @@ Error GDScriptWorkspace::resolve_signature(const lsp::TextDocumentPositionParams
 			}
 
 			for (const lsp::DocumentSymbol *const &symbol : symbols) {
-				if (symbol->kind == lsp::SymbolKind::Method || symbol->kind == lsp::SymbolKind::Function) {
+				if (symbol->kind == lsp::symbol_kind::Method || symbol->kind == lsp::symbol_kind::Function) {
 					lsp::SignatureInformation signature_info;
 					signature_info.label = symbol->detail;
 					signature_info.documentation = symbol->render();

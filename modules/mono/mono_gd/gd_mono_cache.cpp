@@ -28,11 +28,11 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#include "gd_mono_cache.h"
+#include "gdmono_cache.h"
 
 #include "core/error/error_macros.h"
 
-namespace GDMonoCache {
+namespace gdmono_cache {
 
 ManagedCallbacks managed_callbacks;
 bool godot_api_cache_updated = false;
@@ -97,4 +97,4 @@ void update_godot_api_cache(const ManagedCallbacks &p_managed_callbacks) {
 
 	godot_api_cache_updated = true;
 }
-} // namespace GDMonoCache
+} // namespace gdmono_cache

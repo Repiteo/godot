@@ -41,7 +41,7 @@
 #include "servers/rendering/storage/light_storage.h"
 #include "servers/rendering/storage/utilities.h"
 
-namespace GLES3 {
+namespace gles3 {
 
 /* LIGHT */
 
@@ -794,7 +794,7 @@ public:
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, atlas->debug_texture, 0);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 
 		return atlas->debug_fbo;
 	}
@@ -905,6 +905,6 @@ public:
 	}
 };
 
-} // namespace GLES3
+} //namespace gles3
 
 #endif // GLES3_ENABLED

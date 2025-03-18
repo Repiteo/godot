@@ -66,7 +66,7 @@ void pin_vertices(const JoltSoftBody3D &p_body, const HashSet<int> &p_pinned_ver
 } // namespace
 
 JPH::BroadPhaseLayer JoltSoftBody3D::_get_broad_phase_layer() const {
-	return JoltBroadPhaseLayer::BODY_DYNAMIC;
+	return jolt_broad_phase_layer::BODY_DYNAMIC;
 }
 
 JPH::ObjectLayer JoltSoftBody3D::_get_object_layer() const {

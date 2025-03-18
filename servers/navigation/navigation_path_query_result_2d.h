@@ -46,8 +46,8 @@ protected:
 
 public:
 	enum PathSegmentType {
-		PATH_SEGMENT_TYPE_REGION = NavigationUtilities::PathSegmentType::PATH_SEGMENT_TYPE_REGION,
-		PATH_SEGMENT_TYPE_LINK = NavigationUtilities::PathSegmentType::PATH_SEGMENT_TYPE_LINK,
+		PATH_SEGMENT_TYPE_REGION = navigation_utilities::PathSegmentType::PATH_SEGMENT_TYPE_REGION,
+		PATH_SEGMENT_TYPE_LINK = navigation_utilities::PathSegmentType::PATH_SEGMENT_TYPE_LINK,
 	};
 
 	void set_path(const Vector<Vector2> &p_path);

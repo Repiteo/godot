@@ -33,7 +33,7 @@
 #include "servers/rendering/renderer_rd/shaders/effects/taa_resolve.glsl.gen.h"
 #include "servers/rendering/renderer_rd/storage_rd/render_scene_buffers_rd.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class TAA {
 public:
@@ -57,4 +57,4 @@ private:
 	void resolve(RID p_frame, RID p_temp, RID p_depth, RID p_velocity, RID p_prev_velocity, RID p_history, Size2 p_resolution, float p_z_near, float p_z_far);
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

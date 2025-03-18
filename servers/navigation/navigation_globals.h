@@ -30,7 +30,7 @@
 
 #pragma once
 
-namespace NavigationDefaults3D {
+namespace navigation_defaults_3d {
 
 // Rasterization.
 
@@ -46,9 +46,9 @@ constexpr auto navmesh_cell_size_hint{ "0.001,100,0.001,or_greater" };
 constexpr float edge_connection_margin{ 0.25f };
 constexpr float link_connection_radius{ 1.0f };
 
-} //namespace NavigationDefaults3D
+} //namespace navigation_defaults_3d
 
-namespace NavigationDefaults2D {
+namespace navigation_defaults_2d {
 
 // Rasterization.
 
@@ -61,4 +61,4 @@ constexpr auto navmesh_cell_size_hint{ "0.001,100,0.001,or_greater" };
 constexpr float edge_connection_margin{ 1.0f };
 constexpr float link_connection_radius{ 4.0f };
 
-} //namespace NavigationDefaults2D
+} //namespace navigation_defaults_2d

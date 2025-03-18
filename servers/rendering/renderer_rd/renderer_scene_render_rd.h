@@ -51,20 +51,20 @@
 #include "servers/rendering/rendering_method.h"
 
 class RendererSceneRenderRD : public RendererSceneRender {
-	friend RendererRD::SkyRD;
-	friend RendererRD::GI;
+	friend renderer_rd::SkyRD;
+	friend renderer_rd::GI;
 
 protected:
-	RendererRD::ForwardIDStorage *forward_id_storage = nullptr;
-	RendererRD::BokehDOF *bokeh_dof = nullptr;
-	RendererRD::CopyEffects *copy_effects = nullptr;
-	RendererRD::DebugEffects *debug_effects = nullptr;
-	RendererRD::Luminance *luminance = nullptr;
-	RendererRD::ToneMapper *tone_mapper = nullptr;
-	RendererRD::FSR *fsr = nullptr;
-	RendererRD::VRS *vrs = nullptr;
+	renderer_rd::ForwardIDStorage *forward_id_storage = nullptr;
+	renderer_rd::BokehDOF *bokeh_dof = nullptr;
+	renderer_rd::CopyEffects *copy_effects = nullptr;
+	renderer_rd::DebugEffects *debug_effects = nullptr;
+	renderer_rd::Luminance *luminance = nullptr;
+	renderer_rd::ToneMapper *tone_mapper = nullptr;
+	renderer_rd::FSR *fsr = nullptr;
+	renderer_rd::VRS *vrs = nullptr;
 #ifdef METAL_ENABLED
-	RendererRD::MFXSpatialEffect *mfx_spatial = nullptr;
+	renderer_rd::MFXSpatialEffect *mfx_spatial = nullptr;
 #endif
 	double time = 0.0;
 	double time_step = 0.0;
@@ -77,7 +77,7 @@ protected:
 
 	////////////////////////////////
 
-	virtual RendererRD::ForwardIDStorage *create_forward_id_storage() { return memnew(RendererRD::ForwardIDStorage); }
+	virtual renderer_rd::ForwardIDStorage *create_forward_id_storage() { return memnew(renderer_rd::ForwardIDStorage); }
 
 	void _update_vrs(Ref<RenderSceneBuffersRD> p_render_buffers);
 
@@ -112,8 +112,8 @@ protected:
 	PagedArrayPool<RenderGeometryInstance *> cull_argument_pool;
 	PagedArray<RenderGeometryInstance *> cull_argument; //need this to exist
 
-	RendererRD::SkyRD sky;
-	RendererRD::GI gi;
+	renderer_rd::SkyRD sky;
+	renderer_rd::GI gi;
 
 	virtual void _update_shader_quality_settings() {}
 	static bool _debug_draw_can_use_effects(RS::ViewportDebugDraw p_debug_draw);
@@ -170,11 +170,11 @@ public:
 
 	/* GI */
 
-	RendererRD::GI *get_gi() { return &gi; }
+	renderer_rd::GI *get_gi() { return &gi; }
 
 	/* SKY */
 
-	RendererRD::SkyRD *get_sky() { return &sky; }
+	renderer_rd::SkyRD *get_sky() { return &sky; }
 
 	/* SKY API */
 

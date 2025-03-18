@@ -35,7 +35,7 @@
 #include <png.h>
 #include <string.h>
 
-namespace PNGDriverCommon {
+namespace png_driver_common {
 
 // Print any warnings.
 // On error, set explain and return true.
@@ -203,4 +203,4 @@ Error image_to_png(const Ref<Image> &p_image, Vector<uint8_t> &p_buffer) {
 
 	return OK;
 }
-} // namespace PNGDriverCommon
+} // namespace png_driver_common

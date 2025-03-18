@@ -30,7 +30,7 @@
 
 #include "texture_storage.h"
 
-using namespace RendererDummy;
+using namespace renderer_dummy;
 
 TextureStorage *TextureStorage::singleton = nullptr;
 

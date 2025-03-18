@@ -42,7 +42,7 @@
 @protocol MTLFXTemporalScaler;
 #endif
 
-namespace RendererRD {
+namespace renderer_rd {
 
 struct MFXSpatialContext {
 #ifdef __OBJC__
@@ -174,6 +174,6 @@ public:
 	void process(MFXTemporalContext *p_ctx, Params p_params);
 };
 
-} //namespace RendererRD
+} //namespace renderer_rd
 
 #endif // METAL_ENABLED

@@ -1013,7 +1013,7 @@ Ref<Image> DisplayServerX11::clipboard_get_image() const {
 
 			if (success && (data_size > 0)) {
 				ret.instantiate();
-				PNGDriverCommon::png_to_image(incr_data.ptr(), incr_data.size(), false, ret);
+				png_driver_common::png_to_image(incr_data.ptr(), incr_data.size(), false, ret);
 			}
 		} else if (bytes_left > 0) {
 			if (data) {
@@ -1027,7 +1027,7 @@ Ref<Image> DisplayServerX11::clipboard_get_image() const {
 					&len, &dummy, &data);
 			if (result == Success) {
 				ret.instantiate();
-				PNGDriverCommon::png_to_image((uint8_t *)data, bytes_left, false, ret);
+				png_driver_common::png_to_image((uint8_t *)data, bytes_left, false, ret);
 			} else {
 				print_verbose("Failed to get selection data.");
 			}

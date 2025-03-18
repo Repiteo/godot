@@ -42,7 +42,7 @@ JPH::Shape *construct_override_user_data() {
 }
 
 void collide_override_user_data_vs_shape(const JPH::Shape *p_shape1, const JPH::Shape *p_shape2, JPH::Vec3Arg p_scale1, JPH::Vec3Arg p_scale2, JPH::Mat44Arg p_center_of_mass_transform1, JPH::Mat44Arg p_center_of_mass_transform2, const JPH::SubShapeIDCreator &p_sub_shape_id_creator1, const JPH::SubShapeIDCreator &p_sub_shape_id_creator2, const JPH::CollideShapeSettings &p_collide_shape_settings, JPH::CollideShapeCollector &p_collector, const JPH::ShapeFilter &p_shape_filter) {
-	ERR_FAIL_COND(p_shape1->GetSubType() != JoltCustomShapeSubType::OVERRIDE_USER_DATA);
+	ERR_FAIL_COND(p_shape1->GetSubType() != jolt_custom_shape_sub_type::OVERRIDE_USER_DATA);
 
 	const JoltCustomUserDataShape *shape1 = static_cast<const JoltCustomUserDataShape *>(p_shape1);
 
@@ -50,7 +50,7 @@ void collide_override_user_data_vs_shape(const JPH::Shape *p_shape1, const JPH::
 }
 
 void collide_shape_vs_override_user_data(const JPH::Shape *p_shape1, const JPH::Shape *p_shape2, JPH::Vec3Arg p_scale1, JPH::Vec3Arg p_scale2, JPH::Mat44Arg p_center_of_mass_transform1, JPH::Mat44Arg p_center_of_mass_transform2, const JPH::SubShapeIDCreator &p_sub_shape_id_creator1, const JPH::SubShapeIDCreator &p_sub_shape_id_creator2, const JPH::CollideShapeSettings &p_collide_shape_settings, JPH::CollideShapeCollector &p_collector, const JPH::ShapeFilter &p_shape_filter) {
-	ERR_FAIL_COND(p_shape2->GetSubType() != JoltCustomShapeSubType::OVERRIDE_USER_DATA);
+	ERR_FAIL_COND(p_shape2->GetSubType() != jolt_custom_shape_sub_type::OVERRIDE_USER_DATA);
 
 	const JoltCustomUserDataShape *shape2 = static_cast<const JoltCustomUserDataShape *>(p_shape2);
 
@@ -58,7 +58,7 @@ void collide_shape_vs_override_user_data(const JPH::Shape *p_shape1, const JPH::
 }
 
 void cast_override_user_data_vs_shape(const JPH::ShapeCast &p_shape_cast, const JPH::ShapeCastSettings &p_shape_cast_settings, const JPH::Shape *p_shape, JPH::Vec3Arg p_scale, const JPH::ShapeFilter &p_shape_filter, JPH::Mat44Arg p_center_of_mass_transform2, const JPH::SubShapeIDCreator &p_sub_shape_id_creator1, const JPH::SubShapeIDCreator &p_sub_shape_id_creator2, JPH::CastShapeCollector &p_collector) {
-	ERR_FAIL_COND(p_shape_cast.mShape->GetSubType() != JoltCustomShapeSubType::OVERRIDE_USER_DATA);
+	ERR_FAIL_COND(p_shape_cast.mShape->GetSubType() != jolt_custom_shape_sub_type::OVERRIDE_USER_DATA);
 
 	const JoltCustomUserDataShape *shape = static_cast<const JoltCustomUserDataShape *>(p_shape_cast.mShape);
 	const JPH::ShapeCast shape_cast(shape->GetInnerShape(), p_shape_cast.mScale, p_shape_cast.mCenterOfMassStart, p_shape_cast.mDirection);
@@ -67,7 +67,7 @@ void cast_override_user_data_vs_shape(const JPH::ShapeCast &p_shape_cast, const 
 }
 
 void cast_shape_vs_override_user_data(const JPH::ShapeCast &p_shape_cast, const JPH::ShapeCastSettings &p_shape_cast_settings, const JPH::Shape *p_shape, JPH::Vec3Arg p_scale, const JPH::ShapeFilter &p_shape_filter, JPH::Mat44Arg p_center_of_mass_transform2, const JPH::SubShapeIDCreator &p_sub_shape_id_creator1, const JPH::SubShapeIDCreator &p_sub_shape_id_creator2, JPH::CastShapeCollector &p_collector) {
-	ERR_FAIL_COND(p_shape->GetSubType() != JoltCustomShapeSubType::OVERRIDE_USER_DATA);
+	ERR_FAIL_COND(p_shape->GetSubType() != jolt_custom_shape_sub_type::OVERRIDE_USER_DATA);
 
 	const JoltCustomUserDataShape *shape = static_cast<const JoltCustomUserDataShape *>(p_shape);
 
@@ -85,15 +85,15 @@ JPH::ShapeSettings::ShapeResult JoltCustomUserDataShapeSettings::Create() const 
 }
 
 void JoltCustomUserDataShape::register_type() {
-	JPH::ShapeFunctions &shape_functions = JPH::ShapeFunctions::sGet(JoltCustomShapeSubType::OVERRIDE_USER_DATA);
+	JPH::ShapeFunctions &shape_functions = JPH::ShapeFunctions::sGet(jolt_custom_shape_sub_type::OVERRIDE_USER_DATA);
 
 	shape_functions.mConstruct = construct_override_user_data;
 	shape_functions.mColor = JPH::Color::sCyan;
 
 	for (const JPH::EShapeSubType sub_type : JPH::sAllSubShapeTypes) {
-		JPH::CollisionDispatch::sRegisterCollideShape(JoltCustomShapeSubType::OVERRIDE_USER_DATA, sub_type, collide_override_user_data_vs_shape);
-		JPH::CollisionDispatch::sRegisterCollideShape(sub_type, JoltCustomShapeSubType::OVERRIDE_USER_DATA, collide_shape_vs_override_user_data);
-		JPH::CollisionDispatch::sRegisterCastShape(JoltCustomShapeSubType::OVERRIDE_USER_DATA, sub_type, cast_override_user_data_vs_shape);
-		JPH::CollisionDispatch::sRegisterCastShape(sub_type, JoltCustomShapeSubType::OVERRIDE_USER_DATA, cast_shape_vs_override_user_data);
+		JPH::CollisionDispatch::sRegisterCollideShape(jolt_custom_shape_sub_type::OVERRIDE_USER_DATA, sub_type, collide_override_user_data_vs_shape);
+		JPH::CollisionDispatch::sRegisterCollideShape(sub_type, jolt_custom_shape_sub_type::OVERRIDE_USER_DATA, collide_shape_vs_override_user_data);
+		JPH::CollisionDispatch::sRegisterCastShape(jolt_custom_shape_sub_type::OVERRIDE_USER_DATA, sub_type, cast_override_user_data_vs_shape);
+		JPH::CollisionDispatch::sRegisterCastShape(sub_type, jolt_custom_shape_sub_type::OVERRIDE_USER_DATA, cast_shape_vs_override_user_data);
 	}
 }

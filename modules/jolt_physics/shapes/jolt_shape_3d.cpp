@@ -180,14 +180,14 @@ JPH::ShapeRefC JoltShape3D::with_double_sided(const JPH::Shape *p_shape, bool p_
 
 JPH::ShapeRefC JoltShape3D::without_custom_shapes(const JPH::Shape *p_shape) {
 	switch (p_shape->GetSubType()) {
-		case JoltCustomShapeSubType::RAY:
-		case JoltCustomShapeSubType::MOTION: {
+		case jolt_custom_shape_sub_type::RAY:
+		case jolt_custom_shape_sub_type::MOTION: {
 			// Replace unsupported shapes with a small sphere.
 			return new JPH::SphereShape(0.1f);
 		}
 
-		case JoltCustomShapeSubType::OVERRIDE_USER_DATA:
-		case JoltCustomShapeSubType::DOUBLE_SIDED: {
+		case jolt_custom_shape_sub_type::OVERRIDE_USER_DATA:
+		case jolt_custom_shape_sub_type::DOUBLE_SIDED: {
 			const JPH::DecoratedShape *shape = static_cast<const JPH::DecoratedShape *>(p_shape);
 
 			// Replace unsupported decorator shapes with the inner shape.

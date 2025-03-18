@@ -38,7 +38,7 @@
 static Ref<Image> _webp_mem_loader_func(const uint8_t *p_webp_data, int p_size) {
 	Ref<Image> img;
 	img.instantiate();
-	Error err = WebPCommon::webp_load_image_from_buffer(img.ptr(), p_webp_data, p_size);
+	Error err = webp_common::webp_load_image_from_buffer(img.ptr(), p_webp_data, p_size);
 	ERR_FAIL_COND_V(err, Ref<Image>());
 	return img;
 }
@@ -53,7 +53,7 @@ Error ImageLoaderWebP::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitFiel
 
 	f->get_buffer(&w[0], src_image_len);
 
-	Error err = WebPCommon::webp_load_image_from_buffer(p_image.ptr(), w, src_image_len);
+	Error err = webp_common::webp_load_image_from_buffer(p_image.ptr(), w, src_image_len);
 
 	return err;
 }
@@ -64,7 +64,7 @@ void ImageLoaderWebP::get_recognized_extensions(List<String> *p_extensions) cons
 
 ImageLoaderWebP::ImageLoaderWebP() {
 	Image::_webp_mem_loader_func = _webp_mem_loader_func;
-	Image::webp_lossy_packer = WebPCommon::_webp_lossy_pack;
-	Image::webp_lossless_packer = WebPCommon::_webp_lossless_pack;
-	Image::webp_unpacker = WebPCommon::_webp_unpack;
+	Image::webp_lossy_packer = webp_common::_webp_lossy_pack;
+	Image::webp_lossless_packer = webp_common::_webp_lossless_pack;
+	Image::webp_unpacker = webp_common::_webp_unpack;
 }

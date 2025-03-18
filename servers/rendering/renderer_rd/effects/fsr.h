@@ -35,7 +35,7 @@
 #include "../storage_rd/render_scene_buffers_rd.h"
 #include "servers/rendering/renderer_rd/shaders/effects/fsr_upscale.glsl.gen.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class FSR : public SpatialUpscaler {
 	String name = "FSR 1.0 Upscale";
@@ -69,4 +69,4 @@ private:
 	RID pipeline;
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

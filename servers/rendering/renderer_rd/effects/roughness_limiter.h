@@ -32,7 +32,7 @@
 
 #include "servers/rendering/renderer_rd/shaders/effects/roughness_limiter.glsl.gen.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 
 // Note, this logic is unused at the time of writing. It should be re-incorporated into the renderer at some point.
 
@@ -57,4 +57,4 @@ public:
 	void roughness_limit(RID p_source_normal, RID p_roughness, const Size2i &p_size, float p_curve);
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

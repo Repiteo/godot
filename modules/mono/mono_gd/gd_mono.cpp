@@ -36,7 +36,7 @@
 #include "../thirdparty/coreclr_delegates.h"
 #include "../thirdparty/hostfxr.h"
 #include "../utils/path_utils.h"
-#include "gd_mono_cache.h"
+#include "gdmono_cache.h"
 
 #ifdef TOOLS_ENABLED
 #include "../editor/hostfxr_resolver.h"
@@ -129,13 +129,13 @@ String find_hostfxr() {
 #else
 
 #if defined(WINDOWS_ENABLED)
-	String probe_path = GodotSharpDirs::get_api_assemblies_dir()
+	String probe_path = godot_sharp_dirs::get_api_assemblies_dir()
 								.path_join("hostfxr.dll");
 #elif defined(MACOS_ENABLED)
-	String probe_path = GodotSharpDirs::get_api_assemblies_dir()
+	String probe_path = godot_sharp_dirs::get_api_assemblies_dir()
 								.path_join("libhostfxr.dylib");
 #elif defined(UNIX_ENABLED)
-	String probe_path = GodotSharpDirs::get_api_assemblies_dir()
+	String probe_path = godot_sharp_dirs::get_api_assemblies_dir()
 								.path_join("libhostfxr.so");
 #else
 #error "Platform not supported (yet?)"
@@ -158,13 +158,13 @@ String find_monosgen() {
 	return "libmonosgen-2.0.so";
 #else
 #if defined(WINDOWS_ENABLED)
-	String probe_path = GodotSharpDirs::get_api_assemblies_dir()
+	String probe_path = godot_sharp_dirs::get_api_assemblies_dir()
 								.path_join("monosgen-2.0.dll");
 #elif defined(MACOS_ENABLED)
-	String probe_path = GodotSharpDirs::get_api_assemblies_dir()
+	String probe_path = godot_sharp_dirs::get_api_assemblies_dir()
 								.path_join("libmonosgen-2.0.dylib");
 #elif defined(UNIX_ENABLED)
-	String probe_path = GodotSharpDirs::get_api_assemblies_dir()
+	String probe_path = godot_sharp_dirs::get_api_assemblies_dir()
 								.path_join("libmonosgen-2.0.so");
 #else
 #error "Platform not supported (yet?)"
@@ -180,13 +180,13 @@ String find_monosgen() {
 
 String find_coreclr() {
 #if defined(WINDOWS_ENABLED)
-	String probe_path = GodotSharpDirs::get_api_assemblies_dir()
+	String probe_path = godot_sharp_dirs::get_api_assemblies_dir()
 								.path_join("coreclr.dll");
 #elif defined(MACOS_ENABLED)
-	String probe_path = GodotSharpDirs::get_api_assemblies_dir()
+	String probe_path = godot_sharp_dirs::get_api_assemblies_dir()
 								.path_join("libcoreclr.dylib");
 #elif defined(UNIX_ENABLED)
-	String probe_path = GodotSharpDirs::get_api_assemblies_dir()
+	String probe_path = godot_sharp_dirs::get_api_assemblies_dir()
 								.path_join("libcoreclr.so");
 #else
 #error "Platform not supported (yet?)"
@@ -343,9 +343,9 @@ load_assembly_and_get_function_pointer_fn initialize_hostfxr_self_contained(
 #endif
 
 #ifdef TOOLS_ENABLED
-using godot_plugins_initialize_fn = bool (*)(void *, bool, gdmono::PluginCallbacks *, GDMonoCache::ManagedCallbacks *, const void **, int32_t);
+using godot_plugins_initialize_fn = bool (*)(void *, bool, gdmono::PluginCallbacks *, gdmono_cache::ManagedCallbacks *, const void **, int32_t);
 #else
-using godot_plugins_initialize_fn = bool (*)(void *, GDMonoCache::ManagedCallbacks *, const void **, int32_t);
+using godot_plugins_initialize_fn = bool (*)(void *, gdmono_cache::ManagedCallbacks *, const void **, int32_t);
 #endif
 
 #ifdef TOOLS_ENABLED
@@ -353,10 +353,10 @@ godot_plugins_initialize_fn initialize_hostfxr_and_godot_plugins(bool &r_runtime
 	godot_plugins_initialize_fn godot_plugins_initialize = nullptr;
 
 	HostFxrCharString godot_plugins_path = str_to_hostfxr(
-			GodotSharpDirs::get_api_assemblies_dir().path_join("GodotPlugins.dll"));
+			godot_sharp_dirs::get_api_assemblies_dir().path_join("GodotPlugins.dll"));
 
 	HostFxrCharString config_path = str_to_hostfxr(
-			GodotSharpDirs::get_api_assemblies_dir().path_join("GodotPlugins.runtimeconfig.json"));
+			godot_sharp_dirs::get_api_assemblies_dir().path_join("GodotPlugins.runtimeconfig.json"));
 
 	load_assembly_and_get_function_pointer_fn load_assembly_and_get_function_pointer =
 			initialize_hostfxr_for_config(get_data(config_path));
@@ -387,7 +387,7 @@ godot_plugins_initialize_fn initialize_hostfxr_and_godot_plugins(bool &r_runtime
 
 	String assembly_name = path::get_csharp_project_name();
 
-	HostFxrCharString assembly_path = str_to_hostfxr(GodotSharpDirs::get_api_assemblies_dir()
+	HostFxrCharString assembly_path = str_to_hostfxr(godot_sharp_dirs::get_api_assemblies_dir()
 					.path_join(assembly_name + ".dll"));
 
 	load_assembly_and_get_function_pointer_fn load_assembly_and_get_function_pointer =
@@ -413,13 +413,13 @@ godot_plugins_initialize_fn try_load_native_aot_library(void *&r_aot_dll_handle)
 	String assembly_name = path::get_csharp_project_name();
 
 #if defined(WINDOWS_ENABLED)
-	String native_aot_so_path = GodotSharpDirs::get_api_assemblies_dir().path_join(assembly_name + ".dll");
+	String native_aot_so_path = godot_sharp_dirs::get_api_assemblies_dir().path_join(assembly_name + ".dll");
 #elif defined(MACOS_ENABLED) || defined(IOS_ENABLED)
-	String native_aot_so_path = GodotSharpDirs::get_api_assemblies_dir().path_join(assembly_name + ".dylib");
+	String native_aot_so_path = godot_sharp_dirs::get_api_assemblies_dir().path_join(assembly_name + ".dylib");
 #elif defined(ANDROID_ENABLED)
 	String native_aot_so_path = "lib" + assembly_name + ".so";
 #elif defined(UNIX_ENABLED)
-	String native_aot_so_path = GodotSharpDirs::get_api_assemblies_dir().path_join(assembly_name + ".so");
+	String native_aot_so_path = godot_sharp_dirs::get_api_assemblies_dir().path_join(assembly_name + ".so");
 #else
 #error "Platform not supported (yet?)"
 #endif
@@ -450,7 +450,7 @@ String make_tpa_list() {
 	String separator = ":";
 #endif
 
-	String assemblies_dir = GodotSharpDirs::get_api_assemblies_dir();
+	String assemblies_dir = godot_sharp_dirs::get_api_assemblies_dir();
 	PackedStringArray files = DirAccess::get_files_at(assemblies_dir);
 	for (const String &file : files) {
 		tpa_list += assemblies_dir.path_join(file);
@@ -502,7 +502,7 @@ bool GDMono::should_initialize() {
 }
 
 static bool _on_core_api_assembly_loaded() {
-	if (!GDMonoCache::godot_api_cache_updated) {
+	if (!gdmono_cache::godot_api_cache_updated) {
 		return false;
 	}
 
@@ -513,7 +513,7 @@ static bool _on_core_api_assembly_loaded() {
 	debug = false;
 #endif
 
-	GDMonoCache::managed_callbacks.GD_OnCoreApiAssemblyLoaded(debug);
+	gdmono_cache::managed_callbacks.GD_OnCoreApiAssemblyLoaded(debug);
 
 	return true;
 }
@@ -527,8 +527,8 @@ void GDMono::initialize() {
 
 #if !defined(IOS_ENABLED)
 	// Check that the .NET assemblies directory exists before trying to use it.
-	if (!DirAccess::exists(GodotSharpDirs::get_api_assemblies_dir())) {
-		OS::get_singleton()->alert(vformat(RTR("Unable to find the .NET assemblies directory.\nMake sure the '%s' directory exists and contains the .NET assemblies."), GodotSharpDirs::get_api_assemblies_dir()), RTR(".NET assemblies not found"));
+	if (!DirAccess::exists(godot_sharp_dirs::get_api_assemblies_dir())) {
+		OS::get_singleton()->alert(vformat(RTR("Unable to find the .NET assemblies directory.\nMake sure the '%s' directory exists and contains the .NET assemblies."), godot_sharp_dirs::get_api_assemblies_dir()), RTR(".NET assemblies not found"));
 		ERR_FAIL_MSG(".NET: Assemblies not found");
 	}
 #endif
@@ -561,7 +561,7 @@ void GDMono::initialize() {
 	int32_t interop_funcs_size = 0;
 	const void **interop_funcs = godotsharp::get_runtime_interop_funcs(interop_funcs_size);
 
-	GDMonoCache::ManagedCallbacks managed_callbacks{};
+	gdmono_cache::ManagedCallbacks managed_callbacks{};
 
 	void *godot_dll_handle = nullptr;
 
@@ -585,7 +585,7 @@ void GDMono::initialize() {
 	ERR_FAIL_COND_MSG(!init_ok, ".NET: GodotPlugins initialization failed");
 #endif
 
-	GDMonoCache::update_godot_api_cache(managed_callbacks);
+	gdmono_cache::update_godot_api_cache(managed_callbacks);
 
 	print_verbose(".NET: GodotPlugins initialized");
 
@@ -629,7 +629,7 @@ void GDMono::_init_godot_api_hashes() {
 bool GDMono::_load_project_assembly() {
 	String assembly_name = path::get_csharp_project_name();
 
-	String assembly_path = GodotSharpDirs::get_res_temp_assemblies_dir()
+	String assembly_path = godot_sharp_dirs::get_res_temp_assemblies_dir()
 								   .path_join(assembly_name + ".dll");
 	assembly_path = ProjectSettings::get_singleton()->globalize_path(assembly_path);
 
@@ -659,7 +659,7 @@ void GDMono::reload_failure() {
 		ERR_PRINT_ED(".NET: Giving up on assembly reloading. Please restart the editor if unloading was failing.");
 
 		String assembly_name = path::get_csharp_project_name();
-		String assembly_path = GodotSharpDirs::get_res_temp_assemblies_dir().path_join(assembly_name + ".dll");
+		String assembly_path = godot_sharp_dirs::get_res_temp_assemblies_dir().path_join(assembly_name + ".dll");
 		assembly_path = ProjectSettings::get_singleton()->globalize_path(assembly_path);
 		project_assembly_path = assembly_path.simplify_path();
 		project_assembly_modified_time = FileAccess::get_modified_time(assembly_path);

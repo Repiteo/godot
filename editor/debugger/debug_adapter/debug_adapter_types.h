@@ -33,7 +33,7 @@
 #include "core/io/json.h"
 #include "core/variant/dictionary.h"
 
-namespace DAP {
+namespace dap {
 
 enum ErrorType {
 	UNKNOWN,
@@ -275,4 +275,4 @@ struct Variable {
 	}
 };
 
-} // namespace DAP
+} // namespace dap

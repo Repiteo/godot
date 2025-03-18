@@ -68,9 +68,9 @@ Error ResourceSaverWebP::save_image(const String &p_path, const Ref<Image> &p_im
 Vector<uint8_t> ResourceSaverWebP::save_image_to_buffer(const Ref<Image> &p_img, const bool p_lossy, const float p_quality) {
 	Vector<uint8_t> buffer;
 	if (p_lossy) {
-		buffer = WebPCommon::_webp_lossy_pack(p_img, p_quality);
+		buffer = webp_common::_webp_lossy_pack(p_img, p_quality);
 	} else {
-		buffer = WebPCommon::_webp_lossless_pack(p_img);
+		buffer = webp_common::_webp_lossless_pack(p_img);
 	}
 	return buffer;
 }

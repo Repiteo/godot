@@ -40,7 +40,7 @@
 
 #include "platform_gl.h"
 
-namespace GLES3 {
+namespace gles3 {
 
 enum ParticlesUniformLocation {
 	PARTICLES_FRAME_UNIFORM_LOCATION,
@@ -456,6 +456,6 @@ public:
 	virtual void particles_collision_instance_set_active(RID p_collision_instance, bool p_active) override;
 };
 
-} // namespace GLES3
+} //namespace gles3
 
 #endif // GLES3_ENABLED

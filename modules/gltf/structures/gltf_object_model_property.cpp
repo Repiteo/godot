@@ -152,11 +152,11 @@ void GLTFObjectModelProperty::set_json_pointers(const Vector<PackedStringArray> 
 }
 
 TypedArray<PackedStringArray> GLTFObjectModelProperty::get_json_pointers_bind() const {
-	return GLTFTemplateConvert::to_array(json_pointers);
+	return gltf_template_convert::to_array(json_pointers);
 }
 
 void GLTFObjectModelProperty::set_json_pointers_bind(const TypedArray<PackedStringArray> &p_json_pointers) {
-	GLTFTemplateConvert::set_from_array(json_pointers, p_json_pointers);
+	gltf_template_convert::set_from_array(json_pointers, p_json_pointers);
 }
 
 Variant::Type GLTFObjectModelProperty::get_variant_type() const {

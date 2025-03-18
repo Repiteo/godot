@@ -679,7 +679,7 @@ void EditorExportPlatformMacOS::_make_icon(const Ref<EditorExportPreset> &p_pres
 		if (icon_infos[i].is_png) {
 			// Encode PNG icon.
 			Vector<uint8_t> png_buffer;
-			Error err = PNGDriverCommon::image_to_png(copy, png_buffer);
+			Error err = png_driver_common::image_to_png(copy, png_buffer);
 			if (err == OK) {
 				int ofs = data.size();
 				uint64_t len = png_buffer.size();
@@ -2362,13 +2362,13 @@ bool EditorExportPlatformMacOS::has_valid_export_configuration(const Ref<EditorE
 	// Check the texture formats, which vary depending on the target architecture.
 	String architecture = p_preset->get("binary_format/architecture");
 	if (architecture == "universal" || architecture == "x86_64") {
-		if (!ResourceImporterTextureSettings::should_import_s3tc_bptc()) {
+		if (!resource_importer_texture_settings::should_import_s3tc_bptc()) {
 			err += TTR("Cannot export for universal or x86_64 if S3TC BPTC texture format is disabled. Enable it in the Project Settings (Rendering > Textures > VRAM Compression > Import S3TC BPTC).") + "\n";
 			valid = false;
 		}
 	}
 	if (architecture == "universal" || architecture == "arm64") {
-		if (!ResourceImporterTextureSettings::should_import_etc2_astc()) {
+		if (!resource_importer_texture_settings::should_import_etc2_astc()) {
 			err += TTR("Cannot export for universal or arm64 if ETC2 ASTC texture format is disabled. Enable it in the Project Settings (Rendering > Textures > VRAM Compression > Import ETC2 ASTC).") + "\n";
 			valid = false;
 		}

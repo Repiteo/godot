@@ -167,7 +167,7 @@ void Glow::process_glow(GLuint p_source_color, Size2i p_size, const Glow::GLOWLE
 	glDepthMask(GL_TRUE);
 	glUseProgram(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 }
 
 #endif // GLES3_ENABLED

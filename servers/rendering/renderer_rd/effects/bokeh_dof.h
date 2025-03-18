@@ -34,7 +34,7 @@
 #include "servers/rendering/renderer_rd/shaders/effects/bokeh_dof.glsl.gen.h"
 #include "servers/rendering/renderer_rd/shaders/effects/bokeh_dof_raster.glsl.gen.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class BokehDOF {
 private:
@@ -116,4 +116,4 @@ public:
 	void bokeh_dof_raster(const BokehBuffers &p_buffers, RID p_camera_attributes, float p_cam_znear, float p_cam_zfar, bool p_cam_orthogonal);
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

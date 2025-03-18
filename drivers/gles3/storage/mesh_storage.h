@@ -41,7 +41,7 @@
 
 #include "platform_gl.h"
 
-namespace GLES3 {
+namespace gles3 {
 
 struct MeshInstance;
 
@@ -600,6 +600,6 @@ public:
 	}
 };
 
-} // namespace GLES3
+} //namespace gles3
 
 #endif // GLES3_ENABLED

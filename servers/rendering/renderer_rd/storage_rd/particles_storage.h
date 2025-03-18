@@ -41,7 +41,7 @@
 #include "servers/rendering/storage/particles_storage.h"
 #include "servers/rendering/storage/utilities.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class ParticlesStorage : public RendererParticlesStorage {
 private:
@@ -595,4 +595,4 @@ public:
 	virtual void particles_collision_instance_set_active(RID p_collision_instance, bool p_active) override;
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

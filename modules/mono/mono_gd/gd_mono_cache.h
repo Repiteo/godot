@@ -45,7 +45,7 @@
 
 class CSharpScript;
 
-namespace GDMonoCache {
+namespace gdmono_cache {
 
 #ifndef GD_CLR_STDCALL
 #ifdef WIN32
@@ -155,4 +155,4 @@ extern bool godot_api_cache_updated;
 
 void update_godot_api_cache(const ManagedCallbacks &p_managed_callbacks);
 
-} // namespace GDMonoCache
+} // namespace gdmono_cache

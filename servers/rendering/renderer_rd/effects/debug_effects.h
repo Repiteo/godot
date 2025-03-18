@@ -34,7 +34,7 @@
 #include "servers/rendering/renderer_rd/shaders/effects/motion_vectors.glsl.gen.h"
 #include "servers/rendering/renderer_rd/shaders/effects/shadow_frustum.glsl.gen.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class DebugEffects {
 private:
@@ -92,4 +92,4 @@ public:
 	void draw_motion_vectors(RID p_velocity, RID p_depth, RID p_dest_fb, const Projection &p_current_projection, const Transform3D &p_current_transform, const Projection &p_previous_projection, const Transform3D &p_previous_transform, Size2i p_resolution);
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

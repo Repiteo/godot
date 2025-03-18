@@ -3693,7 +3693,7 @@ const String BindingsGenerator::_get_generic_type_parameters(const TypeInterface
 	return params;
 }
 
-StringName BindingsGenerator::_get_type_name_from_meta(Variant::Type p_type, GodotTypeInfo::Metadata p_meta) {
+StringName BindingsGenerator::_get_type_name_from_meta(Variant::Type p_type, godot_type_info::Metadata p_meta) {
 	if (p_type == Variant::INT) {
 		return _get_int_type_name_from_meta(p_meta);
 	} else if (p_type == Variant::FLOAT) {
@@ -3703,36 +3703,36 @@ StringName BindingsGenerator::_get_type_name_from_meta(Variant::Type p_type, God
 	}
 }
 
-StringName BindingsGenerator::_get_int_type_name_from_meta(GodotTypeInfo::Metadata p_meta) {
+StringName BindingsGenerator::_get_int_type_name_from_meta(godot_type_info::Metadata p_meta) {
 	switch (p_meta) {
-		case GodotTypeInfo::METADATA_INT_IS_INT8:
+		case godot_type_info::METADATA_INT_IS_INT8:
 			return "sbyte";
 			break;
-		case GodotTypeInfo::METADATA_INT_IS_INT16:
+		case godot_type_info::METADATA_INT_IS_INT16:
 			return "short";
 			break;
-		case GodotTypeInfo::METADATA_INT_IS_INT32:
+		case godot_type_info::METADATA_INT_IS_INT32:
 			return "int";
 			break;
-		case GodotTypeInfo::METADATA_INT_IS_INT64:
+		case godot_type_info::METADATA_INT_IS_INT64:
 			return "long";
 			break;
-		case GodotTypeInfo::METADATA_INT_IS_UINT8:
+		case godot_type_info::METADATA_INT_IS_UINT8:
 			return "byte";
 			break;
-		case GodotTypeInfo::METADATA_INT_IS_UINT16:
+		case godot_type_info::METADATA_INT_IS_UINT16:
 			return "ushort";
 			break;
-		case GodotTypeInfo::METADATA_INT_IS_UINT32:
+		case godot_type_info::METADATA_INT_IS_UINT32:
 			return "uint";
 			break;
-		case GodotTypeInfo::METADATA_INT_IS_UINT64:
+		case godot_type_info::METADATA_INT_IS_UINT64:
 			return "ulong";
 			break;
-		case GodotTypeInfo::METADATA_INT_IS_CHAR16:
+		case godot_type_info::METADATA_INT_IS_CHAR16:
 			return "char";
 			break;
-		case GodotTypeInfo::METADATA_INT_IS_CHAR32:
+		case godot_type_info::METADATA_INT_IS_CHAR32:
 			// To prevent breaking compatibility, C# bindings need to keep using `long`.
 			return "long";
 		default:
@@ -3741,12 +3741,12 @@ StringName BindingsGenerator::_get_int_type_name_from_meta(GodotTypeInfo::Metada
 	}
 }
 
-StringName BindingsGenerator::_get_float_type_name_from_meta(GodotTypeInfo::Metadata p_meta) {
+StringName BindingsGenerator::_get_float_type_name_from_meta(godot_type_info::Metadata p_meta) {
 	switch (p_meta) {
-		case GodotTypeInfo::METADATA_REAL_IS_FLOAT:
+		case godot_type_info::METADATA_REAL_IS_FLOAT:
 			return "float";
 			break;
-		case GodotTypeInfo::METADATA_REAL_IS_DOUBLE:
+		case godot_type_info::METADATA_REAL_IS_DOUBLE:
 			return "double";
 			break;
 		default:
@@ -4113,7 +4113,7 @@ bool BindingsGenerator::_populate_object_type_interfaces() {
 			} else if (return_info.type == Variant::NIL) {
 				imethod.return_type.cname = name_cache.type_void;
 			} else {
-				imethod.return_type.cname = _get_type_name_from_meta(return_info.type, m ? m->get_argument_meta(-1) : (GodotTypeInfo::Metadata)method_info.return_val_metadata);
+				imethod.return_type.cname = _get_type_name_from_meta(return_info.type, m ? m->get_argument_meta(-1) : (godot_type_info::Metadata)method_info.return_val_metadata);
 			}
 
 			for (int64_t idx = 0; idx < method_info.arguments.size(); ++idx) {
@@ -4142,7 +4142,7 @@ bool BindingsGenerator::_populate_object_type_interfaces() {
 				} else if (arginfo.type == Variant::NIL) {
 					iarg.type.cname = name_cache.type_Variant;
 				} else {
-					iarg.type.cname = _get_type_name_from_meta(arginfo.type, m ? m->get_argument_meta(idx) : (GodotTypeInfo::Metadata)method_info.get_argument_meta(idx));
+					iarg.type.cname = _get_type_name_from_meta(arginfo.type, m ? m->get_argument_meta(idx) : (godot_type_info::Metadata)method_info.get_argument_meta(idx));
 				}
 
 				iarg.name = escape_csharp_keyword(snake_to_camel_case(iarg.name));
@@ -4285,7 +4285,7 @@ bool BindingsGenerator::_populate_object_type_interfaces() {
 				} else if (arginfo.type == Variant::NIL) {
 					iarg.type.cname = name_cache.type_Variant;
 				} else {
-					iarg.type.cname = _get_type_name_from_meta(arginfo.type, (GodotTypeInfo::Metadata)method_info.get_argument_meta(idx));
+					iarg.type.cname = _get_type_name_from_meta(arginfo.type, (godot_type_info::Metadata)method_info.get_argument_meta(idx));
 				}
 
 				iarg.name = escape_csharp_keyword(snake_to_camel_case(iarg.name));

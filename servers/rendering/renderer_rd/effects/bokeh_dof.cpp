@@ -34,7 +34,7 @@
 #include "servers/rendering/renderer_rd/uniform_set_cache_rd.h"
 #include "servers/rendering/storage/camera_attributes_storage.h"
 
-using namespace RendererRD;
+using namespace renderer_rd;
 
 BokehDOF::BokehDOF(bool p_prefer_raster_effects) {
 	prefer_raster_effects = p_prefer_raster_effects;

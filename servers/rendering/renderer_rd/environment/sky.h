@@ -44,7 +44,7 @@
 class RendererSceneRenderRD;
 class RenderSceneBuffersRD;
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class SkyRD {
 public:
@@ -106,7 +106,7 @@ private:
 		// 128 is the max size of a push constant. We can replace "pad" but we can't add any more.
 	};
 
-	struct SkyShaderData : public RendererRD::MaterialStorage::ShaderData {
+	struct SkyShaderData : public renderer_rd::MaterialStorage::ShaderData {
 		bool valid = false;
 		RID version;
 
@@ -232,7 +232,7 @@ public:
 		RID default_shader_rd;
 	} sky_shader;
 
-	struct SkyMaterialData : public RendererRD::MaterialStorage::MaterialData {
+	struct SkyMaterialData : public renderer_rd::MaterialStorage::MaterialData {
 		SkyShaderData *shader_data = nullptr;
 		RID uniform_set;
 		bool uniform_set_updated;
@@ -284,11 +284,11 @@ public:
 	mutable RID_Owner<Sky, true> sky_owner;
 	int roughness_layers;
 
-	RendererRD::MaterialStorage::ShaderData *_create_sky_shader_func();
-	static RendererRD::MaterialStorage::ShaderData *_create_sky_shader_funcs();
+	renderer_rd::MaterialStorage::ShaderData *_create_sky_shader_func();
+	static renderer_rd::MaterialStorage::ShaderData *_create_sky_shader_funcs();
 
-	RendererRD::MaterialStorage::MaterialData *_create_sky_material_func(SkyShaderData *p_shader);
-	static RendererRD::MaterialStorage::MaterialData *_create_sky_material_funcs(RendererRD::MaterialStorage::ShaderData *p_shader);
+	renderer_rd::MaterialStorage::MaterialData *_create_sky_material_func(SkyShaderData *p_shader);
+	static renderer_rd::MaterialStorage::MaterialData *_create_sky_material_funcs(renderer_rd::MaterialStorage::ShaderData *p_shader);
 
 	SkyRD();
 	void init();
@@ -317,4 +317,4 @@ public:
 	Ref<Image> sky_bake_panorama(RID p_sky, float p_energy, bool p_bake_irradiance, const Size2i &p_size);
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

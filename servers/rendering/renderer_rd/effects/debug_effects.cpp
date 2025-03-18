@@ -33,7 +33,7 @@
 #include "servers/rendering/renderer_rd/storage_rd/material_storage.h"
 #include "servers/rendering/renderer_rd/uniform_set_cache_rd.h"
 
-using namespace RendererRD;
+using namespace renderer_rd;
 
 DebugEffects::DebugEffects() {
 	{
@@ -178,7 +178,7 @@ DebugEffects::~DebugEffects() {
 }
 
 void DebugEffects::draw_shadow_frustum(RID p_light, const Projection &p_cam_projection, const Transform3D &p_cam_transform, RID p_dest_fb, const Rect2 p_rect) {
-	RendererRD::LightStorage *light_storage = RendererRD::LightStorage::get_singleton();
+	renderer_rd::LightStorage *light_storage = renderer_rd::LightStorage::get_singleton();
 
 	RID base = light_storage->light_instance_get_base_light(p_light);
 	ERR_FAIL_COND(light_storage->light_get_type(base) != RS::LIGHT_DIRECTIONAL);
@@ -356,7 +356,7 @@ void DebugEffects::draw_motion_vectors(RID p_velocity, RID p_depth, RID p_dest_f
 	Projection correction;
 	correction.set_depth_correction(true, true, false);
 	Projection reprojection = (correction * p_previous_projection) * p_previous_transform.affine_inverse() * p_current_transform * (correction * p_current_projection).inverse();
-	RendererRD::MaterialStorage::store_camera(reprojection, motion_vectors.push_constant.reprojection_matrix);
+	renderer_rd::MaterialStorage::store_camera(reprojection, motion_vectors.push_constant.reprojection_matrix);
 
 	motion_vectors.push_constant.resolution[0] = p_resolution.width;
 	motion_vectors.push_constant.resolution[1] = p_resolution.height;

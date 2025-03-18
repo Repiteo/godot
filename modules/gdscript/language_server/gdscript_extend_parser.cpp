@@ -132,7 +132,7 @@ void ExtendGDScriptParser::update_diagnostics() {
 	const List<ParserError> &parser_errors = get_errors();
 	for (const ParserError &error : parser_errors) {
 		lsp::Diagnostic diagnostic;
-		diagnostic.severity = lsp::DiagnosticSeverity::Error;
+		diagnostic.severity = lsp::text_document_sync_kind::Error;
 		diagnostic.message = error.message;
 		diagnostic.source = "gdscript";
 		diagnostic.code = -1;
@@ -153,7 +153,7 @@ void ExtendGDScriptParser::update_diagnostics() {
 	const List<GDScriptWarning> &parser_warnings = get_warnings();
 	for (const GDScriptWarning &warning : parser_warnings) {
 		lsp::Diagnostic diagnostic;
-		diagnostic.severity = lsp::DiagnosticSeverity::Warning;
+		diagnostic.severity = lsp::text_document_sync_kind::Warning;
 		diagnostic.message = "(" + warning.get_name() + "): " + warning.get_message();
 		diagnostic.source = "gdscript";
 		diagnostic.code = warning.code;
@@ -182,7 +182,7 @@ void ExtendGDScriptParser::update_symbols() {
 			members.insert(symbol.name, &symbol);
 
 			// Cache level one inner classes.
-			if (symbol.kind == lsp::SymbolKind::Class) {
+			if (symbol.kind == lsp::symbol_kind::Class) {
 				ClassMembers inner_class;
 				for (int j = 0; j < symbol.children.size(); j++) {
 					const lsp::DocumentSymbol &s = symbol.children[j];
@@ -241,7 +241,7 @@ void ExtendGDScriptParser::parse_class_symbol(const GDScriptParser::ClassNode *p
 	if (r_symbol.name.is_empty()) {
 		r_symbol.name = path.get_file();
 	}
-	r_symbol.kind = lsp::SymbolKind::Class;
+	r_symbol.kind = lsp::symbol_kind::Class;
 	r_symbol.deprecated = false;
 	r_symbol.range = range_of_node(p_class);
 	if (p_class->identifier) {
@@ -278,7 +278,7 @@ void ExtendGDScriptParser::parse_class_symbol(const GDScriptParser::ClassNode *p
 			case ClassNode::Member::VARIABLE: {
 				lsp::DocumentSymbol symbol;
 				symbol.name = m.variable->identifier->name;
-				symbol.kind = m.variable->property == VariableNode::PROP_NONE ? lsp::SymbolKind::Variable : lsp::SymbolKind::Property;
+				symbol.kind = m.variable->property == VariableNode::PROP_NONE ? lsp::symbol_kind::Variable : lsp::symbol_kind::Property;
 				symbol.deprecated = false;
 				symbol.range = range_of_node(m.variable);
 				symbol.selectionRange = range_of_node(m.variable->identifier);
@@ -324,7 +324,7 @@ void ExtendGDScriptParser::parse_class_symbol(const GDScriptParser::ClassNode *p
 				lsp::DocumentSymbol symbol;
 
 				symbol.name = m.constant->identifier->name;
-				symbol.kind = lsp::SymbolKind::Constant;
+				symbol.kind = lsp::symbol_kind::Constant;
 				symbol.deprecated = false;
 				symbol.range = range_of_node(m.constant);
 				symbol.selectionRange = range_of_node(m.constant->identifier);
@@ -363,7 +363,7 @@ void ExtendGDScriptParser::parse_class_symbol(const GDScriptParser::ClassNode *p
 			case ClassNode::Member::SIGNAL: {
 				lsp::DocumentSymbol symbol;
 				symbol.name = m.signal->identifier->name;
-				symbol.kind = lsp::SymbolKind::Event;
+				symbol.kind = lsp::symbol_kind::Event;
 				symbol.deprecated = false;
 				symbol.range = range_of_node(m.signal);
 				symbol.selectionRange = range_of_node(m.signal->identifier);
@@ -382,7 +382,7 @@ void ExtendGDScriptParser::parse_class_symbol(const GDScriptParser::ClassNode *p
 				for (GDScriptParser::ParameterNode *param : m.signal->parameters) {
 					lsp::DocumentSymbol param_symbol;
 					param_symbol.name = param->identifier->name;
-					param_symbol.kind = lsp::SymbolKind::Variable;
+					param_symbol.kind = lsp::symbol_kind::Variable;
 					param_symbol.deprecated = false;
 					param_symbol.local = true;
 					param_symbol.range = range_of_node(param);
@@ -401,7 +401,7 @@ void ExtendGDScriptParser::parse_class_symbol(const GDScriptParser::ClassNode *p
 				lsp::DocumentSymbol symbol;
 
 				symbol.name = m.enum_value.identifier->name;
-				symbol.kind = lsp::SymbolKind::EnumMember;
+				symbol.kind = lsp::symbol_kind::EnumMember;
 				symbol.deprecated = false;
 				symbol.range.start = GodotPosition(m.enum_value.line, m.enum_value.leftmost_column).to_lsp(lines);
 				symbol.range.end = GodotPosition(m.enum_value.line, m.enum_value.rightmost_column).to_lsp(lines);
@@ -417,7 +417,7 @@ void ExtendGDScriptParser::parse_class_symbol(const GDScriptParser::ClassNode *p
 			case ClassNode::Member::ENUM: {
 				lsp::DocumentSymbol symbol;
 				symbol.name = m.m_enum->identifier->name;
-				symbol.kind = lsp::SymbolKind::Enum;
+				symbol.kind = lsp::symbol_kind::Enum;
 				symbol.range = range_of_node(m.m_enum);
 				symbol.selectionRange = range_of_node(m.m_enum->identifier);
 				symbol.documentation = m.m_enum->doc_data.description;
@@ -437,7 +437,7 @@ void ExtendGDScriptParser::parse_class_symbol(const GDScriptParser::ClassNode *p
 					lsp::DocumentSymbol child;
 
 					child.name = value.identifier->name;
-					child.kind = lsp::SymbolKind::EnumMember;
+					child.kind = lsp::symbol_kind::EnumMember;
 					child.deprecated = false;
 					child.range.start = GodotPosition(value.line, value.leftmost_column).to_lsp(lines);
 					child.range.end = GodotPosition(value.line, value.rightmost_column).to_lsp(lines);
@@ -477,7 +477,7 @@ void ExtendGDScriptParser::parse_function_symbol(const GDScriptParser::FunctionN
 	bool is_named = p_func->identifier != nullptr;
 
 	r_symbol.name = is_named ? p_func->identifier->name : "";
-	r_symbol.kind = (p_func->is_static || p_func->source_lambda != nullptr) ? lsp::SymbolKind::Function : lsp::SymbolKind::Method;
+	r_symbol.kind = (p_func->is_static || p_func->source_lambda != nullptr) ? lsp::symbol_kind::Function : lsp::symbol_kind::Method;
 	r_symbol.detail = "func";
 	if (is_named) {
 		r_symbol.detail += " " + String(p_func->identifier->name);
@@ -572,7 +572,7 @@ void ExtendGDScriptParser::parse_function_symbol(const GDScriptParser::FunctionN
 			const SuiteNode::Local &local = suite_node->locals[i];
 			lsp::DocumentSymbol symbol;
 			symbol.name = local.name;
-			symbol.kind = local.type == SuiteNode::Local::CONSTANT ? lsp::SymbolKind::Constant : lsp::SymbolKind::Variable;
+			symbol.kind = local.type == SuiteNode::Local::CONSTANT ? lsp::symbol_kind::Constant : lsp::symbol_kind::Variable;
 			switch (local.type) {
 				case SuiteNode::Local::CONSTANT:
 					symbol.range = range_of_node(local.constant);

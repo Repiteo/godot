@@ -38,18 +38,18 @@
 
 static_assert(sizeof(JPH::ObjectLayer) == 2, "Size of Jolt's object layer has changed.");
 static_assert(sizeof(JPH::BroadPhaseLayer::Type) == 1, "Size of Jolt's broadphase layer has changed.");
-static_assert(JoltBroadPhaseLayer::COUNT <= 8, "Maximum number of broadphase layers exceeded.");
+static_assert(jolt_broad_phase_layer::COUNT <= 8, "Maximum number of broadphase layers exceeded.");
 
 namespace {
 
-template <uint8_t TSize = JoltBroadPhaseLayer::COUNT>
+template <uint8_t TSize = jolt_broad_phase_layer::COUNT>
 class JoltBroadPhaseMatrix {
 	typedef JPH::BroadPhaseLayer LayerType;
 	typedef LayerType::Type UnderlyingType;
 
 public:
 	JoltBroadPhaseMatrix() {
-		using namespace JoltBroadPhaseLayer;
+		using namespace jolt_broad_phase_layer;
 
 		allow_collision(BODY_STATIC, BODY_DYNAMIC);
 		allow_collision(BODY_STATIC_BIG, BODY_DYNAMIC);
@@ -111,11 +111,11 @@ constexpr void decode_collision(uint64_t p_collision, uint32_t &r_collision_laye
 } // namespace
 
 uint32_t JoltLayers::GetNumBroadPhaseLayers() const {
-	return JoltBroadPhaseLayer::COUNT;
+	return jolt_broad_phase_layer::COUNT;
 }
 
 JPH::BroadPhaseLayer JoltLayers::GetBroadPhaseLayer(JPH::ObjectLayer p_layer) const {
-	JPH::BroadPhaseLayer broad_phase_layer = JoltBroadPhaseLayer::BODY_STATIC;
+	JPH::BroadPhaseLayer broad_phase_layer = jolt_broad_phase_layer::BODY_STATIC;
 	JPH::ObjectLayer object_layer = 0;
 	decode_layers(p_layer, broad_phase_layer, object_layer);
 
@@ -126,19 +126,19 @@ JPH::BroadPhaseLayer JoltLayers::GetBroadPhaseLayer(JPH::ObjectLayer p_layer) co
 
 const char *JoltLayers::GetBroadPhaseLayerName(JPH::BroadPhaseLayer p_layer) const {
 	switch ((JPH::BroadPhaseLayer::Type)p_layer) {
-		case (JPH::BroadPhaseLayer::Type)JoltBroadPhaseLayer::BODY_STATIC: {
+		case (JPH::BroadPhaseLayer::Type)jolt_broad_phase_layer::BODY_STATIC: {
 			return "BODY_STATIC";
 		}
-		case (JPH::BroadPhaseLayer::Type)JoltBroadPhaseLayer::BODY_STATIC_BIG: {
+		case (JPH::BroadPhaseLayer::Type)jolt_broad_phase_layer::BODY_STATIC_BIG: {
 			return "BODY_STATIC_BIG";
 		}
-		case (JPH::BroadPhaseLayer::Type)JoltBroadPhaseLayer::BODY_DYNAMIC: {
+		case (JPH::BroadPhaseLayer::Type)jolt_broad_phase_layer::BODY_DYNAMIC: {
 			return "BODY_DYNAMIC";
 		}
-		case (JPH::BroadPhaseLayer::Type)JoltBroadPhaseLayer::AREA_DETECTABLE: {
+		case (JPH::BroadPhaseLayer::Type)jolt_broad_phase_layer::AREA_DETECTABLE: {
 			return "AREA_DETECTABLE";
 		}
-		case (JPH::BroadPhaseLayer::Type)JoltBroadPhaseLayer::AREA_UNDETECTABLE: {
+		case (JPH::BroadPhaseLayer::Type)jolt_broad_phase_layer::AREA_UNDETECTABLE: {
 			return "AREA_UNDETECTABLE";
 		}
 		default: {
@@ -150,12 +150,12 @@ const char *JoltLayers::GetBroadPhaseLayerName(JPH::BroadPhaseLayer p_layer) con
 #endif
 
 bool JoltLayers::ShouldCollide(JPH::ObjectLayer p_encoded_layer1, JPH::ObjectLayer p_encoded_layer2) const {
-	JPH::BroadPhaseLayer broad_phase_layer1 = JoltBroadPhaseLayer::BODY_STATIC;
+	JPH::BroadPhaseLayer broad_phase_layer1 = jolt_broad_phase_layer::BODY_STATIC;
 	uint32_t collision_layer1 = 0;
 	uint32_t collision_mask1 = 0;
 	from_object_layer(p_encoded_layer1, broad_phase_layer1, collision_layer1, collision_mask1);
 
-	JPH::BroadPhaseLayer broad_phase_layer2 = JoltBroadPhaseLayer::BODY_STATIC;
+	JPH::BroadPhaseLayer broad_phase_layer2 = jolt_broad_phase_layer::BODY_STATIC;
 	uint32_t collision_layer2 = 0;
 	uint32_t collision_mask2 = 0;
 	from_object_layer(p_encoded_layer2, broad_phase_layer2, collision_layer2, collision_mask2);
@@ -169,7 +169,7 @@ bool JoltLayers::ShouldCollide(JPH::ObjectLayer p_encoded_layer1, JPH::ObjectLay
 bool JoltLayers::ShouldCollide(JPH::ObjectLayer p_encoded_layer1, JPH::BroadPhaseLayer p_broad_phase_layer2) const {
 	static const JoltBroadPhaseMatrix matrix;
 
-	JPH::BroadPhaseLayer broad_phase_layer1 = JoltBroadPhaseLayer::BODY_STATIC;
+	JPH::BroadPhaseLayer broad_phase_layer1 = jolt_broad_phase_layer::BODY_STATIC;
 	JPH::ObjectLayer object_layer1 = 0;
 	decode_layers(p_encoded_layer1, broad_phase_layer1, object_layer1);
 

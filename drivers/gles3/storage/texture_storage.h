@@ -43,7 +43,7 @@
 
 #include "drivers/gles3/shaders/canvas_sdf.glsl.gen.h"
 
-namespace GLES3 {
+namespace gles3 {
 
 #define _GL_TEXTURE_MAX_ANISOTROPY_EXT 0x84FE
 #define _GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT 0x84FF
@@ -705,7 +705,7 @@ public:
 	}
 
 	void bind_framebuffer_system() {
-		glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 	}
 
 	String get_framebuffer_error(GLenum p_status);
@@ -726,6 +726,6 @@ inline String TextureStorage::get_framebuffer_error(GLenum p_status) {
 	return itos(p_status);
 }
 
-} // namespace GLES3
+} //namespace gles3
 
 #endif // GLES3_ENABLED

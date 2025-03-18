@@ -42,7 +42,7 @@
 #include "editor/editor_paths.h"
 #endif
 
-namespace GodotSharpDirs {
+namespace godot_sharp_dirs {
 
 String _get_expected_build_config() {
 #ifdef TOOLS_ENABLED
@@ -250,4 +250,4 @@ String get_data_editor_tools_dir() {
 }
 #endif
 
-} // namespace GodotSharpDirs
+} // namespace godot_sharp_dirs

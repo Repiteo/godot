@@ -44,7 +44,7 @@
 
 class RenderDataRD;
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class LightStorage : public RendererLightStorage {
 public:
@@ -253,7 +253,7 @@ private:
 
 		struct Reflection {
 			RID owner;
-			RendererRD::SkyRD::ReflectionData data;
+			renderer_rd::SkyRD::ReflectionData data;
 			RID fbs[6];
 		};
 
@@ -281,7 +281,7 @@ private:
 		uint64_t last_pass = 0;
 		uint32_t cull_mask = 0;
 
-		RendererRD::ForwardID forward_id = -1;
+		renderer_rd::ForwardID forward_id = -1;
 
 		Transform3D transform;
 	};
@@ -918,7 +918,7 @@ public:
 		return rpi->probe;
 	}
 
-	_FORCE_INLINE_ RendererRD::ForwardID reflection_probe_instance_get_forward_id(RID p_instance) {
+	_FORCE_INLINE_ renderer_rd::ForwardID reflection_probe_instance_get_forward_id(RID p_instance) {
 		ReflectionProbeInstance *rpi = reflection_probe_instance_owner.get_or_null(p_instance);
 		ERR_FAIL_NULL_V(rpi, 0);
 
@@ -1162,4 +1162,4 @@ public:
 	bool get_shadow_dual_paraboloid_used() const;
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

@@ -32,7 +32,7 @@
 
 #include "core/config/project_settings.h"
 
-using namespace RendererDummy;
+using namespace renderer_dummy;
 
 MaterialStorage *MaterialStorage::singleton = nullptr;
 

@@ -44,7 +44,7 @@
 #include "drivers/gles3/shaders/scene.glsl.gen.h"
 #include "drivers/gles3/shaders/sky.glsl.gen.h"
 
-namespace GLES3 {
+namespace gles3 {
 
 /* Shader Structs */
 
@@ -630,6 +630,6 @@ public:
 	}
 };
 
-} // namespace GLES3
+} //namespace gles3
 
 #endif // GLES3_ENABLED

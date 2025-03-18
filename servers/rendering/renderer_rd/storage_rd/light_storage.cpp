@@ -33,7 +33,7 @@
 #include "servers/rendering/renderer_rd/renderer_scene_render_rd.h"
 #include "texture_storage.h"
 
-using namespace RendererRD;
+using namespace renderer_rd;
 
 LightStorage *LightStorage::singleton = nullptr;
 
@@ -599,7 +599,7 @@ void LightStorage::set_max_lights(const uint32_t p_max_lights) {
 
 void LightStorage::update_light_buffers(RenderDataRD *p_render_data, const PagedArray<RID> &p_lights, const Transform3D &p_camera_transform, RID p_shadow_atlas, bool p_using_shadows, uint32_t &r_directional_light_count, uint32_t &r_positional_light_count, bool &r_directional_light_soft_shadows) {
 	ForwardIDStorage *forward_id_storage = ForwardIDStorage::get_singleton();
-	RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
+	renderer_rd::TextureStorage *texture_storage = renderer_rd::TextureStorage::get_singleton();
 
 	Transform3D inverse_transform = p_camera_transform.affine_inverse();
 
@@ -720,7 +720,7 @@ void LightStorage::update_light_buffers(RenderDataRD *p_render_data, const Paged
 						light_data.shadow_transmittance_bias[j] = light->param[RS::LIGHT_PARAM_TRANSMITTANCE_BIAS] / 100.0 * bias_scale;
 						light_data.shadow_z_range[j] = light_instance->shadow_transform[j].farplane;
 						light_data.shadow_range_begin[j] = light_instance->shadow_transform[j].range_begin;
-						RendererRD::MaterialStorage::store_camera(shadow_mtx, light_data.shadow_matrices[j]);
+						renderer_rd::MaterialStorage::store_camera(shadow_mtx, light_data.shadow_matrices[j]);
 
 						Vector2 uv_scale = light_instance->shadow_transform[j].uv_scale;
 						uv_scale *= atlas_rect.size; //adapt to atlas size
@@ -827,7 +827,7 @@ void LightStorage::update_light_buffers(RenderDataRD *p_render_data, const Paged
 		real_t distance = (i < omni_light_count) ? omni_light_sort[index].depth : spot_light_sort[index].depth;
 
 		if (using_forward_ids) {
-			forward_id_storage->map_forward_id(type == RS::LIGHT_OMNI ? RendererRD::FORWARD_ID_TYPE_OMNI_LIGHT : RendererRD::FORWARD_ID_TYPE_SPOT_LIGHT, light_instance->forward_id, index, light_instance->last_pass);
+			forward_id_storage->map_forward_id(type == RS::LIGHT_OMNI ? renderer_rd::FORWARD_ID_TYPE_OMNI_LIGHT : renderer_rd::FORWARD_ID_TYPE_SPOT_LIGHT, light_instance->forward_id, index, light_instance->last_pass);
 		}
 
 		Transform3D light_transform = light_instance->transform;
@@ -983,7 +983,7 @@ void LightStorage::update_light_buffers(RenderDataRD *p_render_data, const Paged
 			if (type == RS::LIGHT_OMNI) {
 				Transform3D proj = (inverse_transform * light_transform).inverse();
 
-				RendererRD::MaterialStorage::store_transform(proj, light_data.shadow_matrix);
+				renderer_rd::MaterialStorage::store_transform(proj, light_data.shadow_matrix);
 
 				if (size > 0.0 && light_data.soft_shadow_scale > 0.0) {
 					// Only enable PCSS-like soft shadows if blurring is enabled.
@@ -1005,7 +1005,7 @@ void LightStorage::update_light_buffers(RenderDataRD *p_render_data, const Paged
 				correction.set_depth_correction(false, true, false);
 				Projection cm = correction * light_instance->shadow_transform[0].camera;
 				Projection shadow_mtx = bias * cm * modelview;
-				RendererRD::MaterialStorage::store_camera(shadow_mtx, light_data.shadow_matrix);
+				renderer_rd::MaterialStorage::store_camera(shadow_mtx, light_data.shadow_matrix);
 
 				if (size > 0.0 && light_data.soft_shadow_scale > 0.0) {
 					// Only enable PCSS-like soft shadows if blurring is enabled.

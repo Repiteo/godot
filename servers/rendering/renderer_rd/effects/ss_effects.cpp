@@ -35,7 +35,7 @@
 #include "servers/rendering/renderer_rd/storage_rd/render_scene_buffers_rd.h"
 #include "servers/rendering/renderer_rd/uniform_set_cache_rd.h"
 
-using namespace RendererRD;
+using namespace renderer_rd;
 
 SSEffects *SSEffects::singleton = nullptr;
 

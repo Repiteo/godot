@@ -32,7 +32,7 @@
 
 #include "servers/rendering/storage/texture_storage.h"
 
-namespace RendererDummy {
+namespace renderer_dummy {
 
 class TextureStorage : public RendererTextureStorage {
 private:
@@ -213,4 +213,4 @@ public:
 	virtual Size2i render_target_get_velocity_target_size(RID p_render_target) const override { return Size2i(0, 0); }
 };
 
-} // namespace RendererDummy
+} // namespace renderer_dummy

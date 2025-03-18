@@ -38,7 +38,7 @@
 #include "servers/rendering/storage/mesh_storage.h"
 #include "servers/rendering/storage/utilities.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class MeshStorage : public RendererMeshStorage {
 public:
@@ -797,4 +797,4 @@ public:
 	}
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

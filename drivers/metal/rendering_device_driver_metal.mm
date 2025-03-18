@@ -1041,7 +1041,7 @@ void RenderingDeviceDriverMetal::swap_chain_free(SwapChainID p_swap_chain) {
 RDD::FramebufferID RenderingDeviceDriverMetal::framebuffer_create(RenderPassID p_render_pass, VectorView<TextureID> p_attachments, uint32_t p_width, uint32_t p_height) {
 	MDRenderPass *pass = (MDRenderPass *)(p_render_pass.id);
 
-	Vector<MTL::Texture> textures;
+	Vector<mtl::Texture> textures;
 	textures.resize(p_attachments.size());
 
 	for (uint32_t i = 0; i < p_attachments.size(); i += 1) {

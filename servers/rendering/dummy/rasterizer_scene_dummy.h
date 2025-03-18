@@ -77,7 +77,7 @@ public:
 
 public:
 	RenderGeometryInstance *geometry_instance_create(RID p_base) override {
-		RS::InstanceType type = RendererDummy::Utilities::get_singleton()->get_base_type(p_base);
+		RS::InstanceType type = renderer_dummy::Utilities::get_singleton()->get_base_type(p_base);
 		ERR_FAIL_COND_V(!((1 << type) & RS::INSTANCE_GEOMETRY_MASK), nullptr);
 
 		GeometryInstanceDummy *ginstance = geometry_instance_alloc.alloc();

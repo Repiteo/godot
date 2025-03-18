@@ -361,11 +361,11 @@ void WebXRInterfaceJS::uninitialize() {
 
 		godot_webxr_uninitialize();
 
-		GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
+		gles3::TextureStorage *texture_storage = gles3::TextureStorage::get_singleton();
 		if (texture_storage != nullptr) {
 			for (KeyValue<unsigned int, RID> &E : texture_cache) {
 				// Forcibly mark as not part of a render target so we can free it.
-				GLES3::Texture *texture = texture_storage->get_texture(E.value);
+				gles3::Texture *texture = texture_storage->get_texture(E.value);
 				texture->is_render_target = false;
 
 				texture_storage->texture_free(E.value);
@@ -492,7 +492,7 @@ Projection WebXRInterfaceJS::get_projection_for_view(uint32_t p_view, double p_a
 }
 
 bool WebXRInterfaceJS::pre_draw_viewport(RID p_render_target) {
-	GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
+	gles3::TextureStorage *texture_storage = gles3::TextureStorage::get_singleton();
 	if (texture_storage == nullptr) {
 		return false;
 	}
@@ -519,7 +519,7 @@ bool WebXRInterfaceJS::pre_draw_viewport(RID p_render_target) {
 Vector<BlitToScreen> WebXRInterfaceJS::post_draw_viewport(RID p_render_target, const Rect2 &p_screen_rect) {
 	Vector<BlitToScreen> blit_to_screen;
 
-	GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
+	gles3::TextureStorage *texture_storage = gles3::TextureStorage::get_singleton();
 	if (texture_storage == nullptr) {
 		return blit_to_screen;
 	}
@@ -553,7 +553,7 @@ RID WebXRInterfaceJS::_get_texture(unsigned int p_texture_id) {
 		return cache->get();
 	}
 
-	GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
+	gles3::TextureStorage *texture_storage = gles3::TextureStorage::get_singleton();
 	if (texture_storage == nullptr) {
 		return RID();
 	}

@@ -33,7 +33,7 @@
 #include "core/templates/rid_owner.h"
 #include "servers/rendering/storage/mesh_storage.h"
 
-namespace RendererDummy {
+namespace renderer_dummy {
 
 struct DummyMesh {
 	Vector<RS::SurfaceData> surfaces;
@@ -201,4 +201,4 @@ public:
 	void occluder_set_mesh(RID p_occluder, const PackedVector3Array &p_vertices, const PackedInt32Array &p_indices) {}
 };
 
-} // namespace RendererDummy
+} // namespace renderer_dummy

@@ -106,14 +106,14 @@ void RasterizerGLES3::begin_frame(double frame_step) {
 	canvas->set_time(time_total);
 	scene->set_time(time_total, frame_step);
 
-	GLES3::Utilities *utils = GLES3::Utilities::get_singleton();
+	gles3::Utilities *utils = gles3::Utilities::get_singleton();
 	utils->_capture_timestamps_begin();
 
 	//scene->iteration();
 }
 
 void RasterizerGLES3::end_frame(bool p_swap_buffers) {
-	GLES3::Utilities *utils = GLES3::Utilities::get_singleton();
+	gles3::Utilities *utils = gles3::Utilities::get_singleton();
 	utils->capture_timestamps_end();
 }
 
@@ -207,7 +207,7 @@ void RasterizerGLES3::initialize() {
 	// FLIP XY Bug: Are more devices affected?
 	// Confirmed so far: all Adreno 3xx with old driver (until 2018)
 	// ok on some tested Adreno devices: 4xx, 5xx and 6xx
-	flip_xy_workaround = GLES3::Config::get_singleton()->flip_xy_workaround;
+	flip_xy_workaround = gles3::Config::get_singleton()->flip_xy_workaround;
 }
 
 void RasterizerGLES3::finalize() {
@@ -357,20 +357,20 @@ RasterizerGLES3::RasterizerGLES3() {
 	}
 
 	// OpenGL needs to be initialized before initializing the Rasterizers
-	config = memnew(GLES3::Config);
-	utilities = memnew(GLES3::Utilities);
-	texture_storage = memnew(GLES3::TextureStorage);
-	material_storage = memnew(GLES3::MaterialStorage);
-	mesh_storage = memnew(GLES3::MeshStorage);
-	particles_storage = memnew(GLES3::ParticlesStorage);
-	light_storage = memnew(GLES3::LightStorage);
-	copy_effects = memnew(GLES3::CopyEffects);
-	cubemap_filter = memnew(GLES3::CubemapFilter);
-	glow = memnew(GLES3::Glow);
-	post_effects = memnew(GLES3::PostEffects);
-	feed_effects = memnew(GLES3::FeedEffects);
-	gi = memnew(GLES3::GI);
-	fog = memnew(GLES3::Fog);
+	config = memnew(gles3::Config);
+	utilities = memnew(gles3::Utilities);
+	texture_storage = memnew(gles3::TextureStorage);
+	material_storage = memnew(gles3::MaterialStorage);
+	mesh_storage = memnew(gles3::MeshStorage);
+	particles_storage = memnew(gles3::ParticlesStorage);
+	light_storage = memnew(gles3::LightStorage);
+	copy_effects = memnew(gles3::CopyEffects);
+	cubemap_filter = memnew(gles3::CubemapFilter);
+	glow = memnew(gles3::Glow);
+	post_effects = memnew(gles3::PostEffects);
+	feed_effects = memnew(gles3::FeedEffects);
+	gi = memnew(gles3::GI);
+	fog = memnew(gles3::Fog);
 	canvas = memnew(RasterizerCanvasGLES3());
 	scene = memnew(RasterizerSceneGLES3());
 
@@ -384,7 +384,7 @@ RasterizerGLES3::~RasterizerGLES3() {
 }
 
 void RasterizerGLES3::_blit_render_target_to_screen(RID p_render_target, DisplayServer::WindowID p_screen, const Rect2 &p_screen_rect, uint32_t p_layer, bool p_first) {
-	GLES3::RenderTarget *rt = GLES3::TextureStorage::get_singleton()->get_render_target(p_render_target);
+	gles3::RenderTarget *rt = gles3::TextureStorage::get_singleton()->get_render_target(p_render_target);
 
 	ERR_FAIL_NULL(rt);
 
@@ -414,14 +414,14 @@ void RasterizerGLES3::_blit_render_target_to_screen(RID p_render_target, Display
 	}
 
 	glReadBuffer(GL_COLOR_ATTACHMENT0);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 
 	if (p_first) {
 		if (p_screen_rect.position != Vector2() || p_screen_rect.size != rt->size) {
 			// Viewport doesn't cover entire window so clear window to black before blitting.
 			// Querying the actual window size from the DisplayServer would deadlock in separate render thread mode,
 			// so let's set the biggest viewport the implementation supports, to be sure the window is fully covered.
-			Size2i max_vp = GLES3::Utilities::get_singleton()->get_maximum_viewport_size();
+			Size2i max_vp = gles3::Utilities::get_singleton()->get_maximum_viewport_size();
 			glViewport(0, 0, max_vp[0], max_vp[1]);
 			glClearColor(0.0, 0.0, 0.0, 1.0);
 			glClear(GL_COLOR_BUFFER_BIT);
@@ -444,7 +444,7 @@ void RasterizerGLES3::_blit_render_target_to_screen(RID p_render_target, Display
 			GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
 	if (read_fbo != 0) {
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 		glDeleteFramebuffers(1, &read_fbo);
 	}
 }
@@ -468,7 +468,7 @@ void RasterizerGLES3::set_boot_image(const Ref<Image> &p_image, const Color &p_c
 
 	Size2i win_size = DisplayServer::get_singleton()->window_get_size();
 
-	glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 	glViewport(0, 0, win_size.width, win_size.height);
 	glEnable(GL_BLEND);
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
@@ -512,7 +512,7 @@ void RasterizerGLES3::set_boot_image(const Ref<Image> &p_image, const Color &p_c
 	screenrect.position /= win_size;
 	screenrect.size /= win_size;
 
-	GLES3::Texture *t = texture_storage->get_texture(texture);
+	gles3::Texture *t = texture_storage->get_texture(texture);
 	t->gl_set_filter(p_use_filter ? RS::CANVAS_ITEM_TEXTURE_FILTER_LINEAR : RS::CANVAS_ITEM_TEXTURE_FILTER_NEAREST);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, t->tex_id);

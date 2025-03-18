@@ -34,7 +34,7 @@
 
 #include "servers/rendering/environment/renderer_gi.h"
 
-namespace GLES3 {
+namespace gles3 {
 
 class GI : public RendererGI {
 public:
@@ -83,6 +83,6 @@ public:
 	virtual void sdfgi_reset() override;
 };
 
-}; // namespace GLES3
+}; //namespace gles3
 
 #endif // GLES3_ENABLED

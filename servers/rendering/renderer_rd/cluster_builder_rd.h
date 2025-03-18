@@ -283,7 +283,7 @@ public:
 				cluster_count_by_type[ELEMENT_TYPE_SPOT_LIGHT]++;
 			}
 
-			RendererRD::MaterialStorage::store_transform_transposed_3x4(xform, e.transform_inv);
+			renderer_rd::MaterialStorage::store_transform_transposed_3x4(xform, e.transform_inv);
 
 		} else /*LIGHT_TYPE_SPOT with no wide angle*/ {
 			radius *= shared->cone_overfit; // Overfit cone.
@@ -326,7 +326,7 @@ public:
 			e.type = ELEMENT_TYPE_SPOT_LIGHT;
 			e.original_index = cluster_count_by_type[ELEMENT_TYPE_SPOT_LIGHT];
 
-			RendererRD::MaterialStorage::store_transform_transposed_3x4(xform, e.transform_inv);
+			renderer_rd::MaterialStorage::store_transform_transposed_3x4(xform, e.transform_inv);
 
 			cluster_count_by_type[ELEMENT_TYPE_SPOT_LIGHT]++;
 		}
@@ -373,7 +373,7 @@ public:
 		e.type = (p_box_type == BOX_TYPE_DECAL) ? ELEMENT_TYPE_DECAL : ELEMENT_TYPE_REFLECTION_PROBE;
 		e.original_index = cluster_count_by_type[e.type];
 
-		RendererRD::MaterialStorage::store_transform_transposed_3x4(xform, e.transform_inv);
+		renderer_rd::MaterialStorage::store_transform_transposed_3x4(xform, e.transform_inv);
 
 		cluster_count_by_type[e.type]++;
 		render_element_count++;

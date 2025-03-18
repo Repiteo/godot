@@ -59,7 +59,7 @@ protected:
 
 	Dictionary prepare_base_event() const;
 	Dictionary prepare_success_response(const Dictionary &p_params) const;
-	Dictionary prepare_error_response(const Dictionary &p_params, DAP::ErrorType err_type, const Dictionary &variables = Dictionary()) const;
+	Dictionary prepare_error_response(const Dictionary &p_params, dap::ErrorType err_type, const Dictionary &variables = Dictionary()) const;
 
 	Dictionary ev_stopped() const;
 
@@ -100,5 +100,5 @@ public:
 	Dictionary ev_continued() const;
 	Dictionary ev_output(const String &p_message, RemoteDebugger::MessageType p_type) const;
 	Dictionary ev_custom_data(const String &p_msg, const Array &p_data) const;
-	Dictionary ev_breakpoint(const DAP::Breakpoint &p_breakpoint, const bool &p_enabled) const;
+	Dictionary ev_breakpoint(const dap::Breakpoint &p_breakpoint, const bool &p_enabled) const;
 };

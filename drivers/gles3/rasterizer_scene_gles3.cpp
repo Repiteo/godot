@@ -72,7 +72,7 @@ uint32_t RasterizerSceneGLES3::geometry_instance_get_pair_mask() {
 }
 
 void RasterizerSceneGLES3::GeometryInstanceGLES3::pair_light_instances(const RID *p_light_instances, uint32_t p_light_instance_count) {
-	GLES3::Config *config = GLES3::Config::get_singleton();
+	gles3::Config *config = gles3::Config::get_singleton();
 
 	paired_omni_light_count = 0;
 	paired_spot_light_count = 0;
@@ -80,7 +80,7 @@ void RasterizerSceneGLES3::GeometryInstanceGLES3::pair_light_instances(const RID
 	paired_spot_lights.clear();
 
 	for (uint32_t i = 0; i < p_light_instance_count; i++) {
-		RS::LightType type = GLES3::LightStorage::get_singleton()->light_instance_get_type(p_light_instances[i]);
+		RS::LightType type = gles3::LightStorage::get_singleton()->light_instance_get_type(p_light_instances[i]);
 		switch (type) {
 			case RS::LIGHT_OMNI: {
 				if (paired_omni_light_count < (uint32_t)config->max_lights_per_object) {
@@ -183,7 +183,7 @@ void RasterizerSceneGLES3::_geometry_instance_dependency_changed(Dependency::Dep
 		case Dependency::DEPENDENCY_CHANGED_MULTIMESH_VISIBLE_INSTANCES: {
 			GeometryInstanceGLES3 *ginstance = static_cast<GeometryInstanceGLES3 *>(p_tracker->userdata);
 			if (ginstance->data->base_type == RS::INSTANCE_MULTIMESH) {
-				ginstance->instance_count = GLES3::MeshStorage::get_singleton()->multimesh_get_instances_to_draw(ginstance->data->base);
+				ginstance->instance_count = gles3::MeshStorage::get_singleton()->multimesh_get_instances_to_draw(ginstance->data->base);
 			}
 		} break;
 		default: {
@@ -197,8 +197,8 @@ void RasterizerSceneGLES3::_geometry_instance_dependency_deleted(const RID &p_de
 	static_cast<GeometryInstanceGLES3 *>(p_tracker->userdata)->data->dirty_dependencies = true;
 }
 
-void RasterizerSceneGLES3::_geometry_instance_add_surface_with_material(GeometryInstanceGLES3 *ginstance, uint32_t p_surface, GLES3::SceneMaterialData *p_material, uint32_t p_material_id, uint32_t p_shader_id, RID p_mesh) {
-	GLES3::MeshStorage *mesh_storage = GLES3::MeshStorage::get_singleton();
+void RasterizerSceneGLES3::_geometry_instance_add_surface_with_material(GeometryInstanceGLES3 *ginstance, uint32_t p_surface, gles3::SceneMaterialData *p_material, uint32_t p_material_id, uint32_t p_shader_id, RID p_mesh) {
+	gles3::MeshStorage *mesh_storage = gles3::MeshStorage::get_singleton();
 
 	bool has_read_screen_alpha = p_material->shader_data->uses_screen_texture || p_material->shader_data->uses_depth_texture || p_material->shader_data->uses_normal_texture;
 	bool has_base_alpha = ((p_material->shader_data->uses_alpha && !p_material->shader_data->uses_alpha_clip) || has_read_screen_alpha);
@@ -223,10 +223,10 @@ void RasterizerSceneGLES3::_geometry_instance_add_surface_with_material(Geometry
 		flags |= GeometryInstanceSurface::FLAG_USES_DOUBLE_SIDED_SHADOWS;
 	}
 
-	if (has_alpha || has_read_screen_alpha || p_material->shader_data->depth_draw == GLES3::SceneShaderData::DEPTH_DRAW_DISABLED || p_material->shader_data->depth_test == GLES3::SceneShaderData::DEPTH_TEST_DISABLED) {
+	if (has_alpha || has_read_screen_alpha || p_material->shader_data->depth_draw == gles3::SceneShaderData::DEPTH_DRAW_DISABLED || p_material->shader_data->depth_test == gles3::SceneShaderData::DEPTH_TEST_DISABLED) {
 		//material is only meant for alpha pass
 		flags |= GeometryInstanceSurface::FLAG_PASS_ALPHA;
-		if (p_material->shader_data->uses_depth_prepass_alpha && !(p_material->shader_data->depth_draw == GLES3::SceneShaderData::DEPTH_DRAW_DISABLED || p_material->shader_data->depth_test == GLES3::SceneShaderData::DEPTH_TEST_DISABLED)) {
+		if (p_material->shader_data->uses_depth_prepass_alpha && !(p_material->shader_data->depth_draw == gles3::SceneShaderData::DEPTH_DRAW_DISABLED || p_material->shader_data->depth_test == gles3::SceneShaderData::DEPTH_TEST_DISABLED)) {
 			flags |= GeometryInstanceSurface::FLAG_PASS_DEPTH;
 			flags |= GeometryInstanceSurface::FLAG_PASS_SHADOW;
 		}
@@ -236,11 +236,11 @@ void RasterizerSceneGLES3::_geometry_instance_add_surface_with_material(Geometry
 		flags |= GeometryInstanceSurface::FLAG_PASS_SHADOW;
 	}
 
-	GLES3::SceneMaterialData *material_shadow = nullptr;
+	gles3::SceneMaterialData *material_shadow = nullptr;
 	void *surface_shadow = nullptr;
 	if (!p_material->shader_data->uses_particle_trails && !p_material->shader_data->writes_modelview_or_projection && !p_material->shader_data->uses_vertex && !p_material->shader_data->uses_discard && !p_material->shader_data->uses_depth_prepass_alpha && !p_material->shader_data->uses_alpha_clip && !p_material->shader_data->uses_world_coordinates && !p_material->shader_data->wireframe) {
 		flags |= GeometryInstanceSurface::FLAG_USES_SHARED_SHADOW_MATERIAL;
-		material_shadow = static_cast<GLES3::SceneMaterialData *>(GLES3::MaterialStorage::get_singleton()->material_get_data(scene_globals.default_material, RS::SHADER_SPATIAL));
+		material_shadow = static_cast<gles3::SceneMaterialData *>(gles3::MaterialStorage::get_singleton()->material_get_data(scene_globals.default_material, RS::SHADER_SPATIAL));
 
 		RID shadow_mesh = mesh_storage->mesh_get_shadow_mesh(p_mesh);
 
@@ -289,7 +289,7 @@ void RasterizerSceneGLES3::_geometry_instance_add_surface_with_material(Geometry
 	sdcache->sort.geometry_id = p_mesh.get_local_index();
 	sdcache->sort.priority = p_material->priority;
 
-	GLES3::Mesh::Surface *s = reinterpret_cast<GLES3::Mesh::Surface *>(sdcache->surface);
+	gles3::Mesh::Surface *s = reinterpret_cast<gles3::Mesh::Surface *>(sdcache->surface);
 	if (p_material->shader_data->uses_tangent && !(s->format & RS::ARRAY_FORMAT_TANGENT)) {
 		String shader_path = p_material->shader_data->path.is_empty() ? "" : "(" + p_material->shader_data->path + ")";
 		String mesh_path = mesh_storage->mesh_get_path(p_mesh).is_empty() ? "" : "(" + mesh_storage->mesh_get_path(p_mesh) + ")";
@@ -297,15 +297,15 @@ void RasterizerSceneGLES3::_geometry_instance_add_surface_with_material(Geometry
 	}
 }
 
-void RasterizerSceneGLES3::_geometry_instance_add_surface_with_material_chain(GeometryInstanceGLES3 *ginstance, uint32_t p_surface, GLES3::SceneMaterialData *p_material_data, RID p_mat_src, RID p_mesh) {
-	GLES3::SceneMaterialData *material_data = p_material_data;
-	GLES3::MaterialStorage *material_storage = GLES3::MaterialStorage::get_singleton();
+void RasterizerSceneGLES3::_geometry_instance_add_surface_with_material_chain(GeometryInstanceGLES3 *ginstance, uint32_t p_surface, gles3::SceneMaterialData *p_material_data, RID p_mat_src, RID p_mesh) {
+	gles3::SceneMaterialData *material_data = p_material_data;
+	gles3::MaterialStorage *material_storage = gles3::MaterialStorage::get_singleton();
 
 	_geometry_instance_add_surface_with_material(ginstance, p_surface, material_data, p_mat_src.get_local_index(), material_storage->material_get_shader_id(p_mat_src), p_mesh);
 
 	while (material_data->next_pass.is_valid()) {
 		RID next_pass = material_data->next_pass;
-		material_data = static_cast<GLES3::SceneMaterialData *>(material_storage->material_get_data(next_pass, RS::SHADER_SPATIAL));
+		material_data = static_cast<gles3::SceneMaterialData *>(material_storage->material_get_data(next_pass, RS::SHADER_SPATIAL));
 		if (!material_data || !material_data->shader_data->valid) {
 			break;
 		}
@@ -317,15 +317,15 @@ void RasterizerSceneGLES3::_geometry_instance_add_surface_with_material_chain(Ge
 }
 
 void RasterizerSceneGLES3::_geometry_instance_add_surface(GeometryInstanceGLES3 *ginstance, uint32_t p_surface, RID p_material, RID p_mesh) {
-	GLES3::MaterialStorage *material_storage = GLES3::MaterialStorage::get_singleton();
+	gles3::MaterialStorage *material_storage = gles3::MaterialStorage::get_singleton();
 	RID m_src;
 
 	m_src = ginstance->data->material_override.is_valid() ? ginstance->data->material_override : p_material;
 
-	GLES3::SceneMaterialData *material_data = nullptr;
+	gles3::SceneMaterialData *material_data = nullptr;
 
 	if (m_src.is_valid()) {
-		material_data = static_cast<GLES3::SceneMaterialData *>(material_storage->material_get_data(m_src, RS::SHADER_SPATIAL));
+		material_data = static_cast<gles3::SceneMaterialData *>(material_storage->material_get_data(m_src, RS::SHADER_SPATIAL));
 		if (!material_data || !material_data->shader_data->valid) {
 			material_data = nullptr;
 		}
@@ -336,7 +336,7 @@ void RasterizerSceneGLES3::_geometry_instance_add_surface(GeometryInstanceGLES3 
 			material_storage->material_update_dependency(m_src, &ginstance->data->dependency_tracker);
 		}
 	} else {
-		material_data = static_cast<GLES3::SceneMaterialData *>(material_storage->material_get_data(scene_globals.default_material, RS::SHADER_SPATIAL));
+		material_data = static_cast<gles3::SceneMaterialData *>(material_storage->material_get_data(scene_globals.default_material, RS::SHADER_SPATIAL));
 		m_src = scene_globals.default_material;
 	}
 
@@ -347,7 +347,7 @@ void RasterizerSceneGLES3::_geometry_instance_add_surface(GeometryInstanceGLES3 
 	if (ginstance->data->material_overlay.is_valid()) {
 		m_src = ginstance->data->material_overlay;
 
-		material_data = static_cast<GLES3::SceneMaterialData *>(material_storage->material_get_data(m_src, RS::SHADER_SPATIAL));
+		material_data = static_cast<gles3::SceneMaterialData *>(material_storage->material_get_data(m_src, RS::SHADER_SPATIAL));
 		if (material_data && material_data->shader_data->valid) {
 			if (ginstance->data->dirty_dependencies) {
 				material_storage->material_update_dependency(m_src, &ginstance->data->dependency_tracker);
@@ -359,8 +359,8 @@ void RasterizerSceneGLES3::_geometry_instance_add_surface(GeometryInstanceGLES3 
 }
 
 void RasterizerSceneGLES3::_geometry_instance_update(RenderGeometryInstance *p_geometry_instance) {
-	GLES3::MeshStorage *mesh_storage = GLES3::MeshStorage::get_singleton();
-	GLES3::ParticlesStorage *particles_storage = GLES3::ParticlesStorage::get_singleton();
+	gles3::MeshStorage *mesh_storage = gles3::MeshStorage::get_singleton();
+	gles3::ParticlesStorage *particles_storage = gles3::ParticlesStorage::get_singleton();
 
 	GeometryInstanceGLES3 *ginstance = static_cast<GeometryInstanceGLES3 *>(p_geometry_instance);
 
@@ -483,9 +483,9 @@ void RasterizerSceneGLES3::_geometry_instance_update(RenderGeometryInstance *p_g
 
 void RasterizerSceneGLES3::_free_sky_data(Sky *p_sky) {
 	if (p_sky->radiance != 0) {
-		GLES3::Utilities::get_singleton()->texture_free_data(p_sky->radiance);
+		gles3::Utilities::get_singleton()->texture_free_data(p_sky->radiance);
 		p_sky->radiance = 0;
-		GLES3::Utilities::get_singleton()->texture_free_data(p_sky->raw_radiance);
+		gles3::Utilities::get_singleton()->texture_free_data(p_sky->raw_radiance);
 		p_sky->raw_radiance = 0;
 		glDeleteFramebuffers(1, &p_sky->radiance_framebuffer);
 		p_sky->radiance_framebuffer = 0;
@@ -582,7 +582,7 @@ GLuint _init_radiance_texture(int p_size, int p_mipmaps, String p_name) {
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, p_mipmaps - 1);
 
-	GLES3::Utilities::get_singleton()->texture_allocated_data(radiance_id, Image::get_image_data_size(p_size, p_size, Image::FORMAT_RGBA8, true), p_name);
+	gles3::Utilities::get_singleton()->texture_allocated_data(radiance_id, Image::get_image_data_size(p_size, p_size, Image::FORMAT_RGBA8, true), p_name);
 	return radiance_id;
 }
 
@@ -611,22 +611,22 @@ void RasterizerSceneGLES3::_update_dirty_skys() {
 }
 
 void RasterizerSceneGLES3::_setup_sky(const RenderDataGLES3 *p_render_data, const PagedArray<RID> &p_lights, const Projection &p_projection, const Transform3D &p_transform, const Size2i p_screen_size) {
-	GLES3::LightStorage *light_storage = GLES3::LightStorage::get_singleton();
-	GLES3::MaterialStorage *material_storage = GLES3::MaterialStorage::get_singleton();
+	gles3::LightStorage *light_storage = gles3::LightStorage::get_singleton();
+	gles3::MaterialStorage *material_storage = gles3::MaterialStorage::get_singleton();
 	ERR_FAIL_COND(p_render_data->environment.is_null());
 
-	GLES3::SkyMaterialData *material = nullptr;
+	gles3::SkyMaterialData *material = nullptr;
 	Sky *sky = sky_owner.get_or_null(environment_get_sky(p_render_data->environment));
 
 	RID sky_material;
 
-	GLES3::SkyShaderData *shader_data = nullptr;
+	gles3::SkyShaderData *shader_data = nullptr;
 
 	if (sky) {
 		sky_material = sky->material;
 
 		if (sky_material.is_valid()) {
-			material = static_cast<GLES3::SkyMaterialData *>(material_storage->material_get_data(sky_material, RS::SHADER_SKY));
+			material = static_cast<gles3::SkyMaterialData *>(material_storage->material_get_data(sky_material, RS::SHADER_SKY));
 			if (!material || !material->shader_data->valid) {
 				material = nullptr;
 			}
@@ -635,7 +635,7 @@ void RasterizerSceneGLES3::_setup_sky(const RenderDataGLES3 *p_render_data, cons
 
 	if (!material) {
 		sky_material = sky_globals.default_material;
-		material = static_cast<GLES3::SkyMaterialData *>(material_storage->material_get_data(sky_material, RS::SHADER_SKY));
+		material = static_cast<gles3::SkyMaterialData *>(material_storage->material_get_data(sky_material, RS::SHADER_SKY));
 	}
 
 	ERR_FAIL_NULL(material);
@@ -671,7 +671,7 @@ void RasterizerSceneGLES3::_setup_sky(const RenderDataGLES3 *p_render_data, cons
 	if (shader_data->uses_light) {
 		sky_globals.directional_light_count = 0;
 		for (int i = 0; i < (int)p_lights.size(); i++) {
-			GLES3::LightInstance *li = GLES3::LightStorage::get_singleton()->get_light_instance(p_lights[i]);
+			gles3::LightInstance *li = gles3::LightStorage::get_singleton()->get_light_instance(p_lights[i]);
 			if (!li) {
 				continue;
 			}
@@ -771,12 +771,12 @@ void RasterizerSceneGLES3::_setup_sky(const RenderDataGLES3 *p_render_data, cons
 }
 
 void RasterizerSceneGLES3::_draw_sky(RID p_env, const Projection &p_projection, const Transform3D &p_transform, float p_sky_energy_multiplier, float p_luminance_multiplier, bool p_use_multiview, bool p_flip_y, bool p_apply_color_adjustments_in_post) {
-	GLES3::MaterialStorage *material_storage = GLES3::MaterialStorage::get_singleton();
+	gles3::MaterialStorage *material_storage = gles3::MaterialStorage::get_singleton();
 	ERR_FAIL_COND(p_env.is_null());
 
 	Sky *sky = sky_owner.get_or_null(environment_get_sky(p_env));
 
-	GLES3::SkyMaterialData *material_data = nullptr;
+	gles3::SkyMaterialData *material_data = nullptr;
 	RID sky_material;
 
 	uint64_t spec_constants = p_use_multiview ? SkyShaderGLES3::USE_MULTIVIEW : 0;
@@ -793,7 +793,7 @@ void RasterizerSceneGLES3::_draw_sky(RID p_env, const Projection &p_projection, 
 		sky_material = sky->material;
 
 		if (sky_material.is_valid()) {
-			material_data = static_cast<GLES3::SkyMaterialData *>(material_storage->material_get_data(sky_material, RS::SHADER_SKY));
+			material_data = static_cast<gles3::SkyMaterialData *>(material_storage->material_get_data(sky_material, RS::SHADER_SKY));
 			if (!material_data || !material_data->shader_data->valid) {
 				material_data = nullptr;
 			}
@@ -801,17 +801,17 @@ void RasterizerSceneGLES3::_draw_sky(RID p_env, const Projection &p_projection, 
 
 		if (!material_data) {
 			sky_material = sky_globals.default_material;
-			material_data = static_cast<GLES3::SkyMaterialData *>(material_storage->material_get_data(sky_material, RS::SHADER_SKY));
+			material_data = static_cast<gles3::SkyMaterialData *>(material_storage->material_get_data(sky_material, RS::SHADER_SKY));
 		}
 	} else if (background == RS::ENV_BG_CLEAR_COLOR || background == RS::ENV_BG_COLOR) {
 		sky_material = sky_globals.fog_material;
-		material_data = static_cast<GLES3::SkyMaterialData *>(material_storage->material_get_data(sky_material, RS::SHADER_SKY));
+		material_data = static_cast<gles3::SkyMaterialData *>(material_storage->material_get_data(sky_material, RS::SHADER_SKY));
 	}
 
 	ERR_FAIL_NULL(material_data);
 	material_data->bind_uniforms();
 
-	GLES3::SkyShaderData *shader_data = material_data->shader_data;
+	gles3::SkyShaderData *shader_data = material_data->shader_data;
 
 	ERR_FAIL_NULL(shader_data);
 
@@ -867,14 +867,14 @@ void RasterizerSceneGLES3::_draw_sky(RID p_env, const Projection &p_projection, 
 }
 
 void RasterizerSceneGLES3::_update_sky_radiance(RID p_env, const Projection &p_projection, const Transform3D &p_transform, float p_sky_energy_multiplier) {
-	GLES3::CubemapFilter *cubemap_filter = GLES3::CubemapFilter::get_singleton();
-	GLES3::MaterialStorage *material_storage = GLES3::MaterialStorage::get_singleton();
+	gles3::CubemapFilter *cubemap_filter = gles3::CubemapFilter::get_singleton();
+	gles3::MaterialStorage *material_storage = gles3::MaterialStorage::get_singleton();
 	ERR_FAIL_COND(p_env.is_null());
 
 	Sky *sky = sky_owner.get_or_null(environment_get_sky(p_env));
 	ERR_FAIL_NULL(sky);
 
-	GLES3::SkyMaterialData *material_data = nullptr;
+	gles3::SkyMaterialData *material_data = nullptr;
 	RID sky_material;
 
 	RS::EnvironmentBG background = environment_get_background(p_env);
@@ -884,7 +884,7 @@ void RasterizerSceneGLES3::_update_sky_radiance(RID p_env, const Projection &p_p
 		sky_material = sky->material;
 
 		if (sky_material.is_valid()) {
-			material_data = static_cast<GLES3::SkyMaterialData *>(material_storage->material_get_data(sky_material, RS::SHADER_SKY));
+			material_data = static_cast<gles3::SkyMaterialData *>(material_storage->material_get_data(sky_material, RS::SHADER_SKY));
 			if (!material_data || !material_data->shader_data->valid) {
 				material_data = nullptr;
 			}
@@ -892,17 +892,17 @@ void RasterizerSceneGLES3::_update_sky_radiance(RID p_env, const Projection &p_p
 
 		if (!material_data) {
 			sky_material = sky_globals.default_material;
-			material_data = static_cast<GLES3::SkyMaterialData *>(material_storage->material_get_data(sky_material, RS::SHADER_SKY));
+			material_data = static_cast<gles3::SkyMaterialData *>(material_storage->material_get_data(sky_material, RS::SHADER_SKY));
 		}
 	} else if (background == RS::ENV_BG_CLEAR_COLOR || background == RS::ENV_BG_COLOR) {
 		sky_material = sky_globals.fog_material;
-		material_data = static_cast<GLES3::SkyMaterialData *>(material_storage->material_get_data(sky_material, RS::SHADER_SKY));
+		material_data = static_cast<gles3::SkyMaterialData *>(material_storage->material_get_data(sky_material, RS::SHADER_SKY));
 	}
 
 	ERR_FAIL_NULL(material_data);
 	material_data->bind_uniforms();
 
-	GLES3::SkyShaderData *shader_data = material_data->shader_data;
+	gles3::SkyShaderData *shader_data = material_data->shader_data;
 
 	ERR_FAIL_NULL(shader_data);
 
@@ -1015,19 +1015,19 @@ Ref<Image> RasterizerSceneGLES3::sky_bake_panorama(RID p_sky, float p_energy, bo
 		return Ref<Image>();
 	}
 
-	GLES3::CopyEffects *copy_effects = GLES3::CopyEffects::get_singleton();
-	GLES3::Config *config = GLES3::Config::get_singleton();
+	gles3::CopyEffects *copy_effects = gles3::CopyEffects::get_singleton();
+	gles3::Config *config = gles3::Config::get_singleton();
 
 	GLuint rad_tex = 0;
 	glGenTextures(1, &rad_tex);
 	glBindTexture(GL_TEXTURE_2D, rad_tex);
 	if (config->float_texture_supported) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, p_size.width, p_size.height, 0, GL_RGBA, GL_FLOAT, nullptr);
-		GLES3::Utilities::get_singleton()->texture_allocated_data(rad_tex, p_size.width * p_size.height * 16, "Temp sky panorama");
+		gles3::Utilities::get_singleton()->texture_allocated_data(rad_tex, p_size.width * p_size.height * 16, "Temp sky panorama");
 	} else {
 		// Fallback to RGBA8 on devices that don't support rendering to floating point textures. This will look bad, but we have no choice.
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, p_size.width, p_size.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-		GLES3::Utilities::get_singleton()->texture_allocated_data(rad_tex, p_size.width * p_size.height * 4, "Temp sky panorama");
+		gles3::Utilities::get_singleton()->texture_allocated_data(rad_tex, p_size.width * p_size.height * 4, "Temp sky panorama");
 	}
 
 	GLuint rad_fbo = 0;
@@ -1043,11 +1043,11 @@ Ref<Image> RasterizerSceneGLES3::sky_bake_panorama(RID p_sky, float p_energy, bo
 
 	copy_effects->copy_cube_to_panorama(p_bake_irradiance ? float(sky->mipmap_count) : 0.0);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 	glDeleteFramebuffers(1, &rad_fbo);
 	// Create a dummy texture so we can use texture_2d_get.
-	RID tex_rid = GLES3::TextureStorage::get_singleton()->texture_allocate();
-	GLES3::Texture texture;
+	RID tex_rid = gles3::TextureStorage::get_singleton()->texture_allocate();
+	gles3::Texture texture;
 	texture.width = p_size.width;
 	texture.height = p_size.height;
 	texture.alloc_width = p_size.width;
@@ -1056,19 +1056,19 @@ Ref<Image> RasterizerSceneGLES3::sky_bake_panorama(RID p_sky, float p_energy, bo
 	texture.real_format = Image::FORMAT_RGBAF;
 	texture.gl_format_cache = GL_RGBA;
 	texture.gl_type_cache = GL_FLOAT;
-	texture.type = GLES3::Texture::TYPE_2D;
+	texture.type = gles3::Texture::TYPE_2D;
 	texture.target = GL_TEXTURE_2D;
 	texture.active = true;
 	texture.tex_id = rad_tex;
 	texture.is_render_target = true;
 
-	GLES3::TextureStorage::get_singleton()->texture_2d_initialize_from_texture(tex_rid, texture);
-	Ref<Image> img = GLES3::TextureStorage::get_singleton()->texture_2d_get(tex_rid);
-	GLES3::Utilities::get_singleton()->texture_free_data(rad_tex);
+	gles3::TextureStorage::get_singleton()->texture_2d_initialize_from_texture(tex_rid, texture);
+	Ref<Image> img = gles3::TextureStorage::get_singleton()->texture_2d_get(tex_rid);
+	gles3::Utilities::get_singleton()->texture_free_data(rad_tex);
 
 	texture.is_render_target = false;
 	texture.tex_id = 0;
-	GLES3::TextureStorage::get_singleton()->texture_free(tex_rid);
+	gles3::TextureStorage::get_singleton()->texture_free(tex_rid);
 
 	for (int i = 0; i < p_size.width; i++) {
 		for (int j = 0; j < p_size.height; j++) {
@@ -1223,8 +1223,8 @@ _FORCE_INLINE_ static uint32_t _indices_to_primitives(RS::PrimitiveType p_primit
 	return (p_indices - subtractor[p_primitive]) / divisor[p_primitive];
 }
 void RasterizerSceneGLES3::_fill_render_list(RenderListType p_render_list, const RenderDataGLES3 *p_render_data, PassMode p_pass_mode, bool p_append) {
-	GLES3::MeshStorage *mesh_storage = GLES3::MeshStorage::get_singleton();
-	GLES3::LightStorage *light_storage = GLES3::LightStorage::get_singleton();
+	gles3::MeshStorage *mesh_storage = gles3::MeshStorage::get_singleton();
+	gles3::LightStorage *light_storage = gles3::LightStorage::get_singleton();
 
 	if (p_render_list == RENDER_LIST_OPAQUE) {
 		scene_state.used_screen_texture = false;
@@ -1453,18 +1453,18 @@ void RasterizerSceneGLES3::_setup_environment(const RenderDataGLES3 *p_render_da
 	correction.set_depth_correction(p_flip_y, true, false);
 	Projection projection = correction * p_render_data->cam_projection;
 	//store camera into ubo
-	GLES3::MaterialStorage::store_camera(projection, scene_state.ubo.projection_matrix);
-	GLES3::MaterialStorage::store_camera(projection.inverse(), scene_state.ubo.inv_projection_matrix);
-	GLES3::MaterialStorage::store_transform(p_render_data->cam_transform, scene_state.ubo.inv_view_matrix);
-	GLES3::MaterialStorage::store_transform(p_render_data->inv_cam_transform, scene_state.ubo.view_matrix);
-	GLES3::MaterialStorage::store_transform(p_render_data->main_cam_transform, scene_state.ubo.main_cam_inv_view_matrix);
+	gles3::MaterialStorage::store_camera(projection, scene_state.ubo.projection_matrix);
+	gles3::MaterialStorage::store_camera(projection.inverse(), scene_state.ubo.inv_projection_matrix);
+	gles3::MaterialStorage::store_transform(p_render_data->cam_transform, scene_state.ubo.inv_view_matrix);
+	gles3::MaterialStorage::store_transform(p_render_data->inv_cam_transform, scene_state.ubo.view_matrix);
+	gles3::MaterialStorage::store_transform(p_render_data->main_cam_transform, scene_state.ubo.main_cam_inv_view_matrix);
 	scene_state.ubo.camera_visible_layers = p_render_data->camera_visible_layers;
 
 	if (p_render_data->view_count > 1) {
 		for (uint32_t v = 0; v < p_render_data->view_count; v++) {
 			projection = correction * p_render_data->view_projection[v];
-			GLES3::MaterialStorage::store_camera(projection, scene_state.multiview_ubo.projection_matrix_view[v]);
-			GLES3::MaterialStorage::store_camera(projection.inverse(), scene_state.multiview_ubo.inv_projection_matrix_view[v]);
+			gles3::MaterialStorage::store_camera(projection, scene_state.multiview_ubo.projection_matrix_view[v]);
+			gles3::MaterialStorage::store_camera(projection.inverse(), scene_state.multiview_ubo.inv_projection_matrix_view[v]);
 
 			scene_state.multiview_ubo.eye_offset[v][0] = p_render_data->view_eye_offset[v].x;
 			scene_state.multiview_ubo.eye_offset[v][1] = p_render_data->view_eye_offset[v].y;
@@ -1532,7 +1532,7 @@ void RasterizerSceneGLES3::_setup_environment(const RenderDataGLES3 *p_render_da
 
 			Basis sky_transform = environment_get_sky_orientation(p_render_data->environment);
 			sky_transform = sky_transform.inverse() * p_render_data->cam_transform.basis;
-			GLES3::MaterialStorage::store_transform_3x3(sky_transform, scene_state.ubo.radiance_inverse_xform);
+			gles3::MaterialStorage::store_transform_3x3(sky_transform, scene_state.ubo.radiance_inverse_xform);
 			scene_state.ubo.use_ambient_cubemap = (ambient_src == RS::ENV_AMBIENT_SOURCE_BG && env_bg == RS::ENV_BG_SKY) || ambient_src == RS::ENV_AMBIENT_SOURCE_SKY;
 			scene_state.ubo.use_ambient_light = scene_state.ubo.use_ambient_cubemap || ambient_src == RS::ENV_AMBIENT_SOURCE_COLOR;
 		}
@@ -1589,7 +1589,7 @@ void RasterizerSceneGLES3::_setup_environment(const RenderDataGLES3 *p_render_da
 	if (scene_state.ubo_buffer == 0) {
 		glGenBuffers(1, &scene_state.ubo_buffer);
 		glBindBufferBase(GL_UNIFORM_BUFFER, SCENE_DATA_UNIFORM_LOCATION, scene_state.ubo_buffer);
-		GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, scene_state.ubo_buffer, sizeof(SceneState::UBO), &scene_state.ubo, GL_STREAM_DRAW, "Scene state UBO");
+		gles3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, scene_state.ubo_buffer, sizeof(SceneState::UBO), &scene_state.ubo, GL_STREAM_DRAW, "Scene state UBO");
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	} else {
 		glBindBufferBase(GL_UNIFORM_BUFFER, SCENE_DATA_UNIFORM_LOCATION, scene_state.ubo_buffer);
@@ -1602,7 +1602,7 @@ void RasterizerSceneGLES3::_setup_environment(const RenderDataGLES3 *p_render_da
 		if (scene_state.multiview_buffer == 0) {
 			glGenBuffers(1, &scene_state.multiview_buffer);
 			glBindBufferBase(GL_UNIFORM_BUFFER, SCENE_MULTIVIEW_UNIFORM_LOCATION, scene_state.multiview_buffer);
-			GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, scene_state.multiview_buffer, sizeof(SceneState::MultiviewUBO), &scene_state.multiview_ubo, GL_STREAM_DRAW, "Multiview UBO");
+			gles3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, scene_state.multiview_buffer, sizeof(SceneState::MultiviewUBO), &scene_state.multiview_ubo, GL_STREAM_DRAW, "Multiview UBO");
 		} else {
 			glBindBufferBase(GL_UNIFORM_BUFFER, SCENE_MULTIVIEW_UNIFORM_LOCATION, scene_state.multiview_buffer);
 			glBufferData(GL_UNIFORM_BUFFER, sizeof(SceneState::MultiviewUBO), &scene_state.multiview_ubo, GL_STREAM_DRAW);
@@ -1614,8 +1614,8 @@ void RasterizerSceneGLES3::_setup_environment(const RenderDataGLES3 *p_render_da
 
 // Puts lights into Uniform Buffers. Needs to be called before _fill_list as this caches the index of each light in the Uniform Buffer
 void RasterizerSceneGLES3::_setup_lights(const RenderDataGLES3 *p_render_data, bool p_using_shadows, uint32_t &r_directional_light_count, uint32_t &r_omni_light_count, uint32_t &r_spot_light_count, uint32_t &r_directional_shadow_count) {
-	GLES3::LightStorage *light_storage = GLES3::LightStorage::get_singleton();
-	GLES3::Config *config = GLES3::Config::get_singleton();
+	gles3::LightStorage *light_storage = gles3::LightStorage::get_singleton();
+	gles3::Config *config = gles3::Config::get_singleton();
 
 	const Transform3D inverse_transform = p_render_data->inv_cam_transform;
 
@@ -1629,7 +1629,7 @@ void RasterizerSceneGLES3::_setup_lights(const RenderDataGLES3 *p_render_data, b
 	int num_lights = lights.size();
 
 	for (int i = 0; i < num_lights; i++) {
-		GLES3::LightInstance *li = GLES3::LightStorage::get_singleton()->get_light_instance(lights[i]);
+		gles3::LightInstance *li = gles3::LightStorage::get_singleton()->get_light_instance(lights[i]);
 		if (!li) {
 			continue;
 		}
@@ -1724,7 +1724,7 @@ void RasterizerSceneGLES3::_setup_lights(const RenderDataGLES3 *p_render_data, b
 						Projection shadow_mtx = rectm * bias * matrix * modelview;
 						shadow_data.shadow_split_offsets[j] = split;
 						shadow_data.shadow_normal_bias[j] = light_storage->light_get_param(base, RS::LIGHT_PARAM_SHADOW_NORMAL_BIAS) * li->shadow_transform[j].shadow_texel_size;
-						GLES3::MaterialStorage::store_camera(shadow_mtx, shadow_data.shadow_matrices[j]);
+						gles3::MaterialStorage::store_camera(shadow_mtx, shadow_data.shadow_matrices[j]);
 					}
 					float fade_start = light_storage->light_get_param(base, RS::LIGHT_PARAM_SHADOW_FADE_START);
 					shadow_data.fade_from = -shadow_data.shadow_split_offsets[3] * MIN(fade_start, 0.999);
@@ -1787,12 +1787,12 @@ void RasterizerSceneGLES3::_setup_lights(const RenderDataGLES3 *p_render_data, b
 	}
 
 	if (r_omni_light_count) {
-		SortArray<InstanceSort<GLES3::LightInstance>> sorter;
+		SortArray<InstanceSort<gles3::LightInstance>> sorter;
 		sorter.sort(scene_state.omni_light_sort, r_omni_light_count);
 	}
 
 	if (r_spot_light_count) {
-		SortArray<InstanceSort<GLES3::LightInstance>> sorter;
+		SortArray<InstanceSort<gles3::LightInstance>> sorter;
 		sorter.sort(scene_state.spot_light_sort, r_spot_light_count);
 	}
 
@@ -1802,7 +1802,7 @@ void RasterizerSceneGLES3::_setup_lights(const RenderDataGLES3 *p_render_data, b
 		uint32_t index = (i < r_omni_light_count) ? i : i - (r_omni_light_count);
 		LightData &light_data = (i < r_omni_light_count) ? scene_state.omni_lights[index] : scene_state.spot_lights[index];
 		RS::LightType type = (i < r_omni_light_count) ? RS::LIGHT_OMNI : RS::LIGHT_SPOT;
-		GLES3::LightInstance *li = (i < r_omni_light_count) ? scene_state.omni_light_sort[index].instance : scene_state.spot_light_sort[index].instance;
+		gles3::LightInstance *li = (i < r_omni_light_count) ? scene_state.omni_light_sort[index].instance : scene_state.spot_light_sort[index].instance;
 		real_t distance = (i < r_omni_light_count) ? scene_state.omni_light_sort[index].depth : scene_state.spot_light_sort[index].depth;
 		RID base = li->light;
 
@@ -1926,7 +1926,7 @@ void RasterizerSceneGLES3::_setup_lights(const RenderDataGLES3 *p_render_data, b
 			if (type == RS::LIGHT_OMNI) {
 				Transform3D proj = (inverse_transform * light_transform).inverse();
 
-				GLES3::MaterialStorage::store_transform(proj, shadow_data.shadow_matrix);
+				gles3::MaterialStorage::store_transform(proj, shadow_data.shadow_matrix);
 
 			} else if (type == RS::LIGHT_SPOT) {
 				Transform3D modelview = (inverse_transform * light_transform).inverse();
@@ -1937,7 +1937,7 @@ void RasterizerSceneGLES3::_setup_lights(const RenderDataGLES3 *p_render_data, b
 				correction.set_depth_correction(false, true, false);
 				Projection cm = correction * li->shadow_transform[0].camera;
 				Projection shadow_mtx = bias * cm * modelview;
-				GLES3::MaterialStorage::store_camera(shadow_mtx, shadow_data.shadow_matrix);
+				gles3::MaterialStorage::store_camera(shadow_mtx, shadow_data.shadow_matrix);
 			}
 		}
 	}
@@ -1973,7 +1973,7 @@ void RasterizerSceneGLES3::_setup_lights(const RenderDataGLES3 *p_render_data, b
 
 // Render shadows
 void RasterizerSceneGLES3::_render_shadows(const RenderDataGLES3 *p_render_data, const Size2i &p_viewport_size) {
-	GLES3::LightStorage *light_storage = GLES3::LightStorage::get_singleton();
+	gles3::LightStorage *light_storage = gles3::LightStorage::get_singleton();
 
 	LocalVector<int> cube_shadows;
 	LocalVector<int> shadows;
@@ -2021,7 +2021,7 @@ void RasterizerSceneGLES3::_render_shadows(const RenderDataGLES3 *p_render_data,
 }
 
 void RasterizerSceneGLES3::_render_shadow_pass(RID p_light, RID p_shadow_atlas, int p_pass, const PagedArray<RenderGeometryInstance *> &p_instances, float p_lod_distance_multiplier, float p_screen_mesh_lod_threshold, RenderingMethod::RenderInfo *p_render_info, const Size2i &p_viewport_size, const Transform3D &p_main_cam_transform) {
-	GLES3::LightStorage *light_storage = GLES3::LightStorage::get_singleton();
+	gles3::LightStorage *light_storage = gles3::LightStorage::get_singleton();
 
 	ERR_FAIL_COND(!light_storage->owns_light_instance(p_light));
 
@@ -2094,8 +2094,8 @@ void RasterizerSceneGLES3::_render_shadow_pass(RID p_light, RID p_shadow_atlas, 
 
 		uint32_t key = light_storage->shadow_atlas_get_light_instance_key(p_shadow_atlas, p_light);
 
-		uint32_t quadrant = (key >> GLES3::LightStorage::QUADRANT_SHIFT) & 0x3;
-		uint32_t shadow = key & GLES3::LightStorage::SHADOW_INDEX_MASK;
+		uint32_t quadrant = (key >> gles3::LightStorage::QUADRANT_SHIFT) & 0x3;
+		uint32_t shadow = key & gles3::LightStorage::SHADOW_INDEX_MASK;
 
 		ERR_FAIL_INDEX((int)shadow, light_storage->shadow_atlas_get_quadrant_shadows_length(p_shadow_atlas, quadrant));
 
@@ -2173,7 +2173,7 @@ void RasterizerSceneGLES3::_render_shadow_pass(RID p_light, RID p_shadow_atlas, 
 	glBindFramebuffer(GL_FRAMEBUFFER, shadow_fb);
 	glViewport(atlas_rect.position.x, atlas_rect.position.y, atlas_rect.size.x, atlas_rect.size.y);
 
-	GLuint global_buffer = GLES3::MaterialStorage::get_singleton()->global_shader_parameters_get_uniform_buffer();
+	GLuint global_buffer = gles3::MaterialStorage::get_singleton()->global_shader_parameters_get_uniform_buffer();
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, SCENE_GLOBALS_UNIFORM_LOCATION, global_buffer);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -2210,12 +2210,12 @@ void RasterizerSceneGLES3::_render_shadow_pass(RID p_light, RID p_shadow_atlas, 
 	scene_state.enable_gl_depth_draw(true);
 	glDisable(GL_CULL_FACE);
 	scene_state.cull_mode = RS::CULL_MODE_DISABLED;
-	glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 }
 
 void RasterizerSceneGLES3::render_scene(const Ref<RenderSceneBuffers> &p_render_buffers, const CameraData *p_camera_data, const CameraData *p_prev_camera_data, const PagedArray<RenderGeometryInstance *> &p_instances, const PagedArray<RID> &p_lights, const PagedArray<RID> &p_reflection_probes, const PagedArray<RID> &p_voxel_gi_instances, const PagedArray<RID> &p_decals, const PagedArray<RID> &p_lightmaps, const PagedArray<RID> &p_fog_volumes, RID p_environment, RID p_camera_attributes, RID p_compositor, RID p_shadow_atlas, RID p_occluder_debug_tex, RID p_reflection_atlas, RID p_reflection_probe, int p_reflection_probe_pass, float p_screen_mesh_lod_threshold, const RenderShadowData *p_render_shadows, int p_render_shadow_count, const RenderSDFGIData *p_render_sdfgi_regions, int p_render_sdfgi_region_count, const RenderSDFGIUpdateData *p_sdfgi_update_data, RenderingMethod::RenderInfo *r_render_info) {
-	GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
-	GLES3::Config *config = GLES3::Config::get_singleton();
+	gles3::TextureStorage *texture_storage = gles3::TextureStorage::get_singleton();
+	gles3::Config *config = gles3::Config::get_singleton();
 	RENDER_TIMESTAMP("Setup 3D Scene");
 
 	bool apply_color_adjustments_in_post = false;
@@ -2229,7 +2229,7 @@ void RasterizerSceneGLES3::render_scene(const Ref<RenderSceneBuffers> &p_render_
 		apply_color_adjustments_in_post = true;
 	}
 
-	GLES3::RenderTarget *rt = nullptr; // No render target for reflection probe
+	gles3::RenderTarget *rt = nullptr; // No render target for reflection probe
 	if (!is_reflection_probe) {
 		rt = texture_storage->get_render_target(rb->render_target);
 		ERR_FAIL_NULL(rt);
@@ -2315,7 +2315,7 @@ void RasterizerSceneGLES3::render_scene(const Ref<RenderSceneBuffers> &p_render_
 	// Fill Light lists here
 	//////////
 
-	GLuint global_buffer = GLES3::MaterialStorage::get_singleton()->global_shader_parameters_get_uniform_buffer();
+	GLuint global_buffer = gles3::MaterialStorage::get_singleton()->global_shader_parameters_get_uniform_buffer();
 	glBindBufferBase(GL_UNIFORM_BUFFER, SCENE_GLOBALS_UNIFORM_LOCATION, global_buffer);
 
 	Color clear_color;
@@ -2351,7 +2351,7 @@ void RasterizerSceneGLES3::render_scene(const Ref<RenderSceneBuffers> &p_render_
 		// Only create if using 3D
 		glGenBuffers(1, &scene_state.tonemap_buffer);
 		glBindBufferBase(GL_UNIFORM_BUFFER, SCENE_TONEMAP_UNIFORM_LOCATION, scene_state.tonemap_buffer);
-		GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, scene_state.tonemap_buffer, sizeof(SceneState::TonemapUBO), &tonemap_ubo, GL_STREAM_DRAW, "Tonemap UBO");
+		gles3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, scene_state.tonemap_buffer, sizeof(SceneState::TonemapUBO), &tonemap_ubo, GL_STREAM_DRAW, "Tonemap UBO");
 	} else {
 		glBindBufferBase(GL_UNIFORM_BUFFER, SCENE_TONEMAP_UNIFORM_LOCATION, scene_state.tonemap_buffer);
 		glBufferData(GL_UNIFORM_BUFFER, sizeof(SceneState::TonemapUBO), &tonemap_ubo, GL_STREAM_DRAW);
@@ -2409,7 +2409,7 @@ void RasterizerSceneGLES3::render_scene(const Ref<RenderSceneBuffers> &p_render_
 				clear_color.b *= bg_energy_multiplier;
 				if (!render_data.transparent_bg && environment_get_fog_enabled(render_data.environment)) {
 					draw_sky_fog_only = true;
-					GLES3::MaterialStorage::get_singleton()->material_set_param(sky_globals.fog_material, "clear_color", Variant(clear_color));
+					gles3::MaterialStorage::get_singleton()->material_set_param(sky_globals.fog_material, "clear_color", Variant(clear_color));
 				}
 			} break;
 			case RS::ENV_BG_COLOR: {
@@ -2419,7 +2419,7 @@ void RasterizerSceneGLES3::render_scene(const Ref<RenderSceneBuffers> &p_render_
 				clear_color.b *= bg_energy_multiplier;
 				if (!render_data.transparent_bg && environment_get_fog_enabled(render_data.environment)) {
 					draw_sky_fog_only = true;
-					GLES3::MaterialStorage::get_singleton()->material_set_param(sky_globals.fog_material, "clear_color", Variant(clear_color));
+					gles3::MaterialStorage::get_singleton()->material_set_param(sky_globals.fog_material, "clear_color", Variant(clear_color));
 				}
 			} break;
 			case RS::ENV_BG_SKY: {
@@ -2472,7 +2472,7 @@ void RasterizerSceneGLES3::render_scene(const Ref<RenderSceneBuffers> &p_render_
 
 	GLuint fbo = 0;
 	if (is_reflection_probe) {
-		fbo = GLES3::LightStorage::get_singleton()->reflection_probe_instance_get_framebuffer(render_data.reflection_probe, render_data.reflection_probe_pass);
+		fbo = gles3::LightStorage::get_singleton()->reflection_probe_instance_get_framebuffer(render_data.reflection_probe, render_data.reflection_probe_pass);
 	} else {
 		rb->set_apply_color_adjustments_in_post(apply_color_adjustments_in_post);
 		fbo = rb->get_render_fbo();
@@ -2533,7 +2533,7 @@ void RasterizerSceneGLES3::render_scene(const Ref<RenderSceneBuffers> &p_render_
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 		scene_state.enable_gl_blend(false);
 	}
-	scene_state.current_blend_mode = GLES3::SceneShaderData::BLEND_MODE_MIX;
+	scene_state.current_blend_mode = gles3::SceneShaderData::BLEND_MODE_MIX;
 
 	scene_state.enable_gl_scissor_test(false);
 	scene_state.enable_gl_depth_test(true);
@@ -2559,7 +2559,7 @@ void RasterizerSceneGLES3::render_scene(const Ref<RenderSceneBuffers> &p_render_
 	}
 	if ((keep_color || draw_canvas) && fbo != rt->fbo) {
 		// Need to copy our current contents to our intermediate/MSAA buffer
-		GLES3::CopyEffects *copy_effects = GLES3::CopyEffects::get_singleton();
+		gles3::CopyEffects *copy_effects = gles3::CopyEffects::get_singleton();
 
 		scene_state.enable_gl_depth_test(false);
 		scene_state.enable_gl_depth_draw(false);
@@ -2611,9 +2611,9 @@ void RasterizerSceneGLES3::render_scene(const Ref<RenderSceneBuffers> &p_render_
 
 		if (feed.is_valid()) {
 			RID camera_YCBCR = feed->get_texture(CameraServer::FEED_YCBCR_IMAGE);
-			GLES3::TextureStorage::get_singleton()->texture_bind(camera_YCBCR, 0);
+			gles3::TextureStorage::get_singleton()->texture_bind(camera_YCBCR, 0);
 
-			GLES3::FeedEffects *feed_effects = GLES3::FeedEffects::get_singleton();
+			gles3::FeedEffects *feed_effects = gles3::FeedEffects::get_singleton();
 			feed_effects->draw();
 		}
 		scene_state.enable_gl_depth_draw(true);
@@ -2725,9 +2725,9 @@ void RasterizerSceneGLES3::render_scene(const Ref<RenderSceneBuffers> &p_render_
 }
 
 void RasterizerSceneGLES3::_render_post_processing(const RenderDataGLES3 *p_render_data) {
-	GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
-	GLES3::Glow *glow = GLES3::Glow::get_singleton();
-	GLES3::PostEffects *post_effects = GLES3::PostEffects::get_singleton();
+	gles3::TextureStorage *texture_storage = gles3::TextureStorage::get_singleton();
+	gles3::Glow *glow = gles3::Glow::get_singleton();
+	gles3::PostEffects *post_effects = gles3::PostEffects::get_singleton();
 
 	Ref<RenderSceneBuffersGLES3> rb = p_render_data->render_buffers;
 	ERR_FAIL_COND(rb.is_null());
@@ -2737,7 +2737,7 @@ void RasterizerSceneGLES3::_render_post_processing(const RenderDataGLES3 *p_rend
 	Size2i target_size = rb->get_target_size();
 	uint32_t view_count = rb->get_view_count();
 
-	// bool msaa2d_needs_resolve = texture_storage->render_target_get_msaa(render_target) != RS::VIEWPORT_MSAA_DISABLED && !GLES3::Config::get_singleton()->rt_msaa_supported;
+	// bool msaa2d_needs_resolve = texture_storage->render_target_get_msaa(render_target) != RS::VIEWPORT_MSAA_DISABLED && !gles3::Config::get_singleton()->rt_msaa_supported;
 	bool msaa3d_needs_resolve = rb->get_msaa_needs_resolve();
 	GLuint fbo_msaa_3d = rb->get_msaa3d_fbo();
 	GLuint fbo_int = rb->get_internal_fbo();
@@ -2810,7 +2810,7 @@ void RasterizerSceneGLES3::_render_post_processing(const RenderDataGLES3 *p_rend
 		if (fbo_int != 0) {
 			// Apply glow/bloom if requested? then populate our glow buffers
 			GLuint color = fbo_int != 0 ? rb->get_internal_color() : texture_storage->render_target_get_color(render_target);
-			const GLES3::Glow::GLOWLEVEL *glow_buffers = nullptr;
+			const gles3::Glow::GLOWLEVEL *glow_buffers = nullptr;
 			if (glow_enabled) {
 				glow_buffers = rb->get_glow_buffers();
 
@@ -2870,7 +2870,7 @@ void RasterizerSceneGLES3::_render_post_processing(const RenderDataGLES3 *p_rend
 		// Rendered to intermediate buffer, must copy to our render target
 		if (fbo_int != 0) {
 			// Apply glow/bloom if requested? then populate our glow buffers
-			const GLES3::Glow::GLOWLEVEL *glow_buffers = nullptr;
+			const gles3::Glow::GLOWLEVEL *glow_buffers = nullptr;
 			GLuint source_color = fbo_int != 0 ? rb->get_internal_color() : texture_storage->render_target_get_color(render_target);
 
 			if (glow_enabled) {
@@ -2922,15 +2922,15 @@ void RasterizerSceneGLES3::_render_post_processing(const RenderDataGLES3 *p_rend
 
 template <PassMode p_pass_mode>
 void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params, const RenderDataGLES3 *p_render_data, uint32_t p_from_element, uint32_t p_to_element, bool p_alpha_pass) {
-	GLES3::MeshStorage *mesh_storage = GLES3::MeshStorage::get_singleton();
-	GLES3::ParticlesStorage *particles_storage = GLES3::ParticlesStorage::get_singleton();
-	GLES3::MaterialStorage *material_storage = GLES3::MaterialStorage::get_singleton();
+	gles3::MeshStorage *mesh_storage = gles3::MeshStorage::get_singleton();
+	gles3::ParticlesStorage *particles_storage = gles3::ParticlesStorage::get_singleton();
+	gles3::MaterialStorage *material_storage = gles3::MaterialStorage::get_singleton();
 
 	GLuint prev_vertex_array_gl = 0;
 	GLuint prev_index_array_gl = 0;
 
-	GLES3::SceneMaterialData *prev_material_data = nullptr;
-	GLES3::SceneShaderData *prev_shader = nullptr;
+	gles3::SceneMaterialData *prev_material_data = nullptr;
+	gles3::SceneShaderData *prev_shader = nullptr;
 	GeometryInstanceGLES3 *prev_inst = nullptr;
 	SceneShaderGLES3::ShaderVariant prev_variant = SceneShaderGLES3::ShaderVariant::MODE_COLOR;
 	SceneShaderGLES3::ShaderVariant shader_variant = SceneShaderGLES3::MODE_COLOR; // Assigned to silence wrong -Wmaybe-initialized
@@ -2940,10 +2940,10 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 	uint64_t base_spec_constants = p_params->spec_constant_base_flags;
 
 	if constexpr (p_pass_mode == PASS_MODE_COLOR || p_pass_mode == PASS_MODE_COLOR_TRANSPARENT) {
-		GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
-		GLES3::Config *config = GLES3::Config::get_singleton();
+		gles3::TextureStorage *texture_storage = gles3::TextureStorage::get_singleton();
+		gles3::Config *config = gles3::Config::get_singleton();
 		glActiveTexture(GL_TEXTURE0 + config->max_texture_image_units - 2);
-		GLuint texture_to_bind = texture_storage->get_texture(texture_storage->texture_gl_get_default(GLES3::DEFAULT_GL_TEXTURE_CUBEMAP_BLACK))->tex_id;
+		GLuint texture_to_bind = texture_storage->get_texture(texture_storage->texture_gl_get_default(gles3::DEFAULT_GL_TEXTURE_CUBEMAP_BLACK))->tex_id;
 		if (p_render_data->environment.is_valid()) {
 			Sky *sky = sky_owner.get_or_null(environment_get_sky(p_render_data->environment));
 			if (sky && sky->radiance != 0) {
@@ -2981,8 +2981,8 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 			continue;
 		}
 
-		GLES3::SceneShaderData *shader;
-		GLES3::SceneMaterialData *material_data;
+		gles3::SceneShaderData *shader;
+		gles3::SceneMaterialData *material_data;
 		void *mesh_surface;
 
 		if constexpr (p_pass_mode == PASS_MODE_SHADOW) {
@@ -3013,14 +3013,14 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 		}
 
 		if constexpr (p_pass_mode == PASS_MODE_COLOR_TRANSPARENT) {
-			scene_state.enable_gl_depth_test(shader->depth_test == GLES3::SceneShaderData::DEPTH_TEST_ENABLED);
+			scene_state.enable_gl_depth_test(shader->depth_test == gles3::SceneShaderData::DEPTH_TEST_ENABLED);
 		}
 
 		if constexpr (p_pass_mode != PASS_MODE_SHADOW) {
-			if (shader->depth_draw == GLES3::SceneShaderData::DEPTH_DRAW_OPAQUE) {
-				scene_state.enable_gl_depth_draw((p_pass_mode == PASS_MODE_COLOR && !GLES3::Config::get_singleton()->use_depth_prepass) || p_pass_mode == PASS_MODE_DEPTH);
+			if (shader->depth_draw == gles3::SceneShaderData::DEPTH_DRAW_OPAQUE) {
+				scene_state.enable_gl_depth_draw((p_pass_mode == PASS_MODE_COLOR && !gles3::Config::get_singleton()->use_depth_prepass) || p_pass_mode == PASS_MODE_DEPTH);
 			} else {
-				scene_state.enable_gl_depth_draw(shader->depth_draw == GLES3::SceneShaderData::DEPTH_DRAW_ALWAYS);
+				scene_state.enable_gl_depth_draw(shader->depth_draw == gles3::SceneShaderData::DEPTH_DRAW_ALWAYS);
 			}
 		}
 
@@ -3052,7 +3052,7 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 				}
 				if (pass < int32_t(inst->light_passes.size())) {
 					RID light_instance_rid = inst->light_passes[pass].light_instance_rid;
-					if (!GLES3::LightStorage::get_singleton()->light_instance_has_shadow_atlas(light_instance_rid, p_render_data->shadow_atlas)) {
+					if (!gles3::LightStorage::get_singleton()->light_instance_has_shadow_atlas(light_instance_rid, p_render_data->shadow_atlas)) {
 						// Shadow wasn't able to get a spot on the atlas. So skip it.
 						continue;
 					}
@@ -3066,16 +3066,16 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 			}
 
 			if constexpr (p_pass_mode == PASS_MODE_COLOR || p_pass_mode == PASS_MODE_COLOR_TRANSPARENT) {
-				GLES3::SceneShaderData::BlendMode desired_blend_mode;
+				gles3::SceneShaderData::BlendMode desired_blend_mode;
 				if (pass > 0) {
-					desired_blend_mode = GLES3::SceneShaderData::BLEND_MODE_ADD;
+					desired_blend_mode = gles3::SceneShaderData::BLEND_MODE_ADD;
 				} else {
 					desired_blend_mode = shader->blend_mode;
 				}
 
 				if (desired_blend_mode != scene_state.current_blend_mode) {
 					switch (desired_blend_mode) {
-						case GLES3::SceneShaderData::BLEND_MODE_MIX: {
+						case gles3::SceneShaderData::BLEND_MODE_MIX: {
 							glBlendEquation(GL_FUNC_ADD);
 							if (p_render_data->transparent_bg) {
 								glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -3084,17 +3084,17 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 							}
 
 						} break;
-						case GLES3::SceneShaderData::BLEND_MODE_ADD: {
+						case gles3::SceneShaderData::BLEND_MODE_ADD: {
 							glBlendEquation(GL_FUNC_ADD);
 							glBlendFunc(p_pass_mode == PASS_MODE_COLOR_TRANSPARENT ? GL_SRC_ALPHA : GL_ONE, GL_ONE);
 
 						} break;
-						case GLES3::SceneShaderData::BLEND_MODE_SUB: {
+						case gles3::SceneShaderData::BLEND_MODE_SUB: {
 							glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
 							glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
 						} break;
-						case GLES3::SceneShaderData::BLEND_MODE_MUL: {
+						case gles3::SceneShaderData::BLEND_MODE_MUL: {
 							glBlendEquation(GL_FUNC_ADD);
 							if (p_render_data->transparent_bg) {
 								glBlendFuncSeparate(GL_DST_COLOR, GL_ZERO, GL_DST_ALPHA, GL_ZERO);
@@ -3103,12 +3103,12 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 							}
 
 						} break;
-						case GLES3::SceneShaderData::BLEND_MODE_PREMULT_ALPHA: {
+						case gles3::SceneShaderData::BLEND_MODE_PREMULT_ALPHA: {
 							glBlendEquation(GL_FUNC_ADD);
 							glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 						} break;
-						case GLES3::SceneShaderData::BLEND_MODE_ALPHA_TO_COVERAGE: {
+						case gles3::SceneShaderData::BLEND_MODE_ALPHA_TO_COVERAGE: {
 							// Do nothing for now.
 						} break;
 					}
@@ -3241,8 +3241,8 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 						if (inst->lightmap_instance.is_valid()) {
 							spec_constants |= SceneShaderGLES3::USE_LIGHTMAP;
 
-							GLES3::LightmapInstance *li = GLES3::LightStorage::get_singleton()->get_lightmap_instance(inst->lightmap_instance);
-							GLES3::Lightmap *lm = GLES3::LightStorage::get_singleton()->get_lightmap(li->lightmap);
+							gles3::LightmapInstance *li = gles3::LightStorage::get_singleton()->get_lightmap_instance(inst->lightmap_instance);
+							gles3::Lightmap *lm = gles3::LightStorage::get_singleton()->get_lightmap(li->lightmap);
 
 							if (lm->uses_spherical_harmonics) {
 								spec_constants |= SceneShaderGLES3::USE_SH_LIGHTMAP;
@@ -3269,8 +3269,8 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 
 					// Additive directional passes may use shadowmasks, so enable lightmaps for them.
 					if (pass >= int32_t(inst->light_passes.size()) && inst->lightmap_instance.is_valid()) {
-						GLES3::LightmapInstance *li = GLES3::LightStorage::get_singleton()->get_lightmap_instance(inst->lightmap_instance);
-						GLES3::Lightmap *lm = GLES3::LightStorage::get_singleton()->get_lightmap(li->lightmap);
+						gles3::LightmapInstance *li = gles3::LightStorage::get_singleton()->get_lightmap_instance(inst->lightmap_instance);
+						gles3::Lightmap *lm = gles3::LightStorage::get_singleton()->get_lightmap(li->lightmap);
 
 						if (lm->shadowmask_mode != RS::SHADOWMASK_MODE_NONE) {
 							spec_constants |= SceneShaderGLES3::USE_LIGHTMAP;
@@ -3350,7 +3350,7 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 
 			// Pass in lighting uniforms.
 			if constexpr (p_pass_mode == PASS_MODE_COLOR || p_pass_mode == PASS_MODE_COLOR_TRANSPARENT) {
-				GLES3::Config *config = GLES3::Config::get_singleton();
+				gles3::Config *config = gles3::Config::get_singleton();
 				// Pass light and shadow index and bind shadow texture.
 				if (uses_additive_lighting) {
 					if (pass < int32_t(inst->light_passes.size())) {
@@ -3365,7 +3365,7 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 							glActiveTexture(GL_TEXTURE0 + config->max_texture_image_units - 3);
 							RID light_instance_rid = inst->light_passes[pass].light_instance_rid;
 
-							GLuint tex = GLES3::LightStorage::get_singleton()->light_instance_get_shadow_texture(light_instance_rid, p_render_data->shadow_atlas);
+							GLuint tex = gles3::LightStorage::get_singleton()->light_instance_get_shadow_texture(light_instance_rid, p_render_data->shadow_atlas);
 							if (is_omni) {
 								glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
 							} else {
@@ -3376,14 +3376,14 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 						uint32_t shadow_id = MAX_DIRECTIONAL_LIGHTS - 1 - (pass - int32_t(inst->light_passes.size()));
 						material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::DIRECTIONAL_SHADOW_INDEX, shadow_id, shader->version, instance_variant, spec_constants);
 
-						GLuint tex = GLES3::LightStorage::get_singleton()->directional_shadow_get_texture();
+						GLuint tex = gles3::LightStorage::get_singleton()->directional_shadow_get_texture();
 						glActiveTexture(GL_TEXTURE0 + config->max_texture_image_units - 3);
 						glBindTexture(GL_TEXTURE_2D, tex);
 
 						if (inst->lightmap_instance.is_valid()) {
 							// Use shadowmasks for directional light passes.
-							GLES3::LightmapInstance *li = GLES3::LightStorage::get_singleton()->get_lightmap_instance(inst->lightmap_instance);
-							GLES3::Lightmap *lm = GLES3::LightStorage::get_singleton()->get_lightmap(li->lightmap);
+							gles3::LightmapInstance *li = gles3::LightStorage::get_singleton()->get_lightmap_instance(inst->lightmap_instance);
+							gles3::Lightmap *lm = gles3::LightStorage::get_singleton()->get_lightmap(li->lightmap);
 
 							material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::LIGHTMAP_SLICE, inst->lightmap_slice_index, shader->version, instance_variant, spec_constants);
 
@@ -3398,9 +3398,9 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 							material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::LIGHTMAP_SHADOWMASK_MODE, (uint32_t)lm->shadowmask_mode, shader->version, instance_variant, spec_constants);
 
 							if (lm->shadow_texture.is_valid()) {
-								tex = GLES3::TextureStorage::get_singleton()->texture_get_texid(lm->shadow_texture);
+								tex = gles3::TextureStorage::get_singleton()->texture_get_texid(lm->shadow_texture);
 							} else {
-								tex = GLES3::TextureStorage::get_singleton()->texture_get_texid(GLES3::TextureStorage::get_singleton()->texture_gl_get_default(GLES3::DEFAULT_GL_TEXTURE_2D_ARRAY_WHITE));
+								tex = gles3::TextureStorage::get_singleton()->texture_get_texid(gles3::TextureStorage::get_singleton()->texture_gl_get_default(gles3::DEFAULT_GL_TEXTURE_2D_ARRAY_WHITE));
 							}
 
 							glActiveTexture(GL_TEXTURE0 + config->max_texture_image_units - 5);
@@ -3424,10 +3424,10 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 					}
 
 					if (inst->lightmap_instance.is_valid()) {
-						GLES3::LightmapInstance *li = GLES3::LightStorage::get_singleton()->get_lightmap_instance(inst->lightmap_instance);
-						GLES3::Lightmap *lm = GLES3::LightStorage::get_singleton()->get_lightmap(li->lightmap);
+						gles3::LightmapInstance *li = gles3::LightStorage::get_singleton()->get_lightmap_instance(inst->lightmap_instance);
+						gles3::Lightmap *lm = gles3::LightStorage::get_singleton()->get_lightmap(li->lightmap);
 
-						GLuint tex = GLES3::TextureStorage::get_singleton()->texture_get_texid(lm->light_texture);
+						GLuint tex = gles3::TextureStorage::get_singleton()->texture_get_texid(lm->light_texture);
 						glActiveTexture(GL_TEXTURE0 + config->max_texture_image_units - 4);
 						glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
 
@@ -3479,13 +3479,13 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 			// Pass in reflection probe data
 			if constexpr (p_pass_mode == PASS_MODE_COLOR || p_pass_mode == PASS_MODE_COLOR_TRANSPARENT) {
 				if (pass == 0 && inst->reflection_probe_rid_cache.size() > 0) {
-					GLES3::Config *config = GLES3::Config::get_singleton();
-					GLES3::LightStorage *light_storage = GLES3::LightStorage::get_singleton();
+					gles3::Config *config = gles3::Config::get_singleton();
+					gles3::LightStorage *light_storage = gles3::LightStorage::get_singleton();
 
 					// Setup first probe.
 					{
 						RID probe_rid = light_storage->reflection_probe_instance_get_probe(inst->reflection_probe_rid_cache[0]);
-						GLES3::ReflectionProbe *probe = light_storage->get_reflection_probe(probe_rid);
+						gles3::ReflectionProbe *probe = light_storage->get_reflection_probe(probe_rid);
 
 						material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::REFPROBE1_USE_BOX_PROJECT, probe->box_projection, shader->version, instance_variant, spec_constants);
 						material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::REFPROBE1_BOX_EXTENTS, probe->size * 0.5, shader->version, instance_variant, spec_constants);
@@ -3504,7 +3504,7 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 					if (inst->reflection_probe_rid_cache.size() > 1) {
 						// Setup second probe.
 						RID probe_rid = light_storage->reflection_probe_instance_get_probe(inst->reflection_probe_rid_cache[1]);
-						GLES3::ReflectionProbe *probe = light_storage->get_reflection_probe(probe_rid);
+						gles3::ReflectionProbe *probe = light_storage->get_reflection_probe(probe_rid);
 
 						material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::REFPROBE2_USE_BOX_PROJECT, probe->box_projection, shader->version, instance_variant, spec_constants);
 						material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::REFPROBE2_BOX_EXTENTS, probe->size * 0.5, shader->version, instance_variant, spec_constants);
@@ -3526,7 +3526,7 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 
 			material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::WORLD_TRANSFORM, world_transform, shader->version, instance_variant, spec_constants);
 			{
-				GLES3::Mesh::Surface *s = reinterpret_cast<GLES3::Mesh::Surface *>(surf->surface);
+				gles3::Mesh::Surface *s = reinterpret_cast<gles3::Mesh::Surface *>(surf->surface);
 				if (s->format & RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES) {
 					material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::COMPRESSED_AABB_POSITION, s->aabb.position, shader->version, instance_variant, spec_constants);
 					material_storage->shaders.scene_shader.version_set_uniform(SceneShaderGLES3::COMPRESSED_AABB_SIZE, s->aabb.size, shader->version, instance_variant, spec_constants);
@@ -3659,7 +3659,7 @@ void RasterizerSceneGLES3::render_material(const Transform3D &p_cam_transform, c
 }
 
 void RasterizerSceneGLES3::render_particle_collider_heightfield(RID p_collider, const Transform3D &p_transform, const PagedArray<RenderGeometryInstance *> &p_instances) {
-	GLES3::ParticlesStorage *particles_storage = GLES3::ParticlesStorage::get_singleton();
+	gles3::ParticlesStorage *particles_storage = gles3::ParticlesStorage::get_singleton();
 
 	ERR_FAIL_COND(!particles_storage->particles_collision_is_heightfield(p_collider));
 	Vector3 extents = particles_storage->particles_collision_get_extents(p_collider) * p_transform.basis.get_scale();
@@ -3702,7 +3702,7 @@ void RasterizerSceneGLES3::render_particle_collider_heightfield(RID p_collider, 
 	glBindFramebuffer(GL_FRAMEBUFFER, fb);
 	glViewport(0, 0, fb_size.width, fb_size.height);
 
-	GLuint global_buffer = GLES3::MaterialStorage::get_singleton()->global_shader_parameters_get_uniform_buffer();
+	GLuint global_buffer = gles3::MaterialStorage::get_singleton()->global_shader_parameters_get_uniform_buffer();
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, SCENE_GLOBALS_UNIFORM_LOCATION, global_buffer);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -3724,7 +3724,7 @@ void RasterizerSceneGLES3::render_particle_collider_heightfield(RID p_collider, 
 	_render_list_template<PASS_MODE_SHADOW>(&render_list_params, &render_data, 0, render_list[RENDER_LIST_SECONDARY].elements.size());
 
 	glColorMask(1, 1, 1, 1);
-	glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 }
 
 void RasterizerSceneGLES3::_render_uv2(const PagedArray<RenderGeometryInstance *> &p_instances, GLuint p_framebuffer, const Rect2i &p_region) {
@@ -3748,7 +3748,7 @@ void RasterizerSceneGLES3::_render_uv2(const PagedArray<RenderGeometryInstance *
 		glBindFramebuffer(GL_FRAMEBUFFER, p_framebuffer);
 		glViewport(p_region.position.x, p_region.position.y, p_region.size.x, p_region.size.y);
 
-		GLuint global_buffer = GLES3::MaterialStorage::get_singleton()->global_shader_parameters_get_uniform_buffer();
+		GLuint global_buffer = gles3::MaterialStorage::get_singleton()->global_shader_parameters_get_uniform_buffer();
 
 		glBindBufferBase(GL_UNIFORM_BUFFER, SCENE_GLOBALS_UNIFORM_LOCATION, global_buffer);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -3806,7 +3806,7 @@ void RasterizerSceneGLES3::_render_uv2(const PagedArray<RenderGeometryInstance *
 
 		GLuint db = GL_COLOR_ATTACHMENT0;
 		glDrawBuffers(1, &db);
-		glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 	}
 }
 
@@ -3826,14 +3826,14 @@ Ref<RenderSceneBuffers> RasterizerSceneGLES3::render_buffers_create() {
 }
 
 void RasterizerSceneGLES3::_render_buffers_debug_draw(Ref<RenderSceneBuffersGLES3> p_render_buffers, RID p_shadow_atlas, GLuint p_fbo) {
-	GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
-	GLES3::LightStorage *light_storage = GLES3::LightStorage::get_singleton();
-	GLES3::CopyEffects *copy_effects = GLES3::CopyEffects::get_singleton();
+	gles3::TextureStorage *texture_storage = gles3::TextureStorage::get_singleton();
+	gles3::LightStorage *light_storage = gles3::LightStorage::get_singleton();
+	gles3::CopyEffects *copy_effects = gles3::CopyEffects::get_singleton();
 
 	ERR_FAIL_COND(p_render_buffers.is_null());
 
 	RID render_target = p_render_buffers->render_target;
-	GLES3::RenderTarget *rt = texture_storage->get_render_target(render_target);
+	gles3::RenderTarget *rt = texture_storage->get_render_target(render_target);
 	ERR_FAIL_NULL(rt);
 
 	if (debug_draw == RS::VIEWPORT_DEBUG_DRAW_SHADOW_ATLAS) {
@@ -3910,7 +3910,7 @@ void RasterizerSceneGLES3::_render_buffers_debug_draw(Ref<RenderSceneBuffersGLES
 
 			copy_effects->copy_to_rect(Rect2(Vector2(), Vector2(0.5, 0.5)));
 			glBindTexture(GL_TEXTURE_2D, 0);
-			glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+			glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 		}
 	}
 	if (debug_draw == RS::VIEWPORT_DEBUG_DRAW_DIRECTIONAL_SHADOW_ATLAS) {
@@ -3956,7 +3956,7 @@ void RasterizerSceneGLES3::sub_surface_scattering_set_scale(float p_scale, float
 }
 
 TypedArray<Image> RasterizerSceneGLES3::bake_render_uv2(RID p_base, const TypedArray<RID> &p_material_overrides, const Size2i &p_image_size) {
-	GLES3::Config *config = GLES3::Config::get_singleton();
+	gles3::Config *config = gles3::Config::get_singleton();
 	ERR_FAIL_COND_V_MSG(p_image_size.width <= 0, TypedArray<Image>(), "Image width must be greater than 0.");
 	ERR_FAIL_COND_V_MSG(p_image_size.height <= 0, TypedArray<Image>(), "Image height must be greater than 0.");
 
@@ -3973,30 +3973,30 @@ TypedArray<Image> RasterizerSceneGLES3::bake_render_uv2(RID p_base, const TypedA
 
 	glBindTexture(GL_TEXTURE_2D, albedo_alpha_tex);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, p_image_size.width, p_image_size.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-	GLES3::Utilities::get_singleton()->texture_allocated_data(albedo_alpha_tex, p_image_size.width * p_image_size.height * 4, "Lightmap albedo texture");
+	gles3::Utilities::get_singleton()->texture_allocated_data(albedo_alpha_tex, p_image_size.width * p_image_size.height * 4, "Lightmap albedo texture");
 
 	glBindTexture(GL_TEXTURE_2D, normal_tex);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, p_image_size.width, p_image_size.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-	GLES3::Utilities::get_singleton()->texture_allocated_data(normal_tex, p_image_size.width * p_image_size.height * 4, "Lightmap normal texture");
+	gles3::Utilities::get_singleton()->texture_allocated_data(normal_tex, p_image_size.width * p_image_size.height * 4, "Lightmap normal texture");
 
 	glBindTexture(GL_TEXTURE_2D, orm_tex);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, p_image_size.width, p_image_size.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-	GLES3::Utilities::get_singleton()->texture_allocated_data(orm_tex, p_image_size.width * p_image_size.height * 4, "Lightmap ORM texture");
+	gles3::Utilities::get_singleton()->texture_allocated_data(orm_tex, p_image_size.width * p_image_size.height * 4, "Lightmap ORM texture");
 
 	// Consider rendering to RGBA8 encoded as RGBE, then manually convert to RGBAH on CPU.
 	glBindTexture(GL_TEXTURE_2D, emission_tex);
 	if (config->float_texture_supported) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, p_image_size.width, p_image_size.height, 0, GL_RGBA, GL_FLOAT, nullptr);
-		GLES3::Utilities::get_singleton()->texture_allocated_data(emission_tex, p_image_size.width * p_image_size.height * 16, "Lightmap emission texture");
+		gles3::Utilities::get_singleton()->texture_allocated_data(emission_tex, p_image_size.width * p_image_size.height * 16, "Lightmap emission texture");
 	} else {
 		// Fallback to RGBA8 on devices that don't support rendering to floating point textures. This will look bad, but we have no choice.
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, p_image_size.width, p_image_size.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-		GLES3::Utilities::get_singleton()->texture_allocated_data(emission_tex, p_image_size.width * p_image_size.height * 4, "Lightmap emission texture");
+		gles3::Utilities::get_singleton()->texture_allocated_data(emission_tex, p_image_size.width * p_image_size.height * 4, "Lightmap emission texture");
 	}
 
 	glBindTexture(GL_TEXTURE_2D, depth_tex);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, p_image_size.width, p_image_size.height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, nullptr);
-	GLES3::Utilities::get_singleton()->texture_allocated_data(depth_tex, p_image_size.width * p_image_size.height * 3, "Lightmap depth texture");
+	gles3::Utilities::get_singleton()->texture_allocated_data(depth_tex, p_image_size.width * p_image_size.height * 3, "Lightmap depth texture");
 
 	GLuint fbo = 0;
 	glGenFramebuffers(1, &fbo);
@@ -4011,13 +4011,13 @@ TypedArray<Image> RasterizerSceneGLES3::bake_render_uv2(RID p_base, const TypedA
 	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if (status != GL_FRAMEBUFFER_COMPLETE) {
 		glDeleteFramebuffers(1, &fbo);
-		GLES3::Utilities::get_singleton()->texture_free_data(albedo_alpha_tex);
-		GLES3::Utilities::get_singleton()->texture_free_data(normal_tex);
-		GLES3::Utilities::get_singleton()->texture_free_data(orm_tex);
-		GLES3::Utilities::get_singleton()->texture_free_data(emission_tex);
-		GLES3::Utilities::get_singleton()->texture_free_data(depth_tex);
+		gles3::Utilities::get_singleton()->texture_free_data(albedo_alpha_tex);
+		gles3::Utilities::get_singleton()->texture_free_data(normal_tex);
+		gles3::Utilities::get_singleton()->texture_free_data(orm_tex);
+		gles3::Utilities::get_singleton()->texture_free_data(emission_tex);
+		gles3::Utilities::get_singleton()->texture_free_data(depth_tex);
 
-		WARN_PRINT("Could not create render target, status: " + GLES3::TextureStorage::get_singleton()->get_framebuffer_error(status));
+		WARN_PRINT("Could not create render target, status: " + gles3::TextureStorage::get_singleton()->get_framebuffer_error(status));
 		return TypedArray<Image>();
 	}
 
@@ -4047,8 +4047,8 @@ TypedArray<Image> RasterizerSceneGLES3::bake_render_uv2(RID p_base, const TypedA
 	TypedArray<Image> ret;
 
 	// Create a dummy texture so we can use texture_2d_get.
-	RID tex_rid = GLES3::TextureStorage::get_singleton()->texture_allocate();
-	GLES3::Texture texture;
+	RID tex_rid = gles3::TextureStorage::get_singleton()->texture_allocate();
+	gles3::Texture texture;
 	texture.width = p_image_size.width;
 	texture.height = p_image_size.height;
 	texture.alloc_width = p_image_size.width;
@@ -4057,32 +4057,32 @@ TypedArray<Image> RasterizerSceneGLES3::bake_render_uv2(RID p_base, const TypedA
 	texture.real_format = Image::FORMAT_RGBA8;
 	texture.gl_format_cache = GL_RGBA;
 	texture.gl_type_cache = GL_UNSIGNED_BYTE;
-	texture.type = GLES3::Texture::TYPE_2D;
+	texture.type = gles3::Texture::TYPE_2D;
 	texture.target = GL_TEXTURE_2D;
 	texture.active = true;
 	texture.is_render_target = true; // Enable this so the texture isn't cached in the editor.
 
-	GLES3::TextureStorage::get_singleton()->texture_2d_initialize_from_texture(tex_rid, texture);
-	GLES3::Texture *tex = GLES3::TextureStorage::get_singleton()->get_texture(tex_rid);
+	gles3::TextureStorage::get_singleton()->texture_2d_initialize_from_texture(tex_rid, texture);
+	gles3::Texture *tex = gles3::TextureStorage::get_singleton()->get_texture(tex_rid);
 
 	{
 		tex->tex_id = albedo_alpha_tex;
-		Ref<Image> img = GLES3::TextureStorage::get_singleton()->texture_2d_get(tex_rid);
-		GLES3::Utilities::get_singleton()->texture_free_data(albedo_alpha_tex);
+		Ref<Image> img = gles3::TextureStorage::get_singleton()->texture_2d_get(tex_rid);
+		gles3::Utilities::get_singleton()->texture_free_data(albedo_alpha_tex);
 		ret.push_back(img);
 	}
 
 	{
 		tex->tex_id = normal_tex;
-		Ref<Image> img = GLES3::TextureStorage::get_singleton()->texture_2d_get(tex_rid);
-		GLES3::Utilities::get_singleton()->texture_free_data(normal_tex);
+		Ref<Image> img = gles3::TextureStorage::get_singleton()->texture_2d_get(tex_rid);
+		gles3::Utilities::get_singleton()->texture_free_data(normal_tex);
 		ret.push_back(img);
 	}
 
 	{
 		tex->tex_id = orm_tex;
-		Ref<Image> img = GLES3::TextureStorage::get_singleton()->texture_2d_get(tex_rid);
-		GLES3::Utilities::get_singleton()->texture_free_data(orm_tex);
+		Ref<Image> img = gles3::TextureStorage::get_singleton()->texture_2d_get(tex_rid);
+		gles3::Utilities::get_singleton()->texture_free_data(orm_tex);
 		ret.push_back(img);
 	}
 
@@ -4093,16 +4093,16 @@ TypedArray<Image> RasterizerSceneGLES3::bake_render_uv2(RID p_base, const TypedA
 			tex->real_format = Image::FORMAT_RGBAH;
 			tex->gl_type_cache = GL_HALF_FLOAT;
 		}
-		Ref<Image> img = GLES3::TextureStorage::get_singleton()->texture_2d_get(tex_rid);
-		GLES3::Utilities::get_singleton()->texture_free_data(emission_tex);
+		Ref<Image> img = gles3::TextureStorage::get_singleton()->texture_2d_get(tex_rid);
+		gles3::Utilities::get_singleton()->texture_free_data(emission_tex);
 		ret.push_back(img);
 	}
 
 	tex->is_render_target = false;
 	tex->tex_id = 0;
-	GLES3::TextureStorage::get_singleton()->texture_free(tex_rid);
+	gles3::TextureStorage::get_singleton()->texture_free(tex_rid);
 
-	GLES3::Utilities::get_singleton()->texture_free_data(depth_tex);
+	gles3::Utilities::get_singleton()->texture_free_data(depth_tex);
 	glDeleteFramebuffers(1, &fbo);
 	return ret;
 }
@@ -4115,8 +4115,8 @@ bool RasterizerSceneGLES3::free(RID p_rid) {
 		ERR_FAIL_NULL_V(sky, false);
 		_free_sky_data(sky);
 		sky_owner.free(p_rid);
-	} else if (GLES3::LightStorage::get_singleton()->owns_light_instance(p_rid)) {
-		GLES3::LightStorage::get_singleton()->light_instance_free(p_rid);
+	} else if (gles3::LightStorage::get_singleton()->owns_light_instance(p_rid)) {
+		gles3::LightStorage::get_singleton()->light_instance_free(p_rid);
 	} else if (RSG::camera_attributes->owns_camera_attributes(p_rid)) {
 		//not much to delete, just free it
 		RSG::camera_attributes->camera_attributes_free(p_rid);
@@ -4150,8 +4150,8 @@ void RasterizerSceneGLES3::lightmaps_set_bicubic_filter(bool p_enable) {
 RasterizerSceneGLES3::RasterizerSceneGLES3() {
 	singleton = this;
 
-	GLES3::MaterialStorage *material_storage = GLES3::MaterialStorage::get_singleton();
-	GLES3::Config *config = GLES3::Config::get_singleton();
+	gles3::MaterialStorage *material_storage = gles3::MaterialStorage::get_singleton();
+	gles3::Config *config = gles3::Config::get_singleton();
 
 	cull_argument.set_page_pool(&cull_argument_pool);
 
@@ -4170,34 +4170,34 @@ RasterizerSceneGLES3::RasterizerSceneGLES3() {
 
 		uint32_t light_buffer_size = config->max_renderable_lights * sizeof(LightData);
 		scene_state.omni_lights = memnew_arr(LightData, config->max_renderable_lights);
-		scene_state.omni_light_sort = memnew_arr(InstanceSort<GLES3::LightInstance>, config->max_renderable_lights);
+		scene_state.omni_light_sort = memnew_arr(InstanceSort<gles3::LightInstance>, config->max_renderable_lights);
 		glGenBuffers(1, &scene_state.omni_light_buffer);
 		glBindBuffer(GL_UNIFORM_BUFFER, scene_state.omni_light_buffer);
-		GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, scene_state.omni_light_buffer, light_buffer_size, nullptr, GL_STREAM_DRAW, "OmniLight UBO");
+		gles3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, scene_state.omni_light_buffer, light_buffer_size, nullptr, GL_STREAM_DRAW, "OmniLight UBO");
 
 		scene_state.spot_lights = memnew_arr(LightData, config->max_renderable_lights);
-		scene_state.spot_light_sort = memnew_arr(InstanceSort<GLES3::LightInstance>, config->max_renderable_lights);
+		scene_state.spot_light_sort = memnew_arr(InstanceSort<gles3::LightInstance>, config->max_renderable_lights);
 		glGenBuffers(1, &scene_state.spot_light_buffer);
 		glBindBuffer(GL_UNIFORM_BUFFER, scene_state.spot_light_buffer);
-		GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, scene_state.spot_light_buffer, light_buffer_size, nullptr, GL_STREAM_DRAW, "SpotLight UBO");
+		gles3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, scene_state.spot_light_buffer, light_buffer_size, nullptr, GL_STREAM_DRAW, "SpotLight UBO");
 
 		uint32_t directional_light_buffer_size = MAX_DIRECTIONAL_LIGHTS * sizeof(DirectionalLightData);
 		scene_state.directional_lights = memnew_arr(DirectionalLightData, MAX_DIRECTIONAL_LIGHTS);
 		glGenBuffers(1, &scene_state.directional_light_buffer);
 		glBindBuffer(GL_UNIFORM_BUFFER, scene_state.directional_light_buffer);
-		GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, scene_state.directional_light_buffer, directional_light_buffer_size, nullptr, GL_STREAM_DRAW, "DirectionalLight UBO");
+		gles3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, scene_state.directional_light_buffer, directional_light_buffer_size, nullptr, GL_STREAM_DRAW, "DirectionalLight UBO");
 
 		uint32_t shadow_buffer_size = config->max_renderable_lights * sizeof(ShadowData) * 2;
 		scene_state.positional_shadows = memnew_arr(ShadowData, config->max_renderable_lights * 2);
 		glGenBuffers(1, &scene_state.positional_shadow_buffer);
 		glBindBuffer(GL_UNIFORM_BUFFER, scene_state.positional_shadow_buffer);
-		GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, scene_state.positional_shadow_buffer, shadow_buffer_size, nullptr, GL_STREAM_DRAW, "Positional Shadow UBO");
+		gles3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, scene_state.positional_shadow_buffer, shadow_buffer_size, nullptr, GL_STREAM_DRAW, "Positional Shadow UBO");
 
 		uint32_t directional_shadow_buffer_size = MAX_DIRECTIONAL_LIGHTS * sizeof(DirectionalShadowData);
 		scene_state.directional_shadows = memnew_arr(DirectionalShadowData, MAX_DIRECTIONAL_LIGHTS);
 		glGenBuffers(1, &scene_state.directional_shadow_buffer);
 		glBindBuffer(GL_UNIFORM_BUFFER, scene_state.directional_shadow_buffer);
-		GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, scene_state.directional_shadow_buffer, directional_shadow_buffer_size, nullptr, GL_STREAM_DRAW, "Directional Shadow UBO");
+		gles3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, scene_state.directional_shadow_buffer, directional_shadow_buffer_size, nullptr, GL_STREAM_DRAW, "Directional Shadow UBO");
 
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
@@ -4210,7 +4210,7 @@ RasterizerSceneGLES3::RasterizerSceneGLES3() {
 		sky_globals.last_frame_directional_light_count = sky_globals.max_directional_lights + 1;
 		glGenBuffers(1, &sky_globals.directional_light_buffer);
 		glBindBuffer(GL_UNIFORM_BUFFER, sky_globals.directional_light_buffer);
-		GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, sky_globals.directional_light_buffer, directional_light_buffer_size, nullptr, GL_STREAM_DRAW, "Sky DirectionalLight UBO");
+		gles3::Utilities::get_singleton()->buffer_allocate_data(GL_UNIFORM_BUFFER, sky_globals.directional_light_buffer, directional_light_buffer_size, nullptr, GL_STREAM_DRAW, "Sky DirectionalLight UBO");
 
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
@@ -4252,7 +4252,7 @@ void fragment() {
 		scene_globals.default_material = material_storage->material_allocate();
 		material_storage->material_initialize(scene_globals.default_material);
 		material_storage->material_set_shader(scene_globals.default_material, scene_globals.default_shader);
-		default_material_data_ptr = static_cast<GLES3::SceneMaterialData *>(GLES3::MaterialStorage::get_singleton()->material_get_data(scene_globals.default_material, RS::SHADER_SPATIAL));
+		default_material_data_ptr = static_cast<gles3::SceneMaterialData *>(gles3::MaterialStorage::get_singleton()->material_get_data(scene_globals.default_material, RS::SHADER_SPATIAL));
 	}
 
 	{
@@ -4274,7 +4274,7 @@ void fragment() {
 		scene_globals.overdraw_material = material_storage->material_allocate();
 		material_storage->material_initialize(scene_globals.overdraw_material);
 		material_storage->material_set_shader(scene_globals.overdraw_material, scene_globals.overdraw_shader);
-		overdraw_material_data_ptr = static_cast<GLES3::SceneMaterialData *>(GLES3::MaterialStorage::get_singleton()->material_get_data(scene_globals.overdraw_material, RS::SHADER_SPATIAL));
+		overdraw_material_data_ptr = static_cast<gles3::SceneMaterialData *>(gles3::MaterialStorage::get_singleton()->material_get_data(scene_globals.overdraw_material, RS::SHADER_SPATIAL));
 	}
 
 	{
@@ -4343,7 +4343,7 @@ void sky() {
 			3.0f,
 		};
 
-		GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_ARRAY_BUFFER, sky_globals.screen_triangle, sizeof(float) * 6, qv, GL_STATIC_DRAW, "Screen triangle vertex buffer");
+		gles3::Utilities::get_singleton()->buffer_allocate_data(GL_ARRAY_BUFFER, sky_globals.screen_triangle, sizeof(float) * 6, qv, GL_STATIC_DRAW, "Screen triangle vertex buffer");
 
 		glVertexAttribPointer(RS::ARRAY_VERTEX, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, nullptr);
 		glEnableVertexAttribArray(RS::ARRAY_VERTEX);
@@ -4362,11 +4362,11 @@ void sky() {
 }
 
 RasterizerSceneGLES3::~RasterizerSceneGLES3() {
-	GLES3::Utilities::get_singleton()->buffer_free_data(scene_state.directional_light_buffer);
-	GLES3::Utilities::get_singleton()->buffer_free_data(scene_state.omni_light_buffer);
-	GLES3::Utilities::get_singleton()->buffer_free_data(scene_state.spot_light_buffer);
-	GLES3::Utilities::get_singleton()->buffer_free_data(scene_state.positional_shadow_buffer);
-	GLES3::Utilities::get_singleton()->buffer_free_data(scene_state.directional_shadow_buffer);
+	gles3::Utilities::get_singleton()->buffer_free_data(scene_state.directional_light_buffer);
+	gles3::Utilities::get_singleton()->buffer_free_data(scene_state.omni_light_buffer);
+	gles3::Utilities::get_singleton()->buffer_free_data(scene_state.spot_light_buffer);
+	gles3::Utilities::get_singleton()->buffer_free_data(scene_state.positional_shadow_buffer);
+	gles3::Utilities::get_singleton()->buffer_free_data(scene_state.directional_shadow_buffer);
 	memdelete_arr(scene_state.directional_lights);
 	memdelete_arr(scene_state.omni_lights);
 	memdelete_arr(scene_state.spot_lights);
@@ -4376,7 +4376,7 @@ RasterizerSceneGLES3::~RasterizerSceneGLES3() {
 	memdelete_arr(scene_state.directional_shadows);
 
 	// Scene Shader
-	GLES3::MaterialStorage::get_singleton()->shaders.scene_shader.version_free(scene_globals.shader_default_version);
+	gles3::MaterialStorage::get_singleton()->shaders.scene_shader.version_free(scene_globals.shader_default_version);
 	RSG::material_storage->material_free(scene_globals.default_material);
 	RSG::material_storage->shader_free(scene_globals.default_shader);
 
@@ -4385,28 +4385,28 @@ RasterizerSceneGLES3::~RasterizerSceneGLES3() {
 	RSG::material_storage->shader_free(scene_globals.overdraw_shader);
 
 	// Sky Shader
-	GLES3::MaterialStorage::get_singleton()->shaders.sky_shader.version_free(sky_globals.shader_default_version);
+	gles3::MaterialStorage::get_singleton()->shaders.sky_shader.version_free(sky_globals.shader_default_version);
 	RSG::material_storage->material_free(sky_globals.default_material);
 	RSG::material_storage->shader_free(sky_globals.default_shader);
 	RSG::material_storage->material_free(sky_globals.fog_material);
 	RSG::material_storage->shader_free(sky_globals.fog_shader);
-	GLES3::Utilities::get_singleton()->buffer_free_data(sky_globals.screen_triangle);
+	gles3::Utilities::get_singleton()->buffer_free_data(sky_globals.screen_triangle);
 	glDeleteVertexArrays(1, &sky_globals.screen_triangle_array);
-	GLES3::Utilities::get_singleton()->buffer_free_data(sky_globals.directional_light_buffer);
+	gles3::Utilities::get_singleton()->buffer_free_data(sky_globals.directional_light_buffer);
 	memdelete_arr(sky_globals.directional_lights);
 	memdelete_arr(sky_globals.last_frame_directional_lights);
 
 	// UBOs
 	if (scene_state.ubo_buffer != 0) {
-		GLES3::Utilities::get_singleton()->buffer_free_data(scene_state.ubo_buffer);
+		gles3::Utilities::get_singleton()->buffer_free_data(scene_state.ubo_buffer);
 	}
 
 	if (scene_state.multiview_buffer != 0) {
-		GLES3::Utilities::get_singleton()->buffer_free_data(scene_state.multiview_buffer);
+		gles3::Utilities::get_singleton()->buffer_free_data(scene_state.multiview_buffer);
 	}
 
 	if (scene_state.tonemap_buffer != 0) {
-		GLES3::Utilities::get_singleton()->buffer_free_data(scene_state.tonemap_buffer);
+		gles3::Utilities::get_singleton()->buffer_free_data(scene_state.tonemap_buffer);
 	}
 
 	singleton = nullptr;

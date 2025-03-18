@@ -30,7 +30,7 @@
 
 #include "forward_id_storage.h"
 
-using namespace RendererRD;
+using namespace renderer_rd;
 
 ForwardIDStorage *ForwardIDStorage::singleton = nullptr;
 

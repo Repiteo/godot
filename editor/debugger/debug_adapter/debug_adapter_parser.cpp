@@ -77,7 +77,7 @@ Dictionary DebugAdapterParser::prepare_success_response(const Dictionary &p_para
 	return response;
 }
 
-Dictionary DebugAdapterParser::prepare_error_response(const Dictionary &p_params, DAP::ErrorType err_type, const Dictionary &variables) const {
+Dictionary DebugAdapterParser::prepare_error_response(const Dictionary &p_params, dap::ErrorType err_type, const Dictionary &variables) const {
 	Dictionary response, body;
 	response["type"] = "response";
 	response["request_seq"] = p_params["seq"];
@@ -85,30 +85,30 @@ Dictionary DebugAdapterParser::prepare_error_response(const Dictionary &p_params
 	response["success"] = false;
 	response["body"] = body;
 
-	DAP::Message message;
+	dap::Message message;
 	String error, error_desc;
 	switch (err_type) {
-		case DAP::ErrorType::WRONG_PATH:
+		case dap::ErrorType::WRONG_PATH:
 			error = "wrong_path";
 			error_desc = "The editor and client are working on different paths; the client is on \"{clientPath}\", but the editor is on \"{editorPath}\"";
 			break;
-		case DAP::ErrorType::NOT_RUNNING:
+		case dap::ErrorType::NOT_RUNNING:
 			error = "not_running";
 			error_desc = "Can't attach to a running session since there isn't one.";
 			break;
-		case DAP::ErrorType::TIMEOUT:
+		case dap::ErrorType::TIMEOUT:
 			error = "timeout";
 			error_desc = "Timeout reached while processing a request.";
 			break;
-		case DAP::ErrorType::UNKNOWN_PLATFORM:
+		case dap::ErrorType::UNKNOWN_PLATFORM:
 			error = "unknown_platform";
 			error_desc = "The specified platform is unknown.";
 			break;
-		case DAP::ErrorType::MISSING_DEVICE:
+		case dap::ErrorType::MISSING_DEVICE:
 			error = "missing_device";
 			error_desc = "There's no connected device with specified id.";
 			break;
-		case DAP::ErrorType::UNKNOWN:
+		case dap::ErrorType::UNKNOWN:
 		default:
 			error = "unknown";
 			error_desc = "An unknown error has occurred when processing the request.";
@@ -135,7 +135,7 @@ Dictionary DebugAdapterParser::req_initialize(const Dictionary &p_params) const 
 	peer->supportsVariableType = args.get("supportsVariableType", false);
 	peer->supportsInvalidatedEvent = args.get("supportsInvalidatedEvent", false);
 
-	DAP::Capabilities caps;
+	dap::Capabilities caps;
 	response["body"] = caps.to_json();
 
 	DebugAdapterProtocol::get_singleton()->notify_initialized();
@@ -174,7 +174,7 @@ Dictionary DebugAdapterParser::req_launch(const Dictionary &p_params) const {
 		Dictionary variables;
 		variables["clientPath"] = args["project"];
 		variables["editorPath"] = ProjectSettings::get_singleton()->get_resource_path();
-		return prepare_error_response(p_params, DAP::ErrorType::WRONG_PATH, variables);
+		return prepare_error_response(p_params, dap::ErrorType::WRONG_PATH, variables);
 	}
 
 	if (args.has("godot/custom_data")) {
@@ -216,16 +216,16 @@ Dictionary DebugAdapterParser::_launch_process(const Dictionary &p_params) const
 		}
 
 		if (idx == -1) {
-			return prepare_error_response(p_params, DAP::ErrorType::UNKNOWN_PLATFORM);
+			return prepare_error_response(p_params, dap::ErrorType::UNKNOWN_PLATFORM);
 		}
 
 		EditorRunBar *run_bar = EditorRunBar::get_singleton();
 		Error err = platform_string == "android" ? run_bar->start_native_device(device * 10000 + idx) : run_bar->start_native_device(idx);
 		if (err) {
 			if (err == ERR_INVALID_PARAMETER && platform_string == "android") {
-				return prepare_error_response(p_params, DAP::ErrorType::MISSING_DEVICE);
+				return prepare_error_response(p_params, dap::ErrorType::MISSING_DEVICE);
 			} else {
-				return prepare_error_response(p_params, DAP::ErrorType::UNKNOWN);
+				return prepare_error_response(p_params, dap::ErrorType::UNKNOWN);
 			}
 		}
 	}
@@ -239,7 +239,7 @@ Dictionary DebugAdapterParser::_launch_process(const Dictionary &p_params) const
 Dictionary DebugAdapterParser::req_attach(const Dictionary &p_params) const {
 	ScriptEditorDebugger *dbg = EditorDebuggerNode::get_singleton()->get_default_debugger();
 	if (!dbg->is_session_active()) {
-		return prepare_error_response(p_params, DAP::ErrorType::NOT_RUNNING);
+		return prepare_error_response(p_params, dap::ErrorType::NOT_RUNNING);
 	}
 
 	DebugAdapterProtocol::get_singleton()->get_current_peer()->attached = true;
@@ -302,7 +302,7 @@ Dictionary DebugAdapterParser::req_threads(const Dictionary &p_params) const {
 	response["body"] = body;
 
 	Array arr;
-	DAP::Thread thread;
+	dap::Thread thread;
 
 	thread.id = 1; // Hardcoded because Godot only supports debugging one thread at the moment
 	thread.name = "Main";
@@ -325,8 +325,8 @@ Dictionary DebugAdapterParser::req_stackTrace(const Dictionary &p_params) const 
 
 	Array arr;
 	DebugAdapterProtocol *dap = DebugAdapterProtocol::get_singleton();
-	for (const KeyValue<DAP::StackFrame, List<int>> &E : dap->stackframe_list) {
-		DAP::StackFrame sf = E.key;
+	for (const KeyValue<dap::StackFrame, List<int>> &E : dap->stackframe_list) {
+		dap::StackFrame sf = E.key;
 		if (!lines_at_one) {
 			sf.line--;
 		}
@@ -346,7 +346,7 @@ Dictionary DebugAdapterParser::req_setBreakpoints(const Dictionary &p_params) co
 	response["body"] = body;
 
 	Dictionary args = p_params["arguments"];
-	DAP::Source source;
+	dap::Source source;
 	source.from_json(args["source"]);
 
 	bool lines_at_one = DebugAdapterProtocol::get_singleton()->get_current_peer()->linesStartAt1;
@@ -355,7 +355,7 @@ Dictionary DebugAdapterParser::req_setBreakpoints(const Dictionary &p_params) co
 		Dictionary variables;
 		variables["clientPath"] = source.path;
 		variables["editorPath"] = ProjectSettings::get_singleton()->get_resource_path();
-		return prepare_error_response(p_params, DAP::ErrorType::WRONG_PATH, variables);
+		return prepare_error_response(p_params, dap::ErrorType::WRONG_PATH, variables);
 	}
 
 	// If path contains \, it's a Windows path, so we need to convert it to /, and make the drive letter uppercase
@@ -366,7 +366,7 @@ Dictionary DebugAdapterParser::req_setBreakpoints(const Dictionary &p_params) co
 
 	Array breakpoints = args["breakpoints"], lines;
 	for (int i = 0; i < breakpoints.size(); i++) {
-		DAP::SourceBreakpoint breakpoint;
+		dap::SourceBreakpoint breakpoint;
 		breakpoint.from_json(breakpoints[i]);
 
 		lines.push_back(breakpoint.line + !lines_at_one);
@@ -384,7 +384,7 @@ Dictionary DebugAdapterParser::req_breakpointLocations(const Dictionary &p_param
 	Dictionary args = p_params["arguments"];
 
 	Array locations;
-	DAP::BreakpointLocation location;
+	dap::BreakpointLocation location;
 	location.line = args["line"];
 	if (args.has("endLine")) {
 		location.endLine = args["endLine"];
@@ -403,14 +403,14 @@ Dictionary DebugAdapterParser::req_scopes(const Dictionary &p_params) const {
 	int frame_id = args["frameId"];
 	Array scope_list;
 
-	DAP::StackFrame frame;
+	dap::StackFrame frame;
 	frame.id = frame_id;
-	HashMap<DAP::StackFrame, List<int>, DAP::StackFrame>::Iterator E = DebugAdapterProtocol::get_singleton()->stackframe_list.find(frame);
+	HashMap<dap::StackFrame, List<int>, dap::StackFrame>::Iterator E = DebugAdapterProtocol::get_singleton()->stackframe_list.find(frame);
 	if (E) {
-		ERR_FAIL_COND_V(E->value.size() != 3, prepare_error_response(p_params, DAP::ErrorType::UNKNOWN));
+		ERR_FAIL_COND_V(E->value.size() != 3, prepare_error_response(p_params, dap::ErrorType::UNKNOWN));
 		List<int>::ConstIterator itr = E->value.begin();
 		for (int i = 0; i < 3; ++itr, ++i) {
-			DAP::Scope scope;
+			dap::Scope scope;
 			scope.variablesReference = *itr;
 			switch (i) {
 				case 0:
@@ -465,7 +465,7 @@ Dictionary DebugAdapterParser::req_variables(const Dictionary &p_params) const {
 		ObjectID object_id = DebugAdapterProtocol::get_singleton()->search_object_id(variable_id);
 
 		if (object_id.is_null()) {
-			return prepare_error_response(p_params, DAP::ErrorType::UNKNOWN);
+			return prepare_error_response(p_params, dap::ErrorType::UNKNOWN);
 		}
 
 		DebugAdapterProtocol::get_singleton()->request_remote_object(object_id);
@@ -492,12 +492,12 @@ Dictionary DebugAdapterParser::req_evaluate(const Dictionary &p_params) const {
 	String expression = args["expression"];
 	int frame_id = args.has("frameId") ? static_cast<int>(args["frameId"]) : DebugAdapterProtocol::get_singleton()->_current_frame;
 
-	if (HashMap<String, DAP::Variable>::Iterator E = DebugAdapterProtocol::get_singleton()->eval_list.find(expression); E) {
+	if (HashMap<String, dap::Variable>::Iterator E = DebugAdapterProtocol::get_singleton()->eval_list.find(expression); E) {
 		Dictionary response = prepare_success_response(p_params);
 		Dictionary body;
 		response["body"] = body;
 
-		DAP::Variable var = E->value;
+		dap::Variable var = E->value;
 
 		body["result"] = var.value;
 		body["variablesReference"] = var.variablesReference;
@@ -633,7 +633,7 @@ Dictionary DebugAdapterParser::ev_output(const String &p_message, RemoteDebugger
 	return event;
 }
 
-Dictionary DebugAdapterParser::ev_breakpoint(const DAP::Breakpoint &p_breakpoint, const bool &p_enabled) const {
+Dictionary DebugAdapterParser::ev_breakpoint(const dap::Breakpoint &p_breakpoint, const bool &p_enabled) const {
 	Dictionary event = prepare_base_event(), body;
 	event["event"] = "breakpoint";
 	event["body"] = body;

@@ -58,7 +58,7 @@
 class RenderDataRD;
 class RendererSceneRenderRD;
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class GI : public RendererGI {
 public:
@@ -681,7 +681,7 @@ public:
 		void create(RID p_env, const Vector3 &p_world_position, uint32_t p_requested_history_size, GI *p_gi);
 		void update(RID p_env, const Vector3 &p_world_position);
 		void update_light();
-		void update_probes(RID p_env, RendererRD::SkyRD::Sky *p_sky);
+		void update_probes(RID p_env, renderer_rd::SkyRD::Sky *p_sky);
 		void store_probes();
 		int get_pending_region_data(int p_region, Vector3i &r_local_offset, Vector3i &r_local_size, AABB &r_bounds) const;
 		void update_cascades();
@@ -812,7 +812,7 @@ public:
 	GI();
 	~GI();
 
-	void init(RendererRD::SkyRD *p_sky);
+	void init(renderer_rd::SkyRD *p_sky);
 	void free();
 
 	Ref<SDFGI> create_sdfgi(RID p_env, const Vector3 &p_world_position, uint32_t p_requested_history_size);
@@ -827,4 +827,4 @@ public:
 	void debug_voxel_gi(RID p_voxel_gi, RD::DrawListID p_draw_list, RID p_framebuffer, const Projection &p_camera_with_transform, bool p_lighting, bool p_emission, float p_alpha);
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

@@ -46,7 +46,7 @@
 
 #include "servers/rendering_server.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class CopyEffects {
 private:
@@ -356,4 +356,4 @@ public:
 	void merge_specular(RID p_dest_framebuffer, RID p_specular, RID p_base, RID p_reflection, uint32_t p_view_count);
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

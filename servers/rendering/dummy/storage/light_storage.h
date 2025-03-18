@@ -32,7 +32,7 @@
 
 #include "servers/rendering/storage/light_storage.h"
 
-namespace RendererDummy {
+namespace renderer_dummy {
 
 class LightStorage : public RendererLightStorage {
 private:
@@ -217,4 +217,4 @@ public:
 	virtual void set_directional_shadow_count(int p_count) override {}
 };
 
-} // namespace RendererDummy
+} // namespace renderer_dummy

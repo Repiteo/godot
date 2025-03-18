@@ -32,7 +32,7 @@
 
 #include "servers/rendering/environment/renderer_gi.h"
 
-namespace RendererDummy {
+namespace renderer_dummy {
 
 class GI : public RendererGI {
 public:
@@ -81,4 +81,4 @@ public:
 	virtual void sdfgi_reset() override {}
 };
 
-} // namespace RendererDummy
+} // namespace renderer_dummy

@@ -34,7 +34,7 @@
 
 #include "servers/rendering/environment/renderer_fog.h"
 
-namespace GLES3 {
+namespace gles3 {
 
 class Fog : public RendererFog {
 public:
@@ -51,6 +51,6 @@ public:
 	virtual RS::FogVolumeShape fog_volume_get_shape(RID p_fog_volume) const override;
 };
 
-} // namespace GLES3
+} //namespace gles3
 
 #endif // GLES3_ENABLED

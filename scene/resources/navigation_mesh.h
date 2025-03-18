@@ -77,8 +77,8 @@ public:
 	};
 
 protected:
-	float cell_size = NavigationDefaults3D::navmesh_cell_size;
-	float cell_height = NavigationDefaults3D::navmesh_cell_height;
+	float cell_size = navigation_defaults_3d::navmesh_cell_size;
+	float cell_height = navigation_defaults_3d::navmesh_cell_height;
 	float border_size = 0.0f;
 	float agent_height = 1.5f;
 	float agent_radius = 0.5f;

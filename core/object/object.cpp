@@ -1792,7 +1792,7 @@ void Object::_bind_methods() {
 	{
 		MethodInfo mi("_notification");
 		mi.arguments.push_back(PropertyInfo(Variant::INT, "what"));
-		mi.arguments_metadata.push_back(GodotTypeInfo::Metadata::METADATA_INT_IS_INT32);
+		mi.arguments_metadata.push_back(godot_type_info::Metadata::METADATA_INT_IS_INT32);
 		BIND_OBJ_CORE_METHOD(mi);
 	}
 

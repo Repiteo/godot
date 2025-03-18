@@ -38,7 +38,7 @@
 #include "servers/navigation/navigation_path_query_result_3d.h"
 #include "servers/navigation/navigation_utilities.h"
 
-using namespace NavigationUtilities;
+using namespace navigation_utilities;
 
 class NavMap3D;
 struct NavMapIteration3D;

@@ -144,7 +144,7 @@ class RendererCanvasRenderRD : public RendererCanvasRender {
 		}
 	};
 
-	struct CanvasShaderData : public RendererRD::MaterialStorage::ShaderData {
+	struct CanvasShaderData : public renderer_rd::MaterialStorage::ShaderData {
 		Vector<ShaderCompiler::GeneratedCode::Texture> texture_uniforms;
 		int blend_mode = 0;
 
@@ -189,12 +189,12 @@ class RendererCanvasRenderRD : public RendererCanvasRender {
 		Mutex mutex;
 	} shader;
 
-	RendererRD::MaterialStorage::ShaderData *_create_shader_func();
-	static RendererRD::MaterialStorage::ShaderData *_create_shader_funcs() {
+	renderer_rd::MaterialStorage::ShaderData *_create_shader_func();
+	static renderer_rd::MaterialStorage::ShaderData *_create_shader_funcs() {
 		return static_cast<RendererCanvasRenderRD *>(singleton)->_create_shader_func();
 	}
 
-	struct CanvasMaterialData : public RendererRD::MaterialStorage::MaterialData {
+	struct CanvasMaterialData : public renderer_rd::MaterialStorage::MaterialData {
 		CanvasShaderData *shader_data = nullptr;
 		RID uniform_set;
 		RID uniform_set_srgb;
@@ -205,8 +205,8 @@ class RendererCanvasRenderRD : public RendererCanvasRender {
 		virtual ~CanvasMaterialData();
 	};
 
-	RendererRD::MaterialStorage::MaterialData *_create_material_func(CanvasShaderData *p_shader);
-	static RendererRD::MaterialStorage::MaterialData *_create_material_funcs(RendererRD::MaterialStorage::ShaderData *p_shader) {
+	renderer_rd::MaterialStorage::MaterialData *_create_material_func(CanvasShaderData *p_shader);
+	static renderer_rd::MaterialStorage::MaterialData *_create_material_funcs(renderer_rd::MaterialStorage::ShaderData *p_shader) {
 		return static_cast<RendererCanvasRenderRD *>(singleton)->_create_material_func(static_cast<CanvasShaderData *>(p_shader));
 	}
 

@@ -35,7 +35,7 @@
 
 #include "servers/rendering_server.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class ToneMapper {
 private:
@@ -152,4 +152,4 @@ public:
 	void tonemapper(RD::DrawListID p_subpass_draw_list, RID p_source_color, RD::FramebufferFormatID p_dst_format_id, const TonemapSettings &p_settings);
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

@@ -86,11 +86,11 @@ void GLTFSkin::set_joints_original(Vector<GLTFNodeIndex> p_joints_original) {
 }
 
 TypedArray<Transform3D> GLTFSkin::get_inverse_binds() {
-	return GLTFTemplateConvert::to_array(inverse_binds);
+	return gltf_template_convert::to_array(inverse_binds);
 }
 
 void GLTFSkin::set_inverse_binds(TypedArray<Transform3D> p_inverse_binds) {
-	GLTFTemplateConvert::set_from_array(inverse_binds, p_inverse_binds);
+	gltf_template_convert::set_from_array(inverse_binds, p_inverse_binds);
 }
 
 Vector<GLTFNodeIndex> GLTFSkin::get_joints() {
@@ -126,11 +126,11 @@ void GLTFSkin::set_skeleton(int p_skeleton) {
 }
 
 Dictionary GLTFSkin::get_joint_i_to_bone_i() {
-	return GLTFTemplateConvert::to_dictionary(joint_i_to_bone_i);
+	return gltf_template_convert::to_dictionary(joint_i_to_bone_i);
 }
 
 void GLTFSkin::set_joint_i_to_bone_i(Dictionary p_joint_i_to_bone_i) {
-	GLTFTemplateConvert::set_from_dictionary(joint_i_to_bone_i, p_joint_i_to_bone_i);
+	gltf_template_convert::set_from_dictionary(joint_i_to_bone_i, p_joint_i_to_bone_i);
 }
 
 Dictionary GLTFSkin::get_joint_i_to_name() {

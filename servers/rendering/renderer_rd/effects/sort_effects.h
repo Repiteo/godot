@@ -33,7 +33,7 @@
 #include "servers/rendering/renderer_rd/shader_rd.h"
 #include "servers/rendering/renderer_rd/shaders/effects/sort.glsl.gen.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class SortEffects {
 private:
@@ -62,4 +62,4 @@ public:
 	void sort_buffer(RID p_uniform_set, int p_size);
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

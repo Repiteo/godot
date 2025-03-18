@@ -42,7 +42,7 @@
 
 #define RB_SCOPE_FOG SNAME("Fog")
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class Fog : public RendererFog {
 private:
@@ -184,7 +184,7 @@ private:
 
 	Vector3i _point_get_position_in_froxel_volume(const Vector3 &p_point, float fog_end, const Vector2 &fog_near_size, const Vector2 &fog_far_size, float volumetric_fog_detail_spread, const Vector3 &fog_size, const Transform3D &p_cam_transform);
 
-	struct FogShaderData : public RendererRD::MaterialStorage::ShaderData {
+	struct FogShaderData : public renderer_rd::MaterialStorage::ShaderData {
 		bool valid = false;
 		RID version;
 
@@ -207,7 +207,7 @@ private:
 		virtual ~FogShaderData();
 	};
 
-	struct FogMaterialData : public RendererRD::MaterialStorage::MaterialData {
+	struct FogMaterialData : public renderer_rd::MaterialStorage::MaterialData {
 		FogShaderData *shader_data = nullptr;
 		RID uniform_set;
 		bool uniform_set_updated;
@@ -218,11 +218,11 @@ private:
 		virtual ~FogMaterialData();
 	};
 
-	RendererRD::MaterialStorage::ShaderData *_create_fog_shader_func();
-	static RendererRD::MaterialStorage::ShaderData *_create_fog_shader_funcs();
+	renderer_rd::MaterialStorage::ShaderData *_create_fog_shader_func();
+	static renderer_rd::MaterialStorage::ShaderData *_create_fog_shader_funcs();
 
-	RendererRD::MaterialStorage::MaterialData *_create_fog_material_func(FogShaderData *p_shader);
-	static RendererRD::MaterialStorage::MaterialData *_create_fog_material_funcs(RendererRD::MaterialStorage::ShaderData *p_shader);
+	renderer_rd::MaterialStorage::MaterialData *_create_fog_material_func(FogShaderData *p_shader);
+	static renderer_rd::MaterialStorage::MaterialData *_create_fog_material_funcs(renderer_rd::MaterialStorage::ShaderData *p_shader);
 
 public:
 	static Fog *get_singleton() { return singleton; }
@@ -353,4 +353,4 @@ public:
 	void volumetric_fog_update(const VolumetricFogSettings &p_settings, const Projection &p_cam_projection, const Transform3D &p_cam_transform, const Transform3D &p_prev_cam_inv_transform, RID p_shadow_atlas, int p_directional_light_count, bool p_use_directional_shadows, int p_positional_light_count, int p_voxel_gi_count, const PagedArray<RID> &p_fog_volumes);
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

@@ -34,7 +34,7 @@
 
 #include "drivers/gles3/shaders/effects/copy.glsl.gen.h"
 
-namespace GLES3 {
+namespace gles3 {
 
 class CopyEffects {
 private:
@@ -73,6 +73,6 @@ public:
 	void draw_screen_quad();
 };
 
-} //namespace GLES3
+} //namespace gles3
 
 #endif // GLES3_ENABLED

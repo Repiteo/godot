@@ -41,7 +41,7 @@ RenderSceneBuffersRD::~RenderSceneBuffersRD() {
 
 	data_buffers.clear();
 
-	RendererRD::MaterialStorage::get_singleton()->samplers_rd_free(samplers);
+	renderer_rd::MaterialStorage::get_singleton()->samplers_rd_free(samplers);
 }
 
 void RenderSceneBuffersRD::_bind_methods() {
@@ -115,7 +115,7 @@ void RenderSceneBuffersRD::update_samplers() {
 		computed_mipmap_bias -= 0.25;
 	}
 
-	RendererRD::MaterialStorage *material_storage = RendererRD::MaterialStorage::get_singleton();
+	renderer_rd::MaterialStorage *material_storage = renderer_rd::MaterialStorage::get_singleton();
 	material_storage->samplers_rd_free(samplers);
 	samplers = material_storage->samplers_rd_allocate(computed_mipmap_bias, anisotropic_filtering_level);
 }
@@ -149,7 +149,7 @@ void RenderSceneBuffersRD::cleanup() {
 }
 
 void RenderSceneBuffersRD::configure(const RenderSceneBuffersConfiguration *p_config) {
-	RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
+	renderer_rd::TextureStorage *texture_storage = renderer_rd::TextureStorage::get_singleton();
 
 	render_target = p_config->get_render_target();
 	target_size = p_config->get_target_size();
@@ -250,11 +250,11 @@ void RenderSceneBuffersRD::set_use_debanding(bool p_use_debanding) {
 }
 
 #ifdef METAL_ENABLED
-void RenderSceneBuffersRD::ensure_mfx(RendererRD::MFXSpatialEffect *p_effect) {
+void RenderSceneBuffersRD::ensure_mfx(renderer_rd::MFXSpatialEffect *p_effect) {
 	if (mfx_spatial_context) {
 		return;
 	}
-	RendererRD::MFXSpatialEffect::CreateParams params = {
+	renderer_rd::MFXSpatialEffect::CreateParams params = {
 		.input_size = internal_size,
 		.output_size = target_size,
 		.input_format = base_data_format,
@@ -599,7 +599,7 @@ bool RenderSceneBuffersRD::has_depth_texture() {
 		return false;
 	}
 
-	RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
+	renderer_rd::TextureStorage *texture_storage = renderer_rd::TextureStorage::get_singleton();
 	RID depth = texture_storage->render_target_get_override_depth(render_target);
 	if (depth.is_valid()) {
 		return true;
@@ -614,7 +614,7 @@ RID RenderSceneBuffersRD::get_depth_texture() {
 		return RID();
 	}
 
-	RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
+	renderer_rd::TextureStorage *texture_storage = renderer_rd::TextureStorage::get_singleton();
 	RID depth = texture_storage->render_target_get_override_depth(render_target);
 	if (depth.is_valid()) {
 		return depth;
@@ -624,7 +624,7 @@ RID RenderSceneBuffersRD::get_depth_texture() {
 }
 
 RID RenderSceneBuffersRD::get_depth_texture(const uint32_t p_layer) {
-	RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
+	renderer_rd::TextureStorage *texture_storage = renderer_rd::TextureStorage::get_singleton();
 	RID depth_slice = texture_storage->render_target_get_override_depth_slice(render_target, p_layer);
 	if (depth_slice.is_valid()) {
 		return depth_slice;
@@ -660,7 +660,7 @@ bool RenderSceneBuffersRD::has_velocity_buffer(bool p_has_msaa) {
 	if (p_has_msaa) {
 		return has_texture(RB_SCOPE_BUFFERS, RB_TEX_VELOCITY_MSAA);
 	} else {
-		RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
+		renderer_rd::TextureStorage *texture_storage = renderer_rd::TextureStorage::get_singleton();
 		RID velocity = texture_storage->render_target_get_override_velocity(render_target);
 		if (velocity.is_valid()) {
 			return true;
@@ -678,7 +678,7 @@ RID RenderSceneBuffersRD::get_velocity_buffer(bool p_get_msaa) {
 			return get_texture(RB_SCOPE_BUFFERS, RB_TEX_VELOCITY_MSAA);
 		}
 	} else {
-		RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
+		renderer_rd::TextureStorage *texture_storage = renderer_rd::TextureStorage::get_singleton();
 		RID velocity = texture_storage->render_target_get_override_velocity(render_target);
 		if (velocity.is_valid()) {
 			return velocity;
@@ -694,7 +694,7 @@ RID RenderSceneBuffersRD::get_velocity_buffer(bool p_get_msaa, uint32_t p_layer)
 	if (p_get_msaa) {
 		return get_texture_slice(RB_SCOPE_BUFFERS, RB_TEX_VELOCITY_MSAA, p_layer, 0);
 	} else {
-		RendererRD::TextureStorage *texture_storage = RendererRD::TextureStorage::get_singleton();
+		renderer_rd::TextureStorage *texture_storage = renderer_rd::TextureStorage::get_singleton();
 		RID velocity_slice = texture_storage->render_target_get_override_velocity_slice(render_target, p_layer);
 		if (velocity_slice.is_valid()) {
 			return velocity_slice;

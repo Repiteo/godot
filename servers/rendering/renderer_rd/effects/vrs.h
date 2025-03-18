@@ -33,7 +33,7 @@
 #include "servers/rendering/renderer_rd/pipeline_cache_rd.h"
 #include "servers/rendering/renderer_rd/shaders/effects/vrs.glsl.gen.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class VRS {
 private:
@@ -67,4 +67,4 @@ public:
 	void update_vrs_texture(RID p_vrs_fb, RID p_render_target);
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

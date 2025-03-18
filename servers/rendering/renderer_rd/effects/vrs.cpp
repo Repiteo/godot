@@ -37,7 +37,7 @@
 #include "servers/xr_server.h"
 #endif // _3D_DISABLED
 
-using namespace RendererRD;
+using namespace renderer_rd;
 
 VRS::VRS() {
 	{

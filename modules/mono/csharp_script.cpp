@@ -32,7 +32,7 @@
 
 #include "godotsharp_dirs.h"
 #include "managed_callable.h"
-#include "mono_gd/gd_mono_cache.h"
+#include "mono_gd/gdmono_cache.h"
 #include "signal_awaiter_utils.h"
 #include "utils/macros.h"
 #include "utils/naming_utils.h"
@@ -142,8 +142,8 @@ void CSharpLanguage::finalize() {
 		return;
 	}
 
-	if (gdmono && gdmono->is_runtime_initialized() && GDMonoCache::godot_api_cache_updated) {
-		GDMonoCache::managed_callbacks.DisposablesTracker_OnGodotShuttingDown();
+	if (gdmono && gdmono->is_runtime_initialized() && gdmono_cache::godot_api_cache_updated) {
+		gdmono_cache::managed_callbacks.DisposablesTracker_OnGodotShuttingDown();
 	}
 
 	finalizing = true;
@@ -447,7 +447,7 @@ bool CSharpLanguage::handles_global_class_type(const String &p_type) const {
 
 String CSharpLanguage::get_global_class_name(const String &p_path, String *r_base_type, String *r_icon_path, bool *r_is_abstract, bool *r_is_tool) const {
 	String class_name;
-	GDMonoCache::managed_callbacks.ScriptManagerBridge_GetGlobalClassName(&p_path, r_base_type, r_icon_path, r_is_abstract, r_is_tool, &class_name);
+	gdmono_cache::managed_callbacks.ScriptManagerBridge_GetGlobalClassName(&p_path, r_base_type, r_icon_path, r_is_abstract, r_is_tool, &class_name);
 	return class_name;
 }
 
@@ -509,8 +509,8 @@ Vector<ScriptLanguage::StackInfo> CSharpLanguage::debug_get_current_stack_info()
 
 	Vector<StackInfo> si;
 
-	if (GDMonoCache::godot_api_cache_updated) {
-		GDMonoCache::managed_callbacks.DebuggingUtils_GetCurrentStackInfo(&si);
+	if (gdmono_cache::godot_api_cache_updated) {
+		gdmono_cache::managed_callbacks.DebuggingUtils_GetCurrentStackInfo(&si);
 	}
 
 	return si;
@@ -540,8 +540,8 @@ void CSharpLanguage::pre_unsafe_unreference(Object *p_obj) {
 }
 
 void CSharpLanguage::frame() {
-	if (gdmono && gdmono->is_runtime_initialized() && GDMonoCache::godot_api_cache_updated) {
-		GDMonoCache::managed_callbacks.ScriptManagerBridge_FrameCallback();
+	if (gdmono && gdmono->is_runtime_initialized() && gdmono_cache::godot_api_cache_updated) {
+		gdmono_cache::managed_callbacks.ScriptManagerBridge_FrameCallback();
 	}
 }
 
@@ -617,7 +617,7 @@ bool CSharpLanguage::is_assembly_reloading_needed() {
 	} else {
 		String assembly_name = path::get_csharp_project_name();
 
-		assembly_path = GodotSharpDirs::get_res_temp_assemblies_dir()
+		assembly_path = godot_sharp_dirs::get_res_temp_assemblies_dir()
 								.path_join(assembly_name + ".dll");
 		assembly_path = ProjectSettings::get_singleton()->globalize_path(assembly_path);
 
@@ -656,7 +656,7 @@ void CSharpLanguage::reload_assemblies(bool p_soft_reload) {
 			for (Object *obj : elem->self()->instances) {
 				ERR_CONTINUE(!obj->get_script_instance());
 				CSharpInstance *csi = static_cast<CSharpInstance *>(obj->get_script_instance());
-				if (GDMonoCache::managed_callbacks.GCHandleBridge_GCHandleIsTargetCollectible(csi->get_gchandle_intptr())) {
+				if (gdmono_cache::managed_callbacks.GCHandleBridge_GCHandleIsTargetCollectible(csi->get_gchandle_intptr())) {
 					is_reloadable = true;
 					break;
 				}
@@ -679,13 +679,13 @@ void CSharpLanguage::reload_assemblies(bool p_soft_reload) {
 
 			ERR_CONTINUE(managed_callable->delegate_handle.value == nullptr);
 
-			if (!GDMonoCache::managed_callbacks.GCHandleBridge_GCHandleIsTargetCollectible(managed_callable->delegate_handle)) {
+			if (!gdmono_cache::managed_callbacks.GCHandleBridge_GCHandleIsTargetCollectible(managed_callable->delegate_handle)) {
 				continue;
 			}
 
 			Array serialized_data;
 
-			bool success = GDMonoCache::managed_callbacks.DelegateUtils_TrySerializeDelegateWithGCHandle(
+			bool success = gdmono_cache::managed_callbacks.DelegateUtils_TrySerializeDelegateWithGCHandle(
 					managed_callable->delegate_handle, &serialized_data);
 
 			if (success) {
@@ -766,7 +766,7 @@ void CSharpLanguage::reload_assemblies(bool p_soft_reload) {
 
 			Dictionary properties;
 
-			GDMonoCache::managed_callbacks.CSharpInstanceBridge_SerializeState(
+			gdmono_cache::managed_callbacks.CSharpInstanceBridge_SerializeState(
 					csi->get_gchandle_intptr(), &properties, &state.event_signals);
 
 			for (const Variant *s = properties.next(nullptr); s != nullptr; s = properties.next(s)) {
@@ -855,7 +855,7 @@ void CSharpLanguage::reload_assemblies(bool p_soft_reload) {
 				continue;
 			}
 		} else {
-			bool success = GDMonoCache::managed_callbacks.ScriptManagerBridge_TryReloadRegisteredScriptWithClass(scr.ptr());
+			bool success = gdmono_cache::managed_callbacks.ScriptManagerBridge_TryReloadRegisteredScriptWithClass(scr.ptr());
 
 			if (!success) {
 				// Couldn't reload
@@ -956,7 +956,7 @@ void CSharpLanguage::reload_assemblies(bool p_soft_reload) {
 
 			GCHandleIntPtr delegate = { nullptr };
 
-			bool success = GDMonoCache::managed_callbacks.DelegateUtils_TryDeserializeDelegateWithGCHandle(
+			bool success = gdmono_cache::managed_callbacks.DelegateUtils_TryDeserializeDelegateWithGCHandle(
 					&serialized_data, &delegate);
 
 			if (success) {
@@ -993,7 +993,7 @@ void CSharpLanguage::reload_assemblies(bool p_soft_reload) {
 				}
 
 				// Restore serialized state and call OnAfterDeserialize.
-				GDMonoCache::managed_callbacks.CSharpInstanceBridge_DeserializeState(
+				gdmono_cache::managed_callbacks.CSharpInstanceBridge_DeserializeState(
 						csi->get_gchandle_intptr(), &properties, &state_backup.event_signals);
 			}
 		}
@@ -1059,7 +1059,7 @@ void CSharpLanguage::_editor_init_callback() {
 	const void **interop_funcs = godotsharp::get_editor_interop_funcs(interop_funcs_size);
 
 	Object *editor_plugin_obj = GDMono::get_singleton()->get_plugin_callbacks().LoadToolsAssemblyCallback(
-			GodotSharpDirs::get_data_editor_tools_dir().path_join("GodotTools.dll").utf16().get_data(),
+			godot_sharp_dirs::get_data_editor_tools_dir().path_join("GodotTools.dll").utf16().get_data(),
 			interop_funcs, interop_funcs_size);
 	CRASH_COND(editor_plugin_obj == nullptr);
 
@@ -1149,7 +1149,7 @@ bool CSharpLanguage::setup_csharp_script_binding(CSharpScriptBinding &r_script_b
 #endif
 
 	GCHandleIntPtr strong_gchandle =
-			GDMonoCache::managed_callbacks.ScriptManagerBridge_CreateManagedForGodotObjectBinding(
+			gdmono_cache::managed_callbacks.ScriptManagerBridge_CreateManagedForGodotObjectBinding(
 					&type_name, p_object);
 
 	ERR_FAIL_NULL_V(strong_gchandle.value, false);
@@ -1219,7 +1219,7 @@ void CSharpLanguage::_instance_binding_free_callback(void *, void *, void *p_bin
 		if (script_binding.inited) {
 			// Set the native instance field to IntPtr.Zero, if not yet garbage collected.
 			// This is done to avoid trying to dispose the native instance from Dispose(bool).
-			GDMonoCache::managed_callbacks.ScriptManagerBridge_SetGodotObjectPtr(
+			gdmono_cache::managed_callbacks.ScriptManagerBridge_SetGodotObjectPtr(
 					script_binding.gchandle.get_intptr(), nullptr);
 
 			script_binding.gchandle.release();
@@ -1268,7 +1268,7 @@ GDExtensionBool CSharpLanguage::_instance_binding_reference_callback(void *p_tok
 
 			GCHandleIntPtr new_gchandle = { nullptr };
 			bool create_weak = false;
-			bool target_alive = GDMonoCache::managed_callbacks.ScriptManagerBridge_SwapGCHandleForType(
+			bool target_alive = gdmono_cache::managed_callbacks.ScriptManagerBridge_SwapGCHandleForType(
 					old_gchandle, &new_gchandle, create_weak);
 
 			if (!target_alive) {
@@ -1292,7 +1292,7 @@ GDExtensionBool CSharpLanguage::_instance_binding_reference_callback(void *p_tok
 
 			GCHandleIntPtr new_gchandle = { nullptr };
 			bool create_weak = true;
-			bool target_alive = GDMonoCache::managed_callbacks.ScriptManagerBridge_SwapGCHandleForType(
+			bool target_alive = gdmono_cache::managed_callbacks.ScriptManagerBridge_SwapGCHandleForType(
 					old_gchandle, &new_gchandle, create_weak);
 
 			if (!target_alive) {
@@ -1475,7 +1475,7 @@ Object *CSharpInstance::get_owner() {
 bool CSharpInstance::set(const StringName &p_name, const Variant &p_value) {
 	ERR_FAIL_COND_V(script.is_null(), false);
 
-	return GDMonoCache::managed_callbacks.CSharpInstanceBridge_Set(
+	return gdmono_cache::managed_callbacks.CSharpInstanceBridge_Set(
 			gchandle.get_intptr(), &p_name, &p_value);
 }
 
@@ -1484,7 +1484,7 @@ bool CSharpInstance::get(const StringName &p_name, Variant &r_ret) const {
 
 	Variant ret_value;
 
-	bool ret = GDMonoCache::managed_callbacks.CSharpInstanceBridge_Get(
+	bool ret = gdmono_cache::managed_callbacks.CSharpInstanceBridge_Get(
 			gchandle.get_intptr(), &p_name, &ret_value);
 
 	if (ret) {
@@ -1519,7 +1519,7 @@ void CSharpInstance::get_property_list(List<PropertyInfo> *p_properties) const {
 
 	Variant ret;
 	Callable::CallError call_error;
-	bool ok = GDMonoCache::managed_callbacks.CSharpInstanceBridge_Call(
+	bool ok = gdmono_cache::managed_callbacks.CSharpInstanceBridge_Call(
 			gchandle.get_intptr(), &method, nullptr, 0, &call_error, &ret);
 
 	// CALL_ERROR_INVALID_METHOD would simply mean it was not overridden
@@ -1581,7 +1581,7 @@ bool CSharpInstance::property_can_revert(const StringName &p_name) const {
 
 	Variant ret;
 	Callable::CallError call_error;
-	GDMonoCache::managed_callbacks.CSharpInstanceBridge_Call(
+	gdmono_cache::managed_callbacks.CSharpInstanceBridge_Call(
 			gchandle.get_intptr(), &SNAME("_property_can_revert"), args, 1, &call_error, &ret);
 
 	if (call_error.error != Callable::CallError::CALL_OK) {
@@ -1599,7 +1599,7 @@ void CSharpInstance::validate_property(PropertyInfo &p_property) const {
 
 	Variant ret;
 	Callable::CallError call_error;
-	GDMonoCache::managed_callbacks.CSharpInstanceBridge_Call(
+	gdmono_cache::managed_callbacks.CSharpInstanceBridge_Call(
 			gchandle.get_intptr(), &SNAME("_validate_property"), args, 1, &call_error, &ret);
 
 	if (call_error.error != Callable::CallError::CALL_OK) {
@@ -1617,7 +1617,7 @@ bool CSharpInstance::property_get_revert(const StringName &p_name, Variant &r_re
 
 	Variant ret;
 	Callable::CallError call_error;
-	GDMonoCache::managed_callbacks.CSharpInstanceBridge_Call(
+	gdmono_cache::managed_callbacks.CSharpInstanceBridge_Call(
 			gchandle.get_intptr(), &SNAME("_property_get_revert"), args, 1, &call_error, &ret);
 
 	if (call_error.error != Callable::CallError::CALL_OK) {
@@ -1641,11 +1641,11 @@ bool CSharpInstance::has_method(const StringName &p_method) const {
 		return false;
 	}
 
-	if (!GDMonoCache::godot_api_cache_updated) {
+	if (!gdmono_cache::godot_api_cache_updated) {
 		return false;
 	}
 
-	return GDMonoCache::managed_callbacks.CSharpInstanceBridge_HasMethodUnknownParams(
+	return gdmono_cache::managed_callbacks.CSharpInstanceBridge_HasMethodUnknownParams(
 			gchandle.get_intptr(), &p_method);
 }
 
@@ -1681,7 +1681,7 @@ Variant CSharpInstance::callp(const StringName &p_method, const Variant **p_args
 	ERR_FAIL_COND_V(script.is_null(), Variant());
 
 	Variant ret;
-	GDMonoCache::managed_callbacks.CSharpInstanceBridge_Call(
+	gdmono_cache::managed_callbacks.CSharpInstanceBridge_Call(
 			gchandle.get_intptr(), &p_method, p_args, p_argcount, &r_error, &ret);
 
 	return ret;
@@ -1737,7 +1737,7 @@ bool CSharpInstance::_internal_new_managed() {
 	ERR_FAIL_COND_V(script.is_null(), false);
 	ERR_FAIL_COND_V(!script->can_instantiate(), false);
 
-	bool ok = GDMonoCache::managed_callbacks.ScriptManagerBridge_CreateManagedForGodotObjectScriptInstance(
+	bool ok = gdmono_cache::managed_callbacks.ScriptManagerBridge_CreateManagedForGodotObjectScriptInstance(
 			script.ptr(), owner, nullptr, 0);
 
 	if (!ok) {
@@ -1846,7 +1846,7 @@ void CSharpInstance::refcount_incremented() {
 
 		GCHandleIntPtr new_gchandle = { nullptr };
 		bool create_weak = false;
-		bool target_alive = GDMonoCache::managed_callbacks.ScriptManagerBridge_SwapGCHandleForType(
+		bool target_alive = gdmono_cache::managed_callbacks.ScriptManagerBridge_SwapGCHandleForType(
 				old_gchandle, &new_gchandle, create_weak);
 
 		if (!target_alive) {
@@ -1878,7 +1878,7 @@ bool CSharpInstance::refcount_decremented() {
 
 		GCHandleIntPtr new_gchandle = { nullptr };
 		bool create_weak = true;
-		bool target_alive = GDMonoCache::managed_callbacks.ScriptManagerBridge_SwapGCHandleForType(
+		bool target_alive = gdmono_cache::managed_callbacks.ScriptManagerBridge_SwapGCHandleForType(
 				old_gchandle, &new_gchandle, create_weak);
 
 		if (!target_alive) {
@@ -1926,7 +1926,7 @@ void CSharpInstance::notification(int p_notification, bool p_reversed) {
 		// NOTIFICATION_PREDELETE_CLEANUP is not sent to scripts.
 		// After calling Dispose() the C# instance can no longer be used,
 		// so it should be the last thing we do.
-		GDMonoCache::managed_callbacks.CSharpInstanceBridge_CallDispose(
+		gdmono_cache::managed_callbacks.CSharpInstanceBridge_CallDispose(
 				gchandle.get_intptr(), /* okIfNull */ false);
 
 		return;
@@ -1941,7 +1941,7 @@ void CSharpInstance::_call_notification(int p_notification, bool p_reversed) {
 
 	Variant ret;
 	Callable::CallError call_error;
-	GDMonoCache::managed_callbacks.CSharpInstanceBridge_Call(
+	gdmono_cache::managed_callbacks.CSharpInstanceBridge_Call(
 			gchandle.get_intptr(), &SNAME("_notification"), args, 1, &call_error, &ret);
 }
 
@@ -1949,7 +1949,7 @@ String CSharpInstance::to_string(bool *r_valid) {
 	String res;
 	bool valid;
 
-	GDMonoCache::managed_callbacks.CSharpInstanceBridge_CallToString(
+	gdmono_cache::managed_callbacks.CSharpInstanceBridge_CallToString(
 			gchandle.get_intptr(), &res, &valid);
 
 	if (r_valid) {
@@ -1985,7 +1985,7 @@ CSharpInstance::~CSharpInstance() {
 			// we must call Dispose here, because Dispose calls owner->set_script_instance(nullptr)
 			// and that would mess up with the new script instance if called later.
 
-			GDMonoCache::managed_callbacks.CSharpInstanceBridge_CallDispose(
+			gdmono_cache::managed_callbacks.CSharpInstanceBridge_CallDispose(
 					gchandle.get_intptr(), /* okIfNull */ true);
 		}
 
@@ -2057,7 +2057,7 @@ void CSharpScript::_update_exports_values(HashMap<StringName, Variant> &values, 
 #endif
 
 void GD_CLR_STDCALL CSharpScript::_add_property_info_list_callback(CSharpScript *p_script, const String *p_current_class_name, void *p_props, int32_t p_count) {
-	GDMonoCache::godotsharp_property_info *props = (GDMonoCache::godotsharp_property_info *)p_props;
+	gdmono_cache::godotsharp_property_info *props = (gdmono_cache::godotsharp_property_info *)p_props;
 
 #ifdef TOOLS_ENABLED
 	p_script->exported_members_cache.push_back(PropertyInfo(
@@ -2066,7 +2066,7 @@ void GD_CLR_STDCALL CSharpScript::_add_property_info_list_callback(CSharpScript 
 #endif
 
 	for (int i = 0; i < p_count; i++) {
-		const GDMonoCache::godotsharp_property_info &prop = props[i];
+		const gdmono_cache::godotsharp_property_info &prop = props[i];
 
 		StringName name = *reinterpret_cast<const StringName *>(&prop.name);
 		String hint_string = *reinterpret_cast<const String *>(&prop.hint_string);
@@ -2089,10 +2089,10 @@ void GD_CLR_STDCALL CSharpScript::_add_property_info_list_callback(CSharpScript 
 
 #ifdef TOOLS_ENABLED
 void GD_CLR_STDCALL CSharpScript::_add_property_default_values_callback(CSharpScript *p_script, void *p_def_vals, int32_t p_count) {
-	GDMonoCache::godotsharp_property_def_val_pair *def_vals = (GDMonoCache::godotsharp_property_def_val_pair *)p_def_vals;
+	gdmono_cache::godotsharp_property_def_val_pair *def_vals = (gdmono_cache::godotsharp_property_def_val_pair *)p_def_vals;
 
 	for (int i = 0; i < p_count; i++) {
-		const GDMonoCache::godotsharp_property_def_val_pair &def_val_pair = def_vals[i];
+		const gdmono_cache::godotsharp_property_def_val_pair &def_val_pair = def_vals[i];
 
 		StringName name = *reinterpret_cast<const StringName *>(&def_val_pair.name);
 		Variant value = *reinterpret_cast<const Variant *>(&def_val_pair.value);
@@ -2132,11 +2132,11 @@ bool CSharpScript::_update_exports(PlaceHolderScriptInstance *p_instance_to_upda
 		exported_members_defval_cache.clear();
 #endif
 
-		if (GDMonoCache::godot_api_cache_updated) {
-			GDMonoCache::managed_callbacks.ScriptManagerBridge_GetPropertyInfoList(this, &_add_property_info_list_callback);
+		if (gdmono_cache::godot_api_cache_updated) {
+			gdmono_cache::managed_callbacks.ScriptManagerBridge_GetPropertyInfoList(this, &_add_property_info_list_callback);
 
 #ifdef TOOLS_ENABLED
-			GDMonoCache::managed_callbacks.ScriptManagerBridge_GetPropertyDefaultValues(this, &_add_property_default_values_callback);
+			gdmono_cache::managed_callbacks.ScriptManagerBridge_GetPropertyDefaultValues(this, &_add_property_default_values_callback);
 #endif
 		}
 	}
@@ -2245,7 +2245,7 @@ void CSharpScript::update_script_class_info(Ref<CSharpScript> p_script) {
 	signals_dict.~Dictionary();
 
 	Ref<CSharpScript> base_script;
-	GDMonoCache::managed_callbacks.ScriptManagerBridge_UpdateScriptClassInfo(
+	gdmono_cache::managed_callbacks.ScriptManagerBridge_UpdateScriptClassInfo(
 			p_script.ptr(), &type_info,
 			&methods_array, &rpc_functions_dict, &signals_dict, &base_script);
 
@@ -2365,7 +2365,7 @@ CSharpInstance *CSharpScript::_create_instance(const Variant **p_args, int p_arg
 
 		CSharpScriptBinding &script_binding = ((RBMap<Object *, CSharpScriptBinding>::Element *)data)->get();
 		if (script_binding.inited && !script_binding.gchandle.is_released()) {
-			GDMonoCache::managed_callbacks.CSharpInstanceBridge_CallDispose(
+			gdmono_cache::managed_callbacks.CSharpInstanceBridge_CallDispose(
 					script_binding.gchandle.get_intptr(), /* okIfNull */ true);
 
 			script_binding.gchandle.release(); // Just in case
@@ -2380,7 +2380,7 @@ CSharpInstance *CSharpScript::_create_instance(const Variant **p_args, int p_arg
 
 	/* STEP 2, INITIALIZE AND CONSTRUCT */
 
-	bool ok = GDMonoCache::managed_callbacks.ScriptManagerBridge_CreateManagedForGodotObjectScriptInstance(
+	bool ok = gdmono_cache::managed_callbacks.ScriptManagerBridge_CreateManagedForGodotObjectScriptInstance(
 			this, p_owner, p_args, p_argcount);
 
 	if (!ok) {
@@ -2409,7 +2409,7 @@ Variant CSharpScript::_new(const Variant **p_args, int p_argcount, Callable::Cal
 	r_error.error = Callable::CallError::CALL_OK;
 
 	StringName native_name;
-	GDMonoCache::managed_callbacks.ScriptManagerBridge_GetScriptNativeName(this, &native_name);
+	gdmono_cache::managed_callbacks.ScriptManagerBridge_GetScriptNativeName(this, &native_name);
 
 	ERR_FAIL_COND_V(native_name == StringName(), Variant());
 
@@ -2442,7 +2442,7 @@ ScriptInstance *CSharpScript::instance_create(Object *p_this) {
 #endif
 
 	StringName native_name;
-	GDMonoCache::managed_callbacks.ScriptManagerBridge_GetScriptNativeName(this, &native_name);
+	gdmono_cache::managed_callbacks.ScriptManagerBridge_GetScriptNativeName(this, &native_name);
 
 	ERR_FAIL_COND_V(native_name == StringName(), nullptr);
 
@@ -2569,7 +2569,7 @@ MethodInfo CSharpScript::get_method_info(const StringName &p_method) const {
 Variant CSharpScript::callp(const StringName &p_method, const Variant **p_args, int p_argcount, Callable::CallError &r_error) {
 	if (valid) {
 		Variant ret;
-		bool ok = GDMonoCache::managed_callbacks.ScriptManagerBridge_CallStatic(this, &p_method, p_args, p_argcount, &r_error, &ret);
+		bool ok = gdmono_cache::managed_callbacks.ScriptManagerBridge_CallStatic(this, &p_method, p_args, p_argcount, &r_error, &ret);
 		if (ok) {
 			return ret;
 		}
@@ -2589,7 +2589,7 @@ Error CSharpScript::reload(bool p_keep_state) {
 
 	String script_path = get_path();
 
-	valid = GDMonoCache::managed_callbacks.ScriptManagerBridge_AddScriptBridge(this, &script_path);
+	valid = gdmono_cache::managed_callbacks.ScriptManagerBridge_AddScriptBridge(this, &script_path);
 
 	if (valid) {
 #ifdef DEBUG_ENABLED
@@ -2645,7 +2645,7 @@ bool CSharpScript::has_script_signal(const StringName &p_signal) const {
 		return false;
 	}
 
-	if (!GDMonoCache::godot_api_cache_updated) {
+	if (!gdmono_cache::godot_api_cache_updated) {
 		return false;
 	}
 
@@ -2694,11 +2694,11 @@ bool CSharpScript::inherits_script(const Ref<Script> &p_script) const {
 		return false;
 	}
 
-	if (!GDMonoCache::godot_api_cache_updated) {
+	if (!gdmono_cache::godot_api_cache_updated) {
 		return false;
 	}
 
-	return GDMonoCache::managed_callbacks.ScriptManagerBridge_ScriptIsOrInherits(this, cs.ptr());
+	return gdmono_cache::managed_callbacks.ScriptManagerBridge_ScriptIsOrInherits(this, cs.ptr());
 }
 
 Ref<Script> CSharpScript::get_base_script() const {
@@ -2787,8 +2787,8 @@ CSharpScript::~CSharpScript() {
 	}
 #endif
 
-	if (GDMonoCache::godot_api_cache_updated) {
-		GDMonoCache::managed_callbacks.ScriptManagerBridge_RemoveScriptBridge(this);
+	if (gdmono_cache::godot_api_cache_updated) {
+		gdmono_cache::managed_callbacks.ScriptManagerBridge_RemoveScriptBridge(this);
 	}
 }
 
@@ -2820,8 +2820,8 @@ Ref<Resource> ResourceFormatLoaderCSharpScript::load(const String &p_path, const
 
 	Ref<CSharpScript> scr;
 
-	if (GDMonoCache::godot_api_cache_updated) {
-		GDMonoCache::managed_callbacks.ScriptManagerBridge_GetOrCreateScriptBridgeForPath(&p_path, &scr);
+	if (gdmono_cache::godot_api_cache_updated) {
+		gdmono_cache::managed_callbacks.ScriptManagerBridge_GetOrCreateScriptBridgeForPath(&p_path, &scr);
 		ERR_FAIL_COND_V_MSG(scr.is_null(), Ref<Resource>(), "Could not create C# script '" + real_path + "'.");
 	} else {
 		scr.instantiate();

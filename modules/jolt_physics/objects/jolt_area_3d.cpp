@@ -51,7 +51,7 @@ const Vector3 DEFAULT_WIND_DIRECTION = Vector3();
 } // namespace
 
 JPH::BroadPhaseLayer JoltArea3D::_get_broad_phase_layer() const {
-	return monitorable ? JoltBroadPhaseLayer::AREA_DETECTABLE : JoltBroadPhaseLayer::AREA_UNDETECTABLE;
+	return monitorable ? jolt_broad_phase_layer::AREA_DETECTABLE : jolt_broad_phase_layer::AREA_UNDETECTABLE;
 }
 
 JPH::ObjectLayer JoltArea3D::_get_object_layer() const {

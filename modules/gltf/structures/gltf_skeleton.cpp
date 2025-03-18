@@ -74,19 +74,19 @@ Skeleton3D *GLTFSkeleton::get_godot_skeleton() {
 }
 
 TypedArray<String> GLTFSkeleton::get_unique_names() {
-	return GLTFTemplateConvert::to_array(unique_names);
+	return gltf_template_convert::to_array(unique_names);
 }
 
 void GLTFSkeleton::set_unique_names(TypedArray<String> p_unique_names) {
-	GLTFTemplateConvert::set_from_array(unique_names, p_unique_names);
+	gltf_template_convert::set_from_array(unique_names, p_unique_names);
 }
 
 Dictionary GLTFSkeleton::get_godot_bone_node() {
-	return GLTFTemplateConvert::to_dictionary(godot_bone_node);
+	return gltf_template_convert::to_dictionary(godot_bone_node);
 }
 
 void GLTFSkeleton::set_godot_bone_node(Dictionary p_indict) {
-	GLTFTemplateConvert::set_from_dictionary(godot_bone_node, p_indict);
+	gltf_template_convert::set_from_dictionary(godot_bone_node, p_indict);
 }
 
 BoneAttachment3D *GLTFSkeleton::get_bone_attachment(int idx) {

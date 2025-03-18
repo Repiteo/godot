@@ -36,7 +36,7 @@
 #include "particles_storage.h"
 #include "texture_storage.h"
 
-using namespace RendererRD;
+using namespace renderer_rd;
 
 Utilities *Utilities::singleton = nullptr;
 
@@ -51,34 +51,34 @@ Utilities::~Utilities() {
 /* INSTANCES */
 
 RS::InstanceType Utilities::get_base_type(RID p_rid) const {
-	if (RendererRD::MeshStorage::get_singleton()->owns_mesh(p_rid)) {
+	if (renderer_rd::MeshStorage::get_singleton()->owns_mesh(p_rid)) {
 		return RS::INSTANCE_MESH;
 	}
-	if (RendererRD::MeshStorage::get_singleton()->owns_multimesh(p_rid)) {
+	if (renderer_rd::MeshStorage::get_singleton()->owns_multimesh(p_rid)) {
 		return RS::INSTANCE_MULTIMESH;
 	}
-	if (RendererRD::LightStorage::get_singleton()->owns_reflection_probe(p_rid)) {
+	if (renderer_rd::LightStorage::get_singleton()->owns_reflection_probe(p_rid)) {
 		return RS::INSTANCE_REFLECTION_PROBE;
 	}
-	if (RendererRD::TextureStorage::get_singleton()->owns_decal(p_rid)) {
+	if (renderer_rd::TextureStorage::get_singleton()->owns_decal(p_rid)) {
 		return RS::INSTANCE_DECAL;
 	}
-	if (RendererRD::GI::get_singleton()->owns_voxel_gi(p_rid)) {
+	if (renderer_rd::GI::get_singleton()->owns_voxel_gi(p_rid)) {
 		return RS::INSTANCE_VOXEL_GI;
 	}
-	if (RendererRD::LightStorage::get_singleton()->owns_light(p_rid)) {
+	if (renderer_rd::LightStorage::get_singleton()->owns_light(p_rid)) {
 		return RS::INSTANCE_LIGHT;
 	}
-	if (RendererRD::LightStorage::get_singleton()->owns_lightmap(p_rid)) {
+	if (renderer_rd::LightStorage::get_singleton()->owns_lightmap(p_rid)) {
 		return RS::INSTANCE_LIGHTMAP;
 	}
-	if (RendererRD::ParticlesStorage::get_singleton()->owns_particles(p_rid)) {
+	if (renderer_rd::ParticlesStorage::get_singleton()->owns_particles(p_rid)) {
 		return RS::INSTANCE_PARTICLES;
 	}
-	if (RendererRD::ParticlesStorage::get_singleton()->owns_particles_collision(p_rid)) {
+	if (renderer_rd::ParticlesStorage::get_singleton()->owns_particles_collision(p_rid)) {
 		return RS::INSTANCE_PARTICLES_COLLISION;
 	}
-	if (RendererRD::Fog::get_singleton()->owns_fog_volume(p_rid)) {
+	if (renderer_rd::Fog::get_singleton()->owns_fog_volume(p_rid)) {
 		return RS::INSTANCE_FOG_VOLUME;
 	}
 	if (owns_visibility_notifier(p_rid)) {
@@ -89,21 +89,21 @@ RS::InstanceType Utilities::get_base_type(RID p_rid) const {
 }
 
 bool Utilities::free(RID p_rid) {
-	if (RendererRD::LightStorage::get_singleton()->free(p_rid)) {
+	if (renderer_rd::LightStorage::get_singleton()->free(p_rid)) {
 		return true;
-	} else if (RendererRD::MaterialStorage::get_singleton()->free(p_rid)) {
+	} else if (renderer_rd::MaterialStorage::get_singleton()->free(p_rid)) {
 		return true;
-	} else if (RendererRD::MeshStorage::get_singleton()->free(p_rid)) {
+	} else if (renderer_rd::MeshStorage::get_singleton()->free(p_rid)) {
 		return true;
-	} else if (RendererRD::ParticlesStorage::get_singleton()->free(p_rid)) {
+	} else if (renderer_rd::ParticlesStorage::get_singleton()->free(p_rid)) {
 		return true;
-	} else if (RendererRD::TextureStorage::get_singleton()->free(p_rid)) {
+	} else if (renderer_rd::TextureStorage::get_singleton()->free(p_rid)) {
 		return true;
-	} else if (RendererRD::GI::get_singleton()->owns_voxel_gi(p_rid)) {
-		RendererRD::GI::get_singleton()->voxel_gi_free(p_rid);
+	} else if (renderer_rd::GI::get_singleton()->owns_voxel_gi(p_rid)) {
+		renderer_rd::GI::get_singleton()->voxel_gi_free(p_rid);
 		return true;
-	} else if (RendererRD::Fog::get_singleton()->owns_fog_volume(p_rid)) {
-		RendererRD::Fog::get_singleton()->fog_volume_free(p_rid);
+	} else if (renderer_rd::Fog::get_singleton()->owns_fog_volume(p_rid)) {
+		renderer_rd::Fog::get_singleton()->fog_volume_free(p_rid);
 		return true;
 	} else if (owns_visibility_notifier(p_rid)) {
 		visibility_notifier_free(p_rid);

@@ -32,7 +32,7 @@
 
 #include "servers/rendering/storage/particles_storage.h"
 
-namespace RendererDummy {
+namespace renderer_dummy {
 
 class ParticlesStorage : public RendererParticlesStorage {
 public:
@@ -124,4 +124,4 @@ public:
 	virtual bool particles_is_inactive(RID p_particles) const override { return false; }
 };
 
-} // namespace RendererDummy
+} // namespace renderer_dummy

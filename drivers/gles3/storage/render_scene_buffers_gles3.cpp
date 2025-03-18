@@ -36,10 +36,10 @@
 #include "utilities.h"
 
 #ifdef ANDROID_ENABLED
-#define glFramebufferTextureMultiviewOVR GLES3::Config::get_singleton()->eglFramebufferTextureMultiviewOVR
-#define glTexStorage3DMultisample GLES3::Config::get_singleton()->eglTexStorage3DMultisample
-#define glFramebufferTexture2DMultisampleEXT GLES3::Config::get_singleton()->eglFramebufferTexture2DMultisampleEXT
-#define glFramebufferTextureMultisampleMultiviewOVR GLES3::Config::get_singleton()->eglFramebufferTextureMultisampleMultiviewOVR
+#define glFramebufferTextureMultiviewOVR gles3::Config::get_singleton()->eglFramebufferTextureMultiviewOVR
+#define glTexStorage3DMultisample gles3::Config::get_singleton()->eglTexStorage3DMultisample
+#define glFramebufferTexture2DMultisampleEXT gles3::Config::get_singleton()->eglFramebufferTexture2DMultisampleEXT
+#define glFramebufferTextureMultisampleMultiviewOVR gles3::Config::get_singleton()->eglFramebufferTextureMultisampleMultiviewOVR
 #endif // ANDROID_ENABLED
 
 // Will only be defined if GLES 3.2 headers are included
@@ -111,7 +111,7 @@ GLuint RenderSceneBuffersGLES3::_rt_get_cached_fbo(GLuint p_color, GLuint p_dept
 
 	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if (status != GL_FRAMEBUFFER_COMPLETE) {
-		WARN_PRINT("Could not create 3D MSAA framebuffer, status: " + GLES3::TextureStorage::get_singleton()->get_framebuffer_error(status));
+		WARN_PRINT("Could not create 3D MSAA framebuffer, status: " + gles3::TextureStorage::get_singleton()->get_framebuffer_error(status));
 
 		glDeleteFramebuffers(1, &new_fbo.fbo);
 
@@ -121,15 +121,15 @@ GLuint RenderSceneBuffersGLES3::_rt_get_cached_fbo(GLuint p_color, GLuint p_dept
 		msaa3d.cached_fbos.push_back(new_fbo);
 	}
 
-	glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 #endif
 
 	return new_fbo.fbo;
 }
 
 void RenderSceneBuffersGLES3::configure(const RenderSceneBuffersConfiguration *p_config) {
-	GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
-	GLES3::Config *config = GLES3::Config::get_singleton();
+	gles3::TextureStorage *texture_storage = gles3::TextureStorage::get_singleton();
+	gles3::Config *config = gles3::Config::get_singleton();
 
 	free_render_buffer_data();
 
@@ -190,8 +190,8 @@ void RenderSceneBuffersGLES3::configure(const RenderSceneBuffersConfiguration *p
 }
 
 void RenderSceneBuffersGLES3::_check_render_buffers() {
-	GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
-	GLES3::Config *config = GLES3::Config::get_singleton();
+	gles3::TextureStorage *texture_storage = gles3::TextureStorage::get_singleton();
+	gles3::Config *config = gles3::Config::get_singleton();
 
 	ERR_FAIL_COND(view_count == 0);
 
@@ -223,7 +223,7 @@ void RenderSceneBuffersGLES3::_check_render_buffers() {
 		glTexParameteri(texture_target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(texture_target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		GLES3::Utilities::get_singleton()->texture_allocated_data(internal3d.color, internal_size.x * internal_size.y * view_count * color_format_size, "3D color texture");
+		gles3::Utilities::get_singleton()->texture_allocated_data(internal3d.color, internal_size.x * internal_size.y * view_count * color_format_size, "3D color texture");
 
 		// Create our depth buffer.
 		glGenTextures(1, &internal3d.depth);
@@ -240,7 +240,7 @@ void RenderSceneBuffersGLES3::_check_render_buffers() {
 		glTexParameteri(texture_target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(texture_target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		GLES3::Utilities::get_singleton()->texture_allocated_data(internal3d.depth, internal_size.x * internal_size.y * view_count * depth_format_size, "3D depth texture");
+		gles3::Utilities::get_singleton()->texture_allocated_data(internal3d.depth, internal_size.x * internal_size.y * view_count * depth_format_size, "3D depth texture");
 
 		// Create our internal 3D FBO.
 		// Note that if MSAA is used and our rt_msaa_* extensions are available, this is only used for blitting and effects.
@@ -266,7 +266,7 @@ void RenderSceneBuffersGLES3::_check_render_buffers() {
 		}
 
 		glBindTexture(texture_target, 0);
-		glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 	}
 
 	if (msaa3d.mode != RS::VIEWPORT_MSAA_DISABLED && msaa3d.color == 0) {
@@ -293,14 +293,14 @@ void RenderSceneBuffersGLES3::_check_render_buffers() {
 			glBindRenderbuffer(GL_RENDERBUFFER, msaa3d.color);
 
 			glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaa3d.samples, color_internal_format, internal_size.x, internal_size.y);
-			GLES3::Utilities::get_singleton()->render_buffer_allocated_data(msaa3d.color, internal_size.x * internal_size.y * view_count * 4 * msaa3d.samples, "MSAA 3D color render buffer");
+			gles3::Utilities::get_singleton()->render_buffer_allocated_data(msaa3d.color, internal_size.x * internal_size.y * view_count * 4 * msaa3d.samples, "MSAA 3D color render buffer");
 
 			// Create our depth buffer.
 			glGenRenderbuffers(1, &msaa3d.depth);
 			glBindRenderbuffer(GL_RENDERBUFFER, msaa3d.depth);
 
 			glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaa3d.samples, GL_DEPTH_COMPONENT24, internal_size.x, internal_size.y);
-			GLES3::Utilities::get_singleton()->render_buffer_allocated_data(msaa3d.depth, internal_size.x * internal_size.y * view_count * 3 * msaa3d.samples, "MSAA 3D depth render buffer");
+			gles3::Utilities::get_singleton()->render_buffer_allocated_data(msaa3d.depth, internal_size.x * internal_size.y * view_count * 3 * msaa3d.samples, "MSAA 3D depth render buffer");
 
 			// Create our MSAA 3D FBO.
 			glGenFramebuffers(1, &msaa3d.fbo);
@@ -317,7 +317,7 @@ void RenderSceneBuffersGLES3::_check_render_buffers() {
 			}
 
 			glBindRenderbuffer(GL_RENDERBUFFER, 0);
-			glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+			glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 #if !defined(IOS_ENABLED) && !defined(WEB_ENABLED)
 		} else if (use_multiview && !config->rt_msaa_multiview_supported) {
 			// Render to texture extensions not supported? fall back to MSAA textures through GL_EXT_multiview_texture_multisample.
@@ -334,7 +334,7 @@ void RenderSceneBuffersGLES3::_check_render_buffers() {
 			glTexImage3DMultisample(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, msaa3d.samples, color_internal_format, internal_size.x, internal_size.y, view_count, GL_TRUE);
 #endif
 
-			GLES3::Utilities::get_singleton()->texture_allocated_data(msaa3d.color, internal_size.x * internal_size.y * view_count * color_format_size * msaa3d.samples, "MSAA 3D color texture");
+			gles3::Utilities::get_singleton()->texture_allocated_data(msaa3d.color, internal_size.x * internal_size.y * view_count * color_format_size * msaa3d.samples, "MSAA 3D color texture");
 
 			// Create our depth buffer.
 			glGenTextures(1, &msaa3d.depth);
@@ -346,7 +346,7 @@ void RenderSceneBuffersGLES3::_check_render_buffers() {
 			glTexImage3DMultisample(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, msaa3d.samples, GL_DEPTH_COMPONENT24, internal_size.x, internal_size.y, view_count, GL_TRUE);
 #endif
 
-			GLES3::Utilities::get_singleton()->texture_allocated_data(msaa3d.depth, internal_size.x * internal_size.y * view_count * depth_format_size * msaa3d.samples, "MSAA 3D depth texture");
+			gles3::Utilities::get_singleton()->texture_allocated_data(msaa3d.depth, internal_size.x * internal_size.y * view_count * depth_format_size * msaa3d.samples, "MSAA 3D depth texture");
 
 			// Create our MSAA 3D FBO.
 			glGenFramebuffers(1, &msaa3d.fbo);
@@ -363,7 +363,7 @@ void RenderSceneBuffersGLES3::_check_render_buffers() {
 			}
 
 			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, 0);
-			glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+			glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 #endif
 #if defined(ANDROID_ENABLED) || defined(WEB_ENABLED) // Only supported on OpenGLES!
 		} else if (!use_internal_buffer) {
@@ -391,7 +391,7 @@ void RenderSceneBuffersGLES3::_check_render_buffers() {
 				WARN_PRINT("Could not create 3D MSAA framebuffer, status: " + texture_storage->get_framebuffer_error(status));
 			}
 
-			glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+			glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 #endif
 		} else {
 			// HUH? how did we get here?
@@ -427,18 +427,18 @@ void RenderSceneBuffersGLES3::_clear_msaa3d_buffers() {
 
 	if (msaa3d.color != 0) {
 		if (view_count == 1) {
-			GLES3::Utilities::get_singleton()->render_buffer_free_data(msaa3d.color);
+			gles3::Utilities::get_singleton()->render_buffer_free_data(msaa3d.color);
 		} else {
-			GLES3::Utilities::get_singleton()->texture_free_data(msaa3d.color);
+			gles3::Utilities::get_singleton()->texture_free_data(msaa3d.color);
 		}
 		msaa3d.color = 0;
 	}
 
 	if (msaa3d.depth != 0) {
 		if (view_count == 1) {
-			GLES3::Utilities::get_singleton()->render_buffer_free_data(msaa3d.depth);
+			gles3::Utilities::get_singleton()->render_buffer_free_data(msaa3d.depth);
 		} else {
-			GLES3::Utilities::get_singleton()->texture_free_data(msaa3d.depth);
+			gles3::Utilities::get_singleton()->texture_free_data(msaa3d.depth);
 		}
 		msaa3d.depth = 0;
 	}
@@ -451,18 +451,18 @@ void RenderSceneBuffersGLES3::_clear_intermediate_buffers() {
 	}
 
 	if (internal3d.color != 0) {
-		GLES3::Utilities::get_singleton()->texture_free_data(internal3d.color);
+		gles3::Utilities::get_singleton()->texture_free_data(internal3d.color);
 		internal3d.color = 0;
 	}
 
 	if (internal3d.depth != 0) {
-		GLES3::Utilities::get_singleton()->texture_free_data(internal3d.depth);
+		gles3::Utilities::get_singleton()->texture_free_data(internal3d.depth);
 		internal3d.depth = 0;
 	}
 }
 
 void RenderSceneBuffersGLES3::check_backbuffer(bool p_need_color, bool p_need_depth) {
-	GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
+	gles3::TextureStorage *texture_storage = gles3::TextureStorage::get_singleton();
 
 	// Setup our back buffer
 
@@ -472,7 +472,7 @@ void RenderSceneBuffersGLES3::check_backbuffer(bool p_need_color, bool p_need_de
 
 	glBindFramebuffer(GL_FRAMEBUFFER, backbuffer3d.fbo);
 
-	bool use_multiview = view_count > 1 && GLES3::Config::get_singleton()->multiview_supported;
+	bool use_multiview = view_count > 1 && gles3::Config::get_singleton()->multiview_supported;
 	GLenum texture_target = use_multiview ? GL_TEXTURE_2D_ARRAY : GL_TEXTURE_2D;
 	uint32_t depth_format_size = 3;
 
@@ -491,7 +491,7 @@ void RenderSceneBuffersGLES3::check_backbuffer(bool p_need_color, bool p_need_de
 		glTexParameteri(texture_target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(texture_target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		GLES3::Utilities::get_singleton()->texture_allocated_data(backbuffer3d.color, internal_size.x * internal_size.y * view_count * color_format_size, "3D Back buffer color texture");
+		gles3::Utilities::get_singleton()->texture_allocated_data(backbuffer3d.color, internal_size.x * internal_size.y * view_count * color_format_size, "3D Back buffer color texture");
 
 #ifndef IOS_ENABLED
 		if (use_multiview) {
@@ -519,7 +519,7 @@ void RenderSceneBuffersGLES3::check_backbuffer(bool p_need_color, bool p_need_de
 		glTexParameteri(texture_target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(texture_target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		GLES3::Utilities::get_singleton()->texture_allocated_data(backbuffer3d.depth, internal_size.x * internal_size.y * view_count * depth_format_size, "3D back buffer depth texture");
+		gles3::Utilities::get_singleton()->texture_allocated_data(backbuffer3d.depth, internal_size.x * internal_size.y * view_count * depth_format_size, "3D back buffer depth texture");
 
 #ifndef IOS_ENABLED
 		if (use_multiview) {
@@ -539,7 +539,7 @@ void RenderSceneBuffersGLES3::check_backbuffer(bool p_need_color, bool p_need_de
 	}
 
 	glBindTexture(texture_target, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 }
 
 void RenderSceneBuffersGLES3::_clear_back_buffers() {
@@ -549,12 +549,12 @@ void RenderSceneBuffersGLES3::_clear_back_buffers() {
 	}
 
 	if (backbuffer3d.color != 0) {
-		GLES3::Utilities::get_singleton()->texture_free_data(backbuffer3d.color);
+		gles3::Utilities::get_singleton()->texture_free_data(backbuffer3d.color);
 		backbuffer3d.color = 0;
 	}
 
 	if (backbuffer3d.depth != 0) {
-		GLES3::Utilities::get_singleton()->texture_free_data(backbuffer3d.depth);
+		gles3::Utilities::get_singleton()->texture_free_data(backbuffer3d.depth);
 		backbuffer3d.depth = 0;
 	}
 }
@@ -569,7 +569,7 @@ void RenderSceneBuffersGLES3::check_glow_buffers() {
 		return;
 	}
 
-	GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
+	gles3::TextureStorage *texture_storage = gles3::TextureStorage::get_singleton();
 	Size2i level_size = internal_size;
 	for (int i = 0; i < 4; i++) {
 		level_size = Size2i(level_size.x >> 1, level_size.y >> 1).maxi(4);
@@ -591,7 +591,7 @@ void RenderSceneBuffersGLES3::check_glow_buffers() {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
 
-		GLES3::Utilities::get_singleton()->texture_allocated_data(glow.levels[i].color, level_size.x * level_size.y * color_format_size, String("Glow buffer ") + String::num_int64(i));
+		gles3::Utilities::get_singleton()->texture_allocated_data(glow.levels[i].color, level_size.x * level_size.y * color_format_size, String("Glow buffer ") + String::num_int64(i));
 
 		// Create our FBO
 		glGenFramebuffers(1, &glow.levels[i].fbo);
@@ -608,7 +608,7 @@ void RenderSceneBuffersGLES3::check_glow_buffers() {
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 }
 
 void RenderSceneBuffersGLES3::_clear_glow_buffers() {
@@ -619,7 +619,7 @@ void RenderSceneBuffersGLES3::_clear_glow_buffers() {
 		}
 
 		if (glow.levels[i].color != 0) {
-			GLES3::Utilities::get_singleton()->texture_free_data(glow.levels[i].color);
+			gles3::Utilities::get_singleton()->texture_free_data(glow.levels[i].color);
 			glow.levels[i].color = 0;
 		}
 	}
@@ -633,7 +633,7 @@ void RenderSceneBuffersGLES3::free_render_buffer_data() {
 }
 
 GLuint RenderSceneBuffersGLES3::get_render_fbo() {
-	GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
+	gles3::TextureStorage *texture_storage = gles3::TextureStorage::get_singleton();
 	GLuint rt_fbo = 0;
 
 	_check_render_buffers();

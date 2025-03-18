@@ -37,7 +37,7 @@
 
 #define RB_LUMINANCE_BUFFERS SNAME("luminance_buffers")
 
-namespace RendererRD {
+namespace renderer_rd {
 
 class Luminance {
 private:
@@ -111,4 +111,4 @@ public:
 	~Luminance();
 };
 
-} // namespace RendererRD
+} // namespace renderer_rd

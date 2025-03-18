@@ -652,8 +652,8 @@ Error ResourceImporterTexture::import(ResourceUID::ID p_source_id, const String 
 	if (compress_mode == COMPRESS_VRAM_COMPRESSED) {
 		// Must import in desktop and mobile formats in order of priority, so platform chooses the best supported one (e.g. s3tc over etc2 on desktop).
 		const bool is_hdr = (image->get_format() >= Image::FORMAT_RF && image->get_format() <= Image::FORMAT_RGBE9995);
-		const bool can_s3tc_bptc = ResourceImporterTextureSettings::should_import_s3tc_bptc();
-		const bool can_etc2_astc = ResourceImporterTextureSettings::should_import_etc2_astc();
+		const bool can_s3tc_bptc = resource_importer_texture_settings::should_import_s3tc_bptc();
+		const bool can_etc2_astc = resource_importer_texture_settings::should_import_etc2_astc();
 
 		// Add list of formats imported.
 		if (can_s3tc_bptc) {

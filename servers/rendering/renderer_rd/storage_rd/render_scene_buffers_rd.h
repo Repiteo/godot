@@ -67,7 +67,7 @@ private:
 	bool can_be_storage = true;
 	uint32_t max_cluster_elements = 512;
 	RD::DataFormat base_data_format = RD::DATA_FORMAT_R16G16B16A16_SFLOAT;
-	RendererRD::VRS *vrs = nullptr;
+	renderer_rd::VRS *vrs = nullptr;
 	uint64_t auto_exposure_version = 1;
 
 	// Our render target represents our final destination that we display on screen.
@@ -83,7 +83,7 @@ private:
 	RS::ViewportAnisotropicFiltering anisotropic_filtering_level = RS::VIEWPORT_ANISOTROPY_4X;
 
 #ifdef METAL_ENABLED
-	RendererRD::MFXSpatialContext *mfx_spatial_context = nullptr;
+	renderer_rd::MFXSpatialContext *mfx_spatial_context = nullptr;
 #endif
 
 	// Aliasing settings
@@ -169,7 +169,7 @@ private:
 	mutable HashMap<StringName, Ref<RenderBufferCustomDataRD>> data_buffers;
 
 	// Samplers.
-	RendererRD::MaterialStorage::Samplers samplers;
+	renderer_rd::MaterialStorage::Samplers samplers;
 
 	void update_samplers();
 
@@ -187,7 +187,7 @@ public:
 	uint32_t get_max_cluster_elements() { return max_cluster_elements; }
 	void set_base_data_format(const RD::DataFormat p_base_data_format) { base_data_format = p_base_data_format; }
 	RD::DataFormat get_base_data_format() const { return base_data_format; }
-	void set_vrs(RendererRD::VRS *p_vrs) { vrs = p_vrs; }
+	void set_vrs(renderer_rd::VRS *p_vrs) { vrs = p_vrs; }
 
 	void cleanup();
 	virtual void configure(const RenderSceneBuffersConfiguration *p_config) override;
@@ -198,8 +198,8 @@ public:
 	virtual void set_use_debanding(bool p_use_debanding) override;
 
 #ifdef METAL_ENABLED
-	void ensure_mfx(RendererRD::MFXSpatialEffect *p_effect);
-	_FORCE_INLINE_ RendererRD::MFXSpatialContext *get_mfx_spatial_context() const { return mfx_spatial_context; }
+	void ensure_mfx(renderer_rd::MFXSpatialEffect *p_effect);
+	_FORCE_INLINE_ renderer_rd::MFXSpatialContext *get_mfx_spatial_context() const { return mfx_spatial_context; }
 #endif
 
 	// Named Textures
@@ -312,7 +312,7 @@ public:
 
 	// Samplers adjusted with the mipmap bias that is best fit for the configuration of these render buffers.
 
-	_FORCE_INLINE_ RendererRD::MaterialStorage::Samplers get_samplers() const {
+	_FORCE_INLINE_ renderer_rd::MaterialStorage::Samplers get_samplers() const {
 		return samplers;
 	}
 

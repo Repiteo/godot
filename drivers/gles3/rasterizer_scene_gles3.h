@@ -169,8 +169,8 @@ private:
 		RID overdraw_shader;
 	} scene_globals;
 
-	GLES3::SceneMaterialData *default_material_data_ptr = nullptr;
-	GLES3::SceneMaterialData *overdraw_material_data_ptr = nullptr;
+	gles3::SceneMaterialData *default_material_data_ptr = nullptr;
+	gles3::SceneMaterialData *overdraw_material_data_ptr = nullptr;
 
 	/* LIGHT INSTANCE */
 
@@ -279,12 +279,12 @@ private:
 		bool finished_base_pass = false;
 
 		void *surface = nullptr;
-		GLES3::SceneShaderData *shader = nullptr;
-		GLES3::SceneMaterialData *material = nullptr;
+		gles3::SceneShaderData *shader = nullptr;
+		gles3::SceneMaterialData *material = nullptr;
 
 		void *surface_shadow = nullptr;
-		GLES3::SceneShaderData *shader_shadow = nullptr;
-		GLES3::SceneMaterialData *material_shadow = nullptr;
+		gles3::SceneShaderData *shader_shadow = nullptr;
+		gles3::SceneMaterialData *material_shadow = nullptr;
 
 		GeometryInstanceSurface *next = nullptr;
 		GeometryInstanceGLES3 *owner = nullptr;
@@ -373,8 +373,8 @@ private:
 	PagedAllocator<GeometryInstanceGLES3> geometry_instance_alloc;
 	PagedAllocator<GeometryInstanceSurface> geometry_instance_surface_alloc;
 
-	void _geometry_instance_add_surface_with_material(GeometryInstanceGLES3 *ginstance, uint32_t p_surface, GLES3::SceneMaterialData *p_material, uint32_t p_material_id, uint32_t p_shader_id, RID p_mesh);
-	void _geometry_instance_add_surface_with_material_chain(GeometryInstanceGLES3 *ginstance, uint32_t p_surface, GLES3::SceneMaterialData *p_material, RID p_mat_src, RID p_mesh);
+	void _geometry_instance_add_surface_with_material(GeometryInstanceGLES3 *ginstance, uint32_t p_surface, gles3::SceneMaterialData *p_material, uint32_t p_material_id, uint32_t p_shader_id, RID p_mesh);
+	void _geometry_instance_add_surface_with_material_chain(GeometryInstanceGLES3 *ginstance, uint32_t p_surface, gles3::SceneMaterialData *p_material, RID p_mat_src, RID p_mesh);
 	void _geometry_instance_add_surface(GeometryInstanceGLES3 *ginstance, uint32_t p_surface, RID p_material, RID p_mesh);
 	void _geometry_instance_update(RenderGeometryInstance *p_geometry_instance);
 	void _update_dirty_geometry_instances();
@@ -460,7 +460,7 @@ private:
 
 		bool used_depth_prepass = false;
 
-		GLES3::SceneShaderData::BlendMode current_blend_mode = GLES3::SceneShaderData::BLEND_MODE_MIX;
+		gles3::SceneShaderData::BlendMode current_blend_mode = gles3::SceneShaderData::BLEND_MODE_MIX;
 		RS::CullMode cull_mode = RS::CULL_MODE_BACK;
 
 		bool current_blend_enabled = false;
@@ -549,8 +549,8 @@ private:
 		LightData *spot_lights = nullptr;
 		ShadowData *positional_shadows = nullptr;
 
-		InstanceSort<GLES3::LightInstance> *omni_light_sort;
-		InstanceSort<GLES3::LightInstance> *spot_light_sort;
+		InstanceSort<gles3::LightInstance> *omni_light_sort;
+		InstanceSort<gles3::LightInstance> *spot_light_sort;
 		GLuint omni_light_buffer = 0;
 		GLuint spot_light_buffer = 0;
 		GLuint positional_shadow_buffer = 0;
@@ -739,7 +739,7 @@ protected:
 		float baked_exposure = 1.0;
 
 		//State to track when radiance cubemap needs updating
-		GLES3::SkyMaterialData *prev_material;
+		gles3::SkyMaterialData *prev_material;
 		Vector3 prev_position = Vector3(0.0, 0.0, 0.0);
 		float prev_time = 0.0f;
 	};

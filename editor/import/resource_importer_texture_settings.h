@@ -30,9 +30,9 @@
 
 #pragma once
 
-// ResourceImporterTextureSettings contains code used by
+// resource_importer_texture_settings contains code used by
 // multiple texture importers and the export dialog.
-namespace ResourceImporterTextureSettings {
+namespace resource_importer_texture_settings {
 bool should_import_s3tc_bptc();
 bool should_import_etc2_astc();
-} //namespace ResourceImporterTextureSettings
+} //namespace resource_importer_texture_settings

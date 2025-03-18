@@ -36,7 +36,7 @@
 
 #include "platform_gl.h"
 
-namespace GLES3 {
+namespace gles3 {
 
 /* VISIBILITY NOTIFIER */
 
@@ -229,6 +229,6 @@ public:
 	virtual uint64_t get_maximum_uniform_buffer_size() const override;
 };
 
-} // namespace GLES3
+} //namespace gles3
 
 #endif // GLES3_ENABLED

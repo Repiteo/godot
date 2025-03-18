@@ -48,7 +48,7 @@ class JoltCustomMotionShape final : public JPH::ConvexShape {
 
 public:
 	explicit JoltCustomMotionShape(const JPH::ConvexShape &p_shape) :
-			JPH::ConvexShape(JoltCustomShapeSubType::MOTION), inner_shape(p_shape) {}
+			JPH::ConvexShape(jolt_custom_shape_sub_type::MOTION), inner_shape(p_shape) {}
 
 	virtual bool MustBeStatic() const override { return false; }
 

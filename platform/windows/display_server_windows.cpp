@@ -994,7 +994,7 @@ Ref<Image> DisplayServerWindows::clipboard_get_image() const {
 			uint8_t *png_data = (uint8_t *)GlobalLock(png_handle);
 			image.instantiate();
 
-			PNGDriverCommon::png_to_image(png_data, png_size, false, image);
+			png_driver_common::png_to_image(png_data, png_size, false, image);
 
 			GlobalUnlock(png_handle);
 		}

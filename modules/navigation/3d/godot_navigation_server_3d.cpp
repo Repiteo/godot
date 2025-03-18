@@ -37,7 +37,7 @@
 #include "nav_mesh_generator_3d.h"
 #endif // _3D_DISABLED
 
-using namespace NavigationUtilities;
+using namespace navigation_utilities;
 
 /// Creates a struct for each function and a function that once called creates
 /// an instance of that struct with the submitted parameters.

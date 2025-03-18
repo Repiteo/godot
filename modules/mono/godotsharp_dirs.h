@@ -32,7 +32,7 @@
 
 #include "core/string/ustring.h"
 
-namespace GodotSharpDirs {
+namespace godot_sharp_dirs {
 
 String get_res_metadata_dir();
 String get_res_temp_assemblies_dir();
@@ -46,4 +46,4 @@ String get_build_logs_dir();
 String get_data_editor_tools_dir();
 #endif
 
-} // namespace GodotSharpDirs
+} // namespace godot_sharp_dirs

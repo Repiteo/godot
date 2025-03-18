@@ -46,7 +46,7 @@ Error ImageLoaderPNG::load_image(Ref<Image> p_image, Ref<FileAccess> f, BitField
 		f->get_buffer(writer, buffer_size);
 	}
 	const uint8_t *reader = file_buffer.ptr();
-	return PNGDriverCommon::png_to_image(reader, buffer_size, p_flags & FLAG_FORCE_LINEAR, p_image);
+	return png_driver_common::png_to_image(reader, buffer_size, p_flags & FLAG_FORCE_LINEAR, p_image);
 }
 
 void ImageLoaderPNG::get_recognized_extensions(List<String> *p_extensions) const {
@@ -58,7 +58,7 @@ Ref<Image> ImageLoaderPNG::load_mem_png(const uint8_t *p_png, int p_size) {
 	img.instantiate();
 
 	// the value of p_force_linear does not matter since it only applies to 16 bit
-	Error err = PNGDriverCommon::png_to_image(p_png, p_size, false, img);
+	Error err = png_driver_common::png_to_image(p_png, p_size, false, img);
 	ERR_FAIL_COND_V(err, Ref<Image>());
 
 	return img;
@@ -89,7 +89,7 @@ Vector<uint8_t> ImageLoaderPNG::lossless_pack_png(const Ref<Image> &p_image) {
 		memcpy(writer, "PNG ", 4);
 	}
 
-	Error err = PNGDriverCommon::image_to_png(p_image, out_buffer);
+	Error err = png_driver_common::image_to_png(p_image, out_buffer);
 	if (err) {
 		ERR_FAIL_V(Vector<uint8_t>());
 	}

@@ -30,7 +30,7 @@
 
 #include "mesh_storage.h"
 
-using namespace RendererRD;
+using namespace renderer_rd;
 
 MeshStorage *MeshStorage::singleton = nullptr;
 

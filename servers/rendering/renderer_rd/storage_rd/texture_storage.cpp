@@ -35,7 +35,7 @@
 #include "material_storage.h"
 #include "servers/rendering/renderer_rd/renderer_scene_render_rd.h"
 
-using namespace RendererRD;
+using namespace renderer_rd;
 
 ///////////////////////////////////////////////////////////////////////////
 // TextureStorage::CanvasTexture
@@ -3584,14 +3584,14 @@ RID TextureStorage::render_target_get_override_velocity_slice(RID p_render_targe
 	}
 }
 
-void RendererRD::TextureStorage::render_target_set_render_region(RID p_render_target, const Rect2i &p_render_region) {
+void renderer_rd::TextureStorage::render_target_set_render_region(RID p_render_target, const Rect2i &p_render_region) {
 	RenderTarget *rt = render_target_owner.get_or_null(p_render_target);
 	ERR_FAIL_NULL(rt);
 
 	rt->render_region = p_render_region;
 }
 
-Rect2i RendererRD::TextureStorage::render_target_get_render_region(RID p_render_target) const {
+Rect2i renderer_rd::TextureStorage::render_target_get_render_region(RID p_render_target) const {
 	RenderTarget *rt = render_target_owner.get_or_null(p_render_target);
 	ERR_FAIL_NULL_V(rt, Rect2i());
 

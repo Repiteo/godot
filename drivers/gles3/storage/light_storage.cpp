@@ -173,7 +173,7 @@ void LightStorage::light_set_shadow(RID p_light, bool p_enabled) {
 }
 
 void LightStorage::light_set_projector(RID p_light, RID p_texture) {
-	GLES3::TextureStorage *texture_storage = GLES3::TextureStorage::get_singleton();
+	gles3::TextureStorage *texture_storage = gles3::TextureStorage::get_singleton();
 	Light *light = light_owner.get_or_null(p_light);
 	ERR_FAIL_NULL(light);
 
@@ -694,10 +694,10 @@ void LightStorage::reflection_atlas_set_size(RID p_ref_atlas, int p_reflection_s
 				}
 			}
 
-			GLES3::Utilities::get_singleton()->texture_free_data(ra->reflections[i].color);
+			gles3::Utilities::get_singleton()->texture_free_data(ra->reflections[i].color);
 			ra->reflections.write[i].color = 0;
 
-			GLES3::Utilities::get_singleton()->texture_free_data(ra->reflections[i].radiance);
+			gles3::Utilities::get_singleton()->texture_free_data(ra->reflections[i].radiance);
 			ra->reflections.write[i].radiance = 0;
 
 			if (ra->reflections[i].owner.is_null()) {
@@ -709,7 +709,7 @@ void LightStorage::reflection_atlas_set_size(RID p_ref_atlas, int p_reflection_s
 
 		ra->reflections.clear();
 
-		GLES3::Utilities::get_singleton()->texture_free_data(ra->depth);
+		gles3::Utilities::get_singleton()->texture_free_data(ra->depth);
 		ra->depth = 0;
 	}
 
@@ -834,7 +834,7 @@ bool LightStorage::reflection_probe_instance_begin_render(RID p_instance, RID p_
 
 			glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT24, atlas->size, atlas->size, 6, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, nullptr);
 
-			GLES3::Utilities::get_singleton()->texture_allocated_data(atlas->depth, atlas->size * atlas->size * 6 * 3, "Reflection probe atlas (depth)");
+			gles3::Utilities::get_singleton()->texture_allocated_data(atlas->depth, atlas->size * atlas->size * 6 * 3, "Reflection probe atlas (depth)");
 		}
 
 		// Make room for our atlas entries
@@ -877,7 +877,7 @@ bool LightStorage::reflection_probe_instance_begin_render(RID p_instance, RID p_
 				mipmap_size = MAX(mipmap_size >> 1, 1);
 			}
 
-			GLES3::Utilities::get_singleton()->texture_allocated_data(color, data_size, String("Reflection probe atlas (") + String::num_int64(i) + String(", color)"));
+			gles3::Utilities::get_singleton()->texture_allocated_data(color, data_size, String("Reflection probe atlas (") + String::num_int64(i) + String(", color)"));
 
 			// Create a radiance map for this atlas entry
 			GLuint radiance = 0;
@@ -907,7 +907,7 @@ bool LightStorage::reflection_probe_instance_begin_render(RID p_instance, RID p_
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, atlas->mipmap_count - 1);
 
 			// Same data size as our color buffer
-			GLES3::Utilities::get_singleton()->texture_allocated_data(radiance, data_size, String("Reflection probe atlas (") + String::num_int64(i) + String(", radiance)"));
+			gles3::Utilities::get_singleton()->texture_allocated_data(radiance, data_size, String("Reflection probe atlas (") + String::num_int64(i) + String(", radiance)"));
 
 			// Create our framebuffers so we can draw to all sides
 			for (int side = 0; side < 6; side++) {
@@ -938,7 +938,7 @@ bool LightStorage::reflection_probe_instance_begin_render(RID p_instance, RID p_
 			}
 		}
 
-		glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 	}
@@ -987,7 +987,7 @@ Ref<RenderSceneBuffers> LightStorage::reflection_probe_atlas_get_render_buffers(
 }
 
 bool LightStorage::reflection_probe_instance_postprocess_step(RID p_instance) {
-	GLES3::CubemapFilter *cubemap_filter = GLES3::CubemapFilter::get_singleton();
+	gles3::CubemapFilter *cubemap_filter = gles3::CubemapFilter::get_singleton();
 	ReflectionProbeInstance *rpi = reflection_probe_instance_owner.get_or_null(p_instance);
 	ERR_FAIL_NULL_V(rpi, false);
 	ERR_FAIL_COND_V(!rpi->rendering, false);
@@ -1004,7 +1004,7 @@ bool LightStorage::reflection_probe_instance_postprocess_step(RID p_instance) {
 	if (LightStorage::get_singleton()->reflection_probe_get_update_mode(rpi->probe) == RS::REFLECTION_PROBE_UPDATE_ALWAYS) {
 		// Using real time reflections, all roughness is done in one step
 		for (int m = 0; m < atlas->mipmap_count; m++) {
-			const GLES3::ReflectionAtlas::Reflection &reflection = atlas->reflections[rpi->atlas_index];
+			const gles3::ReflectionAtlas::Reflection &reflection = atlas->reflections[rpi->atlas_index];
 			cubemap_filter->filter_radiance(reflection.color, reflection.radiance, reflection.fbos[6], atlas->size, atlas->mipmap_count, m);
 		}
 
@@ -1012,7 +1012,7 @@ bool LightStorage::reflection_probe_instance_postprocess_step(RID p_instance) {
 		rpi->processing_layer = 0;
 		return true;
 	} else {
-		const GLES3::ReflectionAtlas::Reflection &reflection = atlas->reflections[rpi->atlas_index];
+		const gles3::ReflectionAtlas::Reflection &reflection = atlas->reflections[rpi->atlas_index];
 		cubemap_filter->filter_radiance(reflection.color, reflection.radiance, reflection.fbos[6], atlas->size, atlas->mipmap_count, rpi->processing_layer);
 
 		rpi->processing_layer++;
@@ -1069,10 +1069,10 @@ void LightStorage::lightmap_set_textures(RID p_lightmap, RID p_light, bool p_use
 	lightmap->light_texture = p_light;
 	lightmap->uses_spherical_harmonics = p_uses_spherical_haromics;
 
-	Vector3i light_texture_size = GLES3::TextureStorage::get_singleton()->texture_get_size(lightmap->light_texture);
+	Vector3i light_texture_size = gles3::TextureStorage::get_singleton()->texture_get_size(lightmap->light_texture);
 	lightmap->light_texture_size = Vector2i(light_texture_size.x, light_texture_size.y);
 
-	GLuint tex = GLES3::TextureStorage::get_singleton()->texture_get_texid(lightmap->light_texture);
+	GLuint tex = gles3::TextureStorage::get_singleton()->texture_get_texid(lightmap->light_texture);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -1215,7 +1215,7 @@ void LightStorage::lightmap_set_shadowmask_textures(RID p_lightmap, RID p_shadow
 	ERR_FAIL_NULL(lightmap);
 	lightmap->shadow_texture = p_shadow;
 
-	GLuint tex = GLES3::TextureStorage::get_singleton()->texture_get_texid(lightmap->shadow_texture);
+	GLuint tex = gles3::TextureStorage::get_singleton()->texture_get_texid(lightmap->shadow_texture);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -1535,7 +1535,7 @@ bool LightStorage::_shadow_atlas_find_shadow(ShadowAtlas *shadow_atlas, int *p_i
 #ifdef DEBUG_ENABLED
 				GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 				if (status != GL_FRAMEBUFFER_COMPLETE) {
-					ERR_PRINT("Could not create omni light shadow framebuffer, status: " + GLES3::TextureStorage::get_singleton()->get_framebuffer_error(status));
+					ERR_PRINT("Could not create omni light shadow framebuffer, status: " + gles3::TextureStorage::get_singleton()->get_framebuffer_error(status));
 				}
 #endif
 				glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
@@ -1556,7 +1556,7 @@ bool LightStorage::_shadow_atlas_find_shadow(ShadowAtlas *shadow_atlas, int *p_i
 
 				glBindTexture(GL_TEXTURE_2D, 0);
 			}
-			glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+			glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 
 			r_quadrant = qidx;
 			r_shadow = shadow_atlas->quadrants[qidx].textures.size();
@@ -1656,7 +1656,7 @@ void LightStorage::update_directional_shadow_atlas() {
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 }
 
 void LightStorage::directional_shadow_atlas_set_size(int p_size, bool p_16_bits) {

@@ -33,7 +33,7 @@
 #include "core/math/vector3.h"
 #include "core/variant/typed_array.h"
 
-namespace NavigationUtilities {
+namespace navigation_utilities {
 
 enum PathfindingAlgorithm {
 	PATHFINDING_ALGORITHM_ASTAR = 0,
@@ -58,4 +58,4 @@ enum PathMetadataFlags {
 	PATH_INCLUDE_ALL = PATH_INCLUDE_TYPES | PATH_INCLUDE_RIDS | PATH_INCLUDE_OWNERS
 };
 
-} //namespace NavigationUtilities
+} //namespace navigation_utilities

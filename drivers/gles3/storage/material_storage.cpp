@@ -1372,7 +1372,7 @@ MaterialStorage::MaterialStorage() {
 		actions.render_mode_defines["ambient_light_disabled"] = "#define AMBIENT_LIGHT_DISABLED\n";
 		actions.render_mode_defines["shadow_to_opacity"] = "#define USE_SHADOW_TO_OPACITY\n";
 		actions.render_mode_defines["unshaded"] = "#define MODE_UNSHADED\n";
-		if (!GLES3::Config::get_singleton()->force_vertex_shading) {
+		if (!gles3::Config::get_singleton()->force_vertex_shading) {
 			// If forcing vertex shading, this will be defined already.
 			actions.render_mode_defines["vertex_lighting"] = "#define USE_VERTEX_LIGHTING\n";
 		}
@@ -2155,7 +2155,7 @@ void MaterialStorage::shader_initialize(RID p_rid) {
 }
 
 void MaterialStorage::shader_free(RID p_rid) {
-	GLES3::Shader *shader = shader_owner.get_or_null(p_rid);
+	gles3::Shader *shader = shader_owner.get_or_null(p_rid);
 	ERR_FAIL_NULL(shader);
 
 	//make material unreference this
@@ -2171,7 +2171,7 @@ void MaterialStorage::shader_free(RID p_rid) {
 }
 
 void MaterialStorage::shader_set_code(RID p_shader, const String &p_code) {
-	GLES3::Shader *shader = shader_owner.get_or_null(p_shader);
+	gles3::Shader *shader = shader_owner.get_or_null(p_shader);
 	ERR_FAIL_NULL(shader);
 
 	shader->code = p_code;
@@ -2249,7 +2249,7 @@ void MaterialStorage::shader_set_code(RID p_shader, const String &p_code) {
 }
 
 void MaterialStorage::shader_set_path_hint(RID p_shader, const String &p_path) {
-	GLES3::Shader *shader = shader_owner.get_or_null(p_shader);
+	gles3::Shader *shader = shader_owner.get_or_null(p_shader);
 	ERR_FAIL_NULL(shader);
 
 	shader->path_hint = p_path;
@@ -2259,13 +2259,13 @@ void MaterialStorage::shader_set_path_hint(RID p_shader, const String &p_path) {
 }
 
 String MaterialStorage::shader_get_code(RID p_shader) const {
-	const GLES3::Shader *shader = shader_owner.get_or_null(p_shader);
+	const gles3::Shader *shader = shader_owner.get_or_null(p_shader);
 	ERR_FAIL_NULL_V(shader, String());
 	return shader->code;
 }
 
 void MaterialStorage::get_shader_parameter_list(RID p_shader, List<PropertyInfo> *p_param_list) const {
-	GLES3::Shader *shader = shader_owner.get_or_null(p_shader);
+	gles3::Shader *shader = shader_owner.get_or_null(p_shader);
 	ERR_FAIL_NULL(shader);
 	if (shader->data) {
 		return shader->data->get_shader_uniform_list(p_param_list);
@@ -2273,7 +2273,7 @@ void MaterialStorage::get_shader_parameter_list(RID p_shader, List<PropertyInfo>
 }
 
 void MaterialStorage::shader_set_default_texture_parameter(RID p_shader, const StringName &p_name, RID p_texture, int p_index) {
-	GLES3::Shader *shader = shader_owner.get_or_null(p_shader);
+	gles3::Shader *shader = shader_owner.get_or_null(p_shader);
 	ERR_FAIL_NULL(shader);
 
 	if (p_texture.is_valid() && TextureStorage::get_singleton()->owns_texture(p_texture)) {
@@ -2300,7 +2300,7 @@ void MaterialStorage::shader_set_default_texture_parameter(RID p_shader, const S
 }
 
 RID MaterialStorage::shader_get_default_texture_parameter(RID p_shader, const StringName &p_name, int p_index) const {
-	const GLES3::Shader *shader = shader_owner.get_or_null(p_shader);
+	const gles3::Shader *shader = shader_owner.get_or_null(p_shader);
 	ERR_FAIL_NULL_V(shader, RID());
 	if (shader->default_texture_parameter.has(p_name) && shader->default_texture_parameter[p_name].has(p_index)) {
 		return shader->default_texture_parameter[p_name][p_index];
@@ -2329,7 +2329,7 @@ RS::ShaderNativeSourceCode MaterialStorage::shader_get_native_source_code(RID p_
 
 /* MATERIAL API */
 
-void MaterialStorage::_material_queue_update(GLES3::Material *material, bool p_uniform, bool p_texture) {
+void MaterialStorage::_material_queue_update(gles3::Material *material, bool p_uniform, bool p_texture) {
 	material->uniform_dirty = material->uniform_dirty || p_uniform;
 	material->texture_dirty = material->texture_dirty || p_texture;
 
@@ -2383,7 +2383,7 @@ void MaterialStorage::material_free(RID p_rid) {
 }
 
 void MaterialStorage::material_set_shader(RID p_material, RID p_shader) {
-	GLES3::Material *material = material_owner.get_or_null(p_material);
+	gles3::Material *material = material_owner.get_or_null(p_material);
 	ERR_FAIL_NULL(material);
 
 	if (material->data) {
@@ -2426,7 +2426,7 @@ void MaterialStorage::material_set_shader(RID p_material, RID p_shader) {
 }
 
 void MaterialStorage::material_set_param(RID p_material, const StringName &p_param, const Variant &p_value) {
-	GLES3::Material *material = material_owner.get_or_null(p_material);
+	gles3::Material *material = material_owner.get_or_null(p_material);
 	ERR_FAIL_NULL(material);
 
 	if (p_value.get_type() == Variant::NIL) {
@@ -2445,7 +2445,7 @@ void MaterialStorage::material_set_param(RID p_material, const StringName &p_par
 }
 
 Variant MaterialStorage::material_get_param(RID p_material, const StringName &p_param) const {
-	const GLES3::Material *material = material_owner.get_or_null(p_material);
+	const gles3::Material *material = material_owner.get_or_null(p_material);
 	ERR_FAIL_NULL_V(material, Variant());
 	if (material->params.has(p_param)) {
 		return material->params[p_param];
@@ -2455,7 +2455,7 @@ Variant MaterialStorage::material_get_param(RID p_material, const StringName &p_
 }
 
 void MaterialStorage::material_set_next_pass(RID p_material, RID p_next_material) {
-	GLES3::Material *material = material_owner.get_or_null(p_material);
+	gles3::Material *material = material_owner.get_or_null(p_material);
 	ERR_FAIL_NULL(material);
 
 	if (material->next_pass == p_next_material) {
@@ -2474,7 +2474,7 @@ void MaterialStorage::material_set_render_priority(RID p_material, int priority)
 	ERR_FAIL_COND(priority < RS::MATERIAL_RENDER_PRIORITY_MIN);
 	ERR_FAIL_COND(priority > RS::MATERIAL_RENDER_PRIORITY_MAX);
 
-	GLES3::Material *material = material_owner.get_or_null(p_material);
+	gles3::Material *material = material_owner.get_or_null(p_material);
 	ERR_FAIL_NULL(material);
 	material->priority = priority;
 	if (material->data) {
@@ -2484,7 +2484,7 @@ void MaterialStorage::material_set_render_priority(RID p_material, int priority)
 }
 
 bool MaterialStorage::material_is_animated(RID p_material) {
-	GLES3::Material *material = material_owner.get_or_null(p_material);
+	gles3::Material *material = material_owner.get_or_null(p_material);
 	ERR_FAIL_NULL_V(material, false);
 	if (material->shader && material->shader->data) {
 		if (material->shader->data->is_animated()) {
@@ -2497,7 +2497,7 @@ bool MaterialStorage::material_is_animated(RID p_material) {
 }
 
 bool MaterialStorage::material_casts_shadows(RID p_material) {
-	GLES3::Material *material = material_owner.get_or_null(p_material);
+	gles3::Material *material = material_owner.get_or_null(p_material);
 	ERR_FAIL_NULL_V(material, true);
 	if (material->shader && material->shader->data) {
 		if (material->shader->data->casts_shadows()) {
@@ -2510,7 +2510,7 @@ bool MaterialStorage::material_casts_shadows(RID p_material) {
 }
 
 RS::CullMode MaterialStorage::material_get_cull_mode(RID p_material) const {
-	const GLES3::Material *material = material_owner.get_or_null(p_material);
+	const gles3::Material *material = material_owner.get_or_null(p_material);
 	ERR_FAIL_NULL_V(material, RS::CULL_MODE_DISABLED);
 	ERR_FAIL_NULL_V(material->shader, RS::CULL_MODE_DISABLED);
 	if (material->shader->data) {
@@ -2523,7 +2523,7 @@ RS::CullMode MaterialStorage::material_get_cull_mode(RID p_material) const {
 }
 
 void MaterialStorage::material_get_instance_shader_parameters(RID p_material, List<InstanceShaderParam> *r_parameters) {
-	GLES3::Material *material = material_owner.get_or_null(p_material);
+	gles3::Material *material = material_owner.get_or_null(p_material);
 	ERR_FAIL_NULL(material);
 	if (material->shader && material->shader->data) {
 		material->shader->data->get_instance_param_list(r_parameters);
@@ -2668,7 +2668,7 @@ CanvasShaderData::~CanvasShaderData() {
 	}
 }
 
-GLES3::ShaderData *GLES3::_create_canvas_shader_func() {
+gles3::ShaderData *gles3::_create_canvas_shader_func() {
 	CanvasShaderData *shader_data = memnew(CanvasShaderData);
 	return shader_data;
 }
@@ -2684,12 +2684,12 @@ static void bind_uniforms_generic(const Vector<RID> &p_textures, const Vector<Sh
 	int texture_uniform_count = 0;
 	for (int ti = 0; ti < p_textures.size(); ti++) {
 		ERR_FAIL_COND_MSG(texture_uniform_index >= p_texture_uniforms.size(), "texture_uniform_index out of bounds");
-		GLES3::Texture *texture = TextureStorage::get_singleton()->get_texture(textures[ti]);
+		gles3::Texture *texture = TextureStorage::get_singleton()->get_texture(textures[ti]);
 		const ShaderCompiler::GeneratedCode::Texture &texture_uniform = texture_uniforms[texture_uniform_index];
 		if (texture) {
 			glActiveTexture(GL_TEXTURE0 + texture_offset + ti);
 			GLenum target = target_from_type[texture_uniform.type];
-			if (target == _GL_TEXTURE_EXTERNAL_OES && !GLES3::Config::get_singleton()->external_texture_supported) {
+			if (target == _GL_TEXTURE_EXTERNAL_OES && !gles3::Config::get_singleton()->external_texture_supported) {
 				target = GL_TEXTURE_2D;
 			}
 			glBindTexture(target, texture->tex_id);
@@ -2718,7 +2718,7 @@ void CanvasMaterialData::bind_uniforms() {
 CanvasMaterialData::~CanvasMaterialData() {
 }
 
-GLES3::MaterialData *GLES3::_create_canvas_material_func(ShaderData *p_shader) {
+gles3::MaterialData *gles3::_create_canvas_material_func(ShaderData *p_shader) {
 	CanvasMaterialData *material_data = memnew(CanvasMaterialData);
 	material_data->shader_data = static_cast<CanvasShaderData *>(p_shader);
 	//update will happen later anyway so do nothing.
@@ -2838,7 +2838,7 @@ SkyShaderData::~SkyShaderData() {
 	}
 }
 
-GLES3::ShaderData *GLES3::_create_sky_shader_func() {
+gles3::ShaderData *gles3::_create_sky_shader_func() {
 	SkyShaderData *shader_data = memnew(SkyShaderData);
 	return shader_data;
 }
@@ -2853,7 +2853,7 @@ void SkyMaterialData::update_parameters(const HashMap<StringName, Variant> &p_pa
 
 SkyMaterialData::~SkyMaterialData() {
 }
-GLES3::MaterialData *GLES3::_create_sky_material_func(ShaderData *p_shader) {
+gles3::MaterialData *gles3::_create_sky_material_func(ShaderData *p_shader) {
 	SkyMaterialData *material_data = memnew(SkyMaterialData);
 	material_data->shader_data = static_cast<SkyShaderData *>(p_shader);
 	//update will happen later anyway so do nothing.
@@ -3112,7 +3112,7 @@ SceneShaderData::~SceneShaderData() {
 	}
 }
 
-GLES3::ShaderData *GLES3::_create_scene_shader_func() {
+gles3::ShaderData *gles3::_create_scene_shader_func() {
 	SceneShaderData *shader_data = memnew(SceneShaderData);
 	return shader_data;
 }
@@ -3132,7 +3132,7 @@ void SceneMaterialData::update_parameters(const HashMap<StringName, Variant> &p_
 SceneMaterialData::~SceneMaterialData() {
 }
 
-GLES3::MaterialData *GLES3::_create_scene_material_func(ShaderData *p_shader) {
+gles3::MaterialData *gles3::_create_scene_material_func(ShaderData *p_shader) {
 	SceneMaterialData *material_data = memnew(SceneMaterialData);
 	material_data->shader_data = static_cast<SceneShaderData *>(p_shader);
 	//update will happen later anyway so do nothing.
@@ -3222,7 +3222,7 @@ ParticlesShaderData::~ParticlesShaderData() {
 	}
 }
 
-GLES3::ShaderData *GLES3::_create_particles_shader_func() {
+gles3::ShaderData *gles3::_create_particles_shader_func() {
 	ParticlesShaderData *shader_data = memnew(ParticlesShaderData);
 	return shader_data;
 }
@@ -3234,7 +3234,7 @@ void ParticleProcessMaterialData::update_parameters(const HashMap<StringName, Va
 ParticleProcessMaterialData::~ParticleProcessMaterialData() {
 }
 
-GLES3::MaterialData *GLES3::_create_particles_material_func(ShaderData *p_shader) {
+gles3::MaterialData *gles3::_create_particles_material_func(ShaderData *p_shader) {
 	ParticleProcessMaterialData *material_data = memnew(ParticleProcessMaterialData);
 	material_data->shader_data = static_cast<ParticlesShaderData *>(p_shader);
 	//update will happen later anyway so do nothing.
@@ -3243,7 +3243,7 @@ GLES3::MaterialData *GLES3::_create_particles_material_func(ShaderData *p_shader
 
 void ParticleProcessMaterialData::bind_uniforms() {
 	// Bind Material Uniforms
-	glBindBufferBase(GL_UNIFORM_BUFFER, GLES3::PARTICLES_MATERIAL_UNIFORM_LOCATION, uniform_buffer);
+	glBindBufferBase(GL_UNIFORM_BUFFER, gles3::PARTICLES_MATERIAL_UNIFORM_LOCATION, uniform_buffer);
 
 	bind_uniforms_generic(texture_cache, shader_data->texture_uniforms, 1); // Start at GL_TEXTURE1 because texture slot 0 is reserved for the heightmap texture.
 }

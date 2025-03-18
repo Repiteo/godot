@@ -36,7 +36,7 @@
 #include "servers/rendering/renderer_scene_render.h"
 #include "servers/rendering_server.h"
 
-namespace RendererRD {
+namespace renderer_rd {
 class MotionVectorsStore {
 	struct PushConstant {
 		float reprojection_matrix[16];
@@ -56,4 +56,4 @@ public:
 			const Projection &p_current_projection, const Transform3D &p_current_transform,
 			const Projection &p_previous_projection, const Transform3D &p_previous_transform);
 };
-} //namespace RendererRD
+} //namespace renderer_rd

@@ -206,8 +206,8 @@ void CopyEffects::bilinear_blur(GLuint p_source_texture, int p_mipmap_count, con
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffers[i % 2]);
 		source_region = dest_region;
 	}
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 	glDeleteFramebuffers(2, framebuffers);
 }
 
@@ -248,7 +248,7 @@ void CopyEffects::gaussian_blur(GLuint p_source_texture, int p_mipmap_count, con
 #ifdef DEV_ENABLED
 		GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 		if (status != GL_FRAMEBUFFER_COMPLETE) {
-			WARN_PRINT("Could not bind Gaussian blur framebuffer, status: " + GLES3::TextureStorage::get_singleton()->get_framebuffer_error(status));
+			WARN_PRINT("Could not bind Gaussian blur framebuffer, status: " + gles3::TextureStorage::get_singleton()->get_framebuffer_error(status));
 		}
 #endif
 
@@ -272,7 +272,7 @@ void CopyEffects::gaussian_blur(GLuint p_source_texture, int p_mipmap_count, con
 		source_region = dest_region;
 		normalized_source_region = normalized_dest_region;
 	}
-	glBindFramebuffer(GL_FRAMEBUFFER, GLES3::TextureStorage::system_fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, gles3::TextureStorage::system_fbo);
 	glDeleteFramebuffers(1, &framebuffer);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

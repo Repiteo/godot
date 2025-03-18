@@ -35,7 +35,7 @@
 #include "drivers/gles3/shader_gles3.h"
 #include "drivers/gles3/shaders/feed.glsl.gen.h"
 
-namespace GLES3 {
+namespace gles3 {
 
 class FeedEffects {
 private:
@@ -61,6 +61,6 @@ private:
 	void draw_screen_triangle();
 };
 
-} // namespace GLES3
+} //namespace gles3
 
 #endif // GLES3_ENABLED

@@ -40,14 +40,14 @@ struct NavBaseIteration3D {
 	uint32_t navigation_layers = 1;
 	real_t enter_cost = 0.0;
 	real_t travel_cost = 1.0;
-	NavigationUtilities::PathSegmentType owner_type;
+	navigation_utilities::PathSegmentType owner_type;
 	ObjectID owner_object_id;
 	RID owner_rid;
 	bool owner_use_edge_connections = false;
 	LocalVector<nav_3d::Polygon> navmesh_polygons;
 
 	bool get_enabled() const { return enabled; }
-	NavigationUtilities::PathSegmentType get_type() const { return owner_type; }
+	navigation_utilities::PathSegmentType get_type() const { return owner_type; }
 	RID get_self() const { return owner_rid; }
 	ObjectID get_owner_id() const { return owner_object_id; }
 	uint32_t get_navigation_layers() const { return navigation_layers; }

@@ -30,7 +30,7 @@
 
 #include "light_storage.h"
 
-using namespace RendererDummy;
+using namespace renderer_dummy;
 
 LightStorage *LightStorage::singleton = nullptr;
 

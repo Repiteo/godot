@@ -31,7 +31,7 @@
 #include "sort_effects.h"
 // #include "servers/rendering/renderer_rd/renderer_compositor_rd.h"
 
-using namespace RendererRD;
+using namespace renderer_rd;
 
 SortEffects::SortEffects() {
 	Vector<String> sort_modes;
