@@ -32,7 +32,7 @@
 
 #include "core/error/error_macros.h"
 #include "core/math/math_funcs.h"
-#include "core/string/ustring.h"
+#include "core/math/vector2.h"
 
 struct Basis;
 struct Vector2;
@@ -152,9 +152,9 @@ struct [[nodiscard]] Vector3 {
 	_FORCE_INLINE_ real_t signed_angle_to(const Vector3 &p_to, const Vector3 &p_axis) const;
 	_FORCE_INLINE_ Vector3 direction_to(const Vector3 &p_to) const;
 
-	_FORCE_INLINE_ Vector3 slide(const Vector3 &p_normal) const;
+	Vector3 slide(const Vector3 &p_normal) const;
 	_FORCE_INLINE_ Vector3 bounce(const Vector3 &p_normal) const;
-	_FORCE_INLINE_ Vector3 reflect(const Vector3 &p_normal) const;
+	Vector3 reflect(const Vector3 &p_normal) const;
 
 	bool is_equal_approx(const Vector3 &p_v) const;
 	bool is_same(const Vector3 &p_v) const;
@@ -531,23 +531,129 @@ void Vector3::zero() {
 	x = y = z = 0;
 }
 
-// slide returns the component of the vector along the given plane, specified by its normal vector.
-Vector3 Vector3::slide(const Vector3 &p_normal) const {
-#ifdef MATH_CHECKS
-	ERR_FAIL_COND_V_MSG(!p_normal.is_normalized(), Vector3(), "The normal Vector3 " + p_normal.operator String() + " must be normalized.");
-#endif
-	return *this - p_normal * dot(p_normal);
-}
-
-Vector3 Vector3::bounce(const Vector3 &p_normal) const {
+inline Vector3 Vector3::bounce(const Vector3 &p_normal) const {
 	return -reflect(p_normal);
 }
 
-Vector3 Vector3::reflect(const Vector3 &p_normal) const {
-#ifdef MATH_CHECKS
-	ERR_FAIL_COND_V_MSG(!p_normal.is_normalized(), Vector3(), "The normal Vector3 " + p_normal.operator String() + " must be normalized.");
-#endif
-	return 2.0f * p_normal * dot(p_normal) - *this;
+inline Vector3 Vector3::rotated(const Vector3 &p_axis, real_t p_angle) const {
+	Vector3 r = *this;
+	r.rotate(p_axis, p_angle);
+	return r;
+}
+
+inline Vector3 Vector3::clamp(const Vector3 &p_min, const Vector3 &p_max) const {
+	return Vector3(
+			CLAMP(x, p_min.x, p_max.x),
+			CLAMP(y, p_min.y, p_max.y),
+			CLAMP(z, p_min.z, p_max.z));
+}
+
+inline Vector3 Vector3::clampf(real_t p_min, real_t p_max) const {
+	return Vector3(
+			CLAMP(x, p_min, p_max),
+			CLAMP(y, p_min, p_max),
+			CLAMP(z, p_min, p_max));
+}
+
+inline void Vector3::snap(const Vector3 &p_step) {
+	x = Math::snapped(x, p_step.x);
+	y = Math::snapped(y, p_step.y);
+	z = Math::snapped(z, p_step.z);
+}
+
+inline Vector3 Vector3::snapped(const Vector3 &p_step) const {
+	Vector3 v = *this;
+	v.snap(p_step);
+	return v;
+}
+
+inline void Vector3::snapf(real_t p_step) {
+	x = Math::snapped(x, p_step);
+	y = Math::snapped(y, p_step);
+	z = Math::snapped(z, p_step);
+}
+
+inline Vector3 Vector3::snappedf(real_t p_step) const {
+	Vector3 v = *this;
+	v.snapf(p_step);
+	return v;
+}
+
+inline Vector3 Vector3::limit_length(real_t p_len) const {
+	const real_t l = length();
+	Vector3 v = *this;
+	if (l > 0 && p_len < l) {
+		v /= l;
+		v *= p_len;
+	}
+
+	return v;
+}
+
+inline Vector3 Vector3::move_toward(const Vector3 &p_to, real_t p_delta) const {
+	Vector3 v = *this;
+	Vector3 vd = p_to - v;
+	real_t len = vd.length();
+	return len <= p_delta || len < (real_t)CMP_EPSILON ? p_to : v + vd / len * p_delta;
+}
+
+inline Vector2 Vector3::octahedron_encode() const {
+	Vector3 n = *this;
+	n /= Math::abs(n.x) + Math::abs(n.y) + Math::abs(n.z);
+	Vector2 o;
+	if (n.z >= 0.0f) {
+		o.x = n.x;
+		o.y = n.y;
+	} else {
+		o.x = (1.0f - Math::abs(n.y)) * (n.x >= 0.0f ? 1.0f : -1.0f);
+		o.y = (1.0f - Math::abs(n.x)) * (n.y >= 0.0f ? 1.0f : -1.0f);
+	}
+	o.x = o.x * 0.5f + 0.5f;
+	o.y = o.y * 0.5f + 0.5f;
+	return o;
+}
+
+inline Vector3 Vector3::octahedron_decode(const Vector2 &p_oct) {
+	Vector2 f(p_oct.x * 2.0f - 1.0f, p_oct.y * 2.0f - 1.0f);
+	Vector3 n(f.x, f.y, 1.0f - Math::abs(f.x) - Math::abs(f.y));
+	const real_t t = CLAMP(-n.z, 0.0f, 1.0f);
+	n.x += n.x >= 0 ? -t : t;
+	n.y += n.y >= 0 ? -t : t;
+	return n.normalized();
+}
+
+inline Vector2 Vector3::octahedron_tangent_encode(float p_sign) const {
+	const real_t bias = 1.0f / (real_t)32767.0f;
+	Vector2 res = octahedron_encode();
+	res.y = MAX(res.y, bias);
+	res.y = res.y * 0.5f + 0.5f;
+	res.y = p_sign >= 0.0f ? res.y : 1 - res.y;
+	return res;
+}
+
+inline Vector3 Vector3::octahedron_tangent_decode(const Vector2 &p_oct, float *r_sign) {
+	Vector2 oct_compressed = p_oct;
+	oct_compressed.y = oct_compressed.y * 2 - 1;
+	*r_sign = oct_compressed.y >= 0.0f ? 1.0f : -1.0f;
+	oct_compressed.y = Math::abs(oct_compressed.y);
+	Vector3 res = Vector3::octahedron_decode(oct_compressed);
+	return res;
+}
+
+inline bool Vector3::is_equal_approx(const Vector3 &p_v) const {
+	return Math::is_equal_approx(x, p_v.x) && Math::is_equal_approx(y, p_v.y) && Math::is_equal_approx(z, p_v.z);
+}
+
+inline bool Vector3::is_same(const Vector3 &p_v) const {
+	return Math::is_same(x, p_v.x) && Math::is_same(y, p_v.y) && Math::is_same(z, p_v.z);
+}
+
+inline bool Vector3::is_zero_approx() const {
+	return Math::is_zero_approx(x) && Math::is_zero_approx(y) && Math::is_zero_approx(z);
+}
+
+inline bool Vector3::is_finite() const {
+	return Math::is_finite(x) && Math::is_finite(y) && Math::is_finite(z);
 }
 
 template <>

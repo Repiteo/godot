@@ -33,12 +33,6 @@
 #include "core/os/os.h"
 #include "core/templates/vector.h"
 
-RandomPCG::RandomPCG(uint64_t p_seed, uint64_t p_inc) :
-		pcg(),
-		current_inc(p_inc) {
-	seed(p_seed);
-}
-
 void RandomPCG::randomize() {
 	seed(((uint64_t)OS::get_singleton()->get_unix_time() + OS::get_singleton()->get_ticks_usec()) * pcg.state + PCG_DEFAULT_INC_64);
 }
@@ -66,19 +60,4 @@ int64_t RandomPCG::rand_weighted(const Vector<float> &p_weights) {
 		}
 	}
 	return -1;
-}
-
-double RandomPCG::random(double p_from, double p_to) {
-	return randd() * (p_to - p_from) + p_from;
-}
-
-float RandomPCG::random(float p_from, float p_to) {
-	return randf() * (p_to - p_from) + p_from;
-}
-
-int RandomPCG::random(int p_from, int p_to) {
-	if (p_from == p_to) {
-		return p_from;
-	}
-	return int(rand(uint32_t(Math::abs(p_from - p_to)) + 1U)) + MIN(p_from, p_to);
 }

@@ -305,3 +305,163 @@ _FORCE_INLINE_ Plane Transform3D::xform_inv_fast(const Plane &p_plane, const Tra
 	real_t d = normal.dot(point);
 	return Plane(normal, d);
 }
+
+inline void Transform3D::affine_invert() {
+	basis.invert();
+	origin = basis.xform(-origin);
+}
+
+inline Transform3D Transform3D::affine_inverse() const {
+	Transform3D ret = *this;
+	ret.affine_invert();
+	return ret;
+}
+
+inline void Transform3D::invert() {
+	basis.transpose();
+	origin = basis.xform(-origin);
+}
+
+inline Transform3D Transform3D::inverse() const {
+	// FIXME: this function assumes the basis is a rotation matrix, with no scaling.
+	// Transform3D::affine_inverse can handle matrices with scaling, so GDScript should eventually use that.
+	Transform3D ret = *this;
+	ret.invert();
+	return ret;
+}
+
+inline void Transform3D::rotate(const Vector3 &p_axis, real_t p_angle) {
+	*this = rotated(p_axis, p_angle);
+}
+
+inline Transform3D Transform3D::rotated(const Vector3 &p_axis, real_t p_angle) const {
+	// Equivalent to left multiplication
+	Basis p_basis(p_axis, p_angle);
+	return Transform3D(p_basis * basis, p_basis.xform(origin));
+}
+
+inline Transform3D Transform3D::rotated_local(const Vector3 &p_axis, real_t p_angle) const {
+	// Equivalent to right multiplication
+	Basis p_basis(p_axis, p_angle);
+	return Transform3D(basis * p_basis, origin);
+}
+
+inline void Transform3D::rotate_basis(const Vector3 &p_axis, real_t p_angle) {
+	basis.rotate(p_axis, p_angle);
+}
+
+inline Transform3D Transform3D::looking_at(const Vector3 &p_target, const Vector3 &p_up, bool p_use_model_front) const {
+#ifdef MATH_CHECKS
+	ERR_FAIL_COND_V_MSG(origin.is_equal_approx(p_target), Transform3D(), "The transform's origin and target can't be equal.");
+#endif
+	Transform3D t = *this;
+	t.basis = Basis::looking_at(p_target - origin, p_up, p_use_model_front);
+	return t;
+}
+
+inline void Transform3D::set_look_at(const Vector3 &p_eye, const Vector3 &p_target, const Vector3 &p_up, bool p_use_model_front) {
+#ifdef MATH_CHECKS
+	ERR_FAIL_COND_MSG(p_eye.is_equal_approx(p_target), "The eye and target vectors can't be equal.");
+#endif
+	basis = Basis::looking_at(p_target - p_eye, p_up, p_use_model_front);
+	origin = p_eye;
+}
+
+inline Transform3D Transform3D::interpolate_with(const Transform3D &p_transform, real_t p_c) const {
+	Transform3D interp;
+
+	Vector3 src_scale = basis.get_scale();
+	Quaternion src_rot = basis.get_rotation_quaternion();
+	Vector3 src_loc = origin;
+
+	Vector3 dst_scale = p_transform.basis.get_scale();
+	Quaternion dst_rot = p_transform.basis.get_rotation_quaternion();
+	Vector3 dst_loc = p_transform.origin;
+
+	interp.basis.set_quaternion_scale(src_rot.slerp(dst_rot, p_c).normalized(), src_scale.lerp(dst_scale, p_c));
+	interp.origin = src_loc.lerp(dst_loc, p_c);
+
+	return interp;
+}
+
+inline void Transform3D::scale(const Vector3 &p_scale) {
+	basis.scale(p_scale);
+	origin *= p_scale;
+}
+
+inline Transform3D Transform3D::scaled(const Vector3 &p_scale) const {
+	// Equivalent to left multiplication
+	return Transform3D(basis.scaled(p_scale), origin * p_scale);
+}
+
+inline Transform3D Transform3D::scaled_local(const Vector3 &p_scale) const {
+	// Equivalent to right multiplication
+	return Transform3D(basis.scaled_local(p_scale), origin);
+}
+
+inline void Transform3D::scale_basis(const Vector3 &p_scale) {
+	basis.scale(p_scale);
+}
+
+inline void Transform3D::translate_local(real_t p_tx, real_t p_ty, real_t p_tz) {
+	translate_local(Vector3(p_tx, p_ty, p_tz));
+}
+
+inline void Transform3D::translate_local(const Vector3 &p_translation) {
+	for (int i = 0; i < 3; i++) {
+		origin[i] += basis[i].dot(p_translation);
+	}
+}
+
+inline Transform3D Transform3D::translated(const Vector3 &p_translation) const {
+	// Equivalent to left multiplication
+	return Transform3D(basis, origin + p_translation);
+}
+
+inline Transform3D Transform3D::translated_local(const Vector3 &p_translation) const {
+	// Equivalent to right multiplication
+	return Transform3D(basis, origin + basis.xform(p_translation));
+}
+
+inline void Transform3D::orthonormalize() {
+	basis.orthonormalize();
+}
+
+inline Transform3D Transform3D::orthonormalized() const {
+	Transform3D _copy = *this;
+	_copy.orthonormalize();
+	return _copy;
+}
+
+inline void Transform3D::orthogonalize() {
+	basis.orthogonalize();
+}
+
+inline Transform3D Transform3D::orthogonalized() const {
+	Transform3D _copy = *this;
+	_copy.orthogonalize();
+	return _copy;
+}
+
+inline bool Transform3D::is_equal_approx(const Transform3D &p_transform) const {
+	return basis.is_equal_approx(p_transform.basis) && origin.is_equal_approx(p_transform.origin);
+}
+
+inline bool Transform3D::is_same(const Transform3D &p_transform) const {
+	return basis.is_same(p_transform.basis) && origin.is_same(p_transform.origin);
+}
+
+inline bool Transform3D::is_finite() const {
+	return basis.is_finite() && origin.is_finite();
+}
+
+inline void Transform3D::operator*=(const Transform3D &p_transform) {
+	origin = xform(p_transform.origin);
+	basis *= p_transform.basis;
+}
+
+inline Transform3D Transform3D::operator*(const Transform3D &p_transform) const {
+	Transform3D t = *this;
+	t *= p_transform;
+	return t;
+}

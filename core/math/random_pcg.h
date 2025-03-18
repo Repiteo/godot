@@ -148,3 +148,24 @@ public:
 	float random(float p_from, float p_to);
 	int random(int p_from, int p_to);
 };
+
+inline RandomPCG::RandomPCG(uint64_t p_seed, uint64_t p_inc) :
+		pcg(),
+		current_inc(p_inc) {
+	seed(p_seed);
+}
+
+inline double RandomPCG::random(double p_from, double p_to) {
+	return randd() * (p_to - p_from) + p_from;
+}
+
+inline float RandomPCG::random(float p_from, float p_to) {
+	return randf() * (p_to - p_from) + p_from;
+}
+
+inline int RandomPCG::random(int p_from, int p_to) {
+	if (p_from == p_to) {
+		return p_from;
+	}
+	return int(rand(uint32_t(ABS(p_from - p_to)) + 1U)) + MIN(p_from, p_to);
+}

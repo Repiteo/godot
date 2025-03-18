@@ -815,47 +815,6 @@ Vector<int> Voxelizer::get_voxel_gi_level_cell_count() const {
 // euclidean distance computation based on:
 // https://prideout.net/blog/distance_fields/
 
-#define square(m_s) ((m_s) * (m_s))
-#define INF 1e20
-
-/* dt of 1d function using squared distance */
-static void edt(float *f, int stride, int n) {
-	float *d = (float *)alloca(sizeof(float) * n + sizeof(int) * n + sizeof(float) * (n + 1));
-	int *v = reinterpret_cast<int *>(&(d[n]));
-	float *z = reinterpret_cast<float *>(&v[n]);
-
-	int k = 0;
-	v[0] = 0;
-	z[0] = -INF;
-	z[1] = +INF;
-	for (int q = 1; q <= n - 1; q++) {
-		float s = ((f[q * stride] + square(q)) - (f[v[k] * stride] + square(v[k]))) / (2 * q - 2 * v[k]);
-		while (s <= z[k]) {
-			k--;
-			s = ((f[q * stride] + square(q)) - (f[v[k] * stride] + square(v[k]))) / (2 * q - 2 * v[k]);
-		}
-		k++;
-		v[k] = q;
-
-		z[k] = s;
-		z[k + 1] = +INF;
-	}
-
-	k = 0;
-	for (int q = 0; q <= n - 1; q++) {
-		while (z[k + 1] < q) {
-			k++;
-		}
-		d[q] = square(q - v[k]) + f[v[k] * stride];
-	}
-
-	for (int i = 0; i < n; i++) {
-		f[i * stride] = d[i];
-	}
-}
-
-#undef square
-
 Voxelizer::BakeResult Voxelizer::get_sdf_3d_image(Vector<uint8_t> &r_image, BakeStepFunc p_bake_step_function) const {
 	Vector3i octree_size = get_voxel_gi_octree_size();
 
