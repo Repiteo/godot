@@ -31,13 +31,11 @@
 #pragma once
 
 #include "core/math/math_defs.h"
+#include "core/typedefs.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stdbool.h>
-#include <stdint.h>
 
 // This is taken from the old GDNative, which was removed.
 

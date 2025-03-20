@@ -33,7 +33,7 @@
 #include "core/error/error_macros.h"
 #include "core/templates/safe_refcount.h"
 
-#include <stddef.h>
+#include <cstddef>
 #include <cstring>
 #include <new>
 #include <type_traits>

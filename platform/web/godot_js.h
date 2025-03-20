@@ -30,14 +30,13 @@
 
 #pragma once
 
+#include <cstdint>
+
 #define WASM_EXPORT __attribute__((visibility("default")))
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stddef.h>
-#include <stdint.h>
 
 // Config
 extern void godot_js_config_locale_get(char *p_ptr, int p_ptr_max);

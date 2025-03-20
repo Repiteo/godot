@@ -36,7 +36,7 @@
 #include "core/string/print_string.h"
 #include "core/string/ustring.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #include <cstring>
 

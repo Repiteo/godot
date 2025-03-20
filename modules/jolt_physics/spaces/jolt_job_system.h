@@ -38,8 +38,8 @@
 #include "Jolt/Core/FixedSizeFreeList.h"
 #include "Jolt/Core/JobSystemWithBarrier.h"
 
-#include <stdint.h>
 #include <atomic>
+#include <cstdint>
 
 class JoltJobSystem final : public JPH::JobSystemWithBarrier {
 	class Job : public JPH::JobSystem::Job {

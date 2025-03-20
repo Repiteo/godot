@@ -36,8 +36,8 @@
 #include "core/version.h"
 #include "main/main.h"
 
-#include <string.h>
 #include <unistd.h>
+#include <cstring>
 
 #if defined(DEBUG_ENABLED)
 #define CRASH_HANDLER_ENABLED 1
@@ -47,8 +47,8 @@
 #include <cxxabi.h>
 #include <dlfcn.h>
 #include <execinfo.h>
-#include <signal.h>
-#include <stdlib.h>
+#include <csignal>
+#include <cstdlib>
 
 #import <mach-o/dyld.h>
 #import <mach-o/getsect.h>

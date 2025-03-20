@@ -171,7 +171,7 @@
 #include "editor/gui/touch_actions_panel.h"
 #endif
 
-#include <stdlib.h>
+#include <cstdlib>
 
 EditorNode *EditorNode::singleton = nullptr;
 
