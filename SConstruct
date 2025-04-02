@@ -113,7 +113,7 @@ for x in sorted(glob.glob("platform/*")):
 # want to have to pull in manually. However we enforce no "tools", which we register
 # further down after parsing our platform-specific configuration.
 # Then we prepend PATH to make it take precedence, while preserving SCons' own entries.
-env = Environment(tools=[])
+env = Environment(tools=[], platform="")
 env.PrependENVPath("PATH", os.getenv("PATH"))
 env.PrependENVPath("PKG_CONFIG_PATH", os.getenv("PKG_CONFIG_PATH"))
 if "TERM" in os.environ:  # Used for colored output.
