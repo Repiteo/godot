@@ -62,42 +62,34 @@ static_assert(__cplusplus >= 201703L, "Minimum of C++17 required.");
 #endif
 
 // Should always inline no matter what.
-#ifndef _ALWAYS_INLINE_
 #if defined(__GNUC__)
-#define _ALWAYS_INLINE_ __attribute__((always_inline)) inline
+#define GD_ALWAYS_INLINE __attribute__((always_inline)) inline
 #elif defined(_MSC_VER)
-#define _ALWAYS_INLINE_ __forceinline
+#define GD_ALWAYS_INLINE __forceinline
 #else
-#define _ALWAYS_INLINE_ inline
-#endif
+#define GD_ALWAYS_INLINE inline
 #endif
 
 // Should always inline, except in dev builds because it makes debugging harder,
 // or `size_enabled` builds where inlining is actively avoided.
-#ifndef _FORCE_INLINE_
 #if defined(DEV_ENABLED) || defined(SIZE_EXTRA)
-#define _FORCE_INLINE_ inline
+#define GD_FORCE_INLINE inline
 #else
-#define _FORCE_INLINE_ _ALWAYS_INLINE_
-#endif
+#define GD_FORCE_INLINE GD_ALWAYS_INLINE
 #endif
 
 // Should never inline.
-#ifndef _NO_INLINE_
 #if defined(__GNUC__)
-#define _NO_INLINE_ __attribute__((noinline))
+#define GD_NO_INLINE __attribute__((noinline))
 #elif defined(_MSC_VER)
-#define _NO_INLINE_ __declspec(noinline)
+#define GD_NO_INLINE __declspec(noinline)
 #else
-#define _NO_INLINE_
-#endif
+#define GD_NO_INLINE
 #endif
 
 // In some cases [[nodiscard]] will get false positives,
 // we can prevent the warning in specific cases by preceding the call with a cast.
-#ifndef _ALLOW_DISCARD_
-#define _ALLOW_DISCARD_ (void)
-#endif
+#define GD_ALLOW_DISCARD (void)
 
 // Windows badly defines a lot of stuff we'll never use. Undefine it.
 #ifdef _WIN32
@@ -153,7 +145,7 @@ inline bool is_power_of_2(const T x) {
 }
 
 // Function to find the next power of 2 to an integer.
-static _FORCE_INLINE_ unsigned int next_power_of_2(unsigned int x) {
+static GD_FORCE_INLINE unsigned int next_power_of_2(unsigned int x) {
 	if (x == 0) {
 		return 0;
 	}
@@ -169,7 +161,7 @@ static _FORCE_INLINE_ unsigned int next_power_of_2(unsigned int x) {
 }
 
 // Function to find the previous power of 2 to an integer.
-static _FORCE_INLINE_ unsigned int previous_power_of_2(unsigned int x) {
+static GD_FORCE_INLINE unsigned int previous_power_of_2(unsigned int x) {
 	x |= x >> 1;
 	x |= x >> 2;
 	x |= x >> 4;
@@ -179,7 +171,7 @@ static _FORCE_INLINE_ unsigned int previous_power_of_2(unsigned int x) {
 }
 
 // Function to find the closest power of 2 to an integer.
-static _FORCE_INLINE_ unsigned int closest_power_of_2(unsigned int x) {
+static GD_FORCE_INLINE unsigned int closest_power_of_2(unsigned int x) {
 	unsigned int nx = next_power_of_2(x);
 	unsigned int px = previous_power_of_2(x);
 	return (nx - x) > (x - px) ? px : nx;
@@ -197,7 +189,7 @@ static inline int get_shift_from_power_of_2(unsigned int p_bits) {
 }
 
 template <typename T>
-static _FORCE_INLINE_ T nearest_power_of_2_templated(T x) {
+static GD_FORCE_INLINE T nearest_power_of_2_templated(T x) {
 	--x;
 
 	// The number of operations on x is the base two logarithm
@@ -268,7 +260,7 @@ static inline uint64_t BSWAP64(uint64_t x) {
 // Generic comparator used in Map, List, etc.
 template <typename T>
 struct Comparator {
-	_ALWAYS_INLINE_ bool operator()(const T &p_a, const T &p_b) const { return (p_a < p_b); }
+	GD_ALWAYS_INLINE bool operator()(const T &p_a, const T &p_b) const { return (p_a < p_b); }
 };
 
 // Global lock macro, relies on the static Mutex::_global_mutex.
@@ -387,3 +379,11 @@ inline constexpr bool is_zero_constructible_v = is_zero_constructible<T>::value;
 #define GODOT_MSVC_WARNING_POP
 #define GODOT_MSVC_WARNING_PUSH_AND_IGNORE(m_warning)
 #endif
+
+// Deprecated macro aliases
+#ifndef DISABLE_DEPRECATED
+#define _ALWAYS_INLINE_ GD_ALWAYS_INLINE
+#define _FORCE_INLINE_ GD_FORCE_INLINE
+#define _NO_INLINE_ GD_NO_INLINE
+#define _ALLOW_DISCARD_ GD_ALLOW_DISCARD
+#endif // DISABLE_DEPRECATED

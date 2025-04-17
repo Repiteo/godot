@@ -9,6 +9,11 @@ AlignTrailingComments:
   OverEmptyLines: 0
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortFunctionsOnASingleLine: Inline
+AttributeMacros:
+  - __capability
+  - GD_ALWAYS_INLINE
+  - GD_FORCE_INLINE
+  - GD_NO_INLINE
 BreakConstructorInitializers: AfterColon
 ColumnLimit: 0
 ConstructorInitializerIndentWidth: 8
