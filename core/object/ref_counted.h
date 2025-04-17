@@ -42,7 +42,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	_FORCE_INLINE_ bool is_referenced() const { return refcount_init.get() != 1; }
+	GD_FORCE_INLINE bool is_referenced() const { return refcount_init.get() != 1; }
 	bool init_ref();
 	bool reference(); // returns false if refcount is at zero and didn't get increased
 	bool unreference();
@@ -56,12 +56,12 @@ template <typename T>
 class Ref {
 	T *reference = nullptr;
 
-	_FORCE_INLINE_ void ref(const Ref &p_from) {
+	GD_FORCE_INLINE void ref(const Ref &p_from) {
 		ref_pointer<false>(p_from.reference);
 	}
 
 	template <bool Init>
-	_FORCE_INLINE_ void ref_pointer(T *p_refcounted) {
+	GD_FORCE_INLINE void ref_pointer(T *p_refcounted) {
 		if (p_refcounted == reference) {
 			return;
 		}
@@ -85,14 +85,14 @@ class Ref {
 
 	//virtual RefCounted * get_reference() const { return reference; }
 public:
-	static _FORCE_INLINE_ String get_class_static() {
+	static GD_FORCE_INLINE String get_class_static() {
 		return T::get_class_static();
 	}
 
-	_FORCE_INLINE_ bool operator==(const T *p_ptr) const {
+	GD_FORCE_INLINE bool operator==(const T *p_ptr) const {
 		return reference == p_ptr;
 	}
-	_FORCE_INLINE_ bool operator!=(const T *p_ptr) const {
+	GD_FORCE_INLINE bool operator!=(const T *p_ptr) const {
 		return reference != p_ptr;
 	}
 #ifdef STRICT_CHECKS
@@ -101,25 +101,25 @@ public:
 	bool operator!=(std::nullptr_t) const = delete;
 #endif // STRICT_CHECKS
 
-	_FORCE_INLINE_ bool operator<(const Ref<T> &p_r) const {
+	GD_FORCE_INLINE bool operator<(const Ref<T> &p_r) const {
 		return reference < p_r.reference;
 	}
-	_FORCE_INLINE_ bool operator==(const Ref<T> &p_r) const {
+	GD_FORCE_INLINE bool operator==(const Ref<T> &p_r) const {
 		return reference == p_r.reference;
 	}
-	_FORCE_INLINE_ bool operator!=(const Ref<T> &p_r) const {
+	GD_FORCE_INLINE bool operator!=(const Ref<T> &p_r) const {
 		return reference != p_r.reference;
 	}
 
-	_FORCE_INLINE_ T *operator*() const {
+	GD_FORCE_INLINE T *operator*() const {
 		return reference;
 	}
 
-	_FORCE_INLINE_ T *operator->() const {
+	GD_FORCE_INLINE T *operator->() const {
 		return reference;
 	}
 
-	_FORCE_INLINE_ T *ptr() const {
+	GD_FORCE_INLINE T *ptr() const {
 		return reference;
 	}
 
@@ -239,7 +239,7 @@ public:
 
 template <typename T>
 struct PtrToArg<Ref<T>> {
-	_FORCE_INLINE_ static Ref<T> convert(const void *p_ptr) {
+	GD_FORCE_INLINE static Ref<T> convert(const void *p_ptr) {
 		if (p_ptr == nullptr) {
 			return Ref<T>();
 		}
@@ -249,7 +249,7 @@ struct PtrToArg<Ref<T>> {
 
 	typedef Ref<T> EncodeT;
 
-	_FORCE_INLINE_ static void encode(Ref<T> p_val, const void *p_ptr) {
+	GD_FORCE_INLINE static void encode(Ref<T> p_val, const void *p_ptr) {
 		// p_ptr points to an EncodeT object which is a Ref<T> object.
 		*(const_cast<Ref<RefCounted> *>(reinterpret_cast<const Ref<RefCounted> *>(p_ptr))) = p_val;
 	}
@@ -267,8 +267,8 @@ struct GetTypeInfo<Ref<T>> {
 
 template <typename T>
 struct VariantInternalAccessor<Ref<T>> {
-	static _FORCE_INLINE_ Ref<T> get(const Variant *v) { return Ref<T>(*VariantInternal::get_object(v)); }
-	static _FORCE_INLINE_ void set(Variant *v, const Ref<T> &p_ref) { VariantInternal::object_assign(v, p_ref); }
+	static GD_FORCE_INLINE Ref<T> get(const Variant *v) { return Ref<T>(*VariantInternal::get_object(v)); }
+	static GD_FORCE_INLINE void set(Variant *v, const Ref<T> &p_ref) { VariantInternal::object_assign(v, p_ref); }
 };
 
 // Zero-constructing Ref initializes reference to nullptr (and thus empty).

@@ -445,12 +445,12 @@ class CharBuffer {
 	}
 
 public:
-	_FORCE_INLINE_ CharBuffer() :
+	GD_FORCE_INLINE CharBuffer() :
 			buffer(stack_buffer),
 			capacity(std::size(stack_buffer)) {
 	}
 
-	_FORCE_INLINE_ void push_back(char c) {
+	GD_FORCE_INLINE void push_back(char c) {
 		if (written >= capacity) {
 			ERR_FAIL_COND(!grow());
 		}
@@ -458,7 +458,7 @@ public:
 		buffer[written++] = c;
 	}
 
-	_FORCE_INLINE_ const char *get_data() const {
+	GD_FORCE_INLINE const char *get_data() const {
 		return buffer;
 	}
 };

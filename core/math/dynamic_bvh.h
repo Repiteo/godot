@@ -64,17 +64,17 @@ public:
 		Node *node = nullptr;
 
 	public:
-		_FORCE_INLINE_ bool is_valid() const { return node != nullptr; }
+		GD_FORCE_INLINE bool is_valid() const { return node != nullptr; }
 	};
 
 private:
 	struct Volume {
 		Vector3 min, max;
 
-		_FORCE_INLINE_ Vector3 get_center() const { return ((min + max) / 2); }
-		_FORCE_INLINE_ Vector3 get_length() const { return (max - min); }
+		GD_FORCE_INLINE Vector3 get_center() const { return ((min + max) / 2); }
+		GD_FORCE_INLINE Vector3 get_length() const { return (max - min); }
 
-		_FORCE_INLINE_ bool contains(const Volume &a) const {
+		GD_FORCE_INLINE bool contains(const Volume &a) const {
 			return ((min.x <= a.min.x) &&
 					(min.y <= a.min.y) &&
 					(min.z <= a.min.z) &&
@@ -83,7 +83,7 @@ private:
 					(max.z >= a.max.z));
 		}
 
-		_FORCE_INLINE_ Volume merge(const Volume &b) const {
+		GD_FORCE_INLINE Volume merge(const Volume &b) const {
 			Volume r;
 			for (int i = 0; i < 3; ++i) {
 				if (min[i] < b.min[i]) {
@@ -100,13 +100,13 @@ private:
 			return r;
 		}
 
-		_FORCE_INLINE_ real_t get_size() const {
+		GD_FORCE_INLINE real_t get_size() const {
 			const Vector3 edges = get_length();
 			return (edges.x * edges.y * edges.z +
 					edges.x + edges.y + edges.z);
 		}
 
-		_FORCE_INLINE_ bool is_not_equal_to(const Volume &b) const {
+		GD_FORCE_INLINE bool is_not_equal_to(const Volume &b) const {
 			return ((min.x != b.min.x) ||
 					(min.y != b.min.y) ||
 					(min.z != b.min.z) ||
@@ -115,17 +115,17 @@ private:
 					(max.z != b.max.z));
 		}
 
-		_FORCE_INLINE_ real_t get_proximity_to(const Volume &b) const {
+		GD_FORCE_INLINE real_t get_proximity_to(const Volume &b) const {
 			const Vector3 d = (min + max) - (b.min + b.max);
 			return (Math::abs(d.x) + Math::abs(d.y) + Math::abs(d.z));
 		}
 
-		_FORCE_INLINE_ int select_by_proximity(const Volume &a, const Volume &b) const {
+		GD_FORCE_INLINE int select_by_proximity(const Volume &a, const Volume &b) const {
 			return (get_proximity_to(a) < get_proximity_to(b) ? 0 : 1);
 		}
 
 		//
-		_FORCE_INLINE_ bool intersects(const Volume &b) const {
+		GD_FORCE_INLINE bool intersects(const Volume &b) const {
 			return ((min.x <= b.max.x) &&
 					(max.x >= b.min.x) &&
 					(min.y <= b.max.y) &&
@@ -134,7 +134,7 @@ private:
 					(max.z >= b.min.z));
 		}
 
-		_FORCE_INLINE_ bool intersects_convex(const Plane *p_planes, int p_plane_count, const Vector3 *p_points, int p_point_count) const {
+		GD_FORCE_INLINE bool intersects_convex(const Plane *p_planes, int p_plane_count, const Vector3 *p_points, int p_point_count) const {
 			Vector3 half_extents = (max - min) * 0.5;
 			Vector3 ofs = min + half_extents;
 
@@ -185,10 +185,10 @@ private:
 			void *data;
 		};
 
-		_FORCE_INLINE_ bool is_leaf() const { return children[1] == nullptr; }
-		_FORCE_INLINE_ bool is_internal() const { return (!is_leaf()); }
+		GD_FORCE_INLINE bool is_leaf() const { return children[1] == nullptr; }
+		GD_FORCE_INLINE bool is_internal() const { return (!is_leaf()); }
 
-		_FORCE_INLINE_ int get_index_in_parent() const {
+		GD_FORCE_INLINE int get_index_in_parent() const {
 			ERR_FAIL_NULL_V(parent, 0);
 			return (parent->children[1] == this) ? 1 : 0;
 		}
@@ -232,12 +232,12 @@ private:
 		ALLOCA_STACK_SIZE = 128
 	};
 
-	_FORCE_INLINE_ void _delete_node(Node *p_node);
+	GD_FORCE_INLINE void _delete_node(Node *p_node);
 	void _recurse_delete_node(Node *p_node);
-	_FORCE_INLINE_ Node *_create_node(Node *p_parent, void *p_data);
-	_FORCE_INLINE_ DynamicBVH::Node *_create_node_with_volume(Node *p_parent, const Volume &p_volume, void *p_data);
-	_FORCE_INLINE_ void _insert_leaf(Node *p_root, Node *p_leaf);
-	_FORCE_INLINE_ Node *_remove_leaf(Node *leaf);
+	GD_FORCE_INLINE Node *_create_node(Node *p_parent, void *p_data);
+	GD_FORCE_INLINE DynamicBVH::Node *_create_node_with_volume(Node *p_parent, const Volume &p_volume, void *p_data);
+	GD_FORCE_INLINE void _insert_leaf(Node *p_root, Node *p_leaf);
+	GD_FORCE_INLINE Node *_remove_leaf(Node *leaf);
 	void _fetch_leaves(Node *p_root, LocalVector<Node *> &r_leaves, int p_depth = -1);
 	static int _split(Node **leaves, int p_count, const Vector3 &p_org, const Vector3 &p_axis);
 	static Volume _bounds(Node **leaves, int p_count);
@@ -245,11 +245,11 @@ private:
 	Node *_top_down(Node **leaves, int p_count, int p_bu_threshold);
 	Node *_node_sort(Node *n, Node *&r);
 
-	_FORCE_INLINE_ void _update(Node *leaf, int lookahead = -1);
+	GD_FORCE_INLINE void _update(Node *leaf, int lookahead = -1);
 
 	void _extract_leaves(Node *p_node, List<ID> *r_elements);
 
-	_FORCE_INLINE_ bool _ray_aabb(const Vector3 &rayFrom, const Vector3 &rayInvDirection, const unsigned int raySign[3], const Vector3 bounds[2], real_t &tmin, real_t lambda_min, real_t lambda_max) {
+	GD_FORCE_INLINE bool _ray_aabb(const Vector3 &rayFrom, const Vector3 &rayInvDirection, const unsigned int raySign[3], const Vector3 bounds[2], real_t &tmin, real_t lambda_min, real_t lambda_max) {
 		real_t tmax, tymin, tymax, tzmin, tzmax;
 		tmin = (bounds[raySign[0]].x - rayFrom.x) * rayInvDirection.x;
 		tmax = (bounds[1 - raySign[0]].x - rayFrom.x) * rayInvDirection.x;
@@ -305,11 +305,11 @@ public:
 	};
 
 	template <typename QueryResult>
-	_FORCE_INLINE_ void aabb_query(const AABB &p_aabb, QueryResult &r_result);
+	GD_FORCE_INLINE void aabb_query(const AABB &p_aabb, QueryResult &r_result);
 	template <typename QueryResult>
-	_FORCE_INLINE_ void convex_query(const Plane *p_planes, int p_plane_count, const Vector3 *p_points, int p_point_count, QueryResult &r_result);
+	GD_FORCE_INLINE void convex_query(const Plane *p_planes, int p_plane_count, const Vector3 *p_points, int p_point_count, QueryResult &r_result);
 	template <typename QueryResult>
-	_FORCE_INLINE_ void ray_query(const Vector3 &p_from, const Vector3 &p_to, QueryResult &r_result);
+	GD_FORCE_INLINE void ray_query(const Vector3 &p_from, const Vector3 &p_to, QueryResult &r_result);
 
 	void set_index(uint32_t p_index);
 	uint32_t get_index() const;

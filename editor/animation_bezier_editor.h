@@ -139,7 +139,7 @@ class AnimationBezierTrackEdit : public Control {
 	int moving_handle_mode = 0; // value from Animation::HandleMode
 
 	struct PairHasher {
-		static _FORCE_INLINE_ uint32_t hash(const Pair<int, int> &p_value) {
+		static GD_FORCE_INLINE uint32_t hash(const Pair<int, int> &p_value) {
 			int32_t hash = 23;
 			hash = hash * 31 * hash_one_uint64(p_value.first);
 			hash = hash * 31 * hash_one_uint64(p_value.second);

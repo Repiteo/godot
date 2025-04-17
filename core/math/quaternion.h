@@ -47,13 +47,13 @@ struct [[nodiscard]] Quaternion {
 		// NOLINTEND(modernize-use-default-member-init)
 	};
 
-	_FORCE_INLINE_ real_t &operator[](int p_idx) {
+	GD_FORCE_INLINE real_t &operator[](int p_idx) {
 		return components[p_idx];
 	}
-	_FORCE_INLINE_ const real_t &operator[](int p_idx) const {
+	GD_FORCE_INLINE const real_t &operator[](int p_idx) const {
 		return components[p_idx];
 	}
-	_FORCE_INLINE_ real_t length_squared() const;
+	GD_FORCE_INLINE real_t length_squared() const;
 	bool is_equal_approx(const Quaternion &p_quaternion) const;
 	bool is_same(const Quaternion &p_quaternion) const;
 	bool is_finite() const;
@@ -64,7 +64,7 @@ struct [[nodiscard]] Quaternion {
 	Quaternion inverse() const;
 	Quaternion log() const;
 	Quaternion exp() const;
-	_FORCE_INLINE_ real_t dot(const Quaternion &p_q) const;
+	GD_FORCE_INLINE real_t dot(const Quaternion &p_q) const;
 	real_t angle_to(const Quaternion &p_to) const;
 
 	Vector3 get_euler(EulerOrder p_order = EulerOrder::YXZ) const;
@@ -78,7 +78,7 @@ struct [[nodiscard]] Quaternion {
 	Vector3 get_axis() const;
 	real_t get_angle() const;
 
-	_FORCE_INLINE_ void get_axis_angle(Vector3 &r_axis, real_t &r_angle) const {
+	GD_FORCE_INLINE void get_axis_angle(Vector3 &r_axis, real_t &r_angle) const {
 		r_angle = 2 * Math::acos(w);
 		real_t r = ((real_t)1) / Math::sqrt(1 - w * w);
 		r_axis.x = x * r;
@@ -89,7 +89,7 @@ struct [[nodiscard]] Quaternion {
 	constexpr void operator*=(const Quaternion &p_q);
 	constexpr Quaternion operator*(const Quaternion &p_q) const;
 
-	_FORCE_INLINE_ Vector3 xform(const Vector3 &p_v) const {
+	GD_FORCE_INLINE Vector3 xform(const Vector3 &p_v) const {
 #ifdef MATH_CHECKS
 		ERR_FAIL_COND_V_MSG(!is_normalized(), p_v, "The quaternion " + operator String() + " must be normalized.");
 #endif
@@ -98,7 +98,7 @@ struct [[nodiscard]] Quaternion {
 		return p_v + ((uv * w) + u.cross(uv)) * ((real_t)2);
 	}
 
-	_FORCE_INLINE_ Vector3 xform_inv(const Vector3 &p_v) const {
+	GD_FORCE_INLINE Vector3 xform_inv(const Vector3 &p_v) const {
 		return inverse().xform(p_v);
 	}
 

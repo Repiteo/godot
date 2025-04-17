@@ -249,7 +249,7 @@ public:
 		uint64_t last_pass = 0;
 		uint32_t index = 0;
 
-		_FORCE_INLINE_ bool uses_alpha_pass() const {
+		GD_FORCE_INLINE bool uses_alpha_pass() const {
 			bool has_read_screen_alpha = uses_screen_texture || uses_depth_texture || uses_normal_texture;
 			bool has_base_alpha = (uses_alpha && (!uses_alpha_clip || uses_alpha_antialiasing)) || has_read_screen_alpha;
 			bool has_blend_alpha = uses_blend_alpha;
@@ -259,13 +259,13 @@ public:
 			return has_alpha || has_read_screen_alpha || no_depth_draw || no_depth_test;
 		}
 
-		_FORCE_INLINE_ bool uses_depth_in_alpha_pass() const {
+		GD_FORCE_INLINE bool uses_depth_in_alpha_pass() const {
 			bool no_depth_draw = depth_draw == DEPTH_DRAW_DISABLED;
 			bool no_depth_test = depth_test == DEPTH_TEST_DISABLED;
 			return (uses_depth_prepass_alpha || uses_alpha_antialiasing) && !(no_depth_draw || no_depth_test);
 		}
 
-		_FORCE_INLINE_ bool uses_shared_shadow_material() const {
+		GD_FORCE_INLINE bool uses_shared_shadow_material() const {
 			bool backface_culling = cull_mode == RS::CULL_MODE_BACK;
 			return !uses_particle_trails && !writes_modelview_or_projection && !uses_vertex && !uses_position && !uses_discard && !uses_depth_prepass_alpha && !uses_alpha_clip && !uses_alpha_antialiasing && backface_culling && !uses_point_size && !uses_world_coordinates && !wireframe;
 		}

@@ -52,7 +52,7 @@ struct EnumData {
 	StringName name;
 	List<ConstantData> constants;
 
-	_FORCE_INLINE_ bool operator==(const EnumData &p_enum) const {
+	GD_FORCE_INLINE bool operator==(const EnumData &p_enum) const {
 		return p_enum.name == name;
 	}
 };

@@ -167,7 +167,7 @@ struct CellData {
 
 // We use another comparator for Y-sorted layers with reversed X drawing order.
 struct CellDataYSortedXReversedComparator {
-	_FORCE_INLINE_ bool operator()(const CellData &p_a, const CellData &p_b) const {
+	GD_FORCE_INLINE bool operator()(const CellData &p_a, const CellData &p_b) const {
 		return p_a.coords.x == p_b.coords.x ? (p_a.coords.y < p_b.coords.y) : (p_a.coords.x > p_b.coords.x);
 	}
 };
@@ -203,7 +203,7 @@ class RenderingQuadrant : public RefCounted {
 
 public:
 	struct CoordsWorldComparator {
-		_ALWAYS_INLINE_ bool operator()(const Vector2 &p_a, const Vector2 &p_b) const {
+		GD_ALWAYS_INLINE bool operator()(const Vector2 &p_a, const Vector2 &p_b) const {
 			// We sort the cells by their local coords, as it is needed by rendering.
 			if (p_a.y == p_b.y) {
 				return p_a.x > p_b.x;
@@ -285,7 +285,7 @@ public:
 	};
 
 	struct CoordsWorldComparator {
-		_ALWAYS_INLINE_ bool operator()(const Vector2 &p_a, const Vector2 &p_b) const {
+		GD_ALWAYS_INLINE bool operator()(const Vector2 &p_a, const Vector2 &p_b) const {
 			// We sort the cells by their local coords, as it is needed by rendering.
 			if (p_a.y == p_b.y) {
 				return p_a.x > p_b.x;

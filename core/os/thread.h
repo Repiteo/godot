@@ -119,17 +119,17 @@ private:
 public:
 	static void _set_platform_functions(const PlatformFunctions &p_functions);
 
-	_FORCE_INLINE_ static void yield() { std::this_thread::yield(); }
+	GD_FORCE_INLINE static void yield() { std::this_thread::yield(); }
 
-	_FORCE_INLINE_ ID get_id() const { return id; }
+	GD_FORCE_INLINE ID get_id() const { return id; }
 	// get the ID of the caller thread
-	_FORCE_INLINE_ static ID get_caller_id() {
+	GD_FORCE_INLINE static ID get_caller_id() {
 		return caller_id;
 	}
 	// get the ID of the main thread
-	_FORCE_INLINE_ static ID get_main_id() { return MAIN_ID; }
+	GD_FORCE_INLINE static ID get_main_id() { return MAIN_ID; }
 
-	_FORCE_INLINE_ static bool is_main_thread() { return caller_id == MAIN_ID; } // Gain a tiny bit of perf here because there is no need to validate caller_id here, because only main thread will be set as 1.
+	GD_FORCE_INLINE static bool is_main_thread() { return caller_id == MAIN_ID; } // Gain a tiny bit of perf here because there is no need to validate caller_id here, because only main thread will be set as 1.
 
 	static Error set_name(const String &p_name);
 
@@ -189,11 +189,11 @@ private:
 public:
 	static void _set_platform_functions(const PlatformFunctions &p_functions);
 
-	_FORCE_INLINE_ ID get_id() const { return 0; }
-	_FORCE_INLINE_ static ID get_caller_id() { return MAIN_ID; }
-	_FORCE_INLINE_ static ID get_main_id() { return MAIN_ID; }
+	GD_FORCE_INLINE ID get_id() const { return 0; }
+	GD_FORCE_INLINE static ID get_caller_id() { return MAIN_ID; }
+	GD_FORCE_INLINE static ID get_main_id() { return MAIN_ID; }
 
-	_FORCE_INLINE_ static bool is_main_thread() { return true; }
+	GD_FORCE_INLINE static bool is_main_thread() { return true; }
 
 	static Error set_name(const String &p_name) { return ERR_UNAVAILABLE; }
 

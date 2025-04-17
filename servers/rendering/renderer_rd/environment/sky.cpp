@@ -195,7 +195,7 @@ SkyRD::SkyMaterialData::~SkyMaterialData() {
 ////////////////////////////////////////////////////////////////////////////////
 // Render sky
 
-static _FORCE_INLINE_ void store_transform_3x3(const Basis &p_basis, float *p_array) {
+static GD_FORCE_INLINE void store_transform_3x3(const Basis &p_basis, float *p_array) {
 	p_array[0] = p_basis.rows[0][0];
 	p_array[1] = p_basis.rows[1][0];
 	p_array[2] = p_basis.rows[2][0];

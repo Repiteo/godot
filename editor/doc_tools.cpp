@@ -77,7 +77,7 @@ static String _translate_doc_string(const String &p_text) {
 
 // Comparator for constructors, based on `MethodDoc` operator.
 struct ConstructorCompare {
-	_FORCE_INLINE_ bool operator()(const DocData::MethodDoc &p_lhs, const DocData::MethodDoc &p_rhs) const {
+	GD_FORCE_INLINE bool operator()(const DocData::MethodDoc &p_lhs, const DocData::MethodDoc &p_rhs) const {
 		// Must be a constructor (i.e. assume named for the class)
 		// We want this arbitrary order for a class "Foo":
 		// - 1. Default constructor: Foo()
@@ -95,7 +95,7 @@ struct ConstructorCompare {
 
 // Comparator for operators, compares on name and type.
 struct OperatorCompare {
-	_FORCE_INLINE_ bool operator()(const DocData::MethodDoc &p_lhs, const DocData::MethodDoc &p_rhs) const {
+	GD_FORCE_INLINE bool operator()(const DocData::MethodDoc &p_lhs, const DocData::MethodDoc &p_rhs) const {
 		if (p_lhs.name == p_rhs.name) {
 			if (p_lhs.arguments.size() == p_rhs.arguments.size()) {
 				if (p_lhs.arguments.is_empty()) {
@@ -111,7 +111,7 @@ struct OperatorCompare {
 
 // Comparator for methods, compares on names.
 struct MethodCompare {
-	_FORCE_INLINE_ bool operator()(const DocData::MethodDoc &p_lhs, const DocData::MethodDoc &p_rhs) const {
+	GD_FORCE_INLINE bool operator()(const DocData::MethodDoc &p_lhs, const DocData::MethodDoc &p_rhs) const {
 		return p_lhs.name.naturalcasecmp_to(p_rhs.name) < 0;
 	}
 };

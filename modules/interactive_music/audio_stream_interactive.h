@@ -118,7 +118,7 @@ private:
 	};
 
 	struct TransitionKeyHasher {
-		static _FORCE_INLINE_ uint32_t hash(const TransitionKey &p_key) {
+		static GD_FORCE_INLINE uint32_t hash(const TransitionKey &p_key) {
 			uint32_t h = hash_murmur3_one_32(p_key.from_clip);
 			return hash_murmur3_one_32(p_key.to_clip, h);
 		}

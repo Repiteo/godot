@@ -260,7 +260,7 @@ public:
 	bool is_group_task_completed(GroupID p_group) const;
 	void wait_for_group_task_completion(GroupID p_group);
 
-	_FORCE_INLINE_ int get_thread_count() const {
+	GD_FORCE_INLINE int get_thread_count() const {
 #ifdef THREADS_ENABLED
 		return threads.size();
 #else
@@ -276,9 +276,9 @@ public:
 	TaskID get_caller_task_id() const;
 
 #ifdef THREADS_ENABLED
-	_ALWAYS_INLINE_ static uint32_t thread_enter_unlock_allowance_zone(const MutexLock<BinaryMutex> &p_lock) { return _thread_enter_unlock_allowance_zone(p_lock._get_lock()); }
+	GD_ALWAYS_INLINE static uint32_t thread_enter_unlock_allowance_zone(const MutexLock<BinaryMutex> &p_lock) { return _thread_enter_unlock_allowance_zone(p_lock._get_lock()); }
 	template <int Tag>
-	_ALWAYS_INLINE_ static uint32_t thread_enter_unlock_allowance_zone(const SafeBinaryMutex<Tag> &p_mutex) { return _thread_enter_unlock_allowance_zone(p_mutex._get_lock()); }
+	GD_ALWAYS_INLINE static uint32_t thread_enter_unlock_allowance_zone(const SafeBinaryMutex<Tag> &p_mutex) { return _thread_enter_unlock_allowance_zone(p_mutex._get_lock()); }
 	static void thread_exit_unlock_allowance_zone(uint32_t p_zone_id);
 #else
 	static uint32_t thread_enter_unlock_allowance_zone(const MutexLock<BinaryMutex> &p_lock) { return UINT32_MAX; }

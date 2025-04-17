@@ -40,7 +40,7 @@ struct _CollectorCallback2D {
 	Vector2 normal;
 	Vector2 *sep_axis = nullptr;
 
-	_FORCE_INLINE_ void call(const Vector2 &p_point_A, const Vector2 &p_point_B) {
+	GD_FORCE_INLINE void call(const Vector2 &p_point_A, const Vector2 &p_point_B) {
 		if (swap) {
 			callback(p_point_B, p_point_A, userdata);
 		} else {
@@ -51,7 +51,7 @@ struct _CollectorCallback2D {
 
 typedef void (*GenerateContactsFunc)(const Vector2 *, int, const Vector2 *, int, _CollectorCallback2D *);
 
-_FORCE_INLINE_ static void _generate_contacts_point_point(const Vector2 *p_points_A, int p_point_count_A, const Vector2 *p_points_B, int p_point_count_B, _CollectorCallback2D *p_collector) {
+GD_FORCE_INLINE static void _generate_contacts_point_point(const Vector2 *p_points_A, int p_point_count_A, const Vector2 *p_points_B, int p_point_count_B, _CollectorCallback2D *p_collector) {
 #ifdef DEBUG_ENABLED
 	ERR_FAIL_COND(p_point_count_A != 1);
 	ERR_FAIL_COND(p_point_count_B != 1);
@@ -60,7 +60,7 @@ _FORCE_INLINE_ static void _generate_contacts_point_point(const Vector2 *p_point
 	p_collector->call(*p_points_A, *p_points_B);
 }
 
-_FORCE_INLINE_ static void _generate_contacts_point_edge(const Vector2 *p_points_A, int p_point_count_A, const Vector2 *p_points_B, int p_point_count_B, _CollectorCallback2D *p_collector) {
+GD_FORCE_INLINE static void _generate_contacts_point_edge(const Vector2 *p_points_A, int p_point_count_A, const Vector2 *p_points_B, int p_point_count_B, _CollectorCallback2D *p_collector) {
 #ifdef DEBUG_ENABLED
 	ERR_FAIL_COND(p_point_count_A != 1);
 	ERR_FAIL_COND(p_point_count_B != 2);
@@ -74,10 +74,10 @@ struct _generate_contacts_Pair {
 	bool a = false;
 	int idx = 0;
 	real_t d = 0.0;
-	_FORCE_INLINE_ bool operator<(const _generate_contacts_Pair &l) const { return d < l.d; }
+	GD_FORCE_INLINE bool operator<(const _generate_contacts_Pair &l) const { return d < l.d; }
 };
 
-_FORCE_INLINE_ static void _generate_contacts_edge_edge(const Vector2 *p_points_A, int p_point_count_A, const Vector2 *p_points_B, int p_point_count_B, _CollectorCallback2D *p_collector) {
+GD_FORCE_INLINE static void _generate_contacts_edge_edge(const Vector2 *p_points_A, int p_point_count_A, const Vector2 *p_points_B, int p_point_count_B, _CollectorCallback2D *p_collector) {
 #ifdef DEBUG_ENABLED
 	ERR_FAIL_COND(p_point_count_A != 2);
 	ERR_FAIL_COND(p_point_count_B != 2); // circle is actually a 4x3 matrix
@@ -190,7 +190,7 @@ class SeparatorAxisTest2D {
 	_CollectorCallback2D *callback;
 
 public:
-	_FORCE_INLINE_ bool test_previous_axis() {
+	GD_FORCE_INLINE bool test_previous_axis() {
 		if (callback && callback->sep_axis && *callback->sep_axis != Vector2()) {
 			return test_axis(*callback->sep_axis);
 		} else {
@@ -201,7 +201,7 @@ public:
 		return true;
 	}
 
-	_FORCE_INLINE_ bool test_cast() {
+	GD_FORCE_INLINE bool test_cast() {
 		if (castA) {
 			Vector2 na = motion_A.normalized();
 			if (!test_axis(na)) {
@@ -225,7 +225,7 @@ public:
 		return true;
 	}
 
-	_FORCE_INLINE_ bool test_axis(const Vector2 &p_axis) {
+	GD_FORCE_INLINE bool test_axis(const Vector2 &p_axis) {
 		Vector2 axis = p_axis;
 
 		if (Math::is_zero_approx(axis.x) &&
@@ -301,7 +301,7 @@ public:
 		return true;
 	}
 
-	_FORCE_INLINE_ void generate_contacts() {
+	GD_FORCE_INLINE void generate_contacts() {
 		// nothing to do, don't generate
 		if (best_axis == Vector2(0.0, 0.0)) {
 			return;
@@ -359,7 +359,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ SeparatorAxisTest2D(const ShapeA *p_shape_A, const Transform2D &p_transform_a, const ShapeB *p_shape_B, const Transform2D &p_transform_b, _CollectorCallback2D *p_collector, const Vector2 &p_motion_A = Vector2(), const Vector2 &p_motion_B = Vector2(), real_t p_margin_A = 0, real_t p_margin_B = 0) {
+	GD_FORCE_INLINE SeparatorAxisTest2D(const ShapeA *p_shape_A, const Transform2D &p_transform_a, const ShapeB *p_shape_B, const Transform2D &p_transform_b, _CollectorCallback2D *p_collector, const Vector2 &p_motion_A = Vector2(), const Vector2 &p_motion_B = Vector2(), real_t p_margin_A = 0, real_t p_margin_B = 0) {
 		margin_A = p_margin_A;
 		margin_B = p_margin_B;
 		shape_A = p_shape_A;

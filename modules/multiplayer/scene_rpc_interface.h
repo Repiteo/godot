@@ -86,7 +86,7 @@ private:
 	HashMap<ObjectID, RPCConfigCache> rpc_cache;
 
 #ifdef DEBUG_ENABLED
-	_FORCE_INLINE_ void _profile_node_data(const String &p_what, ObjectID p_id, int p_size);
+	GD_FORCE_INLINE void _profile_node_data(const String &p_what, ObjectID p_id, int p_size);
 #endif
 
 protected:

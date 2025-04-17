@@ -57,12 +57,12 @@ struct [[nodiscard]] Vector3i {
 		// NOLINTEND(modernize-use-default-member-init)
 	};
 
-	_FORCE_INLINE_ const int32_t &operator[](int p_axis) const {
+	GD_FORCE_INLINE const int32_t &operator[](int p_axis) const {
 		DEV_ASSERT((unsigned int)p_axis < 3);
 		return coord[p_axis];
 	}
 
-	_FORCE_INLINE_ int32_t &operator[](int p_axis) {
+	GD_FORCE_INLINE int32_t &operator[](int p_axis) {
 		DEV_ASSERT((unsigned int)p_axis < 3);
 		return coord[p_axis];
 	}
@@ -86,20 +86,20 @@ struct [[nodiscard]] Vector3i {
 		return Vector3i(MAX(x, p_scalar), MAX(y, p_scalar), MAX(z, p_scalar));
 	}
 
-	_FORCE_INLINE_ int64_t length_squared() const;
-	_FORCE_INLINE_ double length() const;
+	GD_FORCE_INLINE int64_t length_squared() const;
+	GD_FORCE_INLINE double length() const;
 
-	_FORCE_INLINE_ void zero();
+	GD_FORCE_INLINE void zero();
 
-	_FORCE_INLINE_ Vector3i abs() const;
-	_FORCE_INLINE_ Vector3i sign() const;
+	GD_FORCE_INLINE Vector3i abs() const;
+	GD_FORCE_INLINE Vector3i sign() const;
 	Vector3i clamp(const Vector3i &p_min, const Vector3i &p_max) const;
 	Vector3i clampi(int32_t p_min, int32_t p_max) const;
 	Vector3i snapped(const Vector3i &p_step) const;
 	Vector3i snappedi(int32_t p_step) const;
 
-	_FORCE_INLINE_ double distance_to(const Vector3i &p_to) const;
-	_FORCE_INLINE_ int64_t distance_squared_to(const Vector3i &p_to) const;
+	GD_FORCE_INLINE double distance_to(const Vector3i &p_to) const;
+	GD_FORCE_INLINE int64_t distance_squared_to(const Vector3i &p_to) const;
 
 	/* Operators */
 

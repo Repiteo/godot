@@ -91,7 +91,7 @@ static_assert(ENUM_MEMBERS_EQUAL(RDD::COMPARE_OP_NOT_EQUAL, MTLCompareFunctionNo
 static_assert(ENUM_MEMBERS_EQUAL(RDD::COMPARE_OP_GREATER_OR_EQUAL, MTLCompareFunctionGreaterEqual));
 static_assert(ENUM_MEMBERS_EQUAL(RDD::COMPARE_OP_ALWAYS, MTLCompareFunctionAlways));
 
-_FORCE_INLINE_ MTLSize mipmapLevelSizeFromTexture(id<MTLTexture> p_tex, NSUInteger p_level) {
+GD_FORCE_INLINE MTLSize mipmapLevelSizeFromTexture(id<MTLTexture> p_tex, NSUInteger p_level) {
 	MTLSize lvlSize;
 	lvlSize.width = MAX(p_tex.width >> p_level, 1UL);
 	lvlSize.height = MAX(p_tex.height >> p_level, 1UL);
@@ -99,7 +99,7 @@ _FORCE_INLINE_ MTLSize mipmapLevelSizeFromTexture(id<MTLTexture> p_tex, NSUInteg
 	return lvlSize;
 }
 
-_FORCE_INLINE_ MTLSize mipmapLevelSizeFromSize(MTLSize p_size, NSUInteger p_level) {
+GD_FORCE_INLINE MTLSize mipmapLevelSizeFromSize(MTLSize p_size, NSUInteger p_level) {
 	if (p_level == 0) {
 		return p_size;
 	}
@@ -111,7 +111,7 @@ _FORCE_INLINE_ MTLSize mipmapLevelSizeFromSize(MTLSize p_size, NSUInteger p_leve
 	return lvlSize;
 }
 
-_FORCE_INLINE_ static bool operator==(MTLSize p_a, MTLSize p_b) {
+GD_FORCE_INLINE static bool operator==(MTLSize p_a, MTLSize p_b) {
 	return p_a.width == p_b.width && p_a.height == p_b.height && p_a.depth == p_b.depth;
 }
 
@@ -1119,36 +1119,36 @@ public:
 		p_value.serialize(*this);
 	}
 
-	_FORCE_INLINE_ void write(uint32_t p_value) {
+	GD_FORCE_INLINE void write(uint32_t p_value) {
 		DEV_ASSERT(pos + sizeof(uint32_t) <= length);
 		pos += encode_uint32(p_value, data + pos);
 	}
 
-	_FORCE_INLINE_ void write(RD::ShaderStage p_value) {
+	GD_FORCE_INLINE void write(RD::ShaderStage p_value) {
 		write((uint32_t)p_value);
 	}
 
-	_FORCE_INLINE_ void write(bool p_value) {
+	GD_FORCE_INLINE void write(bool p_value) {
 		DEV_ASSERT(pos + sizeof(uint8_t) <= length);
 		*(data + pos) = p_value ? 1 : 0;
 		pos += 1;
 	}
 
-	_FORCE_INLINE_ void write(int p_value) {
+	GD_FORCE_INLINE void write(int p_value) {
 		write((uint32_t)p_value);
 	}
 
-	_FORCE_INLINE_ void write(uint64_t p_value) {
+	GD_FORCE_INLINE void write(uint64_t p_value) {
 		DEV_ASSERT(pos + sizeof(uint64_t) <= length);
 		pos += encode_uint64(p_value, data + pos);
 	}
 
-	_FORCE_INLINE_ void write(float p_value) {
+	GD_FORCE_INLINE void write(float p_value) {
 		DEV_ASSERT(pos + sizeof(float) <= length);
 		pos += encode_float(p_value, data + pos);
 	}
 
-	_FORCE_INLINE_ void write(double p_value) {
+	GD_FORCE_INLINE void write(double p_value) {
 		DEV_ASSERT(pos + sizeof(double) <= length);
 		pos += encode_double(p_value, data + pos);
 	}
@@ -1261,41 +1261,41 @@ public:
 		p_value.deserialize(*this);
 	}
 
-	_FORCE_INLINE_ void read(uint32_t &p_val) {
+	GD_FORCE_INLINE void read(uint32_t &p_val) {
 		CHECK(sizeof(uint32_t));
 
 		p_val = decode_uint32(data + pos);
 		pos += sizeof(uint32_t);
 	}
 
-	_FORCE_INLINE_ void read(RD::ShaderStage &p_val) {
+	GD_FORCE_INLINE void read(RD::ShaderStage &p_val) {
 		uint32_t val;
 		read(val);
 		p_val = (RD::ShaderStage)val;
 	}
 
-	_FORCE_INLINE_ void read(bool &p_val) {
+	GD_FORCE_INLINE void read(bool &p_val) {
 		CHECK(sizeof(uint8_t));
 
 		p_val = *(data + pos) > 0;
 		pos += 1;
 	}
 
-	_FORCE_INLINE_ void read(uint64_t &p_val) {
+	GD_FORCE_INLINE void read(uint64_t &p_val) {
 		CHECK(sizeof(uint64_t));
 
 		p_val = decode_uint64(data + pos);
 		pos += sizeof(uint64_t);
 	}
 
-	_FORCE_INLINE_ void read(float &p_val) {
+	GD_FORCE_INLINE void read(float &p_val) {
 		CHECK(sizeof(float));
 
 		p_val = decode_float(data + pos);
 		pos += sizeof(float);
 	}
 
-	_FORCE_INLINE_ void read(double &p_val) {
+	GD_FORCE_INLINE void read(double &p_val) {
 		CHECK(sizeof(double));
 
 		p_val = decode_double(data + pos);

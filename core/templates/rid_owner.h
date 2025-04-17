@@ -116,7 +116,7 @@ class RID_Alloc : public RID_AllocBase {
 
 	mutable Mutex mutex;
 
-	_FORCE_INLINE_ RID _allocate_rid() {
+	GD_FORCE_INLINE RID _allocate_rid() {
 		if constexpr (THREAD_SAFE) {
 			mutex.lock();
 		}
@@ -199,7 +199,7 @@ public:
 		return _allocate_rid();
 	}
 
-	_FORCE_INLINE_ T *get_or_null(const RID &p_rid, bool p_initialize = false) {
+	GD_FORCE_INLINE T *get_or_null(const RID &p_rid, bool p_initialize = false) {
 		if (p_rid == RID()) {
 			return nullptr;
 		}
@@ -310,7 +310,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ bool owns(const RID &p_rid) const {
+	GD_FORCE_INLINE bool owns(const RID &p_rid) const {
 		if constexpr (THREAD_SAFE) {
 			mutex.lock();
 		}
@@ -338,7 +338,7 @@ public:
 		return owned;
 	}
 
-	_FORCE_INLINE_ void free(const RID &p_rid) {
+	GD_FORCE_INLINE void free(const RID &p_rid) {
 		if constexpr (THREAD_SAFE) {
 			mutex.lock();
 		}
@@ -379,7 +379,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ uint32_t get_rid_count() const {
+	GD_FORCE_INLINE uint32_t get_rid_count() const {
 		return alloc_count;
 	}
 	void get_owned_list(List<RID> *p_owned) const {
@@ -468,19 +468,19 @@ class RID_PtrOwner {
 	RID_Alloc<T *, THREAD_SAFE> alloc;
 
 public:
-	_FORCE_INLINE_ RID make_rid(T *p_ptr) {
+	GD_FORCE_INLINE RID make_rid(T *p_ptr) {
 		return alloc.make_rid(p_ptr);
 	}
 
-	_FORCE_INLINE_ RID allocate_rid() {
+	GD_FORCE_INLINE RID allocate_rid() {
 		return alloc.allocate_rid();
 	}
 
-	_FORCE_INLINE_ void initialize_rid(RID p_rid, T *p_ptr) {
+	GD_FORCE_INLINE void initialize_rid(RID p_rid, T *p_ptr) {
 		alloc.initialize_rid(p_rid, p_ptr);
 	}
 
-	_FORCE_INLINE_ T *get_or_null(const RID &p_rid) {
+	GD_FORCE_INLINE T *get_or_null(const RID &p_rid) {
 		T **ptr = alloc.get_or_null(p_rid);
 		if (unlikely(!ptr)) {
 			return nullptr;
@@ -488,25 +488,25 @@ public:
 		return *ptr;
 	}
 
-	_FORCE_INLINE_ void replace(const RID &p_rid, T *p_new_ptr) {
+	GD_FORCE_INLINE void replace(const RID &p_rid, T *p_new_ptr) {
 		T **ptr = alloc.get_or_null(p_rid);
 		ERR_FAIL_NULL(ptr);
 		*ptr = p_new_ptr;
 	}
 
-	_FORCE_INLINE_ bool owns(const RID &p_rid) const {
+	GD_FORCE_INLINE bool owns(const RID &p_rid) const {
 		return alloc.owns(p_rid);
 	}
 
-	_FORCE_INLINE_ void free(const RID &p_rid) {
+	GD_FORCE_INLINE void free(const RID &p_rid) {
 		alloc.free(p_rid);
 	}
 
-	_FORCE_INLINE_ uint32_t get_rid_count() const {
+	GD_FORCE_INLINE uint32_t get_rid_count() const {
 		return alloc.get_rid_count();
 	}
 
-	_FORCE_INLINE_ void get_owned_list(List<RID> *p_owned) const {
+	GD_FORCE_INLINE void get_owned_list(List<RID> *p_owned) const {
 		return alloc.get_owned_list(p_owned);
 	}
 
@@ -527,42 +527,42 @@ class RID_Owner {
 	RID_Alloc<T, THREAD_SAFE> alloc;
 
 public:
-	_FORCE_INLINE_ RID make_rid() {
+	GD_FORCE_INLINE RID make_rid() {
 		return alloc.make_rid();
 	}
-	_FORCE_INLINE_ RID make_rid(const T &p_ptr) {
+	GD_FORCE_INLINE RID make_rid(const T &p_ptr) {
 		return alloc.make_rid(p_ptr);
 	}
 
-	_FORCE_INLINE_ RID allocate_rid() {
+	GD_FORCE_INLINE RID allocate_rid() {
 		return alloc.allocate_rid();
 	}
 
-	_FORCE_INLINE_ void initialize_rid(RID p_rid) {
+	GD_FORCE_INLINE void initialize_rid(RID p_rid) {
 		alloc.initialize_rid(p_rid);
 	}
 
-	_FORCE_INLINE_ void initialize_rid(RID p_rid, const T &p_ptr) {
+	GD_FORCE_INLINE void initialize_rid(RID p_rid, const T &p_ptr) {
 		alloc.initialize_rid(p_rid, p_ptr);
 	}
 
-	_FORCE_INLINE_ T *get_or_null(const RID &p_rid) {
+	GD_FORCE_INLINE T *get_or_null(const RID &p_rid) {
 		return alloc.get_or_null(p_rid);
 	}
 
-	_FORCE_INLINE_ bool owns(const RID &p_rid) const {
+	GD_FORCE_INLINE bool owns(const RID &p_rid) const {
 		return alloc.owns(p_rid);
 	}
 
-	_FORCE_INLINE_ void free(const RID &p_rid) {
+	GD_FORCE_INLINE void free(const RID &p_rid) {
 		alloc.free(p_rid);
 	}
 
-	_FORCE_INLINE_ uint32_t get_rid_count() const {
+	GD_FORCE_INLINE uint32_t get_rid_count() const {
 		return alloc.get_rid_count();
 	}
 
-	_FORCE_INLINE_ void get_owned_list(List<RID> *p_owned) const {
+	GD_FORCE_INLINE void get_owned_list(List<RID> *p_owned) const {
 		return alloc.get_owned_list(p_owned);
 	}
 	void fill_owned_buffer(RID *p_rid_buffer) const {

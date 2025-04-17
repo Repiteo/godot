@@ -56,7 +56,7 @@ class FramebufferCacheRD : public Object {
 
 	Cache *hash_table[HASH_TABLE_SIZE] = {};
 
-	static _FORCE_INLINE_ uint32_t _hash_pass(const RD::FramebufferPass &p, uint32_t h) {
+	static GD_FORCE_INLINE uint32_t _hash_pass(const RD::FramebufferPass &p, uint32_t h) {
 		h = hash_murmur3_one_32(p.depth_attachment, h);
 
 		h = hash_murmur3_one_32(p.color_attachments.size(), h);
@@ -77,7 +77,7 @@ class FramebufferCacheRD : public Object {
 		return h;
 	}
 
-	static _FORCE_INLINE_ bool _compare_pass(const RD::FramebufferPass &a, const RD::FramebufferPass &b) {
+	static GD_FORCE_INLINE bool _compare_pass(const RD::FramebufferPass &a, const RD::FramebufferPass &b) {
 		if (a.depth_attachment != b.depth_attachment) {
 			return false;
 		}
@@ -115,7 +115,7 @@ class FramebufferCacheRD : public Object {
 		return true;
 	}
 
-	_FORCE_INLINE_ uint32_t _hash_rids(uint32_t h, const RID &arg) {
+	GD_FORCE_INLINE uint32_t _hash_rids(uint32_t h, const RID &arg) {
 		return hash_murmur3_one_64(arg.get_id(), h);
 	}
 
@@ -125,24 +125,24 @@ class FramebufferCacheRD : public Object {
 		return _hash_rids(h, args...);
 	}
 
-	_FORCE_INLINE_ bool _compare_args(uint32_t idx, const LocalVector<RID> &textures, const RID &arg) {
+	GD_FORCE_INLINE bool _compare_args(uint32_t idx, const LocalVector<RID> &textures, const RID &arg) {
 		return textures[idx] == arg;
 	}
 
 	template <typename... Args>
-	_FORCE_INLINE_ bool _compare_args(uint32_t idx, const LocalVector<RID> &textures, const RID &arg, Args... args) {
+	GD_FORCE_INLINE bool _compare_args(uint32_t idx, const LocalVector<RID> &textures, const RID &arg, Args... args) {
 		if (textures[idx] != arg) {
 			return false;
 		}
 		return _compare_args(idx + 1, textures, args...);
 	}
 
-	_FORCE_INLINE_ void _create_args(Vector<RID> &textures, const RID &arg) {
+	GD_FORCE_INLINE void _create_args(Vector<RID> &textures, const RID &arg) {
 		textures.push_back(arg);
 	}
 
 	template <typename... Args>
-	_FORCE_INLINE_ void _create_args(Vector<RID> &textures, const RID &arg, Args... args) {
+	GD_FORCE_INLINE void _create_args(Vector<RID> &textures, const RID &arg, Args... args) {
 		textures.push_back(arg);
 		_create_args(textures, args...);
 	}

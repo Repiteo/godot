@@ -54,8 +54,8 @@ class Material : public Resource {
 	void inspect_native_shader_code();
 
 protected:
-	_FORCE_INLINE_ void _set_material(RID p_material) const { material = p_material; }
-	_FORCE_INLINE_ RID _get_material() const { return material; }
+	GD_FORCE_INLINE void _set_material(RID p_material) const { material = p_material; }
+	GD_FORCE_INLINE RID _get_material() const { return material; }
 	static void _bind_methods();
 	virtual bool _can_do_next_pass() const;
 	virtual bool _can_use_render_priority() const;
@@ -371,7 +371,7 @@ private:
 
 	MaterialKey current_key;
 
-	_FORCE_INLINE_ MaterialKey _compute_key() const {
+	GD_FORCE_INLINE MaterialKey _compute_key() const {
 		MaterialKey mk;
 
 		mk.detail_uv = detail_uv;
@@ -473,7 +473,7 @@ private:
 	SelfList<BaseMaterial3D> element;
 
 	void _update_shader();
-	_FORCE_INLINE_ void _queue_shader_change();
+	GD_FORCE_INLINE void _queue_shader_change();
 	void _check_material_rid();
 	void _material_set_param(const StringName &p_name, const Variant &p_value);
 
@@ -565,7 +565,7 @@ private:
 
 	Ref<Texture2D> textures[TEXTURE_MAX];
 
-	_FORCE_INLINE_ void _validate_feature(const String &text, Feature feature, PropertyInfo &property) const;
+	GD_FORCE_INLINE void _validate_feature(const String &text, Feature feature, PropertyInfo &property) const;
 
 	static HashMap<uint64_t, Ref<StandardMaterial3D>> materials_for_2d; //used by Sprite3D, Label3D and other stuff
 

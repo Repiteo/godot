@@ -89,7 +89,7 @@ private:
 		};
 	};
 
-	_FORCE_INLINE_ void _ensure_first_page() {
+	GD_FORCE_INLINE void _ensure_first_page() {
 		if (unlikely(pages.is_empty())) {
 			pages.push_back(allocator->alloc());
 			page_bytes.push_back(0);
@@ -162,8 +162,8 @@ class MessageQueue : public CallQueue {
 	friend class CallQueue;
 
 public:
-	_FORCE_INLINE_ static CallQueue *get_singleton() { return thread_singleton ? thread_singleton : main_singleton; }
-	_FORCE_INLINE_ static CallQueue *get_main_singleton() { return main_singleton; }
+	GD_FORCE_INLINE static CallQueue *get_singleton() { return thread_singleton ? thread_singleton : main_singleton; }
+	GD_FORCE_INLINE static CallQueue *get_main_singleton() { return main_singleton; }
 
 	static void set_thread_singleton_override(CallQueue *p_thread_singleton);
 

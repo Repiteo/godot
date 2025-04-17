@@ -67,7 +67,7 @@ public:
 	void update_specialization_constants(const Vector<RD::PipelineSpecializationConstant> &p_base_specialization_constants);
 	void update_shader(RID p_shader);
 
-	_FORCE_INLINE_ RID get_render_pipeline(RD::VertexFormatID p_vertex_format_id, RD::FramebufferFormatID p_framebuffer_format_id, bool p_wireframe = false, uint32_t p_render_pass = 0, uint32_t p_bool_specializations = 0) {
+	GD_FORCE_INLINE RID get_render_pipeline(RD::VertexFormatID p_vertex_format_id, RD::FramebufferFormatID p_framebuffer_format_id, bool p_wireframe = false, uint32_t p_render_pass = 0, uint32_t p_bool_specializations = 0) {
 #ifdef DEBUG_ENABLED
 		ERR_FAIL_COND_V_MSG(shader.is_null(), RID(),
 				"Attempted to use an unused shader variant (shader is null),");
@@ -89,7 +89,7 @@ public:
 		return result;
 	}
 
-	_FORCE_INLINE_ uint64_t get_vertex_input_mask() {
+	GD_FORCE_INLINE uint64_t get_vertex_input_mask() {
 		ERR_FAIL_COND_V(shader.is_null(), 0);
 		return RD::get_singleton()->shader_get_vertex_input_attribute_mask(shader);
 	}

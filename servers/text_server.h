@@ -662,7 +662,7 @@ private:
 	Vector<Ref<TextServer>> interfaces;
 
 public:
-	_FORCE_INLINE_ static TextServerManager *get_singleton() {
+	GD_FORCE_INLINE static TextServerManager *get_singleton() {
 		return singleton;
 	}
 
@@ -673,7 +673,7 @@ public:
 	Ref<TextServer> find_interface(const String &p_name) const;
 	TypedArray<Dictionary> get_interfaces() const;
 
-	_FORCE_INLINE_ Ref<TextServer> get_primary_interface() const {
+	GD_FORCE_INLINE Ref<TextServer> get_primary_interface() const {
 		return primary_interface;
 	}
 	void set_primary_interface(const Ref<TextServer> &p_primary_interface);

@@ -108,7 +108,7 @@ public:
 	int length() const;
 	bool is_empty() const;
 
-	_FORCE_INLINE_ bool is_node_unique_name() const {
+	GD_FORCE_INLINE bool is_node_unique_name() const {
 		if (!_data) {
 			return false;
 		}
@@ -118,38 +118,38 @@ public:
 			return (char32_t)_data->name[0] == (char32_t)UNIQUE_NODE_PREFIX[0];
 		}
 	}
-	_FORCE_INLINE_ bool operator<(const StringName &p_name) const {
+	GD_FORCE_INLINE bool operator<(const StringName &p_name) const {
 		return _data < p_name._data;
 	}
-	_FORCE_INLINE_ bool operator<=(const StringName &p_name) const {
+	GD_FORCE_INLINE bool operator<=(const StringName &p_name) const {
 		return _data <= p_name._data;
 	}
-	_FORCE_INLINE_ bool operator>(const StringName &p_name) const {
+	GD_FORCE_INLINE bool operator>(const StringName &p_name) const {
 		return _data > p_name._data;
 	}
-	_FORCE_INLINE_ bool operator>=(const StringName &p_name) const {
+	GD_FORCE_INLINE bool operator>=(const StringName &p_name) const {
 		return _data >= p_name._data;
 	}
-	_FORCE_INLINE_ bool operator==(const StringName &p_name) const {
+	GD_FORCE_INLINE bool operator==(const StringName &p_name) const {
 		// The real magic of all this mess happens here.
 		// This is why path comparisons are very fast.
 		return _data == p_name._data;
 	}
-	_FORCE_INLINE_ bool operator!=(const StringName &p_name) const {
+	GD_FORCE_INLINE bool operator!=(const StringName &p_name) const {
 		return _data != p_name._data;
 	}
-	_FORCE_INLINE_ uint32_t hash() const {
+	GD_FORCE_INLINE uint32_t hash() const {
 		if (_data) {
 			return _data->hash;
 		} else {
 			return get_empty_hash();
 		}
 	}
-	_FORCE_INLINE_ const void *data_unique_pointer() const {
+	GD_FORCE_INLINE const void *data_unique_pointer() const {
 		return (void *)_data;
 	}
 
-	_FORCE_INLINE_ operator String() const {
+	GD_FORCE_INLINE operator String() const {
 		if (_data) {
 			if (_data->cname) {
 				return String(_data->cname);
@@ -167,10 +167,10 @@ public:
 
 	struct AlphCompare {
 		template <typename LT, typename RT>
-		_FORCE_INLINE_ bool operator()(const LT &l, const RT &r) const {
+		GD_FORCE_INLINE bool operator()(const LT &l, const RT &r) const {
 			return compare(l, r);
 		}
-		_FORCE_INLINE_ static bool compare(const StringName &l, const StringName &r) {
+		GD_FORCE_INLINE static bool compare(const StringName &l, const StringName &r) {
 			const char *l_cname = l._data ? l._data->cname : "";
 			const char *r_cname = r._data ? r._data->cname : "";
 
@@ -188,7 +188,7 @@ public:
 				}
 			}
 		}
-		_FORCE_INLINE_ static bool compare(const String &l, const StringName &r) {
+		GD_FORCE_INLINE static bool compare(const String &l, const StringName &r) {
 			const char *r_cname = r._data ? r._data->cname : "";
 
 			if (r_cname) {
@@ -197,7 +197,7 @@ public:
 				return str_compare(l.get_data(), r._data->name.ptr()) < 0;
 			}
 		}
-		_FORCE_INLINE_ static bool compare(const StringName &l, const String &r) {
+		GD_FORCE_INLINE static bool compare(const StringName &l, const String &r) {
 			const char *l_cname = l._data ? l._data->cname : "";
 
 			if (l_cname) {
@@ -206,7 +206,7 @@ public:
 				return str_compare(l._data->name.ptr(), r.get_data()) < 0;
 			}
 		}
-		_FORCE_INLINE_ static bool compare(const String &l, const String &r) {
+		GD_FORCE_INLINE static bool compare(const String &l, const String &r) {
 			return str_compare(l.get_data(), r.get_data()) < 0;
 		}
 	};
@@ -235,9 +235,9 @@ public:
 	static void assign_static_unique_class_name(StringName *ptr, const char *p_name);
 
 #ifdef SIZE_EXTRA
-	_NO_INLINE_
+	GD_NO_INLINE
 #else
-	_FORCE_INLINE_
+	GD_FORCE_INLINE
 #endif
 	~StringName() {
 		if (likely(configured) && _data) { //only free if configured

@@ -143,8 +143,8 @@ private:
 public:
 	friend class DebugAdapterServer;
 
-	_FORCE_INLINE_ static DebugAdapterProtocol *get_singleton() { return singleton; }
-	_FORCE_INLINE_ bool is_active() const { return _initialized && clients.size() > 0; }
+	GD_FORCE_INLINE static DebugAdapterProtocol *get_singleton() { return singleton; }
+	GD_FORCE_INLINE bool is_active() const { return _initialized && clients.size() > 0; }
 
 	bool process_message(const String &p_text);
 

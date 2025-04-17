@@ -264,7 +264,7 @@ private:
 		CanvasItem *item = nullptr;
 		real_t z_index = 0;
 		bool has_z = true;
-		_FORCE_INLINE_ bool operator<(const _SelectResult &p_rr) const {
+		GD_FORCE_INLINE bool operator<(const _SelectResult &p_rr) const {
 			return has_z && p_rr.has_z ? p_rr.z_index < z_index : p_rr.has_z;
 		}
 	};
@@ -289,7 +289,7 @@ private:
 	struct BoneKey {
 		ObjectID from;
 		ObjectID to;
-		_FORCE_INLINE_ bool operator<(const BoneKey &p_key) const {
+		GD_FORCE_INLINE bool operator<(const BoneKey &p_key) const {
 			if (from == p_key.from) {
 				return to < p_key.to;
 			} else {

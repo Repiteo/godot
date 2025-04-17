@@ -38,7 +38,7 @@ class StringBuffer {
 	String buffer;
 	int string_length = 0;
 
-	_FORCE_INLINE_ char32_t *current_buffer_ptr() {
+	GD_FORCE_INLINE char32_t *current_buffer_ptr() {
 		return static_cast<String &>(buffer).is_empty() ? short_buffer : buffer.ptrw();
 	}
 
@@ -48,19 +48,19 @@ public:
 	StringBuffer &append(const char *p_str);
 	StringBuffer &append(const char32_t *p_str, int p_clip_to_len = -1);
 
-	_FORCE_INLINE_ void operator+=(char32_t p_char) {
+	GD_FORCE_INLINE void operator+=(char32_t p_char) {
 		append(p_char);
 	}
 
-	_FORCE_INLINE_ void operator+=(const String &p_string) {
+	GD_FORCE_INLINE void operator+=(const String &p_string) {
 		append(p_string);
 	}
 
-	_FORCE_INLINE_ void operator+=(const char *p_str) {
+	GD_FORCE_INLINE void operator+=(const char *p_str) {
 		append(p_str);
 	}
 
-	_FORCE_INLINE_ void operator+=(const char32_t *p_str) {
+	GD_FORCE_INLINE void operator+=(const char32_t *p_str) {
 		append(p_str);
 	}
 
@@ -73,7 +73,7 @@ public:
 	double as_double();
 	int64_t as_int();
 
-	_FORCE_INLINE_ operator String() {
+	GD_FORCE_INLINE operator String() {
 		return as_string();
 	}
 };

@@ -1494,19 +1494,19 @@ struct _Volume_BVH_Element {
 };
 
 struct _Volume_BVH_CompareX {
-	_FORCE_INLINE_ bool operator()(const _Volume_BVH_Element &a, const _Volume_BVH_Element &b) const {
+	GD_FORCE_INLINE bool operator()(const _Volume_BVH_Element &a, const _Volume_BVH_Element &b) const {
 		return a.center.x < b.center.x;
 	}
 };
 
 struct _Volume_BVH_CompareY {
-	_FORCE_INLINE_ bool operator()(const _Volume_BVH_Element &a, const _Volume_BVH_Element &b) const {
+	GD_FORCE_INLINE bool operator()(const _Volume_BVH_Element &a, const _Volume_BVH_Element &b) const {
 		return a.center.y < b.center.y;
 	}
 };
 
 struct _Volume_BVH_CompareZ {
-	_FORCE_INLINE_ bool operator()(const _Volume_BVH_Element &a, const _Volume_BVH_Element &b) const {
+	GD_FORCE_INLINE bool operator()(const _Volume_BVH_Element &a, const _Volume_BVH_Element &b) const {
 		return a.center.z < b.center.z;
 	}
 };
@@ -1719,7 +1719,7 @@ struct _HeightmapGridCullState {
 	int z = 0;
 };
 
-_FORCE_INLINE_ bool _heightmap_face_cull_segment(_HeightmapSegmentCullParams &p_params) {
+GD_FORCE_INLINE bool _heightmap_face_cull_segment(_HeightmapSegmentCullParams &p_params) {
 	Vector3 res;
 	Vector3 normal;
 	int fi = -1;
@@ -1733,7 +1733,7 @@ _FORCE_INLINE_ bool _heightmap_face_cull_segment(_HeightmapSegmentCullParams &p_
 	return false;
 }
 
-_FORCE_INLINE_ bool _heightmap_cell_cull_segment(_HeightmapSegmentCullParams &p_params, const _HeightmapGridCullState &p_state) {
+GD_FORCE_INLINE bool _heightmap_cell_cull_segment(_HeightmapSegmentCullParams &p_params, const _HeightmapGridCullState &p_state) {
 	// First triangle.
 	p_params.heightmap->_get_point(p_state.x, p_state.z, p_params.face->vertex[0]);
 	p_params.heightmap->_get_point(p_state.x + 1, p_state.z, p_params.face->vertex[1]);
@@ -1754,7 +1754,7 @@ _FORCE_INLINE_ bool _heightmap_cell_cull_segment(_HeightmapSegmentCullParams &p_
 	return false;
 }
 
-_FORCE_INLINE_ bool _heightmap_chunk_cull_segment(_HeightmapSegmentCullParams &p_params, const _HeightmapGridCullState &p_state) {
+GD_FORCE_INLINE bool _heightmap_chunk_cull_segment(_HeightmapSegmentCullParams &p_params, const _HeightmapGridCullState &p_state) {
 	const GodotHeightMapShape3D::Range &chunk = p_params.heightmap->_get_bounds_chunk(p_state.x, p_state.z);
 
 	Vector3 enter_pos;

@@ -59,7 +59,7 @@ class OptimizedTranslation : public Translation {
 		Elem elem[1];
 	};
 
-	_FORCE_INLINE_ uint32_t hash(uint32_t d, const char *p_str) const {
+	GD_FORCE_INLINE uint32_t hash(uint32_t d, const char *p_str) const {
 		if (d == 0) {
 			d = 0x1000193;
 		}

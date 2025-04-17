@@ -1568,7 +1568,7 @@ void ConvexHullInternal::merge(IntermediateHull &p_h0, IntermediateHull &p_h1) {
 }
 
 struct PointComparator {
-	_FORCE_INLINE_ bool operator()(const ConvexHullInternal::Point32 &p, const ConvexHullInternal::Point32 &q) const {
+	GD_FORCE_INLINE bool operator()(const ConvexHullInternal::Point32 &p, const ConvexHullInternal::Point32 &q) const {
 		return (p.y < q.y) || ((p.y == q.y) && ((p.x < q.x) || ((p.x == q.x) && (p.z < q.z))));
 	}
 };

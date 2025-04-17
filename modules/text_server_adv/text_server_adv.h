@@ -157,7 +157,7 @@ class TextServerAdvanced : public TextServerExtension {
 
 	void _insert_num_systems_lang();
 	void _insert_feature_sets();
-	_FORCE_INLINE_ void _insert_feature(const StringName &p_name, int32_t p_tag, Variant::Type p_vtype = Variant::INT, bool p_hidden = false);
+	GD_FORCE_INLINE void _insert_feature(const StringName &p_name, int32_t p_tag, Variant::Type p_vtype = Variant::INT, bool p_hidden = false);
 
 	// ICU support data.
 
@@ -372,20 +372,20 @@ class TextServerAdvanced : public TextServerExtension {
 		}
 	};
 
-	_FORCE_INLINE_ FontTexturePosition find_texture_pos_for_glyph(FontForSizeAdvanced *p_data, int p_color_size, Image::Format p_image_format, int p_width, int p_height, bool p_msdf) const;
+	GD_FORCE_INLINE FontTexturePosition find_texture_pos_for_glyph(FontForSizeAdvanced *p_data, int p_color_size, Image::Format p_image_format, int p_width, int p_height, bool p_msdf) const;
 #ifdef MODULE_MSDFGEN_ENABLED
-	_FORCE_INLINE_ FontGlyph rasterize_msdf(FontAdvanced *p_font_data, FontForSizeAdvanced *p_data, int p_pixel_range, int p_rect_margin, FT_Outline *p_outline, const Vector2 &p_advance) const;
+	GD_FORCE_INLINE FontGlyph rasterize_msdf(FontAdvanced *p_font_data, FontForSizeAdvanced *p_data, int p_pixel_range, int p_rect_margin, FT_Outline *p_outline, const Vector2 &p_advance) const;
 #endif
 #ifdef MODULE_FREETYPE_ENABLED
-	_FORCE_INLINE_ FontGlyph rasterize_bitmap(FontForSizeAdvanced *p_data, int p_rect_margin, FT_Bitmap p_bitmap, int p_yofs, int p_xofs, const Vector2 &p_advance, bool p_bgra) const;
+	GD_FORCE_INLINE FontGlyph rasterize_bitmap(FontForSizeAdvanced *p_data, int p_rect_margin, FT_Bitmap p_bitmap, int p_yofs, int p_xofs, const Vector2 &p_advance, bool p_bgra) const;
 #endif
-	_FORCE_INLINE_ bool _ensure_glyph(FontAdvanced *p_font_data, const Vector2i &p_size, int32_t p_glyph, FontGlyph &r_glyph, uint32_t p_oversampling = 0) const;
-	_FORCE_INLINE_ bool _ensure_cache_for_size(FontAdvanced *p_font_data, const Vector2i &p_size, FontForSizeAdvanced *&r_cache_for_size, bool p_silent = false, uint32_t p_oversampling = 0) const;
-	_FORCE_INLINE_ bool _font_validate(const RID &p_font_rid) const;
-	_FORCE_INLINE_ void _font_clear_cache(FontAdvanced *p_font_data);
+	GD_FORCE_INLINE bool _ensure_glyph(FontAdvanced *p_font_data, const Vector2i &p_size, int32_t p_glyph, FontGlyph &r_glyph, uint32_t p_oversampling = 0) const;
+	GD_FORCE_INLINE bool _ensure_cache_for_size(FontAdvanced *p_font_data, const Vector2i &p_size, FontForSizeAdvanced *&r_cache_for_size, bool p_silent = false, uint32_t p_oversampling = 0) const;
+	GD_FORCE_INLINE bool _font_validate(const RID &p_font_rid) const;
+	GD_FORCE_INLINE void _font_clear_cache(FontAdvanced *p_font_data);
 	static void _generateMTSDF_threaded(void *p_td, uint32_t p_y);
 
-	_FORCE_INLINE_ Vector2i _get_size(const FontAdvanced *p_font_data, int p_size) const {
+	GD_FORCE_INLINE Vector2i _get_size(const FontAdvanced *p_font_data, int p_size) const {
 		if (p_font_data->msdf) {
 			return Vector2i(p_font_data->msdf_source_size * 64, 0);
 		} else if (p_font_data->fixed_size > 0) {
@@ -395,7 +395,7 @@ class TextServerAdvanced : public TextServerExtension {
 		}
 	}
 
-	_FORCE_INLINE_ Vector2i _get_size_outline(const FontAdvanced *p_font_data, const Vector2i &p_size) const {
+	GD_FORCE_INLINE Vector2i _get_size_outline(const FontAdvanced *p_font_data, const Vector2i &p_size) const {
 		if (p_font_data->msdf) {
 			return Vector2i(p_font_data->msdf_source_size * 64, 0);
 		} else if (p_font_data->fixed_size > 0) {
@@ -405,10 +405,10 @@ class TextServerAdvanced : public TextServerExtension {
 		}
 	}
 
-	_FORCE_INLINE_ double _get_extra_advance(RID p_font_rid, int p_font_size) const;
-	_FORCE_INLINE_ Variant::Type _get_tag_type(int64_t p_tag) const;
-	_FORCE_INLINE_ bool _get_tag_hidden(int64_t p_tag) const;
-	_FORCE_INLINE_ int _font_get_weight_by_name(const String &p_sty_name) const {
+	GD_FORCE_INLINE double _get_extra_advance(RID p_font_rid, int p_font_size) const;
+	GD_FORCE_INLINE Variant::Type _get_tag_type(int64_t p_tag) const;
+	GD_FORCE_INLINE bool _get_tag_hidden(int64_t p_tag) const;
+	GD_FORCE_INLINE int _font_get_weight_by_name(const String &p_sty_name) const {
 		String sty_name = p_sty_name.remove_chars(" -");
 		if (sty_name.contains("thin") || sty_name.contains("hairline")) {
 			return 100;
@@ -435,7 +435,7 @@ class TextServerAdvanced : public TextServerExtension {
 		}
 		return 400;
 	}
-	_FORCE_INLINE_ int _font_get_stretch_by_name(const String &p_sty_name) const {
+	GD_FORCE_INLINE int _font_get_stretch_by_name(const String &p_sty_name) const {
 		String sty_name = p_sty_name.remove_chars(" -");
 		if (sty_name.contains("ultracondensed")) {
 			return 50;
@@ -456,7 +456,7 @@ class TextServerAdvanced : public TextServerExtension {
 		}
 		return 100;
 	}
-	_FORCE_INLINE_ bool _is_ital_style(const String &p_sty_name) const {
+	GD_FORCE_INLINE bool _is_ital_style(const String &p_sty_name) const {
 		return p_sty_name.contains("italic") || p_sty_name.contains("oblique");
 	}
 
@@ -582,7 +582,7 @@ class TextServerAdvanced : public TextServerExtension {
 	mutable RID_PtrOwner<FontAdvanced> font_owner;
 	mutable RID_PtrOwner<ShapedTextDataAdvanced> shaped_owner;
 
-	_FORCE_INLINE_ FontAdvanced *_get_font_data(const RID &p_font_rid) const {
+	GD_FORCE_INLINE FontAdvanced *_get_font_data(const RID &p_font_rid) const {
 		RID rid = p_font_rid;
 		FontAdvancedLinkedVariation *fdv = font_var_owner.get_or_null(rid);
 		if (unlikely(fdv)) {
@@ -655,7 +655,7 @@ class TextServerAdvanced : public TextServerExtension {
 	};
 
 	struct SystemFontKeyHasher {
-		_FORCE_INLINE_ static uint32_t hash(const SystemFontKey &p_a) {
+		GD_FORCE_INLINE static uint32_t hash(const SystemFontKey &p_a) {
 			uint32_t hash = p_a.font_name.hash();
 			hash = hash_murmur3_one_32(p_a.variation_coordinates.hash(), hash);
 			hash = hash_murmur3_one_32(p_a.weight, hash);
@@ -688,9 +688,9 @@ class TextServerAdvanced : public TextServerExtension {
 	bool _shape_substr(ShapedTextDataAdvanced *p_new_sd, const ShapedTextDataAdvanced *p_sd, int64_t p_start, int64_t p_length) const;
 	void _shape_run(ShapedTextDataAdvanced *p_sd, int64_t p_start, int64_t p_end, hb_script_t p_script, hb_direction_t p_direction, TypedArray<RID> p_fonts, int64_t p_span, int64_t p_fb_index, int64_t p_prev_start, int64_t p_prev_end, RID p_prev_font);
 	Glyph _shape_single_glyph(ShapedTextDataAdvanced *p_sd, char32_t p_char, hb_script_t p_script, hb_direction_t p_direction, const RID &p_font, int64_t p_font_size);
-	_FORCE_INLINE_ RID _find_sys_font_for_text(const RID &p_fdef, const String &p_script_code, const String &p_language, const String &p_text);
+	GD_FORCE_INLINE RID _find_sys_font_for_text(const RID &p_fdef, const String &p_script_code, const String &p_language, const String &p_text);
 
-	_FORCE_INLINE_ void _add_features(const Dictionary &p_source, Vector<hb_feature_t> &r_ftrs);
+	GD_FORCE_INLINE void _add_features(const Dictionary &p_source, Vector<hb_feature_t> &r_ftrs);
 
 	Mutex ft_mutex;
 
@@ -720,7 +720,7 @@ class TextServerAdvanced : public TextServerExtension {
 	hb_font_t *_font_get_hb_handle(const RID &p_font, int64_t p_font_size) const;
 
 	struct GlyphCompare { // For line breaking reordering.
-		_FORCE_INLINE_ bool operator()(const Glyph &l, const Glyph &r) const {
+		GD_FORCE_INLINE bool operator()(const Glyph &l, const Glyph &r) const {
 			if (l.start == r.start) {
 				if (l.count == r.count) {
 					return (l.flags & TextServer::GRAPHEME_IS_VIRTUAL) < (r.flags & TextServer::GRAPHEME_IS_VIRTUAL);

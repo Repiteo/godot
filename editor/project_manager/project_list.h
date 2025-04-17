@@ -166,7 +166,7 @@ public:
 			tag_sort_string = String().join(sorted_tags);
 		}
 
-		_FORCE_INLINE_ bool operator==(const Item &l) const {
+		GD_FORCE_INLINE bool operator==(const Item &l) const {
 			return path == l.path;
 		}
 	};

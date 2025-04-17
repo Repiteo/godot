@@ -111,16 +111,16 @@ class CharProxy {
 	CowData<T> &_cowdata;
 	static const T _null = 0;
 
-	_FORCE_INLINE_ CharProxy(const int &p_index, CowData<T> &p_cowdata) :
+	GD_FORCE_INLINE CharProxy(const int &p_index, CowData<T> &p_cowdata) :
 			_index(p_index),
 			_cowdata(p_cowdata) {}
 
 public:
-	_FORCE_INLINE_ CharProxy(const CharProxy<T> &p_other) :
+	GD_FORCE_INLINE CharProxy(const CharProxy<T> &p_other) :
 			_index(p_other._index),
 			_cowdata(p_other._cowdata) {}
 
-	_FORCE_INLINE_ operator T() const {
+	GD_FORCE_INLINE operator T() const {
 		if (unlikely(_index == _cowdata.size())) {
 			return _null;
 		}
@@ -128,15 +128,15 @@ public:
 		return _cowdata.get(_index);
 	}
 
-	_FORCE_INLINE_ const T *operator&() const {
+	GD_FORCE_INLINE const T *operator&() const {
 		return _cowdata.ptr() + _index;
 	}
 
-	_FORCE_INLINE_ void operator=(const T &p_other) const {
+	GD_FORCE_INLINE void operator=(const T &p_other) const {
 		_cowdata.set(_index, p_other);
 	}
 
-	_FORCE_INLINE_ void operator=(const CharProxy<T> &p_other) const {
+	GD_FORCE_INLINE void operator=(const CharProxy<T> &p_other) const {
 		_cowdata.set(_index, p_other.operator T());
 	}
 };
@@ -150,32 +150,32 @@ class Char16String {
 	static const char16_t _null;
 
 public:
-	_FORCE_INLINE_ char16_t *ptrw() { return _cowdata.ptrw(); }
-	_FORCE_INLINE_ const char16_t *ptr() const { return _cowdata.ptr(); }
-	_FORCE_INLINE_ int size() const { return _cowdata.size(); }
+	GD_FORCE_INLINE char16_t *ptrw() { return _cowdata.ptrw(); }
+	GD_FORCE_INLINE const char16_t *ptr() const { return _cowdata.ptr(); }
+	GD_FORCE_INLINE int size() const { return _cowdata.size(); }
 
-	_FORCE_INLINE_ operator Span<char16_t>() const { return Span(ptr(), length()); }
-	_FORCE_INLINE_ Span<char16_t> span() const { return Span(ptr(), length()); }
+	GD_FORCE_INLINE operator Span<char16_t>() const { return Span(ptr(), length()); }
+	GD_FORCE_INLINE Span<char16_t> span() const { return Span(ptr(), length()); }
 
 	Error resize(int p_size) { return _cowdata.resize(p_size); }
 
-	_FORCE_INLINE_ char16_t get(int p_index) const { return _cowdata.get(p_index); }
-	_FORCE_INLINE_ void set(int p_index, const char16_t &p_elem) { _cowdata.set(p_index, p_elem); }
-	_FORCE_INLINE_ const char16_t &operator[](int p_index) const {
+	GD_FORCE_INLINE char16_t get(int p_index) const { return _cowdata.get(p_index); }
+	GD_FORCE_INLINE void set(int p_index, const char16_t &p_elem) { _cowdata.set(p_index, p_elem); }
+	GD_FORCE_INLINE const char16_t &operator[](int p_index) const {
 		if (unlikely(p_index == _cowdata.size())) {
 			return _null;
 		}
 
 		return _cowdata.get(p_index);
 	}
-	_FORCE_INLINE_ CharProxy<char16_t> operator[](int p_index) { return CharProxy<char16_t>(p_index, _cowdata); }
+	GD_FORCE_INLINE CharProxy<char16_t> operator[](int p_index) { return CharProxy<char16_t>(p_index, _cowdata); }
 
-	_FORCE_INLINE_ Char16String() {}
-	_FORCE_INLINE_ Char16String(const Char16String &p_str) = default;
-	_FORCE_INLINE_ Char16String(Char16String &&p_str) = default;
-	_FORCE_INLINE_ void operator=(const Char16String &p_str) { _cowdata = p_str._cowdata; }
-	_FORCE_INLINE_ void operator=(Char16String &&p_str) { _cowdata = std::move(p_str._cowdata); }
-	_FORCE_INLINE_ Char16String(const char16_t *p_cstr) { copy_from(p_cstr); }
+	GD_FORCE_INLINE Char16String() {}
+	GD_FORCE_INLINE Char16String(const Char16String &p_str) = default;
+	GD_FORCE_INLINE Char16String(Char16String &&p_str) = default;
+	GD_FORCE_INLINE void operator=(const Char16String &p_str) { _cowdata = p_str._cowdata; }
+	GD_FORCE_INLINE void operator=(Char16String &&p_str) { _cowdata = std::move(p_str._cowdata); }
+	GD_FORCE_INLINE Char16String(const char16_t *p_cstr) { copy_from(p_cstr); }
 
 	void operator=(const char16_t *p_cstr);
 	bool operator<(const Char16String &p_right) const;
@@ -196,32 +196,32 @@ class CharString {
 	static const char _null;
 
 public:
-	_FORCE_INLINE_ char *ptrw() { return _cowdata.ptrw(); }
-	_FORCE_INLINE_ const char *ptr() const { return _cowdata.ptr(); }
-	_FORCE_INLINE_ int size() const { return _cowdata.size(); }
+	GD_FORCE_INLINE char *ptrw() { return _cowdata.ptrw(); }
+	GD_FORCE_INLINE const char *ptr() const { return _cowdata.ptr(); }
+	GD_FORCE_INLINE int size() const { return _cowdata.size(); }
 
-	_FORCE_INLINE_ operator Span<char>() const { return Span(ptr(), length()); }
-	_FORCE_INLINE_ Span<char> span() const { return Span(ptr(), length()); }
+	GD_FORCE_INLINE operator Span<char>() const { return Span(ptr(), length()); }
+	GD_FORCE_INLINE Span<char> span() const { return Span(ptr(), length()); }
 
 	Error resize(int p_size) { return _cowdata.resize(p_size); }
 
-	_FORCE_INLINE_ char get(int p_index) const { return _cowdata.get(p_index); }
-	_FORCE_INLINE_ void set(int p_index, const char &p_elem) { _cowdata.set(p_index, p_elem); }
-	_FORCE_INLINE_ const char &operator[](int p_index) const {
+	GD_FORCE_INLINE char get(int p_index) const { return _cowdata.get(p_index); }
+	GD_FORCE_INLINE void set(int p_index, const char &p_elem) { _cowdata.set(p_index, p_elem); }
+	GD_FORCE_INLINE const char &operator[](int p_index) const {
 		if (unlikely(p_index == _cowdata.size())) {
 			return _null;
 		}
 
 		return _cowdata.get(p_index);
 	}
-	_FORCE_INLINE_ CharProxy<char> operator[](int p_index) { return CharProxy<char>(p_index, _cowdata); }
+	GD_FORCE_INLINE CharProxy<char> operator[](int p_index) { return CharProxy<char>(p_index, _cowdata); }
 
-	_FORCE_INLINE_ CharString() {}
-	_FORCE_INLINE_ CharString(const CharString &p_str) = default;
-	_FORCE_INLINE_ CharString(CharString &&p_str) = default;
-	_FORCE_INLINE_ void operator=(const CharString &p_str) { _cowdata = p_str._cowdata; }
-	_FORCE_INLINE_ void operator=(CharString &&p_str) { _cowdata = std::move(p_str._cowdata); }
-	_FORCE_INLINE_ CharString(const char *p_cstr) { copy_from(p_cstr); }
+	GD_FORCE_INLINE CharString() {}
+	GD_FORCE_INLINE CharString(const CharString &p_str) = default;
+	GD_FORCE_INLINE CharString(CharString &&p_str) = default;
+	GD_FORCE_INLINE void operator=(const CharString &p_str) { _cowdata = p_str._cowdata; }
+	GD_FORCE_INLINE void operator=(CharString &&p_str) { _cowdata = std::move(p_str._cowdata); }
+	GD_FORCE_INLINE CharString(const char *p_cstr) { copy_from(p_cstr); }
 
 	void operator=(const char *p_cstr);
 	bool operator<(const CharString &p_right) const;
@@ -284,29 +284,29 @@ public:
 		npos = -1 ///<for "some" compatibility with std::string (npos is a huge value in std::string)
 	};
 
-	_FORCE_INLINE_ char32_t *ptrw() { return _cowdata.ptrw(); }
-	_FORCE_INLINE_ const char32_t *ptr() const { return _cowdata.ptr(); }
-	_FORCE_INLINE_ int size() const { return _cowdata.size(); }
+	GD_FORCE_INLINE char32_t *ptrw() { return _cowdata.ptrw(); }
+	GD_FORCE_INLINE const char32_t *ptr() const { return _cowdata.ptr(); }
+	GD_FORCE_INLINE int size() const { return _cowdata.size(); }
 
-	_FORCE_INLINE_ operator Span<char32_t>() const { return Span(ptr(), length()); }
-	_FORCE_INLINE_ Span<char32_t> span() const { return Span(ptr(), length()); }
+	GD_FORCE_INLINE operator Span<char32_t>() const { return Span(ptr(), length()); }
+	GD_FORCE_INLINE Span<char32_t> span() const { return Span(ptr(), length()); }
 
 	void remove_at(int p_index) { _cowdata.remove_at(p_index); }
 
-	_FORCE_INLINE_ void clear() { resize(0); }
+	GD_FORCE_INLINE void clear() { resize(0); }
 
-	_FORCE_INLINE_ char32_t get(int p_index) const { return _cowdata.get(p_index); }
-	_FORCE_INLINE_ void set(int p_index, const char32_t &p_elem) { _cowdata.set(p_index, p_elem); }
+	GD_FORCE_INLINE char32_t get(int p_index) const { return _cowdata.get(p_index); }
+	GD_FORCE_INLINE void set(int p_index, const char32_t &p_elem) { _cowdata.set(p_index, p_elem); }
 	Error resize(int p_size) { return _cowdata.resize(p_size); }
 
-	_FORCE_INLINE_ const char32_t &operator[](int p_index) const {
+	GD_FORCE_INLINE const char32_t &operator[](int p_index) const {
 		if (unlikely(p_index == _cowdata.size())) {
 			return _null;
 		}
 
 		return _cowdata.get(p_index);
 	}
-	_FORCE_INLINE_ CharProxy<char32_t> operator[](int p_index) { return CharProxy<char32_t>(p_index, _cowdata); }
+	GD_FORCE_INLINE CharProxy<char32_t> operator[](int p_index) { return CharProxy<char32_t>(p_index, _cowdata); }
 
 	/* Compatibility Operators */
 
@@ -353,7 +353,7 @@ public:
 	const char32_t *get_data() const;
 	/* standard size stuff */
 
-	_FORCE_INLINE_ int length() const {
+	GD_FORCE_INLINE int length() const {
 		int s = size();
 		return s ? (s - 1) : 0; // length does not include zero
 	}
@@ -551,12 +551,12 @@ public:
 	Vector<uint8_t> sha1_buffer() const;
 	Vector<uint8_t> sha256_buffer() const;
 
-	_FORCE_INLINE_ bool is_empty() const { return length() == 0; }
-	_FORCE_INLINE_ bool contains(const char *p_str) const { return find(p_str) != -1; }
-	_FORCE_INLINE_ bool contains(const String &p_str) const { return find(p_str) != -1; }
-	_FORCE_INLINE_ bool contains_char(char32_t p_chr) const { return find_char(p_chr) != -1; }
-	_FORCE_INLINE_ bool containsn(const char *p_str) const { return findn(p_str) != -1; }
-	_FORCE_INLINE_ bool containsn(const String &p_str) const { return findn(p_str) != -1; }
+	GD_FORCE_INLINE bool is_empty() const { return length() == 0; }
+	GD_FORCE_INLINE bool contains(const char *p_str) const { return find(p_str) != -1; }
+	GD_FORCE_INLINE bool contains(const String &p_str) const { return find(p_str) != -1; }
+	GD_FORCE_INLINE bool contains_char(char32_t p_chr) const { return find_char(p_chr) != -1; }
+	GD_FORCE_INLINE bool containsn(const char *p_str) const { return findn(p_str) != -1; }
+	GD_FORCE_INLINE bool containsn(const String &p_str) const { return findn(p_str) != -1; }
 
 	// path functions
 	bool is_absolute_path() const;
@@ -606,14 +606,14 @@ public:
 	 * The constructors must not depend on other overloads
 	 */
 
-	_FORCE_INLINE_ String() {}
-	_FORCE_INLINE_ String(const String &p_str) = default;
-	_FORCE_INLINE_ String(String &&p_str) = default;
+	GD_FORCE_INLINE String() {}
+	GD_FORCE_INLINE String(const String &p_str) = default;
+	GD_FORCE_INLINE String(String &&p_str) = default;
 #ifdef SIZE_EXTRA
-	_NO_INLINE_ ~String() {}
+	GD_NO_INLINE ~String() {}
 #endif
-	_FORCE_INLINE_ void operator=(const String &p_str) { _cowdata = p_str._cowdata; }
-	_FORCE_INLINE_ void operator=(String &&p_str) { _cowdata = std::move(p_str._cowdata); }
+	GD_FORCE_INLINE void operator=(const String &p_str) { _cowdata = p_str._cowdata; }
+	GD_FORCE_INLINE void operator=(String &&p_str) { _cowdata = std::move(p_str._cowdata); }
 
 	Vector<uint8_t> to_ascii_buffer() const;
 	Vector<uint8_t> to_utf8_buffer() const;
@@ -685,7 +685,7 @@ struct FileNoCaseComparator {
 };
 
 template <typename L, typename R>
-_FORCE_INLINE_ int64_t str_compare(const L *l_ptr, const R *r_ptr) {
+GD_FORCE_INLINE int64_t str_compare(const L *l_ptr, const R *r_ptr) {
 	while (true) {
 		const char32_t l = *l_ptr;
 		const char32_t r = *r_ptr;
@@ -746,7 +746,7 @@ String RTRN(const String &p_text, const String &p_text_plural, int p_n, const St
  * string it was given. The translation itself should be done internally by nodes
  * with `atr()` instead.
  */
-_FORCE_INLINE_ String ETR(const String &p_text, const String &p_context = "") {
+GD_FORCE_INLINE String ETR(const String &p_text, const String &p_context = "") {
 	return p_text;
 }
 
@@ -763,7 +763,7 @@ _FORCE_INLINE_ String ETR(const String &p_text, const String &p_context = "") {
  * string it was given. The translation itself should be done internally by nodes
  * with `atr()` instead.
  */
-_FORCE_INLINE_ String ETRN(const String &p_text, const String &p_text_plural, int p_n, const String &p_context = "") {
+GD_FORCE_INLINE String ETRN(const String &p_text, const String &p_text_plural, int p_n, const String &p_context = "") {
 	if (p_n == 1) {
 		return p_text;
 	}
@@ -772,21 +772,21 @@ _FORCE_INLINE_ String ETRN(const String &p_text, const String &p_text_plural, in
 
 bool select_word(const String &p_s, int p_col, int &r_beg, int &r_end);
 
-_FORCE_INLINE_ void sarray_add_str(Vector<String> &arr) {
+GD_FORCE_INLINE void sarray_add_str(Vector<String> &arr) {
 }
 
-_FORCE_INLINE_ void sarray_add_str(Vector<String> &arr, const String &p_str) {
+GD_FORCE_INLINE void sarray_add_str(Vector<String> &arr, const String &p_str) {
 	arr.push_back(p_str);
 }
 
 template <typename... P>
-_FORCE_INLINE_ void sarray_add_str(Vector<String> &arr, const String &p_str, P... p_args) {
+GD_FORCE_INLINE void sarray_add_str(Vector<String> &arr, const String &p_str, P... p_args) {
 	arr.push_back(p_str);
 	sarray_add_str(arr, p_args...);
 }
 
 template <typename... P>
-_FORCE_INLINE_ Vector<String> sarray(P... p_args) {
+GD_FORCE_INLINE Vector<String> sarray(P... p_args) {
 	Vector<String> arr;
 	sarray_add_str(arr, p_args...);
 	return arr;

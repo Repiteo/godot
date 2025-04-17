@@ -10,7 +10,7 @@ public:
 		DISABLE_LIGHTING = 1,
 	};
 
-	_FORCE_INLINE_ bool version_bind_shader(RID p_version, ShaderVariant p_variant, uint64_t p_specialization = 0) {
+	GD_FORCE_INLINE bool version_bind_shader(RID p_version, ShaderVariant p_variant, uint64_t p_specialization = 0) {
 		return _version_bind_shader(p_version, p_variant, p_specialization);
 	}
 

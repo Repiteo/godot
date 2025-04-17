@@ -82,7 +82,9 @@ public:
 	void set_compositor(const Ref<Compositor> &p_compositor);
 	Ref<Compositor> get_compositor() const;
 
-	_FORCE_INLINE_ const HashSet<Camera3D *> &get_cameras() const { return cameras; }
+	GD_FORCE_INLINE const HashSet<Camera3D *> &get_cameras() const {
+		return cameras;
+	}
 
 #ifndef PHYSICS_3D_DISABLED
 	PhysicsDirectSpaceState3D *get_direct_space_state();

@@ -75,7 +75,7 @@ struct _CollectorCallback {
 	Vector3 normal;
 	Vector3 *prev_axis = nullptr;
 
-	_FORCE_INLINE_ void call(const Vector3 &p_point_A, const Vector3 &p_point_B, Vector3 p_normal) {
+	GD_FORCE_INLINE void call(const Vector3 &p_point_A, const Vector3 &p_point_B, Vector3 p_normal) {
 		if (p_normal.dot(p_point_B - p_point_A) < 0) {
 			p_normal = -p_normal;
 		}
@@ -629,7 +629,7 @@ class SeparatorAxisTest {
 public:
 	Vector3 best_axis;
 
-	_FORCE_INLINE_ bool test_previous_axis() {
+	GD_FORCE_INLINE bool test_previous_axis() {
 		if (callback && callback->prev_axis && *callback->prev_axis != Vector3()) {
 			return test_axis(*callback->prev_axis);
 		} else {
@@ -637,7 +637,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ bool test_axis(const Vector3 &p_axis) {
+	GD_FORCE_INLINE bool test_axis(const Vector3 &p_axis) {
 		Vector3 axis = p_axis;
 
 		if (axis.is_zero_approx()) {
@@ -689,7 +689,7 @@ public:
 		return true;
 	}
 
-	static _FORCE_INLINE_ void test_contact_points(const Vector3 &p_point_A, int p_index_A, const Vector3 &p_point_B, int p_index_B, const Vector3 &normal, void *p_userdata) {
+	static GD_FORCE_INLINE void test_contact_points(const Vector3 &p_point_A, int p_index_A, const Vector3 &p_point_B, int p_index_B, const Vector3 &normal, void *p_userdata) {
 		SeparatorAxisTest<ShapeA, ShapeB, withMargin> *separator = (SeparatorAxisTest<ShapeA, ShapeB, withMargin> *)p_userdata;
 		Vector3 axis = (p_point_B - p_point_A);
 		real_t depth = axis.length();
@@ -700,7 +700,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ void generate_contacts() {
+	GD_FORCE_INLINE void generate_contacts() {
 		// nothing to do, don't generate
 		if (best_axis == Vector3(0.0, 0.0, 0.0)) {
 			return;
@@ -754,7 +754,7 @@ public:
 		callback->collided = true;
 	}
 
-	_FORCE_INLINE_ SeparatorAxisTest(const ShapeA *p_shape_A, const Transform3D &p_transform_A, const ShapeB *p_shape_B, const Transform3D &p_transform_B, _CollectorCallback *p_callback, real_t p_margin_A = 0, real_t p_margin_B = 0) {
+	GD_FORCE_INLINE SeparatorAxisTest(const ShapeA *p_shape_A, const Transform3D &p_transform_A, const ShapeB *p_shape_B, const Transform3D &p_transform_B, _CollectorCallback *p_callback, real_t p_margin_A = 0, real_t p_margin_B = 0) {
 		shape_A = p_shape_A;
 		shape_B = p_shape_B;
 		transform_A = &p_transform_A;
@@ -2027,7 +2027,7 @@ static void _collision_cylinder_face(const GodotShape3D *p_a, const Transform3D 
 	separator.generate_contacts();
 }
 
-static _FORCE_INLINE_ bool is_minkowski_face(const Vector3 &A, const Vector3 &B, const Vector3 &B_x_A, const Vector3 &C, const Vector3 &D, const Vector3 &D_x_C) {
+static GD_FORCE_INLINE bool is_minkowski_face(const Vector3 &A, const Vector3 &B, const Vector3 &B_x_A, const Vector3 &C, const Vector3 &D, const Vector3 &D_x_C) {
 	// Test if arcs AB and CD intersect on the unit sphere
 	real_t CBA = C.dot(B_x_A);
 	real_t DBA = D.dot(B_x_A);

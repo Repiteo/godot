@@ -78,8 +78,8 @@ class AudioDriverWASAPI : public AudioDriver {
 
 	SafeFlag exit_thread;
 
-	static _FORCE_INLINE_ void write_sample(WORD format_tag, int bits_per_sample, BYTE *buffer, int i, int32_t sample);
-	static _FORCE_INLINE_ int32_t read_sample(WORD format_tag, int bits_per_sample, BYTE *buffer, int i);
+	static GD_FORCE_INLINE void write_sample(WORD format_tag, int bits_per_sample, BYTE *buffer, int i, int32_t sample);
+	static GD_FORCE_INLINE int32_t read_sample(WORD format_tag, int bits_per_sample, BYTE *buffer, int i);
 	static void thread_func(void *p_udata);
 
 	Error init_output_device(bool p_reinit = false);

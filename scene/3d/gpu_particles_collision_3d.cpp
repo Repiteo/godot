@@ -240,7 +240,7 @@ uint32_t GPUParticlesCollisionSDF3D::_create_bvh(LocalVector<BVH> &bvh_tree, Fac
 	return index;
 }
 
-static _FORCE_INLINE_ real_t Vector3_dot2(const Vector3 &p_vec3) {
+static GD_FORCE_INLINE real_t Vector3_dot2(const Vector3 &p_vec3) {
 	return p_vec3.dot(p_vec3);
 }
 

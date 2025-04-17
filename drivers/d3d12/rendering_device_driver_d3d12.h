@@ -151,7 +151,7 @@ class RenderingDeviceDriverD3D12 : public RenderingDeviceDriver {
 		public:
 			D3D12_CPU_DESCRIPTOR_HANDLE get_curr_cpu_handle();
 			D3D12_GPU_DESCRIPTOR_HANDLE get_curr_gpu_handle();
-			_FORCE_INLINE_ void rewind() { handle_index = 0; }
+			GD_FORCE_INLINE void rewind() { handle_index = 0; }
 			void advance(uint32_t p_count = 1);
 			uint32_t get_current_handle_index() const { return handle_index; }
 			uint32_t get_free_handles() { return handle_count - handle_index; }

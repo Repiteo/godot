@@ -54,11 +54,12 @@ protected:
 	void _update_joint(bool p_only_free = false);
 
 	void _notification(int p_what);
-	virtual void _configure_joint(RID p_joint, PhysicsBody2D *body_a, PhysicsBody2D *body_b) = 0;
+	virtual void _configure_joint(RID p_joint, PhysicsBody2D *body_a,
+			PhysicsBody2D *body_b) = 0;
 
 	static void _bind_methods();
 
-	_FORCE_INLINE_ bool is_configured() const { return configured; }
+	GD_FORCE_INLINE bool is_configured() const { return configured; }
 
 public:
 	virtual PackedStringArray get_configuration_warnings() const override;

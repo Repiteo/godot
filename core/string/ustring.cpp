@@ -53,7 +53,7 @@
 
 static const int MAX_DECIMALS = 32;
 
-static _FORCE_INLINE_ char32_t lower_case(char32_t c) {
+static GD_FORCE_INLINE char32_t lower_case(char32_t c) {
 	return (is_ascii_upper_case(c) ? (c + ('a' - 'A')) : c);
 }
 
@@ -682,7 +682,7 @@ signed char String::casecmp_to(const String &p_str) const {
 	}
 }
 
-static _FORCE_INLINE_ signed char natural_cmp_common(const char32_t *&r_this_str, const char32_t *&r_that_str) {
+static GD_FORCE_INLINE signed char natural_cmp_common(const char32_t *&r_this_str, const char32_t *&r_that_str) {
 	// Keep ptrs to start of numerical sequences.
 	const char32_t *this_substr = r_this_str;
 	const char32_t *that_substr = r_that_str;
@@ -723,7 +723,7 @@ static _FORCE_INLINE_ signed char natural_cmp_common(const char32_t *&r_this_str
 	return 0;
 }
 
-static _FORCE_INLINE_ signed char naturalcasecmp_to_base(const char32_t *p_this_str, const char32_t *p_that_str) {
+static GD_FORCE_INLINE signed char naturalcasecmp_to_base(const char32_t *p_this_str, const char32_t *p_that_str) {
 	if (p_this_str && p_that_str) {
 		while (*p_this_str == '.' || *p_that_str == '.') {
 			if (*p_this_str++ != '.') {
@@ -780,7 +780,7 @@ signed char String::naturalcasecmp_to(const String &p_str) const {
 	return naturalcasecmp_to_base(this_str, that_str);
 }
 
-static _FORCE_INLINE_ signed char naturalnocasecmp_to_base(const char32_t *p_this_str, const char32_t *p_that_str) {
+static GD_FORCE_INLINE signed char naturalnocasecmp_to_base(const char32_t *p_this_str, const char32_t *p_that_str) {
 	if (p_this_str && p_that_str) {
 		while (*p_this_str == '.' || *p_that_str == '.') {
 			if (*p_this_str++ != '.') {
@@ -837,7 +837,7 @@ signed char String::naturalnocasecmp_to(const String &p_str) const {
 	return naturalnocasecmp_to_base(this_str, that_str);
 }
 
-static _FORCE_INLINE_ signed char file_cmp_common(const char32_t *&r_this_str, const char32_t *&r_that_str) {
+static GD_FORCE_INLINE signed char file_cmp_common(const char32_t *&r_this_str, const char32_t *&r_that_str) {
 	// Compare leading `_` sequences.
 	while ((*r_this_str == '_' && *r_that_str) || (*r_this_str && *r_that_str == '_')) {
 		// Sort `_` lower than everything except `.`
@@ -2461,7 +2461,7 @@ int64_t String::bin_to_int() const {
 }
 
 template <typename C, typename T>
-_ALWAYS_INLINE_ int64_t _to_int(const T &p_in, int to) {
+GD_ALWAYS_INLINE int64_t _to_int(const T &p_in, int to) {
 	// Accumulate the total number in an unsigned integer as the range is:
 	// +9223372036854775807 to -9223372036854775808 and the smallest negative
 	// number does not fit inside an int64_t. So we accumulate the positive
@@ -4955,7 +4955,7 @@ for (int i=1;i<32;i++) {
 	return str;
 }
 
-static _FORCE_INLINE_ int _xml_unescape(const char32_t *p_src, int p_src_len, char32_t *p_dst) {
+static GD_FORCE_INLINE int _xml_unescape(const char32_t *p_src, int p_src_len, char32_t *p_dst) {
 	int len = 0;
 	while (p_src_len) {
 		if (*p_src == '&') {

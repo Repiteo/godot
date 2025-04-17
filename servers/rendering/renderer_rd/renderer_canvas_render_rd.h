@@ -410,32 +410,32 @@ class RendererCanvasRenderRD : public RendererCanvasRender {
 					(((uint32_t)p_use_linear_colors & LINEAR_COLORS_MASK) << LINEAR_COLORS_SHIFT);
 		}
 
-		_ALWAYS_INLINE_ RS::CanvasItemTextureFilter texture_filter() const {
+		GD_ALWAYS_INLINE RS::CanvasItemTextureFilter texture_filter() const {
 			return (RS::CanvasItemTextureFilter)((other >> FILTER_SHIFT) & FILTER_MASK);
 		}
 
-		_ALWAYS_INLINE_ RS::CanvasItemTextureRepeat texture_repeat() const {
+		GD_ALWAYS_INLINE RS::CanvasItemTextureRepeat texture_repeat() const {
 			return (RS::CanvasItemTextureRepeat)((other >> REPEAT_SHIFT) & REPEAT_MASK);
 		}
 
-		_ALWAYS_INLINE_ bool linear_colors() const {
+		GD_ALWAYS_INLINE bool linear_colors() const {
 			return (other >> LINEAR_COLORS_SHIFT) & LINEAR_COLORS_MASK;
 		}
 
-		_ALWAYS_INLINE_ bool texture_is_data() const {
+		GD_ALWAYS_INLINE bool texture_is_data() const {
 			return (other >> TEXTURE_IS_DATA_SHIFT) & TEXTURE_IS_DATA_MASK;
 		}
 
-		_ALWAYS_INLINE_ bool operator==(const TextureState &p_val) const {
+		GD_ALWAYS_INLINE bool operator==(const TextureState &p_val) const {
 			return (texture == p_val.texture) && (other == p_val.other);
 		}
 
-		_ALWAYS_INLINE_ bool operator!=(const TextureState &p_val) const {
+		GD_ALWAYS_INLINE bool operator!=(const TextureState &p_val) const {
 			return (texture != p_val.texture) || (other != p_val.other);
 		}
 
-		_ALWAYS_INLINE_ bool is_valid() const { return texture.is_valid(); }
-		_ALWAYS_INLINE_ bool is_null() const { return texture.is_null(); }
+		GD_ALWAYS_INLINE bool is_valid() const { return texture.is_valid(); }
+		GD_ALWAYS_INLINE bool is_null() const { return texture.is_null(); }
 
 		uint32_t hash() const {
 			uint32_t hash = hash_murmur3_one_64(texture.get_id());
@@ -467,15 +467,15 @@ class RendererCanvasRenderRD : public RendererCanvasRender {
 				instance_data(p_instance_data) {
 		}
 
-		_ALWAYS_INLINE_ bool operator==(const RIDSetKey &p_val) const {
+		GD_ALWAYS_INLINE bool operator==(const RIDSetKey &p_val) const {
 			return state == p_val.state && instance_data == p_val.instance_data;
 		}
 
-		_ALWAYS_INLINE_ bool operator!=(const RIDSetKey &p_val) const {
+		GD_ALWAYS_INLINE bool operator!=(const RIDSetKey &p_val) const {
 			return !(*this == p_val);
 		}
 
-		_ALWAYS_INLINE_ uint32_t hash() const {
+		GD_ALWAYS_INLINE uint32_t hash() const {
 			uint32_t h = state.hash();
 			h = hash_murmur3_one_64(instance_data.get_id(), h);
 			return hash_fmix32(h);
@@ -628,11 +628,11 @@ class RendererCanvasRenderRD : public RendererCanvasRender {
 	void _add_to_batch(uint32_t &r_index, bool &r_batch_broken, Batch *&r_current_batch);
 	void _allocate_instance_buffer();
 
-	_FORCE_INLINE_ void _update_transform_2d_to_mat2x4(const Transform2D &p_transform, float *p_mat2x4);
-	_FORCE_INLINE_ void _update_transform_2d_to_mat2x3(const Transform2D &p_transform, float *p_mat2x3);
+	GD_FORCE_INLINE void _update_transform_2d_to_mat2x4(const Transform2D &p_transform, float *p_mat2x4);
+	GD_FORCE_INLINE void _update_transform_2d_to_mat2x3(const Transform2D &p_transform, float *p_mat2x3);
 
-	_FORCE_INLINE_ void _update_transform_2d_to_mat4(const Transform2D &p_transform, float *p_mat4);
-	_FORCE_INLINE_ void _update_transform_to_mat4(const Transform3D &p_transform, float *p_mat4);
+	GD_FORCE_INLINE void _update_transform_2d_to_mat4(const Transform2D &p_transform, float *p_mat4);
+	GD_FORCE_INLINE void _update_transform_to_mat4(const Transform3D &p_transform, float *p_mat4);
 
 	void _update_shadow_atlas();
 	void _update_occluder_buffer(uint32_t p_size);

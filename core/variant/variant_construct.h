@@ -43,12 +43,12 @@
 template <typename T>
 struct PtrConstruct {};
 
-#define MAKE_PTRCONSTRUCT(m_type)                                                  \
-	template <>                                                                    \
-	struct PtrConstruct<m_type> {                                                  \
-		_FORCE_INLINE_ static void construct(const m_type &p_value, void *p_ptr) { \
-			memnew_placement(p_ptr, m_type(p_value));                              \
-		}                                                                          \
+#define MAKE_PTRCONSTRUCT(m_type)                                                   \
+	template <>                                                                     \
+	struct PtrConstruct<m_type> {                                                   \
+		GD_FORCE_INLINE static void construct(const m_type &p_value, void *p_ptr) { \
+			memnew_placement(p_ptr, m_type(p_value));                               \
+		}                                                                           \
 	};
 
 MAKE_PTRCONSTRUCT(bool);
@@ -77,7 +77,7 @@ MAKE_PTRCONSTRUCT(RID);
 
 template <>
 struct PtrConstruct<Object *> {
-	_FORCE_INLINE_ static void construct(Object *p_value, void *p_ptr) {
+	GD_FORCE_INLINE static void construct(Object *p_value, void *p_ptr) {
 		*((Object **)p_ptr) = p_value;
 	}
 };
@@ -101,7 +101,7 @@ MAKE_PTRCONSTRUCT(Variant);
 template <typename T, typename... P>
 class VariantConstructor {
 	template <size_t... Is>
-	static _FORCE_INLINE_ void construct_helper(T &base, const Variant **p_args, Callable::CallError &r_error, IndexSequence<Is...>) {
+	static GD_FORCE_INLINE void construct_helper(T &base, const Variant **p_args, Callable::CallError &r_error, IndexSequence<Is...>) {
 		r_error.error = Callable::CallError::CALL_OK;
 
 #ifdef DEBUG_METHODS_ENABLED
@@ -112,12 +112,12 @@ class VariantConstructor {
 	}
 
 	template <size_t... Is>
-	static _FORCE_INLINE_ void validated_construct_helper(T &base, const Variant **p_args, IndexSequence<Is...>) {
+	static GD_FORCE_INLINE void validated_construct_helper(T &base, const Variant **p_args, IndexSequence<Is...>) {
 		base = T((*VariantGetInternalPtr<P>::get_ptr(p_args[Is]))...);
 	}
 
 	template <size_t... Is>
-	static _FORCE_INLINE_ void ptr_construct_helper(void *base, const void **p_args, IndexSequence<Is...>) {
+	static GD_FORCE_INLINE void ptr_construct_helper(void *base, const void **p_args, IndexSequence<Is...>) {
 		PtrConstruct<T>::construct(T(PtrToArg<P>::convert(p_args[Is])...), base);
 	}
 

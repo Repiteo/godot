@@ -122,7 +122,7 @@ struct [[nodiscard]] Projection {
 	constexpr Projection operator*(const Projection &p_matrix) const;
 
 	Plane xform4(const Plane &p_vec4) const;
-	_FORCE_INLINE_ Vector3 xform(const Vector3 &p_vec3) const;
+	GD_FORCE_INLINE Vector3 xform(const Vector3 &p_vec3) const;
 
 	Vector4 xform(const Vector4 &p_vec4) const;
 	Vector4 xform_inv(const Vector4 &p_vec4) const;

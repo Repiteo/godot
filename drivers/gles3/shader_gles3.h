@@ -182,7 +182,7 @@ protected:
 	ShaderGLES3();
 	void _setup(const char *p_vertex_code, const char *p_fragment_code, const char *p_name, int p_uniform_count, const char **p_uniform_names, int p_ubo_count, const UBOPair *p_ubos, int p_feedback_count, const Feedback *p_feedback, int p_texture_count, const TexUnitPair *p_tex_units, int p_specialization_count, const Specialization *p_specializations, int p_variant_count, const char **p_variants);
 
-	_FORCE_INLINE_ bool _version_bind_shader(RID p_version, int p_variant, uint64_t p_specialization) {
+	GD_FORCE_INLINE bool _version_bind_shader(RID p_version, int p_variant, uint64_t p_specialization) {
 		ERR_FAIL_INDEX_V(p_variant, variant_count, false);
 
 		Version *version = version_owner.get_or_null(p_version);
@@ -223,7 +223,7 @@ protected:
 		return true;
 	}
 
-	_FORCE_INLINE_ int _version_get_uniform(int p_which, RID p_version, int p_variant, uint64_t p_specialization) {
+	GD_FORCE_INLINE int _version_get_uniform(int p_which, RID p_version, int p_variant, uint64_t p_specialization) {
 		ERR_FAIL_INDEX_V(p_which, uniform_count, -1);
 		Version *version = version_owner.get_or_null(p_version);
 		ERR_FAIL_NULL_V(version, -1);

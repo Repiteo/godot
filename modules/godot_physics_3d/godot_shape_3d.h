@@ -65,13 +65,13 @@ public:
 
 	virtual real_t get_volume() const { return aabb.get_volume(); }
 
-	_FORCE_INLINE_ void set_self(const RID &p_self) { self = p_self; }
-	_FORCE_INLINE_ RID get_self() const { return self; }
+	GD_FORCE_INLINE void set_self(const RID &p_self) { self = p_self; }
+	GD_FORCE_INLINE RID get_self() const { return self; }
 
 	virtual PhysicsServer3D::ShapeType get_type() const = 0;
 
-	_FORCE_INLINE_ const AABB &get_aabb() const { return aabb; }
-	_FORCE_INLINE_ bool is_configured() const { return configured; }
+	GD_FORCE_INLINE const AABB &get_aabb() const { return aabb; }
+	GD_FORCE_INLINE bool is_configured() const { return configured; }
 
 	virtual bool is_concave() const { return false; }
 
@@ -86,8 +86,8 @@ public:
 	virtual void set_data(const Variant &p_data) = 0;
 	virtual Variant get_data() const = 0;
 
-	_FORCE_INLINE_ void set_custom_bias(real_t p_bias) { custom_bias = p_bias; }
-	_FORCE_INLINE_ real_t get_custom_bias() const { return custom_bias; }
+	GD_FORCE_INLINE void set_custom_bias(real_t p_bias) { custom_bias = p_bias; }
+	GD_FORCE_INLINE real_t get_custom_bias() const { return custom_bias; }
 
 	void add_owner(GodotShapeOwner3D *p_owner);
 	void remove_owner(GodotShapeOwner3D *p_owner);
@@ -196,7 +196,7 @@ class GodotBoxShape3D : public GodotShape3D {
 	void _setup(const Vector3 &p_half_extents);
 
 public:
-	_FORCE_INLINE_ Vector3 get_half_extents() const { return half_extents; }
+	GD_FORCE_INLINE Vector3 get_half_extents() const { return half_extents; }
 	virtual real_t get_volume() const override { return 8 * half_extents.x * half_extents.y * half_extents.z; }
 
 	virtual PhysicsServer3D::ShapeType get_type() const override { return PhysicsServer3D::SHAPE_BOX; }
@@ -223,8 +223,8 @@ class GodotCapsuleShape3D : public GodotShape3D {
 	void _setup(real_t p_height, real_t p_radius);
 
 public:
-	_FORCE_INLINE_ real_t get_height() const { return height; }
-	_FORCE_INLINE_ real_t get_radius() const { return radius; }
+	GD_FORCE_INLINE real_t get_height() const { return height; }
+	GD_FORCE_INLINE real_t get_radius() const { return radius; }
 
 	virtual real_t get_volume() const override { return 4.0 / 3.0 * Math::PI * radius * radius * radius + (height - radius * 2.0) * Math::PI * radius * radius; }
 
@@ -252,8 +252,8 @@ class GodotCylinderShape3D : public GodotShape3D {
 	void _setup(real_t p_height, real_t p_radius);
 
 public:
-	_FORCE_INLINE_ real_t get_height() const { return height; }
-	_FORCE_INLINE_ real_t get_radius() const { return radius; }
+	GD_FORCE_INLINE real_t get_height() const { return height; }
+	GD_FORCE_INLINE real_t get_radius() const { return radius; }
 
 	virtual real_t get_volume() const override { return height * Math::PI * radius * radius; }
 
@@ -399,15 +399,15 @@ struct GodotHeightMapShape3D : public GodotConcaveShape3D {
 
 	static const int BOUNDS_CHUNK_SIZE = 16;
 
-	_FORCE_INLINE_ const Range &_get_bounds_chunk(int p_x, int p_z) const {
+	GD_FORCE_INLINE const Range &_get_bounds_chunk(int p_x, int p_z) const {
 		return bounds_grid[(p_z * bounds_grid_width) + p_x];
 	}
 
-	_FORCE_INLINE_ real_t _get_height(int p_x, int p_z) const {
+	GD_FORCE_INLINE real_t _get_height(int p_x, int p_z) const {
 		return heights[(p_z * width) + p_x];
 	}
 
-	_FORCE_INLINE_ void _get_point(int p_x, int p_z, Vector3 &r_point) const {
+	GD_FORCE_INLINE void _get_point(int p_x, int p_z, Vector3 &r_point) const {
 		r_point.x = p_x - 0.5 * (width - 1.0);
 		r_point.y = _get_height(p_x, p_z);
 		r_point.z = p_z - 0.5 * (depth - 1.0);

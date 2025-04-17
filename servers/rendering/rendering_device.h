@@ -741,7 +741,7 @@ private:
 	};
 
 	struct VertexDescriptionHash {
-		static _FORCE_INLINE_ uint32_t hash(const VertexDescriptionKey &p_key) {
+		static GD_FORCE_INLINE uint32_t hash(const VertexDescriptionKey &p_key) {
 			return p_key.hash();
 		}
 	};
@@ -835,7 +835,7 @@ private:
 	struct UniformSetFormat {
 		Vector<ShaderUniform> uniforms;
 
-		_FORCE_INLINE_ bool operator<(const UniformSetFormat &p_other) const {
+		GD_FORCE_INLINE bool operator<(const UniformSetFormat &p_other) const {
 			if (uniforms.size() != p_other.uniforms.size()) {
 				return uniforms.size() < p_other.uniforms.size();
 			}
@@ -1004,11 +1004,11 @@ public:
 		Vector<RID> ids; // If multiple ones are provided, this is used instead.
 
 	public:
-		_FORCE_INLINE_ uint32_t get_id_count() const {
+		GD_FORCE_INLINE uint32_t get_id_count() const {
 			return (id.is_valid() ? 1 : ids.size());
 		}
 
-		_FORCE_INLINE_ RID get_id(uint32_t p_idx) const {
+		GD_FORCE_INLINE RID get_id(uint32_t p_idx) const {
 			if (id.is_valid()) {
 				ERR_FAIL_COND_V(p_idx != 0, RID());
 				return id;
@@ -1016,7 +1016,7 @@ public:
 				return ids[p_idx];
 			}
 		}
-		_FORCE_INLINE_ void set_id(uint32_t p_idx, RID p_id) {
+		GD_FORCE_INLINE void set_id(uint32_t p_idx, RID p_id) {
 			if (id.is_valid()) {
 				ERR_FAIL_COND(p_idx != 0);
 				id = p_id;
@@ -1025,7 +1025,7 @@ public:
 			}
 		}
 
-		_FORCE_INLINE_ void append_id(RID p_id) {
+		GD_FORCE_INLINE void append_id(RID p_id) {
 			if (ids.is_empty()) {
 				if (id == RID()) {
 					id = p_id;
@@ -1039,22 +1039,22 @@ public:
 			}
 		}
 
-		_FORCE_INLINE_ void clear_ids() {
+		GD_FORCE_INLINE void clear_ids() {
 			id = RID();
 			ids.clear();
 		}
 
-		_FORCE_INLINE_ Uniform(UniformType p_type, int p_binding, RID p_id) {
+		GD_FORCE_INLINE Uniform(UniformType p_type, int p_binding, RID p_id) {
 			uniform_type = p_type;
 			binding = p_binding;
 			id = p_id;
 		}
-		_FORCE_INLINE_ Uniform(UniformType p_type, int p_binding, const Vector<RID> &p_ids) {
+		GD_FORCE_INLINE Uniform(UniformType p_type, int p_binding, const Vector<RID> &p_ids) {
 			uniform_type = p_type;
 			binding = p_binding;
 			ids = p_ids;
 		}
-		_FORCE_INLINE_ Uniform() = default;
+		GD_FORCE_INLINE Uniform() = default;
 	};
 
 	typedef Uniform PipelineImmutableSampler;

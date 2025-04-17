@@ -71,7 +71,7 @@ public:
 	void register_viewport(Viewport *p_viewport);
 	void remove_viewport(Viewport *p_viewport);
 
-	_FORCE_INLINE_ const HashSet<Viewport *> &get_viewports() { return viewports; }
+	GD_FORCE_INLINE const HashSet<Viewport *> &get_viewports() { return viewports; }
 
 	World2D();
 	~World2D();

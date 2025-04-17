@@ -189,7 +189,7 @@ private:
 		void unref();
 
 		template <typename T>
-		_ALWAYS_INLINE_ void ref(const Ref<T> &p_from) {
+		GD_ALWAYS_INLINE void ref(const Ref<T> &p_from) {
 			if (p_from.is_valid()) {
 				ref(ObjData{ p_from->get_instance_id(), p_from.ptr() });
 			} else {
@@ -201,14 +201,14 @@ private:
 	/* array helpers */
 	struct PackedArrayRefBase {
 		SafeRefCount refcount;
-		_FORCE_INLINE_ PackedArrayRefBase *reference() {
+		GD_FORCE_INLINE PackedArrayRefBase *reference() {
 			if (refcount.ref()) {
 				return this;
 			} else {
 				return nullptr;
 			}
 		}
-		static _FORCE_INLINE_ PackedArrayRefBase *reference_from(PackedArrayRefBase *p_base, PackedArrayRefBase *p_from) {
+		static GD_FORCE_INLINE PackedArrayRefBase *reference_from(PackedArrayRefBase *p_base, PackedArrayRefBase *p_from) {
 			if (p_base == p_from) {
 				return p_base; //same thing, do nothing
 			}
@@ -222,43 +222,43 @@ private:
 				return p_base; //keep, could not reference new
 			}
 		}
-		static _FORCE_INLINE_ void destroy(PackedArrayRefBase *p_array) {
+		static GD_FORCE_INLINE void destroy(PackedArrayRefBase *p_array) {
 			if (p_array->refcount.unref()) {
 				memdelete(p_array);
 			}
 		}
-		_FORCE_INLINE_ virtual ~PackedArrayRefBase() {} //needs virtual destructor, but make inline
+		GD_FORCE_INLINE virtual ~PackedArrayRefBase() {} //needs virtual destructor, but make inline
 	};
 
 	template <typename T>
 	struct PackedArrayRef : public PackedArrayRefBase {
 		Vector<T> array;
-		static _FORCE_INLINE_ PackedArrayRef<T> *create() {
+		static GD_FORCE_INLINE PackedArrayRef<T> *create() {
 			return memnew(PackedArrayRef<T>);
 		}
-		static _FORCE_INLINE_ PackedArrayRef<T> *create(const Vector<T> &p_from) {
+		static GD_FORCE_INLINE PackedArrayRef<T> *create(const Vector<T> &p_from) {
 			return memnew(PackedArrayRef<T>(p_from));
 		}
 
-		static _FORCE_INLINE_ const Vector<T> &get_array(PackedArrayRefBase *p_base) {
+		static GD_FORCE_INLINE const Vector<T> &get_array(PackedArrayRefBase *p_base) {
 			return static_cast<PackedArrayRef<T> *>(p_base)->array;
 		}
-		static _FORCE_INLINE_ Vector<T> *get_array_ptr(const PackedArrayRefBase *p_base) {
+		static GD_FORCE_INLINE Vector<T> *get_array_ptr(const PackedArrayRefBase *p_base) {
 			return &const_cast<PackedArrayRef<T> *>(static_cast<const PackedArrayRef<T> *>(p_base))->array;
 		}
 
-		_FORCE_INLINE_ PackedArrayRef(const Vector<T> &p_from) {
+		GD_FORCE_INLINE PackedArrayRef(const Vector<T> &p_from) {
 			array = p_from;
 			refcount.init();
 		}
-		_FORCE_INLINE_ PackedArrayRef() {
+		GD_FORCE_INLINE PackedArrayRef() {
 			refcount.init();
 		}
 	};
 
 	/* end of array helpers */
-	_ALWAYS_INLINE_ ObjData &_get_obj();
-	_ALWAYS_INLINE_ const ObjData &_get_obj() const;
+	GD_ALWAYS_INLINE ObjData &_get_obj();
+	GD_ALWAYS_INLINE const ObjData &_get_obj() const;
 
 	union {
 		bool _bool;
@@ -324,7 +324,7 @@ private:
 		true, //PACKED_VECTOR4_ARRAY,
 	};
 
-	_FORCE_INLINE_ void clear() {
+	GD_FORCE_INLINE void clear() {
 		if (unlikely(needs_deinit[type])) { // Make it fast for types that don't need deinit.
 			_clear_internal();
 		}
@@ -347,7 +347,7 @@ private:
 	void _variant_call_error(const String &p_method, Callable::CallError &error);
 
 	template <typename T>
-	_ALWAYS_INLINE_ T _to_int() const {
+	GD_ALWAYS_INLINE T _to_int() const {
 		switch (get_type()) {
 			case NIL:
 				return 0;
@@ -366,7 +366,7 @@ private:
 	}
 
 	template <typename T>
-	_ALWAYS_INLINE_ T _to_float() const {
+	GD_ALWAYS_INLINE T _to_float() const {
 		switch (type) {
 			case NIL:
 				return 0;
@@ -391,7 +391,7 @@ private:
 	Variant(const Variant **) {}
 
 public:
-	_FORCE_INLINE_ Type get_type() const {
+	GD_FORCE_INLINE Type get_type() const {
 		return type;
 	}
 	static String get_type_name(Variant::Type p_type);
@@ -401,13 +401,13 @@ public:
 	static bool is_type_shared(Variant::Type p_type);
 
 	bool is_ref_counted() const;
-	_FORCE_INLINE_ bool is_num() const {
+	GD_FORCE_INLINE bool is_num() const {
 		return type == INT || type == FLOAT;
 	}
-	_FORCE_INLINE_ bool is_string() const {
+	GD_FORCE_INLINE bool is_string() const {
 		return type == STRING || type == STRING_NAME;
 	}
-	_FORCE_INLINE_ bool is_array() const {
+	GD_FORCE_INLINE bool is_array() const {
 		return type >= ARRAY;
 	}
 	bool is_shared() const;
@@ -485,9 +485,9 @@ public:
 	operator IPAddress() const;
 
 	template <typename T, std::enable_if_t<std::is_enum_v<T>, int> = 0>
-	_FORCE_INLINE_ operator T() const { return static_cast<T>(operator int64_t()); }
+	GD_FORCE_INLINE operator T() const { return static_cast<T>(operator int64_t()); }
 	template <typename T>
-	_FORCE_INLINE_ operator BitField<T>() const { return static_cast<T>(operator uint64_t()); }
+	GD_FORCE_INLINE operator BitField<T>() const { return static_cast<T>(operator uint64_t()); }
 
 	Object *get_validated_object() const;
 	Object *get_validated_object_with_check(bool &r_previously_freed) const;
@@ -553,10 +553,10 @@ public:
 	Variant(const IPAddress &p_address);
 
 	template <typename T, std::enable_if_t<std::is_enum_v<T>, int> = 0>
-	_FORCE_INLINE_ Variant(T p_enum) :
+	GD_FORCE_INLINE Variant(T p_enum) :
 			Variant(static_cast<int64_t>(p_enum)) {}
 	template <typename T>
-	_FORCE_INLINE_ Variant(BitField<T> p_bitfield) :
+	GD_FORCE_INLINE Variant(BitField<T> p_bitfield) :
 			Variant(static_cast<uint64_t>(p_bitfield)) {}
 
 	// If this changes the table in variant_op must be updated
@@ -597,7 +597,7 @@ public:
 
 	static String get_operator_name(Operator p_op);
 	static void evaluate(const Operator &p_op, const Variant &p_a, const Variant &p_b, Variant &r_ret, bool &r_valid);
-	static _FORCE_INLINE_ Variant evaluate(const Operator &p_op, const Variant &p_a, const Variant &p_b) {
+	static GD_FORCE_INLINE Variant evaluate(const Operator &p_op, const Variant &p_a, const Variant &p_b) {
 		bool valid = true;
 		Variant res;
 		evaluate(p_op, p_a, p_b, res, valid);
@@ -863,8 +863,8 @@ public:
 		_data = p_variant._data;
 		p_variant.type = NIL;
 	}
-	_FORCE_INLINE_ Variant() {}
-	_FORCE_INLINE_ ~Variant() {
+	GD_FORCE_INLINE Variant() {}
+	GD_FORCE_INLINE ~Variant() {
 		if (unlikely(needs_deinit[type])) { // Make it fast for types that don't need deinit.
 			_clear_internal();
 		}
@@ -893,11 +893,11 @@ Vector<Variant> varray(VarArgs... p_args) {
 }
 
 struct VariantHasher {
-	static _FORCE_INLINE_ uint32_t hash(const Variant &p_variant) { return p_variant.hash(); }
+	static GD_FORCE_INLINE uint32_t hash(const Variant &p_variant) { return p_variant.hash(); }
 };
 
 struct VariantComparator {
-	static _FORCE_INLINE_ bool compare(const Variant &p_lhs, const Variant &p_rhs) { return p_lhs.hash_compare(p_rhs); }
+	static GD_FORCE_INLINE bool compare(const Variant &p_lhs, const Variant &p_rhs) { return p_lhs.hash_compare(p_rhs); }
 };
 
 struct StringLikeVariantComparator {
@@ -907,7 +907,7 @@ struct StringLikeVariantComparator {
 struct StringLikeVariantOrder {
 	static bool compare(const Variant &p_lhs, const Variant &p_rhs);
 
-	_ALWAYS_INLINE_ bool operator()(const Variant &p_lhs, const Variant &p_rhs) const {
+	GD_ALWAYS_INLINE bool operator()(const Variant &p_lhs, const Variant &p_rhs) const {
 		return compare(p_lhs, p_rhs);
 	}
 };

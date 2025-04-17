@@ -48,12 +48,12 @@ class DisjointSet {
 
 	Element *get_parent(Element *element);
 
-	_FORCE_INLINE_ Element *insert_or_get(T object);
+	GD_FORCE_INLINE Element *insert_or_get(T object);
 
 public:
 	~DisjointSet();
 
-	_FORCE_INLINE_ void insert(T object) { (void)insert_or_get(object); }
+	GD_FORCE_INLINE void insert(T object) { (void)insert_or_get(object); }
 
 	void create_union(T a, T b);
 

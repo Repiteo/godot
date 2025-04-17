@@ -55,20 +55,20 @@ class ConditionVariable {
 
 public:
 	template <typename BinaryMutexT>
-	_ALWAYS_INLINE_ void wait(const MutexLock<BinaryMutexT> &p_lock) const {
+	GD_ALWAYS_INLINE void wait(const MutexLock<BinaryMutexT> &p_lock) const {
 		condition.wait(p_lock._get_lock());
 	}
 
 	template <int Tag>
-	_ALWAYS_INLINE_ void wait(const MutexLock<SafeBinaryMutex<Tag>> &p_lock) const {
+	GD_ALWAYS_INLINE void wait(const MutexLock<SafeBinaryMutex<Tag>> &p_lock) const {
 		condition.wait(p_lock.mutex._get_lock());
 	}
 
-	_ALWAYS_INLINE_ void notify_one() const {
+	GD_ALWAYS_INLINE void notify_one() const {
 		condition.notify_one();
 	}
 
-	_ALWAYS_INLINE_ void notify_all() const {
+	GD_ALWAYS_INLINE void notify_all() const {
 		condition.notify_all();
 	}
 };

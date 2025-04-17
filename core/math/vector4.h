@@ -59,11 +59,11 @@ struct [[nodiscard]] Vector4 {
 		// NOLINTEND(modernize-use-default-member-init)
 	};
 
-	_FORCE_INLINE_ real_t &operator[](int p_axis) {
+	GD_FORCE_INLINE real_t &operator[](int p_axis) {
 		DEV_ASSERT((unsigned int)p_axis < 4);
 		return coord[p_axis];
 	}
-	_FORCE_INLINE_ const real_t &operator[](int p_axis) const {
+	GD_FORCE_INLINE const real_t &operator[](int p_axis) const {
 		DEV_ASSERT((unsigned int)p_axis < 4);
 		return coord[p_axis];
 	}
@@ -87,7 +87,7 @@ struct [[nodiscard]] Vector4 {
 		return Vector4(MAX(x, p_scalar), MAX(y, p_scalar), MAX(z, p_scalar), MAX(w, p_scalar));
 	}
 
-	_FORCE_INLINE_ real_t length_squared() const;
+	GD_FORCE_INLINE real_t length_squared() const;
 	bool is_equal_approx(const Vector4 &p_vec4) const;
 	bool is_zero_approx() const;
 	bool is_same(const Vector4 &p_vec4) const;
@@ -120,7 +120,7 @@ struct [[nodiscard]] Vector4 {
 	Vector4 clampf(real_t p_min, real_t p_max) const;
 
 	Vector4 inverse() const;
-	_FORCE_INLINE_ real_t dot(const Vector4 &p_vec4) const;
+	GD_FORCE_INLINE real_t dot(const Vector4 &p_vec4) const;
 
 	constexpr void operator+=(const Vector4 &p_vec4);
 	constexpr void operator-=(const Vector4 &p_vec4);

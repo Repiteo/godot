@@ -116,20 +116,20 @@ public:
 	HashSet<String> get_file_paths() const;
 
 	void set_disabled(bool p_disabled) { disabled = p_disabled; }
-	_FORCE_INLINE_ bool is_disabled() const { return disabled; }
+	GD_FORCE_INLINE bool is_disabled() const { return disabled; }
 
 	static PackedData *get_singleton() { return singleton; }
 	Error add_pack(const String &p_path, bool p_replace_files, uint64_t p_offset);
 
 	void clear();
 
-	_FORCE_INLINE_ Ref<FileAccess> try_open_path(const String &p_path);
-	_FORCE_INLINE_ bool has_path(const String &p_path);
+	GD_FORCE_INLINE Ref<FileAccess> try_open_path(const String &p_path);
+	GD_FORCE_INLINE bool has_path(const String &p_path);
 
-	_FORCE_INLINE_ int64_t get_size(const String &p_path);
+	GD_FORCE_INLINE int64_t get_size(const String &p_path);
 
-	_FORCE_INLINE_ Ref<DirAccess> try_open_directory(const String &p_path);
-	_FORCE_INLINE_ bool has_directory(const String &p_path);
+	GD_FORCE_INLINE Ref<DirAccess> try_open_directory(const String &p_path);
+	GD_FORCE_INLINE bool has_directory(const String &p_path);
 
 	PackedData();
 	~PackedData();

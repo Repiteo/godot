@@ -163,7 +163,7 @@ struct PropertyInfo {
 
 	// If you are thinking about adding another member to this class, ask the maintainer (Juan) first.
 
-	_FORCE_INLINE_ PropertyInfo added_usage(uint32_t p_fl) const {
+	GD_FORCE_INLINE PropertyInfo added_usage(uint32_t p_fl) const {
 		PropertyInfo pi = *this;
 		pi.usage |= p_fl;
 		return pi;
@@ -342,7 +342,7 @@ struct ObjectGDExtension {
 	GDExtensionClassReference unreference;
 	GDExtensionClassGetRID get_rid;
 
-	_FORCE_INLINE_ bool is_class(const String &p_class) const {
+	GD_FORCE_INLINE bool is_class(const String &p_class) const {
 		const ObjectGDExtension *e = this;
 		while (e) {
 			if (p_class == e->class_name.operator String()) {
@@ -400,7 +400,7 @@ struct ObjectGDExtension {
 public:                                                                              \
 	using self_type = m_class;                                                       \
 	using super_type = m_inherits;                                                   \
-	static _FORCE_INLINE_ void *get_class_ptr_static() {                             \
+	static GD_FORCE_INLINE void *get_class_ptr_static() {                            \
 		static int ptr;                                                              \
 		return &ptr;                                                                 \
 	}                                                                                \
@@ -436,10 +436,10 @@ public:                                                                         
 	}                                                                                                                                       \
                                                                                                                                             \
 protected:                                                                                                                                  \
-	_FORCE_INLINE_ static void (*_get_bind_methods())() {                                                                                   \
+	GD_FORCE_INLINE static void (*_get_bind_methods())() {                                                                                  \
 		return &m_class::_bind_methods;                                                                                                     \
 	}                                                                                                                                       \
-	_FORCE_INLINE_ static void (*_get_bind_compatibility_methods())() {                                                                     \
+	GD_FORCE_INLINE static void (*_get_bind_compatibility_methods())() {                                                                    \
 		return &m_class::_bind_compatibility_methods;                                                                                       \
 	}                                                                                                                                       \
                                                                                                                                             \
@@ -464,7 +464,7 @@ protected:                                                                      
 	virtual void _initialize_classv() override {                                                                                            \
 		initialize_class();                                                                                                                 \
 	}                                                                                                                                       \
-	_FORCE_INLINE_ bool (Object::*_get_get() const)(const StringName &p_name, Variant &) const {                                            \
+	GD_FORCE_INLINE bool (Object::*_get_get() const)(const StringName &p_name, Variant &) const {                                           \
 		return (bool (Object::*)(const StringName &, Variant &) const) & m_class::_get;                                                     \
 	}                                                                                                                                       \
 	virtual bool _getv(const StringName &p_name, Variant &r_ret) const override {                                                           \
@@ -475,7 +475,7 @@ protected:                                                                      
 		}                                                                                                                                   \
 		return m_inherits::_getv(p_name, r_ret);                                                                                            \
 	}                                                                                                                                       \
-	_FORCE_INLINE_ bool (Object::*_get_set() const)(const StringName &p_name, const Variant &p_property) {                                  \
+	GD_FORCE_INLINE bool (Object::*_get_set() const)(const StringName &p_name, const Variant &p_property) {                                 \
 		return (bool (Object::*)(const StringName &, const Variant &)) & m_class::_set;                                                     \
 	}                                                                                                                                       \
 	virtual bool _setv(const StringName &p_name, const Variant &p_property) override {                                                      \
@@ -487,7 +487,7 @@ protected:                                                                      
 		}                                                                                                                                   \
 		return false;                                                                                                                       \
 	}                                                                                                                                       \
-	_FORCE_INLINE_ void (Object::*_get_get_property_list() const)(List<PropertyInfo> * p_list) const {                                      \
+	GD_FORCE_INLINE void (Object::*_get_get_property_list() const)(List<PropertyInfo> * p_list) const {                                     \
 		return (void (Object::*)(List<PropertyInfo> *) const) & m_class::_get_property_list;                                                \
 	}                                                                                                                                       \
 	virtual void _get_property_listv(List<PropertyInfo> *p_list, bool p_reversed) const override {                                          \
@@ -503,7 +503,7 @@ protected:                                                                      
 			m_inherits::_get_property_listv(p_list, p_reversed);                                                                            \
 		}                                                                                                                                   \
 	}                                                                                                                                       \
-	_FORCE_INLINE_ void (Object::*_get_validate_property() const)(PropertyInfo & p_property) const {                                        \
+	GD_FORCE_INLINE void (Object::*_get_validate_property() const)(PropertyInfo & p_property) const {                                       \
 		return (void (Object::*)(PropertyInfo &) const) & m_class::_validate_property;                                                      \
 	}                                                                                                                                       \
 	virtual void _validate_propertyv(PropertyInfo &p_property) const override {                                                             \
@@ -512,7 +512,7 @@ protected:                                                                      
 			_validate_property(p_property);                                                                                                 \
 		}                                                                                                                                   \
 	}                                                                                                                                       \
-	_FORCE_INLINE_ bool (Object::*_get_property_can_revert() const)(const StringName &p_name) const {                                       \
+	GD_FORCE_INLINE bool (Object::*_get_property_can_revert() const)(const StringName &p_name) const {                                      \
 		return (bool (Object::*)(const StringName &) const) & m_class::_property_can_revert;                                                \
 	}                                                                                                                                       \
 	virtual bool _property_can_revertv(const StringName &p_name) const override {                                                           \
@@ -523,7 +523,7 @@ protected:                                                                      
 		}                                                                                                                                   \
 		return m_inherits::_property_can_revertv(p_name);                                                                                   \
 	}                                                                                                                                       \
-	_FORCE_INLINE_ bool (Object::*_get_property_get_revert() const)(const StringName &p_name, Variant &) const {                            \
+	GD_FORCE_INLINE bool (Object::*_get_property_get_revert() const)(const StringName &p_name, Variant &) const {                           \
 		return (bool (Object::*)(const StringName &, Variant &) const) & m_class::_property_get_revert;                                     \
 	}                                                                                                                                       \
 	virtual bool _property_get_revertv(const StringName &p_name, Variant &r_ret) const override {                                           \
@@ -534,7 +534,7 @@ protected:                                                                      
 		}                                                                                                                                   \
 		return m_inherits::_property_get_revertv(p_name, r_ret);                                                                            \
 	}                                                                                                                                       \
-	_FORCE_INLINE_ void (Object::*_get_notification() const)(int) {                                                                         \
+	GD_FORCE_INLINE void (Object::*_get_notification() const)(int) {                                                                        \
 		return (void (Object::*)(int)) & m_class::_notification;                                                                            \
 	}                                                                                                                                       \
 	virtual void _notification_forwardv(int p_notification) override {                                                                      \
@@ -647,7 +647,7 @@ private:
 	Variant _get_indexed_bind(const NodePath &p_name) const;
 	int _get_method_argument_count_bind(const StringName &p_name) const;
 
-	_FORCE_INLINE_ void _construct_object(bool p_reference);
+	GD_FORCE_INLINE void _construct_object(bool p_reference);
 
 	friend class RefCounted;
 	bool type_is_reference = false;
@@ -667,7 +667,7 @@ private:
 protected:
 	StringName _translation_domain;
 
-	_FORCE_INLINE_ bool _instance_binding_reference(bool p_reference) {
+	GD_FORCE_INLINE bool _instance_binding_reference(bool p_reference) {
 		bool can_die = true;
 		if (_instance_bindings) {
 			MutexLock instance_binding_lock(_instance_binding_mutex);
@@ -683,8 +683,8 @@ protected:
 	}
 
 	friend class GDExtensionMethodBind;
-	_ALWAYS_INLINE_ const ObjectGDExtension *_get_extension() const { return _extension; }
-	_ALWAYS_INLINE_ GDExtensionClassInstancePtr _get_extension_instance() const { return _extension_instance; }
+	GD_ALWAYS_INLINE const ObjectGDExtension *_get_extension() const { return _extension; }
+	GD_ALWAYS_INLINE GDExtensionClassInstancePtr _get_extension_instance() const { return _extension_instance; }
 	virtual void _initialize_classv() { initialize_class(); }
 	virtual bool _setv(const StringName &p_name, const Variant &p_property) { return false; }
 	virtual bool _getv(const StringName &p_name, Variant &r_property) const { return false; }
@@ -708,31 +708,31 @@ protected:
 	bool _property_get_revert(const StringName &p_name, Variant &r_property) const { return false; }
 	void _notification(int p_notification) {}
 
-	_FORCE_INLINE_ static void (*_get_bind_methods())() {
+	GD_FORCE_INLINE static void (*_get_bind_methods())() {
 		return &Object::_bind_methods;
 	}
-	_FORCE_INLINE_ static void (*_get_bind_compatibility_methods())() {
+	GD_FORCE_INLINE static void (*_get_bind_compatibility_methods())() {
 		return &Object::_bind_compatibility_methods;
 	}
-	_FORCE_INLINE_ bool (Object::*_get_get() const)(const StringName &p_name, Variant &r_ret) const {
+	GD_FORCE_INLINE bool (Object::*_get_get() const)(const StringName &p_name, Variant &r_ret) const {
 		return &Object::_get;
 	}
-	_FORCE_INLINE_ bool (Object::*_get_set() const)(const StringName &p_name, const Variant &p_property) {
+	GD_FORCE_INLINE bool (Object::*_get_set() const)(const StringName &p_name, const Variant &p_property) {
 		return &Object::_set;
 	}
-	_FORCE_INLINE_ void (Object::*_get_get_property_list() const)(List<PropertyInfo> *p_list) const {
+	GD_FORCE_INLINE void (Object::*_get_get_property_list() const)(List<PropertyInfo> *p_list) const {
 		return &Object::_get_property_list;
 	}
-	_FORCE_INLINE_ void (Object::*_get_validate_property() const)(PropertyInfo &p_property) const {
+	GD_FORCE_INLINE void (Object::*_get_validate_property() const)(PropertyInfo &p_property) const {
 		return &Object::_validate_property;
 	}
-	_FORCE_INLINE_ bool (Object::*_get_property_can_revert() const)(const StringName &p_name) const {
+	GD_FORCE_INLINE bool (Object::*_get_property_can_revert() const)(const StringName &p_name) const {
 		return &Object::_property_can_revert;
 	}
-	_FORCE_INLINE_ bool (Object::*_get_property_get_revert() const)(const StringName &p_name, Variant &) const {
+	GD_FORCE_INLINE bool (Object::*_get_property_get_revert() const)(const StringName &p_name, Variant &) const {
 		return &Object::_property_get_revert;
 	}
-	_FORCE_INLINE_ void (Object::*_get_notification() const)(int) {
+	GD_FORCE_INLINE void (Object::*_get_notification() const)(int) {
 		return &Object::_notification;
 	}
 
@@ -770,7 +770,7 @@ protected:
 
 public: // Should be protected, but bug in clang++.
 	static void initialize_class();
-	_FORCE_INLINE_ static void register_custom_data_to_otdb() {}
+	GD_FORCE_INLINE static void register_custom_data_to_otdb() {}
 
 public:
 	static constexpr bool _class_is_enabled = true;
@@ -783,7 +783,7 @@ public:
 	}
 
 	void detach_from_objectdb();
-	_FORCE_INLINE_ ObjectID get_instance_id() const { return _instance_id; }
+	GD_FORCE_INLINE ObjectID get_instance_id() const { return _instance_id; }
 
 	template <typename T>
 	static T *cast_to(Object *p_object) {
@@ -818,7 +818,7 @@ public:
 		return _class_name_static;
 	}
 
-	_FORCE_INLINE_ String get_class() const { return get_class_name(); }
+	GD_FORCE_INLINE String get_class() const { return get_class_name(); }
 
 	virtual String get_save_class() const { return get_class(); } //class stored when saving
 
@@ -868,7 +868,7 @@ public:
 	// Depending on the boolean, we call either the virtual function _notification_backward or _notification_forward.
 	// - Forward calls subclasses in descending order (e.g. Object -> Node -> Node3D -> extension -> script).
 	//   Backward calls subclasses in descending order (e.g. script -> extension -> Node3D -> Node -> Object).
-	_FORCE_INLINE_ void notification(int p_notification, bool p_reversed = false) {
+	GD_FORCE_INLINE void notification(int p_notification, bool p_reversed = false) {
 		if (p_reversed) {
 			_notification_backward(p_notification);
 		} else {
@@ -909,7 +909,7 @@ public:
 #endif
 
 	void set_script_instance(ScriptInstance *p_instance);
-	_FORCE_INLINE_ ScriptInstance *get_script_instance() const { return script_instance; }
+	GD_FORCE_INLINE ScriptInstance *get_script_instance() const { return script_instance; }
 
 	// Some script languages can't control instance creation, so this function eases the process.
 	void set_script_and_instance(const Variant &p_script, ScriptInstance *p_instance);
@@ -959,8 +959,8 @@ public:
 	bool _is_queued_for_deletion = false; // Set to true by SceneTree::queue_delete().
 	bool is_queued_for_deletion() const;
 
-	_FORCE_INLINE_ void set_message_translation(bool p_enable) { _can_translate = p_enable; }
-	_FORCE_INLINE_ bool can_translate_messages() const { return _can_translate; }
+	GD_FORCE_INLINE void set_message_translation(bool p_enable) { _can_translate = p_enable; }
+	GD_FORCE_INLINE bool can_translate_messages() const { return _can_translate; }
 
 	virtual StringName get_translation_domain() const;
 	virtual void set_translation_domain(const StringName &p_domain);
@@ -989,7 +989,7 @@ public:
 
 	void clear_internal_resource_paths();
 
-	_ALWAYS_INLINE_ bool is_ref_counted() const { return type_is_reference; }
+	GD_ALWAYS_INLINE bool is_ref_counted() const { return type_is_reference; }
 
 	void cancel_free();
 
@@ -1034,7 +1034,7 @@ class ObjectDB {
 public:
 	typedef void (*DebugFunc)(Object *p_obj);
 
-	_ALWAYS_INLINE_ static Object *get_instance(ObjectID p_instance_id) {
+	GD_ALWAYS_INLINE static Object *get_instance(ObjectID p_instance_id) {
 		uint64_t id = p_instance_id;
 		uint32_t slot = id & OBJECTDB_SLOT_MAX_COUNT_MASK;
 
@@ -1057,12 +1057,12 @@ public:
 	}
 
 	template <typename T>
-	_ALWAYS_INLINE_ static T *get_instance(ObjectID p_instance_id) {
+	GD_ALWAYS_INLINE static T *get_instance(ObjectID p_instance_id) {
 		return Object::cast_to<T>(get_instance(p_instance_id));
 	}
 
 	template <typename T>
-	_ALWAYS_INLINE_ static Ref<T> get_ref(ObjectID p_instance_id); // Defined in ref_counted.h
+	GD_ALWAYS_INLINE static Ref<T> get_ref(ObjectID p_instance_id); // Defined in ref_counted.h
 
 	static void debug_objects(DebugFunc p_func);
 	static int get_object_count();

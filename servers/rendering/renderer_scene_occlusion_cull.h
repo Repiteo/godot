@@ -55,7 +55,7 @@ public:
 		uint64_t occlusion_frame = 0;
 		Size2i occlusion_buffer_size;
 
-		_FORCE_INLINE_ bool _is_occluded(const real_t p_bounds[6], const Vector3 &p_cam_position, const Transform3D &p_cam_inv_transform, const Projection &p_cam_projection, real_t p_near) const {
+		GD_FORCE_INLINE bool _is_occluded(const real_t p_bounds[6], const Vector3 &p_cam_position, const Transform3D &p_cam_inv_transform, const Projection &p_cam_projection, real_t p_near) const {
 			if (is_empty()) {
 				return false;
 			}
@@ -162,7 +162,7 @@ public:
 		// Thin wrapper around _is_occluded(),
 		// allowing occlusion timers to delay the disappearance
 		// of objects to prevent flickering when using jittering.
-		_FORCE_INLINE_ bool is_occluded(const real_t p_bounds[6], const Vector3 &p_cam_position, const Transform3D &p_cam_inv_transform, const Projection &p_cam_projection, real_t p_near, uint64_t &r_occlusion_timeout) const {
+		GD_FORCE_INLINE bool is_occluded(const real_t p_bounds[6], const Vector3 &p_cam_position, const Transform3D &p_cam_inv_transform, const Projection &p_cam_projection, real_t p_near, uint64_t &r_occlusion_timeout) const {
 			bool occluded = _is_occluded(p_bounds, p_cam_position, p_cam_inv_transform, p_cam_projection, p_near);
 
 			// Special case, temporal jitter disabled,

@@ -73,7 +73,7 @@ class ViewportRotationControl : public Control {
 	};
 
 	struct Axis2DCompare {
-		_FORCE_INLINE_ bool operator()(const Axis2D &l, const Axis2D &r) const {
+		GD_FORCE_INLINE bool operator()(const Axis2D &l, const Axis2D &r) const {
 			return l.z_axis < r.z_axis;
 		}
 	};
@@ -290,7 +290,7 @@ private:
 	struct _RayResult {
 		Node3D *item = nullptr;
 		real_t depth = 0;
-		_FORCE_INLINE_ bool operator<(const _RayResult &p_rr) const { return depth < p_rr.depth; }
+		GD_FORCE_INLINE bool operator<(const _RayResult &p_rr) const { return depth < p_rr.depth; }
 	};
 
 	void _update_name();
@@ -433,7 +433,7 @@ private:
 	};
 
 	struct ShortcutCheckSetComparator {
-		_FORCE_INLINE_ bool operator()(const ShortcutCheckSet &A, const ShortcutCheckSet &B) const {
+		GD_FORCE_INLINE bool operator()(const ShortcutCheckSet &A, const ShortcutCheckSet &B) const {
 			return A.input_count > B.input_count;
 		}
 	};

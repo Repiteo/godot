@@ -103,9 +103,9 @@ protected:
 	static void _bind_methods();
 	virtual void _draw() = 0;
 	void draw_texture_rect(Ref<Texture2D> p_texture, Rect2 p_dst_rect, Rect2 p_src_rect);
-	_FORCE_INLINE_ void set_aabb(const AABB &p_aabb) { aabb = p_aabb; }
-	_FORCE_INLINE_ RID &get_mesh() { return mesh; }
-	_FORCE_INLINE_ RID &get_material() { return material; }
+	GD_FORCE_INLINE void set_aabb(const AABB &p_aabb) { aabb = p_aabb; }
+	GD_FORCE_INLINE RID &get_mesh() { return mesh; }
+	GD_FORCE_INLINE RID &get_material() { return material; }
 
 	uint32_t mesh_surface_offsets[RS::ARRAY_MAX];
 	PackedByteArray vertex_buffer;

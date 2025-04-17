@@ -97,7 +97,7 @@ private:
 	};
 
 	struct SortPoints {
-		_FORCE_INLINE_ bool operator()(const Point *A, const Point *B) const { // Returns true when the Point A is worse than Point B.
+		GD_FORCE_INLINE bool operator()(const Point *A, const Point *B) const { // Returns true when the Point A is worse than Point B.
 			if (A->f_score > B->f_score) {
 				return true;
 			} else if (A->f_score < B->f_score) {
@@ -116,42 +116,42 @@ private:
 	uint64_t pass = 1;
 
 private: // Internal routines.
-	_FORCE_INLINE_ size_t _to_mask_index(int32_t p_x, int32_t p_y) const {
+	GD_FORCE_INLINE size_t _to_mask_index(int32_t p_x, int32_t p_y) const {
 		return ((p_y - region.position.y + 1) * (region.size.x + 2)) + p_x - region.position.x + 1;
 	}
 
-	_FORCE_INLINE_ bool _is_walkable(int32_t p_x, int32_t p_y) const {
+	GD_FORCE_INLINE bool _is_walkable(int32_t p_x, int32_t p_y) const {
 		return !solid_mask[_to_mask_index(p_x, p_y)];
 	}
 
-	_FORCE_INLINE_ Point *_get_point(int32_t p_x, int32_t p_y) {
+	GD_FORCE_INLINE Point *_get_point(int32_t p_x, int32_t p_y) {
 		if (region.has_point(Vector2i(p_x, p_y))) {
 			return &points[p_y - region.position.y][p_x - region.position.x];
 		}
 		return nullptr;
 	}
 
-	_FORCE_INLINE_ void _set_solid_unchecked(int32_t p_x, int32_t p_y, bool p_solid) {
+	GD_FORCE_INLINE void _set_solid_unchecked(int32_t p_x, int32_t p_y, bool p_solid) {
 		solid_mask[_to_mask_index(p_x, p_y)] = p_solid;
 	}
 
-	_FORCE_INLINE_ void _set_solid_unchecked(const Vector2i &p_id, bool p_solid) {
+	GD_FORCE_INLINE void _set_solid_unchecked(const Vector2i &p_id, bool p_solid) {
 		solid_mask[_to_mask_index(p_id.x, p_id.y)] = p_solid;
 	}
 
-	_FORCE_INLINE_ bool _get_solid_unchecked(const Vector2i &p_id) const {
+	GD_FORCE_INLINE bool _get_solid_unchecked(const Vector2i &p_id) const {
 		return solid_mask[_to_mask_index(p_id.x, p_id.y)];
 	}
 
-	_FORCE_INLINE_ Point *_get_point_unchecked(int32_t p_x, int32_t p_y) {
+	GD_FORCE_INLINE Point *_get_point_unchecked(int32_t p_x, int32_t p_y) {
 		return &points[p_y - region.position.y][p_x - region.position.x];
 	}
 
-	_FORCE_INLINE_ Point *_get_point_unchecked(const Vector2i &p_id) {
+	GD_FORCE_INLINE Point *_get_point_unchecked(const Vector2i &p_id) {
 		return &points[p_id.y - region.position.y][p_id.x - region.position.x];
 	}
 
-	_FORCE_INLINE_ const Point *_get_point_unchecked(const Vector2i &p_id) const {
+	GD_FORCE_INLINE const Point *_get_point_unchecked(const Vector2i &p_id) const {
 		return &points[p_id.y - region.position.y][p_id.x - region.position.x];
 	}
 

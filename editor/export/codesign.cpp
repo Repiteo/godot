@@ -450,7 +450,7 @@ CodeSignRequirements::CodeSignRequirements(const PackedByteArray &p_data) {
 	blob = p_data;
 }
 
-_FORCE_INLINE_ void CodeSignRequirements::_parse_certificate_slot(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const {
+GD_FORCE_INLINE void CodeSignRequirements::_parse_certificate_slot(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const {
 #define _R(x) BSWAP32(*(uint32_t *)(blob.ptr() + x))
 	ERR_FAIL_COND_MSG(r_pos >= p_rq_size, "CodeSign/Requirements: Out of bounds.");
 	r_out += "certificate ";
@@ -466,7 +466,7 @@ _FORCE_INLINE_ void CodeSignRequirements::_parse_certificate_slot(uint32_t &r_po
 #undef _R
 }
 
-_FORCE_INLINE_ void CodeSignRequirements::_parse_key(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const {
+GD_FORCE_INLINE void CodeSignRequirements::_parse_key(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const {
 #define _R(x) BSWAP32(*(uint32_t *)(blob.ptr() + x))
 	ERR_FAIL_COND_MSG(r_pos >= p_rq_size, "CodeSign/Requirements: Out of bounds.");
 	const uint32_t key_size = _R(r_pos);
@@ -476,7 +476,7 @@ _FORCE_INLINE_ void CodeSignRequirements::_parse_key(uint32_t &r_pos, String &r_
 #undef _R
 }
 
-_FORCE_INLINE_ void CodeSignRequirements::_parse_oid_key(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const {
+GD_FORCE_INLINE void CodeSignRequirements::_parse_oid_key(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const {
 #define _R(x) BSWAP32(*(uint32_t *)(blob.ptr() + x))
 	ERR_FAIL_COND_MSG(r_pos >= p_rq_size, "CodeSign/Requirements: Out of bounds.");
 	uint32_t key_size = _R(r_pos);
@@ -507,7 +507,7 @@ _FORCE_INLINE_ void CodeSignRequirements::_parse_oid_key(uint32_t &r_pos, String
 #undef _R
 }
 
-_FORCE_INLINE_ void CodeSignRequirements::_parse_hash_string(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const {
+GD_FORCE_INLINE void CodeSignRequirements::_parse_hash_string(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const {
 #define _R(x) BSWAP32(*(uint32_t *)(blob.ptr() + x))
 	ERR_FAIL_COND_MSG(r_pos >= p_rq_size, "CodeSign/Requirements: Out of bounds.");
 	uint32_t tag_size = _R(r_pos);
@@ -517,7 +517,7 @@ _FORCE_INLINE_ void CodeSignRequirements::_parse_hash_string(uint32_t &r_pos, St
 #undef _R
 }
 
-_FORCE_INLINE_ void CodeSignRequirements::_parse_value(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const {
+GD_FORCE_INLINE void CodeSignRequirements::_parse_value(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const {
 #define _R(x) BSWAP32(*(uint32_t *)(blob.ptr() + x))
 	ERR_FAIL_COND_MSG(r_pos >= p_rq_size, "CodeSign/Requirements: Out of bounds.");
 	const uint32_t key_size = _R(r_pos);
@@ -527,7 +527,7 @@ _FORCE_INLINE_ void CodeSignRequirements::_parse_value(uint32_t &r_pos, String &
 #undef _R
 }
 
-_FORCE_INLINE_ void CodeSignRequirements::_parse_date(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const {
+GD_FORCE_INLINE void CodeSignRequirements::_parse_date(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const {
 #define _R(x) BSWAP32(*(uint32_t *)(blob.ptr() + x))
 	ERR_FAIL_COND_MSG(r_pos >= p_rq_size, "CodeSign/Requirements: Out of bounds.");
 	uint32_t date = _R(r_pos);
@@ -542,7 +542,7 @@ _FORCE_INLINE_ void CodeSignRequirements::_parse_date(uint32_t &r_pos, String &r
 #undef _R
 }
 
-_FORCE_INLINE_ bool CodeSignRequirements::_parse_match(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const {
+GD_FORCE_INLINE bool CodeSignRequirements::_parse_match(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const {
 #define _R(x) BSWAP32(*(uint32_t *)(blob.ptr() + x))
 	ERR_FAIL_COND_V_MSG(r_pos >= p_rq_size, false, "CodeSign/Requirements: Out of bounds.");
 	uint32_t match = _R(r_pos);

@@ -62,70 +62,70 @@ public:
 		/**
 		 * Get NEXT Element iterator, for constant lists.
 		 */
-		_FORCE_INLINE_ const Element *next() const {
+		GD_FORCE_INLINE const Element *next() const {
 			return next_ptr;
 		}
 		/**
 		 * Get NEXT Element iterator,
 		 */
-		_FORCE_INLINE_ Element *next() {
+		GD_FORCE_INLINE Element *next() {
 			return next_ptr;
 		}
 
 		/**
 		 * Get PREV Element iterator, for constant lists.
 		 */
-		_FORCE_INLINE_ const Element *prev() const {
+		GD_FORCE_INLINE const Element *prev() const {
 			return prev_ptr;
 		}
 		/**
 		 * Get PREV Element iterator,
 		 */
-		_FORCE_INLINE_ Element *prev() {
+		GD_FORCE_INLINE Element *prev() {
 			return prev_ptr;
 		}
 
 		/**
 		 * * operator, for using as *iterator, when iterators are defined on stack.
 		 */
-		_FORCE_INLINE_ const T &operator*() const {
+		GD_FORCE_INLINE const T &operator*() const {
 			return value;
 		}
 		/**
 		 * operator->, for using as iterator->, when iterators are defined on stack, for constant lists.
 		 */
-		_FORCE_INLINE_ const T *operator->() const {
+		GD_FORCE_INLINE const T *operator->() const {
 			return &value;
 		}
 		/**
 		 * * operator, for using as *iterator, when iterators are defined on stack,
 		 */
-		_FORCE_INLINE_ T &operator*() {
+		GD_FORCE_INLINE T &operator*() {
 			return value;
 		}
 		/**
 		 * operator->, for using as iterator->, when iterators are defined on stack, for constant lists.
 		 */
-		_FORCE_INLINE_ T *operator->() {
+		GD_FORCE_INLINE T *operator->() {
 			return &value;
 		}
 
 		/**
 		 * get the value stored in this element.
 		 */
-		_FORCE_INLINE_ T &get() {
+		GD_FORCE_INLINE T &get() {
 			return value;
 		}
 		/**
 		 * get the value stored in this element, for constant lists
 		 */
-		_FORCE_INLINE_ const T &get() const {
+		GD_FORCE_INLINE const T &get() const {
 			return value;
 		}
 		/**
 		 * set the value stored in this element.
 		 */
-		_FORCE_INLINE_ void set(const T &p_value) {
+		GD_FORCE_INLINE void set(const T &p_value) {
 			value = (T &)p_value;
 		}
 
@@ -135,52 +135,52 @@ public:
 
 		void transfer_to_back(List<T, A> *p_dst_list);
 
-		_FORCE_INLINE_ Element() {}
+		GD_FORCE_INLINE Element() {}
 	};
 
 	typedef T ValueType;
 
 	struct ConstIterator {
-		_FORCE_INLINE_ const T &operator*() const {
+		GD_FORCE_INLINE const T &operator*() const {
 			return E->get();
 		}
-		_FORCE_INLINE_ const T *operator->() const { return &E->get(); }
-		_FORCE_INLINE_ ConstIterator &operator++() {
+		GD_FORCE_INLINE const T *operator->() const { return &E->get(); }
+		GD_FORCE_INLINE ConstIterator &operator++() {
 			E = E->next();
 			return *this;
 		}
-		_FORCE_INLINE_ ConstIterator &operator--() {
+		GD_FORCE_INLINE ConstIterator &operator--() {
 			E = E->prev();
 			return *this;
 		}
 
-		_FORCE_INLINE_ bool operator==(const ConstIterator &b) const { return E == b.E; }
-		_FORCE_INLINE_ bool operator!=(const ConstIterator &b) const { return E != b.E; }
+		GD_FORCE_INLINE bool operator==(const ConstIterator &b) const { return E == b.E; }
+		GD_FORCE_INLINE bool operator!=(const ConstIterator &b) const { return E != b.E; }
 
-		_FORCE_INLINE_ ConstIterator(const Element *p_E) { E = p_E; }
-		_FORCE_INLINE_ ConstIterator() {}
-		_FORCE_INLINE_ ConstIterator(const ConstIterator &p_it) { E = p_it.E; }
+		GD_FORCE_INLINE ConstIterator(const Element *p_E) { E = p_E; }
+		GD_FORCE_INLINE ConstIterator() {}
+		GD_FORCE_INLINE ConstIterator(const ConstIterator &p_it) { E = p_it.E; }
 
 	private:
 		const Element *E = nullptr;
 	};
 
 	struct Iterator {
-		_FORCE_INLINE_ T &operator*() const {
+		GD_FORCE_INLINE T &operator*() const {
 			return E->get();
 		}
-		_FORCE_INLINE_ T *operator->() const { return &E->get(); }
-		_FORCE_INLINE_ Iterator &operator++() {
+		GD_FORCE_INLINE T *operator->() const { return &E->get(); }
+		GD_FORCE_INLINE Iterator &operator++() {
 			E = E->next();
 			return *this;
 		}
-		_FORCE_INLINE_ Iterator &operator--() {
+		GD_FORCE_INLINE Iterator &operator--() {
 			E = E->prev();
 			return *this;
 		}
 
-		_FORCE_INLINE_ bool operator==(const Iterator &b) const { return E == b.E; }
-		_FORCE_INLINE_ bool operator!=(const Iterator &b) const { return E != b.E; }
+		GD_FORCE_INLINE bool operator==(const Iterator &b) const { return E == b.E; }
+		GD_FORCE_INLINE bool operator!=(const Iterator &b) const { return E != b.E; }
 
 		Iterator(Element *p_E) { E = p_E; }
 		Iterator() {}
@@ -194,28 +194,28 @@ public:
 		Element *E = nullptr;
 	};
 
-	_FORCE_INLINE_ Iterator begin() {
+	GD_FORCE_INLINE Iterator begin() {
 		return Iterator(front());
 	}
-	_FORCE_INLINE_ Iterator end() {
+	GD_FORCE_INLINE Iterator end() {
 		return Iterator(nullptr);
 	}
 
 #if 0
 	//to use when replacing find()
-	_FORCE_INLINE_ Iterator find(const K &p_key) {
+	GD_FORCE_INLINE Iterator find(const K &p_key) {
 		return Iterator(find(p_key));
 	}
 #endif
-	_FORCE_INLINE_ ConstIterator begin() const {
+	GD_FORCE_INLINE ConstIterator begin() const {
 		return ConstIterator(front());
 	}
-	_FORCE_INLINE_ ConstIterator end() const {
+	GD_FORCE_INLINE ConstIterator end() const {
 		return ConstIterator(nullptr);
 	}
 #if 0
 	//to use when replacing find()
-	_FORCE_INLINE_ ConstIterator find(const K &p_key) const {
+	GD_FORCE_INLINE ConstIterator find(const K &p_key) const {
 		return ConstIterator(find(p_key));
 	}
 #endif
@@ -258,28 +258,28 @@ public:
 	/**
 	 * return a const iterator to the beginning of the list.
 	 */
-	_FORCE_INLINE_ const Element *front() const {
+	GD_FORCE_INLINE const Element *front() const {
 		return _data ? _data->first : nullptr;
 	}
 
 	/**
 	 * return an iterator to the beginning of the list.
 	 */
-	_FORCE_INLINE_ Element *front() {
+	GD_FORCE_INLINE Element *front() {
 		return _data ? _data->first : nullptr;
 	}
 
 	/**
 	 * return a const iterator to the last member of the list.
 	 */
-	_FORCE_INLINE_ const Element *back() const {
+	GD_FORCE_INLINE const Element *back() const {
 		return _data ? _data->last : nullptr;
 	}
 
 	/**
 	 * return an iterator to the last member of the list.
 	 */
-	_FORCE_INLINE_ Element *back() {
+	GD_FORCE_INLINE Element *back() {
 		return _data ? _data->last : nullptr;
 	}
 
@@ -457,7 +457,7 @@ public:
 	/**
 	 * return whether the list is empty
 	 */
-	_FORCE_INLINE_ bool is_empty() const {
+	GD_FORCE_INLINE bool is_empty() const {
 		return (!_data || !_data->size_cache);
 	}
 
@@ -470,7 +470,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ int size() const {
+	GD_FORCE_INLINE int size() const {
 		return _data ? _data->size_cache : 0;
 	}
 
@@ -714,7 +714,7 @@ public:
 	template <typename C>
 	struct AuxiliaryComparator {
 		C compare;
-		_FORCE_INLINE_ bool operator()(const Element *a, const Element *b) const {
+		GD_FORCE_INLINE bool operator()(const Element *a, const Element *b) const {
 			return compare(a->value, b->value);
 		}
 	};

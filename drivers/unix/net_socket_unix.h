@@ -54,8 +54,8 @@ private:
 
 	NetError _get_socket_error() const;
 	void _set_socket(int p_sock, IP::Type p_ip_type, bool p_is_stream);
-	_FORCE_INLINE_ Error _change_multicast_group(IPAddress p_ip, String p_if_name, bool p_add);
-	_FORCE_INLINE_ void _set_close_exec_enabled(bool p_enabled);
+	GD_FORCE_INLINE Error _change_multicast_group(IPAddress p_ip, String p_if_name, bool p_add);
+	GD_FORCE_INLINE void _set_close_exec_enabled(bool p_enabled);
 
 protected:
 	static NetSocket *_create_func();

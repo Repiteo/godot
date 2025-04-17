@@ -155,14 +155,14 @@ public:
 			_last = to;
 		}
 
-		_FORCE_INLINE_ SelfList<T> *first() { return _first; }
-		_FORCE_INLINE_ const SelfList<T> *first() const { return _first; }
+		GD_FORCE_INLINE SelfList<T> *first() { return _first; }
+		GD_FORCE_INLINE const SelfList<T> *first() const { return _first; }
 
 		// Forbid copying, which has broken behavior.
 		void operator=(const List &) = delete;
 
-		_FORCE_INLINE_ List() {}
-		_FORCE_INLINE_ ~List() {
+		GD_FORCE_INLINE List() {}
+		GD_FORCE_INLINE ~List() {
 			// A self list must be empty on destruction.
 			DEV_ASSERT(_first == nullptr);
 		}
@@ -175,26 +175,26 @@ private:
 	SelfList<T> *_prev = nullptr;
 
 public:
-	_FORCE_INLINE_ bool in_list() const { return _root; }
-	_FORCE_INLINE_ void remove_from_list() {
+	GD_FORCE_INLINE bool in_list() const { return _root; }
+	GD_FORCE_INLINE void remove_from_list() {
 		if (_root) {
 			_root->remove(this);
 		}
 	}
-	_FORCE_INLINE_ SelfList<T> *next() { return _next; }
-	_FORCE_INLINE_ SelfList<T> *prev() { return _prev; }
-	_FORCE_INLINE_ const SelfList<T> *next() const { return _next; }
-	_FORCE_INLINE_ const SelfList<T> *prev() const { return _prev; }
-	_FORCE_INLINE_ T *self() const { return _self; }
+	GD_FORCE_INLINE SelfList<T> *next() { return _next; }
+	GD_FORCE_INLINE SelfList<T> *prev() { return _prev; }
+	GD_FORCE_INLINE const SelfList<T> *next() const { return _next; }
+	GD_FORCE_INLINE const SelfList<T> *prev() const { return _prev; }
+	GD_FORCE_INLINE T *self() const { return _self; }
 
 	// Forbid copying, which has broken behavior.
 	void operator=(const SelfList<T> &) = delete;
 
-	_FORCE_INLINE_ SelfList(T *p_self) {
+	GD_FORCE_INLINE SelfList(T *p_self) {
 		_self = p_self;
 	}
 
-	_FORCE_INLINE_ ~SelfList() {
+	GD_FORCE_INLINE ~SelfList() {
 		if (_root) {
 			_root->remove(this);
 		}

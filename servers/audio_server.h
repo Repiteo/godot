@@ -70,11 +70,11 @@ protected:
 	int _get_configured_mix_rate();
 
 #ifdef DEBUG_ENABLED
-	_FORCE_INLINE_ void start_counting_ticks() { prof_ticks.set(OS::get_singleton()->get_ticks_usec()); }
-	_FORCE_INLINE_ void stop_counting_ticks() { prof_time.add(OS::get_singleton()->get_ticks_usec() - prof_ticks.get()); }
+	GD_FORCE_INLINE void start_counting_ticks() { prof_ticks.set(OS::get_singleton()->get_ticks_usec()); }
+	GD_FORCE_INLINE void stop_counting_ticks() { prof_time.add(OS::get_singleton()->get_ticks_usec() - prof_ticks.get()); }
 #else
-	_FORCE_INLINE_ void start_counting_ticks() {}
-	_FORCE_INLINE_ void stop_counting_ticks() {}
+	GD_FORCE_INLINE void start_counting_ticks() {}
+	GD_FORCE_INLINE void stop_counting_ticks() {}
 #endif
 
 public:
@@ -350,7 +350,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	_FORCE_INLINE_ int get_channel_count() const {
+	GD_FORCE_INLINE int get_channel_count() const {
 		switch (get_speaker_mode()) {
 			case SPEAKER_MODE_STEREO:
 				return 1;

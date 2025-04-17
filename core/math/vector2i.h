@@ -60,20 +60,20 @@ struct [[nodiscard]] Vector2i {
 		// NOLINTEND(modernize-use-default-member-init)
 	};
 
-	_FORCE_INLINE_ int32_t &operator[](int p_axis) {
+	GD_FORCE_INLINE int32_t &operator[](int p_axis) {
 		DEV_ASSERT((unsigned int)p_axis < 2);
 		return coord[p_axis];
 	}
-	_FORCE_INLINE_ const int32_t &operator[](int p_axis) const {
+	GD_FORCE_INLINE const int32_t &operator[](int p_axis) const {
 		DEV_ASSERT((unsigned int)p_axis < 2);
 		return coord[p_axis];
 	}
 
-	_FORCE_INLINE_ Vector2i::Axis min_axis_index() const {
+	GD_FORCE_INLINE Vector2i::Axis min_axis_index() const {
 		return x < y ? Vector2i::AXIS_X : Vector2i::AXIS_Y;
 	}
 
-	_FORCE_INLINE_ Vector2i::Axis max_axis_index() const {
+	GD_FORCE_INLINE Vector2i::Axis max_axis_index() const {
 		return x < y ? Vector2i::AXIS_Y : Vector2i::AXIS_X;
 	}
 

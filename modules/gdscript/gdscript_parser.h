@@ -138,24 +138,24 @@ public:
 		MethodInfo method_info; // For callable/signals.
 		HashMap<StringName, int64_t> enum_values; // For enums.
 
-		_FORCE_INLINE_ bool is_set() const { return kind != RESOLVING && kind != UNRESOLVED; }
-		_FORCE_INLINE_ bool is_resolving() const { return kind == RESOLVING; }
-		_FORCE_INLINE_ bool has_no_type() const { return type_source == UNDETECTED; }
-		_FORCE_INLINE_ bool is_variant() const { return kind == VARIANT || kind == RESOLVING || kind == UNRESOLVED; }
-		_FORCE_INLINE_ bool is_hard_type() const { return type_source > INFERRED; }
+		GD_FORCE_INLINE bool is_set() const { return kind != RESOLVING && kind != UNRESOLVED; }
+		GD_FORCE_INLINE bool is_resolving() const { return kind == RESOLVING; }
+		GD_FORCE_INLINE bool has_no_type() const { return type_source == UNDETECTED; }
+		GD_FORCE_INLINE bool is_variant() const { return kind == VARIANT || kind == RESOLVING || kind == UNRESOLVED; }
+		GD_FORCE_INLINE bool is_hard_type() const { return type_source > INFERRED; }
 
 		String to_string() const;
-		_FORCE_INLINE_ String to_string_strict() const { return is_hard_type() ? to_string() : "Variant"; }
+		GD_FORCE_INLINE String to_string_strict() const { return is_hard_type() ? to_string() : "Variant"; }
 		PropertyInfo to_property_info(const String &p_name) const;
 
-		_FORCE_INLINE_ static DataType get_variant_type() { // Default DataType for container elements.
+		GD_FORCE_INLINE static DataType get_variant_type() { // Default DataType for container elements.
 			DataType datatype;
 			datatype.kind = VARIANT;
 			datatype.type_source = INFERRED;
 			return datatype;
 		}
 
-		_FORCE_INLINE_ void set_container_element_type(int p_index, const DataType &p_type) {
+		GD_FORCE_INLINE void set_container_element_type(int p_index, const DataType &p_type) {
 			ERR_FAIL_COND(p_index < 0);
 			while (p_index >= container_element_types.size()) {
 				container_element_types.push_back(get_variant_type());
@@ -163,27 +163,27 @@ public:
 			container_element_types.write[p_index] = DataType(p_type);
 		}
 
-		_FORCE_INLINE_ int get_container_element_type_count() const {
+		GD_FORCE_INLINE int get_container_element_type_count() const {
 			return container_element_types.size();
 		}
 
-		_FORCE_INLINE_ DataType get_container_element_type(int p_index) const {
+		GD_FORCE_INLINE DataType get_container_element_type(int p_index) const {
 			ERR_FAIL_INDEX_V(p_index, container_element_types.size(), get_variant_type());
 			return container_element_types[p_index];
 		}
 
-		_FORCE_INLINE_ DataType get_container_element_type_or_variant(int p_index) const {
+		GD_FORCE_INLINE DataType get_container_element_type_or_variant(int p_index) const {
 			if (p_index < 0 || p_index >= container_element_types.size()) {
 				return get_variant_type();
 			}
 			return container_element_types[p_index];
 		}
 
-		_FORCE_INLINE_ bool has_container_element_type(int p_index) const {
+		GD_FORCE_INLINE bool has_container_element_type(int p_index) const {
 			return p_index >= 0 && p_index < container_element_types.size();
 		}
 
-		_FORCE_INLINE_ bool has_container_element_types() const {
+		GD_FORCE_INLINE bool has_container_element_types() const {
 			return !container_element_types.is_empty();
 		}
 

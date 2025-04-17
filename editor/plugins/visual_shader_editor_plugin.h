@@ -413,7 +413,7 @@ class VisualShaderEditor : public ShaderEditor {
 		}
 	};
 	struct _OptionComparator {
-		_FORCE_INLINE_ bool operator()(const AddOption &a, const AddOption &b) const {
+		GD_FORCE_INLINE bool operator()(const AddOption &a, const AddOption &b) const {
 			return a.category.count("/") > b.category.count("/") || (a.category + "/" + a.name).naturalnocasecmp_to(b.category + "/" + b.name) < 0;
 		}
 	};

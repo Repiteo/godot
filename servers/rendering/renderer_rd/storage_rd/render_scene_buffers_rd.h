@@ -201,7 +201,7 @@ public:
 
 #ifdef METAL_ENABLED
 	void ensure_mfx(RendererRD::MFXSpatialEffect *p_effect);
-	_FORCE_INLINE_ RendererRD::MFXSpatialContext *get_mfx_spatial_context() const { return mfx_spatial_context; }
+	GD_FORCE_INLINE RendererRD::MFXSpatialContext *get_mfx_spatial_context() const { return mfx_spatial_context; }
 #endif
 
 	// Named Textures
@@ -228,33 +228,33 @@ public:
 
 	// Getters
 
-	_FORCE_INLINE_ RID get_render_target() const { return render_target; }
-	_FORCE_INLINE_ uint32_t get_view_count() const { return view_count; }
-	_FORCE_INLINE_ Size2i get_internal_size() const { return internal_size; }
-	_FORCE_INLINE_ Size2i get_target_size() const { return target_size; }
-	_FORCE_INLINE_ RS::ViewportScaling3DMode get_scaling_3d_mode() const { return scaling_3d_mode; }
-	_FORCE_INLINE_ float get_fsr_sharpness() const { return fsr_sharpness; }
-	_FORCE_INLINE_ RS::ViewportMSAA get_msaa_3d() const { return msaa_3d; }
-	_FORCE_INLINE_ RD::TextureSamples get_texture_samples() const { return texture_samples; }
-	_FORCE_INLINE_ RS::ViewportScreenSpaceAA get_screen_space_aa() const { return screen_space_aa; }
-	_FORCE_INLINE_ bool get_use_taa() const { return use_taa; }
-	_FORCE_INLINE_ bool get_use_debanding() const { return use_debanding; }
+	GD_FORCE_INLINE RID get_render_target() const { return render_target; }
+	GD_FORCE_INLINE uint32_t get_view_count() const { return view_count; }
+	GD_FORCE_INLINE Size2i get_internal_size() const { return internal_size; }
+	GD_FORCE_INLINE Size2i get_target_size() const { return target_size; }
+	GD_FORCE_INLINE RS::ViewportScaling3DMode get_scaling_3d_mode() const { return scaling_3d_mode; }
+	GD_FORCE_INLINE float get_fsr_sharpness() const { return fsr_sharpness; }
+	GD_FORCE_INLINE RS::ViewportMSAA get_msaa_3d() const { return msaa_3d; }
+	GD_FORCE_INLINE RD::TextureSamples get_texture_samples() const { return texture_samples; }
+	GD_FORCE_INLINE RS::ViewportScreenSpaceAA get_screen_space_aa() const { return screen_space_aa; }
+	GD_FORCE_INLINE bool get_use_taa() const { return use_taa; }
+	GD_FORCE_INLINE bool get_use_debanding() const { return use_debanding; }
 
 	uint64_t get_auto_exposure_version() const { return auto_exposure_version; }
 	void set_auto_exposure_version(const uint64_t p_auto_exposure_version) { auto_exposure_version = p_auto_exposure_version; }
 
 	// For our internal textures we provide some easy access methods.
 
-	_FORCE_INLINE_ bool has_internal_texture() const {
+	GD_FORCE_INLINE bool has_internal_texture() const {
 		return has_texture(RB_SCOPE_BUFFERS, RB_TEX_COLOR);
 	}
-	_FORCE_INLINE_ RID get_internal_texture() const {
+	GD_FORCE_INLINE RID get_internal_texture() const {
 		return get_texture(RB_SCOPE_BUFFERS, RB_TEX_COLOR);
 	}
-	_FORCE_INLINE_ RID get_internal_texture(const uint32_t p_layer) {
+	GD_FORCE_INLINE RID get_internal_texture(const uint32_t p_layer) {
 		return get_texture_slice(RB_SCOPE_BUFFERS, RB_TEX_COLOR, p_layer, 0);
 	}
-	_FORCE_INLINE_ RID get_internal_texture_reactive(const uint32_t p_layer) {
+	GD_FORCE_INLINE RID get_internal_texture_reactive(const uint32_t p_layer) {
 		RD::TextureView alpha_only_view;
 		alpha_only_view.swizzle_r = RD::TEXTURE_SWIZZLE_A;
 		alpha_only_view.swizzle_g = RD::TEXTURE_SWIZZLE_A;
@@ -262,10 +262,10 @@ public:
 		alpha_only_view.swizzle_a = RD::TEXTURE_SWIZZLE_A;
 		return get_texture_slice_view(RB_SCOPE_BUFFERS, RB_TEX_COLOR, p_layer, 0, 1, 1, alpha_only_view);
 	}
-	_FORCE_INLINE_ RID get_color_msaa() const {
+	GD_FORCE_INLINE RID get_color_msaa() const {
 		return get_texture(RB_SCOPE_BUFFERS, RB_TEX_COLOR_MSAA);
 	}
-	_FORCE_INLINE_ RID get_color_msaa(uint32_t p_layer) {
+	GD_FORCE_INLINE RID get_color_msaa(uint32_t p_layer) {
 		return get_texture_slice(RB_SCOPE_BUFFERS, RB_TEX_COLOR_MSAA, p_layer, 0);
 	}
 
@@ -295,13 +295,13 @@ public:
 	// Upscaled.
 	void ensure_upscaled();
 
-	_FORCE_INLINE_ bool has_upscaled_texture() const {
+	GD_FORCE_INLINE bool has_upscaled_texture() const {
 		return has_texture(RB_SCOPE_BUFFERS, RB_TEX_COLOR_UPSCALED);
 	}
-	_FORCE_INLINE_ RID get_upscaled_texture() const {
+	GD_FORCE_INLINE RID get_upscaled_texture() const {
 		return get_texture(RB_SCOPE_BUFFERS, RB_TEX_COLOR_UPSCALED);
 	}
-	_FORCE_INLINE_ RID get_upscaled_texture(const uint32_t p_layer) {
+	GD_FORCE_INLINE RID get_upscaled_texture(const uint32_t p_layer) {
 		return get_texture_slice(RB_SCOPE_BUFFERS, RB_TEX_COLOR_UPSCALED, p_layer, 0);
 	}
 
@@ -314,11 +314,11 @@ public:
 
 	// Samplers adjusted with the mipmap bias that is best fit for the configuration of these render buffers.
 
-	_FORCE_INLINE_ RendererRD::MaterialStorage::Samplers get_samplers() const {
+	GD_FORCE_INLINE RendererRD::MaterialStorage::Samplers get_samplers() const {
 		return samplers;
 	}
 
-	_FORCE_INLINE_ static RD::TextureSamples msaa_to_samples(RS::ViewportMSAA p_msaa) {
+	GD_FORCE_INLINE static RD::TextureSamples msaa_to_samples(RS::ViewportMSAA p_msaa) {
 		switch (p_msaa) {
 			case RS::VIEWPORT_MSAA_DISABLED:
 				return RD::TEXTURE_SAMPLES_1;

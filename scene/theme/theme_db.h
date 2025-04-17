@@ -110,7 +110,7 @@ public:
 		ThemeItemSetter setter;
 
 		struct SortByType {
-			_FORCE_INLINE_ bool operator()(const ThemeItemBind &l, const ThemeItemBind &r) const {
+			GD_FORCE_INLINE bool operator()(const ThemeItemBind &l, const ThemeItemBind &r) const {
 				return l.data_type < r.data_type;
 			}
 		};

@@ -82,7 +82,7 @@ private:
 
 		int32_t index = 0;
 
-		_FORCE_INLINE_ bool operator<(const CellSort &p_cell_sort) const {
+		GD_FORCE_INLINE bool operator<(const CellSort &p_cell_sort) const {
 			return key < p_cell_sort.key;
 		}
 	};

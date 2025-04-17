@@ -92,8 +92,8 @@ public:
 
 class DefaultAllocator {
 public:
-	_FORCE_INLINE_ static void *alloc(size_t p_memory) { return Memory::alloc_static(p_memory, false); }
-	_FORCE_INLINE_ static void free(void *p_ptr) { Memory::free_static(p_ptr, false); }
+	GD_FORCE_INLINE static void *alloc(size_t p_memory) { return Memory::alloc_static(p_memory, false); }
+	GD_FORCE_INLINE static void free(void *p_ptr) { Memory::free_static(p_ptr, false); }
 };
 
 void *operator new(size_t p_size, const char *p_description); ///< operator new that takes a description and uses MemoryStaticPool
@@ -113,10 +113,10 @@ void operator delete(void *p_mem, void *p_pointer, size_t check, const char *p_d
 #define memrealloc(m_mem, m_size) Memory::realloc_static(m_mem, m_size)
 #define memfree(m_mem) Memory::free_static(m_mem)
 
-_ALWAYS_INLINE_ void postinitialize_handler(void *) {}
+GD_ALWAYS_INLINE void postinitialize_handler(void *) {}
 
 template <typename T>
-_ALWAYS_INLINE_ T *_post_initialize(T *p_obj) {
+GD_ALWAYS_INLINE T *_post_initialize(T *p_obj) {
 	postinitialize_handler(p_obj);
 	return p_obj;
 }
@@ -126,7 +126,7 @@ _ALWAYS_INLINE_ T *_post_initialize(T *p_obj) {
 #define memnew_allocator(m_class, m_allocator) _post_initialize(::new (m_allocator::alloc) m_class)
 #define memnew_placement(m_placement, m_class) _post_initialize(::new (m_placement) m_class)
 
-_ALWAYS_INLINE_ bool predelete_handler(void *) {
+GD_ALWAYS_INLINE bool predelete_handler(void *) {
 	return true;
 }
 
@@ -163,7 +163,7 @@ void memdelete_allocator(T *p_class) {
 
 #define memnew_arr(m_class, m_count) memnew_arr_template<m_class>(m_count)
 
-_FORCE_INLINE_ uint64_t *_get_element_count_ptr(uint8_t *p_ptr) {
+GD_FORCE_INLINE uint64_t *_get_element_count_ptr(uint8_t *p_ptr) {
 	return (uint64_t *)(p_ptr - Memory::DATA_OFFSET + Memory::ELEMENT_OFFSET);
 }
 
@@ -197,7 +197,7 @@ T *memnew_arr_template(size_t p_elements) {
 
 // Fast alternative to a loop constructor pattern.
 template <bool p_ensure_zero = false, typename T>
-_FORCE_INLINE_ void memnew_arr_placement(T *p_start, size_t p_num) {
+GD_FORCE_INLINE void memnew_arr_placement(T *p_start, size_t p_num) {
 	if constexpr (std::is_trivially_constructible_v<T> && !p_ensure_zero) {
 		// Don't need to do anything :)
 		(void)p_start;
@@ -258,6 +258,6 @@ template <typename T>
 class DefaultTypedAllocator {
 public:
 	template <typename... Args>
-	_FORCE_INLINE_ T *new_allocation(const Args &&...p_args) { return memnew(T(p_args...)); }
-	_FORCE_INLINE_ void delete_allocation(T *p_allocation) { memdelete(p_allocation); }
+	GD_FORCE_INLINE T *new_allocation(const Args &&...p_args) { return memnew(T(p_args...)); }
+	GD_FORCE_INLINE void delete_allocation(T *p_allocation) { memdelete(p_allocation); }
 };

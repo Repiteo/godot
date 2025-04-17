@@ -107,7 +107,7 @@ private:
 	static void _set_render_world_origin(const Transform3D &p_world_origin);
 	static void _set_render_reference_frame(const Transform3D &p_reference_frame);
 
-	_FORCE_INLINE_ void set_render_world_scale(double p_world_scale) {
+	GD_FORCE_INLINE void set_render_world_scale(double p_world_scale) {
 		// If we're rendering on a separate thread, we may still be processing the last frame, don't communicate this till we're ready...
 		RenderingServer *rendering_server = RenderingServer::get_singleton();
 		ERR_FAIL_NULL(rendering_server);
@@ -115,7 +115,7 @@ private:
 		rendering_server->call_on_render_thread(callable_mp_static(&XRServer::_set_render_world_scale).bind(p_world_scale));
 	}
 
-	_FORCE_INLINE_ void set_render_world_origin(const Transform3D &p_world_origin) {
+	GD_FORCE_INLINE void set_render_world_origin(const Transform3D &p_world_origin) {
 		// If we're rendering on a separate thread, we may still be processing the last frame, don't communicate this till we're ready...
 		RenderingServer *rendering_server = RenderingServer::get_singleton();
 		ERR_FAIL_NULL(rendering_server);
@@ -123,7 +123,7 @@ private:
 		rendering_server->call_on_render_thread(callable_mp_static(&XRServer::_set_render_world_origin).bind(p_world_origin));
 	}
 
-	_FORCE_INLINE_ void set_render_reference_frame(const Transform3D &p_reference_frame) {
+	GD_FORCE_INLINE void set_render_reference_frame(const Transform3D &p_reference_frame) {
 		// If we're rendering on a separate thread, we may still be processing the last frame, don't communicate this till we're ready...
 		RenderingServer *rendering_server = RenderingServer::get_singleton();
 		ERR_FAIL_NULL(rendering_server);

@@ -61,7 +61,7 @@ private:
 	void _set_process(bool p_enabled);
 	void _update_stream_parameters();
 
-	_FORCE_INLINE_ bool _is_sample() {
+	GD_FORCE_INLINE bool _is_sample() {
 		return (AudioServer::get_singleton()->get_default_playback_type() == AudioServer::PlaybackType::PLAYBACK_TYPE_SAMPLE && get_playback_type() == AudioServer::PlaybackType::PLAYBACK_TYPE_DEFAULT) || get_playback_type() == AudioServer::PlaybackType::PLAYBACK_TYPE_SAMPLE;
 	}
 

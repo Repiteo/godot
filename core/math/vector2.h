@@ -60,20 +60,20 @@ struct [[nodiscard]] Vector2 {
 		// NOLINTEND(modernize-use-default-member-init)
 	};
 
-	_FORCE_INLINE_ real_t &operator[](int p_axis) {
+	GD_FORCE_INLINE real_t &operator[](int p_axis) {
 		DEV_ASSERT((unsigned int)p_axis < 2);
 		return coord[p_axis];
 	}
-	_FORCE_INLINE_ const real_t &operator[](int p_axis) const {
+	GD_FORCE_INLINE const real_t &operator[](int p_axis) const {
 		DEV_ASSERT((unsigned int)p_axis < 2);
 		return coord[p_axis];
 	}
 
-	_FORCE_INLINE_ Vector2::Axis min_axis_index() const {
+	GD_FORCE_INLINE Vector2::Axis min_axis_index() const {
 		return x < y ? Vector2::AXIS_X : Vector2::AXIS_Y;
 	}
 
-	_FORCE_INLINE_ Vector2::Axis max_axis_index() const {
+	GD_FORCE_INLINE Vector2::Axis max_axis_index() const {
 		return x < y ? Vector2::AXIS_Y : Vector2::AXIS_X;
 	}
 
@@ -105,7 +105,7 @@ struct [[nodiscard]] Vector2 {
 	real_t distance_squared_to(const Vector2 &p_vector2) const;
 	real_t angle_to(const Vector2 &p_vector2) const;
 	real_t angle_to_point(const Vector2 &p_vector2) const;
-	_FORCE_INLINE_ Vector2 direction_to(const Vector2 &p_to) const;
+	GD_FORCE_INLINE Vector2 direction_to(const Vector2 &p_to) const;
 
 	real_t dot(const Vector2 &p_other) const;
 	real_t cross(const Vector2 &p_other) const;
@@ -115,12 +115,12 @@ struct [[nodiscard]] Vector2 {
 
 	Vector2 plane_project(real_t p_d, const Vector2 &p_vec) const;
 
-	_FORCE_INLINE_ Vector2 lerp(const Vector2 &p_to, real_t p_weight) const;
-	_FORCE_INLINE_ Vector2 slerp(const Vector2 &p_to, real_t p_weight) const;
-	_FORCE_INLINE_ Vector2 cubic_interpolate(const Vector2 &p_b, const Vector2 &p_pre_a, const Vector2 &p_post_b, real_t p_weight) const;
-	_FORCE_INLINE_ Vector2 cubic_interpolate_in_time(const Vector2 &p_b, const Vector2 &p_pre_a, const Vector2 &p_post_b, real_t p_weight, real_t p_b_t, real_t p_pre_a_t, real_t p_post_b_t) const;
-	_FORCE_INLINE_ Vector2 bezier_interpolate(const Vector2 &p_control_1, const Vector2 &p_control_2, const Vector2 &p_end, real_t p_t) const;
-	_FORCE_INLINE_ Vector2 bezier_derivative(const Vector2 &p_control_1, const Vector2 &p_control_2, const Vector2 &p_end, real_t p_t) const;
+	GD_FORCE_INLINE Vector2 lerp(const Vector2 &p_to, real_t p_weight) const;
+	GD_FORCE_INLINE Vector2 slerp(const Vector2 &p_to, real_t p_weight) const;
+	GD_FORCE_INLINE Vector2 cubic_interpolate(const Vector2 &p_b, const Vector2 &p_pre_a, const Vector2 &p_post_b, real_t p_weight) const;
+	GD_FORCE_INLINE Vector2 cubic_interpolate_in_time(const Vector2 &p_b, const Vector2 &p_pre_a, const Vector2 &p_post_b, real_t p_weight, real_t p_b_t, real_t p_pre_a_t, real_t p_post_b_t) const;
+	GD_FORCE_INLINE Vector2 bezier_interpolate(const Vector2 &p_control_1, const Vector2 &p_control_2, const Vector2 &p_end, real_t p_t) const;
+	GD_FORCE_INLINE Vector2 bezier_derivative(const Vector2 &p_control_1, const Vector2 &p_control_2, const Vector2 &p_end, real_t p_t) const;
 
 	Vector2 move_toward(const Vector2 &p_to, real_t p_delta) const;
 
@@ -163,7 +163,7 @@ struct [[nodiscard]] Vector2 {
 	real_t angle() const;
 	static Vector2 from_angle(real_t p_angle);
 
-	_FORCE_INLINE_ Vector2 abs() const {
+	GD_FORCE_INLINE Vector2 abs() const {
 		return Vector2(Math::abs(x), Math::abs(y));
 	}
 
@@ -193,7 +193,7 @@ struct [[nodiscard]] Vector2 {
 	// NOLINTEND(cppcoreguidelines-pro-type-member-init)
 };
 
-_FORCE_INLINE_ Vector2 Vector2::plane_project(real_t p_d, const Vector2 &p_vec) const {
+GD_FORCE_INLINE Vector2 Vector2::plane_project(real_t p_d, const Vector2 &p_vec) const {
 	return p_vec - *this * (dot(p_vec) - p_d);
 }
 

@@ -421,7 +421,7 @@ struct ProjectListComparator {
 	ProjectList::FilterOption order_option = ProjectList::FilterOption::EDIT_DATE;
 
 	// operator<
-	_FORCE_INLINE_ bool operator()(const ProjectList::Item &a, const ProjectList::Item &b) const {
+	GD_FORCE_INLINE bool operator()(const ProjectList::Item &a, const ProjectList::Item &b) const {
 		if (a.favorite && !b.favorite) {
 			return true;
 		}

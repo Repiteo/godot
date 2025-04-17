@@ -126,8 +126,8 @@ private:
 	friend class GodotPhysicsDirectSpaceState2D;
 
 public:
-	_FORCE_INLINE_ void set_self(const RID &p_self) { self = p_self; }
-	_FORCE_INLINE_ RID get_self() const { return self; }
+	GD_FORCE_INLINE void set_self(const RID &p_self) { self = p_self; }
+	GD_FORCE_INLINE RID get_self() const { return self; }
 
 	void set_default_area(GodotArea2D *p_area) { area = p_area; }
 	GodotArea2D *get_default_area() const { return area; }
@@ -153,15 +153,15 @@ public:
 	void remove_object(GodotCollisionObject2D *p_object);
 	const HashSet<GodotCollisionObject2D *> &get_objects() const;
 
-	_FORCE_INLINE_ int get_solver_iterations() const { return solver_iterations; }
-	_FORCE_INLINE_ real_t get_contact_recycle_radius() const { return contact_recycle_radius; }
-	_FORCE_INLINE_ real_t get_contact_max_separation() const { return contact_max_separation; }
-	_FORCE_INLINE_ real_t get_contact_max_allowed_penetration() const { return contact_max_allowed_penetration; }
-	_FORCE_INLINE_ real_t get_contact_bias() const { return contact_bias; }
-	_FORCE_INLINE_ real_t get_constraint_bias() const { return constraint_bias; }
-	_FORCE_INLINE_ real_t get_body_linear_velocity_sleep_threshold() const { return body_linear_velocity_sleep_threshold; }
-	_FORCE_INLINE_ real_t get_body_angular_velocity_sleep_threshold() const { return body_angular_velocity_sleep_threshold; }
-	_FORCE_INLINE_ real_t get_body_time_to_sleep() const { return body_time_to_sleep; }
+	GD_FORCE_INLINE int get_solver_iterations() const { return solver_iterations; }
+	GD_FORCE_INLINE real_t get_contact_recycle_radius() const { return contact_recycle_radius; }
+	GD_FORCE_INLINE real_t get_contact_max_separation() const { return contact_max_separation; }
+	GD_FORCE_INLINE real_t get_contact_max_allowed_penetration() const { return contact_max_allowed_penetration; }
+	GD_FORCE_INLINE real_t get_contact_bias() const { return contact_bias; }
+	GD_FORCE_INLINE real_t get_constraint_bias() const { return constraint_bias; }
+	GD_FORCE_INLINE real_t get_body_linear_velocity_sleep_threshold() const { return body_linear_velocity_sleep_threshold; }
+	GD_FORCE_INLINE real_t get_body_angular_velocity_sleep_threshold() const { return body_angular_velocity_sleep_threshold; }
+	GD_FORCE_INLINE real_t get_body_time_to_sleep() const { return body_time_to_sleep; }
 
 	void update();
 	void setup();
@@ -188,14 +188,14 @@ public:
 	bool test_body_motion(GodotBody2D *p_body, const PhysicsServer2D::MotionParameters &p_parameters, PhysicsServer2D::MotionResult *r_result);
 
 	void set_debug_contacts(int p_amount) { contact_debug.resize(p_amount); }
-	_FORCE_INLINE_ bool is_debugging_contacts() const { return !contact_debug.is_empty(); }
-	_FORCE_INLINE_ void add_debug_contact(const Vector2 &p_contact) {
+	GD_FORCE_INLINE bool is_debugging_contacts() const { return !contact_debug.is_empty(); }
+	GD_FORCE_INLINE void add_debug_contact(const Vector2 &p_contact) {
 		if (contact_debug_count < contact_debug.size()) {
 			contact_debug.write[contact_debug_count++] = p_contact;
 		}
 	}
-	_FORCE_INLINE_ Vector<Vector2> get_debug_contacts() { return contact_debug; }
-	_FORCE_INLINE_ int get_debug_contact_count() { return contact_debug_count; }
+	GD_FORCE_INLINE Vector<Vector2> get_debug_contacts() { return contact_debug; }
+	GD_FORCE_INLINE int get_debug_contact_count() { return contact_debug_count; }
 
 	GodotPhysicsDirectSpaceState2D *get_direct_state();
 

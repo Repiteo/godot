@@ -1997,7 +1997,7 @@ bool SceneTreeDock::_update_node_path(Node *p_root_node, NodePath &r_node_path, 
 	return false;
 }
 
-_ALWAYS_INLINE_ static bool _recurse_into_property(const PropertyInfo &p_property) {
+GD_ALWAYS_INLINE static bool _recurse_into_property(const PropertyInfo &p_property) {
 	// Only check these types for NodePaths.
 	static const Variant::Type property_type_check[] = { Variant::OBJECT, Variant::NODE_PATH, Variant::ARRAY, Variant::DICTIONARY };
 

@@ -62,8 +62,8 @@ public:
 		static Vector<OpenXRSwapChainInfo> free_queue;
 
 	public:
-		_FORCE_INLINE_ XrSwapchain get_swapchain() const { return swapchain; }
-		_FORCE_INLINE_ bool is_image_acquired() const { return image_acquired; }
+		GD_FORCE_INLINE XrSwapchain get_swapchain() const { return swapchain; }
+		GD_FORCE_INLINE bool is_image_acquired() const { return image_acquired; }
 
 		bool create(XrSwapchainCreateFlags p_create_flags, XrSwapchainUsageFlags p_usage_flags, int64_t p_swapchain_format, uint32_t p_width, uint32_t p_height, uint32_t p_sample_count, uint32_t p_array_size);
 		void queue_free();
@@ -310,7 +310,7 @@ private:
 		const XrCompositionLayerBaseHeader *composition_layer;
 		int sort_order;
 
-		_FORCE_INLINE_ bool operator()(const OrderedCompositionLayer &a, const OrderedCompositionLayer &b) const {
+		GD_FORCE_INLINE bool operator()(const OrderedCompositionLayer &a, const OrderedCompositionLayer &b) const {
 			return a.sort_order < b.sort_order || (a.sort_order == b.sort_order && uint64_t(a.composition_layer) < uint64_t(b.composition_layer));
 		}
 	};
@@ -369,7 +369,7 @@ private:
 	static void _set_render_state_multiplier(double p_render_target_size_multiplier);
 	static void _set_render_state_render_region(const Rect2i &p_render_region);
 
-	_FORCE_INLINE_ void allocate_view_buffers(uint32_t p_view_count, bool p_submit_depth_buffer) {
+	GD_FORCE_INLINE void allocate_view_buffers(uint32_t p_view_count, bool p_submit_depth_buffer) {
 		// If we're rendering on a separate thread, we may still be processing the last frame, don't communicate this till we're ready...
 		RenderingServer *rendering_server = RenderingServer::get_singleton();
 		ERR_FAIL_NULL(rendering_server);
@@ -377,7 +377,7 @@ private:
 		rendering_server->call_on_render_thread(callable_mp_static(&OpenXRAPI::_allocate_view_buffers).bind(p_view_count, p_submit_depth_buffer));
 	}
 
-	_FORCE_INLINE_ void set_render_session_running(bool p_is_running) {
+	GD_FORCE_INLINE void set_render_session_running(bool p_is_running) {
 		// If we're rendering on a separate thread, we may still be processing the last frame, don't communicate this till we're ready...
 		RenderingServer *rendering_server = RenderingServer::get_singleton();
 		ERR_FAIL_NULL(rendering_server);
@@ -385,7 +385,7 @@ private:
 		rendering_server->call_on_render_thread(callable_mp_static(&OpenXRAPI::_set_render_session_running).bind(p_is_running));
 	}
 
-	_FORCE_INLINE_ void set_render_display_info(XrTime p_predicted_display_time, bool p_should_render) {
+	GD_FORCE_INLINE void set_render_display_info(XrTime p_predicted_display_time, bool p_should_render) {
 		// If we're rendering on a separate thread, we may still be processing the last frame, don't communicate this till we're ready...
 		RenderingServer *rendering_server = RenderingServer::get_singleton();
 		ERR_FAIL_NULL(rendering_server);
@@ -393,7 +393,7 @@ private:
 		rendering_server->call_on_render_thread(callable_mp_static(&OpenXRAPI::_set_render_display_info).bind(p_predicted_display_time, p_should_render));
 	}
 
-	_FORCE_INLINE_ void set_render_play_space(XrSpace p_play_space) {
+	GD_FORCE_INLINE void set_render_play_space(XrSpace p_play_space) {
 		// If we're rendering on a separate thread, we may still be processing the last frame, don't communicate this till we're ready...
 		RenderingServer *rendering_server = RenderingServer::get_singleton();
 		ERR_FAIL_NULL(rendering_server);
@@ -401,7 +401,7 @@ private:
 		rendering_server->call_on_render_thread(callable_mp_static(&OpenXRAPI::_set_render_play_space).bind(uint64_t(p_play_space)));
 	}
 
-	_FORCE_INLINE_ void set_render_state_multiplier(double p_render_target_size_multiplier) {
+	GD_FORCE_INLINE void set_render_state_multiplier(double p_render_target_size_multiplier) {
 		// If we're rendering on a separate thread, we may still be processing the last frame, don't communicate this till we're ready...
 		RenderingServer *rendering_server = RenderingServer::get_singleton();
 		ERR_FAIL_NULL(rendering_server);
@@ -409,7 +409,7 @@ private:
 		rendering_server->call_on_render_thread(callable_mp_static(&OpenXRAPI::_set_render_state_multiplier).bind(p_render_target_size_multiplier));
 	}
 
-	_FORCE_INLINE_ void set_render_state_render_region(const Rect2i &p_render_region) {
+	GD_FORCE_INLINE void set_render_state_render_region(const Rect2i &p_render_region) {
 		RenderingServer *rendering_server = RenderingServer::get_singleton();
 		ERR_FAIL_NULL(rendering_server);
 
@@ -440,7 +440,7 @@ public:
 	bool interaction_profile_supports_io_path(const String &p_ip_path, const String &p_io_path);
 
 	static bool openxr_is_enabled(bool p_check_run_in_editor = true);
-	_FORCE_INLINE_ static OpenXRAPI *get_singleton() { return singleton; }
+	GD_FORCE_INLINE static OpenXRAPI *get_singleton() { return singleton; }
 
 	XrResult try_get_instance_proc_addr(const char *p_name, PFN_xrVoidFunction *p_addr);
 	XrResult get_instance_proc_addr(const char *p_name, PFN_xrVoidFunction *p_addr);
@@ -481,10 +481,10 @@ public:
 	bool initialize_session();
 	void finish();
 
-	_FORCE_INLINE_ XrSpace get_play_space() const { return play_space; }
-	_FORCE_INLINE_ XrTime get_predicted_display_time() { return frame_state.predictedDisplayTime; }
-	_FORCE_INLINE_ XrTime get_next_frame_time() { return frame_state.predictedDisplayTime + frame_state.predictedDisplayPeriod; }
-	_FORCE_INLINE_ bool can_render() {
+	GD_FORCE_INLINE XrSpace get_play_space() const { return play_space; }
+	GD_FORCE_INLINE XrTime get_predicted_display_time() { return frame_state.predictedDisplayTime; }
+	GD_FORCE_INLINE XrTime get_next_frame_time() { return frame_state.predictedDisplayTime + frame_state.predictedDisplayPeriod; }
+	GD_FORCE_INLINE bool can_render() {
 		return instance != XR_NULL_HANDLE && session != XR_NULL_HANDLE && running && frame_state.shouldRender;
 	}
 

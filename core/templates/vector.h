@@ -51,7 +51,7 @@ class Vector;
 template <typename T>
 class VectorWriteProxy {
 public:
-	_FORCE_INLINE_ T &operator[](typename CowData<T>::Size p_index) {
+	GD_FORCE_INLINE T &operator[](typename CowData<T>::Size p_index) {
 		CRASH_BAD_INDEX(p_index, ((Vector<T> *)(this))->_cowdata.size());
 
 		return ((Vector<T> *)(this))->_cowdata.ptrw()[p_index];
@@ -72,11 +72,11 @@ private:
 public:
 	// Must take a copy instead of a reference (see GH-31736).
 	bool push_back(T p_elem);
-	_FORCE_INLINE_ bool append(const T &p_elem) { return push_back(p_elem); } //alias
+	GD_FORCE_INLINE bool append(const T &p_elem) { return push_back(p_elem); } //alias
 	void fill(T p_elem);
 
 	void remove_at(Size p_index) { _cowdata.remove_at(p_index); }
-	_FORCE_INLINE_ bool erase(const T &p_val) {
+	GD_FORCE_INLINE bool erase(const T &p_val) {
 		Size idx = find(p_val);
 		if (idx >= 0) {
 			remove_at(idx);
@@ -87,22 +87,22 @@ public:
 
 	void reverse();
 
-	_FORCE_INLINE_ T *ptrw() { return _cowdata.ptrw(); }
-	_FORCE_INLINE_ const T *ptr() const { return _cowdata.ptr(); }
-	_FORCE_INLINE_ Size size() const { return _cowdata.size(); }
+	GD_FORCE_INLINE T *ptrw() { return _cowdata.ptrw(); }
+	GD_FORCE_INLINE const T *ptr() const { return _cowdata.ptr(); }
+	GD_FORCE_INLINE Size size() const { return _cowdata.size(); }
 
-	_FORCE_INLINE_ operator Span<T>() const { return _cowdata.span(); }
-	_FORCE_INLINE_ Span<T> span() const { return _cowdata.span(); }
+	GD_FORCE_INLINE operator Span<T>() const { return _cowdata.span(); }
+	GD_FORCE_INLINE Span<T> span() const { return _cowdata.span(); }
 
-	_FORCE_INLINE_ void clear() { resize(0); }
-	_FORCE_INLINE_ bool is_empty() const { return _cowdata.is_empty(); }
+	GD_FORCE_INLINE void clear() { resize(0); }
+	GD_FORCE_INLINE bool is_empty() const { return _cowdata.is_empty(); }
 
-	_FORCE_INLINE_ T get(Size p_index) { return _cowdata.get(p_index); }
-	_FORCE_INLINE_ const T &get(Size p_index) const { return _cowdata.get(p_index); }
-	_FORCE_INLINE_ void set(Size p_index, const T &p_elem) { _cowdata.set(p_index, p_elem); }
+	GD_FORCE_INLINE T get(Size p_index) { return _cowdata.get(p_index); }
+	GD_FORCE_INLINE const T &get(Size p_index) const { return _cowdata.get(p_index); }
+	GD_FORCE_INLINE void set(Size p_index, const T &p_elem) { _cowdata.set(p_index, p_elem); }
 	Error resize(Size p_size) { return _cowdata.resize(p_size); }
 	Error resize_zeroed(Size p_size) { return _cowdata.template resize<true>(p_size); }
-	_FORCE_INLINE_ const T &operator[](Size p_index) const { return _cowdata.get(p_index); }
+	GD_FORCE_INLINE const T &operator[](Size p_index) const { return _cowdata.get(p_index); }
 	// Must take a copy instead of a reference (see GH-31736).
 	Error insert(Size p_pos, T p_val) { return _cowdata.insert(p_pos, p_val); }
 	Size find(const T &p_val, Size p_from = 0) const {
@@ -128,7 +128,7 @@ public:
 	// Must take a copy instead of a reference (see GH-31736).
 	void append_array(Vector<T> p_other);
 
-	_FORCE_INLINE_ bool has(const T &p_val) const { return find(p_val) != -1; }
+	GD_FORCE_INLINE bool has(const T &p_val) const { return find(p_val) != -1; }
 
 	void sort() {
 		sort_custom<Comparator<T>>();
@@ -241,21 +241,21 @@ public:
 	}
 
 	struct Iterator {
-		_FORCE_INLINE_ T &operator*() const {
+		GD_FORCE_INLINE T &operator*() const {
 			return *elem_ptr;
 		}
-		_FORCE_INLINE_ T *operator->() const { return elem_ptr; }
-		_FORCE_INLINE_ Iterator &operator++() {
+		GD_FORCE_INLINE T *operator->() const { return elem_ptr; }
+		GD_FORCE_INLINE Iterator &operator++() {
 			elem_ptr++;
 			return *this;
 		}
-		_FORCE_INLINE_ Iterator &operator--() {
+		GD_FORCE_INLINE Iterator &operator--() {
 			elem_ptr--;
 			return *this;
 		}
 
-		_FORCE_INLINE_ bool operator==(const Iterator &b) const { return elem_ptr == b.elem_ptr; }
-		_FORCE_INLINE_ bool operator!=(const Iterator &b) const { return elem_ptr != b.elem_ptr; }
+		GD_FORCE_INLINE bool operator==(const Iterator &b) const { return elem_ptr == b.elem_ptr; }
+		GD_FORCE_INLINE bool operator!=(const Iterator &b) const { return elem_ptr != b.elem_ptr; }
 
 		Iterator(T *p_ptr) { elem_ptr = p_ptr; }
 		Iterator() {}
@@ -266,21 +266,21 @@ public:
 	};
 
 	struct ConstIterator {
-		_FORCE_INLINE_ const T &operator*() const {
+		GD_FORCE_INLINE const T &operator*() const {
 			return *elem_ptr;
 		}
-		_FORCE_INLINE_ const T *operator->() const { return elem_ptr; }
-		_FORCE_INLINE_ ConstIterator &operator++() {
+		GD_FORCE_INLINE const T *operator->() const { return elem_ptr; }
+		GD_FORCE_INLINE ConstIterator &operator++() {
 			elem_ptr++;
 			return *this;
 		}
-		_FORCE_INLINE_ ConstIterator &operator--() {
+		GD_FORCE_INLINE ConstIterator &operator--() {
 			elem_ptr--;
 			return *this;
 		}
 
-		_FORCE_INLINE_ bool operator==(const ConstIterator &b) const { return elem_ptr == b.elem_ptr; }
-		_FORCE_INLINE_ bool operator!=(const ConstIterator &b) const { return elem_ptr != b.elem_ptr; }
+		GD_FORCE_INLINE bool operator==(const ConstIterator &b) const { return elem_ptr == b.elem_ptr; }
+		GD_FORCE_INLINE bool operator!=(const ConstIterator &b) const { return elem_ptr != b.elem_ptr; }
 
 		ConstIterator(const T *p_ptr) { elem_ptr = p_ptr; }
 		ConstIterator() {}
@@ -290,27 +290,27 @@ public:
 		const T *elem_ptr = nullptr;
 	};
 
-	_FORCE_INLINE_ Iterator begin() {
+	GD_FORCE_INLINE Iterator begin() {
 		return Iterator(ptrw());
 	}
-	_FORCE_INLINE_ Iterator end() {
+	GD_FORCE_INLINE Iterator end() {
 		return Iterator(ptrw() + size());
 	}
 
-	_FORCE_INLINE_ ConstIterator begin() const {
+	GD_FORCE_INLINE ConstIterator begin() const {
 		return ConstIterator(ptr());
 	}
-	_FORCE_INLINE_ ConstIterator end() const {
+	GD_FORCE_INLINE ConstIterator end() const {
 		return ConstIterator(ptr() + size());
 	}
 
-	_FORCE_INLINE_ Vector() {}
-	_FORCE_INLINE_ Vector(std::initializer_list<T> p_init) :
+	GD_FORCE_INLINE Vector() {}
+	GD_FORCE_INLINE Vector(std::initializer_list<T> p_init) :
 			_cowdata(p_init) {}
-	_FORCE_INLINE_ Vector(const Vector &p_from) = default;
-	_FORCE_INLINE_ Vector(Vector &&p_from) = default;
+	GD_FORCE_INLINE Vector(const Vector &p_from) = default;
+	GD_FORCE_INLINE Vector(Vector &&p_from) = default;
 
-	_FORCE_INLINE_ ~Vector() {}
+	GD_FORCE_INLINE ~Vector() {}
 };
 
 template <typename T>

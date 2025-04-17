@@ -679,7 +679,7 @@ void TextServer::_bind_methods() {
 	BIND_ENUM_CONSTANT(FIXED_SIZE_SCALE_ENABLED);
 }
 
-_FORCE_INLINE_ int32_t ot_tag_from_string(const char *p_str, int p_len) {
+GD_FORCE_INLINE int32_t ot_tag_from_string(const char *p_str, int p_len) {
 	char tag[4];
 	uint32_t i;
 
@@ -706,7 +706,7 @@ int64_t TextServer::name_to_tag(const String &p_name) const {
 	return ot_tag_from_string(p_name.replace("custom_", "").ascii().get_data(), -1);
 }
 
-_FORCE_INLINE_ void ot_tag_to_string(int32_t p_tag, char *p_buf) {
+GD_FORCE_INLINE void ot_tag_to_string(int32_t p_tag, char *p_buf) {
 	p_buf[0] = (char)(uint8_t)(p_tag >> 24);
 	p_buf[1] = (char)(uint8_t)(p_tag >> 16);
 	p_buf[2] = (char)(uint8_t)(p_tag >> 8);
@@ -1422,7 +1422,7 @@ TextServer::Direction TextServer::shaped_text_get_dominant_direction_in_range(co
 	}
 }
 
-_FORCE_INLINE_ void _push_range(Vector<Vector2> &r_vector, real_t p_start, real_t p_end) {
+GD_FORCE_INLINE void _push_range(Vector<Vector2> &r_vector, real_t p_start, real_t p_end) {
 	if (!r_vector.is_empty() && Math::is_equal_approx(r_vector[r_vector.size() - 1].y, p_start, (real_t)UNIT_EPSILON)) {
 		r_vector.write[r_vector.size() - 1].y = p_end;
 	} else {

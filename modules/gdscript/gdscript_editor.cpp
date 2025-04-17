@@ -1651,7 +1651,7 @@ static GDScriptCompletionIdentifier _callable_type_from_method_info(const Method
 #define MAX_COMPLETION_RECURSION 100
 struct RecursionCheck {
 	int *counter;
-	_FORCE_INLINE_ bool check() {
+	GD_FORCE_INLINE bool check() {
 		return (*counter) > MAX_COMPLETION_RECURSION;
 	}
 	RecursionCheck(int *p_counter) :

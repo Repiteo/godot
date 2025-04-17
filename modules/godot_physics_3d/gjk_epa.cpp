@@ -146,19 +146,19 @@ struct	MinkowskiDiff {
 	}
 
 	// i wonder how this could be sped up... if it can
-	_FORCE_INLINE_ Vector3 Support0(const Vector3& d) const {
+	GD_FORCE_INLINE Vector3 Support0(const Vector3& d) const {
 		return transform_A.xform(get_support(m_shapes[0], transform_A.basis.xform_inv(d), margin_A));
 	}
 
-	_FORCE_INLINE_ Vector3 Support1(const Vector3& d) const {
+	GD_FORCE_INLINE Vector3 Support1(const Vector3& d) const {
 		return transform_B.xform(get_support(m_shapes[1], transform_B.basis.xform_inv(d), margin_B));
 	}
 
-	_FORCE_INLINE_ Vector3 Support (const Vector3& d) const {
+	GD_FORCE_INLINE Vector3 Support (const Vector3& d) const {
 		return (Support0(d) - Support1(-d));
 	}
 
-	_FORCE_INLINE_ Vector3 Support(const Vector3& d, U index) const {
+	GD_FORCE_INLINE Vector3 Support(const Vector3& d, U index) const {
 		if (index) {
 			return Support1(d);
 		} else {

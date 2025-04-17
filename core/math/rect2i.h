@@ -47,7 +47,7 @@ struct [[nodiscard]] Rect2i {
 
 	int get_area() const { return size.width * size.height; }
 
-	_FORCE_INLINE_ Vector2i get_center() const { return position + (size / 2); }
+	GD_FORCE_INLINE Vector2i get_center() const { return position + (size / 2); }
 
 	inline bool intersects(const Rect2i &p_rect) const {
 #ifdef MATH_CHECKS
@@ -82,7 +82,7 @@ struct [[nodiscard]] Rect2i {
 				((p_rect.position.y + p_rect.size.y) <= (position.y + size.y));
 	}
 
-	_FORCE_INLINE_ bool has_area() const {
+	GD_FORCE_INLINE bool has_area() const {
 		return size.x > 0 && size.y > 0;
 	}
 
@@ -178,7 +178,7 @@ struct [[nodiscard]] Rect2i {
 		return g;
 	}
 
-	_FORCE_INLINE_ Rect2i expand(const Vector2i &p_vector) const {
+	GD_FORCE_INLINE Rect2i expand(const Vector2i &p_vector) const {
 		Rect2i r = *this;
 		r.expand_to(p_vector);
 		return r;
@@ -211,15 +211,15 @@ struct [[nodiscard]] Rect2i {
 		size = end - begin;
 	}
 
-	_FORCE_INLINE_ Rect2i abs() const {
+	GD_FORCE_INLINE Rect2i abs() const {
 		return Rect2i(position + size.mini(0), size.abs());
 	}
 
-	_FORCE_INLINE_ void set_end(const Vector2i &p_end) {
+	GD_FORCE_INLINE void set_end(const Vector2i &p_end) {
 		size = p_end - position;
 	}
 
-	_FORCE_INLINE_ Vector2i get_end() const {
+	GD_FORCE_INLINE Vector2i get_end() const {
 		return position + size;
 	}
 

@@ -46,11 +46,11 @@ class RasterizerSceneGLES3;
 class RasterizerCanvasGLES3 : public RendererCanvasRender {
 	static RasterizerCanvasGLES3 *singleton;
 
-	_FORCE_INLINE_ void _update_transform_2d_to_mat2x4(const Transform2D &p_transform, float *p_mat2x4);
-	_FORCE_INLINE_ void _update_transform_2d_to_mat2x3(const Transform2D &p_transform, float *p_mat2x3);
+	GD_FORCE_INLINE void _update_transform_2d_to_mat2x4(const Transform2D &p_transform, float *p_mat2x4);
+	GD_FORCE_INLINE void _update_transform_2d_to_mat2x3(const Transform2D &p_transform, float *p_mat2x3);
 
-	_FORCE_INLINE_ void _update_transform_2d_to_mat4(const Transform2D &p_transform, float *p_mat4);
-	_FORCE_INLINE_ void _update_transform_to_mat4(const Transform3D &p_transform, float *p_mat4);
+	GD_FORCE_INLINE void _update_transform_2d_to_mat4(const Transform2D &p_transform, float *p_mat4);
+	GD_FORCE_INLINE void _update_transform_to_mat4(const Transform3D &p_transform, float *p_mat4);
 
 	enum {
 		INSTANCE_FLAGS_LIGHT_COUNT_SHIFT = 0, // 4 bits for light count.

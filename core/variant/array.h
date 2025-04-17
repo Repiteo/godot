@@ -48,22 +48,22 @@ class Array {
 
 public:
 	struct ConstIterator {
-		_FORCE_INLINE_ const Variant &operator*() const;
-		_FORCE_INLINE_ const Variant *operator->() const;
+		GD_FORCE_INLINE const Variant &operator*() const;
+		GD_FORCE_INLINE const Variant *operator->() const;
 
-		_FORCE_INLINE_ ConstIterator &operator++();
-		_FORCE_INLINE_ ConstIterator &operator--();
+		GD_FORCE_INLINE ConstIterator &operator++();
+		GD_FORCE_INLINE ConstIterator &operator--();
 
-		_FORCE_INLINE_ bool operator==(const ConstIterator &p_other) const { return element_ptr == p_other.element_ptr; }
-		_FORCE_INLINE_ bool operator!=(const ConstIterator &p_other) const { return element_ptr != p_other.element_ptr; }
+		GD_FORCE_INLINE bool operator==(const ConstIterator &p_other) const { return element_ptr == p_other.element_ptr; }
+		GD_FORCE_INLINE bool operator!=(const ConstIterator &p_other) const { return element_ptr != p_other.element_ptr; }
 
-		_FORCE_INLINE_ ConstIterator(const Variant *p_element_ptr) :
+		GD_FORCE_INLINE ConstIterator(const Variant *p_element_ptr) :
 				element_ptr(p_element_ptr) {}
-		_FORCE_INLINE_ ConstIterator() {}
-		_FORCE_INLINE_ ConstIterator(const ConstIterator &p_other) :
+		GD_FORCE_INLINE ConstIterator() {}
+		GD_FORCE_INLINE ConstIterator(const ConstIterator &p_other) :
 				element_ptr(p_other.element_ptr) {}
 
-		_FORCE_INLINE_ ConstIterator &operator=(const ConstIterator &p_other) {
+		GD_FORCE_INLINE ConstIterator &operator=(const ConstIterator &p_other) {
 			element_ptr = p_other.element_ptr;
 			return *this;
 		}
@@ -73,22 +73,22 @@ public:
 	};
 
 	struct Iterator {
-		_FORCE_INLINE_ Variant &operator*() const;
-		_FORCE_INLINE_ Variant *operator->() const;
+		GD_FORCE_INLINE Variant &operator*() const;
+		GD_FORCE_INLINE Variant *operator->() const;
 
-		_FORCE_INLINE_ Iterator &operator++();
-		_FORCE_INLINE_ Iterator &operator--();
+		GD_FORCE_INLINE Iterator &operator++();
+		GD_FORCE_INLINE Iterator &operator--();
 
-		_FORCE_INLINE_ bool operator==(const Iterator &p_other) const { return element_ptr == p_other.element_ptr; }
-		_FORCE_INLINE_ bool operator!=(const Iterator &p_other) const { return element_ptr != p_other.element_ptr; }
+		GD_FORCE_INLINE bool operator==(const Iterator &p_other) const { return element_ptr == p_other.element_ptr; }
+		GD_FORCE_INLINE bool operator!=(const Iterator &p_other) const { return element_ptr != p_other.element_ptr; }
 
-		_FORCE_INLINE_ Iterator(Variant *p_element_ptr, Variant *p_read_only = nullptr) :
+		GD_FORCE_INLINE Iterator(Variant *p_element_ptr, Variant *p_read_only = nullptr) :
 				element_ptr(p_element_ptr), read_only(p_read_only) {}
-		_FORCE_INLINE_ Iterator() {}
-		_FORCE_INLINE_ Iterator(const Iterator &p_other) :
+		GD_FORCE_INLINE Iterator() {}
+		GD_FORCE_INLINE Iterator(const Iterator &p_other) :
 				element_ptr(p_other.element_ptr), read_only(p_other.read_only) {}
 
-		_FORCE_INLINE_ Iterator &operator=(const Iterator &p_other) {
+		GD_FORCE_INLINE Iterator &operator=(const Iterator &p_other) {
 			element_ptr = p_other.element_ptr;
 			read_only = p_other.read_only;
 			return *this;
@@ -131,7 +131,7 @@ public:
 
 	void assign(const Array &p_array);
 	void push_back(const Variant &p_value);
-	_FORCE_INLINE_ void append(const Variant &p_value) { push_back(p_value); } //for python compatibility
+	GD_FORCE_INLINE void append(const Variant &p_value) { push_back(p_value); } //for python compatibility
 	void append_array(const Array &p_array);
 	Error resize(int p_new_size);
 

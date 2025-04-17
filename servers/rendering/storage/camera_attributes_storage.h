@@ -90,7 +90,7 @@ public:
 	float camera_attributes_get_dof_near_transition(RID p_camera_attributes);
 	float camera_attributes_get_dof_blur_amount(RID p_camera_attributes);
 
-	_FORCE_INLINE_ bool camera_attributes_uses_dof(RID p_camera_attributes) {
+	GD_FORCE_INLINE bool camera_attributes_uses_dof(RID p_camera_attributes) {
 		CameraAttributes *cam_attributes = camera_attributes_owner.get_or_null(p_camera_attributes);
 
 		return cam_attributes && (cam_attributes->dof_blur_near_enabled || cam_attributes->dof_blur_far_enabled) && cam_attributes->dof_blur_amount > 0.0;
@@ -106,21 +106,21 @@ public:
 	float camera_attributes_get_auto_exposure_scale(RID p_camera_attributes);
 	uint64_t camera_attributes_get_auto_exposure_version(RID p_camera_attributes);
 
-	_FORCE_INLINE_ bool camera_attributes_uses_auto_exposure(RID p_camera_attributes) {
+	GD_FORCE_INLINE bool camera_attributes_uses_auto_exposure(RID p_camera_attributes) {
 		CameraAttributes *cam_attributes = camera_attributes_owner.get_or_null(p_camera_attributes);
 
 		return cam_attributes && cam_attributes->use_auto_exposure;
 	}
 
-	_FORCE_INLINE_ RS::DOFBlurQuality camera_attributes_get_dof_blur_quality() {
+	GD_FORCE_INLINE RS::DOFBlurQuality camera_attributes_get_dof_blur_quality() {
 		return dof_blur_quality;
 	}
 
-	_FORCE_INLINE_ RS::DOFBokehShape camera_attributes_get_dof_blur_bokeh_shape() {
+	GD_FORCE_INLINE RS::DOFBokehShape camera_attributes_get_dof_blur_bokeh_shape() {
 		return dof_blur_bokeh_shape;
 	}
 
-	_FORCE_INLINE_ bool camera_attributes_get_dof_blur_use_jitter() {
+	GD_FORCE_INLINE bool camera_attributes_get_dof_blur_use_jitter() {
 		return dof_blur_use_jitter;
 	}
 };

@@ -436,7 +436,7 @@ public:
 	MDResourceCache &get_resource_cache() const { return *resource_cache; }
 	MetalDeviceProperties const &get_device_properties() const { return *device_properties; }
 
-	_FORCE_INLINE_ uint32_t get_metal_buffer_index_for_vertex_attribute_binding(uint32_t p_binding) {
+	GD_FORCE_INLINE uint32_t get_metal_buffer_index_for_vertex_attribute_binding(uint32_t p_binding) {
 		return (device_properties->limits.maxPerStageBufferCount - 1) - p_binding;
 	}
 

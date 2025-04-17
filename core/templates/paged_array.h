@@ -144,7 +144,7 @@ class PagedArray {
 	uint32_t page_size_mask = 0;
 	uint64_t count = 0;
 
-	_FORCE_INLINE_ uint32_t _get_pages_in_use() const {
+	GD_FORCE_INLINE uint32_t _get_pages_in_use() const {
 		if (count == 0) {
 			return 0;
 		} else {
@@ -164,14 +164,14 @@ class PagedArray {
 	}
 
 public:
-	_FORCE_INLINE_ const T &operator[](uint64_t p_index) const {
+	GD_FORCE_INLINE const T &operator[](uint64_t p_index) const {
 		CRASH_BAD_UNSIGNED_INDEX(p_index, count);
 		uint32_t page = p_index >> page_size_shift;
 		uint32_t offset = p_index & page_size_mask;
 
 		return page_data[page][offset];
 	}
-	_FORCE_INLINE_ T &operator[](uint64_t p_index) {
+	GD_FORCE_INLINE T &operator[](uint64_t p_index) {
 		CRASH_BAD_UNSIGNED_INDEX(p_index, count);
 		uint32_t page = p_index >> page_size_shift;
 		uint32_t offset = p_index & page_size_mask;
@@ -179,7 +179,7 @@ public:
 		return page_data[page][offset];
 	}
 
-	_FORCE_INLINE_ void push_back(const T &p_value) {
+	GD_FORCE_INLINE void push_back(const T &p_value) {
 		uint32_t remainder = count & page_size_mask;
 		if (unlikely(remainder == 0)) {
 			// at 0, so time to request a new page
@@ -210,7 +210,7 @@ public:
 		count++;
 	}
 
-	_FORCE_INLINE_ void pop_back() {
+	GD_FORCE_INLINE void pop_back() {
 		ERR_FAIL_COND(count == 0);
 
 		if constexpr (!std::is_trivially_destructible_v<T>) {
@@ -355,7 +355,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ uint64_t size() const {
+	GD_FORCE_INLINE uint64_t size() const {
 		return count;
 	}
 

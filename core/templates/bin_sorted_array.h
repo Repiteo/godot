@@ -39,9 +39,9 @@ class BinSortedArray {
 	LocalVector<uint64_t> bin_limits;
 
 	// Implement if elements need to keep track of their own index in the array.
-	_FORCE_INLINE_ virtual void _update_idx(T &r_element, uint64_t p_idx) {}
+	GD_FORCE_INLINE virtual void _update_idx(T &r_element, uint64_t p_idx) {}
 
-	_FORCE_INLINE_ void _swap(uint64_t p_a, uint64_t p_b) {
+	GD_FORCE_INLINE void _swap(uint64_t p_a, uint64_t p_b) {
 		SWAP(array[p_a], array[p_b]);
 		_update_idx(array[p_a], p_a);
 		_update_idx(array[p_b], p_b);
@@ -131,11 +131,11 @@ public:
 		array.set_page_pool(p_page_pool);
 	}
 
-	_FORCE_INLINE_ const T &operator[](uint64_t p_index) const {
+	GD_FORCE_INLINE const T &operator[](uint64_t p_index) const {
 		return array[p_index];
 	}
 
-	_FORCE_INLINE_ T &operator[](uint64_t p_index) {
+	GD_FORCE_INLINE T &operator[](uint64_t p_index) {
 		return array[p_index];
 	}
 

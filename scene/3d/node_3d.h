@@ -141,8 +141,8 @@ private:
 
 	NodePath visibility_parent_path;
 
-	_FORCE_INLINE_ uint32_t _read_dirty_mask() const { return is_group_processing() ? data.dirty.mt.get() : data.dirty.st; }
-	_FORCE_INLINE_ bool _test_dirty_bits(uint32_t p_bits) const { return is_group_processing() ? data.dirty.mt.bit_and(p_bits) : (data.dirty.st & p_bits); }
+	GD_FORCE_INLINE uint32_t _read_dirty_mask() const { return is_group_processing() ? data.dirty.mt.get() : data.dirty.st; }
+	GD_FORCE_INLINE bool _test_dirty_bits(uint32_t p_bits) const { return is_group_processing() ? data.dirty.mt.bit_and(p_bits) : (data.dirty.st & p_bits); }
 	void _replace_dirty_mask(uint32_t p_mask) const;
 	void _set_dirty_bits(uint32_t p_bits) const;
 	void _clear_dirty_bits(uint32_t p_bits) const;
@@ -158,10 +158,10 @@ private:
 	void _propagate_transform_changed_deferred();
 
 protected:
-	_FORCE_INLINE_ void set_ignore_transform_notification(bool p_ignore) { data.ignore_notification = p_ignore; }
+	GD_FORCE_INLINE void set_ignore_transform_notification(bool p_ignore) { data.ignore_notification = p_ignore; }
 
-	_FORCE_INLINE_ void _update_local_transform() const;
-	_FORCE_INLINE_ void _update_rotation_and_scale() const;
+	GD_FORCE_INLINE void _update_local_transform() const;
+	GD_FORCE_INLINE void _update_rotation_and_scale() const;
 
 	void _set_vi_visible(bool p_visible) { data.vi_visible = p_visible; }
 	bool _is_vi_visible() const { return data.vi_visible; }
@@ -254,7 +254,7 @@ public:
 	void set_disable_scale(bool p_enabled);
 	bool is_scale_disabled() const;
 
-	_FORCE_INLINE_ bool is_inside_world() const { return data.inside_world; }
+	GD_FORCE_INLINE bool is_inside_world() const { return data.inside_world; }
 
 	Transform3D get_relative_transform(const Node *p_parent) const;
 

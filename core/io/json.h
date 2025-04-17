@@ -92,18 +92,18 @@ public:
 	static String stringify(const Variant &p_var, const String &p_indent = "", bool p_sort_keys = true, bool p_full_precision = false);
 	static Variant parse_string(const String &p_json_string);
 
-	_FORCE_INLINE_ static Variant from_native(const Variant &p_variant, bool p_full_objects = false) {
+	GD_FORCE_INLINE static Variant from_native(const Variant &p_variant, bool p_full_objects = false) {
 		return _from_native(p_variant, p_full_objects, 0);
 	}
-	_FORCE_INLINE_ static Variant to_native(const Variant &p_json, bool p_allow_objects = false) {
+	GD_FORCE_INLINE static Variant to_native(const Variant &p_json, bool p_allow_objects = false) {
 		return _to_native(p_json, p_allow_objects, 0);
 	}
 
 	void set_data(const Variant &p_data);
-	_FORCE_INLINE_ Variant get_data() const { return data; }
+	GD_FORCE_INLINE Variant get_data() const { return data; }
 
-	_FORCE_INLINE_ int get_error_line() const { return err_line; }
-	_FORCE_INLINE_ String get_error_message() const { return err_str; }
+	GD_FORCE_INLINE int get_error_line() const { return err_line; }
+	GD_FORCE_INLINE String get_error_message() const { return err_str; }
 };
 
 class ResourceFormatLoaderJSON : public ResourceFormatLoader {

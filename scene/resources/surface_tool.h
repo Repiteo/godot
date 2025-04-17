@@ -113,7 +113,7 @@ public:
 
 private:
 	struct VertexHasher {
-		static _FORCE_INLINE_ uint32_t hash(const Vertex &p_vtx);
+		static GD_FORCE_INLINE uint32_t hash(const Vertex &p_vtx);
 	};
 
 	struct SmoothGroupVertex {
@@ -128,12 +128,12 @@ private:
 	};
 
 	struct SmoothGroupVertexHasher {
-		static _FORCE_INLINE_ uint32_t hash(const SmoothGroupVertex &p_vtx);
+		static GD_FORCE_INLINE uint32_t hash(const SmoothGroupVertex &p_vtx);
 	};
 
 	struct TriangleHasher {
-		static _FORCE_INLINE_ uint32_t hash(const int *p_triangle);
-		static _FORCE_INLINE_ bool compare(const int *p_lhs, const int *p_rhs);
+		static GD_FORCE_INLINE uint32_t hash(const int *p_triangle);
+		static GD_FORCE_INLINE bool compare(const int *p_lhs, const int *p_rhs);
 	};
 
 	struct WeightSort {

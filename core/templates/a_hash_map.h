@@ -109,11 +109,11 @@ private:
 		return hash;
 	}
 
-	static _FORCE_INLINE_ uint32_t _get_resize_count(uint32_t p_capacity) {
+	static GD_FORCE_INLINE uint32_t _get_resize_count(uint32_t p_capacity) {
 		return p_capacity ^ (p_capacity + 1) >> 2; // = get_capacity() * 0.75 - 1; Works only if p_capacity = 2^n - 1.
 	}
 
-	static _FORCE_INLINE_ uint32_t _get_probe_length(uint32_t p_pos, uint32_t p_hash, uint32_t p_local_capacity) {
+	static GD_FORCE_INLINE uint32_t _get_probe_length(uint32_t p_pos, uint32_t p_hash, uint32_t p_local_capacity) {
 		const uint32_t original_pos = p_hash & p_local_capacity;
 		return (p_pos - original_pos + p_local_capacity + 1) & p_local_capacity;
 	}
@@ -281,10 +281,10 @@ private:
 public:
 	/* Standard Godot Container API */
 
-	_FORCE_INLINE_ uint32_t get_capacity() const { return capacity + 1; }
-	_FORCE_INLINE_ uint32_t size() const { return num_elements; }
+	GD_FORCE_INLINE uint32_t get_capacity() const { return capacity + 1; }
+	GD_FORCE_INLINE uint32_t size() const { return num_elements; }
 
-	_FORCE_INLINE_ bool is_empty() const {
+	GD_FORCE_INLINE bool is_empty() const {
 		return num_elements == 0;
 	}
 
@@ -426,18 +426,18 @@ public:
 	/** Iterator API **/
 
 	struct ConstIterator {
-		_FORCE_INLINE_ const MapKeyValue &operator*() const {
+		GD_FORCE_INLINE const MapKeyValue &operator*() const {
 			return *pair;
 		}
-		_FORCE_INLINE_ const MapKeyValue *operator->() const {
+		GD_FORCE_INLINE const MapKeyValue *operator->() const {
 			return pair;
 		}
-		_FORCE_INLINE_ ConstIterator &operator++() {
+		GD_FORCE_INLINE ConstIterator &operator++() {
 			pair++;
 			return *this;
 		}
 
-		_FORCE_INLINE_ ConstIterator &operator--() {
+		GD_FORCE_INLINE ConstIterator &operator--() {
 			pair--;
 			if (pair < begin) {
 				pair = end;
@@ -445,25 +445,25 @@ public:
 			return *this;
 		}
 
-		_FORCE_INLINE_ bool operator==(const ConstIterator &b) const { return pair == b.pair; }
-		_FORCE_INLINE_ bool operator!=(const ConstIterator &b) const { return pair != b.pair; }
+		GD_FORCE_INLINE bool operator==(const ConstIterator &b) const { return pair == b.pair; }
+		GD_FORCE_INLINE bool operator!=(const ConstIterator &b) const { return pair != b.pair; }
 
-		_FORCE_INLINE_ explicit operator bool() const {
+		GD_FORCE_INLINE explicit operator bool() const {
 			return pair != end;
 		}
 
-		_FORCE_INLINE_ ConstIterator(MapKeyValue *p_key, MapKeyValue *p_begin, MapKeyValue *p_end) {
+		GD_FORCE_INLINE ConstIterator(MapKeyValue *p_key, MapKeyValue *p_begin, MapKeyValue *p_end) {
 			pair = p_key;
 			begin = p_begin;
 			end = p_end;
 		}
-		_FORCE_INLINE_ ConstIterator() {}
-		_FORCE_INLINE_ ConstIterator(const ConstIterator &p_it) {
+		GD_FORCE_INLINE ConstIterator() {}
+		GD_FORCE_INLINE ConstIterator(const ConstIterator &p_it) {
 			pair = p_it.pair;
 			begin = p_it.begin;
 			end = p_it.end;
 		}
-		_FORCE_INLINE_ void operator=(const ConstIterator &p_it) {
+		GD_FORCE_INLINE void operator=(const ConstIterator &p_it) {
 			pair = p_it.pair;
 			begin = p_it.begin;
 			end = p_it.end;
@@ -476,17 +476,17 @@ public:
 	};
 
 	struct Iterator {
-		_FORCE_INLINE_ MapKeyValue &operator*() const {
+		GD_FORCE_INLINE MapKeyValue &operator*() const {
 			return *pair;
 		}
-		_FORCE_INLINE_ MapKeyValue *operator->() const {
+		GD_FORCE_INLINE MapKeyValue *operator->() const {
 			return pair;
 		}
-		_FORCE_INLINE_ Iterator &operator++() {
+		GD_FORCE_INLINE Iterator &operator++() {
 			pair++;
 			return *this;
 		}
-		_FORCE_INLINE_ Iterator &operator--() {
+		GD_FORCE_INLINE Iterator &operator--() {
 			pair--;
 			if (pair < begin) {
 				pair = end;
@@ -494,25 +494,25 @@ public:
 			return *this;
 		}
 
-		_FORCE_INLINE_ bool operator==(const Iterator &b) const { return pair == b.pair; }
-		_FORCE_INLINE_ bool operator!=(const Iterator &b) const { return pair != b.pair; }
+		GD_FORCE_INLINE bool operator==(const Iterator &b) const { return pair == b.pair; }
+		GD_FORCE_INLINE bool operator!=(const Iterator &b) const { return pair != b.pair; }
 
-		_FORCE_INLINE_ explicit operator bool() const {
+		GD_FORCE_INLINE explicit operator bool() const {
 			return pair != end;
 		}
 
-		_FORCE_INLINE_ Iterator(MapKeyValue *p_key, MapKeyValue *p_begin, MapKeyValue *p_end) {
+		GD_FORCE_INLINE Iterator(MapKeyValue *p_key, MapKeyValue *p_begin, MapKeyValue *p_end) {
 			pair = p_key;
 			begin = p_begin;
 			end = p_end;
 		}
-		_FORCE_INLINE_ Iterator() {}
-		_FORCE_INLINE_ Iterator(const Iterator &p_it) {
+		GD_FORCE_INLINE Iterator() {}
+		GD_FORCE_INLINE Iterator(const Iterator &p_it) {
 			pair = p_it.pair;
 			begin = p_it.begin;
 			end = p_it.end;
 		}
-		_FORCE_INLINE_ void operator=(const Iterator &p_it) {
+		GD_FORCE_INLINE void operator=(const Iterator &p_it) {
 			pair = p_it.pair;
 			begin = p_it.begin;
 			end = p_it.end;
@@ -528,13 +528,13 @@ public:
 		MapKeyValue *end = nullptr;
 	};
 
-	_FORCE_INLINE_ Iterator begin() {
+	GD_FORCE_INLINE Iterator begin() {
 		return Iterator(elements, elements, elements + num_elements);
 	}
-	_FORCE_INLINE_ Iterator end() {
+	GD_FORCE_INLINE Iterator end() {
 		return Iterator(elements + num_elements, elements, elements + num_elements);
 	}
-	_FORCE_INLINE_ Iterator last() {
+	GD_FORCE_INLINE Iterator last() {
 		if (unlikely(num_elements == 0)) {
 			return Iterator(nullptr, nullptr, nullptr);
 		}
@@ -557,13 +557,13 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ ConstIterator begin() const {
+	GD_FORCE_INLINE ConstIterator begin() const {
 		return ConstIterator(elements, elements, elements + num_elements);
 	}
-	_FORCE_INLINE_ ConstIterator end() const {
+	GD_FORCE_INLINE ConstIterator end() const {
 		return ConstIterator(elements + num_elements, elements, elements + num_elements);
 	}
-	_FORCE_INLINE_ ConstIterator last() const {
+	GD_FORCE_INLINE ConstIterator last() const {
 		if (unlikely(num_elements == 0)) {
 			return ConstIterator(nullptr, nullptr, nullptr);
 		}

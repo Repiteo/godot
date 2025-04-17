@@ -1872,7 +1872,7 @@ int RichTextLabel::_find_first_line(int p_from, int p_to, int p_vofs) const {
 	return MIN(l, (int)main->lines.size() - 1);
 }
 
-_FORCE_INLINE_ float RichTextLabel::_calculate_line_vertical_offset(const RichTextLabel::Line &line) const {
+GD_FORCE_INLINE float RichTextLabel::_calculate_line_vertical_offset(const RichTextLabel::Line &line) const {
 	return line.get_height(theme_cache.line_separation);
 }
 
@@ -3562,7 +3562,7 @@ int RichTextLabel::get_progress_bar_delay() const {
 	return progress_delay;
 }
 
-_FORCE_INLINE_ float RichTextLabel::_update_scroll_exceeds(float p_total_height, float p_ctrl_height, float p_width, int p_idx, float p_old_scroll, float p_text_rect_height) {
+GD_FORCE_INLINE float RichTextLabel::_update_scroll_exceeds(float p_total_height, float p_ctrl_height, float p_width, int p_idx, float p_old_scroll, float p_text_rect_height) {
 	updating_scroll = true;
 
 	float total_height = p_total_height;

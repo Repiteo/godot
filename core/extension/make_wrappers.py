@@ -1,7 +1,7 @@
 proto_mod = """
 #define MODBIND$VER($RETTYPE m_name$ARG) \\
 virtual $RETVAL _##m_name($FUNCARGS) $CONST; \\
-_FORCE_INLINE_ virtual $RETVAL m_name($FUNCARGS) $CONST override { \\
+GD_FORCE_INLINE virtual $RETVAL m_name($FUNCARGS) $CONST override { \\
     $RETX _##m_name($CALLARGS);\\
 }
 """

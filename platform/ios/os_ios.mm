@@ -231,7 +231,7 @@ void OS_IOS::finalize() {
 
 // MARK: Dynamic Libraries
 
-_FORCE_INLINE_ String OS_IOS::get_framework_executable(const String &p_path) {
+GD_FORCE_INLINE String OS_IOS::get_framework_executable(const String &p_path) {
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 
 	// Read framework bundle to get executable name.

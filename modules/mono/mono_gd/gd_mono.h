@@ -109,7 +109,7 @@ public:
 #endif // TOOLS_ENABLED
 #endif // DEBUG_METHODS_ENABLED
 
-	_FORCE_INLINE_ static String get_expected_api_build_config() {
+	GD_FORCE_INLINE static String get_expected_api_build_config() {
 #ifdef TOOLS_ENABLED
 		return "Debug";
 #else
@@ -125,20 +125,20 @@ public:
 		return singleton;
 	}
 
-	_FORCE_INLINE_ bool is_initialized() const {
+	GD_FORCE_INLINE bool is_initialized() const {
 		return initialized;
 	}
-	_FORCE_INLINE_ bool is_runtime_initialized() const {
+	GD_FORCE_INLINE bool is_runtime_initialized() const {
 		return runtime_initialized;
 	}
-	_FORCE_INLINE_ bool is_finalizing_scripts_domain() {
+	GD_FORCE_INLINE bool is_finalizing_scripts_domain() {
 		return finalizing_scripts_domain;
 	}
 
-	_FORCE_INLINE_ const String &get_project_assembly_path() const {
+	GD_FORCE_INLINE const String &get_project_assembly_path() const {
 		return project_assembly_path;
 	}
-	_FORCE_INLINE_ uint64_t get_project_assembly_modified_time() const {
+	GD_FORCE_INLINE uint64_t get_project_assembly_modified_time() const {
 		return project_assembly_modified_time;
 	}
 

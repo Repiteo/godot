@@ -55,12 +55,12 @@ public:
 		const static unsigned int INVALID_GEOMETRY_ID = ((unsigned int)-1); // from rtcore_common.h
 
 		/*! Default construction does nothing. */
-		_FORCE_INLINE_ Ray() :
+		GD_FORCE_INLINE Ray() :
 				geomID(INVALID_GEOMETRY_ID) {}
 
 		/*! Constructs a ray from origin, direction, and ray segment. Near
 		 *  has to be smaller than far. */
-		_FORCE_INLINE_ Ray(const Vector3 &p_org,
+		GD_FORCE_INLINE Ray(const Vector3 &p_org,
 				const Vector3 &p_dir,
 				float p_tnear = 0.0f,
 				float p_tfar = Math::INF) :
@@ -77,7 +77,7 @@ public:
 				instID(INVALID_GEOMETRY_ID) {}
 
 		/*! Tests if we hit something. */
-		_FORCE_INLINE_ explicit operator bool() const {
+		GD_FORCE_INLINE explicit operator bool() const {
 			return geomID != INVALID_GEOMETRY_ID;
 		}
 

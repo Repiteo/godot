@@ -94,7 +94,7 @@ enum ShaderStageUsage : uint32_t {
 	Compute = RDD::SHADER_STAGE_COMPUTE_BIT,
 };
 
-_FORCE_INLINE_ ShaderStageUsage &operator|=(ShaderStageUsage &p_a, int p_b) {
+GD_FORCE_INLINE ShaderStageUsage &operator|=(ShaderStageUsage &p_a, int p_b) {
 	p_a = ShaderStageUsage(uint32_t(p_a) | uint32_t(p_b));
 	return p_a;
 }
@@ -154,19 +154,19 @@ struct ClearAttKey {
 	uint16_t sample_count = 0;
 	uint16_t pixel_formats[ATTACHMENT_COUNT] = { 0 };
 
-	_FORCE_INLINE_ void set_color_format(uint32_t p_idx, MTLPixelFormat p_fmt) { pixel_formats[p_idx] = p_fmt; }
-	_FORCE_INLINE_ void set_depth_format(MTLPixelFormat p_fmt) { pixel_formats[DEPTH_INDEX] = p_fmt; }
-	_FORCE_INLINE_ void set_stencil_format(MTLPixelFormat p_fmt) { pixel_formats[STENCIL_INDEX] = p_fmt; }
-	_FORCE_INLINE_ MTLPixelFormat depth_format() const { return (MTLPixelFormat)pixel_formats[DEPTH_INDEX]; }
-	_FORCE_INLINE_ MTLPixelFormat stencil_format() const { return (MTLPixelFormat)pixel_formats[STENCIL_INDEX]; }
-	_FORCE_INLINE_ void enable_layered_rendering() { flags::set(flags, CLEAR_FLAGS_LAYERED); }
+	GD_FORCE_INLINE void set_color_format(uint32_t p_idx, MTLPixelFormat p_fmt) { pixel_formats[p_idx] = p_fmt; }
+	GD_FORCE_INLINE void set_depth_format(MTLPixelFormat p_fmt) { pixel_formats[DEPTH_INDEX] = p_fmt; }
+	GD_FORCE_INLINE void set_stencil_format(MTLPixelFormat p_fmt) { pixel_formats[STENCIL_INDEX] = p_fmt; }
+	GD_FORCE_INLINE MTLPixelFormat depth_format() const { return (MTLPixelFormat)pixel_formats[DEPTH_INDEX]; }
+	GD_FORCE_INLINE MTLPixelFormat stencil_format() const { return (MTLPixelFormat)pixel_formats[STENCIL_INDEX]; }
+	GD_FORCE_INLINE void enable_layered_rendering() { flags::set(flags, CLEAR_FLAGS_LAYERED); }
 
-	_FORCE_INLINE_ bool is_enabled(uint32_t p_idx) const { return pixel_formats[p_idx] != 0; }
-	_FORCE_INLINE_ bool is_depth_enabled() const { return pixel_formats[DEPTH_INDEX] != 0; }
-	_FORCE_INLINE_ bool is_stencil_enabled() const { return pixel_formats[STENCIL_INDEX] != 0; }
-	_FORCE_INLINE_ bool is_layered_rendering_enabled() const { return flags::any(flags, CLEAR_FLAGS_LAYERED); }
+	GD_FORCE_INLINE bool is_enabled(uint32_t p_idx) const { return pixel_formats[p_idx] != 0; }
+	GD_FORCE_INLINE bool is_depth_enabled() const { return pixel_formats[DEPTH_INDEX] != 0; }
+	GD_FORCE_INLINE bool is_stencil_enabled() const { return pixel_formats[STENCIL_INDEX] != 0; }
+	GD_FORCE_INLINE bool is_layered_rendering_enabled() const { return flags::any(flags, CLEAR_FLAGS_LAYERED); }
 
-	_FORCE_INLINE_ bool operator==(const ClearAttKey &p_rhs) const {
+	GD_FORCE_INLINE bool operator==(const ClearAttKey &p_rhs) const {
 		return memcmp(this, &p_rhs, sizeof(ClearAttKey)) == 0;
 	}
 
@@ -225,12 +225,12 @@ enum class MDAttachmentType : uint8_t {
 	Stencil = 1 << 2,
 };
 
-_FORCE_INLINE_ MDAttachmentType &operator|=(MDAttachmentType &p_a, MDAttachmentType p_b) {
+GD_FORCE_INLINE MDAttachmentType &operator|=(MDAttachmentType &p_a, MDAttachmentType p_b) {
 	flags::set(p_a, p_b);
 	return p_a;
 }
 
-_FORCE_INLINE_ bool operator&(MDAttachmentType p_a, MDAttachmentType p_b) {
+GD_FORCE_INLINE bool operator&(MDAttachmentType p_a, MDAttachmentType p_b) {
 	return uint8_t(p_a) & uint8_t(p_b);
 }
 
@@ -265,7 +265,7 @@ public:
 	 * @param p_subpass
 	 * @return
 	 */
-	_FORCE_INLINE_ bool isFirstUseOf(MDSubpass const &p_subpass) const {
+	GD_FORCE_INLINE bool isFirstUseOf(MDSubpass const &p_subpass) const {
 		return p_subpass.subpass_index == firstUseSubpassIndex;
 	}
 
@@ -274,7 +274,7 @@ public:
 	 * @param p_subpass
 	 * @return
 	 */
-	_FORCE_INLINE_ bool isLastUseOf(MDSubpass const &p_subpass) const {
+	GD_FORCE_INLINE bool isLastUseOf(MDSubpass const &p_subpass) const {
 		return p_subpass.subpass_index == lastUseSubpassIndex;
 	}
 
@@ -371,36 +371,36 @@ public:
 		// Bit mask of the uniform sets that are dirty, to prevent redundant binding.
 		uint64_t uniform_set_mask = 0;
 
-		_FORCE_INLINE_ void reset();
+		GD_FORCE_INLINE void reset();
 		void end_encoding();
 
-		_ALWAYS_INLINE_ const MDSubpass &get_subpass() const {
+		GD_ALWAYS_INLINE const MDSubpass &get_subpass() const {
 			DEV_ASSERT(pass != nullptr);
 			return pass->subpasses[current_subpass];
 		}
 
-		_FORCE_INLINE_ void mark_viewport_dirty() {
+		GD_FORCE_INLINE void mark_viewport_dirty() {
 			if (viewports.is_empty()) {
 				return;
 			}
 			dirty.set_flag(DirtyFlag::DIRTY_VIEWPORT);
 		}
 
-		_FORCE_INLINE_ void mark_scissors_dirty() {
+		GD_FORCE_INLINE void mark_scissors_dirty() {
 			if (scissors.is_empty()) {
 				return;
 			}
 			dirty.set_flag(DirtyFlag::DIRTY_SCISSOR);
 		}
 
-		_FORCE_INLINE_ void mark_vertex_dirty() {
+		GD_FORCE_INLINE void mark_vertex_dirty() {
 			if (vertex_buffers.is_empty()) {
 				return;
 			}
 			dirty.set_flag(DirtyFlag::DIRTY_VERTEX);
 		}
 
-		_FORCE_INLINE_ void mark_uniforms_dirty(std::initializer_list<uint32_t> l) {
+		GD_FORCE_INLINE void mark_uniforms_dirty(std::initializer_list<uint32_t> l) {
 			if (uniform_sets.is_empty()) {
 				return;
 			}
@@ -412,7 +412,7 @@ public:
 			dirty.set_flag(DirtyFlag::DIRTY_UNIFORMS);
 		}
 
-		_FORCE_INLINE_ void mark_uniforms_dirty(void) {
+		GD_FORCE_INLINE void mark_uniforms_dirty(void) {
 			if (uniform_sets.is_empty()) {
 				return;
 			}
@@ -424,7 +424,7 @@ public:
 			dirty.set_flag(DirtyFlag::DIRTY_UNIFORMS);
 		}
 
-		_FORCE_INLINE_ void mark_blend_dirty() {
+		GD_FORCE_INLINE void mark_blend_dirty() {
 			if (!blend_constants.has_value()) {
 				return;
 			}
@@ -466,7 +466,7 @@ public:
 		MDComputePipeline *pipeline = nullptr;
 		id<MTLComputeCommandEncoder> encoder = nil;
 		ResourceUsageMap resource_usage;
-		_FORCE_INLINE_ void reset() {
+		GD_FORCE_INLINE void reset() {
 			pipeline = nil;
 			encoder = nil;
 			// Keep the keys, as they are likely to be used again.
@@ -481,12 +481,12 @@ public:
 	// State specific to a blit pass.
 	struct {
 		id<MTLBlitCommandEncoder> encoder = nil;
-		_FORCE_INLINE_ void reset() {
+		GD_FORCE_INLINE void reset() {
 			encoder = nil;
 		}
 	} blit;
 
-	_FORCE_INLINE_ id<MTLCommandBuffer> get_command_buffer() const {
+	GD_FORCE_INLINE id<MTLCommandBuffer> get_command_buffer() const {
 		return commandBuffer;
 	}
 
@@ -660,7 +660,7 @@ struct SHA256Digest {
 		CC_SHA256(p_data, (CC_LONG)p_length, data);
 	}
 
-	_FORCE_INLINE_ uint32_t short_sha() const {
+	GD_FORCE_INLINE uint32_t short_sha() const {
 		return __builtin_bswap32(*(uint32_t *)&data[0]);
 	}
 };
@@ -753,16 +753,16 @@ public:
 			MDLibrary *p_vert, MDLibrary *p_frag);
 };
 
-_FORCE_INLINE_ StageResourceUsage &operator|=(StageResourceUsage &p_a, uint32_t p_b) {
+GD_FORCE_INLINE StageResourceUsage &operator|=(StageResourceUsage &p_a, uint32_t p_b) {
 	p_a = StageResourceUsage(uint32_t(p_a) | p_b);
 	return p_a;
 }
 
-_FORCE_INLINE_ StageResourceUsage stage_resource_usage(RDC::ShaderStage p_stage, MTLResourceUsage p_usage) {
+GD_FORCE_INLINE StageResourceUsage stage_resource_usage(RDC::ShaderStage p_stage, MTLResourceUsage p_usage) {
 	return StageResourceUsage(p_usage << (p_stage * 2));
 }
 
-_FORCE_INLINE_ MTLResourceUsage resource_usage_for_stage(StageResourceUsage p_usage, RDC::ShaderStage p_stage) {
+GD_FORCE_INLINE MTLResourceUsage resource_usage_for_stage(StageResourceUsage p_usage, RDC::ShaderStage p_stage) {
 	return MTLResourceUsage((p_usage >> (p_stage * 2)) & 0b11);
 }
 
@@ -835,7 +835,7 @@ public:
 			float depth_bias = 0.0;
 			float slope_scale = 0.0;
 			float clamp = 0.0;
-			_FORCE_INLINE_ void apply(id<MTLRenderCommandEncoder> __unsafe_unretained p_enc) const {
+			GD_FORCE_INLINE void apply(id<MTLRenderCommandEncoder> __unsafe_unretained p_enc) const {
 				if (!enabled) {
 					return;
 				}
@@ -847,7 +847,7 @@ public:
 			bool enabled = false;
 			uint32_t front_reference = 0;
 			uint32_t back_reference = 0;
-			_FORCE_INLINE_ void apply(id<MTLRenderCommandEncoder> __unsafe_unretained p_enc) const {
+			GD_FORCE_INLINE void apply(id<MTLRenderCommandEncoder> __unsafe_unretained p_enc) const {
 				if (!enabled) {
 					return;
 				}
@@ -862,14 +862,14 @@ public:
 			float b = 0.0;
 			float a = 0.0;
 
-			_FORCE_INLINE_ void apply(id<MTLRenderCommandEncoder> __unsafe_unretained p_enc) const {
+			GD_FORCE_INLINE void apply(id<MTLRenderCommandEncoder> __unsafe_unretained p_enc) const {
 				//if (!enabled)
 				//	return;
 				[p_enc setBlendColorRed:r green:g blue:b alpha:a];
 			}
 		} blend;
 
-		_FORCE_INLINE_ void apply(id<MTLRenderCommandEncoder> __unsafe_unretained p_enc) const {
+		GD_FORCE_INLINE void apply(id<MTLRenderCommandEncoder> __unsafe_unretained p_enc) const {
 			[p_enc setCullMode:cull_mode];
 			[p_enc setTriangleFillMode:fill_mode];
 			[p_enc setDepthClipMode:clip_mode];
@@ -912,27 +912,27 @@ public:
 	MDFrameBuffer() {}
 
 	/// Returns the texture at the given index.
-	_ALWAYS_INLINE_ MTL::Texture get_texture(uint32_t p_idx) const {
+	GD_ALWAYS_INLINE MTL::Texture get_texture(uint32_t p_idx) const {
 		return textures[p_idx];
 	}
 
 	/// Returns true if the texture at the given index is not nil.
-	_ALWAYS_INLINE_ bool has_texture(uint32_t p_idx) const {
+	GD_ALWAYS_INLINE bool has_texture(uint32_t p_idx) const {
 		return textures[p_idx] != nil;
 	}
 
 	/// Set the texture at the given index.
-	_ALWAYS_INLINE_ void set_texture(uint32_t p_idx, MTL::Texture p_texture) {
+	GD_ALWAYS_INLINE void set_texture(uint32_t p_idx, MTL::Texture p_texture) {
 		textures.write[p_idx] = p_texture;
 	}
 
 	/// Unset or nil the texture at the given index.
-	_ALWAYS_INLINE_ void unset_texture(uint32_t p_idx) {
+	GD_ALWAYS_INLINE void unset_texture(uint32_t p_idx) {
 		textures.write[p_idx] = nil;
 	}
 
 	/// Resizes buffers to the specified size.
-	_ALWAYS_INLINE_ void set_texture_count(uint32_t p_size) {
+	GD_ALWAYS_INLINE void set_texture_count(uint32_t p_size) {
 		textures.resize(p_size);
 	}
 
@@ -945,14 +945,13 @@ namespace rid {
 
 // Converts an Objective-C object to a pointer, and incrementing the
 // reference count.
-_FORCE_INLINE_
-void *owned(id p_id) {
+GD_FORCE_INLINE void *owned(id p_id) {
 	return (__bridge_retained void *)p_id;
 }
 
-#define MAKE_ID(FROM, TO)                \
-	_FORCE_INLINE_ TO make(FROM p_obj) { \
-		return TO(owned(p_obj));         \
+#define MAKE_ID(FROM, TO)                 \
+	GD_FORCE_INLINE TO make(FROM p_obj) { \
+		return TO(owned(p_obj));          \
 	}
 
 MAKE_ID(id<MTLTexture>, RDD::TextureID)
@@ -962,14 +961,12 @@ MAKE_ID(MTLVertexDescriptor *, RDD::VertexFormatID)
 MAKE_ID(id<MTLCommandQueue>, RDD::CommandPoolID)
 
 // Converts a pointer to an Objective-C object without changing the reference count.
-_FORCE_INLINE_
-auto get(RDD::ID p_id) {
+GD_FORCE_INLINE auto get(RDD::ID p_id) {
 	return (p_id.id) ? (__bridge ::id)(void *)p_id.id : nil;
 }
 
 // Converts a pointer to an Objective-C object, and decrements the reference count.
-_FORCE_INLINE_
-auto release(RDD::ID p_id) {
+GD_FORCE_INLINE auto release(RDD::ID p_id) {
 	return (__bridge_transfer ::id)(void *)p_id.id;
 }
 

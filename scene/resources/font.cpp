@@ -574,7 +574,7 @@ Font::~Font() {
 /*  FontFile                                                             */
 /*************************************************************************/
 
-_FORCE_INLINE_ void FontFile::_clear_cache() {
+GD_FORCE_INLINE void FontFile::_clear_cache() {
 	for (int i = 0; i < cache.size(); i++) {
 		if (cache[i].is_valid()) {
 			TS->free_rid(cache[i]);
@@ -583,7 +583,7 @@ _FORCE_INLINE_ void FontFile::_clear_cache() {
 	}
 }
 
-_FORCE_INLINE_ void FontFile::_ensure_rid(int p_cache_index, int p_make_linked_from) const {
+GD_FORCE_INLINE void FontFile::_ensure_rid(int p_cache_index, int p_make_linked_from) const {
 	if (unlikely(p_cache_index >= cache.size())) {
 		cache.resize(p_cache_index + 1);
 	}

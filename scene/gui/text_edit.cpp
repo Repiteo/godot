@@ -211,12 +211,12 @@ float TextEdit::Text::get_indent_offset(int p_line, bool p_rtl) const {
 	return text_line.indent_ofs;
 }
 
-_FORCE_INLINE_ String TextEdit::Text::operator[](int p_line) const {
+GD_FORCE_INLINE String TextEdit::Text::operator[](int p_line) const {
 	ERR_FAIL_INDEX_V(p_line, text.size(), "");
 	return text[p_line].data;
 }
 
-_FORCE_INLINE_ const String &TextEdit::Text::get_text_with_ime(int p_line) const {
+GD_FORCE_INLINE const String &TextEdit::Text::get_text_with_ime(int p_line) const {
 	if (!text[p_line].ime_data.is_empty()) {
 		return text[p_line].ime_data;
 	} else {
@@ -5287,7 +5287,7 @@ void TextEdit::add_caret_at_carets(bool p_below) {
 }
 
 struct _CaretSortComparator {
-	_FORCE_INLINE_ bool operator()(const Vector3i &a, const Vector3i &b) const {
+	GD_FORCE_INLINE bool operator()(const Vector3i &a, const Vector3i &b) const {
 		// x is column, y is line, z is caret index.
 		if (a.y == b.y) {
 			return a.x < b.x;

@@ -58,13 +58,13 @@ class EditorCommandPalette : public ConfirmationDialog {
 	};
 
 	struct CommandEntryComparator {
-		_FORCE_INLINE_ bool operator()(const CommandEntry &A, const CommandEntry &B) const {
+		GD_FORCE_INLINE bool operator()(const CommandEntry &A, const CommandEntry &B) const {
 			return A.score > B.score;
 		}
 	};
 
 	struct CommandHistoryComparator {
-		_FORCE_INLINE_ bool operator()(const CommandEntry &A, const CommandEntry &B) const {
+		GD_FORCE_INLINE bool operator()(const CommandEntry &A, const CommandEntry &B) const {
 			if (A.last_used == B.last_used) {
 				return A.display_name < B.display_name;
 			} else {

@@ -59,21 +59,21 @@ struct [[nodiscard]] Vector3 {
 		// NOLINTEND(modernize-use-default-member-init)
 	};
 
-	_FORCE_INLINE_ const real_t &operator[](int p_axis) const {
+	GD_FORCE_INLINE const real_t &operator[](int p_axis) const {
 		DEV_ASSERT((unsigned int)p_axis < 3);
 		return coord[p_axis];
 	}
 
-	_FORCE_INLINE_ real_t &operator[](int p_axis) {
+	GD_FORCE_INLINE real_t &operator[](int p_axis) {
 		DEV_ASSERT((unsigned int)p_axis < 3);
 		return coord[p_axis];
 	}
 
-	_FORCE_INLINE_ Vector3::Axis min_axis_index() const {
+	GD_FORCE_INLINE Vector3::Axis min_axis_index() const {
 		return x < y ? (x < z ? Vector3::AXIS_X : Vector3::AXIS_Z) : (y < z ? Vector3::AXIS_Y : Vector3::AXIS_Z);
 	}
 
-	_FORCE_INLINE_ Vector3::Axis max_axis_index() const {
+	GD_FORCE_INLINE Vector3::Axis max_axis_index() const {
 		return x < y ? (y < z ? Vector3::AXIS_Z : Vector3::AXIS_Y) : (x < z ? Vector3::AXIS_Z : Vector3::AXIS_X);
 	}
 
@@ -93,16 +93,16 @@ struct [[nodiscard]] Vector3 {
 		return Vector3(MAX(x, p_scalar), MAX(y, p_scalar), MAX(z, p_scalar));
 	}
 
-	_FORCE_INLINE_ real_t length() const;
-	_FORCE_INLINE_ real_t length_squared() const;
+	GD_FORCE_INLINE real_t length() const;
+	GD_FORCE_INLINE real_t length_squared() const;
 
-	_FORCE_INLINE_ void normalize();
-	_FORCE_INLINE_ Vector3 normalized() const;
-	_FORCE_INLINE_ bool is_normalized() const;
-	_FORCE_INLINE_ Vector3 inverse() const;
+	GD_FORCE_INLINE void normalize();
+	GD_FORCE_INLINE Vector3 normalized() const;
+	GD_FORCE_INLINE bool is_normalized() const;
+	GD_FORCE_INLINE Vector3 inverse() const;
 	Vector3 limit_length(real_t p_len = 1.0) const;
 
-	_FORCE_INLINE_ void zero();
+	GD_FORCE_INLINE void zero();
 
 	void snap(const Vector3 &p_step);
 	void snapf(real_t p_step);
@@ -114,12 +114,12 @@ struct [[nodiscard]] Vector3 {
 
 	/* Static Methods between 2 vector3s */
 
-	_FORCE_INLINE_ Vector3 lerp(const Vector3 &p_to, real_t p_weight) const;
-	_FORCE_INLINE_ Vector3 slerp(const Vector3 &p_to, real_t p_weight) const;
-	_FORCE_INLINE_ Vector3 cubic_interpolate(const Vector3 &p_b, const Vector3 &p_pre_a, const Vector3 &p_post_b, real_t p_weight) const;
-	_FORCE_INLINE_ Vector3 cubic_interpolate_in_time(const Vector3 &p_b, const Vector3 &p_pre_a, const Vector3 &p_post_b, real_t p_weight, real_t p_b_t, real_t p_pre_a_t, real_t p_post_b_t) const;
-	_FORCE_INLINE_ Vector3 bezier_interpolate(const Vector3 &p_control_1, const Vector3 &p_control_2, const Vector3 &p_end, real_t p_t) const;
-	_FORCE_INLINE_ Vector3 bezier_derivative(const Vector3 &p_control_1, const Vector3 &p_control_2, const Vector3 &p_end, real_t p_t) const;
+	GD_FORCE_INLINE Vector3 lerp(const Vector3 &p_to, real_t p_weight) const;
+	GD_FORCE_INLINE Vector3 slerp(const Vector3 &p_to, real_t p_weight) const;
+	GD_FORCE_INLINE Vector3 cubic_interpolate(const Vector3 &p_b, const Vector3 &p_pre_a, const Vector3 &p_post_b, real_t p_weight) const;
+	GD_FORCE_INLINE Vector3 cubic_interpolate_in_time(const Vector3 &p_b, const Vector3 &p_pre_a, const Vector3 &p_post_b, real_t p_weight, real_t p_b_t, real_t p_pre_a_t, real_t p_post_b_t) const;
+	GD_FORCE_INLINE Vector3 bezier_interpolate(const Vector3 &p_control_1, const Vector3 &p_control_2, const Vector3 &p_end, real_t p_t) const;
+	GD_FORCE_INLINE Vector3 bezier_derivative(const Vector3 &p_control_1, const Vector3 &p_control_2, const Vector3 &p_end, real_t p_t) const;
 
 	Vector3 move_toward(const Vector3 &p_to, real_t p_delta) const;
 
@@ -128,33 +128,33 @@ struct [[nodiscard]] Vector3 {
 	Vector2 octahedron_tangent_encode(float p_sign) const;
 	static Vector3 octahedron_tangent_decode(const Vector2 &p_oct, float *r_sign);
 
-	_FORCE_INLINE_ Vector3 cross(const Vector3 &p_with) const;
-	_FORCE_INLINE_ real_t dot(const Vector3 &p_with) const;
+	GD_FORCE_INLINE Vector3 cross(const Vector3 &p_with) const;
+	GD_FORCE_INLINE real_t dot(const Vector3 &p_with) const;
 	Basis outer(const Vector3 &p_with) const;
-	_FORCE_INLINE_ Vector3 get_any_perpendicular() const;
+	GD_FORCE_INLINE Vector3 get_any_perpendicular() const;
 
-	_FORCE_INLINE_ Vector3 abs() const;
-	_FORCE_INLINE_ Vector3 floor() const;
-	_FORCE_INLINE_ Vector3 sign() const;
-	_FORCE_INLINE_ Vector3 ceil() const;
-	_FORCE_INLINE_ Vector3 round() const;
+	GD_FORCE_INLINE Vector3 abs() const;
+	GD_FORCE_INLINE Vector3 floor() const;
+	GD_FORCE_INLINE Vector3 sign() const;
+	GD_FORCE_INLINE Vector3 ceil() const;
+	GD_FORCE_INLINE Vector3 round() const;
 	Vector3 clamp(const Vector3 &p_min, const Vector3 &p_max) const;
 	Vector3 clampf(real_t p_min, real_t p_max) const;
 
-	_FORCE_INLINE_ real_t distance_to(const Vector3 &p_to) const;
-	_FORCE_INLINE_ real_t distance_squared_to(const Vector3 &p_to) const;
+	GD_FORCE_INLINE real_t distance_to(const Vector3 &p_to) const;
+	GD_FORCE_INLINE real_t distance_squared_to(const Vector3 &p_to) const;
 
-	_FORCE_INLINE_ Vector3 posmod(real_t p_mod) const;
-	_FORCE_INLINE_ Vector3 posmodv(const Vector3 &p_modv) const;
-	_FORCE_INLINE_ Vector3 project(const Vector3 &p_to) const;
+	GD_FORCE_INLINE Vector3 posmod(real_t p_mod) const;
+	GD_FORCE_INLINE Vector3 posmodv(const Vector3 &p_modv) const;
+	GD_FORCE_INLINE Vector3 project(const Vector3 &p_to) const;
 
-	_FORCE_INLINE_ real_t angle_to(const Vector3 &p_to) const;
-	_FORCE_INLINE_ real_t signed_angle_to(const Vector3 &p_to, const Vector3 &p_axis) const;
-	_FORCE_INLINE_ Vector3 direction_to(const Vector3 &p_to) const;
+	GD_FORCE_INLINE real_t angle_to(const Vector3 &p_to) const;
+	GD_FORCE_INLINE real_t signed_angle_to(const Vector3 &p_to, const Vector3 &p_axis) const;
+	GD_FORCE_INLINE Vector3 direction_to(const Vector3 &p_to) const;
 
-	_FORCE_INLINE_ Vector3 slide(const Vector3 &p_normal) const;
-	_FORCE_INLINE_ Vector3 bounce(const Vector3 &p_normal) const;
-	_FORCE_INLINE_ Vector3 reflect(const Vector3 &p_normal) const;
+	GD_FORCE_INLINE Vector3 slide(const Vector3 &p_normal) const;
+	GD_FORCE_INLINE Vector3 bounce(const Vector3 &p_normal) const;
+	GD_FORCE_INLINE Vector3 reflect(const Vector3 &p_normal) const;
 
 	bool is_equal_approx(const Vector3 &p_v) const;
 	bool is_same(const Vector3 &p_v) const;
@@ -476,11 +476,11 @@ constexpr bool Vector3::operator>=(const Vector3 &p_v) const {
 	return x > p_v.x;
 }
 
-_FORCE_INLINE_ Vector3 vec3_cross(const Vector3 &p_a, const Vector3 &p_b) {
+GD_FORCE_INLINE Vector3 vec3_cross(const Vector3 &p_a, const Vector3 &p_b) {
 	return p_a.cross(p_b);
 }
 
-_FORCE_INLINE_ real_t vec3_dot(const Vector3 &p_a, const Vector3 &p_b) {
+GD_FORCE_INLINE real_t vec3_dot(const Vector3 &p_a, const Vector3 &p_b) {
 	return p_a.dot(p_b);
 }
 

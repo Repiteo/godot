@@ -107,13 +107,13 @@ public:
 	SelfList<Item>::List _item_update_list;
 
 	struct ItemIndexSort {
-		_FORCE_INLINE_ bool operator()(const Item *p_left, const Item *p_right) const {
+		GD_FORCE_INLINE bool operator()(const Item *p_left, const Item *p_right) const {
 			return p_left->index < p_right->index;
 		}
 	};
 
 	struct ItemYSort {
-		_FORCE_INLINE_ bool operator()(const Item *p_left, const Item *p_right) const {
+		GD_FORCE_INLINE bool operator()(const Item *p_left, const Item *p_right) const {
 			const real_t left_y = p_left->ysort_xform.columns[2].y;
 			const real_t right_y = p_right->ysort_xform.columns[2].y;
 			if (Math::is_equal_approx(left_y, right_y)) {
@@ -201,7 +201,7 @@ public:
 	PagedAllocator<Item::VisibilityNotifierData> visibility_notifier_allocator;
 	SelfList<Item::VisibilityNotifierData>::List visibility_notifier_list;
 
-	_FORCE_INLINE_ void _attach_canvas_item_for_draw(Item *ci, Item *p_canvas_clip, RendererCanvasRender::Item **r_z_list, RendererCanvasRender::Item **r_z_last_list, const Transform2D &p_transform, const Rect2 &p_clip_rect, Rect2 p_global_rect, const Color &modulate, int p_z, RendererCanvasCull::Item *p_material_owner, bool p_use_canvas_group, RendererCanvasRender::Item *r_canvas_group_from);
+	GD_FORCE_INLINE void _attach_canvas_item_for_draw(Item *ci, Item *p_canvas_clip, RendererCanvasRender::Item **r_z_list, RendererCanvasRender::Item **r_z_last_list, const Transform2D &p_transform, const Rect2 &p_clip_rect, Rect2 p_global_rect, const Color &modulate, int p_z, RendererCanvasCull::Item *p_material_owner, bool p_use_canvas_group, RendererCanvasRender::Item *r_canvas_group_from);
 
 private:
 	void _render_canvas_item_tree(RID p_to_render_target, Canvas::ChildItem *p_child_items, int p_child_item_count, const Transform2D &p_transform, const Rect2 &p_clip_rect, const Color &p_modulate, RendererCanvasRender::Light *p_lights, RendererCanvasRender::Light *p_directional_lights, RS::CanvasItemTextureFilter p_default_filter, RS::CanvasItemTextureRepeat p_default_repeat, bool p_snap_2d_vertices_to_pixel, uint32_t p_canvas_cull_mask, RenderingMethod::RenderInfo *r_render_info = nullptr);

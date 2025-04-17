@@ -82,7 +82,7 @@ private:
 	void _thread();
 
 public:
-	_FORCE_INLINE_ static TilesEditorUtils *get_singleton() { return singleton; }
+	GD_FORCE_INLINE static TilesEditorUtils *get_singleton() { return singleton; }
 
 	// Pattern preview API.
 	void queue_pattern_preview(Ref<TileSet> p_tile_set, Ref<TileMapPattern> p_pattern, Callable p_callback);

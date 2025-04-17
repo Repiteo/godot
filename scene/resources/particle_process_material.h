@@ -153,7 +153,7 @@ private:
 
 	MaterialKey current_key;
 
-	_FORCE_INLINE_ MaterialKey _compute_key() const {
+	GD_FORCE_INLINE MaterialKey _compute_key() const {
 		MaterialKey mk;
 
 		mk.texture_color = color_ramp.is_valid() ? 1 : 0;
@@ -294,7 +294,7 @@ private:
 	SelfList<ParticleProcessMaterial> element;
 
 	void _update_shader();
-	_FORCE_INLINE_ void _queue_shader_change();
+	GD_FORCE_INLINE void _queue_shader_change();
 
 	Vector3 direction;
 	float spread = 0.0f;

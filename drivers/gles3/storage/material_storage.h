@@ -488,7 +488,7 @@ public:
 	MaterialStorage();
 	virtual ~MaterialStorage();
 
-	static _FORCE_INLINE_ void store_transform(const Transform3D &p_mtx, float *p_array) {
+	static GD_FORCE_INLINE void store_transform(const Transform3D &p_mtx, float *p_array) {
 		p_array[0] = p_mtx.basis.rows[0][0];
 		p_array[1] = p_mtx.basis.rows[1][0];
 		p_array[2] = p_mtx.basis.rows[2][0];
@@ -507,7 +507,7 @@ public:
 		p_array[15] = 1;
 	}
 
-	static _FORCE_INLINE_ void store_transform_3x3(const Basis &p_mtx, float *p_array) {
+	static GD_FORCE_INLINE void store_transform_3x3(const Basis &p_mtx, float *p_array) {
 		p_array[0] = p_mtx.rows[0][0];
 		p_array[1] = p_mtx.rows[1][0];
 		p_array[2] = p_mtx.rows[2][0];
@@ -522,7 +522,7 @@ public:
 		p_array[11] = 0;
 	}
 
-	static _FORCE_INLINE_ void store_camera(const Projection &p_mtx, float *p_array) {
+	static GD_FORCE_INLINE void store_camera(const Projection &p_mtx, float *p_array) {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				p_array[i * 4 + j] = p_mtx.columns[i][j];
@@ -615,12 +615,12 @@ public:
 
 	virtual void material_update_dependency(RID p_material, DependencyTracker *p_instance) override;
 
-	_FORCE_INLINE_ uint32_t material_get_shader_id(RID p_material) {
+	GD_FORCE_INLINE uint32_t material_get_shader_id(RID p_material) {
 		Material *material = material_owner.get_or_null(p_material);
 		return material->shader_id;
 	}
 
-	_FORCE_INLINE_ MaterialData *material_get_data(RID p_material, RS::ShaderMode p_shader_mode) {
+	GD_FORCE_INLINE MaterialData *material_get_data(RID p_material, RS::ShaderMode p_shader_mode) {
 		Material *material = material_owner.get_or_null(p_material);
 		if (!material || material->shader_mode != p_shader_mode) {
 			return nullptr;

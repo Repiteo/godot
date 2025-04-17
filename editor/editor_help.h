@@ -210,7 +210,7 @@ class EditorHelp : public VBoxContainer {
 	static void _compute_doc_version_hash();
 
 	struct PropertyCompare {
-		_FORCE_INLINE_ bool operator()(const DocData::PropertyDoc &p_l, const DocData::PropertyDoc &p_r) const {
+		GD_FORCE_INLINE bool operator()(const DocData::PropertyDoc &p_l, const DocData::PropertyDoc &p_r) const {
 			// Sort overridden properties above all else.
 			if (p_l.overridden == p_r.overridden) {
 				return p_l.name.naturalcasecmp_to(p_r.name) < 0;

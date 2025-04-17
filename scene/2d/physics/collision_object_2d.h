@@ -77,14 +77,15 @@ private:
 	int total_subshapes = 0;
 
 	RBMap<uint32_t, ShapeData> shapes;
-	bool only_update_transform_changes = false; // This is used for sync to physics.
+	bool only_update_transform_changes =
+			false; // This is used for sync to physics.
 
 	void _apply_disabled();
 	void _apply_enabled();
 
 protected:
-	_FORCE_INLINE_ void lock_callback() { callback_lock++; }
-	_FORCE_INLINE_ void unlock_callback() {
+	GD_FORCE_INLINE void lock_callback() { callback_lock++; }
+	GD_FORCE_INLINE void unlock_callback() {
 		ERR_FAIL_COND(callback_lock == 0);
 		callback_lock--;
 	}
@@ -96,7 +97,8 @@ protected:
 
 	void _update_pickable();
 	friend class Viewport;
-	void _input_event_call(Viewport *p_viewport, const Ref<InputEvent> &p_input_event, int p_shape);
+	void _input_event_call(Viewport *p_viewport,
+			const Ref<InputEvent> &p_input_event, int p_shape);
 	void _mouse_enter();
 	void _mouse_exit();
 
@@ -139,7 +141,8 @@ public:
 	void get_shape_owners(List<uint32_t> *r_owners);
 	PackedInt32Array _get_shape_owners();
 
-	void shape_owner_set_transform(uint32_t p_owner, const Transform2D &p_transform);
+	void shape_owner_set_transform(uint32_t p_owner,
+			const Transform2D &p_transform);
 	Transform2D shape_owner_get_transform(uint32_t p_owner) const;
 	Object *shape_owner_get_owner(uint32_t p_owner) const;
 
@@ -149,7 +152,8 @@ public:
 	void shape_owner_set_one_way_collision(uint32_t p_owner, bool p_enable);
 	bool is_shape_owner_one_way_collision_enabled(uint32_t p_owner) const;
 
-	void shape_owner_set_one_way_collision_margin(uint32_t p_owner, real_t p_margin);
+	void shape_owner_set_one_way_collision_margin(uint32_t p_owner,
+			real_t p_margin);
 	real_t get_shape_owner_one_way_collision_margin(uint32_t p_owner) const;
 
 	void shape_owner_add_shape(uint32_t p_owner, const Ref<Shape2D> &p_shape);
@@ -167,7 +171,7 @@ public:
 
 	PackedStringArray get_configuration_warnings() const override;
 
-	_FORCE_INLINE_ RID get_rid() const { return rid; }
+	GD_FORCE_INLINE RID get_rid() const { return rid; }
 
 	CollisionObject2D();
 	~CollisionObject2D();

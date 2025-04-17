@@ -68,7 +68,7 @@ public:
 
 	void prepend_period();
 
-	_FORCE_INLINE_ uint32_t hash() const {
+	GD_FORCE_INLINE uint32_t hash() const {
 		if (!data) {
 			return 0;
 		}

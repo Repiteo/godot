@@ -60,21 +60,21 @@ struct AudioRBResampler {
 	uint32_t _resample(AudioFrame *p_dest, int p_todo, int32_t p_increment);
 
 public:
-	_FORCE_INLINE_ void flush() {
+	GD_FORCE_INLINE void flush() {
 		rb_read_pos.set(0);
 		rb_write_pos.set(0);
 		offset = 0;
 	}
 
-	_FORCE_INLINE_ bool is_ready() const {
+	GD_FORCE_INLINE bool is_ready() const {
 		return rb != nullptr;
 	}
 
-	_FORCE_INLINE_ int get_total() const {
+	GD_FORCE_INLINE int get_total() const {
 		return rb_len - 1;
 	}
 
-	_FORCE_INLINE_ int get_writer_space() const {
+	GD_FORCE_INLINE int get_writer_space() const {
 		int space, r, w;
 
 		r = rb_read_pos.get();
@@ -91,7 +91,7 @@ public:
 		return space;
 	}
 
-	_FORCE_INLINE_ int get_reader_space() const {
+	GD_FORCE_INLINE int get_reader_space() const {
 		int space, r, w;
 
 		r = rb_read_pos.get();
@@ -108,12 +108,12 @@ public:
 		return space;
 	}
 
-	_FORCE_INLINE_ bool has_data() const {
+	GD_FORCE_INLINE bool has_data() const {
 		return rb && rb_read_pos.get() != rb_write_pos.get();
 	}
 
-	_FORCE_INLINE_ float *get_write_buffer() { return read_buf; }
-	_FORCE_INLINE_ void write(uint32_t p_frames) {
+	GD_FORCE_INLINE float *get_write_buffer() { return read_buf; }
+	GD_FORCE_INLINE void write(uint32_t p_frames) {
 		ERR_FAIL_COND(p_frames >= rb_len);
 
 		int wp = rb_write_pos.get();

@@ -65,62 +65,62 @@ class SafeNumeric {
 	static_assert(std::atomic<T>::is_always_lock_free);
 
 public:
-	_ALWAYS_INLINE_ void set(T p_value) {
+	GD_ALWAYS_INLINE void set(T p_value) {
 		value.store(p_value, std::memory_order_release);
 	}
 
-	_ALWAYS_INLINE_ T get() const {
+	GD_ALWAYS_INLINE T get() const {
 		return value.load(std::memory_order_acquire);
 	}
 
-	_ALWAYS_INLINE_ T increment() {
+	GD_ALWAYS_INLINE T increment() {
 		return value.fetch_add(1, std::memory_order_acq_rel) + 1;
 	}
 
 	// Returns the original value instead of the new one
-	_ALWAYS_INLINE_ T postincrement() {
+	GD_ALWAYS_INLINE T postincrement() {
 		return value.fetch_add(1, std::memory_order_acq_rel);
 	}
 
-	_ALWAYS_INLINE_ T decrement() {
+	GD_ALWAYS_INLINE T decrement() {
 		return value.fetch_sub(1, std::memory_order_acq_rel) - 1;
 	}
 
 	// Returns the original value instead of the new one
-	_ALWAYS_INLINE_ T postdecrement() {
+	GD_ALWAYS_INLINE T postdecrement() {
 		return value.fetch_sub(1, std::memory_order_acq_rel);
 	}
 
-	_ALWAYS_INLINE_ T add(T p_value) {
+	GD_ALWAYS_INLINE T add(T p_value) {
 		return value.fetch_add(p_value, std::memory_order_acq_rel) + p_value;
 	}
 
 	// Returns the original value instead of the new one
-	_ALWAYS_INLINE_ T postadd(T p_value) {
+	GD_ALWAYS_INLINE T postadd(T p_value) {
 		return value.fetch_add(p_value, std::memory_order_acq_rel);
 	}
 
-	_ALWAYS_INLINE_ T sub(T p_value) {
+	GD_ALWAYS_INLINE T sub(T p_value) {
 		return value.fetch_sub(p_value, std::memory_order_acq_rel) - p_value;
 	}
 
-	_ALWAYS_INLINE_ T bit_or(T p_value) {
+	GD_ALWAYS_INLINE T bit_or(T p_value) {
 		return value.fetch_or(p_value, std::memory_order_acq_rel);
 	}
-	_ALWAYS_INLINE_ T bit_and(T p_value) {
+	GD_ALWAYS_INLINE T bit_and(T p_value) {
 		return value.fetch_and(p_value, std::memory_order_acq_rel);
 	}
 
-	_ALWAYS_INLINE_ T bit_xor(T p_value) {
+	GD_ALWAYS_INLINE T bit_xor(T p_value) {
 		return value.fetch_xor(p_value, std::memory_order_acq_rel);
 	}
 
 	// Returns the original value instead of the new one
-	_ALWAYS_INLINE_ T postsub(T p_value) {
+	GD_ALWAYS_INLINE T postsub(T p_value) {
 		return value.fetch_sub(p_value, std::memory_order_acq_rel);
 	}
 
-	_ALWAYS_INLINE_ T exchange_if_greater(T p_value) {
+	GD_ALWAYS_INLINE T exchange_if_greater(T p_value) {
 		while (true) {
 			T tmp = value.load(std::memory_order_acquire);
 			if (tmp >= p_value) {
@@ -133,7 +133,7 @@ public:
 		}
 	}
 
-	_ALWAYS_INLINE_ T conditional_increment() {
+	GD_ALWAYS_INLINE T conditional_increment() {
 		while (true) {
 			T c = value.load(std::memory_order_acquire);
 			if (c == 0) {
@@ -145,7 +145,7 @@ public:
 		}
 	}
 
-	_ALWAYS_INLINE_ explicit SafeNumeric(T p_value = static_cast<T>(0)) {
+	GD_ALWAYS_INLINE explicit SafeNumeric(T p_value = static_cast<T>(0)) {
 		set(p_value);
 	}
 };
@@ -156,23 +156,23 @@ class SafeFlag {
 	static_assert(std::atomic_bool::is_always_lock_free);
 
 public:
-	_ALWAYS_INLINE_ bool is_set() const {
+	GD_ALWAYS_INLINE bool is_set() const {
 		return flag.load(std::memory_order_acquire);
 	}
 
-	_ALWAYS_INLINE_ void set() {
+	GD_ALWAYS_INLINE void set() {
 		flag.store(true, std::memory_order_release);
 	}
 
-	_ALWAYS_INLINE_ void clear() {
+	GD_ALWAYS_INLINE void clear() {
 		flag.store(false, std::memory_order_release);
 	}
 
-	_ALWAYS_INLINE_ void set_to(bool p_value) {
+	GD_ALWAYS_INLINE void set_to(bool p_value) {
 		flag.store(p_value, std::memory_order_release);
 	}
 
-	_ALWAYS_INLINE_ explicit SafeFlag(bool p_value = false) {
+	GD_ALWAYS_INLINE explicit SafeFlag(bool p_value = false) {
 		set_to(p_value);
 	}
 };
@@ -181,7 +181,7 @@ class SafeRefCount {
 	SafeNumeric<uint32_t> count;
 
 #ifdef DEV_ENABLED
-	_ALWAYS_INLINE_ void _check_unref_safety() {
+	GD_ALWAYS_INLINE void _check_unref_safety() {
 		// This won't catch every misuse, but it's better than nothing.
 		CRASH_COND_MSG(count.get() == 0,
 				"Trying to unreference a SafeRefCount which is already zero is wrong and a symptom of it being misused.\n"
@@ -191,33 +191,33 @@ class SafeRefCount {
 #endif
 
 public:
-	_ALWAYS_INLINE_ bool ref() { // true on success
+	GD_ALWAYS_INLINE bool ref() { // true on success
 		return count.conditional_increment() != 0;
 	}
 
-	_ALWAYS_INLINE_ uint32_t refval() { // none-zero on success
+	GD_ALWAYS_INLINE uint32_t refval() { // none-zero on success
 		return count.conditional_increment();
 	}
 
-	_ALWAYS_INLINE_ bool unref() { // true if must be disposed of
+	GD_ALWAYS_INLINE bool unref() { // true if must be disposed of
 #ifdef DEV_ENABLED
 		_check_unref_safety();
 #endif
 		return count.decrement() == 0;
 	}
 
-	_ALWAYS_INLINE_ uint32_t unrefval() { // 0 if must be disposed of
+	GD_ALWAYS_INLINE uint32_t unrefval() { // 0 if must be disposed of
 #ifdef DEV_ENABLED
 		_check_unref_safety();
 #endif
 		return count.decrement();
 	}
 
-	_ALWAYS_INLINE_ uint32_t get() const {
+	GD_ALWAYS_INLINE uint32_t get() const {
 		return count.get();
 	}
 
-	_ALWAYS_INLINE_ void init(uint32_t p_value = 1) {
+	GD_ALWAYS_INLINE void init(uint32_t p_value = 1) {
 		count.set(p_value);
 	}
 };

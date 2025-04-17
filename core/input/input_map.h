@@ -78,7 +78,7 @@ protected:
 #endif // DISABLE_DEPRECATED
 
 public:
-	static _FORCE_INLINE_ InputMap *get_singleton() { return singleton; }
+	static GD_FORCE_INLINE InputMap *get_singleton() { return singleton; }
 
 	bool has_action(const StringName &p_action) const;
 	List<StringName> get_actions() const;

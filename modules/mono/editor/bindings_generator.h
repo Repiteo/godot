@@ -66,7 +66,7 @@ class BindingsGenerator {
 		List<ConstantInterface> constants;
 		bool is_flags = false;
 
-		_FORCE_INLINE_ bool operator==(const EnumInterface &p_ienum) const {
+		GD_FORCE_INLINE bool operator==(const EnumInterface &p_ienum) const {
 			return p_ienum.cname == cname;
 		}
 
@@ -631,7 +631,7 @@ class BindingsGenerator {
 		TypeReference return_type;
 		List<TypeReference> argument_types;
 
-		_FORCE_INLINE_ int get_arguments_count() const { return argument_types.size(); }
+		GD_FORCE_INLINE int get_arguments_count() const { return argument_types.size(); }
 
 		InternalCall() {}
 
@@ -861,10 +861,10 @@ public:
 	Error generate_cs_editor_project(const String &p_proj_dir);
 	Error generate_cs_api(const String &p_output_dir);
 
-	_FORCE_INLINE_ bool is_log_print_enabled() { return log_print_enabled; }
-	_FORCE_INLINE_ void set_log_print_enabled(bool p_enabled) { log_print_enabled = p_enabled; }
+	GD_FORCE_INLINE bool is_log_print_enabled() { return log_print_enabled; }
+	GD_FORCE_INLINE void set_log_print_enabled(bool p_enabled) { log_print_enabled = p_enabled; }
 
-	_FORCE_INLINE_ bool is_initialized() { return initialized; }
+	GD_FORCE_INLINE bool is_initialized() { return initialized; }
 
 	static void handle_cmdline_args(const List<String> &p_cmdline_args);
 

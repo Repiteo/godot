@@ -59,12 +59,12 @@ struct [[nodiscard]] Vector4i {
 		// NOLINTEND(modernize-use-default-member-init)
 	};
 
-	_FORCE_INLINE_ const int32_t &operator[](int p_axis) const {
+	GD_FORCE_INLINE const int32_t &operator[](int p_axis) const {
 		DEV_ASSERT((unsigned int)p_axis < 4);
 		return coord[p_axis];
 	}
 
-	_FORCE_INLINE_ int32_t &operator[](int p_axis) {
+	GD_FORCE_INLINE int32_t &operator[](int p_axis) {
 		DEV_ASSERT((unsigned int)p_axis < 4);
 		return coord[p_axis];
 	}
@@ -88,16 +88,16 @@ struct [[nodiscard]] Vector4i {
 		return Vector4i(MAX(x, p_scalar), MAX(y, p_scalar), MAX(z, p_scalar), MAX(w, p_scalar));
 	}
 
-	_FORCE_INLINE_ int64_t length_squared() const;
-	_FORCE_INLINE_ double length() const;
+	GD_FORCE_INLINE int64_t length_squared() const;
+	GD_FORCE_INLINE double length() const;
 
-	_FORCE_INLINE_ void zero();
+	GD_FORCE_INLINE void zero();
 
-	_FORCE_INLINE_ double distance_to(const Vector4i &p_to) const;
-	_FORCE_INLINE_ int64_t distance_squared_to(const Vector4i &p_to) const;
+	GD_FORCE_INLINE double distance_to(const Vector4i &p_to) const;
+	GD_FORCE_INLINE int64_t distance_squared_to(const Vector4i &p_to) const;
 
-	_FORCE_INLINE_ Vector4i abs() const;
-	_FORCE_INLINE_ Vector4i sign() const;
+	GD_FORCE_INLINE Vector4i abs() const;
+	GD_FORCE_INLINE Vector4i sign() const;
 	Vector4i clamp(const Vector4i &p_min, const Vector4i &p_max) const;
 	Vector4i clampi(int32_t p_min, int32_t p_max) const;
 	Vector4i snapped(const Vector4i &p_step) const;

@@ -52,7 +52,7 @@
 #define BYTE_ONLY_OR_NO_ARGS_FLAG (1 << BYTE_ONLY_OR_NO_ARGS_SHIFT)
 
 #ifdef DEBUG_ENABLED
-_FORCE_INLINE_ void SceneRPCInterface::_profile_node_data(const String &p_what, ObjectID p_id, int p_size) {
+GD_FORCE_INLINE void SceneRPCInterface::_profile_node_data(const String &p_what, ObjectID p_id, int p_size) {
 	if (EngineDebugger::is_profiling("multiplayer:rpc")) {
 		Array values = { p_what, p_id, p_size };
 		EngineDebugger::profiler_add_frame_data("multiplayer:rpc", values);

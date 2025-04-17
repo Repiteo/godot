@@ -251,7 +251,7 @@ public:
 	bool isSupportedOrSubstitutable(DataFormat p_format);
 
 	/** Returns whether the specified Metal MTLPixelFormat can be used as a depth format. */
-	_FORCE_INLINE_ bool isDepthFormat(MTLPixelFormat p_format) {
+	GD_FORCE_INLINE bool isDepthFormat(MTLPixelFormat p_format) {
 		switch (p_format) {
 			case MTLPixelFormatDepth32Float:
 			case MTLPixelFormatDepth16Unorm:
@@ -266,7 +266,7 @@ public:
 	}
 
 	/** Returns whether the specified Metal MTLPixelFormat can be used as a stencil format. */
-	_FORCE_INLINE_ bool isStencilFormat(MTLPixelFormat p_format) {
+	GD_FORCE_INLINE bool isStencilFormat(MTLPixelFormat p_format) {
 		switch (p_format) {
 			case MTLPixelFormatStencil8:
 #if TARGET_OS_OSX

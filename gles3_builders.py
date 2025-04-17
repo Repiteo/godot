@@ -241,7 +241,7 @@ public:
                 defspec |= 1 << index
 
         file.write(f"""\
-	_FORCE_INLINE_ bool version_bind_shader(RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE bool version_bind_shader(RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		return _version_bind_shader(p_version, p_variant, p_specialization);
 	}}
 
@@ -249,7 +249,7 @@ public:
 
         if header_data.uniforms:
             file.write(f"""\
-	_FORCE_INLINE_ int version_get_uniform(Uniforms p_uniform, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE int version_get_uniform(Uniforms p_uniform, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		return _version_get_uniform(p_uniform, p_version, p_variant, p_specialization);
 	}}
 
@@ -257,92 +257,92 @@ public:
 #define TRY_GET_UNIFORM if (version_get_uniform(p_uniform, p_version, p_variant, p_specialization) < 0) return
 	/* clang-format on */
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, float p_value, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, float p_value, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		glUniform1f(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), p_value);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, double p_value, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, double p_value, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		glUniform1f(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), p_value);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, uint8_t p_value, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, uint8_t p_value, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		glUniform1ui(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), p_value);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, int8_t p_value, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, int8_t p_value, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		glUniform1i(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), p_value);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, uint16_t p_value, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, uint16_t p_value, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		glUniform1ui(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), p_value);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, int16_t p_value, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, int16_t p_value, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		glUniform1i(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), p_value);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, uint32_t p_value, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, uint32_t p_value, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		glUniform1ui(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), p_value);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, int32_t p_value, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, int32_t p_value, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		glUniform1i(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), p_value);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, const Color &p_color, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, const Color &p_color, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		GLfloat col[4] = {{ p_color.r, p_color.g, p_color.b, p_color.a }};
 		glUniform4fv(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), 1, col);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, const Vector2 &p_vec2, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, const Vector2 &p_vec2, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		GLfloat vec2[2] = {{ float(p_vec2.x), float(p_vec2.y) }};
 		glUniform2fv(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), 1, vec2);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, const Size2i &p_vec2, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, const Size2i &p_vec2, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		GLint vec2[2] = {{ GLint(p_vec2.x), GLint(p_vec2.y) }};
 		glUniform2iv(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), 1, vec2);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, const Vector3 &p_vec3, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, const Vector3 &p_vec3, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		GLfloat vec3[3] = {{ float(p_vec3.x), float(p_vec3.y), float(p_vec3.z) }};
 		glUniform3fv(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), 1, vec3);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, const Vector4 &p_vec4, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, const Vector4 &p_vec4, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		GLfloat vec4[4] = {{ float(p_vec4.x), float(p_vec4.y), float(p_vec4.z), float(p_vec4.w) }};
 		glUniform4fv(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), 1, vec4);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, float p_a, float p_b, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, float p_a, float p_b, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		glUniform2f(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), p_a, p_b);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, float p_a, float p_b, float p_c, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, float p_a, float p_b, float p_c, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		glUniform3f(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), p_a, p_b, p_c);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, float p_a, float p_b, float p_c, float p_d, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, float p_a, float p_b, float p_c, float p_d, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		glUniform4f(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), p_a, p_b, p_c, p_d);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, const Transform3D &p_transform, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, const Transform3D &p_transform, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		const Transform3D &tr = p_transform;
 
@@ -368,7 +368,7 @@ public:
 		glUniformMatrix4fv(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), 1, false, matrix);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, const Transform2D &p_transform, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, const Transform2D &p_transform, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		const Transform2D &tr = p_transform;
 
@@ -394,7 +394,7 @@ public:
 		glUniformMatrix4fv(version_get_uniform(p_uniform, p_version, p_variant, p_specialization), 1, false, matrix);
 	}}
 
-	_FORCE_INLINE_ void version_set_uniform(Uniforms p_uniform, const Projection &p_matrix, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
+	GD_FORCE_INLINE void version_set_uniform(Uniforms p_uniform, const Projection &p_matrix, RID p_version, ShaderVariant p_variant{defvariant}, uint64_t p_specialization = {defspec}) {{
 		TRY_GET_UNIFORM;
 		GLfloat matrix[16];
 

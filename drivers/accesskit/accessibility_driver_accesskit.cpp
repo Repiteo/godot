@@ -39,14 +39,14 @@
 
 AccessibilityDriverAccessKit *AccessibilityDriverAccessKit::singleton = nullptr;
 
-_FORCE_INLINE_ accesskit_role AccessibilityDriverAccessKit::_accessibility_role(DisplayServer::AccessibilityRole p_role) const {
+GD_FORCE_INLINE accesskit_role AccessibilityDriverAccessKit::_accessibility_role(DisplayServer::AccessibilityRole p_role) const {
 	if (role_map.has(p_role)) {
 		return role_map[p_role];
 	}
 	return ACCESSKIT_ROLE_UNKNOWN;
 }
 
-_FORCE_INLINE_ accesskit_action AccessibilityDriverAccessKit::_accessibility_action(DisplayServer::AccessibilityAction p_action) const {
+GD_FORCE_INLINE accesskit_action AccessibilityDriverAccessKit::_accessibility_action(DisplayServer::AccessibilityAction p_action) const {
 	if (action_map.has(p_action)) {
 		return action_map[p_action];
 	}
@@ -427,7 +427,7 @@ RID AccessibilityDriverAccessKit::accessibility_create_sub_text_edit_elements(co
 
 	// Sort runs in logical order.
 	struct RunCompare {
-		_FORCE_INLINE_ bool operator()(const AccessibilityElement *l, const AccessibilityElement *r) const {
+		GD_FORCE_INLINE bool operator()(const AccessibilityElement *l, const AccessibilityElement *r) const {
 			return l->run.x < r->run.x;
 		}
 	};
@@ -564,7 +564,7 @@ void AccessibilityDriverAccessKit::accessibility_update_if_active(const Callable
 	update_cb = Callable();
 }
 
-_FORCE_INLINE_ void AccessibilityDriverAccessKit::_ensure_node(const RID &p_id, AccessibilityElement *p_ae) {
+GD_FORCE_INLINE void AccessibilityDriverAccessKit::_ensure_node(const RID &p_id, AccessibilityElement *p_ae) {
 	if (unlikely(!p_ae->node)) {
 		WindowData *wd = windows.getptr(p_ae->window_id);
 		ERR_FAIL_NULL(wd);

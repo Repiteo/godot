@@ -50,11 +50,11 @@ struct TextDocumentIdentifier {
 	 */
 	DocumentUri uri;
 
-	_FORCE_INLINE_ void load(const Dictionary &p_params) {
+	GD_FORCE_INLINE void load(const Dictionary &p_params) {
 		uri = p_params["uri"];
 	}
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["uri"] = uri;
 		return dict;
@@ -82,7 +82,7 @@ struct Position {
 	 */
 	int character = 0;
 
-	_FORCE_INLINE_ bool operator==(const Position &p_other) const {
+	GD_FORCE_INLINE bool operator==(const Position &p_other) const {
 		return line == p_other.line && character == p_other.character;
 	}
 
@@ -90,12 +90,12 @@ struct Position {
 		return vformat("(%d,%d)", line, character);
 	}
 
-	_FORCE_INLINE_ void load(const Dictionary &p_params) {
+	GD_FORCE_INLINE void load(const Dictionary &p_params) {
 		line = p_params["line"];
 		character = p_params["character"];
 	}
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["line"] = line;
 		dict["character"] = character;
@@ -119,7 +119,7 @@ struct Range {
 	 */
 	Position end;
 
-	_FORCE_INLINE_ bool operator==(const Range &p_other) const {
+	GD_FORCE_INLINE bool operator==(const Range &p_other) const {
 		return start == p_other.start && end == p_other.end;
 	}
 
@@ -140,12 +140,12 @@ struct Range {
 		return vformat("[%s:%s]", start.to_string(), end.to_string());
 	}
 
-	_FORCE_INLINE_ void load(const Dictionary &p_params) {
+	GD_FORCE_INLINE void load(const Dictionary &p_params) {
 		start.load(p_params["start"]);
 		end.load(p_params["end"]);
 	}
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["start"] = start.to_json();
 		dict["end"] = end.to_json();
@@ -160,12 +160,12 @@ struct Location {
 	DocumentUri uri;
 	Range range;
 
-	_FORCE_INLINE_ void load(const Dictionary &p_params) {
+	GD_FORCE_INLINE void load(const Dictionary &p_params) {
 		uri = p_params["uri"];
 		range.load(p_params["range"]);
 	}
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["uri"] = uri;
 		dict["range"] = range.to_json();
@@ -218,12 +218,12 @@ struct TextDocumentPositionParams {
 	 */
 	Position position;
 
-	_FORCE_INLINE_ void load(const Dictionary &p_params) {
+	GD_FORCE_INLINE void load(const Dictionary &p_params) {
 		textDocument.load(p_params["textDocument"]);
 		position.load(p_params["position"]);
 	}
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["textDocument"] = textDocument.to_json();
 		dict["position"] = position.to_json();
@@ -248,7 +248,7 @@ struct DocumentLinkParams {
 	 */
 	TextDocumentIdentifier textDocument;
 
-	_FORCE_INLINE_ void load(const Dictionary &p_params) {
+	GD_FORCE_INLINE void load(const Dictionary &p_params) {
 		textDocument.load(p_params["textDocument"]);
 	}
 };
@@ -302,7 +302,7 @@ struct WorkspaceEdit {
 	 */
 	HashMap<String, Vector<TextEdit>> changes;
 
-	_FORCE_INLINE_ void add_edit(const String &uri, const TextEdit &edit) {
+	GD_FORCE_INLINE void add_edit(const String &uri, const TextEdit &edit) {
 		if (changes.has(uri)) {
 			changes[uri].push_back(edit);
 		} else {
@@ -312,7 +312,7 @@ struct WorkspaceEdit {
 		}
 	}
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 
 		Dictionary out_changes;
@@ -331,7 +331,7 @@ struct WorkspaceEdit {
 		return dict;
 	}
 
-	_FORCE_INLINE_ void add_change(const String &uri, const int &line, const int &start_character, const int &end_character, const String &new_text) {
+	GD_FORCE_INLINE void add_change(const String &uri, const int &line, const int &start_character, const int &end_character, const String &new_text) {
 		TextEdit new_edit;
 		new_edit.newText = new_text;
 		new_edit.range.start.line = line;
@@ -1030,7 +1030,7 @@ struct CompletionItem {
 	 */
 	Variant data;
 
-	_FORCE_INLINE_ Dictionary to_json(bool resolved = false) const {
+	GD_FORCE_INLINE Dictionary to_json(bool resolved = false) const {
 		Dictionary dict;
 		dict["label"] = label;
 		dict["kind"] = kind;
@@ -1243,7 +1243,7 @@ struct DocumentSymbol {
 		return dict;
 	}
 
-	_FORCE_INLINE_ MarkupContent render() const {
+	GD_FORCE_INLINE MarkupContent render() const {
 		MarkupContent markdown;
 		if (detail.length()) {
 			markdown.value = "\t" + detail + "\n\n";
@@ -1257,7 +1257,7 @@ struct DocumentSymbol {
 		return markdown;
 	}
 
-	_FORCE_INLINE_ CompletionItem make_completion_item(bool resolved = false) const {
+	GD_FORCE_INLINE CompletionItem make_completion_item(bool resolved = false) const {
 		LSP::CompletionItem item;
 		item.label = name;
 
@@ -1371,7 +1371,7 @@ struct FoldingRange {
 	 */
 	String kind = FoldingRangeKind::Region;
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["startLine"] = startLine;
 		dict["startCharacter"] = startCharacter;
@@ -1464,7 +1464,7 @@ struct Hover {
 	 */
 	Range range;
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["range"] = range.to_json();
 		dict["contents"] = contents.to_json();
@@ -1824,7 +1824,7 @@ struct ServerCapabilities {
 	 */
 	ExecuteCommandOptions executeCommandProvider;
 
-	_FORCE_INLINE_ Dictionary to_json() {
+	GD_FORCE_INLINE Dictionary to_json() {
 		Dictionary dict;
 		dict["textDocumentSync"] = textDocumentSync.to_json();
 		dict["completionProvider"] = completionProvider.to_json();
@@ -1861,7 +1861,7 @@ struct InitializeResult {
 	 */
 	ServerCapabilities capabilities;
 
-	_FORCE_INLINE_ Dictionary to_json() {
+	GD_FORCE_INLINE Dictionary to_json() {
 		Dictionary dict;
 		dict["capabilities"] = capabilities.to_json();
 		return dict;

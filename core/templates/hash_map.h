@@ -82,7 +82,7 @@ private:
 	uint32_t capacity_index = 0;
 	uint32_t num_elements = 0;
 
-	_FORCE_INLINE_ uint32_t _hash(const TKey &p_key) const {
+	GD_FORCE_INLINE uint32_t _hash(const TKey &p_key) const {
 		uint32_t hash = Hasher::hash(p_key);
 
 		if (unlikely(hash == EMPTY_HASH)) {
@@ -92,7 +92,7 @@ private:
 		return hash;
 	}
 
-	static _FORCE_INLINE_ uint32_t _get_probe_length(const uint32_t p_pos, const uint32_t p_hash, const uint32_t p_capacity, const uint64_t p_capacity_inv) {
+	static GD_FORCE_INLINE uint32_t _get_probe_length(const uint32_t p_pos, const uint32_t p_hash, const uint32_t p_capacity, const uint64_t p_capacity_inv) {
 		const uint32_t original_pos = fastmod(p_hash, p_capacity_inv, p_capacity);
 		return fastmod(p_pos - original_pos + p_capacity, p_capacity_inv, p_capacity);
 	}
@@ -195,7 +195,7 @@ private:
 		Memory::free_static(old_hashes);
 	}
 
-	_FORCE_INLINE_ HashMapElement<TKey, TValue> *_insert(const TKey &p_key, const TValue &p_value, bool p_front_insert = false) {
+	GD_FORCE_INLINE HashMapElement<TKey, TValue> *_insert(const TKey &p_key, const TValue &p_value, bool p_front_insert = false) {
 		uint32_t capacity = hash_table_size_primes[capacity_index];
 		if (unlikely(elements == nullptr)) {
 			// Allocate on demand to save memory.
@@ -243,8 +243,8 @@ private:
 	}
 
 public:
-	_FORCE_INLINE_ uint32_t get_capacity() const { return hash_table_size_primes[capacity_index]; }
-	_FORCE_INLINE_ uint32_t size() const { return num_elements; }
+	GD_FORCE_INLINE uint32_t get_capacity() const { return hash_table_size_primes[capacity_index]; }
+	GD_FORCE_INLINE uint32_t size() const { return num_elements; }
 
 	/* Standard Godot Container API */
 
@@ -347,7 +347,7 @@ public:
 		return nullptr;
 	}
 
-	_FORCE_INLINE_ bool has(const TKey &p_key) const {
+	GD_FORCE_INLINE bool has(const TKey &p_key) const {
 		uint32_t _pos = 0;
 		return _lookup_pos(p_key, _pos);
 	}
@@ -453,34 +453,34 @@ public:
 	/** Iterator API **/
 
 	struct ConstIterator {
-		_FORCE_INLINE_ const KeyValue<TKey, TValue> &operator*() const {
+		GD_FORCE_INLINE const KeyValue<TKey, TValue> &operator*() const {
 			return E->data;
 		}
-		_FORCE_INLINE_ const KeyValue<TKey, TValue> *operator->() const { return &E->data; }
-		_FORCE_INLINE_ ConstIterator &operator++() {
+		GD_FORCE_INLINE const KeyValue<TKey, TValue> *operator->() const { return &E->data; }
+		GD_FORCE_INLINE ConstIterator &operator++() {
 			if (E) {
 				E = E->next;
 			}
 			return *this;
 		}
-		_FORCE_INLINE_ ConstIterator &operator--() {
+		GD_FORCE_INLINE ConstIterator &operator--() {
 			if (E) {
 				E = E->prev;
 			}
 			return *this;
 		}
 
-		_FORCE_INLINE_ bool operator==(const ConstIterator &b) const { return E == b.E; }
-		_FORCE_INLINE_ bool operator!=(const ConstIterator &b) const { return E != b.E; }
+		GD_FORCE_INLINE bool operator==(const ConstIterator &b) const { return E == b.E; }
+		GD_FORCE_INLINE bool operator!=(const ConstIterator &b) const { return E != b.E; }
 
-		_FORCE_INLINE_ explicit operator bool() const {
+		GD_FORCE_INLINE explicit operator bool() const {
 			return E != nullptr;
 		}
 
-		_FORCE_INLINE_ ConstIterator(const HashMapElement<TKey, TValue> *p_E) { E = p_E; }
-		_FORCE_INLINE_ ConstIterator() {}
-		_FORCE_INLINE_ ConstIterator(const ConstIterator &p_it) { E = p_it.E; }
-		_FORCE_INLINE_ void operator=(const ConstIterator &p_it) {
+		GD_FORCE_INLINE ConstIterator(const HashMapElement<TKey, TValue> *p_E) { E = p_E; }
+		GD_FORCE_INLINE ConstIterator() {}
+		GD_FORCE_INLINE ConstIterator(const ConstIterator &p_it) { E = p_it.E; }
+		GD_FORCE_INLINE void operator=(const ConstIterator &p_it) {
 			E = p_it.E;
 		}
 
@@ -489,34 +489,34 @@ public:
 	};
 
 	struct Iterator {
-		_FORCE_INLINE_ KeyValue<TKey, TValue> &operator*() const {
+		GD_FORCE_INLINE KeyValue<TKey, TValue> &operator*() const {
 			return E->data;
 		}
-		_FORCE_INLINE_ KeyValue<TKey, TValue> *operator->() const { return &E->data; }
-		_FORCE_INLINE_ Iterator &operator++() {
+		GD_FORCE_INLINE KeyValue<TKey, TValue> *operator->() const { return &E->data; }
+		GD_FORCE_INLINE Iterator &operator++() {
 			if (E) {
 				E = E->next;
 			}
 			return *this;
 		}
-		_FORCE_INLINE_ Iterator &operator--() {
+		GD_FORCE_INLINE Iterator &operator--() {
 			if (E) {
 				E = E->prev;
 			}
 			return *this;
 		}
 
-		_FORCE_INLINE_ bool operator==(const Iterator &b) const { return E == b.E; }
-		_FORCE_INLINE_ bool operator!=(const Iterator &b) const { return E != b.E; }
+		GD_FORCE_INLINE bool operator==(const Iterator &b) const { return E == b.E; }
+		GD_FORCE_INLINE bool operator!=(const Iterator &b) const { return E != b.E; }
 
-		_FORCE_INLINE_ explicit operator bool() const {
+		GD_FORCE_INLINE explicit operator bool() const {
 			return E != nullptr;
 		}
 
-		_FORCE_INLINE_ Iterator(HashMapElement<TKey, TValue> *p_E) { E = p_E; }
-		_FORCE_INLINE_ Iterator() {}
-		_FORCE_INLINE_ Iterator(const Iterator &p_it) { E = p_it.E; }
-		_FORCE_INLINE_ void operator=(const Iterator &p_it) {
+		GD_FORCE_INLINE Iterator(HashMapElement<TKey, TValue> *p_E) { E = p_E; }
+		GD_FORCE_INLINE Iterator() {}
+		GD_FORCE_INLINE Iterator(const Iterator &p_it) { E = p_it.E; }
+		GD_FORCE_INLINE void operator=(const Iterator &p_it) {
 			E = p_it.E;
 		}
 
@@ -528,17 +528,17 @@ public:
 		HashMapElement<TKey, TValue> *E = nullptr;
 	};
 
-	_FORCE_INLINE_ Iterator begin() {
+	GD_FORCE_INLINE Iterator begin() {
 		return Iterator(head_element);
 	}
-	_FORCE_INLINE_ Iterator end() {
+	GD_FORCE_INLINE Iterator end() {
 		return Iterator(nullptr);
 	}
-	_FORCE_INLINE_ Iterator last() {
+	GD_FORCE_INLINE Iterator last() {
 		return Iterator(tail_element);
 	}
 
-	_FORCE_INLINE_ Iterator find(const TKey &p_key) {
+	GD_FORCE_INLINE Iterator find(const TKey &p_key) {
 		uint32_t pos = 0;
 		bool exists = _lookup_pos(p_key, pos);
 		if (!exists) {
@@ -547,23 +547,23 @@ public:
 		return Iterator(elements[pos]);
 	}
 
-	_FORCE_INLINE_ void remove(const Iterator &p_iter) {
+	GD_FORCE_INLINE void remove(const Iterator &p_iter) {
 		if (p_iter) {
 			erase(p_iter->key);
 		}
 	}
 
-	_FORCE_INLINE_ ConstIterator begin() const {
+	GD_FORCE_INLINE ConstIterator begin() const {
 		return ConstIterator(head_element);
 	}
-	_FORCE_INLINE_ ConstIterator end() const {
+	GD_FORCE_INLINE ConstIterator end() const {
 		return ConstIterator(nullptr);
 	}
-	_FORCE_INLINE_ ConstIterator last() const {
+	GD_FORCE_INLINE ConstIterator last() const {
 		return ConstIterator(tail_element);
 	}
 
-	_FORCE_INLINE_ ConstIterator find(const TKey &p_key) const {
+	GD_FORCE_INLINE ConstIterator find(const TKey &p_key) const {
 		uint32_t pos = 0;
 		bool exists = _lookup_pos(p_key, pos);
 		if (!exists) {

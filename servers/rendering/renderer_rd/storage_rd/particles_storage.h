@@ -488,19 +488,19 @@ public:
 
 	virtual bool particles_is_inactive(RID p_particles) const override;
 
-	_FORCE_INLINE_ RS::ParticlesMode particles_get_mode(RID p_particles) {
+	GD_FORCE_INLINE RS::ParticlesMode particles_get_mode(RID p_particles) {
 		Particles *particles = particles_owner.get_or_null(p_particles);
 		ERR_FAIL_NULL_V(particles, RS::PARTICLES_MODE_2D);
 		return particles->mode;
 	}
 
-	_FORCE_INLINE_ uint32_t particles_get_frame_counter(RID p_particles) {
+	GD_FORCE_INLINE uint32_t particles_get_frame_counter(RID p_particles) {
 		Particles *particles = particles_owner.get_or_null(p_particles);
 		ERR_FAIL_NULL_V(particles, false);
 		return particles->frame_counter;
 	}
 
-	_FORCE_INLINE_ uint32_t particles_get_amount(RID p_particles, uint32_t &r_trail_divisor) {
+	GD_FORCE_INLINE uint32_t particles_get_amount(RID p_particles, uint32_t &r_trail_divisor) {
 		Particles *particles = particles_owner.get_or_null(p_particles);
 		ERR_FAIL_NULL_V(particles, 0);
 
@@ -513,21 +513,21 @@ public:
 		return particles->amount * r_trail_divisor;
 	}
 
-	_FORCE_INLINE_ bool particles_has_collision(RID p_particles) {
+	GD_FORCE_INLINE bool particles_has_collision(RID p_particles) {
 		Particles *particles = particles_owner.get_or_null(p_particles);
 		ERR_FAIL_NULL_V(particles, false);
 
 		return particles->has_collision_cache;
 	}
 
-	_FORCE_INLINE_ uint32_t particles_is_using_local_coords(RID p_particles) {
+	GD_FORCE_INLINE uint32_t particles_is_using_local_coords(RID p_particles) {
 		Particles *particles = particles_owner.get_or_null(p_particles);
 		ERR_FAIL_NULL_V(particles, false);
 
 		return particles->use_local_coords;
 	}
 
-	_FORCE_INLINE_ RID particles_get_instance_buffer_uniform_set(RID p_particles, RID p_shader, uint32_t p_set) {
+	GD_FORCE_INLINE RID particles_get_instance_buffer_uniform_set(RID p_particles, RID p_shader, uint32_t p_set) {
 		Particles *particles = particles_owner.get_or_null(p_particles);
 		ERR_FAIL_NULL_V(particles, RID());
 		if (particles->particles_transforms_buffer_uniform_set.is_null() || !RD::get_singleton()->uniform_set_is_valid(particles->particles_transforms_buffer_uniform_set)) {

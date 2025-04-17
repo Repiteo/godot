@@ -138,13 +138,13 @@ class CodeSignRequirements : public CodeSignBlob {
 		return (s % a == 0) ? 0 : (a - s % a);
 	}
 
-	_FORCE_INLINE_ void _parse_certificate_slot(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const;
-	_FORCE_INLINE_ void _parse_key(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const;
-	_FORCE_INLINE_ void _parse_oid_key(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const;
-	_FORCE_INLINE_ void _parse_hash_string(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const;
-	_FORCE_INLINE_ void _parse_value(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const;
-	_FORCE_INLINE_ void _parse_date(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const;
-	_FORCE_INLINE_ bool _parse_match(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const;
+	GD_FORCE_INLINE void _parse_certificate_slot(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const;
+	GD_FORCE_INLINE void _parse_key(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const;
+	GD_FORCE_INLINE void _parse_oid_key(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const;
+	GD_FORCE_INLINE void _parse_hash_string(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const;
+	GD_FORCE_INLINE void _parse_value(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const;
+	GD_FORCE_INLINE void _parse_date(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const;
+	GD_FORCE_INLINE bool _parse_match(uint32_t &r_pos, String &r_out, uint32_t p_rq_size) const;
 
 public:
 	CodeSignRequirements();

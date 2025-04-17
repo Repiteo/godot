@@ -85,8 +85,8 @@ public:
 		bool use_normal = false;
 		bool use_specular = false;
 
-		_FORCE_INLINE_ bool is_valid() const { return diffuse.is_valid(); }
-		_FORCE_INLINE_ bool is_null() const { return diffuse.is_null(); }
+		GD_FORCE_INLINE bool is_valid() const { return diffuse.is_valid(); }
+		GD_FORCE_INLINE bool is_null() const { return diffuse.is_null(); }
 	};
 
 	typedef void (*InvalidationCallback)(bool p_deleted, void *p_userdata);
@@ -479,7 +479,7 @@ private:
 public:
 	static TextureStorage *get_singleton();
 
-	_FORCE_INLINE_ RID texture_rd_get_default(DefaultRDTexture p_texture) {
+	GD_FORCE_INLINE RID texture_rd_get_default(DefaultRDTexture p_texture) {
 		return default_rd_textures[p_texture];
 	}
 
@@ -562,7 +562,7 @@ public:
 	virtual uint64_t texture_get_native_handle(RID p_texture, bool p_srgb = false) const override;
 
 	//internal usage
-	_FORCE_INLINE_ TextureType texture_get_type(RID p_texture) {
+	GD_FORCE_INLINE TextureType texture_get_type(RID p_texture) {
 		RendererRD::TextureStorage::Texture *tex = texture_owner.get_or_null(p_texture);
 		if (tex == nullptr) {
 			return TYPE_2D;
@@ -571,7 +571,7 @@ public:
 		return tex->type;
 	}
 
-	_FORCE_INLINE_ int texture_get_layers(RID p_texture) {
+	GD_FORCE_INLINE int texture_get_layers(RID p_texture) {
 		RendererRD::TextureStorage::Texture *tex = texture_owner.get_or_null(p_texture);
 		if (tex == nullptr) {
 			return 1;
@@ -580,7 +580,7 @@ public:
 		return tex->layers;
 	}
 
-	_FORCE_INLINE_ Size2i texture_2d_get_size(RID p_texture) {
+	GD_FORCE_INLINE Size2i texture_2d_get_size(RID p_texture) {
 		if (p_texture.is_null()) {
 			return Size2i();
 		}
@@ -600,7 +600,7 @@ public:
 
 	RID decal_atlas_get_texture() const;
 	RID decal_atlas_get_texture_srgb() const;
-	_FORCE_INLINE_ Rect2 decal_atlas_get_texture_rect(RID p_texture) {
+	GD_FORCE_INLINE Rect2 decal_atlas_get_texture_rect(RID p_texture) {
 		DecalAtlas::Texture *t = decal_atlas.textures.getptr(p_texture);
 		if (!t) {
 			return Rect2();
@@ -629,62 +629,62 @@ public:
 	virtual void texture_add_to_decal_atlas(RID p_texture, bool p_panorama_to_dp = false) override;
 	virtual void texture_remove_from_decal_atlas(RID p_texture, bool p_panorama_to_dp = false) override;
 
-	_FORCE_INLINE_ Vector3 decal_get_size(RID p_decal) {
+	GD_FORCE_INLINE Vector3 decal_get_size(RID p_decal) {
 		const Decal *decal = decal_owner.get_or_null(p_decal);
 		return decal->size;
 	}
 
-	_FORCE_INLINE_ RID decal_get_texture(RID p_decal, RS::DecalTexture p_texture) {
+	GD_FORCE_INLINE RID decal_get_texture(RID p_decal, RS::DecalTexture p_texture) {
 		const Decal *decal = decal_owner.get_or_null(p_decal);
 		return decal->textures[p_texture];
 	}
 
-	_FORCE_INLINE_ Color decal_get_modulate(RID p_decal) {
+	GD_FORCE_INLINE Color decal_get_modulate(RID p_decal) {
 		const Decal *decal = decal_owner.get_or_null(p_decal);
 		return decal->modulate;
 	}
 
-	_FORCE_INLINE_ float decal_get_emission_energy(RID p_decal) {
+	GD_FORCE_INLINE float decal_get_emission_energy(RID p_decal) {
 		const Decal *decal = decal_owner.get_or_null(p_decal);
 		return decal->emission_energy;
 	}
 
-	_FORCE_INLINE_ float decal_get_albedo_mix(RID p_decal) {
+	GD_FORCE_INLINE float decal_get_albedo_mix(RID p_decal) {
 		const Decal *decal = decal_owner.get_or_null(p_decal);
 		return decal->albedo_mix;
 	}
 
-	_FORCE_INLINE_ uint32_t decal_get_cull_mask(RID p_decal) {
+	GD_FORCE_INLINE uint32_t decal_get_cull_mask(RID p_decal) {
 		const Decal *decal = decal_owner.get_or_null(p_decal);
 		return decal->cull_mask;
 	}
 
-	_FORCE_INLINE_ float decal_get_upper_fade(RID p_decal) {
+	GD_FORCE_INLINE float decal_get_upper_fade(RID p_decal) {
 		const Decal *decal = decal_owner.get_or_null(p_decal);
 		return decal->upper_fade;
 	}
 
-	_FORCE_INLINE_ float decal_get_lower_fade(RID p_decal) {
+	GD_FORCE_INLINE float decal_get_lower_fade(RID p_decal) {
 		const Decal *decal = decal_owner.get_or_null(p_decal);
 		return decal->lower_fade;
 	}
 
-	_FORCE_INLINE_ float decal_get_normal_fade(RID p_decal) {
+	GD_FORCE_INLINE float decal_get_normal_fade(RID p_decal) {
 		const Decal *decal = decal_owner.get_or_null(p_decal);
 		return decal->normal_fade;
 	}
 
-	_FORCE_INLINE_ bool decal_is_distance_fade_enabled(RID p_decal) {
+	GD_FORCE_INLINE bool decal_is_distance_fade_enabled(RID p_decal) {
 		const Decal *decal = decal_owner.get_or_null(p_decal);
 		return decal->distance_fade;
 	}
 
-	_FORCE_INLINE_ float decal_get_distance_fade_begin(RID p_decal) {
+	GD_FORCE_INLINE float decal_get_distance_fade_begin(RID p_decal) {
 		const Decal *decal = decal_owner.get_or_null(p_decal);
 		return decal->distance_fade_begin;
 	}
 
-	_FORCE_INLINE_ float decal_get_distance_fade_length(RID p_decal) {
+	GD_FORCE_INLINE float decal_get_distance_fade_length(RID p_decal) {
 		const Decal *decal = decal_owner.get_or_null(p_decal);
 		return decal->distance_fade_length;
 	}
@@ -702,27 +702,27 @@ public:
 	virtual void decal_instance_set_transform(RID p_decal_instance, const Transform3D &p_transform) override;
 	virtual void decal_instance_set_sorting_offset(RID p_decal_instance, float p_sorting_offset) override;
 
-	_FORCE_INLINE_ RID decal_instance_get_base(RID p_decal_instance) const {
+	GD_FORCE_INLINE RID decal_instance_get_base(RID p_decal_instance) const {
 		DecalInstance *di = decal_instance_owner.get_or_null(p_decal_instance);
 		return di->decal;
 	}
 
-	_FORCE_INLINE_ RendererRD::ForwardID decal_instance_get_forward_id(RID p_decal_instance) const {
+	GD_FORCE_INLINE RendererRD::ForwardID decal_instance_get_forward_id(RID p_decal_instance) const {
 		DecalInstance *di = decal_instance_owner.get_or_null(p_decal_instance);
 		return di->forward_id;
 	}
 
-	_FORCE_INLINE_ Transform3D decal_instance_get_transform(RID p_decal_instance) const {
+	GD_FORCE_INLINE Transform3D decal_instance_get_transform(RID p_decal_instance) const {
 		DecalInstance *di = decal_instance_owner.get_or_null(p_decal_instance);
 		return di->transform;
 	}
 
-	_FORCE_INLINE_ ForwardID decal_instance_get_forward_id(RID p_decal_instance) {
+	GD_FORCE_INLINE ForwardID decal_instance_get_forward_id(RID p_decal_instance) {
 		DecalInstance *di = decal_instance_owner.get_or_null(p_decal_instance);
 		return di->forward_id;
 	}
 
-	_FORCE_INLINE_ void decal_instance_set_cullmask(RID p_decal_instance, uint32_t p_cull_mask) const {
+	GD_FORCE_INLINE void decal_instance_set_cullmask(RID p_decal_instance, uint32_t p_cull_mask) const {
 		DecalInstance *di = decal_instance_owner.get_or_null(p_decal_instance);
 		di->cull_mask = p_cull_mask;
 	}

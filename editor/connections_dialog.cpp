@@ -930,7 +930,7 @@ Control *ConnectionsDockTree::make_custom_tooltip(const String &p_text) const {
 }
 
 struct _ConnectionsDockMethodInfoSort {
-	_FORCE_INLINE_ bool operator()(const MethodInfo &a, const MethodInfo &b) const {
+	GD_FORCE_INLINE bool operator()(const MethodInfo &a, const MethodInfo &b) const {
 		return a.name < b.name;
 	}
 };

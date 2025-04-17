@@ -58,8 +58,8 @@ struct [[nodiscard]] Transform2D {
 		{ 0, 0 },
 	};
 
-	_FORCE_INLINE_ real_t tdotx(const Vector2 &p_v) const { return columns[0][0] * p_v.x + columns[1][0] * p_v.y; }
-	_FORCE_INLINE_ real_t tdoty(const Vector2 &p_v) const { return columns[0][1] * p_v.x + columns[1][1] * p_v.y; }
+	GD_FORCE_INLINE real_t tdotx(const Vector2 &p_v) const { return columns[0][0] * p_v.x + columns[1][0] * p_v.y; }
+	GD_FORCE_INLINE real_t tdoty(const Vector2 &p_v) const { return columns[0][1] * p_v.x + columns[1][1] * p_v.y; }
 
 	constexpr const Vector2 &operator[](int p_idx) const { return columns[p_idx]; }
 	constexpr Vector2 &operator[](int p_idx) { return columns[p_idx]; }
@@ -74,8 +74,8 @@ struct [[nodiscard]] Transform2D {
 	real_t get_rotation() const;
 	real_t get_skew() const;
 	void set_skew(real_t p_angle);
-	_FORCE_INLINE_ void set_rotation_and_scale(real_t p_rot, const Size2 &p_scale);
-	_FORCE_INLINE_ void set_rotation_scale_and_skew(real_t p_rot, const Size2 &p_scale, real_t p_skew);
+	GD_FORCE_INLINE void set_rotation_and_scale(real_t p_rot, const Size2 &p_scale);
+	GD_FORCE_INLINE void set_rotation_scale_and_skew(real_t p_rot, const Size2 &p_scale, real_t p_skew);
 	void rotate(real_t p_angle);
 
 	void scale(const Size2 &p_scale);
@@ -88,8 +88,8 @@ struct [[nodiscard]] Transform2D {
 	Size2 get_scale() const;
 	void set_scale(const Size2 &p_scale);
 
-	_FORCE_INLINE_ const Vector2 &get_origin() const { return columns[2]; }
-	_FORCE_INLINE_ void set_origin(const Vector2 &p_origin) { columns[2] = p_origin; }
+	GD_FORCE_INLINE const Vector2 &get_origin() const { return columns[2]; }
+	GD_FORCE_INLINE void set_origin(const Vector2 &p_origin) { columns[2] = p_origin; }
 
 	Transform2D scaled(const Size2 &p_scale) const;
 	Transform2D scaled_local(const Size2 &p_scale) const;
@@ -121,14 +121,14 @@ struct [[nodiscard]] Transform2D {
 
 	Transform2D interpolate_with(const Transform2D &p_transform, real_t p_c) const;
 
-	_FORCE_INLINE_ Vector2 basis_xform(const Vector2 &p_vec) const;
-	_FORCE_INLINE_ Vector2 basis_xform_inv(const Vector2 &p_vec) const;
-	_FORCE_INLINE_ Vector2 xform(const Vector2 &p_vec) const;
-	_FORCE_INLINE_ Vector2 xform_inv(const Vector2 &p_vec) const;
-	_FORCE_INLINE_ Rect2 xform(const Rect2 &p_rect) const;
-	_FORCE_INLINE_ Rect2 xform_inv(const Rect2 &p_rect) const;
-	_FORCE_INLINE_ Vector<Vector2> xform(const Vector<Vector2> &p_array) const;
-	_FORCE_INLINE_ Vector<Vector2> xform_inv(const Vector<Vector2> &p_array) const;
+	GD_FORCE_INLINE Vector2 basis_xform(const Vector2 &p_vec) const;
+	GD_FORCE_INLINE Vector2 basis_xform_inv(const Vector2 &p_vec) const;
+	GD_FORCE_INLINE Vector2 xform(const Vector2 &p_vec) const;
+	GD_FORCE_INLINE Vector2 xform_inv(const Vector2 &p_vec) const;
+	GD_FORCE_INLINE Rect2 xform(const Rect2 &p_rect) const;
+	GD_FORCE_INLINE Rect2 xform_inv(const Rect2 &p_rect) const;
+	GD_FORCE_INLINE Vector<Vector2> xform(const Vector<Vector2> &p_array) const;
+	GD_FORCE_INLINE Vector<Vector2> xform_inv(const Vector<Vector2> &p_array) const;
 
 	operator String() const;
 

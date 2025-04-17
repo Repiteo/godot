@@ -593,7 +593,7 @@ private:
 		//should eventually be replaced by radix
 
 		struct SortByKey {
-			_FORCE_INLINE_ bool operator()(const GeometryInstanceSurface *A, const GeometryInstanceSurface *B) const {
+			GD_FORCE_INLINE bool operator()(const GeometryInstanceSurface *A, const GeometryInstanceSurface *B) const {
 				return (A->sort.sort_key2 == B->sort.sort_key2) ? (A->sort.sort_key1 < B->sort.sort_key1) : (A->sort.sort_key2 < B->sort.sort_key2);
 			}
 		};
@@ -609,7 +609,7 @@ private:
 		}
 
 		struct SortByDepth {
-			_FORCE_INLINE_ bool operator()(const GeometryInstanceSurface *A, const GeometryInstanceSurface *B) const {
+			GD_FORCE_INLINE bool operator()(const GeometryInstanceSurface *A, const GeometryInstanceSurface *B) const {
 				return (A->owner->depth < B->owner->depth);
 			}
 		};
@@ -621,7 +621,7 @@ private:
 		}
 
 		struct SortByReverseDepthAndPriority {
-			_FORCE_INLINE_ bool operator()(const GeometryInstanceSurface *A, const GeometryInstanceSurface *B) const {
+			GD_FORCE_INLINE bool operator()(const GeometryInstanceSurface *A, const GeometryInstanceSurface *B) const {
 				return (A->sort.priority == B->sort.priority) ? (A->owner->depth > B->owner->depth) : (A->sort.priority < B->sort.priority);
 			}
 		};
@@ -632,7 +632,7 @@ private:
 			sorter.sort(elements.ptr(), elements.size());
 		}
 
-		_FORCE_INLINE_ void add_element(GeometryInstanceSurface *p_element) {
+		GD_FORCE_INLINE void add_element(GeometryInstanceSurface *p_element) {
 			elements.push_back(p_element);
 		}
 	};
@@ -647,7 +647,7 @@ private:
 	void _render_post_processing(const RenderDataGLES3 *p_render_data);
 
 	template <PassMode p_pass_mode>
-	_FORCE_INLINE_ void _render_list_template(RenderListParameters *p_params, const RenderDataGLES3 *p_render_data, uint32_t p_from_element, uint32_t p_to_element, bool p_alpha_pass = false);
+	GD_FORCE_INLINE void _render_list_template(RenderListParameters *p_params, const RenderDataGLES3 *p_render_data, uint32_t p_from_element, uint32_t p_to_element, bool p_alpha_pass = false);
 
 protected:
 	double time;
@@ -815,7 +815,7 @@ public:
 
 	Ref<Image> environment_bake_panorama(RID p_env, bool p_bake_irradiance, const Size2i &p_size) override;
 
-	_FORCE_INLINE_ bool is_using_physical_light_units() {
+	GD_FORCE_INLINE bool is_using_physical_light_units() {
 		return use_physical_light_units;
 	}
 
@@ -843,13 +843,13 @@ public:
 		scene_pass = p_pass;
 	}
 
-	_FORCE_INLINE_ uint64_t get_scene_pass() {
+	GD_FORCE_INLINE uint64_t get_scene_pass() {
 		return scene_pass;
 	}
 
 	void set_time(double p_time, double p_step) override;
 	void set_debug_draw_mode(RS::ViewportDebugDraw p_debug_draw) override;
-	_FORCE_INLINE_ RS::ViewportDebugDraw get_debug_draw_mode() const {
+	GD_FORCE_INLINE RS::ViewportDebugDraw get_debug_draw_mode() const {
 		return debug_draw;
 	}
 

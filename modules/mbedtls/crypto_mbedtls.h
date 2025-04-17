@@ -67,8 +67,8 @@ public:
 		mbedtls_pk_free(&pkey);
 	}
 
-	_FORCE_INLINE_ void lock() { locks++; }
-	_FORCE_INLINE_ void unlock() { locks--; }
+	GD_FORCE_INLINE void lock() { locks++; }
+	GD_FORCE_INLINE void unlock() { locks--; }
 
 	friend class CryptoMbedTLS;
 	friend class TLSContextMbedTLS;
@@ -100,8 +100,8 @@ public:
 		mbedtls_x509_crt_free(&cert);
 	}
 
-	_FORCE_INLINE_ void lock() { locks++; }
-	_FORCE_INLINE_ void unlock() { locks--; }
+	GD_FORCE_INLINE void lock() { locks++; }
+	GD_FORCE_INLINE void unlock() { locks--; }
 
 	friend class CryptoMbedTLS;
 	friend class TLSContextMbedTLS;

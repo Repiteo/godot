@@ -161,7 +161,7 @@ private:
 
 	void _change_tree(Tree *p_tree);
 
-	_FORCE_INLINE_ void _create_children_cache() {
+	GD_FORCE_INLINE void _create_children_cache() {
 		if (children_cache.is_empty()) {
 			TreeItem *c = first_child;
 			while (c) {
@@ -171,7 +171,7 @@ private:
 		}
 	}
 
-	_FORCE_INLINE_ void _unlink_from_tree() {
+	GD_FORCE_INLINE void _unlink_from_tree() {
 		if (accessibility_row_element.is_valid()) {
 			DisplayServer::get_singleton()->accessibility_free_element(accessibility_row_element);
 			accessibility_row_element = RID();

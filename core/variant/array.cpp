@@ -693,7 +693,7 @@ bool Array::all(const Callable &p_callable) const {
 }
 
 struct _ArrayVariantSort {
-	_FORCE_INLINE_ bool operator()(const Variant &p_l, const Variant &p_r) const {
+	GD_FORCE_INLINE bool operator()(const Variant &p_l, const Variant &p_r) const {
 		bool valid = false;
 		Variant res;
 		Variant::evaluate(Variant::OP_LESS, p_l, p_r, res, valid);

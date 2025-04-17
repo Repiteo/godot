@@ -53,7 +53,7 @@ struct [[nodiscard]] Basis {
 	Basis inverse() const;
 	Basis transposed() const;
 
-	_FORCE_INLINE_ real_t determinant() const;
+	GD_FORCE_INLINE real_t determinant() const;
 
 	void rotate(const Vector3 &p_axis, real_t p_angle);
 	Basis rotated(const Vector3 &p_axis, real_t p_angle) const;
@@ -109,13 +109,13 @@ struct [[nodiscard]] Basis {
 	void set_quaternion_scale(const Quaternion &p_quaternion, const Vector3 &p_scale);
 
 	// transposed dot products
-	_FORCE_INLINE_ real_t tdotx(const Vector3 &p_v) const {
+	GD_FORCE_INLINE real_t tdotx(const Vector3 &p_v) const {
 		return rows[0][0] * p_v[0] + rows[1][0] * p_v[1] + rows[2][0] * p_v[2];
 	}
-	_FORCE_INLINE_ real_t tdoty(const Vector3 &p_v) const {
+	GD_FORCE_INLINE real_t tdoty(const Vector3 &p_v) const {
 		return rows[0][1] * p_v[0] + rows[1][1] * p_v[1] + rows[2][1] * p_v[2];
 	}
-	_FORCE_INLINE_ real_t tdotz(const Vector3 &p_v) const {
+	GD_FORCE_INLINE real_t tdotz(const Vector3 &p_v) const {
 		return rows[0][2] * p_v[0] + rows[1][2] * p_v[1] + rows[2][2] * p_v[2];
 	}
 
@@ -126,10 +126,10 @@ struct [[nodiscard]] Basis {
 	constexpr bool operator==(const Basis &p_matrix) const;
 	constexpr bool operator!=(const Basis &p_matrix) const;
 
-	_FORCE_INLINE_ Vector3 xform(const Vector3 &p_vector) const;
-	_FORCE_INLINE_ Vector3 xform_inv(const Vector3 &p_vector) const;
-	_FORCE_INLINE_ void operator*=(const Basis &p_matrix);
-	_FORCE_INLINE_ Basis operator*(const Basis &p_matrix) const;
+	GD_FORCE_INLINE Vector3 xform(const Vector3 &p_vector) const;
+	GD_FORCE_INLINE Vector3 xform_inv(const Vector3 &p_vector) const;
+	GD_FORCE_INLINE void operator*=(const Basis &p_matrix);
+	GD_FORCE_INLINE Basis operator*(const Basis &p_matrix) const;
 	constexpr void operator+=(const Basis &p_matrix);
 	constexpr Basis operator+(const Basis &p_matrix) const;
 	constexpr void operator-=(const Basis &p_matrix);
@@ -153,7 +153,7 @@ struct [[nodiscard]] Basis {
 
 	/* create / set */
 
-	_FORCE_INLINE_ void set(real_t p_xx, real_t p_xy, real_t p_xz, real_t p_yx, real_t p_yy, real_t p_yz, real_t p_zx, real_t p_zy, real_t p_zz) {
+	GD_FORCE_INLINE void set(real_t p_xx, real_t p_xy, real_t p_xz, real_t p_yx, real_t p_yy, real_t p_yz, real_t p_zx, real_t p_zy, real_t p_zz) {
 		rows[0][0] = p_xx;
 		rows[0][1] = p_xy;
 		rows[0][2] = p_xz;
@@ -164,35 +164,35 @@ struct [[nodiscard]] Basis {
 		rows[2][1] = p_zy;
 		rows[2][2] = p_zz;
 	}
-	_FORCE_INLINE_ void set_columns(const Vector3 &p_x, const Vector3 &p_y, const Vector3 &p_z) {
+	GD_FORCE_INLINE void set_columns(const Vector3 &p_x, const Vector3 &p_y, const Vector3 &p_z) {
 		set_column(0, p_x);
 		set_column(1, p_y);
 		set_column(2, p_z);
 	}
 
-	_FORCE_INLINE_ Vector3 get_column(int p_index) const {
+	GD_FORCE_INLINE Vector3 get_column(int p_index) const {
 		// Get actual basis axis column (we store transposed as rows for performance).
 		return Vector3(rows[0][p_index], rows[1][p_index], rows[2][p_index]);
 	}
 
-	_FORCE_INLINE_ void set_column(int p_index, const Vector3 &p_value) {
+	GD_FORCE_INLINE void set_column(int p_index, const Vector3 &p_value) {
 		// Set actual basis axis column (we store transposed as rows for performance).
 		rows[0][p_index] = p_value.x;
 		rows[1][p_index] = p_value.y;
 		rows[2][p_index] = p_value.z;
 	}
 
-	_FORCE_INLINE_ Vector3 get_main_diagonal() const {
+	GD_FORCE_INLINE Vector3 get_main_diagonal() const {
 		return Vector3(rows[0][0], rows[1][1], rows[2][2]);
 	}
 
-	_FORCE_INLINE_ void set_zero() {
+	GD_FORCE_INLINE void set_zero() {
 		rows[0].zero();
 		rows[1].zero();
 		rows[2].zero();
 	}
 
-	_FORCE_INLINE_ Basis transpose_xform(const Basis &p_m) const {
+	GD_FORCE_INLINE Basis transpose_xform(const Basis &p_m) const {
 		return Basis(
 				rows[0].x * p_m[0].x + rows[1].x * p_m[1].x + rows[2].x * p_m[2].x,
 				rows[0].x * p_m[0].y + rows[1].x * p_m[1].y + rows[2].x * p_m[2].y,
@@ -263,14 +263,14 @@ constexpr bool Basis::operator!=(const Basis &p_matrix) const {
 	return (!(*this == p_matrix));
 }
 
-_FORCE_INLINE_ void Basis::operator*=(const Basis &p_matrix) {
+GD_FORCE_INLINE void Basis::operator*=(const Basis &p_matrix) {
 	set(
 			p_matrix.tdotx(rows[0]), p_matrix.tdoty(rows[0]), p_matrix.tdotz(rows[0]),
 			p_matrix.tdotx(rows[1]), p_matrix.tdoty(rows[1]), p_matrix.tdotz(rows[1]),
 			p_matrix.tdotx(rows[2]), p_matrix.tdoty(rows[2]), p_matrix.tdotz(rows[2]));
 }
 
-_FORCE_INLINE_ Basis Basis::operator*(const Basis &p_matrix) const {
+GD_FORCE_INLINE Basis Basis::operator*(const Basis &p_matrix) const {
 	return Basis(
 			p_matrix.tdotx(rows[0]), p_matrix.tdoty(rows[0]), p_matrix.tdotz(rows[0]),
 			p_matrix.tdotx(rows[1]), p_matrix.tdoty(rows[1]), p_matrix.tdotz(rows[1]),

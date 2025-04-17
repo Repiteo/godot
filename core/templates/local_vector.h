@@ -48,15 +48,15 @@ private:
 	T *data = nullptr;
 
 public:
-	_FORCE_INLINE_ T *ptr() { return data; }
-	_FORCE_INLINE_ const T *ptr() const { return data; }
-	_FORCE_INLINE_ U size() const { return count; }
+	GD_FORCE_INLINE T *ptr() { return data; }
+	GD_FORCE_INLINE const T *ptr() const { return data; }
+	GD_FORCE_INLINE U size() const { return count; }
 
-	_FORCE_INLINE_ Span<T> span() const { return Span(data, count); }
-	_FORCE_INLINE_ operator Span<T>() const { return span(); }
+	GD_FORCE_INLINE Span<T> span() const { return Span(data, count); }
+	GD_FORCE_INLINE operator Span<T>() const { return span(); }
 
 	// Must take a copy instead of a reference (see GH-31736).
-	_FORCE_INLINE_ void push_back(T p_elem) {
+	GD_FORCE_INLINE void push_back(T p_elem) {
 		if (unlikely(count == capacity)) {
 			capacity = tight ? (capacity + 1) : MAX((U)1, capacity << 1);
 			data = (T *)memrealloc(data, capacity * sizeof(T));
@@ -94,7 +94,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ bool erase(const T &p_val) {
+	GD_FORCE_INLINE bool erase(const T &p_val) {
 		int64_t idx = find(p_val);
 		if (idx >= 0) {
 			remove_at(idx);
@@ -134,8 +134,8 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ void clear() { resize(0); }
-	_FORCE_INLINE_ void reset() {
+	GD_FORCE_INLINE void clear() { resize(0); }
+	GD_FORCE_INLINE void reset() {
 		clear();
 		if (data) {
 			memfree(data);
@@ -143,9 +143,9 @@ public:
 			capacity = 0;
 		}
 	}
-	_FORCE_INLINE_ bool is_empty() const { return count == 0; }
-	_FORCE_INLINE_ U get_capacity() const { return capacity; }
-	_FORCE_INLINE_ void reserve(U p_size) {
+	GD_FORCE_INLINE bool is_empty() const { return count == 0; }
+	GD_FORCE_INLINE U get_capacity() const { return capacity; }
+	GD_FORCE_INLINE void reserve(U p_size) {
 		p_size = tight ? p_size : nearest_power_of_2_templated(p_size);
 		if (p_size > capacity) {
 			capacity = p_size;
@@ -174,31 +174,31 @@ public:
 			count = p_size;
 		}
 	}
-	_FORCE_INLINE_ const T &operator[](U p_index) const {
+	GD_FORCE_INLINE const T &operator[](U p_index) const {
 		CRASH_BAD_UNSIGNED_INDEX(p_index, count);
 		return data[p_index];
 	}
-	_FORCE_INLINE_ T &operator[](U p_index) {
+	GD_FORCE_INLINE T &operator[](U p_index) {
 		CRASH_BAD_UNSIGNED_INDEX(p_index, count);
 		return data[p_index];
 	}
 
 	struct Iterator {
-		_FORCE_INLINE_ T &operator*() const {
+		GD_FORCE_INLINE T &operator*() const {
 			return *elem_ptr;
 		}
-		_FORCE_INLINE_ T *operator->() const { return elem_ptr; }
-		_FORCE_INLINE_ Iterator &operator++() {
+		GD_FORCE_INLINE T *operator->() const { return elem_ptr; }
+		GD_FORCE_INLINE Iterator &operator++() {
 			elem_ptr++;
 			return *this;
 		}
-		_FORCE_INLINE_ Iterator &operator--() {
+		GD_FORCE_INLINE Iterator &operator--() {
 			elem_ptr--;
 			return *this;
 		}
 
-		_FORCE_INLINE_ bool operator==(const Iterator &b) const { return elem_ptr == b.elem_ptr; }
-		_FORCE_INLINE_ bool operator!=(const Iterator &b) const { return elem_ptr != b.elem_ptr; }
+		GD_FORCE_INLINE bool operator==(const Iterator &b) const { return elem_ptr == b.elem_ptr; }
+		GD_FORCE_INLINE bool operator!=(const Iterator &b) const { return elem_ptr != b.elem_ptr; }
 
 		Iterator(T *p_ptr) { elem_ptr = p_ptr; }
 		Iterator() {}
@@ -209,21 +209,21 @@ public:
 	};
 
 	struct ConstIterator {
-		_FORCE_INLINE_ const T &operator*() const {
+		GD_FORCE_INLINE const T &operator*() const {
 			return *elem_ptr;
 		}
-		_FORCE_INLINE_ const T *operator->() const { return elem_ptr; }
-		_FORCE_INLINE_ ConstIterator &operator++() {
+		GD_FORCE_INLINE const T *operator->() const { return elem_ptr; }
+		GD_FORCE_INLINE ConstIterator &operator++() {
 			elem_ptr++;
 			return *this;
 		}
-		_FORCE_INLINE_ ConstIterator &operator--() {
+		GD_FORCE_INLINE ConstIterator &operator--() {
 			elem_ptr--;
 			return *this;
 		}
 
-		_FORCE_INLINE_ bool operator==(const ConstIterator &b) const { return elem_ptr == b.elem_ptr; }
-		_FORCE_INLINE_ bool operator!=(const ConstIterator &b) const { return elem_ptr != b.elem_ptr; }
+		GD_FORCE_INLINE bool operator==(const ConstIterator &b) const { return elem_ptr == b.elem_ptr; }
+		GD_FORCE_INLINE bool operator!=(const ConstIterator &b) const { return elem_ptr != b.elem_ptr; }
 
 		ConstIterator(const T *p_ptr) { elem_ptr = p_ptr; }
 		ConstIterator() {}
@@ -233,17 +233,17 @@ public:
 		const T *elem_ptr = nullptr;
 	};
 
-	_FORCE_INLINE_ Iterator begin() {
+	GD_FORCE_INLINE Iterator begin() {
 		return Iterator(data);
 	}
-	_FORCE_INLINE_ Iterator end() {
+	GD_FORCE_INLINE Iterator end() {
 		return Iterator(data + size());
 	}
 
-	_FORCE_INLINE_ ConstIterator begin() const {
+	GD_FORCE_INLINE ConstIterator begin() const {
 		return ConstIterator(ptr());
 	}
-	_FORCE_INLINE_ ConstIterator end() const {
+	GD_FORCE_INLINE ConstIterator end() const {
 		return ConstIterator(ptr() + size());
 	}
 
@@ -325,20 +325,20 @@ public:
 		return ret;
 	}
 
-	_FORCE_INLINE_ LocalVector() {}
-	_FORCE_INLINE_ LocalVector(std::initializer_list<T> p_init) {
+	GD_FORCE_INLINE LocalVector() {}
+	GD_FORCE_INLINE LocalVector(std::initializer_list<T> p_init) {
 		reserve(p_init.size());
 		for (const T &element : p_init) {
 			push_back(element);
 		}
 	}
-	_FORCE_INLINE_ LocalVector(const LocalVector &p_from) {
+	GD_FORCE_INLINE LocalVector(const LocalVector &p_from) {
 		resize(p_from.size());
 		for (U i = 0; i < p_from.count; i++) {
 			data[i] = p_from.data[i];
 		}
 	}
-	_FORCE_INLINE_ LocalVector(LocalVector &&p_from) {
+	GD_FORCE_INLINE LocalVector(LocalVector &&p_from) {
 		data = p_from.data;
 		count = p_from.count;
 		capacity = p_from.capacity;
@@ -381,7 +381,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ ~LocalVector() {
+	GD_FORCE_INLINE ~LocalVector() {
 		if (data) {
 			reset();
 		}

@@ -72,12 +72,12 @@ class ComAutoreleaseRef {
 public:
 	T *reference = nullptr;
 
-	_FORCE_INLINE_ T *operator->() { return reference; }
-	_FORCE_INLINE_ const T *operator->() const { return reference; }
-	_FORCE_INLINE_ T *operator*() { return reference; }
-	_FORCE_INLINE_ const T *operator*() const { return reference; }
-	_FORCE_INLINE_ bool is_valid() const { return reference != nullptr; }
-	_FORCE_INLINE_ bool is_null() const { return reference == nullptr; }
+	GD_FORCE_INLINE T *operator->() { return reference; }
+	GD_FORCE_INLINE const T *operator->() const { return reference; }
+	GD_FORCE_INLINE T *operator*() { return reference; }
+	GD_FORCE_INLINE const T *operator*() const { return reference; }
+	GD_FORCE_INLINE bool is_valid() const { return reference != nullptr; }
+	GD_FORCE_INLINE bool is_null() const { return reference == nullptr; }
 	ComAutoreleaseRef() {}
 	ComAutoreleaseRef(T *p_ref) {
 		reference = p_ref;

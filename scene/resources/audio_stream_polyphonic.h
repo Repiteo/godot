@@ -86,8 +86,8 @@ class AudioStreamPlaybackPolyphonic : public AudioStreamPlayback {
 	bool _is_sample = false;
 	Ref<AudioSamplePlayback> sample_playback;
 
-	_FORCE_INLINE_ Stream *_find_stream(int64_t p_id);
-	_FORCE_INLINE_ const Stream *_find_stream(int64_t p_id) const;
+	GD_FORCE_INLINE Stream *_find_stream(int64_t p_id);
+	GD_FORCE_INLINE const Stream *_find_stream(int64_t p_id) const;
 
 	friend class AudioStreamPolyphonic;
 

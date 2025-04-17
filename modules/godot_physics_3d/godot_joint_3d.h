@@ -56,7 +56,7 @@ protected:
 		}
 	}
 
-	_FORCE_INLINE_ real_t atan2fast(real_t y, real_t x) {
+	GD_FORCE_INLINE real_t atan2fast(real_t y, real_t x) {
 		real_t coeff_1 = Math::PI / 4.0f;
 		real_t coeff_2 = 3.0f * coeff_1;
 		real_t abs_y = Math::abs(y);
@@ -83,7 +83,7 @@ public:
 	}
 
 	virtual PhysicsServer3D::JointType get_type() const { return PhysicsServer3D::JOINT_TYPE_MAX; }
-	_FORCE_INLINE_ GodotJoint3D(GodotBody3D **p_body_ptr = nullptr, int p_body_count = 0) :
+	GD_FORCE_INLINE GodotJoint3D(GodotBody3D **p_body_ptr = nullptr, int p_body_count = 0) :
 			GodotConstraint3D(p_body_ptr, p_body_count) {
 	}
 

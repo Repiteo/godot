@@ -335,9 +335,9 @@ class CSharpInstance : public ScriptInstance {
 	static CSharpInstance *create_for_managed_type(Object *p_owner, CSharpScript *p_script, const MonoGCHandleData &p_gchandle);
 
 public:
-	_FORCE_INLINE_ bool is_destructing_script_instance() { return destructing_script_instance; }
+	GD_FORCE_INLINE bool is_destructing_script_instance() { return destructing_script_instance; }
 
-	_FORCE_INLINE_ GCHandleIntPtr get_gchandle_intptr() { return gchandle.get_intptr(); }
+	GD_FORCE_INLINE GCHandleIntPtr get_gchandle_intptr() { return gchandle.get_intptr(); }
 
 	Object *get_owner() override;
 
@@ -457,17 +457,17 @@ public:
 		return script_instances_mutex;
 	}
 
-	_FORCE_INLINE_ int get_language_index() {
+	GD_FORCE_INLINE int get_language_index() {
 		return lang_idx;
 	}
 	void set_language_index(int p_idx);
 
-	_FORCE_INLINE_ static CSharpLanguage *get_singleton() {
+	GD_FORCE_INLINE static CSharpLanguage *get_singleton() {
 		return singleton;
 	}
 
 #ifdef TOOLS_ENABLED
-	_FORCE_INLINE_ EditorPlugin *get_godotsharp_editor() const {
+	GD_FORCE_INLINE EditorPlugin *get_godotsharp_editor() const {
 		return godotsharp_editor;
 	}
 #endif
@@ -484,7 +484,7 @@ public:
 	void reload_assemblies(bool p_soft_reload);
 #endif
 
-	_FORCE_INLINE_ ManagedCallableMiddleman *get_managed_callable_middleman() const {
+	GD_FORCE_INLINE ManagedCallableMiddleman *get_managed_callable_middleman() const {
 		return managed_callable_middleman;
 	}
 

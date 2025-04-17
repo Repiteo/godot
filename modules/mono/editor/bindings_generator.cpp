@@ -3855,7 +3855,7 @@ bool method_has_ptr_parameter(MethodInfo p_method_info) {
 }
 
 struct SortMethodWithHashes {
-	_FORCE_INLINE_ bool operator()(const Pair<MethodInfo, uint32_t> &p_a, const Pair<MethodInfo, uint32_t> &p_b) const {
+	GD_FORCE_INLINE bool operator()(const Pair<MethodInfo, uint32_t> &p_a, const Pair<MethodInfo, uint32_t> &p_b) const {
 		return p_a.first < p_b.first;
 	}
 };

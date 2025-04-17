@@ -45,8 +45,8 @@ extern "C" {
 struct GCHandleIntPtr {
 	void *value;
 
-	_FORCE_INLINE_ bool operator==(const GCHandleIntPtr &p_other) { return value == p_other.value; }
-	_FORCE_INLINE_ bool operator!=(const GCHandleIntPtr &p_other) { return value != p_other.value; }
+	GD_FORCE_INLINE bool operator==(const GCHandleIntPtr &p_other) { return value == p_other.value; }
+	GD_FORCE_INLINE bool operator!=(const GCHandleIntPtr &p_other) { return value != p_other.value; }
 
 	GCHandleIntPtr() = delete;
 };
@@ -59,9 +59,9 @@ struct MonoGCHandleData {
 	GCHandleIntPtr handle = { nullptr };
 	gdmono::GCHandleType type = gdmono::GCHandleType::NIL;
 
-	_FORCE_INLINE_ bool is_released() const { return !handle.value; }
-	_FORCE_INLINE_ bool is_weak() const { return type == gdmono::GCHandleType::WEAK_HANDLE; }
-	_FORCE_INLINE_ GCHandleIntPtr get_intptr() const { return handle; }
+	GD_FORCE_INLINE bool is_released() const { return !handle.value; }
+	GD_FORCE_INLINE bool is_weak() const { return type == gdmono::GCHandleType::WEAK_HANDLE; }
+	GD_FORCE_INLINE GCHandleIntPtr get_intptr() const { return handle; }
 
 	void release();
 

@@ -80,25 +80,25 @@ struct [[nodiscard]] Transform3D {
 	constexpr bool operator==(const Transform3D &p_transform) const;
 	constexpr bool operator!=(const Transform3D &p_transform) const;
 
-	_FORCE_INLINE_ Vector3 xform(const Vector3 &p_vector) const;
-	_FORCE_INLINE_ AABB xform(const AABB &p_aabb) const;
-	_FORCE_INLINE_ Vector<Vector3> xform(const Vector<Vector3> &p_array) const;
+	GD_FORCE_INLINE Vector3 xform(const Vector3 &p_vector) const;
+	GD_FORCE_INLINE AABB xform(const AABB &p_aabb) const;
+	GD_FORCE_INLINE Vector<Vector3> xform(const Vector<Vector3> &p_array) const;
 
 	// NOTE: These are UNSAFE with non-uniform scaling, and will produce incorrect results.
 	// They use the transpose.
 	// For safe inverse transforms, xform by the affine_inverse.
-	_FORCE_INLINE_ Vector3 xform_inv(const Vector3 &p_vector) const;
-	_FORCE_INLINE_ AABB xform_inv(const AABB &p_aabb) const;
-	_FORCE_INLINE_ Vector<Vector3> xform_inv(const Vector<Vector3> &p_array) const;
+	GD_FORCE_INLINE Vector3 xform_inv(const Vector3 &p_vector) const;
+	GD_FORCE_INLINE AABB xform_inv(const AABB &p_aabb) const;
+	GD_FORCE_INLINE Vector<Vector3> xform_inv(const Vector<Vector3> &p_array) const;
 
 	// Safe with non-uniform scaling (uses affine_inverse).
-	_FORCE_INLINE_ Plane xform(const Plane &p_plane) const;
-	_FORCE_INLINE_ Plane xform_inv(const Plane &p_plane) const;
+	GD_FORCE_INLINE Plane xform(const Plane &p_plane) const;
+	GD_FORCE_INLINE Plane xform_inv(const Plane &p_plane) const;
 
 	// These fast versions use precomputed affine inverse, and should be used in bottleneck areas where
 	// multiple planes are to be transformed.
-	_FORCE_INLINE_ Plane xform_fast(const Plane &p_plane, const Basis &p_basis_inverse_transpose) const;
-	static _FORCE_INLINE_ Plane xform_inv_fast(const Plane &p_plane, const Transform3D &p_inverse, const Basis &p_basis_transpose);
+	GD_FORCE_INLINE Plane xform_fast(const Plane &p_plane, const Basis &p_basis_inverse_transpose) const;
+	static GD_FORCE_INLINE Plane xform_inv_fast(const Plane &p_plane, const Transform3D &p_inverse, const Basis &p_basis_transpose);
 
 	void operator*=(const Transform3D &p_transform);
 	Transform3D operator*(const Transform3D &p_transform) const;
@@ -109,7 +109,7 @@ struct [[nodiscard]] Transform3D {
 
 	Transform3D interpolate_with(const Transform3D &p_transform, real_t p_c) const;
 
-	_FORCE_INLINE_ Transform3D inverse_xform(const Transform3D &t) const {
+	GD_FORCE_INLINE Transform3D inverse_xform(const Transform3D &t) const {
 		Vector3 v = t.origin - origin;
 		return Transform3D(basis.transpose_xform(t.basis),
 				basis.xform(v));
@@ -166,14 +166,14 @@ constexpr Transform3D Transform3D::operator/(real_t p_val) const {
 	return ret;
 }
 
-_FORCE_INLINE_ Vector3 Transform3D::xform(const Vector3 &p_vector) const {
+GD_FORCE_INLINE Vector3 Transform3D::xform(const Vector3 &p_vector) const {
 	return Vector3(
 			basis[0].dot(p_vector) + origin.x,
 			basis[1].dot(p_vector) + origin.y,
 			basis[2].dot(p_vector) + origin.z);
 }
 
-_FORCE_INLINE_ Vector3 Transform3D::xform_inv(const Vector3 &p_vector) const {
+GD_FORCE_INLINE Vector3 Transform3D::xform_inv(const Vector3 &p_vector) const {
 	Vector3 v = p_vector - origin;
 
 	return Vector3(
@@ -186,19 +186,19 @@ _FORCE_INLINE_ Vector3 Transform3D::xform_inv(const Vector3 &p_vector) const {
 // as they do a basis inverse. For xforming a large number
 // of planes it is better to pre-calculate the inverse transpose basis once
 // and reuse it for each plane, by using the 'fast' version of the functions.
-_FORCE_INLINE_ Plane Transform3D::xform(const Plane &p_plane) const {
+GD_FORCE_INLINE Plane Transform3D::xform(const Plane &p_plane) const {
 	Basis b = basis.inverse();
 	b.transpose();
 	return xform_fast(p_plane, b);
 }
 
-_FORCE_INLINE_ Plane Transform3D::xform_inv(const Plane &p_plane) const {
+GD_FORCE_INLINE Plane Transform3D::xform_inv(const Plane &p_plane) const {
 	Transform3D inv = affine_inverse();
 	Basis basis_transpose = basis.transposed();
 	return xform_inv_fast(p_plane, inv, basis_transpose);
 }
 
-_FORCE_INLINE_ AABB Transform3D::xform(const AABB &p_aabb) const {
+GD_FORCE_INLINE AABB Transform3D::xform(const AABB &p_aabb) const {
 	/* https://dev.theomader.com/transform-bounding-boxes/ */
 	Vector3 min = p_aabb.position;
 	Vector3 max = p_aabb.position + p_aabb.size;
@@ -223,7 +223,7 @@ _FORCE_INLINE_ AABB Transform3D::xform(const AABB &p_aabb) const {
 	return r_aabb;
 }
 
-_FORCE_INLINE_ AABB Transform3D::xform_inv(const AABB &p_aabb) const {
+GD_FORCE_INLINE AABB Transform3D::xform_inv(const AABB &p_aabb) const {
 	/* define vertices */
 	Vector3 vertices[8] = {
 		Vector3(p_aabb.position.x + p_aabb.size.x, p_aabb.position.y + p_aabb.size.y, p_aabb.position.z + p_aabb.size.z),
@@ -273,7 +273,7 @@ Vector<Vector3> Transform3D::xform_inv(const Vector<Vector3> &p_array) const {
 	return array;
 }
 
-_FORCE_INLINE_ Plane Transform3D::xform_fast(const Plane &p_plane, const Basis &p_basis_inverse_transpose) const {
+GD_FORCE_INLINE Plane Transform3D::xform_fast(const Plane &p_plane, const Basis &p_basis_inverse_transpose) const {
 	// Transform a single point on the plane.
 	Vector3 point = p_plane.normal * p_plane.d;
 	point = xform(point);
@@ -286,7 +286,7 @@ _FORCE_INLINE_ Plane Transform3D::xform_fast(const Plane &p_plane, const Basis &
 	return Plane(normal, d);
 }
 
-_FORCE_INLINE_ Plane Transform3D::xform_inv_fast(const Plane &p_plane, const Transform3D &p_inverse, const Basis &p_basis_transpose) {
+GD_FORCE_INLINE Plane Transform3D::xform_inv_fast(const Plane &p_plane, const Transform3D &p_inverse, const Basis &p_basis_transpose) {
 	// Transform a single point on the plane.
 	Vector3 point = p_plane.normal * p_plane.d;
 	point = p_inverse.xform(point);

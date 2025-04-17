@@ -56,7 +56,7 @@ class Shape3D : public Resource {
 protected:
 	static void _bind_methods();
 
-	_FORCE_INLINE_ RID get_shape() const { return shape; }
+	GD_FORCE_INLINE RID get_shape() const { return shape; }
 	Shape3D(RID p_shape);
 
 	Ref<Material> get_debug_collision_material();
@@ -67,12 +67,15 @@ public:
 	virtual RID get_rid() const override { return shape; }
 
 	Ref<ArrayMesh> get_debug_mesh();
-	virtual Vector<Vector3> get_debug_mesh_lines() const = 0; // { return Vector<Vector3>(); }
-	virtual Ref<ArrayMesh> get_debug_arraymesh_faces(const Color &p_modulate) const = 0;
+	virtual Vector<Vector3>
+	get_debug_mesh_lines() const = 0; // { return Vector<Vector3>(); }
+	virtual Ref<ArrayMesh>
+	get_debug_arraymesh_faces(const Color &p_modulate) const = 0;
 	/// Returns the radius of a sphere that fully enclose this shape
 	virtual real_t get_enclosing_radius() const = 0;
 
-	void add_vertices_to_array(Vector<Vector3> &array, const Transform3D &p_xform);
+	void add_vertices_to_array(Vector<Vector3> &array,
+			const Transform3D &p_xform);
 
 	void set_custom_solver_bias(real_t p_bias);
 	real_t get_custom_solver_bias() const;
@@ -87,7 +90,9 @@ public:
 	bool get_debug_fill() const;
 
 #ifdef DEBUG_ENABLED
-	_FORCE_INLINE_ bool are_debug_properties_edited() const { return debug_properties_edited; }
+	GD_FORCE_INLINE bool are_debug_properties_edited() const {
+		return debug_properties_edited;
+	}
 #endif // DEBUG_ENABLED
 
 	Shape3D();

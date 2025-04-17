@@ -323,7 +323,7 @@ private:
 	Vector<StringName> blend_shapes;
 	AABB custom_aabb;
 
-	_FORCE_INLINE_ void _create_if_empty() const;
+	GD_FORCE_INLINE void _create_if_empty() const;
 	void _recompute_aabb();
 
 protected:

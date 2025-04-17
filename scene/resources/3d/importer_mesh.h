@@ -39,9 +39,9 @@
 #include "scene/resources/3d/convex_polygon_shape_3d.h"
 #endif // PHYSICS_3D_DISABLED
 
-// The following classes are used by importers instead of ArrayMesh and MeshInstance3D
-// so the data is not registered (hence, quality loss), importing happens faster and
-// its easier to modify before saving
+// The following classes are used by importers instead of ArrayMesh and
+// MeshInstance3D so the data is not registered (hence, quality loss), importing
+// happens faster and its easier to modify before saving
 
 class ImporterMesh : public Resource {
 	GDCLASS(ImporterMesh, Resource)
@@ -63,7 +63,7 @@ class ImporterMesh : public Resource {
 		uint64_t flags = 0;
 
 		struct LODComparator {
-			_FORCE_INLINE_ bool operator()(const LOD &l, const LOD &r) const {
+			GD_FORCE_INLINE bool operator()(const LOD &l, const LOD &r) const {
 				return l.distance < r.distance;
 			}
 		};
@@ -82,7 +82,9 @@ protected:
 	void _set_data(const Dictionary &p_data);
 	Dictionary _get_data() const;
 
-	void _generate_lods_bind(float p_normal_merge_angle, float p_normal_split_angle, Array p_skin_pose_transform_array);
+	void _generate_lods_bind(float p_normal_merge_angle,
+			float p_normal_split_angle,
+			Array p_skin_pose_transform_array);
 
 	static void _bind_methods();
 
@@ -93,7 +95,11 @@ public:
 
 	static String validate_blend_shape_name(const String &p_name);
 
-	void add_surface(Mesh::PrimitiveType p_primitive, const Array &p_arrays, const TypedArray<Array> &p_blend_shapes = Array(), const Dictionary &p_lods = Dictionary(), const Ref<Material> &p_material = Ref<Material>(), const String &p_name = String(), const uint64_t p_flags = 0);
+	void add_surface(Mesh::PrimitiveType p_primitive, const Array &p_arrays,
+			const TypedArray<Array> &p_blend_shapes = Array(),
+			const Dictionary &p_lods = Dictionary(),
+			const Ref<Material> &p_material = Ref<Material>(),
+			const String &p_name = String(), const uint64_t p_flags = 0);
 	int get_surface_count() const;
 
 	void set_blend_shape_mode(Mesh::BlendShapeMode p_blend_shape_mode);
@@ -114,19 +120,25 @@ public:
 
 	void optimize_indices();
 
-	void generate_lods(float p_normal_merge_angle, Array p_skin_pose_transform_array);
+	void generate_lods(float p_normal_merge_angle,
+			Array p_skin_pose_transform_array);
 
 	void create_shadow_mesh();
 	Ref<ImporterMesh> get_shadow_mesh() const;
 
 	Vector<Face3> get_faces() const;
 #ifndef PHYSICS_3D_DISABLED
-	Vector<Ref<Shape3D>> convex_decompose(const Ref<MeshConvexDecompositionSettings> &p_settings) const;
-	Ref<ConvexPolygonShape3D> create_convex_shape(bool p_clean = true, bool p_simplify = false) const;
+	Vector<Ref<Shape3D>> convex_decompose(
+			const Ref<MeshConvexDecompositionSettings> &p_settings) const;
+	Ref<ConvexPolygonShape3D> create_convex_shape(bool p_clean = true,
+			bool p_simplify = false) const;
 	Ref<ConcavePolygonShape3D> create_trimesh_shape() const;
 #endif // PHYSICS_3D_DISABLED
 	Ref<NavigationMesh> create_navigation_mesh();
-	Error lightmap_unwrap_cached(const Transform3D &p_base_transform, float p_texel_size, const Vector<uint8_t> &p_src_cache, Vector<uint8_t> &r_dst_cache);
+	Error lightmap_unwrap_cached(const Transform3D &p_base_transform,
+			float p_texel_size,
+			const Vector<uint8_t> &p_src_cache,
+			Vector<uint8_t> &r_dst_cache);
 
 	void set_lightmap_size_hint(const Size2i &p_size);
 	Size2i get_lightmap_size_hint() const;

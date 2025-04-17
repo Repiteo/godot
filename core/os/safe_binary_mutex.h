@@ -64,27 +64,27 @@ class SafeBinaryMutex {
 	static thread_local TLSData tls_data;
 
 public:
-	_ALWAYS_INLINE_ void lock() const {
+	GD_ALWAYS_INLINE void lock() const {
 		if (++tls_data.count == 1) {
 			tls_data.lock.lock();
 		}
 	}
 
-	_ALWAYS_INLINE_ void unlock() const {
+	GD_ALWAYS_INLINE void unlock() const {
 		DEV_ASSERT(tls_data.count);
 		if (--tls_data.count == 0) {
 			tls_data.lock.unlock();
 		}
 	}
 
-	_ALWAYS_INLINE_ THREADING_NAMESPACE::unique_lock<THREADING_NAMESPACE::mutex> &_get_lock() const {
+	GD_ALWAYS_INLINE THREADING_NAMESPACE::unique_lock<THREADING_NAMESPACE::mutex> &_get_lock() const {
 		return const_cast<THREADING_NAMESPACE::unique_lock<THREADING_NAMESPACE::mutex> &>(tls_data.lock);
 	}
 
-	_ALWAYS_INLINE_ SafeBinaryMutex() {
+	GD_ALWAYS_INLINE SafeBinaryMutex() {
 	}
 
-	_ALWAYS_INLINE_ ~SafeBinaryMutex() {
+	GD_ALWAYS_INLINE ~SafeBinaryMutex() {
 		DEV_ASSERT(!tls_data.count);
 	}
 };
@@ -105,11 +105,11 @@ public:
 		mutex.unlock();
 	}
 
-	_ALWAYS_INLINE_ void temp_relock() const {
+	GD_ALWAYS_INLINE void temp_relock() const {
 		mutex.lock();
 	}
 
-	_ALWAYS_INLINE_ void temp_unlock() const {
+	GD_ALWAYS_INLINE void temp_unlock() const {
 		mutex.unlock();
 	}
 

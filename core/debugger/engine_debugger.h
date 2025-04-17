@@ -101,10 +101,10 @@ protected:
 	static void (*allow_focus_steal_fn)();
 
 public:
-	_FORCE_INLINE_ static EngineDebugger *get_singleton() { return singleton; }
-	_FORCE_INLINE_ static bool is_active() { return singleton != nullptr && script_debugger != nullptr; }
+	GD_FORCE_INLINE static EngineDebugger *get_singleton() { return singleton; }
+	GD_FORCE_INLINE static bool is_active() { return singleton != nullptr && script_debugger != nullptr; }
 
-	_FORCE_INLINE_ static ScriptDebugger *get_script_debugger() { return script_debugger; }
+	GD_FORCE_INLINE static ScriptDebugger *get_script_debugger() { return script_debugger; }
 
 	static void initialize(const String &p_uri, bool p_skip_breakpoints, bool p_ignore_error_breaks, const Vector<String> &p_breakpoints, void (*p_allow_focus_steal_fn)());
 	static void deinitialize();

@@ -1242,7 +1242,7 @@ Vector<ObjectID> RendererSceneCull::instances_cull_aabb(const AABB &p_aabb, RID 
 
 	struct CullAABB {
 		Vector<ObjectID> instances;
-		_FORCE_INLINE_ bool operator()(void *p_data) {
+		GD_FORCE_INLINE bool operator()(void *p_data) {
 			Instance *p_instance = (Instance *)p_data;
 			if (!p_instance->object_id.is_null()) {
 				instances.push_back(p_instance->object_id);
@@ -1265,7 +1265,7 @@ Vector<ObjectID> RendererSceneCull::instances_cull_ray(const Vector3 &p_from, co
 
 	struct CullRay {
 		Vector<ObjectID> instances;
-		_FORCE_INLINE_ bool operator()(void *p_data) {
+		GD_FORCE_INLINE bool operator()(void *p_data) {
 			Instance *p_instance = (Instance *)p_data;
 			if (!p_instance->object_id.is_null()) {
 				instances.push_back(p_instance->object_id);
@@ -1290,7 +1290,7 @@ Vector<ObjectID> RendererSceneCull::instances_cull_convex(const Vector<Plane> &p
 
 	struct CullConvex {
 		Vector<ObjectID> instances;
-		_FORCE_INLINE_ bool operator()(void *p_data) {
+		GD_FORCE_INLINE bool operator()(void *p_data) {
 			Instance *p_instance = (Instance *)p_data;
 			if (!p_instance->object_id.is_null()) {
 				instances.push_back(p_instance->object_id);
@@ -2462,7 +2462,7 @@ bool RendererSceneCull::_light_instance_update_shadow(Instance *p_instance, cons
 
 					struct CullConvex {
 						PagedArray<Instance *> *result;
-						_FORCE_INLINE_ bool operator()(void *p_data) {
+						GD_FORCE_INLINE bool operator()(void *p_data) {
 							Instance *p_instance = (Instance *)p_data;
 							result->push_back(p_instance);
 							return false;
@@ -2545,7 +2545,7 @@ bool RendererSceneCull::_light_instance_update_shadow(Instance *p_instance, cons
 
 					struct CullConvex {
 						PagedArray<Instance *> *result;
-						_FORCE_INLINE_ bool operator()(void *p_data) {
+						GD_FORCE_INLINE bool operator()(void *p_data) {
 							Instance *p_instance = (Instance *)p_data;
 							result->push_back(p_instance);
 							return false;
@@ -2613,7 +2613,7 @@ bool RendererSceneCull::_light_instance_update_shadow(Instance *p_instance, cons
 
 			struct CullConvex {
 				PagedArray<Instance *> *result;
-				_FORCE_INLINE_ bool operator()(void *p_data) {
+				GD_FORCE_INLINE bool operator()(void *p_data) {
 					Instance *p_instance = (Instance *)p_data;
 					result->push_back(p_instance);
 					return false;
@@ -3974,7 +3974,7 @@ void RendererSceneCull::render_particle_colliders() {
 			struct CullAABB {
 				PagedArray<Instance *> *result;
 				uint32_t heightfield_mask;
-				_FORCE_INLINE_ bool operator()(void *p_data) {
+				GD_FORCE_INLINE bool operator()(void *p_data) {
 					Instance *p_instance = (Instance *)p_data;
 					if (p_instance->layer_mask & heightfield_mask) {
 						result->push_back(p_instance);

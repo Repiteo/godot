@@ -260,81 +260,81 @@ hb_font_t *TextServerAdvanced::_bmp_font_create(TextServerAdvanced::FontForSizeA
 /*  Character properties.                                                */
 /*************************************************************************/
 
-_FORCE_INLINE_ bool is_ain(char32_t p_chr) {
+GD_FORCE_INLINE bool is_ain(char32_t p_chr) {
 	return u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_AIN;
 }
 
-_FORCE_INLINE_ bool is_alef(char32_t p_chr) {
+GD_FORCE_INLINE bool is_alef(char32_t p_chr) {
 	return u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_ALEF;
 }
 
-_FORCE_INLINE_ bool is_beh(char32_t p_chr) {
+GD_FORCE_INLINE bool is_beh(char32_t p_chr) {
 	int32_t prop = u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP);
 	return (prop == U_JG_BEH) || (prop == U_JG_NOON) || (prop == U_JG_AFRICAN_NOON) || (prop == U_JG_NYA) || (prop == U_JG_YEH) || (prop == U_JG_FARSI_YEH);
 }
 
-_FORCE_INLINE_ bool is_dal(char32_t p_chr) {
+GD_FORCE_INLINE bool is_dal(char32_t p_chr) {
 	return u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_DAL;
 }
 
-_FORCE_INLINE_ bool is_feh(char32_t p_chr) {
+GD_FORCE_INLINE bool is_feh(char32_t p_chr) {
 	return (u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_FEH) || (u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_AFRICAN_FEH);
 }
 
-_FORCE_INLINE_ bool is_gaf(char32_t p_chr) {
+GD_FORCE_INLINE bool is_gaf(char32_t p_chr) {
 	return u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_GAF;
 }
 
-_FORCE_INLINE_ bool is_heh(char32_t p_chr) {
+GD_FORCE_INLINE bool is_heh(char32_t p_chr) {
 	return u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_HEH;
 }
 
-_FORCE_INLINE_ bool is_kaf(char32_t p_chr) {
+GD_FORCE_INLINE bool is_kaf(char32_t p_chr) {
 	return u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_KAF;
 }
 
-_FORCE_INLINE_ bool is_lam(char32_t p_chr) {
+GD_FORCE_INLINE bool is_lam(char32_t p_chr) {
 	return u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_LAM;
 }
 
-_FORCE_INLINE_ bool is_qaf(char32_t p_chr) {
+GD_FORCE_INLINE bool is_qaf(char32_t p_chr) {
 	return (u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_QAF) || (u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_AFRICAN_QAF);
 }
 
-_FORCE_INLINE_ bool is_reh(char32_t p_chr) {
+GD_FORCE_INLINE bool is_reh(char32_t p_chr) {
 	return u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_REH;
 }
 
-_FORCE_INLINE_ bool is_seen_sad(char32_t p_chr) {
+GD_FORCE_INLINE bool is_seen_sad(char32_t p_chr) {
 	return (u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_SAD) || (u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_SEEN);
 }
 
-_FORCE_INLINE_ bool is_tah(char32_t p_chr) {
+GD_FORCE_INLINE bool is_tah(char32_t p_chr) {
 	return u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_TAH;
 }
 
-_FORCE_INLINE_ bool is_teh_marbuta(char32_t p_chr) {
+GD_FORCE_INLINE bool is_teh_marbuta(char32_t p_chr) {
 	return u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_TEH_MARBUTA;
 }
 
-_FORCE_INLINE_ bool is_yeh(char32_t p_chr) {
+GD_FORCE_INLINE bool is_yeh(char32_t p_chr) {
 	int32_t prop = u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP);
 	return (prop == U_JG_YEH) || (prop == U_JG_FARSI_YEH) || (prop == U_JG_YEH_BARREE) || (prop == U_JG_BURUSHASKI_YEH_BARREE) || (prop == U_JG_YEH_WITH_TAIL);
 }
 
-_FORCE_INLINE_ bool is_waw(char32_t p_chr) {
+GD_FORCE_INLINE bool is_waw(char32_t p_chr) {
 	return u_getIntPropertyValue(p_chr, UCHAR_JOINING_GROUP) == U_JG_WAW;
 }
 
-_FORCE_INLINE_ bool is_transparent(char32_t p_chr) {
+GD_FORCE_INLINE bool is_transparent(char32_t p_chr) {
 	return u_getIntPropertyValue(p_chr, UCHAR_JOINING_TYPE) == U_JT_TRANSPARENT;
 }
 
-_FORCE_INLINE_ bool is_ligature(char32_t p_chr, char32_t p_nchr) {
+GD_FORCE_INLINE bool is_ligature(char32_t p_chr, char32_t p_nchr) {
 	return (is_lam(p_chr) && is_alef(p_nchr));
 }
 
-_FORCE_INLINE_ bool is_connected_to_prev(char32_t p_chr, char32_t p_pchr) {
+GD_FORCE_INLINE bool is_connected_to_prev(char32_t p_chr, char32_t p_pchr) {
 	int32_t prop = u_getIntPropertyValue(p_pchr, UCHAR_JOINING_TYPE);
 	return (prop != U_JT_RIGHT_JOINING) && (prop != U_JT_NON_JOINING) ? !is_ligature(p_pchr, p_chr) : false;
 }
@@ -517,7 +517,7 @@ bool TextServerAdvanced::_is_locale_right_to_left(const String &p_locale) const 
 	}
 }
 
-_FORCE_INLINE_ void TextServerAdvanced::_insert_feature(const StringName &p_name, int32_t p_tag, Variant::Type p_vtype, bool p_hidden) {
+GD_FORCE_INLINE void TextServerAdvanced::_insert_feature(const StringName &p_name, int32_t p_tag, Variant::Type p_vtype, bool p_hidden) {
 	FeatureInfo fi;
 	fi.name = p_name;
 	fi.vtype = p_vtype;
@@ -819,7 +819,7 @@ String TextServerAdvanced::_tag_to_name(int64_t p_tag) const {
 /* Font Glyph Rendering                                                  */
 /*************************************************************************/
 
-_FORCE_INLINE_ TextServerAdvanced::FontTexturePosition TextServerAdvanced::find_texture_pos_for_glyph(FontForSizeAdvanced *p_data, int p_color_size, Image::Format p_image_format, int p_width, int p_height, bool p_msdf) const {
+GD_FORCE_INLINE TextServerAdvanced::FontTexturePosition TextServerAdvanced::find_texture_pos_for_glyph(FontForSizeAdvanced *p_data, int p_color_size, Image::Format p_image_format, int p_width, int p_height, bool p_msdf) const {
 	FontTexturePosition ret;
 
 	int mw = p_width;
@@ -905,9 +905,9 @@ class DistancePixelConversion {
 	double invRange;
 
 public:
-	_FORCE_INLINE_ explicit DistancePixelConversion(double range) :
+	GD_FORCE_INLINE explicit DistancePixelConversion(double range) :
 			invRange(1 / range) {}
-	_FORCE_INLINE_ void operator()(float *pixels, const msdfgen::MultiAndTrueDistance &distance) const {
+	GD_FORCE_INLINE void operator()(float *pixels, const msdfgen::MultiAndTrueDistance &distance) const {
 		pixels[0] = float(invRange * distance.r + .5);
 		pixels[1] = float(invRange * distance.g + .5);
 		pixels[2] = float(invRange * distance.b + .5);
@@ -972,7 +972,7 @@ void TextServerAdvanced::_generateMTSDF_threaded(void *p_td, uint32_t p_y) {
 	}
 }
 
-_FORCE_INLINE_ TextServerAdvanced::FontGlyph TextServerAdvanced::rasterize_msdf(FontAdvanced *p_font_data, FontForSizeAdvanced *p_data, int p_pixel_range, int p_rect_margin, FT_Outline *p_outline, const Vector2 &p_advance) const {
+GD_FORCE_INLINE TextServerAdvanced::FontGlyph TextServerAdvanced::rasterize_msdf(FontAdvanced *p_font_data, FontForSizeAdvanced *p_data, int p_pixel_range, int p_rect_margin, FT_Outline *p_outline, const Vector2 &p_advance) const {
 	msdfgen::Shape shape;
 
 	shape.contours.clear();
@@ -1077,7 +1077,7 @@ _FORCE_INLINE_ TextServerAdvanced::FontGlyph TextServerAdvanced::rasterize_msdf(
 #endif
 
 #ifdef MODULE_FREETYPE_ENABLED
-_FORCE_INLINE_ TextServerAdvanced::FontGlyph TextServerAdvanced::rasterize_bitmap(FontForSizeAdvanced *p_data, int p_rect_margin, FT_Bitmap p_bitmap, int p_yofs, int p_xofs, const Vector2 &p_advance, bool p_bgra) const {
+GD_FORCE_INLINE TextServerAdvanced::FontGlyph TextServerAdvanced::rasterize_bitmap(FontForSizeAdvanced *p_data, int p_rect_margin, FT_Bitmap p_bitmap, int p_yofs, int p_xofs, const Vector2 &p_advance, bool p_bgra) const {
 	FontGlyph chr;
 	chr.advance = p_advance * p_data->scale;
 	chr.found = true;
@@ -1202,7 +1202,7 @@ _FORCE_INLINE_ TextServerAdvanced::FontGlyph TextServerAdvanced::rasterize_bitma
 /* Font Cache                                                            */
 /*************************************************************************/
 
-_FORCE_INLINE_ bool TextServerAdvanced::_ensure_glyph(FontAdvanced *p_font_data, const Vector2i &p_size, int32_t p_glyph, FontGlyph &r_glyph, uint32_t p_oversampling) const {
+GD_FORCE_INLINE bool TextServerAdvanced::_ensure_glyph(FontAdvanced *p_font_data, const Vector2i &p_size, int32_t p_glyph, FontGlyph &r_glyph, uint32_t p_oversampling) const {
 	FontForSizeAdvanced *fd = nullptr;
 	ERR_FAIL_COND_V(!_ensure_cache_for_size(p_font_data, p_size, fd, false, p_oversampling), false);
 
@@ -1369,7 +1369,7 @@ _FORCE_INLINE_ bool TextServerAdvanced::_ensure_glyph(FontAdvanced *p_font_data,
 	return false;
 }
 
-_FORCE_INLINE_ bool TextServerAdvanced::_ensure_cache_for_size(FontAdvanced *p_font_data, const Vector2i &p_size, FontForSizeAdvanced *&r_cache_for_size, bool p_silent, uint32_t p_oversampling) const {
+GD_FORCE_INLINE bool TextServerAdvanced::_ensure_cache_for_size(FontAdvanced *p_font_data, const Vector2i &p_size, FontForSizeAdvanced *&r_cache_for_size, bool p_silent, uint32_t p_oversampling) const {
 	ERR_FAIL_COND_V(p_size.x <= 0, false);
 
 	HashMap<Vector2i, FontForSizeAdvanced *>::Iterator E = p_font_data->cache.find(p_size);
@@ -1926,7 +1926,7 @@ void TextServerAdvanced::_unreference_oversampling_level(double p_oversampling) 
 	}
 }
 
-_FORCE_INLINE_ bool TextServerAdvanced::_font_validate(const RID &p_font_rid) const {
+GD_FORCE_INLINE bool TextServerAdvanced::_font_validate(const RID &p_font_rid) const {
 	FontAdvanced *fd = _get_font_data(p_font_rid);
 	ERR_FAIL_NULL_V(fd, false);
 
@@ -1936,7 +1936,7 @@ _FORCE_INLINE_ bool TextServerAdvanced::_font_validate(const RID &p_font_rid) co
 	return _ensure_cache_for_size(fd, size, ffsd, true);
 }
 
-_FORCE_INLINE_ void TextServerAdvanced::_font_clear_cache(FontAdvanced *p_font_data) {
+GD_FORCE_INLINE void TextServerAdvanced::_font_clear_cache(FontAdvanced *p_font_data) {
 	MutexLock ftlock(ft_mutex);
 
 	for (const KeyValue<Vector2i, FontForSizeAdvanced *> &E : p_font_data->cache) {
@@ -6161,7 +6161,7 @@ bool TextServerAdvanced::_shaped_text_update_breaks(const RID &p_shaped) {
 	return sd->line_breaks_valid;
 }
 
-_FORCE_INLINE_ int64_t _generate_kashida_justification_opportunities(const String &p_data, int64_t p_start, int64_t p_end) {
+GD_FORCE_INLINE int64_t _generate_kashida_justification_opportunities(const String &p_data, int64_t p_start, int64_t p_end) {
 	int64_t kashida_pos = -1;
 	int8_t priority = 100;
 	int64_t i = p_start;
@@ -6449,7 +6449,7 @@ Glyph TextServerAdvanced::_shape_single_glyph(ShapedTextDataAdvanced *p_sd, char
 	return gl;
 }
 
-_FORCE_INLINE_ void TextServerAdvanced::_add_features(const Dictionary &p_source, Vector<hb_feature_t> &r_ftrs) {
+GD_FORCE_INLINE void TextServerAdvanced::_add_features(const Dictionary &p_source, Vector<hb_feature_t> &r_ftrs) {
 	for (const KeyValue<Variant, Variant> &key_value : p_source) {
 		int32_t value = key_value.value;
 		if (value >= 0) {

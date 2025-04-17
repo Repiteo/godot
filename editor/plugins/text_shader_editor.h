@@ -57,7 +57,7 @@ class ShaderTextEditor : public CodeTextEditor {
 	Color marked_line_color = Color(1, 1, 1);
 
 	struct WarningsComparator {
-		_ALWAYS_INLINE_ bool operator()(const ShaderWarning &p_a, const ShaderWarning &p_b) const { return (p_a.get_line() < p_b.get_line()); }
+		GD_ALWAYS_INLINE bool operator()(const ShaderWarning &p_a, const ShaderWarning &p_b) const { return (p_a.get_line() < p_b.get_line()); }
 	};
 
 	Ref<GDShaderSyntaxHighlighter> syntax_highlighter;

@@ -49,13 +49,13 @@ public:
 			std::is_same<T, char32_t>,
 			std::is_same<T, wchar_t>>;
 
-	_FORCE_INLINE_ constexpr Span() = default;
-	_FORCE_INLINE_ constexpr Span(const T *p_ptr, uint64_t p_len) :
+	GD_FORCE_INLINE constexpr Span() = default;
+	GD_FORCE_INLINE constexpr Span(const T *p_ptr, uint64_t p_len) :
 			_ptr(p_ptr), _len(p_len) {}
 
 	// Allows creating Span directly from C arrays and string literals.
 	template <size_t N>
-	_FORCE_INLINE_ constexpr Span(const T (&p_array)[N]) :
+	GD_FORCE_INLINE constexpr Span(const T (&p_array)[N]) :
 			_ptr(p_array), _len(N) {
 		if constexpr (is_string) {
 			// Cut off the \0 terminator implicitly added to string literals.
@@ -65,26 +65,26 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ constexpr uint64_t size() const { return _len; }
-	_FORCE_INLINE_ constexpr bool is_empty() const { return _len == 0; }
+	GD_FORCE_INLINE constexpr uint64_t size() const { return _len; }
+	GD_FORCE_INLINE constexpr bool is_empty() const { return _len == 0; }
 
-	_FORCE_INLINE_ constexpr const T *ptr() const { return _ptr; }
+	GD_FORCE_INLINE constexpr const T *ptr() const { return _ptr; }
 
 	// NOTE: Span subscripts sanity check the bounds to avoid undefined behavior.
 	//       This is slower than direct buffer access and can prevent autovectorization.
 	//       If the bounds are known, use ptr() subscript instead.
-	_FORCE_INLINE_ constexpr const T &operator[](uint64_t p_idx) const {
+	GD_FORCE_INLINE constexpr const T &operator[](uint64_t p_idx) const {
 		CRASH_COND(p_idx >= _len);
 		return _ptr[p_idx];
 	}
 
-	_FORCE_INLINE_ constexpr const T *begin() const { return _ptr; }
-	_FORCE_INLINE_ constexpr const T *end() const { return _ptr + _len; }
+	GD_FORCE_INLINE constexpr const T *begin() const { return _ptr; }
+	GD_FORCE_INLINE constexpr const T *end() const { return _ptr + _len; }
 
 	// Algorithms.
 	constexpr int64_t find(const T &p_val, uint64_t p_from = 0) const;
 	constexpr int64_t rfind(const T &p_val, uint64_t p_from) const;
-	_FORCE_INLINE_ constexpr int64_t rfind(const T &p_val) const { return rfind(p_val, size() - 1); }
+	GD_FORCE_INLINE constexpr int64_t rfind(const T &p_val) const { return rfind(p_val, size() - 1); }
 	constexpr uint64_t count(const T &p_val) const;
 };
 

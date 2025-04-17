@@ -42,7 +42,7 @@ public:
 		singleton = nullptr;
 	}
 
-	_FORCE_INLINE_ static CoreStringNames *get_singleton() { return singleton; }
+	GD_FORCE_INLINE static CoreStringNames *get_singleton() { return singleton; }
 
 	const StringName free_ = StaticCString::create("free"); // free would conflict with C++ keyword.
 	const StringName changed = StaticCString::create("changed");

@@ -181,7 +181,7 @@ public:
 		bool write_command_list_enabled = false;
 		bool is_discardable = false;
 
-		_FORCE_INLINE_ void reset_if_outdated(int64_t new_command_frame) {
+		GD_FORCE_INLINE void reset_if_outdated(int64_t new_command_frame) {
 			if (new_command_frame != command_frame) {
 				command_frame = new_command_frame;
 				previous_frame_stages = current_frame_stages;
@@ -330,11 +330,11 @@ private:
 		RDD::BufferID destination;
 		uint32_t buffer_copies_count = 0;
 
-		_FORCE_INLINE_ RecordedBufferCopy *buffer_copies() {
+		GD_FORCE_INLINE RecordedBufferCopy *buffer_copies() {
 			return reinterpret_cast<RecordedBufferCopy *>(&this[1]);
 		}
 
-		_FORCE_INLINE_ const RecordedBufferCopy *buffer_copies() const {
+		GD_FORCE_INLINE const RecordedBufferCopy *buffer_copies() const {
 			return reinterpret_cast<const RecordedBufferCopy *>(&this[1]);
 		}
 	};
@@ -348,11 +348,11 @@ private:
 		uint32_t instruction_data_size = 0;
 		uint32_t breadcrumb = 0;
 
-		_FORCE_INLINE_ uint8_t *instruction_data() {
+		GD_FORCE_INLINE uint8_t *instruction_data() {
 			return reinterpret_cast<uint8_t *>(&this[1]);
 		}
 
-		_FORCE_INLINE_ const uint8_t *instruction_data() const {
+		GD_FORCE_INLINE const uint8_t *instruction_data() const {
 			return reinterpret_cast<const uint8_t *>(&this[1]);
 		}
 	};
@@ -372,43 +372,43 @@ private:
 #endif
 		bool split_cmd_buffer = false;
 
-		_FORCE_INLINE_ RDD::RenderPassClearValue *clear_values() {
+		GD_FORCE_INLINE RDD::RenderPassClearValue *clear_values() {
 			return reinterpret_cast<RDD::RenderPassClearValue *>(&this[1]);
 		}
 
-		_FORCE_INLINE_ const RDD::RenderPassClearValue *clear_values() const {
+		GD_FORCE_INLINE const RDD::RenderPassClearValue *clear_values() const {
 			return reinterpret_cast<const RDD::RenderPassClearValue *>(&this[1]);
 		}
 
-		_FORCE_INLINE_ ResourceTracker **trackers() {
+		GD_FORCE_INLINE ResourceTracker **trackers() {
 			return reinterpret_cast<ResourceTracker **>(&clear_values()[clear_values_count]);
 		}
 
-		_FORCE_INLINE_ ResourceTracker *const *trackers() const {
+		GD_FORCE_INLINE ResourceTracker *const *trackers() const {
 			return reinterpret_cast<ResourceTracker *const *>(&clear_values()[clear_values_count]);
 		}
 
-		_FORCE_INLINE_ RDD::AttachmentLoadOp *load_ops() {
+		GD_FORCE_INLINE RDD::AttachmentLoadOp *load_ops() {
 			return reinterpret_cast<RDD::AttachmentLoadOp *>(&trackers()[trackers_count]);
 		}
 
-		_FORCE_INLINE_ const RDD::AttachmentLoadOp *load_ops() const {
+		GD_FORCE_INLINE const RDD::AttachmentLoadOp *load_ops() const {
 			return reinterpret_cast<const RDD::AttachmentLoadOp *>(&trackers()[trackers_count]);
 		}
 
-		_FORCE_INLINE_ RDD::AttachmentStoreOp *store_ops() {
+		GD_FORCE_INLINE RDD::AttachmentStoreOp *store_ops() {
 			return reinterpret_cast<RDD::AttachmentStoreOp *>(&load_ops()[trackers_count]);
 		}
 
-		_FORCE_INLINE_ const RDD::AttachmentStoreOp *store_ops() const {
+		GD_FORCE_INLINE const RDD::AttachmentStoreOp *store_ops() const {
 			return reinterpret_cast<const RDD::AttachmentStoreOp *>(&load_ops()[trackers_count]);
 		}
 
-		_FORCE_INLINE_ uint8_t *instruction_data() {
+		GD_FORCE_INLINE uint8_t *instruction_data() {
 			return reinterpret_cast<uint8_t *>(&store_ops()[trackers_count]);
 		}
 
-		_FORCE_INLINE_ const uint8_t *instruction_data() const {
+		GD_FORCE_INLINE const uint8_t *instruction_data() const {
 			return reinterpret_cast<const uint8_t *>(&store_ops()[trackers_count]);
 		}
 	};
@@ -424,11 +424,11 @@ private:
 		RDD::TextureID to_texture;
 		uint32_t texture_copy_regions_count = 0;
 
-		_FORCE_INLINE_ RDD::TextureCopyRegion *texture_copy_regions() {
+		GD_FORCE_INLINE RDD::TextureCopyRegion *texture_copy_regions() {
 			return reinterpret_cast<RDD::TextureCopyRegion *>(&this[1]);
 		}
 
-		_FORCE_INLINE_ const RDD::TextureCopyRegion *texture_copy_regions() const {
+		GD_FORCE_INLINE const RDD::TextureCopyRegion *texture_copy_regions() const {
 			return reinterpret_cast<const RDD::TextureCopyRegion *>(&this[1]);
 		}
 	};
@@ -438,11 +438,11 @@ private:
 		RDD::BufferID to_buffer;
 		uint32_t buffer_texture_copy_regions_count = 0;
 
-		_FORCE_INLINE_ RDD::BufferTextureCopyRegion *buffer_texture_copy_regions() {
+		GD_FORCE_INLINE RDD::BufferTextureCopyRegion *buffer_texture_copy_regions() {
 			return reinterpret_cast<RDD::BufferTextureCopyRegion *>(&this[1]);
 		}
 
-		_FORCE_INLINE_ const RDD::BufferTextureCopyRegion *buffer_texture_copy_regions() const {
+		GD_FORCE_INLINE const RDD::BufferTextureCopyRegion *buffer_texture_copy_regions() const {
 			return reinterpret_cast<const RDD::BufferTextureCopyRegion *>(&this[1]);
 		}
 	};
@@ -460,11 +460,11 @@ private:
 		RDD::TextureID to_texture;
 		uint32_t buffer_to_texture_copies_count = 0;
 
-		_FORCE_INLINE_ RecordedBufferToTextureCopy *buffer_to_texture_copies() {
+		GD_FORCE_INLINE RecordedBufferToTextureCopy *buffer_to_texture_copies() {
 			return reinterpret_cast<RecordedBufferToTextureCopy *>(&this[1]);
 		}
 
-		_FORCE_INLINE_ const RecordedBufferToTextureCopy *buffer_to_texture_copies() const {
+		GD_FORCE_INLINE const RecordedBufferToTextureCopy *buffer_to_texture_copies() const {
 			return reinterpret_cast<const RecordedBufferToTextureCopy *>(&this[1]);
 		}
 	};
@@ -489,11 +489,11 @@ private:
 		uint32_t first_set_index = 0;
 		uint32_t set_count = 0;
 
-		_FORCE_INLINE_ RDD::UniformSetID *uniform_set_ids() {
+		GD_FORCE_INLINE RDD::UniformSetID *uniform_set_ids() {
 			return reinterpret_cast<RDD::UniformSetID *>(&this[1]);
 		}
 
-		_FORCE_INLINE_ const RDD::UniformSetID *uniform_set_ids() const {
+		GD_FORCE_INLINE const RDD::UniformSetID *uniform_set_ids() const {
 			return reinterpret_cast<const RDD::UniformSetID *>(&this[1]);
 		}
 	};
@@ -501,19 +501,19 @@ private:
 	struct DrawListBindVertexBuffersInstruction : DrawListInstruction {
 		uint32_t vertex_buffers_count = 0;
 
-		_FORCE_INLINE_ RDD::BufferID *vertex_buffers() {
+		GD_FORCE_INLINE RDD::BufferID *vertex_buffers() {
 			return reinterpret_cast<RDD::BufferID *>(&this[1]);
 		}
 
-		_FORCE_INLINE_ const RDD::BufferID *vertex_buffers() const {
+		GD_FORCE_INLINE const RDD::BufferID *vertex_buffers() const {
 			return reinterpret_cast<const RDD::BufferID *>(&this[1]);
 		}
 
-		_FORCE_INLINE_ uint64_t *vertex_buffer_offsets() {
+		GD_FORCE_INLINE uint64_t *vertex_buffer_offsets() {
 			return reinterpret_cast<uint64_t *>(&vertex_buffers()[vertex_buffers_count]);
 		}
 
-		_FORCE_INLINE_ const uint64_t *vertex_buffer_offsets() const {
+		GD_FORCE_INLINE const uint64_t *vertex_buffer_offsets() const {
 			return reinterpret_cast<const uint64_t *>(&vertex_buffers()[vertex_buffers_count]);
 		}
 	};
@@ -522,19 +522,19 @@ private:
 		uint32_t attachments_clear_count = 0;
 		uint32_t attachments_clear_rect_count = 0;
 
-		_FORCE_INLINE_ RDD::AttachmentClear *attachments_clear() {
+		GD_FORCE_INLINE RDD::AttachmentClear *attachments_clear() {
 			return reinterpret_cast<RDD::AttachmentClear *>(&this[1]);
 		}
 
-		_FORCE_INLINE_ const RDD::AttachmentClear *attachments_clear() const {
+		GD_FORCE_INLINE const RDD::AttachmentClear *attachments_clear() const {
 			return reinterpret_cast<const RDD::AttachmentClear *>(&this[1]);
 		}
 
-		_FORCE_INLINE_ Rect2i *attachments_clear_rect() {
+		GD_FORCE_INLINE Rect2i *attachments_clear_rect() {
 			return reinterpret_cast<Rect2i *>(&attachments_clear()[attachments_clear_count]);
 		}
 
-		_FORCE_INLINE_ const Rect2i *attachments_clear_rect() const {
+		GD_FORCE_INLINE const Rect2i *attachments_clear_rect() const {
 			return reinterpret_cast<const Rect2i *>(&attachments_clear()[attachments_clear_count]);
 		}
 	};
@@ -576,11 +576,11 @@ private:
 		uint32_t size = 0;
 		RDD::ShaderID shader;
 
-		_FORCE_INLINE_ uint8_t *data() {
+		GD_FORCE_INLINE uint8_t *data() {
 			return reinterpret_cast<uint8_t *>(&this[1]);
 		}
 
-		_FORCE_INLINE_ const uint8_t *data() const {
+		GD_FORCE_INLINE const uint8_t *data() const {
 			return reinterpret_cast<const uint8_t *>(&this[1]);
 		}
 	};
@@ -620,11 +620,11 @@ private:
 		uint32_t first_set_index = 0;
 		uint32_t set_count = 0;
 
-		_FORCE_INLINE_ RDD::UniformSetID *uniform_set_ids() {
+		GD_FORCE_INLINE RDD::UniformSetID *uniform_set_ids() {
 			return reinterpret_cast<RDD::UniformSetID *>(&this[1]);
 		}
 
-		_FORCE_INLINE_ const RDD::UniformSetID *uniform_set_ids() const {
+		GD_FORCE_INLINE const RDD::UniformSetID *uniform_set_ids() const {
 			return reinterpret_cast<const RDD::UniformSetID *>(&this[1]);
 		}
 	};
@@ -644,11 +644,11 @@ private:
 		uint32_t size = 0;
 		RDD::ShaderID shader;
 
-		_FORCE_INLINE_ uint8_t *data() {
+		GD_FORCE_INLINE uint8_t *data() {
 			return reinterpret_cast<uint8_t *>(&this[1]);
 		}
 
-		_FORCE_INLINE_ const uint8_t *data() const {
+		GD_FORCE_INLINE const uint8_t *data() const {
 			return reinterpret_cast<const uint8_t *>(&this[1]);
 		}
 	};

@@ -780,7 +780,7 @@ public:
 template <typename A, typename B>
 class OperatorEvaluatorXor {
 public:
-	_FORCE_INLINE_ static bool xor_op(const A &a, const B &b) {
+	GD_FORCE_INLINE static bool xor_op(const A &a, const B &b) {
 		return ((a) || (b)) && !((a) && (b));
 	}
 	static void evaluate(const Variant &p_left, const Variant &p_right, Variant *r_ret, bool &r_valid) {
@@ -819,7 +819,7 @@ public:
 
 class OperatorEvaluatorAddArray {
 public:
-	_FORCE_INLINE_ static void _add_arrays(Array &sum, const Array &array_a, const Array &array_b) {
+	GD_FORCE_INLINE static void _add_arrays(Array &sum, const Array &array_a, const Array &array_b) {
 		int asize = array_a.size();
 		int bsize = array_b.size();
 
@@ -906,7 +906,7 @@ class OperatorEvaluatorStringFormat;
 template <typename S>
 class OperatorEvaluatorStringFormat<S, void> {
 public:
-	_FORCE_INLINE_ static String do_mod(const String &s, bool *r_valid) {
+	GD_FORCE_INLINE static String do_mod(const String &s, bool *r_valid) {
 		Array values = { Variant() };
 		String a = s.sprintf(values, r_valid);
 		if (r_valid) {
@@ -935,7 +935,7 @@ public:
 template <typename S>
 class OperatorEvaluatorStringFormat<S, Array> {
 public:
-	_FORCE_INLINE_ static String do_mod(const String &s, const Array &p_values, bool *r_valid) {
+	GD_FORCE_INLINE static String do_mod(const String &s, const Array &p_values, bool *r_valid) {
 		String a = s.sprintf(p_values, r_valid);
 		if (r_valid) {
 			*r_valid = !*r_valid;
@@ -963,7 +963,7 @@ public:
 template <typename S>
 class OperatorEvaluatorStringFormat<S, Object> {
 public:
-	_FORCE_INLINE_ static String do_mod(const String &s, const Object *p_object, bool *r_valid) {
+	GD_FORCE_INLINE static String do_mod(const String &s, const Object *p_object, bool *r_valid) {
 		Array values = { p_object };
 		String a = s.sprintf(values, r_valid);
 		if (r_valid) {
@@ -993,7 +993,7 @@ public:
 template <typename S, typename T>
 class OperatorEvaluatorStringFormat {
 public:
-	_FORCE_INLINE_ static String do_mod(const String &s, const T &p_value, bool *r_valid) {
+	GD_FORCE_INLINE static String do_mod(const String &s, const T &p_value, bool *r_valid) {
 		Array values = { p_value };
 		String a = s.sprintf(values, r_valid);
 		if (r_valid) {
@@ -1053,55 +1053,55 @@ public:
 
 ///// OR ///////
 
-_FORCE_INLINE_ static bool _operate_or(bool p_left, bool p_right) {
+GD_FORCE_INLINE static bool _operate_or(bool p_left, bool p_right) {
 	return p_left || p_right;
 }
 
-_FORCE_INLINE_ static bool _operate_and(bool p_left, bool p_right) {
+GD_FORCE_INLINE static bool _operate_and(bool p_left, bool p_right) {
 	return p_left && p_right;
 }
 
-_FORCE_INLINE_ static bool _operate_xor(bool p_left, bool p_right) {
+GD_FORCE_INLINE static bool _operate_xor(bool p_left, bool p_right) {
 	return (p_left || p_right) && !(p_left && p_right);
 }
 
-_FORCE_INLINE_ static bool _operate_get_nil(const Variant *p_ptr) {
+GD_FORCE_INLINE static bool _operate_get_nil(const Variant *p_ptr) {
 	return p_ptr->get_validated_object() != nullptr;
 }
 
-_FORCE_INLINE_ static bool _operate_get_bool(const Variant *p_ptr) {
+GD_FORCE_INLINE static bool _operate_get_bool(const Variant *p_ptr) {
 	return *VariantGetInternalPtr<bool>::get_ptr(p_ptr);
 }
 
-_FORCE_INLINE_ static bool _operate_get_int(const Variant *p_ptr) {
+GD_FORCE_INLINE static bool _operate_get_int(const Variant *p_ptr) {
 	return *VariantGetInternalPtr<int64_t>::get_ptr(p_ptr) != 0;
 }
 
-_FORCE_INLINE_ static bool _operate_get_float(const Variant *p_ptr) {
+GD_FORCE_INLINE static bool _operate_get_float(const Variant *p_ptr) {
 	return *VariantGetInternalPtr<double>::get_ptr(p_ptr) != 0.0;
 }
 
-_FORCE_INLINE_ static bool _operate_get_object(const Variant *p_ptr) {
+GD_FORCE_INLINE static bool _operate_get_object(const Variant *p_ptr) {
 	return p_ptr->get_validated_object() != nullptr;
 }
 
-_FORCE_INLINE_ static bool _operate_get_ptr_nil(const void *p_ptr) {
+GD_FORCE_INLINE static bool _operate_get_ptr_nil(const void *p_ptr) {
 	return false;
 }
 
-_FORCE_INLINE_ static bool _operate_get_ptr_bool(const void *p_ptr) {
+GD_FORCE_INLINE static bool _operate_get_ptr_bool(const void *p_ptr) {
 	return PtrToArg<bool>::convert(p_ptr);
 }
 
-_FORCE_INLINE_ static bool _operate_get_ptr_int(const void *p_ptr) {
+GD_FORCE_INLINE static bool _operate_get_ptr_int(const void *p_ptr) {
 	return PtrToArg<int64_t>::convert(p_ptr) != 0;
 }
 
-_FORCE_INLINE_ static bool _operate_get_ptr_float(const void *p_ptr) {
+GD_FORCE_INLINE static bool _operate_get_ptr_float(const void *p_ptr) {
 	return PtrToArg<double>::convert(p_ptr) != 0.0;
 }
 
-_FORCE_INLINE_ static bool _operate_get_ptr_object(const void *p_ptr) {
+GD_FORCE_INLINE static bool _operate_get_ptr_object(const void *p_ptr) {
 	return PtrToArg<Object *>::convert(p_ptr) != nullptr;
 }
 

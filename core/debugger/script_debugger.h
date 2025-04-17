@@ -50,12 +50,12 @@ class ScriptDebugger {
 
 public:
 	void set_lines_left(int p_left);
-	_ALWAYS_INLINE_ int get_lines_left() const {
+	GD_ALWAYS_INLINE int get_lines_left() const {
 		return lines_left;
 	}
 
 	void set_depth(int p_depth);
-	_ALWAYS_INLINE_ int get_depth() const {
+	GD_ALWAYS_INLINE int get_depth() const {
 		return depth;
 	}
 
@@ -68,7 +68,7 @@ public:
 	bool is_ignoring_error_breaks();
 	void insert_breakpoint(int p_line, const StringName &p_source);
 	void remove_breakpoint(int p_line, const StringName &p_source);
-	_ALWAYS_INLINE_ bool is_breakpoint(int p_line, const StringName &p_source) const {
+	GD_ALWAYS_INLINE bool is_breakpoint(int p_line, const StringName &p_source) const {
 		if (likely(!breakpoints.has(p_line))) {
 			return false;
 		}

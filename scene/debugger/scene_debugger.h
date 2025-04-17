@@ -202,7 +202,7 @@ private:
 	struct SelectResult {
 		Node *item = nullptr;
 		real_t order = 0;
-		_FORCE_INLINE_ bool operator<(const SelectResult &p_rr) const { return p_rr.order < order; }
+		GD_FORCE_INLINE bool operator<(const SelectResult &p_rr) const { return p_rr.order < order; }
 	};
 
 	const int SELECTION_MIN_AREA = 8 * 8;

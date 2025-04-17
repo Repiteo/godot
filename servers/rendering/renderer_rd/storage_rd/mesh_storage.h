@@ -261,13 +261,13 @@ private:
 
 	MultiMesh *multimesh_dirty_list = nullptr;
 
-	_FORCE_INLINE_ void _multimesh_make_local(MultiMesh *multimesh) const;
-	_FORCE_INLINE_ void _multimesh_enable_motion_vectors(MultiMesh *multimesh);
-	_FORCE_INLINE_ void _multimesh_update_motion_vectors_data_cache(MultiMesh *multimesh);
-	_FORCE_INLINE_ bool _multimesh_uses_motion_vectors(MultiMesh *multimesh);
-	_FORCE_INLINE_ void _multimesh_mark_dirty(MultiMesh *multimesh, int p_index, bool p_aabb);
-	_FORCE_INLINE_ void _multimesh_mark_all_dirty(MultiMesh *multimesh, bool p_data, bool p_aabb);
-	_FORCE_INLINE_ void _multimesh_re_create_aabb(MultiMesh *multimesh, const float *p_data, int p_instances);
+	GD_FORCE_INLINE void _multimesh_make_local(MultiMesh *multimesh) const;
+	GD_FORCE_INLINE void _multimesh_enable_motion_vectors(MultiMesh *multimesh);
+	GD_FORCE_INLINE void _multimesh_update_motion_vectors_data_cache(MultiMesh *multimesh);
+	GD_FORCE_INLINE bool _multimesh_uses_motion_vectors(MultiMesh *multimesh);
+	GD_FORCE_INLINE void _multimesh_mark_dirty(MultiMesh *multimesh, int p_index, bool p_aabb);
+	GD_FORCE_INLINE void _multimesh_mark_all_dirty(MultiMesh *multimesh, bool p_data, bool p_aabb);
+	GD_FORCE_INLINE void _multimesh_re_create_aabb(MultiMesh *multimesh, const float *p_data, int p_instances);
 
 	/* Skeleton */
 
@@ -336,7 +336,7 @@ private:
 
 	mutable RID_Owner<Skeleton, true> skeleton_owner;
 
-	_FORCE_INLINE_ void _skeleton_make_dirty(Skeleton *skeleton);
+	GD_FORCE_INLINE void _skeleton_make_dirty(Skeleton *skeleton);
 
 	Skeleton *skeleton_dirty_list = nullptr;
 
@@ -399,7 +399,7 @@ public:
 
 	virtual bool mesh_needs_instance(RID p_mesh, bool p_has_skeleton) override;
 
-	_FORCE_INLINE_ const RID *mesh_get_surface_count_and_materials(RID p_mesh, uint32_t &r_surface_count) {
+	GD_FORCE_INLINE const RID *mesh_get_surface_count_and_materials(RID p_mesh, uint32_t &r_surface_count) {
 		Mesh *mesh = mesh_owner.get_or_null(p_mesh);
 		ERR_FAIL_NULL_V(mesh, nullptr);
 		r_surface_count = mesh->surface_count;
@@ -416,7 +416,7 @@ public:
 		return mesh->material_cache.ptr();
 	}
 
-	_FORCE_INLINE_ void *mesh_get_surface(RID p_mesh, uint32_t p_surface_index) {
+	GD_FORCE_INLINE void *mesh_get_surface(RID p_mesh, uint32_t p_surface_index) {
 		Mesh *mesh = mesh_owner.get_or_null(p_mesh);
 		ERR_FAIL_NULL_V(mesh, nullptr);
 		ERR_FAIL_UNSIGNED_INDEX_V(p_surface_index, mesh->surface_count, nullptr);
@@ -424,44 +424,44 @@ public:
 		return mesh->surfaces[p_surface_index];
 	}
 
-	_FORCE_INLINE_ RID mesh_get_shadow_mesh(RID p_mesh) {
+	GD_FORCE_INLINE RID mesh_get_shadow_mesh(RID p_mesh) {
 		Mesh *mesh = mesh_owner.get_or_null(p_mesh);
 		ERR_FAIL_NULL_V(mesh, RID());
 
 		return mesh->shadow_mesh;
 	}
 
-	_FORCE_INLINE_ RS::PrimitiveType mesh_surface_get_primitive(void *p_surface) {
+	GD_FORCE_INLINE RS::PrimitiveType mesh_surface_get_primitive(void *p_surface) {
 		Mesh::Surface *surface = reinterpret_cast<Mesh::Surface *>(p_surface);
 		return surface->primitive;
 	}
 
-	_FORCE_INLINE_ bool mesh_surface_has_lod(void *p_surface) const {
+	GD_FORCE_INLINE bool mesh_surface_has_lod(void *p_surface) const {
 		Mesh::Surface *s = reinterpret_cast<Mesh::Surface *>(p_surface);
 		return s->lod_count > 0;
 	}
 
-	_FORCE_INLINE_ uint32_t mesh_surface_get_vertices_drawn_count(void *p_surface) const {
+	GD_FORCE_INLINE uint32_t mesh_surface_get_vertices_drawn_count(void *p_surface) const {
 		Mesh::Surface *s = reinterpret_cast<Mesh::Surface *>(p_surface);
 		return s->index_count ? s->index_count : s->vertex_count;
 	}
 
-	_FORCE_INLINE_ AABB mesh_surface_get_aabb(void *p_surface) {
+	GD_FORCE_INLINE AABB mesh_surface_get_aabb(void *p_surface) {
 		Mesh::Surface *s = reinterpret_cast<Mesh::Surface *>(p_surface);
 		return s->aabb;
 	}
 
-	_FORCE_INLINE_ uint64_t mesh_surface_get_format(void *p_surface) {
+	GD_FORCE_INLINE uint64_t mesh_surface_get_format(void *p_surface) {
 		Mesh::Surface *s = reinterpret_cast<Mesh::Surface *>(p_surface);
 		return s->format;
 	}
 
-	_FORCE_INLINE_ Vector4 mesh_surface_get_uv_scale(void *p_surface) {
+	GD_FORCE_INLINE Vector4 mesh_surface_get_uv_scale(void *p_surface) {
 		Mesh::Surface *s = reinterpret_cast<Mesh::Surface *>(p_surface);
 		return s->uv_scale;
 	}
 
-	_FORCE_INLINE_ uint32_t mesh_surface_get_lod(void *p_surface, float p_model_scale, float p_distance_threshold, float p_mesh_lod_threshold, uint32_t &r_index_count) const {
+	GD_FORCE_INLINE uint32_t mesh_surface_get_lod(void *p_surface, float p_model_scale, float p_distance_threshold, float p_mesh_lod_threshold, uint32_t &r_index_count) const {
 		Mesh::Surface *s = reinterpret_cast<Mesh::Surface *>(p_surface);
 
 		int32_t current_lod = -1;
@@ -481,7 +481,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ RID mesh_surface_get_index_array(void *p_surface, uint32_t p_lod) const {
+	GD_FORCE_INLINE RID mesh_surface_get_index_array(void *p_surface, uint32_t p_lod) const {
 		Mesh::Surface *s = reinterpret_cast<Mesh::Surface *>(p_surface);
 
 		if (p_lod == 0) {
@@ -491,7 +491,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ void mesh_surface_get_vertex_arrays_and_format(void *p_surface, uint64_t p_input_mask, bool p_input_motion_vectors, RID &r_vertex_array_rd, RD::VertexFormatID &r_vertex_format) {
+	GD_FORCE_INLINE void mesh_surface_get_vertex_arrays_and_format(void *p_surface, uint64_t p_input_mask, bool p_input_motion_vectors, RID &r_vertex_array_rd, RD::VertexFormatID &r_vertex_format) {
 		Mesh::Surface *s = reinterpret_cast<Mesh::Surface *>(p_surface);
 
 		s->version_lock.lock();
@@ -523,7 +523,7 @@ public:
 		s->version_lock.unlock();
 	}
 
-	_FORCE_INLINE_ void mesh_instance_surface_get_vertex_arrays_and_format(RID p_mesh_instance, uint64_t p_surface_index, uint64_t p_input_mask, bool p_input_motion_vectors, RID &r_vertex_array_rd, RD::VertexFormatID &r_vertex_format) {
+	GD_FORCE_INLINE void mesh_instance_surface_get_vertex_arrays_and_format(RID p_mesh_instance, uint64_t p_surface_index, uint64_t p_input_mask, bool p_input_motion_vectors, RID &r_vertex_array_rd, RD::VertexFormatID &r_vertex_format) {
 		MeshInstance *mi = mesh_instance_owner.get_or_null(p_mesh_instance);
 		ERR_FAIL_NULL(mi);
 		Mesh *mesh = mi->mesh;
@@ -570,12 +570,12 @@ public:
 		s->version_lock.unlock();
 	}
 
-	_FORCE_INLINE_ RID mesh_get_default_rd_buffer(DefaultRDBuffer p_buffer) {
+	GD_FORCE_INLINE RID mesh_get_default_rd_buffer(DefaultRDBuffer p_buffer) {
 		ERR_FAIL_INDEX_V(p_buffer, DEFAULT_RD_BUFFER_MAX, RID());
 		return mesh_default_rd_buffers[p_buffer];
 	}
 
-	_FORCE_INLINE_ uint32_t mesh_surface_get_render_pass_index(RID p_mesh, uint32_t p_surface_index, uint64_t p_render_pass, uint32_t *r_index) {
+	GD_FORCE_INLINE uint32_t mesh_surface_get_render_pass_index(RID p_mesh, uint32_t p_surface_index, uint64_t p_render_pass, uint32_t *r_index) {
 		Mesh *mesh = mesh_owner.get_or_null(p_mesh);
 		Mesh::Surface *s = mesh->surfaces[p_surface_index];
 
@@ -588,7 +588,7 @@ public:
 		return s->render_index;
 	}
 
-	_FORCE_INLINE_ uint32_t mesh_surface_get_multimesh_render_pass_index(RID p_mesh, uint32_t p_surface_index, uint64_t p_render_pass, uint32_t *r_index) {
+	GD_FORCE_INLINE uint32_t mesh_surface_get_multimesh_render_pass_index(RID p_mesh, uint32_t p_surface_index, uint64_t p_render_pass, uint32_t *r_index) {
 		Mesh *mesh = mesh_owner.get_or_null(p_mesh);
 		Mesh::Surface *s = mesh->surfaces[p_surface_index];
 
@@ -601,7 +601,7 @@ public:
 		return s->multimesh_render_index;
 	}
 
-	_FORCE_INLINE_ uint32_t mesh_surface_get_particles_render_pass_index(RID p_mesh, uint32_t p_surface_index, uint64_t p_render_pass, uint32_t *r_index) {
+	GD_FORCE_INLINE uint32_t mesh_surface_get_particles_render_pass_index(RID p_mesh, uint32_t p_surface_index, uint64_t p_render_pass, uint32_t *r_index) {
 		Mesh *mesh = mesh_owner.get_or_null(p_mesh);
 		Mesh::Surface *s = mesh->surfaces[p_surface_index];
 
@@ -614,7 +614,7 @@ public:
 		return s->particles_render_index;
 	}
 
-	_FORCE_INLINE_ RD::VertexFormatID mesh_surface_get_vertex_format(void *p_surface, uint64_t p_input_mask, bool p_instanced_surface, bool p_input_motion_vectors) {
+	GD_FORCE_INLINE RD::VertexFormatID mesh_surface_get_vertex_format(void *p_surface, uint64_t p_input_mask, bool p_instanced_surface, bool p_input_motion_vectors) {
 		Mesh::Surface *s = reinterpret_cast<Mesh::Surface *>(p_surface);
 		uint32_t position_stride = 0;
 		return _mesh_surface_generate_vertex_format(s->format, p_input_mask, p_instanced_surface, p_input_motion_vectors, position_stride);
@@ -678,27 +678,27 @@ public:
 	bool _multimesh_uses_motion_vectors_offsets(RID p_multimesh);
 	bool _multimesh_uses_motion_vectors(RID p_multimesh);
 
-	_FORCE_INLINE_ bool multimesh_uses_indirect(RID p_multimesh) const {
+	GD_FORCE_INLINE bool multimesh_uses_indirect(RID p_multimesh) const {
 		MultiMesh *multimesh = multimesh_owner.get_or_null(p_multimesh);
 		return multimesh->indirect;
 	}
 
-	_FORCE_INLINE_ RS::MultimeshTransformFormat multimesh_get_transform_format(RID p_multimesh) const {
+	GD_FORCE_INLINE RS::MultimeshTransformFormat multimesh_get_transform_format(RID p_multimesh) const {
 		MultiMesh *multimesh = multimesh_owner.get_or_null(p_multimesh);
 		return multimesh->xform_format;
 	}
 
-	_FORCE_INLINE_ bool multimesh_uses_colors(RID p_multimesh) const {
+	GD_FORCE_INLINE bool multimesh_uses_colors(RID p_multimesh) const {
 		MultiMesh *multimesh = multimesh_owner.get_or_null(p_multimesh);
 		return multimesh->uses_colors;
 	}
 
-	_FORCE_INLINE_ bool multimesh_uses_custom_data(RID p_multimesh) const {
+	GD_FORCE_INLINE bool multimesh_uses_custom_data(RID p_multimesh) const {
 		MultiMesh *multimesh = multimesh_owner.get_or_null(p_multimesh);
 		return multimesh->uses_custom_data;
 	}
 
-	_FORCE_INLINE_ uint32_t multimesh_get_instances_to_draw(RID p_multimesh) const {
+	GD_FORCE_INLINE uint32_t multimesh_get_instances_to_draw(RID p_multimesh) const {
 		MultiMesh *multimesh = multimesh_owner.get_or_null(p_multimesh);
 		if (multimesh->visible_instances >= 0) {
 			return multimesh->visible_instances;
@@ -706,7 +706,7 @@ public:
 		return multimesh->instances;
 	}
 
-	_FORCE_INLINE_ RID multimesh_get_3d_uniform_set(RID p_multimesh, RID p_shader, uint32_t p_set) const {
+	GD_FORCE_INLINE RID multimesh_get_3d_uniform_set(RID p_multimesh, RID p_shader, uint32_t p_set) const {
 		MultiMesh *multimesh = multimesh_owner.get_or_null(p_multimesh);
 		if (multimesh == nullptr) {
 			return RID();
@@ -727,7 +727,7 @@ public:
 		return multimesh->uniform_set_3d;
 	}
 
-	_FORCE_INLINE_ RID multimesh_get_2d_uniform_set(RID p_multimesh, RID p_shader, uint32_t p_set) const {
+	GD_FORCE_INLINE RID multimesh_get_2d_uniform_set(RID p_multimesh, RID p_shader, uint32_t p_set) const {
 		MultiMesh *multimesh = multimesh_owner.get_or_null(p_multimesh);
 		if (multimesh == nullptr) {
 			return RID();
@@ -770,11 +770,11 @@ public:
 
 	void _update_dirty_skeletons();
 
-	_FORCE_INLINE_ bool skeleton_is_valid(RID p_skeleton) {
+	GD_FORCE_INLINE bool skeleton_is_valid(RID p_skeleton) {
 		return skeleton_owner.get_or_null(p_skeleton) != nullptr;
 	}
 
-	_FORCE_INLINE_ RID skeleton_get_3d_uniform_set(RID p_skeleton, RID p_shader, uint32_t p_set) const {
+	GD_FORCE_INLINE RID skeleton_get_3d_uniform_set(RID p_skeleton, RID p_shader, uint32_t p_set) const {
 		Skeleton *skeleton = skeleton_owner.get_or_null(p_skeleton);
 		ERR_FAIL_NULL_V(skeleton, RID());
 		if (skeleton->size == 0) {

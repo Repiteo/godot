@@ -40,9 +40,9 @@ public:
 		T key;
 		V value;
 
-		_FORCE_INLINE_ Pair() {}
+		GD_FORCE_INLINE Pair() {}
 
-		_FORCE_INLINE_ Pair(const T &p_key, const V &p_value) {
+		GD_FORCE_INLINE Pair(const T &p_key, const V &p_value) {
 			key = p_key;
 			value = p_value;
 		}
@@ -51,7 +51,7 @@ public:
 private:
 	CowData<Pair> _cowdata;
 
-	_FORCE_INLINE_ int _find(const T &p_val, bool &r_exact) const {
+	GD_FORCE_INLINE int _find(const T &p_val, bool &r_exact) const {
 		r_exact = false;
 		if (_cowdata.is_empty()) {
 			return 0;
@@ -87,7 +87,7 @@ private:
 		return middle;
 	}
 
-	_FORCE_INLINE_ int _find_exact(const T &p_val) const {
+	GD_FORCE_INLINE int _find_exact(const T &p_val) const {
 		if (_cowdata.is_empty()) {
 			return -1;
 		}
@@ -148,8 +148,8 @@ public:
 		return _find(p_val, exact);
 	}
 
-	_FORCE_INLINE_ int size() const { return _cowdata.size(); }
-	_FORCE_INLINE_ bool is_empty() const { return _cowdata.is_empty(); }
+	GD_FORCE_INLINE int size() const { return _cowdata.size(); }
+	GD_FORCE_INLINE bool is_empty() const { return _cowdata.is_empty(); }
 
 	const Pair *get_array() const {
 		return _cowdata.ptr();
@@ -192,10 +192,10 @@ public:
 		return _cowdata.get_m(pos).value;
 	}
 
-	_FORCE_INLINE_ VMap() {}
-	_FORCE_INLINE_ VMap(std::initializer_list<T> p_init) :
+	GD_FORCE_INLINE VMap() {}
+	GD_FORCE_INLINE VMap(std::initializer_list<T> p_init) :
 			_cowdata(p_init) {}
-	_FORCE_INLINE_ VMap(const VMap &p_from) = default;
+	GD_FORCE_INLINE VMap(const VMap &p_from) = default;
 
 	void operator=(const VMap &p_from) { _cowdata = p_from._cowdata; }
 };

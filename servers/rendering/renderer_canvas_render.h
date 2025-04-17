@@ -138,7 +138,7 @@ public:
 		PolygonID polygon_id;
 		Rect2 rect_cache;
 
-		_FORCE_INLINE_ void create(const Vector<int> &p_indices, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs = Vector<Point2>(), const Vector<int> &p_bones = Vector<int>(), const Vector<float> &p_weights = Vector<float>()) {
+		GD_FORCE_INLINE void create(const Vector<int> &p_indices, const Vector<Point2> &p_points, const Vector<Color> &p_colors, const Vector<Point2> &p_uvs = Vector<Point2>(), const Vector<int> &p_bones = Vector<int>(), const Vector<float> &p_weights = Vector<float>()) {
 			ERR_FAIL_COND(polygon_id != 0);
 			{
 				uint32_t pc = p_points.size();
@@ -151,8 +151,8 @@ public:
 			polygon_id = singleton->request_polygon(p_indices, p_points, p_colors, p_uvs, p_bones, p_weights);
 		}
 
-		_FORCE_INLINE_ Polygon() { polygon_id = 0; }
-		_FORCE_INLINE_ ~Polygon() {
+		GD_FORCE_INLINE Polygon() { polygon_id = 0; }
+		GD_FORCE_INLINE ~Polygon() {
 			if (polygon_id) {
 				singleton->free_polygon(polygon_id);
 			}

@@ -87,7 +87,7 @@ private:
 
 	MaterialKey current_key;
 
-	_FORCE_INLINE_ MaterialKey _compute_key() const {
+	GD_FORCE_INLINE MaterialKey _compute_key() const {
 		MaterialKey mk;
 		mk.key = 0;
 		mk.blend_mode = blend_mode;
@@ -101,7 +101,7 @@ private:
 	SelfList<CanvasItemMaterial> element;
 
 	void _update_shader();
-	_FORCE_INLINE_ void _queue_shader_change();
+	GD_FORCE_INLINE void _queue_shader_change();
 
 	BlendMode blend_mode = BLEND_MODE_MIX;
 	LightMode light_mode = LIGHT_MODE_NORMAL;

@@ -65,8 +65,8 @@ public:
 		return _ptr[p_index];
 	}
 
-	_ALWAYS_INLINE_ const T *ptr() const { return _ptr; }
-	_ALWAYS_INLINE_ uint32_t size() const { return _size; }
+	GD_ALWAYS_INLINE const T *ptr() const { return _ptr; }
+	GD_ALWAYS_INLINE uint32_t size() const { return _size; }
 
 	VectorView() = default;
 	VectorView(const T &p_ptr) :
@@ -119,33 +119,33 @@ class RenderingDeviceDriver : public RenderingDeviceCommons {
 public:
 	struct ID {
 		uint64_t id = 0;
-		_ALWAYS_INLINE_ ID() = default;
-		_ALWAYS_INLINE_ ID(uint64_t p_id) :
+		GD_ALWAYS_INLINE ID() = default;
+		GD_ALWAYS_INLINE ID(uint64_t p_id) :
 				id(p_id) {}
 	};
 
-#define DEFINE_ID(m_name)                                                         \
-	struct m_name##ID : public ID {                                               \
-		_ALWAYS_INLINE_ explicit operator bool() const {                          \
-			return id != 0;                                                       \
-		}                                                                         \
-		_ALWAYS_INLINE_ m_name##ID &operator=(m_name##ID p_other) {               \
-			id = p_other.id;                                                      \
-			return *this;                                                         \
-		}                                                                         \
-		_ALWAYS_INLINE_ bool operator<(const m_name##ID &p_other) const {         \
-			return id < p_other.id;                                               \
-		}                                                                         \
-		_ALWAYS_INLINE_ bool operator==(const m_name##ID &p_other) const {        \
-			return id == p_other.id;                                              \
-		}                                                                         \
-		_ALWAYS_INLINE_ bool operator!=(const m_name##ID &p_other) const {        \
-			return id != p_other.id;                                              \
-		}                                                                         \
-		_ALWAYS_INLINE_ m_name##ID(const m_name##ID &p_other) : ID(p_other.id) {} \
-		_ALWAYS_INLINE_ explicit m_name##ID(uint64_t p_int) : ID(p_int) {}        \
-		_ALWAYS_INLINE_ explicit m_name##ID(void *p_ptr) : ID((uint64_t)p_ptr) {} \
-		_ALWAYS_INLINE_ m_name##ID() = default;                                   \
+#define DEFINE_ID(m_name)                                                          \
+	struct m_name##ID : public ID {                                                \
+		GD_ALWAYS_INLINE explicit operator bool() const {                          \
+			return id != 0;                                                        \
+		}                                                                          \
+		GD_ALWAYS_INLINE m_name##ID &operator=(m_name##ID p_other) {               \
+			id = p_other.id;                                                       \
+			return *this;                                                          \
+		}                                                                          \
+		GD_ALWAYS_INLINE bool operator<(const m_name##ID &p_other) const {         \
+			return id < p_other.id;                                                \
+		}                                                                          \
+		GD_ALWAYS_INLINE bool operator==(const m_name##ID &p_other) const {        \
+			return id == p_other.id;                                               \
+		}                                                                          \
+		GD_ALWAYS_INLINE bool operator!=(const m_name##ID &p_other) const {        \
+			return id != p_other.id;                                               \
+		}                                                                          \
+		GD_ALWAYS_INLINE m_name##ID(const m_name##ID &p_other) : ID(p_other.id) {} \
+		GD_ALWAYS_INLINE explicit m_name##ID(uint64_t p_int) : ID(p_int) {}        \
+		GD_ALWAYS_INLINE explicit m_name##ID(void *p_ptr) : ID((uint64_t)p_ptr) {} \
+		GD_ALWAYS_INLINE m_name##ID() = default;                                   \
 	};
 
 	// Id types declared before anything else to prevent cyclic dependencies between the different concerns.

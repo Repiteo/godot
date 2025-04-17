@@ -63,10 +63,10 @@ struct [[nodiscard]] Color {
 	float get_ok_hsl_l() const;
 	void set_ok_hsl(float p_h, float p_s, float p_l, float p_alpha = 1.0f);
 
-	_FORCE_INLINE_ float &operator[](int p_idx) {
+	GD_FORCE_INLINE float &operator[](int p_idx) {
 		return components[p_idx];
 	}
-	_FORCE_INLINE_ const float &operator[](int p_idx) const {
+	GD_FORCE_INLINE const float &operator[](int p_idx) const {
 		return components[p_idx];
 	}
 
@@ -101,11 +101,11 @@ struct [[nodiscard]] Color {
 	void invert();
 	Color inverted() const;
 
-	_FORCE_INLINE_ float get_luminance() const {
+	GD_FORCE_INLINE float get_luminance() const {
 		return 0.2126f * r + 0.7152f * g + 0.0722f * b;
 	}
 
-	_FORCE_INLINE_ Color lerp(const Color &p_to, float p_weight) const {
+	GD_FORCE_INLINE Color lerp(const Color &p_to, float p_weight) const {
 		Color res = *this;
 		res.r = Math::lerp(res.r, p_to.r, p_weight);
 		res.g = Math::lerp(res.g, p_to.g, p_weight);
@@ -114,7 +114,7 @@ struct [[nodiscard]] Color {
 		return res;
 	}
 
-	_FORCE_INLINE_ Color darkened(float p_amount) const {
+	GD_FORCE_INLINE Color darkened(float p_amount) const {
 		Color res = *this;
 		res.r = res.r * (1.0f - p_amount);
 		res.g = res.g * (1.0f - p_amount);
@@ -122,7 +122,7 @@ struct [[nodiscard]] Color {
 		return res;
 	}
 
-	_FORCE_INLINE_ Color lightened(float p_amount) const {
+	GD_FORCE_INLINE Color lightened(float p_amount) const {
 		Color res = *this;
 		res.r = res.r + (1.0f - res.r) * p_amount;
 		res.g = res.g + (1.0f - res.g) * p_amount;
@@ -130,7 +130,7 @@ struct [[nodiscard]] Color {
 		return res;
 	}
 
-	_FORCE_INLINE_ uint32_t to_rgbe9995() const {
+	GD_FORCE_INLINE uint32_t to_rgbe9995() const {
 		// https://github.com/microsoft/DirectX-Graphics-Samples/blob/v10.0.19041.0/MiniEngine/Core/Color.cpp
 		static const float kMaxVal = float(0x1FF << 7);
 		static const float kMinVal = float(1.f / (1 << 16));
@@ -173,7 +173,7 @@ struct [[nodiscard]] Color {
 		return E.i | (B.i << 18U) | (G.i << 9U) | (R.i & 511U);
 	}
 
-	_FORCE_INLINE_ Color blend(const Color &p_over) const {
+	GD_FORCE_INLINE Color blend(const Color &p_over) const {
 		Color res;
 		float sa = 1.0f - p_over.a;
 		res.a = a * sa + p_over.a;
@@ -187,14 +187,14 @@ struct [[nodiscard]] Color {
 		return res;
 	}
 
-	_FORCE_INLINE_ Color srgb_to_linear() const {
+	GD_FORCE_INLINE Color srgb_to_linear() const {
 		return Color(
 				r < 0.04045f ? r * (1.0f / 12.92f) : Math::pow(float((r + 0.055) * (1.0 / (1.0 + 0.055))), 2.4f),
 				g < 0.04045f ? g * (1.0f / 12.92f) : Math::pow(float((g + 0.055) * (1.0 / (1.0 + 0.055))), 2.4f),
 				b < 0.04045f ? b * (1.0f / 12.92f) : Math::pow(float((b + 0.055) * (1.0 / (1.0 + 0.055))), 2.4f),
 				a);
 	}
-	_FORCE_INLINE_ Color linear_to_srgb() const {
+	GD_FORCE_INLINE Color linear_to_srgb() const {
 		return Color(
 				r < 0.0031308f ? 12.92f * r : (1.0 + 0.055) * Math::pow(r, 1.0f / 2.4f) - 0.055,
 				g < 0.0031308f ? 12.92f * g : (1.0 + 0.055) * Math::pow(g, 1.0f / 2.4f) - 0.055,
@@ -221,21 +221,21 @@ struct [[nodiscard]] Color {
 	operator String() const;
 
 	// For the binder.
-	_FORCE_INLINE_ void set_r8(int32_t r8) { r = (CLAMP(r8, 0, 255) / 255.0f); }
-	_FORCE_INLINE_ int32_t get_r8() const { return int32_t(CLAMP(Math::round(r * 255.0f), 0.0f, 255.0f)); }
-	_FORCE_INLINE_ void set_g8(int32_t g8) { g = (CLAMP(g8, 0, 255) / 255.0f); }
-	_FORCE_INLINE_ int32_t get_g8() const { return int32_t(CLAMP(Math::round(g * 255.0f), 0.0f, 255.0f)); }
-	_FORCE_INLINE_ void set_b8(int32_t b8) { b = (CLAMP(b8, 0, 255) / 255.0f); }
-	_FORCE_INLINE_ int32_t get_b8() const { return int32_t(CLAMP(Math::round(b * 255.0f), 0.0f, 255.0f)); }
-	_FORCE_INLINE_ void set_a8(int32_t a8) { a = (CLAMP(a8, 0, 255) / 255.0f); }
-	_FORCE_INLINE_ int32_t get_a8() const { return int32_t(CLAMP(Math::round(a * 255.0f), 0.0f, 255.0f)); }
+	GD_FORCE_INLINE void set_r8(int32_t r8) { r = (CLAMP(r8, 0, 255) / 255.0f); }
+	GD_FORCE_INLINE int32_t get_r8() const { return int32_t(CLAMP(Math::round(r * 255.0f), 0.0f, 255.0f)); }
+	GD_FORCE_INLINE void set_g8(int32_t g8) { g = (CLAMP(g8, 0, 255) / 255.0f); }
+	GD_FORCE_INLINE int32_t get_g8() const { return int32_t(CLAMP(Math::round(g * 255.0f), 0.0f, 255.0f)); }
+	GD_FORCE_INLINE void set_b8(int32_t b8) { b = (CLAMP(b8, 0, 255) / 255.0f); }
+	GD_FORCE_INLINE int32_t get_b8() const { return int32_t(CLAMP(Math::round(b * 255.0f), 0.0f, 255.0f)); }
+	GD_FORCE_INLINE void set_a8(int32_t a8) { a = (CLAMP(a8, 0, 255) / 255.0f); }
+	GD_FORCE_INLINE int32_t get_a8() const { return int32_t(CLAMP(Math::round(a * 255.0f), 0.0f, 255.0f)); }
 
-	_FORCE_INLINE_ void set_h(float p_h) { set_hsv(p_h, get_s(), get_v(), a); }
-	_FORCE_INLINE_ void set_s(float p_s) { set_hsv(get_h(), p_s, get_v(), a); }
-	_FORCE_INLINE_ void set_v(float p_v) { set_hsv(get_h(), get_s(), p_v, a); }
-	_FORCE_INLINE_ void set_ok_hsl_h(float p_h) { set_ok_hsl(p_h, get_ok_hsl_s(), get_ok_hsl_l(), a); }
-	_FORCE_INLINE_ void set_ok_hsl_s(float p_s) { set_ok_hsl(get_ok_hsl_h(), p_s, get_ok_hsl_l(), a); }
-	_FORCE_INLINE_ void set_ok_hsl_l(float p_l) { set_ok_hsl(get_ok_hsl_h(), get_ok_hsl_s(), p_l, a); }
+	GD_FORCE_INLINE void set_h(float p_h) { set_hsv(p_h, get_s(), get_v(), a); }
+	GD_FORCE_INLINE void set_s(float p_s) { set_hsv(get_h(), p_s, get_v(), a); }
+	GD_FORCE_INLINE void set_v(float p_v) { set_hsv(get_h(), get_s(), p_v, a); }
+	GD_FORCE_INLINE void set_ok_hsl_h(float p_h) { set_ok_hsl(p_h, get_ok_hsl_s(), get_ok_hsl_l(), a); }
+	GD_FORCE_INLINE void set_ok_hsl_s(float p_s) { set_ok_hsl(get_ok_hsl_h(), p_s, get_ok_hsl_l(), a); }
+	GD_FORCE_INLINE void set_ok_hsl_l(float p_l) { set_ok_hsl(get_ok_hsl_h(), get_ok_hsl_s(), p_l, a); }
 
 	constexpr Color() :
 			r(0), g(0), b(0), a(1) {}

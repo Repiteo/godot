@@ -79,7 +79,7 @@ private:
 	CGFloat _stretch_to_ct(int p_stretch) const;
 	String _get_default_fontname(const String &p_font_name) const;
 
-	static _FORCE_INLINE_ String get_framework_executable(const String &p_path);
+	static GD_FORCE_INLINE String get_framework_executable(const String &p_path);
 
 	void deinitialize_modules();
 

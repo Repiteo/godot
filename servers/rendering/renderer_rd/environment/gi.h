@@ -519,13 +519,13 @@ public:
 
 	/* VOXEL_GI INSTANCE */
 
-	_FORCE_INLINE_ RID voxel_gi_instance_get_texture(RID p_probe) {
+	GD_FORCE_INLINE RID voxel_gi_instance_get_texture(RID p_probe) {
 		VoxelGIInstance *voxel_gi = voxel_gi_instance_owner.get_or_null(p_probe);
 		ERR_FAIL_NULL_V(voxel_gi, RID());
 		return voxel_gi->texture;
 	}
 
-	_FORCE_INLINE_ void voxel_gi_instance_set_render_index(RID p_probe, uint32_t p_index) {
+	GD_FORCE_INLINE void voxel_gi_instance_set_render_index(RID p_probe, uint32_t p_index) {
 		VoxelGIInstance *voxel_gi = voxel_gi_instance_owner.get_or_null(p_probe);
 		ERR_FAIL_NULL(voxel_gi);
 

@@ -38,7 +38,7 @@
 #endif
 
 #ifdef DEBUG_ENABLED
-_FORCE_INLINE_ void SceneMultiplayer::_profile_bandwidth(const String &p_what, int p_value) {
+GD_FORCE_INLINE void SceneMultiplayer::_profile_bandwidth(const String &p_what, int p_value) {
 	if (EngineDebugger::is_profiling("multiplayer:bandwidth")) {
 		Array values = {
 			p_what,
@@ -252,7 +252,7 @@ void SceneMultiplayer::_process_packet(int p_from, const uint8_t *p_packet, int 
 }
 
 #ifdef DEBUG_ENABLED
-_FORCE_INLINE_ Error SceneMultiplayer::_send(const uint8_t *p_packet, int p_packet_len) {
+GD_FORCE_INLINE Error SceneMultiplayer::_send(const uint8_t *p_packet, int p_packet_len) {
 	_profile_bandwidth("out", p_packet_len);
 	return multiplayer_peer->put_packet(p_packet, p_packet_len);
 }

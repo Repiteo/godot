@@ -241,7 +241,7 @@ void OS_MacOS::alert(const String &p_alert, const String &p_title) {
 	}
 }
 
-_FORCE_INLINE_ String OS_MacOS::get_framework_executable(const String &p_path) {
+GD_FORCE_INLINE String OS_MacOS::get_framework_executable(const String &p_path) {
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 
 	// Read framework bundle to get executable name.

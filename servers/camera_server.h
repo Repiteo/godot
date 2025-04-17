@@ -90,7 +90,7 @@ public:
 	}
 
 	virtual void set_monitoring_feeds(bool p_monitoring_feeds);
-	_FORCE_INLINE_ bool is_monitoring_feeds() const { return monitoring_feeds; }
+	GD_FORCE_INLINE bool is_monitoring_feeds() const { return monitoring_feeds; }
 
 	// Right now we identify our feed by it's ID when it's used in the background.
 	// May see if we can change this to purely relying on CameraFeed objects or by name.

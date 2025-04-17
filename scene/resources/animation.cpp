@@ -4800,7 +4800,7 @@ struct AnimationCompressionBufferBitsRead {
 	uint32_t used = 0;
 	const uint8_t *src_data = nullptr;
 
-	_FORCE_INLINE_ uint32_t read(uint32_t p_bits) {
+	GD_FORCE_INLINE uint32_t read(uint32_t p_bits) {
 		uint32_t output = 0;
 		uint32_t written = 0;
 		while (p_bits > 0) {

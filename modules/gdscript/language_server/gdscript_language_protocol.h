@@ -92,10 +92,10 @@ protected:
 	void initialized(const Variant &p_params);
 
 public:
-	_FORCE_INLINE_ static GDScriptLanguageProtocol *get_singleton() { return singleton; }
-	_FORCE_INLINE_ Ref<GDScriptWorkspace> get_workspace() { return workspace; }
-	_FORCE_INLINE_ Ref<GDScriptTextDocument> get_text_document() { return text_document; }
-	_FORCE_INLINE_ bool is_initialized() const { return _initialized; }
+	GD_FORCE_INLINE static GDScriptLanguageProtocol *get_singleton() { return singleton; }
+	GD_FORCE_INLINE Ref<GDScriptWorkspace> get_workspace() { return workspace; }
+	GD_FORCE_INLINE Ref<GDScriptTextDocument> get_text_document() { return text_document; }
+	GD_FORCE_INLINE bool is_initialized() const { return _initialized; }
 
 	void poll(int p_limit_usec);
 	Error start(int p_port, const IPAddress &p_bind_ip);

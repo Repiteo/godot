@@ -201,7 +201,7 @@ public:
 
 	virtual Ref<Image> environment_bake_panorama(RID p_env, bool p_bake_irradiance, const Size2i &p_size) override;
 
-	_FORCE_INLINE_ bool is_using_physical_light_units() {
+	GD_FORCE_INLINE bool is_using_physical_light_units() {
 		return use_physical_light_units;
 	}
 
@@ -250,7 +250,7 @@ public:
 	virtual void set_scene_pass(uint64_t p_pass) override {
 		scene_pass = p_pass;
 	}
-	_FORCE_INLINE_ uint64_t get_scene_pass() {
+	GD_FORCE_INLINE uint64_t get_scene_pass() {
 		return scene_pass;
 	}
 
@@ -266,52 +266,52 @@ public:
 	virtual void light_projectors_set_filter(RS::LightProjectorFilter p_filter) override;
 	virtual void lightmaps_set_bicubic_filter(bool p_enable) override;
 
-	_FORCE_INLINE_ RS::ShadowQuality shadows_quality_get() const {
+	GD_FORCE_INLINE RS::ShadowQuality shadows_quality_get() const {
 		return shadows_quality;
 	}
-	_FORCE_INLINE_ RS::ShadowQuality directional_shadow_quality_get() const {
+	GD_FORCE_INLINE RS::ShadowQuality directional_shadow_quality_get() const {
 		return directional_shadow_quality;
 	}
-	_FORCE_INLINE_ float shadows_quality_radius_get() const {
+	GD_FORCE_INLINE float shadows_quality_radius_get() const {
 		return shadows_quality_radius;
 	}
-	_FORCE_INLINE_ float directional_shadow_quality_radius_get() const {
+	GD_FORCE_INLINE float directional_shadow_quality_radius_get() const {
 		return directional_shadow_quality_radius;
 	}
 
-	_FORCE_INLINE_ float *directional_penumbra_shadow_kernel_get() {
+	GD_FORCE_INLINE float *directional_penumbra_shadow_kernel_get() {
 		return directional_penumbra_shadow_kernel;
 	}
-	_FORCE_INLINE_ float *directional_soft_shadow_kernel_get() {
+	GD_FORCE_INLINE float *directional_soft_shadow_kernel_get() {
 		return directional_soft_shadow_kernel;
 	}
-	_FORCE_INLINE_ float *penumbra_shadow_kernel_get() {
+	GD_FORCE_INLINE float *penumbra_shadow_kernel_get() {
 		return penumbra_shadow_kernel;
 	}
-	_FORCE_INLINE_ float *soft_shadow_kernel_get() {
+	GD_FORCE_INLINE float *soft_shadow_kernel_get() {
 		return soft_shadow_kernel;
 	}
 
-	_FORCE_INLINE_ int directional_penumbra_shadow_samples_get() const {
+	GD_FORCE_INLINE int directional_penumbra_shadow_samples_get() const {
 		return directional_penumbra_shadow_samples;
 	}
-	_FORCE_INLINE_ bool lightmap_filter_bicubic_get() const {
+	GD_FORCE_INLINE bool lightmap_filter_bicubic_get() const {
 		return lightmap_filter_bicubic;
 	}
-	_FORCE_INLINE_ int directional_soft_shadow_samples_get() const {
+	GD_FORCE_INLINE int directional_soft_shadow_samples_get() const {
 		return directional_soft_shadow_samples;
 	}
-	_FORCE_INLINE_ int penumbra_shadow_samples_get() const {
+	GD_FORCE_INLINE int penumbra_shadow_samples_get() const {
 		return penumbra_shadow_samples;
 	}
-	_FORCE_INLINE_ int soft_shadow_samples_get() const {
+	GD_FORCE_INLINE int soft_shadow_samples_get() const {
 		return soft_shadow_samples;
 	}
 
-	_FORCE_INLINE_ RS::LightProjectorFilter light_projectors_get_filter() const {
+	GD_FORCE_INLINE RS::LightProjectorFilter light_projectors_get_filter() const {
 		return light_projectors_filter;
 	}
-	_FORCE_INLINE_ RS::DecalFilter decals_get_filter() const {
+	GD_FORCE_INLINE RS::DecalFilter decals_get_filter() const {
 		return decals_filter;
 	}
 
@@ -325,7 +325,7 @@ public:
 	virtual void update() override;
 
 	virtual void set_debug_draw_mode(RS::ViewportDebugDraw p_debug_draw) override;
-	_FORCE_INLINE_ RS::ViewportDebugDraw get_debug_draw_mode() const {
+	GD_FORCE_INLINE RS::ViewportDebugDraw get_debug_draw_mode() const {
 		return debug_draw;
 	}
 

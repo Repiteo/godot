@@ -65,10 +65,10 @@ protected:
 	void set_argument_count(int p_count) { argument_count = p_count; }
 
 public:
-	_FORCE_INLINE_ const Vector<Variant> &get_default_arguments() const { return default_arguments; }
-	_FORCE_INLINE_ int get_default_argument_count() const { return default_argument_count; }
+	GD_FORCE_INLINE const Vector<Variant> &get_default_arguments() const { return default_arguments; }
+	GD_FORCE_INLINE int get_default_argument_count() const { return default_argument_count; }
 
-	_FORCE_INLINE_ Variant has_default_argument(int p_arg) const {
+	GD_FORCE_INLINE Variant has_default_argument(int p_arg) const {
 		int idx = p_arg - (argument_count - default_arguments.size());
 
 		if (idx < 0 || idx >= default_arguments.size()) {
@@ -78,7 +78,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ Variant get_default_argument(int p_arg) const {
+	GD_FORCE_INLINE Variant get_default_argument(int p_arg) const {
 		int idx = p_arg - (argument_count - default_arguments.size());
 
 		if (idx < 0 || idx >= default_arguments.size()) {
@@ -88,7 +88,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ Variant::Type get_argument_type(int p_argument) const {
+	GD_FORCE_INLINE Variant::Type get_argument_type(int p_argument) const {
 		ERR_FAIL_COND_V(p_argument < -1 || p_argument >= argument_count, Variant::NIL);
 		return argument_types[p_argument + 1];
 	}
@@ -105,10 +105,10 @@ public:
 
 	void set_hint_flags(uint32_t p_hint) { hint_flags = p_hint; }
 	uint32_t get_hint_flags() const { return hint_flags | (is_const() ? METHOD_FLAG_CONST : 0) | (is_vararg() ? METHOD_FLAG_VARARG : 0) | (is_static() ? METHOD_FLAG_STATIC : 0); }
-	_FORCE_INLINE_ StringName get_instance_class() const { return instance_class; }
-	_FORCE_INLINE_ void set_instance_class(const StringName &p_class) { instance_class = p_class; }
+	GD_FORCE_INLINE StringName get_instance_class() const { return instance_class; }
+	GD_FORCE_INLINE void set_instance_class(const StringName &p_class) { instance_class = p_class; }
 
-	_FORCE_INLINE_ int get_argument_count() const { return argument_count; }
+	GD_FORCE_INLINE int get_argument_count() const { return argument_count; }
 
 #ifdef TOOLS_ENABLED
 	virtual bool is_valid() const { return true; }
@@ -121,14 +121,14 @@ public:
 
 	StringName get_name() const;
 	void set_name(const StringName &p_name);
-	_FORCE_INLINE_ int get_method_id() const { return method_id; }
-	_FORCE_INLINE_ bool is_const() const { return _const; }
-	_FORCE_INLINE_ bool is_static() const { return _static; }
-	_FORCE_INLINE_ bool has_return() const { return _returns; }
+	GD_FORCE_INLINE int get_method_id() const { return method_id; }
+	GD_FORCE_INLINE bool is_const() const { return _const; }
+	GD_FORCE_INLINE bool is_static() const { return _static; }
+	GD_FORCE_INLINE bool has_return() const { return _returns; }
 	virtual bool is_vararg() const { return false; }
 
-	_FORCE_INLINE_ bool is_return_type_raw_object_ptr() { return _returns_raw_obj_ptr; }
-	_FORCE_INLINE_ void set_return_type_is_raw_object_ptr(bool p_returns_raw_obj) { _returns_raw_obj_ptr = p_returns_raw_obj; }
+	GD_FORCE_INLINE bool is_return_type_raw_object_ptr() { return _returns_raw_obj_ptr; }
+	GD_FORCE_INLINE void set_return_type_is_raw_object_ptr(bool p_returns_raw_obj) { _returns_raw_obj_ptr = p_returns_raw_obj; }
 
 	void set_default_arguments(const Vector<Variant> &p_defargs);
 

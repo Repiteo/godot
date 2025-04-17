@@ -85,7 +85,7 @@ private:
 	void _pop_current_packet();
 	void _disconnect_inactive_peers();
 	void _destroy_unused(ENetPacket *p_packet);
-	_FORCE_INLINE_ bool _is_active() const { return active_mode != MODE_NONE; }
+	GD_FORCE_INLINE bool _is_active() const { return active_mode != MODE_NONE; }
 
 	IPAddress bind_ip;
 

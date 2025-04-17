@@ -214,25 +214,25 @@ private:
 		float db_value = 0;
 		bool render_db_value = false;
 
-		_FORCE_INLINE_ AudioNotch(float r_pos, float db_v, bool rndr_val) {
+		GD_FORCE_INLINE AudioNotch(float r_pos, float db_v, bool rndr_val) {
 			relative_position = r_pos;
 			db_value = db_v;
 			render_db_value = rndr_val;
 		}
 
-		_FORCE_INLINE_ AudioNotch(const AudioNotch &n) {
+		GD_FORCE_INLINE AudioNotch(const AudioNotch &n) {
 			relative_position = n.relative_position;
 			db_value = n.db_value;
 			render_db_value = n.render_db_value;
 		}
 
-		_FORCE_INLINE_ void operator=(const EditorAudioMeterNotches::AudioNotch &n) {
+		GD_FORCE_INLINE void operator=(const EditorAudioMeterNotches::AudioNotch &n) {
 			relative_position = n.relative_position;
 			db_value = n.db_value;
 			render_db_value = n.render_db_value;
 		}
 
-		_FORCE_INLINE_ AudioNotch() {}
+		GD_FORCE_INLINE AudioNotch() {}
 	};
 
 	List<AudioNotch> notches;

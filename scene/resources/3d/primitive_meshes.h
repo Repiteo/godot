@@ -37,8 +37,9 @@
 ///@TODO probably should change a few integers to unsigned integers...
 
 /**
-	Base class for all the classes in this file, handles a number of code functions that are shared among all meshes.
-	This class is set apart that it assumes a single surface is always generated for our mesh.
+		Base class for all the classes in this file, handles a number of code
+   functions that are shared among all meshes. This class is set apart that it
+   assumes a single surface is always generated for our mesh.
 */
 
 class PrimitiveMesh : public Mesh {
@@ -63,7 +64,8 @@ private:
 	void _update() const;
 
 protected:
-	// assume primitive triangles as the type, correct for all but one and it will change this :)
+	// assume primitive triangles as the type, correct for all but one and it will
+	// change this :)
 	Mesh::PrimitiveType primitive_type = Mesh::PRIMITIVE_TRIANGLES;
 
 	// Copy of our texel_size project setting.
@@ -85,15 +87,19 @@ public:
 	virtual int surface_get_array_len(int p_idx) const override;
 	virtual int surface_get_array_index_len(int p_idx) const override;
 	virtual Array surface_get_arrays(int p_surface) const override;
-	virtual TypedArray<Array> surface_get_blend_shape_arrays(int p_surface) const override;
+	virtual TypedArray<Array>
+	surface_get_blend_shape_arrays(int p_surface) const override;
 	virtual Dictionary surface_get_lods(int p_surface) const override;
 	virtual BitField<ArrayFormat> surface_get_format(int p_idx) const override;
-	virtual Mesh::PrimitiveType surface_get_primitive_type(int p_idx) const override;
-	virtual void surface_set_material(int p_idx, const Ref<Material> &p_material) override;
+	virtual Mesh::PrimitiveType
+	surface_get_primitive_type(int p_idx) const override;
+	virtual void surface_set_material(int p_idx,
+			const Ref<Material> &p_material) override;
 	virtual Ref<Material> surface_get_material(int p_idx) const override;
 	virtual int get_blend_shape_count() const override;
 	virtual StringName get_blend_shape_name(int p_index) const override;
-	virtual void set_blend_shape_name(int p_index, const StringName &p_name) override;
+	virtual void set_blend_shape_name(int p_index,
+			const StringName &p_name) override;
 	virtual AABB get_aabb() const override;
 	virtual RID get_rid() const override;
 
@@ -121,7 +127,7 @@ public:
 };
 
 /**
-	Mesh for a simple capsule
+		Mesh for a simple capsule
 */
 class CapsuleMesh : public PrimitiveMesh {
 	GDCLASS(CapsuleMesh, PrimitiveMesh);
@@ -139,7 +145,10 @@ protected:
 	virtual void _update_lightmap_size() override;
 
 public:
-	static void create_mesh_array(Array &p_arr, float radius, float height, int radial_segments = 64, int rings = 8, bool p_add_uv2 = false, const float p_uv2_padding = 1.0);
+	static void create_mesh_array(Array &p_arr, float radius, float height,
+			int radial_segments = 64, int rings = 8,
+			bool p_add_uv2 = false,
+			const float p_uv2_padding = 1.0);
 
 	void set_radius(const float p_radius);
 	float get_radius() const;
@@ -157,7 +166,7 @@ public:
 };
 
 /**
-	A box
+		A box
 */
 class BoxMesh : public PrimitiveMesh {
 	GDCLASS(BoxMesh, PrimitiveMesh);
@@ -175,7 +184,10 @@ protected:
 	virtual void _update_lightmap_size() override;
 
 public:
-	static void create_mesh_array(Array &p_arr, Vector3 size, int subdivide_w = 0, int subdivide_h = 0, int subdivide_d = 0, bool p_add_uv2 = false, const float p_uv2_padding = 1.0);
+	static void create_mesh_array(Array &p_arr, Vector3 size, int subdivide_w = 0,
+			int subdivide_h = 0, int subdivide_d = 0,
+			bool p_add_uv2 = false,
+			const float p_uv2_padding = 1.0);
 
 	void set_size(const Vector3 &p_size);
 	Vector3 get_size() const;
@@ -193,7 +205,7 @@ public:
 };
 
 /**
-	A cylinder
+		A cylinder
 */
 
 class CylinderMesh : public PrimitiveMesh {
@@ -215,7 +227,12 @@ protected:
 	virtual void _update_lightmap_size() override;
 
 public:
-	static void create_mesh_array(Array &p_arr, float top_radius, float bottom_radius, float height, int radial_segments = 64, int rings = 4, bool cap_top = true, bool cap_bottom = true, bool p_add_uv2 = false, const float p_uv2_padding = 1.0);
+	static void create_mesh_array(Array &p_arr, float top_radius,
+			float bottom_radius, float height,
+			int radial_segments = 64, int rings = 4,
+			bool cap_top = true, bool cap_bottom = true,
+			bool p_add_uv2 = false,
+			const float p_uv2_padding = 1.0);
 
 	void set_top_radius(const float p_radius);
 	float get_top_radius() const;
@@ -242,7 +259,7 @@ public:
 };
 
 /*
-	A flat rectangle, can be used as quad or heightmap.
+		A flat rectangle, can be used as quad or heightmap.
 */
 class PlaneMesh : public PrimitiveMesh {
 	GDCLASS(PlaneMesh, PrimitiveMesh);
@@ -289,7 +306,8 @@ public:
 VARIANT_ENUM_CAST(PlaneMesh::Orientation)
 
 /*
-	A flat rectangle, inherits from PlaneMesh but defaults to facing the Z-plane.
+		A flat rectangle, inherits from PlaneMesh but defaults to facing the
+   Z-plane.
 */
 class QuadMesh : public PlaneMesh {
 	GDCLASS(QuadMesh, PlaneMesh);
@@ -302,7 +320,7 @@ public:
 };
 
 /**
-	A prism shapen, handy for ramps, triangles, etc.
+		A prism shapen, handy for ramps, triangles, etc.
 */
 class PrismMesh : public PrimitiveMesh {
 	GDCLASS(PrismMesh, PrimitiveMesh);
@@ -340,7 +358,7 @@ public:
 };
 
 /**
-	A sphere..
+		A sphere..
 */
 class SphereMesh : public PrimitiveMesh {
 	GDCLASS(SphereMesh, PrimitiveMesh);
@@ -359,7 +377,11 @@ protected:
 	virtual void _update_lightmap_size() override;
 
 public:
-	static void create_mesh_array(Array &p_arr, float radius, float height, int radial_segments = 64, int rings = 32, bool is_hemisphere = false, bool p_add_uv2 = false, const float p_uv2_padding = 1.0);
+	static void create_mesh_array(Array &p_arr, float radius, float height,
+			int radial_segments = 64, int rings = 32,
+			bool is_hemisphere = false,
+			bool p_add_uv2 = false,
+			const float p_uv2_padding = 1.0);
 
 	void set_radius(const float p_radius);
 	float get_radius() const;
@@ -380,7 +402,7 @@ public:
 };
 
 /**
-	Big donut
+		Big donut
 */
 class TorusMesh : public PrimitiveMesh {
 	GDCLASS(TorusMesh, PrimitiveMesh);
@@ -414,7 +436,7 @@ public:
 };
 
 /**
-	A single point for use in particle systems
+		A single point for use in particle systems
 */
 
 class PointMesh : public PrimitiveMesh {
@@ -482,10 +504,8 @@ class RibbonTrailMesh : public PrimitiveMesh {
 	GDCLASS(RibbonTrailMesh, PrimitiveMesh);
 
 public:
-	enum Shape {
-		SHAPE_FLAT,
-		SHAPE_CROSS
-	};
+	enum Shape { SHAPE_FLAT,
+		SHAPE_CROSS };
 
 private:
 	float size = 1.0;
@@ -529,7 +549,7 @@ public:
 };
 
 /**
-	Text...
+		Text...
 */
 
 class TextMesh : public PrimitiveMesh {
@@ -572,7 +592,7 @@ private:
 	};
 
 	struct GlyphMeshKeyHasher {
-		_FORCE_INLINE_ static uint32_t hash(const GlyphMeshKey &p_a) {
+		GD_FORCE_INLINE static uint32_t hash(const GlyphMeshKey &p_a) {
 			return hash_murmur3_buffer(&p_a, sizeof(GlyphMeshKey));
 		}
 	};
@@ -596,7 +616,10 @@ private:
 	Ref<Font> font_override;
 
 	TextServer::AutowrapMode autowrap_mode = TextServer::AUTOWRAP_OFF;
-	BitField<TextServer::JustificationFlag> jst_flags = TextServer::JUSTIFICATION_WORD_BOUND | TextServer::JUSTIFICATION_KASHIDA | TextServer::JUSTIFICATION_SKIP_LAST_LINE | TextServer::JUSTIFICATION_DO_NOT_SKIP_SINGLE_LINE;
+	BitField<TextServer::JustificationFlag> jst_flags =
+			TextServer::JUSTIFICATION_WORD_BOUND | TextServer::JUSTIFICATION_KASHIDA |
+			TextServer::JUSTIFICATION_SKIP_LAST_LINE |
+			TextServer::JUSTIFICATION_DO_NOT_SKIP_SINGLE_LINE;
 	float width = 500.0;
 	float line_spacing = 0.f;
 	Point2 lbl_offset;
@@ -606,7 +629,8 @@ private:
 	bool uppercase = false;
 	String language;
 	TextServer::Direction text_direction = TextServer::DIRECTION_AUTO;
-	TextServer::StructuredTextParser st_parser = TextServer::STRUCTURED_TEXT_DEFAULT;
+	TextServer::StructuredTextParser st_parser =
+			TextServer::STRUCTURED_TEXT_DEFAULT;
 	Array st_args;
 
 	real_t depth = 0.05;
@@ -618,7 +642,8 @@ private:
 	mutable bool dirty_font = true;
 	mutable bool dirty_cache = true;
 
-	void _generate_glyph_mesh_data(const GlyphMeshKey &p_key, const Glyph &p_glyph) const;
+	void _generate_glyph_mesh_data(const GlyphMeshKey &p_key,
+			const Glyph &p_glyph) const;
 	void _font_changed();
 
 protected:
@@ -664,7 +689,8 @@ public:
 	void set_language(const String &p_language);
 	String get_language() const;
 
-	void set_structured_text_bidi_override(TextServer::StructuredTextParser p_parser);
+	void
+	set_structured_text_bidi_override(TextServer::StructuredTextParser p_parser);
 	TextServer::StructuredTextParser get_structured_text_bidi_override() const;
 
 	void set_structured_text_bidi_override_options(Array p_args);

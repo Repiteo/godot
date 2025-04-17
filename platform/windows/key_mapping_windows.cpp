@@ -37,9 +37,9 @@
 // https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 
 struct HashMapHasherKeys {
-	static _FORCE_INLINE_ uint32_t hash(const Key p_key) { return hash_fmix32(static_cast<uint32_t>(p_key)); }
-	static _FORCE_INLINE_ uint32_t hash(const char32_t p_uchar) { return hash_fmix32(p_uchar); }
-	static _FORCE_INLINE_ uint32_t hash(const unsigned p_key) { return hash_fmix32(p_key); }
+	static GD_FORCE_INLINE uint32_t hash(const Key p_key) { return hash_fmix32(static_cast<uint32_t>(p_key)); }
+	static GD_FORCE_INLINE uint32_t hash(const char32_t p_uchar) { return hash_fmix32(p_uchar); }
+	static GD_FORCE_INLINE uint32_t hash(const unsigned p_key) { return hash_fmix32(p_key); }
 };
 
 HashMap<unsigned int, Key, HashMapHasherKeys> vk_map;

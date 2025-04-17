@@ -173,7 +173,7 @@ bool TextServerFallback::_is_locale_right_to_left(const String &p_locale) const 
 	return false; // No RTL support.
 }
 
-_FORCE_INLINE_ void TextServerFallback::_insert_feature(const StringName &p_name, int32_t p_tag) {
+GD_FORCE_INLINE void TextServerFallback::_insert_feature(const StringName &p_name, int32_t p_tag) {
 	feature_sets.insert(p_name, p_tag);
 	feature_sets_inv.insert(p_tag, p_name);
 }
@@ -187,7 +187,7 @@ void TextServerFallback::_insert_feature_sets() {
 	_insert_feature("weight", OT_TAG('w', 'g', 'h', 't'));
 }
 
-_FORCE_INLINE_ int32_t ot_tag_from_string(const char *p_str, int p_len) {
+GD_FORCE_INLINE int32_t ot_tag_from_string(const char *p_str, int p_len) {
 	char tag[4];
 	uint32_t i;
 
@@ -218,7 +218,7 @@ int64_t TextServerFallback::_name_to_tag(const String &p_name) const {
 	return ot_tag_from_string(p_name.replace("custom_", "").ascii().get_data(), -1);
 }
 
-_FORCE_INLINE_ void ot_tag_to_string(int32_t p_tag, char *p_buf) {
+GD_FORCE_INLINE void ot_tag_to_string(int32_t p_tag, char *p_buf) {
 	p_buf[0] = (char)(uint8_t)(p_tag >> 24);
 	p_buf[1] = (char)(uint8_t)(p_tag >> 16);
 	p_buf[2] = (char)(uint8_t)(p_tag >> 8);
@@ -241,7 +241,7 @@ String TextServerFallback::_tag_to_name(int64_t p_tag) const {
 /* Font Glyph Rendering                                                  */
 /*************************************************************************/
 
-_FORCE_INLINE_ TextServerFallback::FontTexturePosition TextServerFallback::find_texture_pos_for_glyph(FontForSizeFallback *p_data, int p_color_size, Image::Format p_image_format, int p_width, int p_height, bool p_msdf) const {
+GD_FORCE_INLINE TextServerFallback::FontTexturePosition TextServerFallback::find_texture_pos_for_glyph(FontForSizeFallback *p_data, int p_color_size, Image::Format p_image_format, int p_width, int p_height, bool p_msdf) const {
 	FontTexturePosition ret;
 
 	int mw = p_width;
@@ -328,9 +328,9 @@ class DistancePixelConversion {
 	double invRange;
 
 public:
-	_FORCE_INLINE_ explicit DistancePixelConversion(double range) :
+	GD_FORCE_INLINE explicit DistancePixelConversion(double range) :
 			invRange(1 / range) {}
-	_FORCE_INLINE_ void operator()(float *pixels, const msdfgen::MultiAndTrueDistance &distance) const {
+	GD_FORCE_INLINE void operator()(float *pixels, const msdfgen::MultiAndTrueDistance &distance) const {
 		pixels[0] = float(invRange * distance.r + .5);
 		pixels[1] = float(invRange * distance.g + .5);
 		pixels[2] = float(invRange * distance.b + .5);
@@ -395,7 +395,7 @@ void TextServerFallback::_generateMTSDF_threaded(void *p_td, uint32_t p_y) {
 	}
 }
 
-_FORCE_INLINE_ TextServerFallback::FontGlyph TextServerFallback::rasterize_msdf(FontFallback *p_font_data, FontForSizeFallback *p_data, int p_pixel_range, int p_rect_margin, FT_Outline *p_outline, const Vector2 &p_advance) const {
+GD_FORCE_INLINE TextServerFallback::FontGlyph TextServerFallback::rasterize_msdf(FontFallback *p_font_data, FontForSizeFallback *p_data, int p_pixel_range, int p_rect_margin, FT_Outline *p_outline, const Vector2 &p_advance) const {
 	msdfgen::Shape shape;
 
 	shape.contours.clear();
@@ -498,7 +498,7 @@ _FORCE_INLINE_ TextServerFallback::FontGlyph TextServerFallback::rasterize_msdf(
 #endif
 
 #ifdef MODULE_FREETYPE_ENABLED
-_FORCE_INLINE_ TextServerFallback::FontGlyph TextServerFallback::rasterize_bitmap(FontForSizeFallback *p_data, int p_rect_margin, FT_Bitmap p_bitmap, int p_yofs, int p_xofs, const Vector2 &p_advance, bool p_bgra) const {
+GD_FORCE_INLINE TextServerFallback::FontGlyph TextServerFallback::rasterize_bitmap(FontForSizeFallback *p_data, int p_rect_margin, FT_Bitmap p_bitmap, int p_yofs, int p_xofs, const Vector2 &p_advance, bool p_bgra) const {
 	FontGlyph chr;
 	chr.advance = p_advance * p_data->scale;
 	chr.found = true;
@@ -623,7 +623,7 @@ _FORCE_INLINE_ TextServerFallback::FontGlyph TextServerFallback::rasterize_bitma
 /* Font Cache                                                            */
 /*************************************************************************/
 
-_FORCE_INLINE_ bool TextServerFallback::_ensure_glyph(FontFallback *p_font_data, const Vector2i &p_size, int32_t p_glyph, FontGlyph &r_glyph, uint32_t p_oversampling) const {
+GD_FORCE_INLINE bool TextServerFallback::_ensure_glyph(FontFallback *p_font_data, const Vector2i &p_size, int32_t p_glyph, FontGlyph &r_glyph, uint32_t p_oversampling) const {
 	FontForSizeFallback *fd = nullptr;
 	ERR_FAIL_COND_V(!_ensure_cache_for_size(p_font_data, p_size, fd, false, p_oversampling), false);
 
@@ -792,7 +792,7 @@ _FORCE_INLINE_ bool TextServerFallback::_ensure_glyph(FontFallback *p_font_data,
 	return false;
 }
 
-_FORCE_INLINE_ bool TextServerFallback::_ensure_cache_for_size(FontFallback *p_font_data, const Vector2i &p_size, FontForSizeFallback *&r_cache_for_size, bool p_silent, uint32_t p_oversampling) const {
+GD_FORCE_INLINE bool TextServerFallback::_ensure_cache_for_size(FontFallback *p_font_data, const Vector2i &p_size, FontForSizeFallback *&r_cache_for_size, bool p_silent, uint32_t p_oversampling) const {
 	ERR_FAIL_COND_V(p_size.x <= 0, false);
 
 	HashMap<Vector2i, FontForSizeFallback *>::Iterator E = p_font_data->cache.find(p_size);
@@ -1055,7 +1055,7 @@ void TextServerFallback::_unreference_oversampling_level(double p_oversampling) 
 	}
 }
 
-_FORCE_INLINE_ bool TextServerFallback::_font_validate(const RID &p_font_rid) const {
+GD_FORCE_INLINE bool TextServerFallback::_font_validate(const RID &p_font_rid) const {
 	FontFallback *fd = _get_font_data(p_font_rid);
 	ERR_FAIL_NULL_V(fd, false);
 
@@ -1065,7 +1065,7 @@ _FORCE_INLINE_ bool TextServerFallback::_font_validate(const RID &p_font_rid) co
 	return _ensure_cache_for_size(fd, size, ffsd, true);
 }
 
-_FORCE_INLINE_ void TextServerFallback::_font_clear_cache(FontFallback *p_font_data) {
+GD_FORCE_INLINE void TextServerFallback::_font_clear_cache(FontFallback *p_font_data) {
 	MutexLock ftlock(ft_mutex);
 
 	for (const KeyValue<Vector2i, FontForSizeFallback *> &E : p_font_data->cache) {

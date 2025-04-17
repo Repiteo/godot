@@ -71,7 +71,7 @@ class Font : public Resource {
 	};
 
 	struct ShapedTextKeyHasher {
-		_FORCE_INLINE_ static uint32_t hash(const ShapedTextKey &p_a) {
+		GD_FORCE_INLINE static uint32_t hash(const ShapedTextKey &p_a) {
 			uint32_t hash = p_a.text.hash();
 			hash = hash_murmur3_one_32(p_a.font_size, hash);
 			hash = hash_murmur3_one_float(p_a.width, hash);
@@ -212,8 +212,8 @@ class FontFile : public Font {
 	// Cache.
 	mutable Vector<RID> cache;
 
-	_FORCE_INLINE_ void _clear_cache();
-	_FORCE_INLINE_ void _ensure_rid(int p_cache_index, int p_make_linked_from = -1) const;
+	GD_FORCE_INLINE void _clear_cache();
+	GD_FORCE_INLINE void _ensure_rid(int p_cache_index, int p_make_linked_from = -1) const;
 
 	void _convert_packed_8bit(Ref<Image> &p_source, int p_page, int p_sz);
 	void _convert_packed_4bit(Ref<Image> &p_source, int p_page, int p_sz);

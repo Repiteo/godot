@@ -45,7 +45,7 @@ struct ContainerTypeValidate {
 	Ref<Script> script;
 	const char *where = "container";
 
-	_FORCE_INLINE_ bool can_reference(const ContainerTypeValidate &p_type) const {
+	GD_FORCE_INLINE bool can_reference(const ContainerTypeValidate &p_type) const {
 		if (type != p_type.type) {
 			return false;
 		} else if (type != Variant::OBJECT) {
@@ -71,15 +71,15 @@ struct ContainerTypeValidate {
 		return true;
 	}
 
-	_FORCE_INLINE_ bool operator==(const ContainerTypeValidate &p_type) const {
+	GD_FORCE_INLINE bool operator==(const ContainerTypeValidate &p_type) const {
 		return type == p_type.type && class_name == p_type.class_name && script == p_type.script;
 	}
-	_FORCE_INLINE_ bool operator!=(const ContainerTypeValidate &p_type) const {
+	GD_FORCE_INLINE bool operator!=(const ContainerTypeValidate &p_type) const {
 		return type != p_type.type || class_name != p_type.class_name || script != p_type.script;
 	}
 
 	// Coerces String and StringName into each other and int into float when needed.
-	_FORCE_INLINE_ bool validate(Variant &inout_variant, const char *p_operation = "use") const {
+	GD_FORCE_INLINE bool validate(Variant &inout_variant, const char *p_operation = "use") const {
 		if (type == Variant::NIL) {
 			return true;
 		}
@@ -109,7 +109,7 @@ struct ContainerTypeValidate {
 		return validate_object(inout_variant, p_operation);
 	}
 
-	_FORCE_INLINE_ bool validate_object(const Variant &p_variant, const char *p_operation = "use") const {
+	GD_FORCE_INLINE bool validate_object(const Variant &p_variant, const char *p_operation = "use") const {
 		ERR_FAIL_COND_V(p_variant.get_type() != Variant::OBJECT, false);
 
 #ifdef DEBUG_ENABLED

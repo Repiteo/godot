@@ -67,8 +67,8 @@ public:
 		void set_filter(AudioFilterSW *p_filter, bool p_clear_history = true);
 		void process(float *p_samples, int p_amount, int p_stride = 1, bool p_interpolate = false);
 		void update_coeffs(int p_interp_buffer_len = 0);
-		_ALWAYS_INLINE_ void process_one(float &p_sample);
-		_ALWAYS_INLINE_ void process_one_interp(float &p_sample);
+		GD_ALWAYS_INLINE void process_one(float &p_sample);
+		GD_ALWAYS_INLINE void process_one_interp(float &p_sample);
 
 		Processor();
 	};

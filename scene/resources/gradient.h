@@ -65,14 +65,14 @@ private:
 	InterpolationMode interpolation_mode = GRADIENT_INTERPOLATE_LINEAR;
 	ColorSpace interpolation_color_space = GRADIENT_COLOR_SPACE_SRGB;
 
-	_FORCE_INLINE_ void _update_sorting() {
+	GD_FORCE_INLINE void _update_sorting() {
 		if (!is_sorted) {
 			points.sort();
 			is_sorted = true;
 		}
 	}
 
-	_FORCE_INLINE_ Color transform_color_space(const Color p_color) const {
+	GD_FORCE_INLINE Color transform_color_space(const Color p_color) const {
 		switch (interpolation_color_space) {
 			case GRADIENT_COLOR_SPACE_SRGB:
 			default:
@@ -96,7 +96,7 @@ private:
 		}
 	}
 
-	_FORCE_INLINE_ Color inv_transform_color_space(const Color p_color) const {
+	GD_FORCE_INLINE Color inv_transform_color_space(const Color p_color) const {
 		switch (interpolation_color_space) {
 			case GRADIENT_COLOR_SPACE_SRGB:
 			default:
@@ -148,7 +148,7 @@ public:
 	void set_interpolation_color_space(Gradient::ColorSpace p_color_space);
 	ColorSpace get_interpolation_color_space();
 
-	_FORCE_INLINE_ Color get_color_at_offset(float p_offset) {
+	GD_FORCE_INLINE Color get_color_at_offset(float p_offset) {
 		if (points.is_empty()) {
 			return Color(0, 0, 0, 1);
 		}

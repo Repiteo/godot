@@ -81,7 +81,7 @@ public:
 	static Vector<uint8_t> buffer_get_data(GLenum p_target, GLuint p_buffer, uint32_t p_buffer_size);
 
 	// Allocate memory with glBufferData. Does not handle resizing.
-	_FORCE_INLINE_ void buffer_allocate_data(GLenum p_target, GLuint p_id, uint32_t p_size, const void *p_data, GLenum p_usage, String p_name = "") {
+	GD_FORCE_INLINE void buffer_allocate_data(GLenum p_target, GLuint p_id, uint32_t p_size, const void *p_data, GLenum p_usage, String p_name = "") {
 		glBufferData(p_target, p_size, p_data, p_usage);
 		buffer_mem_cache += p_size;
 
@@ -97,14 +97,14 @@ public:
 		buffer_allocs_cache[p_id] = resource_allocation;
 	}
 
-	_FORCE_INLINE_ void buffer_free_data(GLuint p_id) {
+	GD_FORCE_INLINE void buffer_free_data(GLuint p_id) {
 		ERR_FAIL_COND(!buffer_allocs_cache.has(p_id));
 		glDeleteBuffers(1, &p_id);
 		buffer_mem_cache -= buffer_allocs_cache[p_id].size;
 		buffer_allocs_cache.erase(p_id);
 	}
 
-	_FORCE_INLINE_ void render_buffer_allocated_data(GLuint p_id, uint32_t p_size, String p_name = "") {
+	GD_FORCE_INLINE void render_buffer_allocated_data(GLuint p_id, uint32_t p_size, String p_name = "") {
 		render_buffer_mem_cache += p_size;
 #ifdef DEV_ENABLED
 		ERR_FAIL_COND_MSG(render_buffer_allocs_cache.has(p_id), "trying to allocate render buffer with name " + p_name + " but ID already used by " + render_buffer_allocs_cache[p_id].name);
@@ -117,7 +117,7 @@ public:
 		render_buffer_allocs_cache[p_id] = resource_allocation;
 	}
 
-	_FORCE_INLINE_ void render_buffer_free_data(GLuint p_id) {
+	GD_FORCE_INLINE void render_buffer_free_data(GLuint p_id) {
 		ERR_FAIL_COND(!render_buffer_allocs_cache.has(p_id));
 		glDeleteRenderbuffers(1, &p_id);
 		render_buffer_mem_cache -= render_buffer_allocs_cache[p_id].size;
@@ -126,7 +126,7 @@ public:
 
 	// Records that data was allocated for state tracking purposes.
 	// Size is measured in bytes.
-	_FORCE_INLINE_ void texture_allocated_data(GLuint p_id, uint32_t p_size, String p_name = "") {
+	GD_FORCE_INLINE void texture_allocated_data(GLuint p_id, uint32_t p_size, String p_name = "") {
 		texture_mem_cache += p_size;
 #ifdef DEV_ENABLED
 		ERR_FAIL_COND_MSG(texture_allocs_cache.has(p_id), "trying to allocate texture with name " + p_name + " but ID already used by " + texture_allocs_cache[p_id].name);
@@ -139,14 +139,14 @@ public:
 		texture_allocs_cache[p_id] = resource_allocation;
 	}
 
-	_FORCE_INLINE_ void texture_free_data(GLuint p_id) {
+	GD_FORCE_INLINE void texture_free_data(GLuint p_id) {
 		ERR_FAIL_COND(!texture_allocs_cache.has(p_id));
 		glDeleteTextures(1, &p_id);
 		texture_mem_cache -= texture_allocs_cache[p_id].size;
 		texture_allocs_cache.erase(p_id);
 	}
 
-	_FORCE_INLINE_ void texture_resize_data(GLuint p_id, uint32_t p_size) {
+	GD_FORCE_INLINE void texture_resize_data(GLuint p_id, uint32_t p_size) {
 		ERR_FAIL_COND(!texture_allocs_cache.has(p_id));
 		texture_mem_cache -= texture_allocs_cache[p_id].size;
 		texture_mem_cache += p_size;

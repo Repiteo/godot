@@ -473,7 +473,7 @@ public:
 	TextureStorage();
 	virtual ~TextureStorage();
 
-	_FORCE_INLINE_ RID texture_gl_get_default(DefaultGLTexture p_texture) {
+	GD_FORCE_INLINE RID texture_gl_get_default(DefaultGLTexture p_texture) {
 		return default_gl_textures[p_texture];
 	}
 
@@ -572,7 +572,7 @@ public:
 	void update_texture_atlas();
 
 	GLuint texture_atlas_get_texture() const;
-	_FORCE_INLINE_ Rect2 texture_atlas_get_texture_rect(RID p_texture) {
+	GD_FORCE_INLINE Rect2 texture_atlas_get_texture_rect(RID p_texture) {
 		TextureAtlas::Texture *t = texture_atlas.textures.getptr(p_texture);
 		if (!t) {
 			return Rect2();

@@ -121,7 +121,7 @@ class TextServerFallback : public TextServerExtension {
 	void _update_settings();
 
 	void _insert_feature_sets();
-	_FORCE_INLINE_ void _insert_feature(const StringName &p_name, int32_t p_tag);
+	GD_FORCE_INLINE void _insert_feature(const StringName &p_name, int32_t p_tag);
 
 	// Font cache data.
 
@@ -317,20 +317,20 @@ class TextServerFallback : public TextServerExtension {
 		}
 	};
 
-	_FORCE_INLINE_ FontTexturePosition find_texture_pos_for_glyph(FontForSizeFallback *p_data, int p_color_size, Image::Format p_image_format, int p_width, int p_height, bool p_msdf) const;
+	GD_FORCE_INLINE FontTexturePosition find_texture_pos_for_glyph(FontForSizeFallback *p_data, int p_color_size, Image::Format p_image_format, int p_width, int p_height, bool p_msdf) const;
 #ifdef MODULE_MSDFGEN_ENABLED
-	_FORCE_INLINE_ FontGlyph rasterize_msdf(FontFallback *p_font_data, FontForSizeFallback *p_data, int p_pixel_range, int p_rect_margin, FT_Outline *p_outline, const Vector2 &p_advance) const;
+	GD_FORCE_INLINE FontGlyph rasterize_msdf(FontFallback *p_font_data, FontForSizeFallback *p_data, int p_pixel_range, int p_rect_margin, FT_Outline *p_outline, const Vector2 &p_advance) const;
 #endif
 #ifdef MODULE_FREETYPE_ENABLED
-	_FORCE_INLINE_ FontGlyph rasterize_bitmap(FontForSizeFallback *p_data, int p_rect_margin, FT_Bitmap p_bitmap, int p_yofs, int p_xofs, const Vector2 &p_advance, bool p_bgra) const;
+	GD_FORCE_INLINE FontGlyph rasterize_bitmap(FontForSizeFallback *p_data, int p_rect_margin, FT_Bitmap p_bitmap, int p_yofs, int p_xofs, const Vector2 &p_advance, bool p_bgra) const;
 #endif
-	_FORCE_INLINE_ bool _ensure_glyph(FontFallback *p_font_data, const Vector2i &p_size, int32_t p_glyph, FontGlyph &r_glyph, uint32_t p_oversampling = 0) const;
-	_FORCE_INLINE_ bool _ensure_cache_for_size(FontFallback *p_font_data, const Vector2i &p_size, FontForSizeFallback *&r_cache_for_size, bool p_silent = false, uint32_t p_oversampling = 0) const;
-	_FORCE_INLINE_ bool _font_validate(const RID &p_font_rid) const;
-	_FORCE_INLINE_ void _font_clear_cache(FontFallback *p_font_data);
+	GD_FORCE_INLINE bool _ensure_glyph(FontFallback *p_font_data, const Vector2i &p_size, int32_t p_glyph, FontGlyph &r_glyph, uint32_t p_oversampling = 0) const;
+	GD_FORCE_INLINE bool _ensure_cache_for_size(FontFallback *p_font_data, const Vector2i &p_size, FontForSizeFallback *&r_cache_for_size, bool p_silent = false, uint32_t p_oversampling = 0) const;
+	GD_FORCE_INLINE bool _font_validate(const RID &p_font_rid) const;
+	GD_FORCE_INLINE void _font_clear_cache(FontFallback *p_font_data);
 	static void _generateMTSDF_threaded(void *p_td, uint32_t p_y);
 
-	_FORCE_INLINE_ Vector2i _get_size(const FontFallback *p_font_data, int p_size) const {
+	GD_FORCE_INLINE Vector2i _get_size(const FontFallback *p_font_data, int p_size) const {
 		if (p_font_data->msdf) {
 			return Vector2i(p_font_data->msdf_source_size * 64, 0);
 		} else if (p_font_data->fixed_size > 0) {
@@ -340,7 +340,7 @@ class TextServerFallback : public TextServerExtension {
 		}
 	}
 
-	_FORCE_INLINE_ Vector2i _get_size_outline(const FontFallback *p_font_data, const Vector2i &p_size) const {
+	GD_FORCE_INLINE Vector2i _get_size_outline(const FontFallback *p_font_data, const Vector2i &p_size) const {
 		if (p_font_data->msdf) {
 			return Vector2i(p_font_data->msdf_source_size * 64, 0);
 		} else if (p_font_data->fixed_size > 0) {
@@ -350,7 +350,7 @@ class TextServerFallback : public TextServerExtension {
 		}
 	}
 
-	_FORCE_INLINE_ int _font_get_weight_by_name(const String &p_sty_name) const {
+	GD_FORCE_INLINE int _font_get_weight_by_name(const String &p_sty_name) const {
 		String sty_name = p_sty_name.remove_chars(" -");
 		if (sty_name.contains("thin") || sty_name.contains("hairline")) {
 			return 100;
@@ -377,7 +377,7 @@ class TextServerFallback : public TextServerExtension {
 		}
 		return 400;
 	}
-	_FORCE_INLINE_ int _font_get_stretch_by_name(const String &p_sty_name) const {
+	GD_FORCE_INLINE int _font_get_stretch_by_name(const String &p_sty_name) const {
 		String sty_name = p_sty_name.remove_chars(" -");
 		if (sty_name.contains("ultracondensed")) {
 			return 50;
@@ -398,7 +398,7 @@ class TextServerFallback : public TextServerExtension {
 		}
 		return 100;
 	}
-	_FORCE_INLINE_ bool _is_ital_style(const String &p_sty_name) const {
+	GD_FORCE_INLINE bool _is_ital_style(const String &p_sty_name) const {
 		return p_sty_name.contains("italic") || p_sty_name.contains("oblique");
 	}
 
@@ -493,7 +493,7 @@ class TextServerFallback : public TextServerExtension {
 	mutable RID_PtrOwner<FontFallback> font_owner;
 	mutable RID_PtrOwner<ShapedTextDataFallback> shaped_owner;
 
-	_FORCE_INLINE_ FontFallback *_get_font_data(const RID &p_font_rid) const {
+	GD_FORCE_INLINE FontFallback *_get_font_data(const RID &p_font_rid) const {
 		RID rid = p_font_rid;
 		FontFallbackLinkedVariation *fdv = font_var_owner.get_or_null(rid);
 		if (unlikely(fdv)) {
@@ -566,7 +566,7 @@ class TextServerFallback : public TextServerExtension {
 	};
 
 	struct SystemFontKeyHasher {
-		_FORCE_INLINE_ static uint32_t hash(const SystemFontKey &p_a) {
+		GD_FORCE_INLINE static uint32_t hash(const SystemFontKey &p_a) {
 			uint32_t hash = p_a.font_name.hash();
 			hash = hash_murmur3_one_32(p_a.variation_coordinates.hash(), hash);
 			hash = hash_murmur3_one_32(p_a.weight, hash);
@@ -592,7 +592,7 @@ class TextServerFallback : public TextServerExtension {
 
 	void _generate_runs(ShapedTextDataFallback *p_sd) const;
 	void _realign(ShapedTextDataFallback *p_sd) const;
-	_FORCE_INLINE_ RID _find_sys_font_for_text(const RID &p_fdef, const String &p_script_code, const String &p_language, const String &p_text);
+	GD_FORCE_INLINE RID _find_sys_font_for_text(const RID &p_fdef, const String &p_script_code, const String &p_language, const String &p_text);
 
 	Mutex ft_mutex;
 

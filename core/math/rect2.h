@@ -48,7 +48,7 @@ struct [[nodiscard]] Rect2 {
 
 	real_t get_area() const { return size.width * size.height; }
 
-	_FORCE_INLINE_ Vector2 get_center() const { return position + (size * 0.5f); }
+	GD_FORCE_INLINE Vector2 get_center() const { return position + (size * 0.5f); }
 
 	inline bool intersects(const Rect2 &p_rect, bool p_include_borders = false) const {
 #ifdef MATH_CHECKS
@@ -139,7 +139,7 @@ struct [[nodiscard]] Rect2 {
 				((p_rect.position.y + p_rect.size.y) <= (position.y + size.y));
 	}
 
-	_FORCE_INLINE_ bool has_area() const {
+	GD_FORCE_INLINE bool has_area() const {
 		return size.x > 0.0f && size.y > 0.0f;
 	}
 
@@ -244,7 +244,7 @@ struct [[nodiscard]] Rect2 {
 		return g;
 	}
 
-	_FORCE_INLINE_ Rect2 expand(const Vector2 &p_vector) const {
+	GD_FORCE_INLINE Rect2 expand(const Vector2 &p_vector) const {
 		Rect2 r = *this;
 		r.expand_to(p_vector);
 		return r;
@@ -277,11 +277,11 @@ struct [[nodiscard]] Rect2 {
 		size = end - begin;
 	}
 
-	_FORCE_INLINE_ Rect2 abs() const {
+	GD_FORCE_INLINE Rect2 abs() const {
 		return Rect2(position + size.minf(0), size.abs());
 	}
 
-	_FORCE_INLINE_ Rect2 round() const {
+	GD_FORCE_INLINE Rect2 round() const {
 		return Rect2(position.round(), size.round());
 	}
 
@@ -296,7 +296,7 @@ struct [[nodiscard]] Rect2 {
 		return support;
 	}
 
-	_FORCE_INLINE_ bool intersects_filled_polygon(const Vector2 *p_points, int p_point_count) const {
+	GD_FORCE_INLINE bool intersects_filled_polygon(const Vector2 *p_points, int p_point_count) const {
 		Vector2 center = get_center();
 		int side_plus = 0;
 		int side_minus = 0;
@@ -350,11 +350,11 @@ struct [[nodiscard]] Rect2 {
 		}
 	}
 
-	_FORCE_INLINE_ void set_end(const Vector2 &p_end) {
+	GD_FORCE_INLINE void set_end(const Vector2 &p_end) {
 		size = p_end - position;
 	}
 
-	_FORCE_INLINE_ Vector2 get_end() const {
+	GD_FORCE_INLINE Vector2 get_end() const {
 		return position + size;
 	}
 

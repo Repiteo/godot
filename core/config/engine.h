@@ -154,29 +154,29 @@ public:
 	bool is_singleton_editor_only(const StringName &p_name) const;
 
 #ifdef TOOLS_ENABLED
-	_FORCE_INLINE_ void set_editor_hint(bool p_enabled) { editor_hint = p_enabled; }
-	_FORCE_INLINE_ bool is_editor_hint() const { return editor_hint; }
+	GD_FORCE_INLINE void set_editor_hint(bool p_enabled) { editor_hint = p_enabled; }
+	GD_FORCE_INLINE bool is_editor_hint() const { return editor_hint; }
 
-	_FORCE_INLINE_ void set_project_manager_hint(bool p_enabled) { project_manager_hint = p_enabled; }
-	_FORCE_INLINE_ bool is_project_manager_hint() const { return project_manager_hint; }
+	GD_FORCE_INLINE void set_project_manager_hint(bool p_enabled) { project_manager_hint = p_enabled; }
+	GD_FORCE_INLINE bool is_project_manager_hint() const { return project_manager_hint; }
 
-	_FORCE_INLINE_ void set_extension_reloading_enabled(bool p_enabled) { extension_reloading = p_enabled; }
-	_FORCE_INLINE_ bool is_extension_reloading_enabled() const { return extension_reloading; }
+	GD_FORCE_INLINE void set_extension_reloading_enabled(bool p_enabled) { extension_reloading = p_enabled; }
+	GD_FORCE_INLINE bool is_extension_reloading_enabled() const { return extension_reloading; }
 
-	_FORCE_INLINE_ void set_recovery_mode_hint(bool p_enabled) { recovery_mode_hint = p_enabled; }
-	_FORCE_INLINE_ bool is_recovery_mode_hint() const { return recovery_mode_hint; }
+	GD_FORCE_INLINE void set_recovery_mode_hint(bool p_enabled) { recovery_mode_hint = p_enabled; }
+	GD_FORCE_INLINE bool is_recovery_mode_hint() const { return recovery_mode_hint; }
 #else
-	_FORCE_INLINE_ void set_editor_hint(bool p_enabled) {}
-	_FORCE_INLINE_ bool is_editor_hint() const { return false; }
+	GD_FORCE_INLINE void set_editor_hint(bool p_enabled) {}
+	GD_FORCE_INLINE bool is_editor_hint() const { return false; }
 
-	_FORCE_INLINE_ void set_project_manager_hint(bool p_enabled) {}
-	_FORCE_INLINE_ bool is_project_manager_hint() const { return false; }
+	GD_FORCE_INLINE void set_project_manager_hint(bool p_enabled) {}
+	GD_FORCE_INLINE bool is_project_manager_hint() const { return false; }
 
-	_FORCE_INLINE_ void set_extension_reloading_enabled(bool p_enabled) {}
-	_FORCE_INLINE_ bool is_extension_reloading_enabled() const { return false; }
+	GD_FORCE_INLINE void set_extension_reloading_enabled(bool p_enabled) {}
+	GD_FORCE_INLINE bool is_extension_reloading_enabled() const { return false; }
 
-	_FORCE_INLINE_ void set_recovery_mode_hint(bool p_enabled) {}
-	_FORCE_INLINE_ bool is_recovery_mode_hint() const { return false; }
+	GD_FORCE_INLINE void set_recovery_mode_hint(bool p_enabled) {}
+	GD_FORCE_INLINE bool is_recovery_mode_hint() const { return false; }
 #endif
 
 	Dictionary get_version_info() const;

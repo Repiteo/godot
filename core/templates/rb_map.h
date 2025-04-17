@@ -99,21 +99,21 @@ public:
 	struct Iterator {
 		friend class RBMap<K, V, C, A>;
 
-		_FORCE_INLINE_ KeyValue<K, V> &operator*() const {
+		GD_FORCE_INLINE KeyValue<K, V> &operator*() const {
 			return E->key_value();
 		}
-		_FORCE_INLINE_ KeyValue<K, V> *operator->() const { return &E->key_value(); }
-		_FORCE_INLINE_ Iterator &operator++() {
+		GD_FORCE_INLINE KeyValue<K, V> *operator->() const { return &E->key_value(); }
+		GD_FORCE_INLINE Iterator &operator++() {
 			E = E->next();
 			return *this;
 		}
-		_FORCE_INLINE_ Iterator &operator--() {
+		GD_FORCE_INLINE Iterator &operator--() {
 			E = E->prev();
 			return *this;
 		}
 
-		_FORCE_INLINE_ bool operator==(const Iterator &p_it) const { return E == p_it.E; }
-		_FORCE_INLINE_ bool operator!=(const Iterator &p_it) const { return E != p_it.E; }
+		GD_FORCE_INLINE bool operator==(const Iterator &p_it) const { return E == p_it.E; }
+		GD_FORCE_INLINE bool operator!=(const Iterator &p_it) const { return E != p_it.E; }
 		explicit operator bool() const {
 			return E != nullptr;
 		}
@@ -131,21 +131,21 @@ public:
 	};
 
 	struct ConstIterator {
-		_FORCE_INLINE_ const KeyValue<K, V> &operator*() const {
+		GD_FORCE_INLINE const KeyValue<K, V> &operator*() const {
 			return E->key_value();
 		}
-		_FORCE_INLINE_ const KeyValue<K, V> *operator->() const { return &E->key_value(); }
-		_FORCE_INLINE_ ConstIterator &operator++() {
+		GD_FORCE_INLINE const KeyValue<K, V> *operator->() const { return &E->key_value(); }
+		GD_FORCE_INLINE ConstIterator &operator++() {
 			E = E->next();
 			return *this;
 		}
-		_FORCE_INLINE_ ConstIterator &operator--() {
+		GD_FORCE_INLINE ConstIterator &operator--() {
 			E = E->prev();
 			return *this;
 		}
 
-		_FORCE_INLINE_ bool operator==(const ConstIterator &p_it) const { return E == p_it.E; }
-		_FORCE_INLINE_ bool operator!=(const ConstIterator &p_it) const { return E != p_it.E; }
+		GD_FORCE_INLINE bool operator==(const ConstIterator &p_it) const { return E == p_it.E; }
+		GD_FORCE_INLINE bool operator!=(const ConstIterator &p_it) const { return E != p_it.E; }
 		explicit operator bool() const {
 			return E != nullptr;
 		}
@@ -162,33 +162,33 @@ public:
 		const Element *E = nullptr;
 	};
 
-	_FORCE_INLINE_ Iterator begin() {
+	GD_FORCE_INLINE Iterator begin() {
 		return Iterator(front());
 	}
-	_FORCE_INLINE_ Iterator end() {
+	GD_FORCE_INLINE Iterator end() {
 		return Iterator(nullptr);
 	}
 
 #if 0
 	//to use when replacing find()
-	_FORCE_INLINE_ Iterator find(const K &p_key) {
+	GD_FORCE_INLINE Iterator find(const K &p_key) {
 		return Iterator(find(p_key));
 	}
 #endif
-	_FORCE_INLINE_ void remove(const Iterator &p_iter) {
+	GD_FORCE_INLINE void remove(const Iterator &p_iter) {
 		return erase(p_iter.E);
 	}
 
-	_FORCE_INLINE_ ConstIterator begin() const {
+	GD_FORCE_INLINE ConstIterator begin() const {
 		return ConstIterator(front());
 	}
-	_FORCE_INLINE_ ConstIterator end() const {
+	GD_FORCE_INLINE ConstIterator end() const {
 		return ConstIterator(nullptr);
 	}
 
 #if 0
 	//to use when replacing find()
-	_FORCE_INLINE_ ConstIterator find(const K &p_key) const {
+	GD_FORCE_INLINE ConstIterator find(const K &p_key) const {
 		return ConstIterator(find(p_key));
 	}
 #endif
@@ -198,7 +198,7 @@ private:
 		Element *_nil = nullptr;
 		int size_cache = 0;
 
-		_FORCE_INLINE_ _Data() {
+		GD_FORCE_INLINE _Data() {
 #ifdef GLOBALNIL_DISABLED
 			_nil = memnew_allocator(Element, A);
 			_nil->parent = _nil->left = _nil->right = _nil;
@@ -770,7 +770,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ RBMap() {}
+	GD_FORCE_INLINE RBMap() {}
 
 	~RBMap() {
 		clear();

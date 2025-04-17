@@ -47,7 +47,7 @@ struct Checksum {
 	String algorithm;
 	String checksum;
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["algorithm"] = algorithm;
 		dict["checksum"] = checksum;
@@ -83,13 +83,13 @@ public:
 		_checksums.push_back(sha256.to_json());
 	}
 
-	_FORCE_INLINE_ void from_json(const Dictionary &p_params) {
+	GD_FORCE_INLINE void from_json(const Dictionary &p_params) {
 		name = p_params["name"];
 		path = p_params["path"];
 		_checksums = p_params["checksums"];
 	}
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["name"] = name;
 		dict["path"] = path;
@@ -113,7 +113,7 @@ struct Breakpoint {
 		return source == p_other.source && line == p_other.line;
 	}
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["id"] = id;
 		dict["verified"] = verified;
@@ -130,7 +130,7 @@ struct BreakpointLocation {
 	int line = 0;
 	int endLine = -1;
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["line"] = line;
 		if (endLine >= 0) {
@@ -153,7 +153,7 @@ struct Capabilities {
 	bool supportsTerminateRequest = true;
 	bool supportsBreakpointLocationsRequest = true;
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["supportsConfigurationDoneRequest"] = supportsConfigurationDoneRequest;
 		dict["supportsEvaluateForHovers"] = supportsEvaluateForHovers;
@@ -179,7 +179,7 @@ struct Message {
 	bool showUser = false;
 	Dictionary variables;
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["id"] = id;
 		dict["format"] = format;
@@ -197,7 +197,7 @@ struct Scope {
 	int variablesReference = 0;
 	bool expensive = false;
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["name"] = name;
 		dict["presentationHint"] = presentationHint;
@@ -211,7 +211,7 @@ struct Scope {
 struct SourceBreakpoint {
 	int line = 0;
 
-	_FORCE_INLINE_ void from_json(const Dictionary &p_params) {
+	GD_FORCE_INLINE void from_json(const Dictionary &p_params) {
 		line = p_params["line"];
 	}
 };
@@ -231,7 +231,7 @@ struct StackFrame {
 		return hash_murmur3_one_32(p_frame.id);
 	}
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["id"] = id;
 		dict["name"] = name;
@@ -249,7 +249,7 @@ struct Thread {
 	int id = 0;
 	String name;
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["id"] = id;
 		dict["name"] = name;
@@ -264,7 +264,7 @@ struct Variable {
 	String type;
 	int variablesReference = 0;
 
-	_FORCE_INLINE_ Dictionary to_json() const {
+	GD_FORCE_INLINE Dictionary to_json() const {
 		Dictionary dict;
 		dict["name"] = name;
 		dict["value"] = value;

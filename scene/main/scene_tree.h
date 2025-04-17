@@ -103,7 +103,7 @@ private:
 	};
 
 	struct ProcessGroupSort {
-		_FORCE_INLINE_ bool operator()(const ProcessGroup *p_left, const ProcessGroup *p_right) const;
+		GD_FORCE_INLINE bool operator()(const ProcessGroup *p_left, const ProcessGroup *p_right) const;
 	};
 
 	PagedAllocator<ProcessGroup, true> group_allocator; // Allocate groups on pages, to enhance cache usage.
@@ -187,7 +187,7 @@ private:
 	bool ugc_locked = false;
 	void _flush_ugc();
 
-	_FORCE_INLINE_ void _update_group_order(Group &g);
+	GD_FORCE_INLINE void _update_group_order(Group &g);
 
 	TypedArray<Node> _get_nodes_in_group(const StringName &p_group);
 
@@ -291,7 +291,7 @@ public:
 		GROUP_CALL_UNIQUE = 4,
 	};
 
-	_FORCE_INLINE_ Window *get_root() const { return root; }
+	GD_FORCE_INLINE Window *get_root() const { return root; }
 
 	void call_group_flagsp(uint32_t p_call_flags, const StringName &p_group, const StringName &p_function, const Variant **p_args, int p_argcount);
 	void notify_group_flags(uint32_t p_call_flags, const StringName &p_group, int p_notification);
@@ -350,8 +350,8 @@ public:
 
 	void quit(int p_exit_code = EXIT_SUCCESS);
 
-	_FORCE_INLINE_ double get_physics_process_time() const { return physics_process_time; }
-	_FORCE_INLINE_ double get_process_time() const { return process_time; }
+	GD_FORCE_INLINE double get_physics_process_time() const { return physics_process_time; }
+	GD_FORCE_INLINE double get_process_time() const { return process_time; }
 
 	void set_pause(bool p_enabled);
 	bool is_paused() const;

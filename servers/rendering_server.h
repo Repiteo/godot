@@ -948,7 +948,7 @@ public:
 		VIEWPORT_SCALING_3D_TYPE_MAX,
 	};
 
-	_ALWAYS_INLINE_ static ViewportScaling3DType scaling_3d_mode_type(ViewportScaling3DMode p_mode) {
+	GD_ALWAYS_INLINE static ViewportScaling3DType scaling_3d_mode_type(ViewportScaling3DMode p_mode) {
 		if (p_mode == VIEWPORT_SCALING_3D_MODE_BILINEAR || p_mode == VIEWPORT_SCALING_3D_MODE_FSR || p_mode == VIEWPORT_SCALING_3D_MODE_METALFX_SPATIAL) {
 			return VIEWPORT_SCALING_3D_TYPE_SPATIAL;
 		} else if (p_mode == VIEWPORT_SCALING_3D_MODE_FSR2 || p_mode == VIEWPORT_SCALING_3D_MODE_METALFX_TEMPORAL) {

@@ -309,15 +309,15 @@ private:
 	void _propagate_pause_notification(bool p_enable);
 	void _propagate_suspend_notification(bool p_enable);
 
-	_FORCE_INLINE_ bool _can_process(bool p_paused) const;
-	_FORCE_INLINE_ bool _is_enabled() const;
+	GD_FORCE_INLINE bool _can_process(bool p_paused) const;
+	GD_FORCE_INLINE bool _is_enabled() const;
 
 	void _release_unique_name_in_owner();
 	void _acquire_unique_name_in_owner();
 
 	void _clean_up_owner();
 
-	_FORCE_INLINE_ void _update_children_cache() const {
+	GD_FORCE_INLINE void _update_children_cache() const {
 		if (unlikely(data.children_cache_dirty)) {
 			_update_children_cache_impl();
 		}
@@ -499,12 +499,12 @@ public:
 	Window *get_window() const;
 	Window *get_last_exclusive_window() const;
 
-	_FORCE_INLINE_ SceneTree *get_tree() const {
+	GD_FORCE_INLINE SceneTree *get_tree() const {
 		ERR_FAIL_NULL_V(data.tree, nullptr);
 		return data.tree;
 	}
 
-	_FORCE_INLINE_ bool is_inside_tree() const { return data.inside_tree; }
+	GD_FORCE_INLINE bool is_inside_tree() const { return data.inside_tree; }
 	bool is_internal() const { return data.internal_mode != INTERNAL_MODE_DISABLED; }
 
 	bool is_ancestor_of(const Node *p_node) const;
@@ -536,7 +536,7 @@ public:
 	void set_unique_name_in_owner(bool p_enabled);
 	bool is_unique_name_in_owner() const;
 
-	_FORCE_INLINE_ int get_index(bool p_include_internal = true) const {
+	GD_FORCE_INLINE int get_index(bool p_include_internal = true) const {
 		// p_include_internal = false doesn't make sense if the node is internal.
 		ERR_FAIL_COND_V_MSG(!p_include_internal && data.internal_mode != INTERNAL_MODE_DISABLED, -1, "Node is internal. Can't get index with 'include_internal' being false.");
 		if (!data.parent) {
@@ -634,10 +634,10 @@ public:
 	void set_process_unhandled_key_input(bool p_enable);
 	bool is_processing_unhandled_key_input() const;
 
-	_FORCE_INLINE_ bool _is_any_processing() const {
+	GD_FORCE_INLINE bool _is_any_processing() const {
 		return data.process || data.process_internal || data.physics_process || data.physics_process_internal;
 	}
-	_FORCE_INLINE_ bool is_accessible_from_caller_thread() const {
+	GD_FORCE_INLINE bool is_accessible_from_caller_thread() const {
 		if (current_process_thread_group == nullptr) {
 			// No thread processing.
 			// Only accessible if node is outside the scene tree
@@ -649,7 +649,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ bool is_readable_from_caller_thread() const {
+	GD_FORCE_INLINE bool is_readable_from_caller_thread() const {
 		if (current_process_thread_group == nullptr) {
 			// No thread processing.
 			// Only accessible if node is outside the scene tree
@@ -661,7 +661,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ static bool is_group_processing() { return current_process_thread_group; }
+	GD_FORCE_INLINE static bool is_group_processing() { return current_process_thread_group; }
 
 	void set_process_thread_messages(BitField<ProcessThreadMessages> p_flags);
 	BitField<ProcessThreadMessages> get_process_thread_messages() const;
@@ -729,8 +729,8 @@ public:
 
 	void set_physics_interpolation_mode(PhysicsInterpolationMode p_mode);
 	PhysicsInterpolationMode get_physics_interpolation_mode() const { return data.physics_interpolation_mode; }
-	_FORCE_INLINE_ bool is_physics_interpolated() const { return data.physics_interpolated; }
-	_FORCE_INLINE_ bool is_physics_interpolated_and_enabled() const { return is_inside_tree() && get_tree()->is_physics_interpolation_enabled() && is_physics_interpolated(); }
+	GD_FORCE_INLINE bool is_physics_interpolated() const { return data.physics_interpolated; }
+	GD_FORCE_INLINE bool is_physics_interpolated_and_enabled() const { return is_inside_tree() && get_tree()->is_physics_interpolation_enabled() && is_physics_interpolated(); }
 	void reset_physics_interpolation();
 
 	bool is_enabled() const;
@@ -762,7 +762,7 @@ public:
 
 	void clear_internal_tree_resource_paths();
 
-	_FORCE_INLINE_ Viewport *get_viewport() const { return data.viewport; }
+	GD_FORCE_INLINE Viewport *get_viewport() const { return data.viewport; }
 
 	virtual PackedStringArray get_configuration_warnings() const;
 
@@ -800,8 +800,8 @@ public:
 	virtual void set_translation_domain(const StringName &p_domain) override;
 	void set_translation_domain_inherited();
 
-	_FORCE_INLINE_ String atr(const String &p_message, const StringName &p_context = "") const { return can_auto_translate() ? tr(p_message, p_context) : p_message; }
-	_FORCE_INLINE_ String atr_n(const String &p_message, const StringName &p_message_plural, int p_n, const StringName &p_context = "") const {
+	GD_FORCE_INLINE String atr(const String &p_message, const StringName &p_context = "") const { return can_auto_translate() ? tr(p_message, p_context) : p_message; }
+	GD_FORCE_INLINE String atr_n(const String &p_message, const StringName &p_message_plural, int p_n, const StringName &p_context = "") const {
 		if (can_auto_translate()) {
 			return tr_n(p_message, p_message_plural, p_n, p_context);
 		}

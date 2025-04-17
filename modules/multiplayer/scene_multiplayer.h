@@ -128,10 +128,10 @@ private:
 	Ref<SceneRPCInterface> rpc;
 
 #ifdef DEBUG_ENABLED
-	_FORCE_INLINE_ void _profile_bandwidth(const String &p_what, int p_value);
-	_FORCE_INLINE_ Error _send(const uint8_t *p_packet, int p_packet_len); // Also profiles.
+	GD_FORCE_INLINE void _profile_bandwidth(const String &p_what, int p_value);
+	GD_FORCE_INLINE Error _send(const uint8_t *p_packet, int p_packet_len); // Also profiles.
 #else
-	_FORCE_INLINE_ Error _send(const uint8_t *p_packet, int p_packet_len) {
+	GD_FORCE_INLINE Error _send(const uint8_t *p_packet, int p_packet_len) {
 		return multiplayer_peer->put_packet(p_packet, p_packet_len);
 	}
 #endif

@@ -55,15 +55,15 @@ class MutexImpl {
 	mutable StdMutexT mutex;
 
 public:
-	_ALWAYS_INLINE_ void lock() const {
+	GD_ALWAYS_INLINE void lock() const {
 		mutex.lock();
 	}
 
-	_ALWAYS_INLINE_ void unlock() const {
+	GD_ALWAYS_INLINE void unlock() const {
 		mutex.unlock();
 	}
 
-	_ALWAYS_INLINE_ bool try_lock() const {
+	GD_ALWAYS_INLINE bool try_lock() const {
 		return mutex.try_lock();
 	}
 };
@@ -78,16 +78,16 @@ public:
 
 	// Clarification: all the funny syntax is needed so this function exists only for binary mutexes.
 	template <typename T = MutexT>
-	_ALWAYS_INLINE_ THREADING_NAMESPACE::unique_lock<THREADING_NAMESPACE::mutex> &_get_lock(
+	GD_ALWAYS_INLINE THREADING_NAMESPACE::unique_lock<THREADING_NAMESPACE::mutex> &_get_lock(
 			typename std::enable_if<std::is_same<T, THREADING_NAMESPACE::mutex>::value> * = nullptr) const {
 		return lock;
 	}
 
-	_ALWAYS_INLINE_ void temp_relock() const {
+	GD_ALWAYS_INLINE void temp_relock() const {
 		lock.lock();
 	}
 
-	_ALWAYS_INLINE_ void temp_unlock() const {
+	GD_ALWAYS_INLINE void temp_unlock() const {
 		lock.unlock();
 	}
 

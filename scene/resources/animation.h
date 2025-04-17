@@ -262,23 +262,23 @@ private:
 
 	inline int _find(const Vector<K> &p_keys, double p_time, bool p_backward = false, bool p_limit = false) const;
 
-	_FORCE_INLINE_ Vector3 _interpolate(const Vector3 &p_a, const Vector3 &p_b, real_t p_c) const;
-	_FORCE_INLINE_ Quaternion _interpolate(const Quaternion &p_a, const Quaternion &p_b, real_t p_c) const;
-	_FORCE_INLINE_ Variant _interpolate(const Variant &p_a, const Variant &p_b, real_t p_c) const;
-	_FORCE_INLINE_ real_t _interpolate(const real_t &p_a, const real_t &p_b, real_t p_c) const;
-	_FORCE_INLINE_ Variant _interpolate_angle(const Variant &p_a, const Variant &p_b, real_t p_c) const;
+	GD_FORCE_INLINE Vector3 _interpolate(const Vector3 &p_a, const Vector3 &p_b, real_t p_c) const;
+	GD_FORCE_INLINE Quaternion _interpolate(const Quaternion &p_a, const Quaternion &p_b, real_t p_c) const;
+	GD_FORCE_INLINE Variant _interpolate(const Variant &p_a, const Variant &p_b, real_t p_c) const;
+	GD_FORCE_INLINE real_t _interpolate(const real_t &p_a, const real_t &p_b, real_t p_c) const;
+	GD_FORCE_INLINE Variant _interpolate_angle(const Variant &p_a, const Variant &p_b, real_t p_c) const;
 
-	_FORCE_INLINE_ Vector3 _cubic_interpolate_in_time(const Vector3 &p_pre_a, const Vector3 &p_a, const Vector3 &p_b, const Vector3 &p_post_b, real_t p_c, real_t p_pre_a_t, real_t p_b_t, real_t p_post_b_t) const;
-	_FORCE_INLINE_ Quaternion _cubic_interpolate_in_time(const Quaternion &p_pre_a, const Quaternion &p_a, const Quaternion &p_b, const Quaternion &p_post_b, real_t p_c, real_t p_pre_a_t, real_t p_b_t, real_t p_post_b_t) const;
-	_FORCE_INLINE_ Variant _cubic_interpolate_in_time(const Variant &p_pre_a, const Variant &p_a, const Variant &p_b, const Variant &p_post_b, real_t p_c, real_t p_pre_a_t, real_t p_b_t, real_t p_post_b_t) const;
-	_FORCE_INLINE_ real_t _cubic_interpolate_in_time(const real_t &p_pre_a, const real_t &p_a, const real_t &p_b, const real_t &p_post_b, real_t p_c, real_t p_pre_a_t, real_t p_b_t, real_t p_post_b_t) const;
-	_FORCE_INLINE_ Variant _cubic_interpolate_angle_in_time(const Variant &p_pre_a, const Variant &p_a, const Variant &p_b, const Variant &p_post_b, real_t p_c, real_t p_pre_a_t, real_t p_b_t, real_t p_post_b_t) const;
-
-	template <typename T>
-	_FORCE_INLINE_ T _interpolate(const Vector<TKey<T>> &p_keys, double p_time, InterpolationType p_interp, bool p_loop_wrap, bool *p_ok, bool p_backward = false) const;
+	GD_FORCE_INLINE Vector3 _cubic_interpolate_in_time(const Vector3 &p_pre_a, const Vector3 &p_a, const Vector3 &p_b, const Vector3 &p_post_b, real_t p_c, real_t p_pre_a_t, real_t p_b_t, real_t p_post_b_t) const;
+	GD_FORCE_INLINE Quaternion _cubic_interpolate_in_time(const Quaternion &p_pre_a, const Quaternion &p_a, const Quaternion &p_b, const Quaternion &p_post_b, real_t p_c, real_t p_pre_a_t, real_t p_b_t, real_t p_post_b_t) const;
+	GD_FORCE_INLINE Variant _cubic_interpolate_in_time(const Variant &p_pre_a, const Variant &p_a, const Variant &p_b, const Variant &p_post_b, real_t p_c, real_t p_pre_a_t, real_t p_b_t, real_t p_post_b_t) const;
+	GD_FORCE_INLINE real_t _cubic_interpolate_in_time(const real_t &p_pre_a, const real_t &p_a, const real_t &p_b, const real_t &p_post_b, real_t p_c, real_t p_pre_a_t, real_t p_b_t, real_t p_post_b_t) const;
+	GD_FORCE_INLINE Variant _cubic_interpolate_angle_in_time(const Variant &p_pre_a, const Variant &p_a, const Variant &p_b, const Variant &p_post_b, real_t p_c, real_t p_pre_a_t, real_t p_b_t, real_t p_post_b_t) const;
 
 	template <typename T>
-	_FORCE_INLINE_ void _track_get_key_indices_in_range(const Vector<T> &p_array, double from_time, double to_time, List<int> *p_indices, bool p_is_backward) const;
+	GD_FORCE_INLINE T _interpolate(const Vector<TKey<T>> &p_keys, double p_time, InterpolationType p_interp, bool p_loop_wrap, bool *p_ok, bool p_backward = false) const;
+
+	template <typename T>
+	GD_FORCE_INLINE void _track_get_key_indices_in_range(const Vector<T> &p_array, double from_time, double to_time, List<int> *p_indices, bool p_is_backward) const;
 
 	double length = 1.0;
 	real_t step = DEFAULT_STEP;
@@ -367,9 +367,9 @@ private:
 	int _get_compressed_key_count(uint32_t p_compressed_track) const;
 	template <uint32_t COMPONENTS>
 	void _get_compressed_key_indices_in_range(uint32_t p_compressed_track, double p_time, double p_delta, List<int> *r_indices) const;
-	_FORCE_INLINE_ Quaternion _uncompress_quaternion(const Vector3i &p_value) const;
-	_FORCE_INLINE_ Vector3 _uncompress_pos_scale(uint32_t p_compressed_track, const Vector3i &p_value) const;
-	_FORCE_INLINE_ float _uncompress_blend_shape(const Vector3i &p_value) const;
+	GD_FORCE_INLINE Quaternion _uncompress_quaternion(const Vector3i &p_value) const;
+	GD_FORCE_INLINE Vector3 _uncompress_pos_scale(uint32_t p_compressed_track, const Vector3i &p_value) const;
+	GD_FORCE_INLINE float _uncompress_blend_shape(const Vector3i &p_value) const;
 
 	// bind helpers
 private:
@@ -409,7 +409,7 @@ public:
 	int add_track(TrackType p_type, int p_at_pos = -1);
 	void remove_track(int p_track);
 
-	_FORCE_INLINE_ const Vector<Track *> get_tracks() {
+	GD_FORCE_INLINE const Vector<Track *> get_tracks() {
 		return tracks;
 	}
 

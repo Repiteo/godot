@@ -137,12 +137,12 @@ class ExtendGDScriptParser : public GDScriptParser {
 	Array member_completions;
 
 public:
-	_FORCE_INLINE_ const String &get_path() const { return path; }
-	_FORCE_INLINE_ const Vector<String> &get_lines() const { return lines; }
-	_FORCE_INLINE_ const LSP::DocumentSymbol &get_symbols() const { return class_symbol; }
-	_FORCE_INLINE_ const Vector<LSP::Diagnostic> &get_diagnostics() const { return diagnostics; }
-	_FORCE_INLINE_ const ClassMembers &get_members() const { return members; }
-	_FORCE_INLINE_ const HashMap<String, ClassMembers> &get_inner_classes() const { return inner_classes; }
+	GD_FORCE_INLINE const String &get_path() const { return path; }
+	GD_FORCE_INLINE const Vector<String> &get_lines() const { return lines; }
+	GD_FORCE_INLINE const LSP::DocumentSymbol &get_symbols() const { return class_symbol; }
+	GD_FORCE_INLINE const Vector<LSP::Diagnostic> &get_diagnostics() const { return diagnostics; }
+	GD_FORCE_INLINE const ClassMembers &get_members() const { return members; }
+	GD_FORCE_INLINE const HashMap<String, ClassMembers> &get_inner_classes() const { return inner_classes; }
 
 	Error get_left_function_call(const LSP::Position &p_position, LSP::Position &r_func_pos, int &r_arg_index) const;
 

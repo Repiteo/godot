@@ -43,14 +43,14 @@ protected:
 	bool dynamic_B = false;
 
 public:
-	_FORCE_INLINE_ void set_max_force(real_t p_force) { max_force = p_force; }
-	_FORCE_INLINE_ real_t get_max_force() const { return max_force; }
+	GD_FORCE_INLINE void set_max_force(real_t p_force) { max_force = p_force; }
+	GD_FORCE_INLINE real_t get_max_force() const { return max_force; }
 
-	_FORCE_INLINE_ void set_bias(real_t p_bias) { bias = p_bias; }
-	_FORCE_INLINE_ real_t get_bias() const { return bias; }
+	GD_FORCE_INLINE void set_bias(real_t p_bias) { bias = p_bias; }
+	GD_FORCE_INLINE real_t get_bias() const { return bias; }
 
-	_FORCE_INLINE_ void set_max_bias(real_t p_bias) { max_bias = p_bias; }
-	_FORCE_INLINE_ real_t get_max_bias() const { return max_bias; }
+	GD_FORCE_INLINE void set_max_bias(real_t p_bias) { max_bias = p_bias; }
+	GD_FORCE_INLINE real_t get_max_bias() const { return max_bias; }
 
 	virtual bool setup(real_t p_step) override { return false; }
 	virtual bool pre_solve(real_t p_step) override { return false; }

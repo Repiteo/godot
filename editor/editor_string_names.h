@@ -42,7 +42,7 @@ public:
 		singleton = nullptr;
 	}
 
-	_FORCE_INLINE_ static EditorStringNames *get_singleton() { return singleton; }
+	GD_FORCE_INLINE static EditorStringNames *get_singleton() { return singleton; }
 
 	const StringName Editor = StaticCString::create("Editor");
 	const StringName EditorFonts = StaticCString::create("EditorFonts");

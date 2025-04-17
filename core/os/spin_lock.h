@@ -54,11 +54,11 @@ class SpinLock {
 	};
 
 public:
-	_ALWAYS_INLINE_ void lock() const {
+	GD_ALWAYS_INLINE void lock() const {
 		os_unfair_lock_lock(&_lock);
 	}
 
-	_ALWAYS_INLINE_ void unlock() const {
+	GD_ALWAYS_INLINE void unlock() const {
 		os_unfair_lock_unlock(&_lock);
 	}
 };
@@ -67,7 +67,7 @@ public:
 
 #include <atomic>
 
-_ALWAYS_INLINE_ static void _cpu_pause() {
+GD_ALWAYS_INLINE static void _cpu_pause() {
 #if defined(_MSC_VER)
 // ----- MSVC.
 #if defined(_M_ARM) || defined(_M_ARM64) // ARM.
@@ -98,7 +98,7 @@ class SpinLock {
 	};
 
 public:
-	_ALWAYS_INLINE_ void lock() const {
+	GD_ALWAYS_INLINE void lock() const {
 		while (true) {
 			bool expected = false;
 			if (locked.compare_exchange_weak(expected, true, std::memory_order_acquire, std::memory_order_relaxed)) {
@@ -110,7 +110,7 @@ public:
 		}
 	}
 
-	_ALWAYS_INLINE_ void unlock() const {
+	GD_ALWAYS_INLINE void unlock() const {
 		locked.store(false, std::memory_order_release);
 	}
 };

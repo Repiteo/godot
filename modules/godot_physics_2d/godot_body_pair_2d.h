@@ -86,7 +86,7 @@ class GodotBodyPair2D : public GodotConstraint2D {
 	bool _test_ccd(real_t p_step, GodotBody2D *p_A, int p_shape_A, const Transform2D &p_xform_A, GodotBody2D *p_B, int p_shape_B, const Transform2D &p_xform_B);
 	void _validate_contacts();
 	static void _add_contact(const Vector2 &p_point_A, const Vector2 &p_point_B, void *p_self);
-	_FORCE_INLINE_ void _contact_added_callback(const Vector2 &p_point_A, const Vector2 &p_point_B);
+	GD_FORCE_INLINE void _contact_added_callback(const Vector2 &p_point_A, const Vector2 &p_point_B);
 
 public:
 	virtual bool setup(real_t p_step) override;

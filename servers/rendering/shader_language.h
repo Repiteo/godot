@@ -705,7 +705,7 @@ public:
 			String group;
 			String subgroup;
 
-			_FORCE_INLINE_ bool is_texture() const {
+			GD_FORCE_INLINE bool is_texture() const {
 				// Order is assigned to -1 for texture uniforms.
 				return order < 0;
 			}
@@ -771,7 +771,7 @@ public:
 	};
 
 	struct UniformOrderComparator {
-		_FORCE_INLINE_ bool operator()(const Pair<StringName, int> &A, const Pair<StringName, int> &B) const {
+		GD_FORCE_INLINE bool operator()(const Pair<StringName, int> &A, const Pair<StringName, int> &B) const {
 			return A.second < B.second;
 		}
 	};

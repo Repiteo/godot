@@ -76,7 +76,7 @@ private:
 	virtual void _physics_interpolated_changed() override;
 
 protected:
-	_FORCE_INLINE_ RID _get_light() const { return canvas_light; }
+	GD_FORCE_INLINE RID _get_light() const { return canvas_light; }
 	void _notification(int p_what);
 	static void _bind_methods();
 	void _validate_property(PropertyInfo &p_property) const;

@@ -46,11 +46,11 @@ class AudioEffectPhaserInstance : public AudioEffectInstance {
 		float a, h;
 
 	public:
-		_ALWAYS_INLINE_ void delay(float d) {
+		GD_ALWAYS_INLINE void delay(float d) {
 			a = (1.f - d) / (1.f + d);
 		}
 
-		_ALWAYS_INLINE_ float update(float s) {
+		GD_ALWAYS_INLINE float update(float s) {
 			float y = s * -a + h;
 			h = y * a + s;
 			return y;

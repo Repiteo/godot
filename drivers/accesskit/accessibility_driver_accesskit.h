@@ -91,11 +91,11 @@ class AccessibilityDriverAccessKit : public AccessibilityDriver {
 	HashMap<DisplayServer::AccessibilityRole, accesskit_role> role_map;
 	HashMap<DisplayServer::AccessibilityAction, accesskit_action> action_map;
 
-	_FORCE_INLINE_ accesskit_role _accessibility_role(DisplayServer::AccessibilityRole p_role) const;
-	_FORCE_INLINE_ accesskit_action _accessibility_action(DisplayServer::AccessibilityAction p_action) const;
+	GD_FORCE_INLINE accesskit_role _accessibility_role(DisplayServer::AccessibilityRole p_role) const;
+	GD_FORCE_INLINE accesskit_action _accessibility_action(DisplayServer::AccessibilityAction p_action) const;
 
 	void _free_recursive(WindowData *p_wd, const RID &p_id);
-	_FORCE_INLINE_ void _ensure_node(const RID &p_id, AccessibilityElement *p_ae);
+	GD_FORCE_INLINE void _ensure_node(const RID &p_id, AccessibilityElement *p_ae);
 
 	static void _accessibility_action_callback(struct accesskit_action_request *p_request, void *p_user_data);
 	static accesskit_tree_update *_accessibility_initial_tree_update_callback(void *p_user_data);

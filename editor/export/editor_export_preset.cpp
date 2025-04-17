@@ -530,7 +530,7 @@ Variant EditorExportPreset::get_or_env(const StringName &p_name, const String &p
 	return get(p_name, r_valid);
 }
 
-_FORCE_INLINE_ bool _check_digits(const String &p_str) {
+GD_FORCE_INLINE bool _check_digits(const String &p_str) {
 	for (int i = 0; i < p_str.length(); i++) {
 		char32_t c = p_str.operator[](i);
 		if (!is_digit(c)) {

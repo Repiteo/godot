@@ -179,7 +179,7 @@ private:
 			}
 		}
 
-		_FORCE_INLINE_ float get_height(float line_separation) const {
+		GD_FORCE_INLINE float get_height(float line_separation) const {
 			return offset.y + text_buf->get_size().y + text_buf->get_line_count() * line_separation;
 		}
 	};
@@ -551,7 +551,7 @@ private:
 	void _stop_thread();
 	bool _validate_line_caches();
 	void _process_line_caches();
-	_FORCE_INLINE_ float _update_scroll_exceeds(float p_total_height, float p_ctrl_height, float p_width, int p_idx, float p_old_scroll, float p_text_rect_height);
+	GD_FORCE_INLINE float _update_scroll_exceeds(float p_total_height, float p_ctrl_height, float p_width, int p_idx, float p_old_scroll, float p_text_rect_height);
 
 	void _add_item(Item *p_item, bool p_enter = false, bool p_ensure_newline = false);
 	void _remove_frame(HashSet<Item *> &r_erase_list, ItemFrame *p_frame, int p_line, bool p_erase, int p_char_offset, int p_line_offset);
@@ -663,7 +663,7 @@ private:
 	void _scroll_changed(double);
 	int _find_first_line(int p_from, int p_to, int p_vofs) const;
 
-	_FORCE_INLINE_ float _calculate_line_vertical_offset(const Line &line) const;
+	GD_FORCE_INLINE float _calculate_line_vertical_offset(const Line &line) const;
 
 	virtual void gui_input(const Ref<InputEvent> &p_event) override;
 	virtual String get_tooltip(const Point2 &p_pos) const override;
@@ -865,7 +865,7 @@ public:
 	void select_all();
 	void selection_copy();
 
-	_FORCE_INLINE_ void set_selection_modifier(const Callable &p_modifier) {
+	GD_FORCE_INLINE void set_selection_modifier(const Callable &p_modifier) {
 		selection_modifier = p_modifier;
 	}
 

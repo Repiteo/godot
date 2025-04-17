@@ -130,10 +130,10 @@ public:
 	}
 #endif
 
-	_ALWAYS_INLINE_ uint64_t get_frame_number() const { return frame; }
-	_ALWAYS_INLINE_ double get_frame_delta_time() const { return delta; }
-	_ALWAYS_INLINE_ double get_total_time() const { return time_total; }
-	_ALWAYS_INLINE_ bool can_create_resources_async() const { return false; }
+	GD_ALWAYS_INLINE uint64_t get_frame_number() const { return frame; }
+	GD_ALWAYS_INLINE double get_frame_delta_time() const { return delta; }
+	GD_ALWAYS_INLINE double get_total_time() const { return time_total; }
+	GD_ALWAYS_INLINE bool can_create_resources_async() const { return false; }
 
 	static RasterizerGLES3 *get_singleton() { return singleton; }
 	RasterizerGLES3();

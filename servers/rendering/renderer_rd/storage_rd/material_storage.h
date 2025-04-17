@@ -123,7 +123,7 @@ public:
 		bool use_nearest_mipmap_filter = false;
 		int anisotropic_filtering_level = 2;
 
-		_FORCE_INLINE_ RID get_sampler(RS::CanvasItemTextureFilter p_filter, RS::CanvasItemTextureRepeat p_repeat) const {
+		GD_FORCE_INLINE RID get_sampler(RS::CanvasItemTextureFilter p_filter, RS::CanvasItemTextureRepeat p_repeat) const {
 			return rids[p_filter][p_repeat];
 		}
 
@@ -271,7 +271,7 @@ public:
 
 	/* Helpers */
 
-	static _FORCE_INLINE_ void store_transform(const Transform3D &p_mtx, float *p_array) {
+	static GD_FORCE_INLINE void store_transform(const Transform3D &p_mtx, float *p_array) {
 		p_array[0] = p_mtx.basis.rows[0][0];
 		p_array[1] = p_mtx.basis.rows[1][0];
 		p_array[2] = p_mtx.basis.rows[2][0];
@@ -290,7 +290,7 @@ public:
 		p_array[15] = 1;
 	}
 
-	static _FORCE_INLINE_ void store_basis_3x4(const Basis &p_mtx, float *p_array) {
+	static GD_FORCE_INLINE void store_basis_3x4(const Basis &p_mtx, float *p_array) {
 		p_array[0] = p_mtx.rows[0][0];
 		p_array[1] = p_mtx.rows[1][0];
 		p_array[2] = p_mtx.rows[2][0];
@@ -305,7 +305,7 @@ public:
 		p_array[11] = 0;
 	}
 
-	static _FORCE_INLINE_ void store_transform_3x3(const Basis &p_mtx, float *p_array) {
+	static GD_FORCE_INLINE void store_transform_3x3(const Basis &p_mtx, float *p_array) {
 		p_array[0] = p_mtx.rows[0][0];
 		p_array[1] = p_mtx.rows[1][0];
 		p_array[2] = p_mtx.rows[2][0];
@@ -320,7 +320,7 @@ public:
 		p_array[11] = 0;
 	}
 
-	static _FORCE_INLINE_ void store_transform_transposed_3x4(const Transform3D &p_mtx, float *p_array) {
+	static GD_FORCE_INLINE void store_transform_transposed_3x4(const Transform3D &p_mtx, float *p_array) {
 		p_array[0] = p_mtx.basis.rows[0][0];
 		p_array[1] = p_mtx.basis.rows[0][1];
 		p_array[2] = p_mtx.basis.rows[0][2];
@@ -335,7 +335,7 @@ public:
 		p_array[11] = p_mtx.origin.z;
 	}
 
-	static _FORCE_INLINE_ void store_camera(const Projection &p_mtx, float *p_array) {
+	static GD_FORCE_INLINE void store_camera(const Projection &p_mtx, float *p_array) {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				p_array[i * 4 + j] = p_mtx.columns[i][j];
@@ -343,7 +343,7 @@ public:
 		}
 	}
 
-	static _FORCE_INLINE_ void store_soft_shadow_kernel(const float *p_kernel, float *p_array) {
+	static GD_FORCE_INLINE void store_soft_shadow_kernel(const float *p_kernel, float *p_array) {
 		for (int i = 0; i < 128; i++) {
 			p_array[i] = p_kernel[i];
 		}
@@ -351,7 +351,7 @@ public:
 
 	// http://andrewthall.org/papers/df64_qf128.pdf
 #ifdef REAL_T_IS_DOUBLE
-	static _FORCE_INLINE_ void split_double(double a, float *a_hi, float *a_lo) {
+	static GD_FORCE_INLINE void split_double(double a, float *a_hi, float *a_lo) {
 		const double SPLITTER = (1 << 29) + 1;
 		double t = a * SPLITTER;
 		double t_hi = t - (t - a);
@@ -366,11 +366,11 @@ public:
 	Samplers samplers_rd_allocate(float p_mipmap_bias = 0.0f, RS::ViewportAnisotropicFiltering anisotropic_filtering_level = RS::ViewportAnisotropicFiltering::VIEWPORT_ANISOTROPY_4X) const;
 	void samplers_rd_free(Samplers &p_samplers) const;
 
-	_FORCE_INLINE_ RID sampler_rd_get_default(RS::CanvasItemTextureFilter p_filter, RS::CanvasItemTextureRepeat p_repeat) {
+	GD_FORCE_INLINE RID sampler_rd_get_default(RS::CanvasItemTextureFilter p_filter, RS::CanvasItemTextureRepeat p_repeat) {
 		return default_samplers.get_sampler(p_filter, p_repeat);
 	}
 
-	_FORCE_INLINE_ const Samplers &samplers_rd_get_default() const {
+	GD_FORCE_INLINE const Samplers &samplers_rd_get_default() const {
 		return default_samplers;
 	}
 
@@ -452,12 +452,12 @@ public:
 	void material_set_data_request_function(ShaderType p_shader_type, MaterialDataRequestFunction p_function);
 	MaterialDataRequestFunction material_get_data_request_function(ShaderType p_shader_type);
 
-	_FORCE_INLINE_ uint32_t material_get_shader_id(RID p_material) {
+	GD_FORCE_INLINE uint32_t material_get_shader_id(RID p_material) {
 		Material *material = material_owner.get_or_null(p_material);
 		return material->shader_id;
 	}
 
-	_FORCE_INLINE_ MaterialData *material_get_data(RID p_material, ShaderType p_shader_type) {
+	GD_FORCE_INLINE MaterialData *material_get_data(RID p_material, ShaderType p_shader_type) {
 		Material *material = material_owner.get_or_null(p_material);
 		if (!material || material->shader_type != p_shader_type) {
 			return nullptr;

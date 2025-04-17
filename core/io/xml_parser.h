@@ -88,7 +88,7 @@ private:
 	void _parse_opening_xml_element();
 	void _parse_current_node();
 
-	_FORCE_INLINE_ void next_char() {
+	GD_FORCE_INLINE void next_char() {
 		if (*P == '\n') {
 			current_line++;
 		}

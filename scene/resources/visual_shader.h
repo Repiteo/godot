@@ -209,13 +209,13 @@ public: // internal methods
 	Vector2 get_node_position(Type p_type, int p_id) const;
 	Ref<VisualShaderNode> get_node(Type p_type, int p_id) const;
 
-	_FORCE_INLINE_ Ref<VisualShaderNode> get_node_unchecked(Type p_type, int p_id) const {
+	GD_FORCE_INLINE Ref<VisualShaderNode> get_node_unchecked(Type p_type, int p_id) const {
 		return graph[p_type].nodes[p_id].node;
 	}
-	_FORCE_INLINE_ const LocalVector<int> &get_next_connected_nodes(Type p_type, int p_id) const {
+	GD_FORCE_INLINE const LocalVector<int> &get_next_connected_nodes(Type p_type, int p_id) const {
 		return graph[p_type].nodes[p_id].next_connected_nodes;
 	}
-	_FORCE_INLINE_ const LocalVector<int> &get_prev_connected_nodes(Type p_type, int p_id) const {
+	GD_FORCE_INLINE const LocalVector<int> &get_prev_connected_nodes(Type p_type, int p_id) const {
 		return graph[p_type].nodes[p_id].prev_connected_nodes;
 	}
 

@@ -64,7 +64,7 @@ private:
 
 	static const uint32_t EMPTY_HASH = 0;
 
-	_FORCE_INLINE_ uint32_t _hash(const TKey &p_key) const {
+	GD_FORCE_INLINE uint32_t _hash(const TKey &p_key) const {
 		uint32_t hash = Hasher::hash(p_key);
 
 		if (hash == EMPTY_HASH) {
@@ -74,12 +74,12 @@ private:
 		return hash;
 	}
 
-	_FORCE_INLINE_ uint32_t _get_probe_length(uint32_t p_pos, uint32_t p_hash) const {
+	GD_FORCE_INLINE uint32_t _get_probe_length(uint32_t p_pos, uint32_t p_hash) const {
 		uint32_t original_pos = p_hash % capacity;
 		return (p_pos - original_pos + capacity) % capacity;
 	}
 
-	_FORCE_INLINE_ void _construct(uint32_t p_pos, uint32_t p_hash, const TKey &p_key, const TValue &p_value) {
+	GD_FORCE_INLINE void _construct(uint32_t p_pos, uint32_t p_hash, const TKey &p_key, const TValue &p_value) {
 		memnew_placement(&keys[p_pos], TKey(p_key));
 		memnew_placement(&values[p_pos], TValue(p_value));
 		hashes[p_pos] = p_hash;
@@ -185,8 +185,8 @@ private:
 	}
 
 public:
-	_FORCE_INLINE_ uint32_t get_capacity() const { return capacity; }
-	_FORCE_INLINE_ uint32_t get_num_elements() const { return num_elements; }
+	GD_FORCE_INLINE uint32_t get_capacity() const { return capacity; }
+	GD_FORCE_INLINE uint32_t get_num_elements() const { return num_elements; }
 
 	bool is_empty() const {
 		return num_elements == 0;
@@ -265,7 +265,7 @@ public:
 		return nullptr;
 	}
 
-	_FORCE_INLINE_ bool has(const TKey &p_key) const {
+	GD_FORCE_INLINE bool has(const TKey &p_key) const {
 		uint32_t _pos = 0;
 		return _lookup_pos(p_key, _pos);
 	}

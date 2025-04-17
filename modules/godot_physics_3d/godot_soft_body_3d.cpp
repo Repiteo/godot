@@ -1118,7 +1118,7 @@ struct AABBQueryResult {
 	void *userdata = nullptr;
 	GodotSoftBody3D::QueryResultCallback result_callback = nullptr;
 
-	_FORCE_INLINE_ bool operator()(void *p_data) {
+	GD_FORCE_INLINE bool operator()(void *p_data) {
 		return result_callback(soft_body->get_node_index(p_data), userdata);
 	}
 };
@@ -1137,7 +1137,7 @@ struct RayQueryResult {
 	void *userdata = nullptr;
 	GodotSoftBody3D::QueryResultCallback result_callback = nullptr;
 
-	_FORCE_INLINE_ bool operator()(void *p_data) {
+	GD_FORCE_INLINE bool operator()(void *p_data) {
 		return result_callback(soft_body->get_face_index(p_data), userdata);
 	}
 };

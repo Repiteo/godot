@@ -110,7 +110,7 @@ class GodotSoftBody3D : public GodotCollisionObject3D {
 
 	uint64_t island_step = 0;
 
-	_FORCE_INLINE_ Vector3 _compute_area_windforce(const GodotArea3D *p_area, const Face *p_face);
+	GD_FORCE_INLINE Vector3 _compute_area_windforce(const GodotArea3D *p_area, const Face *p_face);
 
 public:
 	GodotSoftBody3D();
@@ -120,20 +120,20 @@ public:
 	void set_state(PhysicsServer3D::BodyState p_state, const Variant &p_variant);
 	Variant get_state(PhysicsServer3D::BodyState p_state) const;
 
-	_FORCE_INLINE_ void add_constraint(GodotConstraint3D *p_constraint) { constraints.insert(p_constraint); }
-	_FORCE_INLINE_ void remove_constraint(GodotConstraint3D *p_constraint) { constraints.erase(p_constraint); }
-	_FORCE_INLINE_ const HashSet<GodotConstraint3D *> &get_constraints() const { return constraints; }
-	_FORCE_INLINE_ void clear_constraints() { constraints.clear(); }
+	GD_FORCE_INLINE void add_constraint(GodotConstraint3D *p_constraint) { constraints.insert(p_constraint); }
+	GD_FORCE_INLINE void remove_constraint(GodotConstraint3D *p_constraint) { constraints.erase(p_constraint); }
+	GD_FORCE_INLINE const HashSet<GodotConstraint3D *> &get_constraints() const { return constraints; }
+	GD_FORCE_INLINE void clear_constraints() { constraints.clear(); }
 
-	_FORCE_INLINE_ void add_exception(const RID &p_exception) { exceptions.insert(p_exception); }
-	_FORCE_INLINE_ void remove_exception(const RID &p_exception) { exceptions.erase(p_exception); }
-	_FORCE_INLINE_ bool has_exception(const RID &p_exception) const { return exceptions.has(p_exception); }
-	_FORCE_INLINE_ const VSet<RID> &get_exceptions() const { return exceptions; }
+	GD_FORCE_INLINE void add_exception(const RID &p_exception) { exceptions.insert(p_exception); }
+	GD_FORCE_INLINE void remove_exception(const RID &p_exception) { exceptions.erase(p_exception); }
+	GD_FORCE_INLINE bool has_exception(const RID &p_exception) const { return exceptions.has(p_exception); }
+	GD_FORCE_INLINE const VSet<RID> &get_exceptions() const { return exceptions; }
 
-	_FORCE_INLINE_ uint64_t get_island_step() const { return island_step; }
-	_FORCE_INLINE_ void set_island_step(uint64_t p_step) { island_step = p_step; }
+	GD_FORCE_INLINE uint64_t get_island_step() const { return island_step; }
+	GD_FORCE_INLINE void set_island_step(uint64_t p_step) { island_step = p_step; }
 
-	_FORCE_INLINE_ void add_area(GodotArea3D *p_area) {
+	GD_FORCE_INLINE void add_area(GodotArea3D *p_area) {
 		int index = areas.find(AreaCMP(p_area));
 		if (index > -1) {
 			areas.write[index].refCount += 1;
@@ -142,7 +142,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ void remove_area(GodotArea3D *p_area) {
+	GD_FORCE_INLINE void remove_area(GodotArea3D *p_area) {
 		int index = areas.find(AreaCMP(p_area));
 		if (index > -1) {
 			areas.write[index].refCount -= 1;
@@ -179,32 +179,32 @@ public:
 	Vector3 get_face_normal(uint32_t p_face_index) const;
 
 	void set_iteration_count(int p_val);
-	_FORCE_INLINE_ real_t get_iteration_count() const { return iteration_count; }
+	GD_FORCE_INLINE real_t get_iteration_count() const { return iteration_count; }
 
 	void set_total_mass(real_t p_val);
-	_FORCE_INLINE_ real_t get_total_mass() const { return total_mass; }
-	_FORCE_INLINE_ real_t get_total_inv_mass() const { return inv_total_mass; }
+	GD_FORCE_INLINE real_t get_total_mass() const { return total_mass; }
+	GD_FORCE_INLINE real_t get_total_inv_mass() const { return inv_total_mass; }
 
 	void set_collision_margin(real_t p_val);
-	_FORCE_INLINE_ real_t get_collision_margin() const { return collision_margin; }
+	GD_FORCE_INLINE real_t get_collision_margin() const { return collision_margin; }
 
 	void set_linear_stiffness(real_t p_val);
-	_FORCE_INLINE_ real_t get_linear_stiffness() const { return linear_stiffness; }
+	GD_FORCE_INLINE real_t get_linear_stiffness() const { return linear_stiffness; }
 
 	void set_pressure_coefficient(real_t p_val);
-	_FORCE_INLINE_ real_t get_pressure_coefficient() const { return pressure_coefficient; }
+	GD_FORCE_INLINE real_t get_pressure_coefficient() const { return pressure_coefficient; }
 
 	void set_damping_coefficient(real_t p_val);
-	_FORCE_INLINE_ real_t get_damping_coefficient() const { return damping_coefficient; }
+	GD_FORCE_INLINE real_t get_damping_coefficient() const { return damping_coefficient; }
 
 	void set_drag_coefficient(real_t p_val);
-	_FORCE_INLINE_ real_t get_drag_coefficient() const { return drag_coefficient; }
+	GD_FORCE_INLINE real_t get_drag_coefficient() const { return drag_coefficient; }
 
 	void predict_motion(real_t p_delta);
 	void solve_constraints(real_t p_delta);
 
-	_FORCE_INLINE_ uint32_t get_node_index(void *p_node) const { return static_cast<Node *>(p_node)->index; }
-	_FORCE_INLINE_ uint32_t get_face_index(void *p_face) const { return static_cast<Face *>(p_face)->index; }
+	GD_FORCE_INLINE uint32_t get_node_index(void *p_node) const { return static_cast<Node *>(p_node)->index; }
+	GD_FORCE_INLINE uint32_t get_face_index(void *p_face) const { return static_cast<Face *>(p_face)->index; }
 
 	// Return true to stop the query.
 	// p_index is the node index for AABB query, face index for Ray query.

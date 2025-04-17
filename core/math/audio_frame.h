@@ -33,7 +33,7 @@
 #include "core/math/vector2.h"
 #include "core/typedefs.h"
 
-static _FORCE_INLINE_ float undenormalize(float f) {
+static GD_FORCE_INLINE float undenormalize(float f) {
 	union {
 		uint32_t i;
 		float f;
@@ -67,11 +67,11 @@ struct AudioFrame {
 		// NOLINTEND(modernize-use-default-member-init)
 	};
 
-	_ALWAYS_INLINE_ const float &operator[](int p_idx) const {
+	GD_ALWAYS_INLINE const float &operator[](int p_idx) const {
 		DEV_ASSERT((unsigned int)p_idx < 2);
 		return levels[p_idx];
 	}
-	_ALWAYS_INLINE_ float &operator[](int p_idx) {
+	GD_ALWAYS_INLINE float &operator[](int p_idx) {
 		DEV_ASSERT((unsigned int)p_idx < 2);
 		return levels[p_idx];
 	}
@@ -120,12 +120,12 @@ struct AudioFrame {
 		right /= p_sample;
 	}
 
-	_ALWAYS_INLINE_ void undenormalize() {
+	GD_ALWAYS_INLINE void undenormalize() {
 		left = ::undenormalize(left);
 		right = ::undenormalize(right);
 	}
 
-	_FORCE_INLINE_ AudioFrame lerp(const AudioFrame &p_b, float p_t) const {
+	GD_FORCE_INLINE AudioFrame lerp(const AudioFrame &p_b, float p_t) const {
 		AudioFrame res = *this;
 
 		res.left += (p_t * (p_b.left - left));

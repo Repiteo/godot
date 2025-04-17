@@ -72,16 +72,16 @@ struct GDExtensionPtr {
 	};                                                                                                        \
 	template <>                                                                                               \
 	struct VariantCaster<GDExtensionConstPtr<const m_type>> {                                                 \
-		static _FORCE_INLINE_ GDExtensionConstPtr<const m_type> cast(const Variant &p_variant) {              \
+		static GD_FORCE_INLINE GDExtensionConstPtr<const m_type> cast(const Variant &p_variant) {             \
 			return GDExtensionConstPtr<const m_type>((const m_type *)p_variant.operator uint64_t());          \
 		}                                                                                                     \
 	};                                                                                                        \
 	template <>                                                                                               \
 	struct VariantInternalAccessor<GDExtensionConstPtr<const m_type>> {                                       \
-		static _FORCE_INLINE_ const GDExtensionConstPtr<const m_type> &get(const Variant *v) {                \
+		static GD_FORCE_INLINE const GDExtensionConstPtr<const m_type> &get(const Variant *v) {               \
 			return *reinterpret_cast<const GDExtensionConstPtr<const m_type> *>(VariantInternal::get_int(v)); \
 		}                                                                                                     \
-		static _FORCE_INLINE_ void set(Variant *v, const GDExtensionConstPtr<const m_type> &p_value) {        \
+		static GD_FORCE_INLINE void set(Variant *v, const GDExtensionConstPtr<const m_type> &p_value) {       \
 			*VariantInternal::get_int(v) = uint64_t(p_value.data);                                            \
 		}                                                                                                     \
 	};                                                                                                        \
@@ -104,16 +104,16 @@ struct GDExtensionPtr {
 	};                                                                                                        \
 	template <>                                                                                               \
 	struct VariantCaster<GDExtensionPtr<m_type>> {                                                            \
-		static _FORCE_INLINE_ GDExtensionPtr<m_type> cast(const Variant &p_variant) {                         \
+		static GD_FORCE_INLINE GDExtensionPtr<m_type> cast(const Variant &p_variant) {                        \
 			return GDExtensionPtr<m_type>((m_type *)p_variant.operator uint64_t());                           \
 		}                                                                                                     \
 	};                                                                                                        \
 	template <>                                                                                               \
 	struct VariantInternalAccessor<GDExtensionPtr<m_type>> {                                                  \
-		static _FORCE_INLINE_ const GDExtensionPtr<m_type> &get(const Variant *v) {                           \
+		static GD_FORCE_INLINE const GDExtensionPtr<m_type> &get(const Variant *v) {                          \
 			return *reinterpret_cast<const GDExtensionPtr<m_type> *>(VariantInternal::get_int(v));            \
 		}                                                                                                     \
-		static _FORCE_INLINE_ void set(Variant *v, const GDExtensionPtr<m_type> &p_value) {                   \
+		static GD_FORCE_INLINE void set(Variant *v, const GDExtensionPtr<m_type> &p_value) {                  \
 			*VariantInternal::get_int(v) = uint64_t(p_value.data);                                            \
 		}                                                                                                     \
 	};
@@ -138,21 +138,21 @@ struct GetTypeInfo<GDExtensionPtr<T>> {
 
 template <typename T>
 struct PtrToArg<GDExtensionConstPtr<T>> {
-	_FORCE_INLINE_ static GDExtensionConstPtr<T> convert(const void *p_ptr) {
+	GD_FORCE_INLINE static GDExtensionConstPtr<T> convert(const void *p_ptr) {
 		return GDExtensionConstPtr<T>(reinterpret_cast<const T *>(p_ptr));
 	}
 	typedef const T *EncodeT;
-	_FORCE_INLINE_ static void encode(GDExtensionConstPtr<T> p_val, void *p_ptr) {
+	GD_FORCE_INLINE static void encode(GDExtensionConstPtr<T> p_val, void *p_ptr) {
 		*((const T **)p_ptr) = p_val.data;
 	}
 };
 template <typename T>
 struct PtrToArg<GDExtensionPtr<T>> {
-	_FORCE_INLINE_ static GDExtensionPtr<T> convert(const void *p_ptr) {
+	GD_FORCE_INLINE static GDExtensionPtr<T> convert(const void *p_ptr) {
 		return GDExtensionPtr<T>(reinterpret_cast<const T *>(p_ptr));
 	}
 	typedef T *EncodeT;
-	_FORCE_INLINE_ static void encode(GDExtensionPtr<T> p_val, void *p_ptr) {
+	GD_FORCE_INLINE static void encode(GDExtensionPtr<T> p_val, void *p_ptr) {
 		*((T **)p_ptr) = p_val.data;
 	}
 };

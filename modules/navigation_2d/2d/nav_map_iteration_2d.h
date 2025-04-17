@@ -93,12 +93,12 @@ class NavMapIterationRead2D {
 	const NavMapIteration2D &map_iteration;
 
 public:
-	_ALWAYS_INLINE_ NavMapIterationRead2D(const NavMapIteration2D &p_iteration) :
+	GD_ALWAYS_INLINE NavMapIterationRead2D(const NavMapIteration2D &p_iteration) :
 			map_iteration(p_iteration) {
 		map_iteration.rwlock.read_lock();
 		map_iteration.users.increment();
 	}
-	_ALWAYS_INLINE_ ~NavMapIterationRead2D() {
+	GD_ALWAYS_INLINE ~NavMapIterationRead2D() {
 		map_iteration.users.decrement();
 		map_iteration.rwlock.read_unlock();
 	}

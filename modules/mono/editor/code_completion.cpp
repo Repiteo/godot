@@ -42,7 +42,7 @@ namespace gdmono {
 
 // Almost everything here is taken from functions used by GDScript for code completion, adapted for C#.
 
-_FORCE_INLINE_ String quoted(const String &p_str) {
+GD_FORCE_INLINE String quoted(const String &p_str) {
 	return "\"" + p_str + "\"";
 }
 

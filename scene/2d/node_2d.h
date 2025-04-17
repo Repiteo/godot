@@ -43,7 +43,9 @@ class Node2D : public CanvasItem {
 
 	Transform2D transform;
 
-	_FORCE_INLINE_ bool _is_xform_dirty() const { return is_group_processing() ? xform_dirty.mt.is_set() : xform_dirty.st; }
+	GD_FORCE_INLINE bool _is_xform_dirty() const {
+		return is_group_processing() ? xform_dirty.mt.is_set() : xform_dirty.st;
+	}
 	void _set_xform_dirty(bool p_dirty) const;
 
 	void _update_transform();
@@ -71,7 +73,8 @@ public:
 
 	virtual void _edit_set_rect(const Rect2 &p_edit_rect) override;
 #endif
-	virtual void reparent(Node *p_parent, bool p_keep_global_transform = true) override;
+	virtual void reparent(Node *p_parent,
+			bool p_keep_global_transform = true) override;
 
 	void set_position(const Point2 &p_pos);
 	void set_rotation(real_t p_radians);

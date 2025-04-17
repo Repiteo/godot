@@ -59,7 +59,7 @@ private:
 #endif
 
 public:
-	_ALWAYS_INLINE_ void post(uint32_t p_count = 1) const {
+	GD_ALWAYS_INLINE void post(uint32_t p_count = 1) const {
 		std::lock_guard lock(mutex);
 		count += p_count;
 		for (uint32_t i = 0; i < p_count; ++i) {
@@ -67,7 +67,7 @@ public:
 		}
 	}
 
-	_ALWAYS_INLINE_ void wait() const {
+	GD_ALWAYS_INLINE void wait() const {
 		THREADING_NAMESPACE::unique_lock lock(mutex);
 #ifdef DEBUG_ENABLED
 		++awaiters;
@@ -81,7 +81,7 @@ public:
 #endif
 	}
 
-	_ALWAYS_INLINE_ bool try_wait() const {
+	GD_ALWAYS_INLINE bool try_wait() const {
 		std::lock_guard lock(mutex);
 		if (count) {
 			count--;

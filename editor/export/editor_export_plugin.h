@@ -63,13 +63,13 @@ class EditorExportPlugin : public RefCounted {
 
 	Vector<String> macos_plugin_files;
 
-	_FORCE_INLINE_ void _clear() {
+	GD_FORCE_INLINE void _clear() {
 		shared_objects.clear();
 		extra_files.clear();
 		skipped = false;
 	}
 
-	_FORCE_INLINE_ void _export_end_clear() {
+	GD_FORCE_INLINE void _export_end_clear() {
 		ios_frameworks.clear();
 		ios_embedded_frameworks.clear();
 		ios_bundle_files.clear();

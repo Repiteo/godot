@@ -54,7 +54,7 @@ public:
 		return nullptr;
 	}
 
-	_ALWAYS_INLINE_ bool has_active_player() {
+	GD_ALWAYS_INLINE bool has_active_player() {
 		return player != nil;
 	}
 
@@ -98,11 +98,11 @@ public:
 		}
 	}
 
-	_ALWAYS_INLINE_ bool has_motors() {
+	GD_ALWAYS_INLINE bool has_motors() {
 		return weak_motor != nullptr && strong_motor != nullptr;
 	}
 
-	_ALWAYS_INLINE_ bool has_active_players() {
+	GD_ALWAYS_INLINE bool has_active_players() {
 		if (!has_motors()) {
 			return false;
 		}

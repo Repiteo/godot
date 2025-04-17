@@ -97,8 +97,8 @@ private:
 protected:
 	CollisionObject3D(RID p_rid, bool p_area);
 
-	_FORCE_INLINE_ void lock_callback() { callback_lock++; }
-	_FORCE_INLINE_ void unlock_callback() {
+	GD_FORCE_INLINE void lock_callback() { callback_lock++; }
+	GD_FORCE_INLINE void unlock_callback() {
 		ERR_FAIL_COND(callback_lock == 0);
 		callback_lock--;
 	}
@@ -170,7 +170,7 @@ public:
 	void set_capture_input_on_drag(bool p_capture);
 	bool get_capture_input_on_drag() const;
 
-	_FORCE_INLINE_ RID get_rid() const { return rid; }
+	GD_FORCE_INLINE RID get_rid() const { return rid; }
 
 	PackedStringArray get_configuration_warnings() const override;
 

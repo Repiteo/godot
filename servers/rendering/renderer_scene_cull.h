@@ -132,8 +132,8 @@ public:
 	struct Instance;
 
 	struct PlaneSign {
-		_ALWAYS_INLINE_ PlaneSign() {}
-		_ALWAYS_INLINE_ PlaneSign(const Plane &p_plane) {
+		GD_ALWAYS_INLINE PlaneSign() {}
+		GD_ALWAYS_INLINE PlaneSign(const Plane &p_plane) {
 			if (p_plane.normal.x > 0) {
 				signs[0] = 0;
 			} else {
@@ -161,8 +161,8 @@ public:
 		const PlaneSign *plane_signs_ptr;
 		uint32_t plane_count;
 
-		_ALWAYS_INLINE_ Frustum() {}
-		_ALWAYS_INLINE_ Frustum(const Frustum &p_frustum) {
+		GD_ALWAYS_INLINE Frustum() {}
+		GD_ALWAYS_INLINE Frustum(const Frustum &p_frustum) {
 			planes = p_frustum.planes;
 			plane_signs = p_frustum.plane_signs;
 
@@ -170,7 +170,7 @@ public:
 			plane_signs_ptr = plane_signs.ptr();
 			plane_count = p_frustum.plane_count;
 		}
-		_ALWAYS_INLINE_ void operator=(const Frustum &p_frustum) {
+		GD_ALWAYS_INLINE void operator=(const Frustum &p_frustum) {
 			planes = p_frustum.planes;
 			plane_signs = p_frustum.plane_signs;
 
@@ -178,7 +178,7 @@ public:
 			plane_signs_ptr = plane_signs.ptr();
 			plane_count = p_frustum.plane_count;
 		}
-		_ALWAYS_INLINE_ Frustum(const Vector<Plane> &p_planes) {
+		GD_ALWAYS_INLINE Frustum(const Vector<Plane> &p_planes) {
 			planes = p_planes;
 			planes_ptr = planes.ptrw();
 			plane_count = planes.size();
@@ -197,9 +197,9 @@ public:
 		// keep it separated from data.
 
 		real_t bounds[6];
-		_ALWAYS_INLINE_ InstanceBounds() {}
+		GD_ALWAYS_INLINE InstanceBounds() {}
 
-		_ALWAYS_INLINE_ InstanceBounds(const AABB &p_aabb) {
+		GD_ALWAYS_INLINE InstanceBounds(const AABB &p_aabb) {
 			bounds[0] = p_aabb.position.x;
 			bounds[1] = p_aabb.position.y;
 			bounds[2] = p_aabb.position.z;
@@ -207,7 +207,7 @@ public:
 			bounds[4] = p_aabb.position.y + p_aabb.size.y;
 			bounds[5] = p_aabb.position.z + p_aabb.size.z;
 		}
-		_ALWAYS_INLINE_ bool in_frustum(const Frustum &p_frustum) const {
+		GD_ALWAYS_INLINE bool in_frustum(const Frustum &p_frustum) const {
 			// This is not a full SAT check and the possibility of false positives exist,
 			// but the tradeoff vs performance is still very good.
 
@@ -224,7 +224,7 @@ public:
 
 			return true;
 		}
-		_ALWAYS_INLINE_ bool in_aabb(const AABB &p_aabb) const {
+		GD_ALWAYS_INLINE bool in_aabb(const AABB &p_aabb) const {
 			Vector3 end = p_aabb.position + p_aabb.size;
 
 			if (bounds[0] >= end.x) {
@@ -311,7 +311,7 @@ public:
 	};
 
 	class VisibilityArray : public BinSortedArray<InstanceVisibilityData> {
-		_FORCE_INLINE_ virtual void _update_idx(InstanceVisibilityData &r_element, uint64_t p_idx) {
+		GD_FORCE_INLINE virtual void _update_idx(InstanceVisibilityData &r_element, uint64_t p_idx) {
 			r_element.instance->visibility_index = p_idx;
 			if (r_element.instance->scenario && r_element.instance->array_index != -1) {
 				r_element.instance->scenario->instance_data[r_element.instance->array_index].visibility_index = p_idx;
@@ -843,7 +843,7 @@ public:
 		uint64_t pair_pass;
 		uint32_t cull_mask = 0xFFFFFFFF; // Needed for decals and lights in the mobile and compatibility renderers.
 
-		_FORCE_INLINE_ bool operator()(void *p_data) {
+		GD_FORCE_INLINE bool operator()(void *p_data) {
 			Instance *p_instance = (Instance *)p_data;
 
 			if (instance != p_instance && instance->transformed_aabb.intersects(p_instance->transformed_aabb) && (pair_mask & (1 << p_instance->base_type)) && (cull_mask & p_instance->layer_mask)) {
@@ -1090,15 +1090,15 @@ public:
 	virtual void mesh_generate_pipelines(RID p_mesh, bool p_background_compilation);
 	virtual uint32_t get_pipeline_compilations(RS::PipelineSource p_source);
 
-	_FORCE_INLINE_ void _update_instance(Instance *p_instance) const;
-	_FORCE_INLINE_ void _update_instance_aabb(Instance *p_instance) const;
-	_FORCE_INLINE_ void _update_dirty_instance(Instance *p_instance) const;
-	_FORCE_INLINE_ void _update_instance_lightmap_captures(Instance *p_instance) const;
+	GD_FORCE_INLINE void _update_instance(Instance *p_instance) const;
+	GD_FORCE_INLINE void _update_instance_aabb(Instance *p_instance) const;
+	GD_FORCE_INLINE void _update_dirty_instance(Instance *p_instance) const;
+	GD_FORCE_INLINE void _update_instance_lightmap_captures(Instance *p_instance) const;
 	void _unpair_instance(Instance *p_instance);
 
 	void _light_instance_setup_directional_shadow(int p_shadow_index, Instance *p_instance, const Transform3D p_cam_transform, const Projection &p_cam_projection, bool p_cam_orthogonal, bool p_cam_vaspect);
 
-	_FORCE_INLINE_ bool _light_instance_update_shadow(Instance *p_instance, const Transform3D p_cam_transform, const Projection &p_cam_projection, bool p_cam_orthogonal, bool p_cam_vaspect, RID p_shadow_atlas, Scenario *p_scenario, float p_screen_mesh_lod_threshold, uint32_t p_visible_layers = 0xFFFFFF);
+	GD_FORCE_INLINE bool _light_instance_update_shadow(Instance *p_instance, const Transform3D p_cam_transform, const Projection &p_cam_projection, bool p_cam_orthogonal, bool p_cam_vaspect, RID p_shadow_atlas, Scenario *p_scenario, float p_screen_mesh_lod_threshold, uint32_t p_visible_layers = 0xFFFFFF);
 
 	RID _render_get_environment(RID p_camera, RID p_scenario);
 	RID _render_get_compositor(RID p_camera, RID p_scenario);
@@ -1153,7 +1153,7 @@ public:
 	void _visibility_cull_threaded(uint32_t p_thread, VisibilityCullData *cull_data);
 	void _visibility_cull(const VisibilityCullData &cull_data, uint64_t p_from, uint64_t p_to);
 	template <bool p_fade_check>
-	_FORCE_INLINE_ int _visibility_range_check(InstanceVisibilityData &r_vis_data, const Vector3 &p_camera_pos, uint64_t p_viewport_mask);
+	GD_FORCE_INLINE int _visibility_range_check(InstanceVisibilityData &r_vis_data, const Vector3 &p_camera_pos, uint64_t p_viewport_mask);
 
 	struct CullData {
 		Cull *cull = nullptr;
@@ -1170,7 +1170,7 @@ public:
 	void _scene_cull_threaded(uint32_t p_thread, CullData *cull_data);
 	void _scene_cull(CullData &cull_data, InstanceCullResult &cull_result, uint64_t p_from, uint64_t p_to);
 	static void _scene_particles_set_view_axis(RID p_particles, const Vector3 &p_axis, const Vector3 &p_up_axis);
-	_FORCE_INLINE_ bool _visibility_parent_check(const CullData &p_cull_data, const InstanceData &p_instance_data);
+	GD_FORCE_INLINE bool _visibility_parent_check(const CullData &p_cull_data, const InstanceData &p_instance_data);
 
 	bool _render_reflection_probe_step(Instance *p_instance, int p_step);
 

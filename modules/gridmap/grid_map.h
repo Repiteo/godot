@@ -62,14 +62,14 @@ class GridMap : public Node3D {
 		static uint32_t hash(const IndexKey &p_key) {
 			return hash_one_uint64(p_key.key);
 		}
-		_FORCE_INLINE_ bool operator<(const IndexKey &p_key) const {
+		GD_FORCE_INLINE bool operator<(const IndexKey &p_key) const {
 			return key < p_key.key;
 		}
-		_FORCE_INLINE_ bool operator==(const IndexKey &p_key) const {
+		GD_FORCE_INLINE bool operator==(const IndexKey &p_key) const {
 			return key == p_key.key;
 		}
 
-		_FORCE_INLINE_ operator Vector3i() const {
+		GD_FORCE_INLINE operator Vector3i() const {
 			return Vector3i(x, y, z);
 		}
 
@@ -144,7 +144,7 @@ class GridMap : public Node3D {
 		static uint32_t hash(const OctantKey &p_key) {
 			return hash_one_uint64(p_key.key);
 		}
-		_FORCE_INLINE_ bool operator==(const OctantKey &p_key) const {
+		GD_FORCE_INLINE bool operator==(const OctantKey &p_key) const {
 			return key == p_key.key;
 		}
 
@@ -187,7 +187,7 @@ class GridMap : public Node3D {
 		float param[RS::LIGHT_PARAM_MAX] = {};
 	};
 
-	_FORCE_INLINE_ Vector3 _octant_get_offset(const OctantKey &p_key) const {
+	GD_FORCE_INLINE Vector3 _octant_get_offset(const OctantKey &p_key) const {
 		return Vector3(p_key.x, p_key.y, p_key.z) * cell_size * octant_size;
 	}
 

@@ -61,8 +61,8 @@ class Delaunay3D {
 		LocalVector<GridPos> grid_positions;
 		List<Simplex *>::Element *SE = nullptr;
 
-		_FORCE_INLINE_ Simplex() {}
-		_FORCE_INLINE_ Simplex(uint32_t p_a, uint32_t p_b, uint32_t p_c, uint32_t p_d) {
+		GD_FORCE_INLINE Simplex() {}
+		GD_FORCE_INLINE Simplex(uint32_t p_a, uint32_t p_b, uint32_t p_c, uint32_t p_d) {
 			points[0] = p_a;
 			points[1] = p_b;
 			points[2] = p_c;
@@ -73,12 +73,12 @@ class Delaunay3D {
 	struct Triangle {
 		uint32_t triangle[3];
 		bool bad = false;
-		_FORCE_INLINE_ bool operator==(const Triangle &p_triangle) const {
+		GD_FORCE_INLINE bool operator==(const Triangle &p_triangle) const {
 			return triangle[0] == p_triangle.triangle[0] && triangle[1] == p_triangle.triangle[1] && triangle[2] == p_triangle.triangle[2];
 		}
 
-		_FORCE_INLINE_ Triangle() {}
-		_FORCE_INLINE_ Triangle(uint32_t p_a, uint32_t p_b, uint32_t p_c) {
+		GD_FORCE_INLINE Triangle() {}
+		GD_FORCE_INLINE Triangle(uint32_t p_a, uint32_t p_b, uint32_t p_c) {
 			if (p_a > p_b) {
 				SWAP(p_a, p_b);
 			}
@@ -96,14 +96,14 @@ class Delaunay3D {
 	};
 
 	struct TriangleHasher {
-		_FORCE_INLINE_ static uint32_t hash(const Triangle &p_triangle) {
+		GD_FORCE_INLINE static uint32_t hash(const Triangle &p_triangle) {
 			uint32_t h = hash_djb2_one_32(p_triangle.triangle[0]);
 			h = hash_djb2_one_32(p_triangle.triangle[1], h);
 			return hash_fmix32(hash_djb2_one_32(p_triangle.triangle[2], h));
 		}
 	};
 
-	_FORCE_INLINE_ static void circum_sphere_compute(const Vector3 *p_points, Simplex *p_simplex) {
+	GD_FORCE_INLINE static void circum_sphere_compute(const Vector3 *p_points, Simplex *p_simplex) {
 		// The only part in the algorithm where there may be precision errors is this one,
 		// so ensure that we do it with the maximum precision possible.
 
@@ -161,7 +161,7 @@ class Delaunay3D {
 		p_simplex->circum_r2 = radius1;
 	}
 
-	_FORCE_INLINE_ static bool simplex_contains(const Vector3 *p_points, const Simplex &p_simplex, uint32_t p_vertex) {
+	GD_FORCE_INLINE static bool simplex_contains(const Vector3 *p_points, const Simplex &p_simplex, uint32_t p_vertex) {
 		R128 v_x = p_points[p_vertex].x;
 		R128 v_y = p_points[p_vertex].y;
 		R128 v_z = p_points[p_vertex].z;

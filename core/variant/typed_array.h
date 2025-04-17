@@ -40,14 +40,14 @@
 template <typename T>
 class TypedArray : public Array {
 public:
-	_FORCE_INLINE_ void operator=(const Array &p_array) {
+	GD_FORCE_INLINE void operator=(const Array &p_array) {
 		ERR_FAIL_COND_MSG(!is_same_typed(p_array), "Cannot assign an array with a different element type.");
 		_ref(p_array);
 	}
-	_FORCE_INLINE_ TypedArray(const Variant &p_variant) :
+	GD_FORCE_INLINE TypedArray(const Variant &p_variant) :
 			TypedArray(Array(p_variant)) {
 	}
-	_FORCE_INLINE_ TypedArray(const Array &p_array) {
+	GD_FORCE_INLINE TypedArray(const Array &p_array) {
 		set_typed(Variant::OBJECT, T::get_class_static(), Variant());
 		if (is_same_typed(p_array)) {
 			_ref(p_array);
@@ -55,22 +55,22 @@ public:
 			assign(p_array);
 		}
 	}
-	_FORCE_INLINE_ TypedArray(std::initializer_list<Variant> p_init) :
+	GD_FORCE_INLINE TypedArray(std::initializer_list<Variant> p_init) :
 			TypedArray(Array(p_init)) {}
-	_FORCE_INLINE_ TypedArray() {
+	GD_FORCE_INLINE TypedArray() {
 		set_typed(Variant::OBJECT, T::get_class_static(), Variant());
 	}
 };
 
 template <typename T>
 struct VariantInternalAccessor<TypedArray<T>> {
-	static _FORCE_INLINE_ TypedArray<T> get(const Variant *v) { return *VariantInternal::get_array(v); }
-	static _FORCE_INLINE_ void set(Variant *v, const TypedArray<T> &p_array) { *VariantInternal::get_array(v) = p_array; }
+	static GD_FORCE_INLINE TypedArray<T> get(const Variant *v) { return *VariantInternal::get_array(v); }
+	static GD_FORCE_INLINE void set(Variant *v, const TypedArray<T> &p_array) { *VariantInternal::get_array(v) = p_array; }
 };
 template <typename T>
 struct VariantInternalAccessor<const TypedArray<T> &> {
-	static _FORCE_INLINE_ TypedArray<T> get(const Variant *v) { return *VariantInternal::get_array(v); }
-	static _FORCE_INLINE_ void set(Variant *v, const TypedArray<T> &p_array) { *VariantInternal::get_array(v) = p_array; }
+	static GD_FORCE_INLINE TypedArray<T> get(const Variant *v) { return *VariantInternal::get_array(v); }
+	static GD_FORCE_INLINE void set(Variant *v, const TypedArray<T> &p_array) { *VariantInternal::get_array(v) = p_array; }
 };
 
 //specialization for the rest of variant types
@@ -79,17 +79,17 @@ struct VariantInternalAccessor<const TypedArray<T> &> {
 	template <>                                                                                                  \
 	class TypedArray<m_type> : public Array {                                                                    \
 	public:                                                                                                      \
-		_FORCE_INLINE_ void operator=(const Array &p_array) {                                                    \
+		GD_FORCE_INLINE void operator=(const Array &p_array) {                                                   \
 			ERR_FAIL_COND_MSG(!is_same_typed(p_array), "Cannot assign an array with a different element type."); \
 			_ref(p_array);                                                                                       \
 		}                                                                                                        \
-		_FORCE_INLINE_ TypedArray(std::initializer_list<Variant> p_init) :                                       \
+		GD_FORCE_INLINE TypedArray(std::initializer_list<Variant> p_init) :                                      \
 				Array(Array(p_init), m_variant_type, StringName(), Variant()) {                                  \
 		}                                                                                                        \
-		_FORCE_INLINE_ TypedArray(const Variant &p_variant) :                                                    \
+		GD_FORCE_INLINE TypedArray(const Variant &p_variant) :                                                   \
 				TypedArray(Array(p_variant)) {                                                                   \
 		}                                                                                                        \
-		_FORCE_INLINE_ TypedArray(const Array &p_array) {                                                        \
+		GD_FORCE_INLINE TypedArray(const Array &p_array) {                                                       \
 			set_typed(m_variant_type, StringName(), Variant());                                                  \
 			if (is_same_typed(p_array)) {                                                                        \
 				_ref(p_array);                                                                                   \
@@ -97,7 +97,7 @@ struct VariantInternalAccessor<const TypedArray<T> &> {
 				assign(p_array);                                                                                 \
 			}                                                                                                    \
 		}                                                                                                        \
-		_FORCE_INLINE_ TypedArray() {                                                                            \
+		GD_FORCE_INLINE TypedArray() {                                                                           \
 			set_typed(m_variant_type, StringName(), Variant());                                                  \
 		}                                                                                                        \
 	};
@@ -153,11 +153,11 @@ MAKE_TYPED_ARRAY(IPAddress, Variant::STRING)
 
 template <typename T>
 struct PtrToArg<TypedArray<T>> {
-	_FORCE_INLINE_ static TypedArray<T> convert(const void *p_ptr) {
+	GD_FORCE_INLINE static TypedArray<T> convert(const void *p_ptr) {
 		return TypedArray<T>(*reinterpret_cast<const Array *>(p_ptr));
 	}
 	typedef Array EncodeT;
-	_FORCE_INLINE_ static void encode(TypedArray<T> p_val, void *p_ptr) {
+	GD_FORCE_INLINE static void encode(TypedArray<T> p_val, void *p_ptr) {
 		*(Array *)p_ptr = p_val;
 	}
 };

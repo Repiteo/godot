@@ -36,6 +36,6 @@ class NavRid3D {
 	RID self;
 
 public:
-	_FORCE_INLINE_ void set_self(const RID &p_self) { self = p_self; }
-	_FORCE_INLINE_ RID get_self() const { return self; }
+	GD_FORCE_INLINE void set_self(const RID &p_self) { self = p_self; }
+	GD_FORCE_INLINE RID get_self() const { return self; }
 };

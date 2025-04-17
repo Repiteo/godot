@@ -377,7 +377,7 @@ k_tensor(GodotBody2D *a, GodotBody2D *b, Vector2 r1, Vector2 r2, Vector2 *k1, Ve
 	*k2 = Vector2(-k21 * det_inv, k11 * det_inv);
 }
 
-static _FORCE_INLINE_ Vector2
+static GD_FORCE_INLINE Vector2
 mult_k(const Vector2 &vr, const Vector2 &k1, const Vector2 &k2) {
 	return Vector2(vr.dot(k1), vr.dot(k2));
 }

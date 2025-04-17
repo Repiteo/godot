@@ -60,7 +60,7 @@ private:
 	uint32_t capacity_index = 0;
 	uint32_t num_elements = 0;
 
-	_FORCE_INLINE_ uint32_t _hash(const TKey &p_key) const {
+	GD_FORCE_INLINE uint32_t _hash(const TKey &p_key) const {
 		uint32_t hash = Hasher::hash(p_key);
 
 		if (unlikely(hash == EMPTY_HASH)) {
@@ -70,7 +70,7 @@ private:
 		return hash;
 	}
 
-	static _FORCE_INLINE_ uint32_t _get_probe_length(const uint32_t p_pos, const uint32_t p_hash, const uint32_t p_capacity, const uint64_t p_capacity_inv) {
+	static GD_FORCE_INLINE uint32_t _get_probe_length(const uint32_t p_pos, const uint32_t p_hash, const uint32_t p_capacity, const uint64_t p_capacity_inv) {
 		const uint32_t original_pos = fastmod(p_hash, p_capacity_inv, p_capacity);
 		return fastmod(p_pos - original_pos + p_capacity, p_capacity_inv, p_capacity);
 	}
@@ -162,7 +162,7 @@ private:
 		Memory::free_static(old_key_to_hash);
 	}
 
-	_FORCE_INLINE_ int32_t _insert(const TKey &p_key) {
+	GD_FORCE_INLINE int32_t _insert(const TKey &p_key) {
 		uint32_t capacity = hash_table_size_primes[capacity_index];
 		if (unlikely(keys == nullptr)) {
 			// Allocate on demand to save memory.
@@ -223,8 +223,8 @@ private:
 	}
 
 public:
-	_FORCE_INLINE_ uint32_t get_capacity() const { return hash_table_size_primes[capacity_index]; }
-	_FORCE_INLINE_ uint32_t size() const { return num_elements; }
+	GD_FORCE_INLINE uint32_t get_capacity() const { return hash_table_size_primes[capacity_index]; }
+	GD_FORCE_INLINE uint32_t size() const { return num_elements; }
 
 	/* Standard Godot Container API */
 
@@ -247,7 +247,7 @@ public:
 		num_elements = 0;
 	}
 
-	_FORCE_INLINE_ bool has(const TKey &p_key) const {
+	GD_FORCE_INLINE bool has(const TKey &p_key) const {
 		uint32_t _pos = 0;
 		return _lookup_pos(p_key, _pos);
 	}
@@ -315,13 +315,13 @@ public:
 	/** Iterator API **/
 
 	struct Iterator {
-		_FORCE_INLINE_ const TKey &operator*() const {
+		GD_FORCE_INLINE const TKey &operator*() const {
 			return keys[index];
 		}
-		_FORCE_INLINE_ const TKey *operator->() const {
+		GD_FORCE_INLINE const TKey *operator->() const {
 			return &keys[index];
 		}
-		_FORCE_INLINE_ Iterator &operator++() {
+		GD_FORCE_INLINE Iterator &operator++() {
 			index++;
 			if (index >= (int32_t)num_keys) {
 				index = -1;
@@ -330,7 +330,7 @@ public:
 			}
 			return *this;
 		}
-		_FORCE_INLINE_ Iterator &operator--() {
+		GD_FORCE_INLINE Iterator &operator--() {
 			index--;
 			if (index < 0) {
 				index = -1;
@@ -340,25 +340,25 @@ public:
 			return *this;
 		}
 
-		_FORCE_INLINE_ bool operator==(const Iterator &b) const { return keys == b.keys && index == b.index; }
-		_FORCE_INLINE_ bool operator!=(const Iterator &b) const { return keys != b.keys || index != b.index; }
+		GD_FORCE_INLINE bool operator==(const Iterator &b) const { return keys == b.keys && index == b.index; }
+		GD_FORCE_INLINE bool operator!=(const Iterator &b) const { return keys != b.keys || index != b.index; }
 
-		_FORCE_INLINE_ explicit operator bool() const {
+		GD_FORCE_INLINE explicit operator bool() const {
 			return keys != nullptr;
 		}
 
-		_FORCE_INLINE_ Iterator(const TKey *p_keys, uint32_t p_num_keys, int32_t p_index = -1) {
+		GD_FORCE_INLINE Iterator(const TKey *p_keys, uint32_t p_num_keys, int32_t p_index = -1) {
 			keys = p_keys;
 			num_keys = p_num_keys;
 			index = p_index;
 		}
-		_FORCE_INLINE_ Iterator() {}
-		_FORCE_INLINE_ Iterator(const Iterator &p_it) {
+		GD_FORCE_INLINE Iterator() {}
+		GD_FORCE_INLINE Iterator(const Iterator &p_it) {
 			keys = p_it.keys;
 			num_keys = p_it.num_keys;
 			index = p_it.index;
 		}
-		_FORCE_INLINE_ void operator=(const Iterator &p_it) {
+		GD_FORCE_INLINE void operator=(const Iterator &p_it) {
 			keys = p_it.keys;
 			num_keys = p_it.num_keys;
 			index = p_it.index;
@@ -370,20 +370,20 @@ public:
 		int32_t index = -1;
 	};
 
-	_FORCE_INLINE_ Iterator begin() const {
+	GD_FORCE_INLINE Iterator begin() const {
 		return num_elements ? Iterator(keys, num_elements, 0) : Iterator();
 	}
-	_FORCE_INLINE_ Iterator end() const {
+	GD_FORCE_INLINE Iterator end() const {
 		return Iterator();
 	}
-	_FORCE_INLINE_ Iterator last() const {
+	GD_FORCE_INLINE Iterator last() const {
 		if (num_elements == 0) {
 			return Iterator();
 		}
 		return Iterator(keys, num_elements, num_elements - 1);
 	}
 
-	_FORCE_INLINE_ Iterator find(const TKey &p_key) const {
+	GD_FORCE_INLINE Iterator find(const TKey &p_key) const {
 		uint32_t pos = 0;
 		bool exists = _lookup_pos(p_key, pos);
 		if (!exists) {
@@ -392,7 +392,7 @@ public:
 		return Iterator(keys, num_elements, pos);
 	}
 
-	_FORCE_INLINE_ void remove(const Iterator &p_iter) {
+	GD_FORCE_INLINE void remove(const Iterator &p_iter) {
 		if (p_iter) {
 			erase(*p_iter);
 		}

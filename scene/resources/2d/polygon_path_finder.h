@@ -49,10 +49,10 @@ class PolygonPathFinder : public Resource {
 		};
 		uint64_t key = 0;
 
-		_FORCE_INLINE_ bool operator==(const Edge &p_edge) const {
+		GD_FORCE_INLINE bool operator==(const Edge &p_edge) const {
 			return key == p_edge.key;
 		}
-		_FORCE_INLINE_ static uint32_t hash(const Edge &p_edge) {
+		GD_FORCE_INLINE static uint32_t hash(const Edge &p_edge) {
 			return hash_one_uint64(p_edge.key);
 		}
 

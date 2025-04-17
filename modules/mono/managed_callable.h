@@ -58,8 +58,8 @@ public:
 	int get_argument_count(bool &r_is_valid) const override;
 	void call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const override;
 
-	_FORCE_INLINE_ GCHandleIntPtr get_delegate() const { return delegate_handle; }
-	_FORCE_INLINE_ void *get_trampoline() const { return trampoline; }
+	GD_FORCE_INLINE GCHandleIntPtr get_delegate() const { return delegate_handle; }
+	GD_FORCE_INLINE void *get_trampoline() const { return trampoline; }
 
 	static bool compare_equal(const CallableCustom *p_a, const CallableCustom *p_b);
 	static bool compare_less(const CallableCustom *p_a, const CallableCustom *p_b);

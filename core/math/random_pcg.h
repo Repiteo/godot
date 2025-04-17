@@ -72,20 +72,20 @@ public:
 
 	RandomPCG(uint64_t p_seed = DEFAULT_SEED, uint64_t p_inc = DEFAULT_INC);
 
-	_FORCE_INLINE_ void seed(uint64_t p_seed) {
+	GD_FORCE_INLINE void seed(uint64_t p_seed) {
 		current_seed = p_seed;
 		pcg32_srandom_r(&pcg, current_seed, current_inc);
 	}
-	_FORCE_INLINE_ uint64_t get_seed() { return current_seed; }
+	GD_FORCE_INLINE uint64_t get_seed() { return current_seed; }
 
-	_FORCE_INLINE_ void set_state(uint64_t p_state) { pcg.state = p_state; }
-	_FORCE_INLINE_ uint64_t get_state() const { return pcg.state; }
+	GD_FORCE_INLINE void set_state(uint64_t p_state) { pcg.state = p_state; }
+	GD_FORCE_INLINE uint64_t get_state() const { return pcg.state; }
 
 	void randomize();
-	_FORCE_INLINE_ uint32_t rand() {
+	GD_FORCE_INLINE uint32_t rand() {
 		return pcg32_random_r(&pcg);
 	}
-	_FORCE_INLINE_ uint32_t rand(uint32_t bounds) {
+	GD_FORCE_INLINE uint32_t rand(uint32_t bounds) {
 		return pcg32_boundedrand_r(&pcg, bounds);
 	}
 
@@ -103,7 +103,7 @@ public:
 	// However, all numbers below that threshold are floored to 0.
 	// The thresholds are chosen to minimize rand() calls while keeping the numbers within a totally subjective quality standard.
 	// If clz or ldexp isn't available, fall back to bit truncation for performance, sacrificing uniformity.
-	_FORCE_INLINE_ double randd() {
+	GD_FORCE_INLINE double randd() {
 #if defined(CLZ32)
 		uint32_t proto_exp_offset = rand();
 		if (unlikely(proto_exp_offset == 0)) {
@@ -116,7 +116,7 @@ public:
 		return (double)(((((uint64_t)rand()) << 32) | rand()) & 0x1FFFFFFFFFFFFFU) / (double)0x1FFFFFFFFFFFFFU;
 #endif
 	}
-	_FORCE_INLINE_ float randf() {
+	GD_FORCE_INLINE float randf() {
 #if defined(CLZ32)
 		uint32_t proto_exp_offset = rand();
 		if (unlikely(proto_exp_offset == 0)) {
@@ -129,14 +129,14 @@ public:
 #endif
 	}
 
-	_FORCE_INLINE_ double randfn(double p_mean, double p_deviation) {
+	GD_FORCE_INLINE double randfn(double p_mean, double p_deviation) {
 		double temp = randd();
 		if (temp < CMP_EPSILON) {
 			temp += CMP_EPSILON; // To prevent generating of INF value in log function, resulting to return NaN value from this function.
 		}
 		return p_mean + p_deviation * (cos(Math::TAU * randd()) * sqrt(-2.0 * log(temp))); // Box-Muller transform.
 	}
-	_FORCE_INLINE_ float randfn(float p_mean, float p_deviation) {
+	GD_FORCE_INLINE float randfn(float p_mean, float p_deviation) {
 		float temp = randf();
 		if (temp < CMP_EPSILON) {
 			temp += CMP_EPSILON; // To prevent generating of INF value in log function, resulting to return NaN value from this function.

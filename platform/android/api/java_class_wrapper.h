@@ -76,7 +76,7 @@ class JavaClass : public RefCounted {
 		jmethodID method;
 	};
 
-	_FORCE_INLINE_ static void _convert_to_variant_type(int p_sig, Variant::Type &r_type, float &likelihood) {
+	GD_FORCE_INLINE static void _convert_to_variant_type(int p_sig, Variant::Type &r_type, float &likelihood) {
 		likelihood = 1.0;
 		r_type = Variant::NIL;
 
@@ -178,7 +178,7 @@ class JavaClass : public RefCounted {
 		}
 	}
 
-	_FORCE_INLINE_ static bool _convert_object_to_variant(JNIEnv *env, jobject obj, Variant &var, uint32_t p_sig);
+	GD_FORCE_INLINE static bool _convert_object_to_variant(JNIEnv *env, jobject obj, Variant &var, uint32_t p_sig);
 
 	bool _call_method(JavaObject *p_instance, const StringName &p_method, const Variant **p_args, int p_argcount, Callable::CallError &r_error, Variant &ret);
 

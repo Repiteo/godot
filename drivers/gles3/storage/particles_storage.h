@@ -375,20 +375,20 @@ public:
 	virtual void update_particles() override;
 	virtual bool particles_is_inactive(RID p_particles) const override;
 
-	_FORCE_INLINE_ RS::ParticlesMode particles_get_mode(RID p_particles) {
+	GD_FORCE_INLINE RS::ParticlesMode particles_get_mode(RID p_particles) {
 		Particles *particles = particles_owner.get_or_null(p_particles);
 		ERR_FAIL_NULL_V(particles, RS::PARTICLES_MODE_2D);
 		return particles->mode;
 	}
 
-	_FORCE_INLINE_ uint32_t particles_get_amount(RID p_particles) {
+	GD_FORCE_INLINE uint32_t particles_get_amount(RID p_particles) {
 		Particles *particles = particles_owner.get_or_null(p_particles);
 		ERR_FAIL_NULL_V(particles, 0);
 
 		return particles->amount;
 	}
 
-	_FORCE_INLINE_ GLuint particles_get_gl_buffer(RID p_particles) {
+	GD_FORCE_INLINE GLuint particles_get_gl_buffer(RID p_particles) {
 		Particles *particles = particles_owner.get_or_null(p_particles);
 
 		if ((particles->draw_order == RS::PARTICLES_DRAW_ORDER_VIEW_DEPTH || particles->draw_order == RS::PARTICLES_DRAW_ORDER_REVERSE_LIFETIME) && particles->sort_buffer_filled) {
@@ -397,14 +397,14 @@ public:
 		return particles->back_instance_buffer;
 	}
 
-	_FORCE_INLINE_ bool particles_has_collision(RID p_particles) {
+	GD_FORCE_INLINE bool particles_has_collision(RID p_particles) {
 		Particles *particles = particles_owner.get_or_null(p_particles);
 		ERR_FAIL_NULL_V(particles, false);
 
 		return particles->has_collision_cache;
 	}
 
-	_FORCE_INLINE_ uint32_t particles_is_using_local_coords(RID p_particles) {
+	GD_FORCE_INLINE uint32_t particles_is_using_local_coords(RID p_particles) {
 		Particles *particles = particles_owner.get_or_null(p_particles);
 		ERR_FAIL_NULL_V(particles, false);
 
@@ -437,7 +437,7 @@ public:
 	virtual uint32_t particles_collision_get_height_field_mask(RID p_particles_collision) const override;
 	virtual void particles_collision_set_height_field_mask(RID p_particles_collision, uint32_t p_heightfield_mask) override;
 
-	_FORCE_INLINE_ Size2i particles_collision_get_heightfield_size(RID p_particles_collision) const {
+	GD_FORCE_INLINE Size2i particles_collision_get_heightfield_size(RID p_particles_collision) const {
 		ParticlesCollision *particles_collision = particles_collision_owner.get_or_null(p_particles_collision);
 		ERR_FAIL_NULL_V(particles_collision, Size2i());
 		ERR_FAIL_COND_V(particles_collision->type != RS::PARTICLES_COLLISION_TYPE_HEIGHTFIELD_COLLIDE, Size2i());

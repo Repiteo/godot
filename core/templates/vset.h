@@ -37,7 +37,7 @@ template <typename T>
 class VSet {
 	Vector<T> _data;
 
-	_FORCE_INLINE_ int _find(const T &p_val, bool &r_exact) const {
+	GD_FORCE_INLINE int _find(const T &p_val, bool &r_exact) const {
 		r_exact = false;
 		if (_data.is_empty()) {
 			return 0;
@@ -74,7 +74,7 @@ class VSet {
 		return middle;
 	}
 
-	_FORCE_INLINE_ int _find_exact(const T &p_val) const {
+	GD_FORCE_INLINE int _find_exact(const T &p_val) const {
 		if (_data.is_empty()) {
 			return -1;
 		}
@@ -125,9 +125,9 @@ public:
 		return _find_exact(p_val);
 	}
 
-	_FORCE_INLINE_ bool is_empty() const { return _data.is_empty(); }
+	GD_FORCE_INLINE bool is_empty() const { return _data.is_empty(); }
 
-	_FORCE_INLINE_ int size() const { return _data.size(); }
+	GD_FORCE_INLINE int size() const { return _data.size(); }
 
 	inline T &operator[](int p_index) {
 		return _data.write[p_index];
@@ -137,7 +137,7 @@ public:
 		return _data[p_index];
 	}
 
-	_FORCE_INLINE_ VSet() {}
-	_FORCE_INLINE_ VSet(std::initializer_list<T> p_init) :
+	GD_FORCE_INLINE VSet() {}
+	GD_FORCE_INLINE VSet(std::initializer_list<T> p_init) :
 			_data(p_init) {}
 };

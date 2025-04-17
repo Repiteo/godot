@@ -86,17 +86,17 @@ private:
 	static void release_main_thread() { caller_id = id_counter.increment(); }
 
 public:
-	_FORCE_INLINE_ static void yield() { pthread_yield_np(); }
+	GD_FORCE_INLINE static void yield() { pthread_yield_np(); }
 
-	_FORCE_INLINE_ ID get_id() const { return id; }
+	GD_FORCE_INLINE ID get_id() const { return id; }
 	// get the ID of the caller thread
-	_FORCE_INLINE_ static ID get_caller_id() {
+	GD_FORCE_INLINE static ID get_caller_id() {
 		return caller_id;
 	}
 	// get the ID of the main thread
-	_FORCE_INLINE_ static ID get_main_id() { return MAIN_ID; }
+	GD_FORCE_INLINE static ID get_main_id() { return MAIN_ID; }
 
-	_FORCE_INLINE_ static bool is_main_thread() { return caller_id == MAIN_ID; }
+	GD_FORCE_INLINE static bool is_main_thread() { return caller_id == MAIN_ID; }
 
 	static Error set_name(const String &p_name);
 

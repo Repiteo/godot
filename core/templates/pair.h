@@ -87,11 +87,11 @@ struct KeyValue {
 	V value;
 
 	void operator=(const KeyValue &p_kv) = delete;
-	_FORCE_INLINE_ KeyValue(const KeyValue &p_kv) :
+	GD_FORCE_INLINE KeyValue(const KeyValue &p_kv) :
 			key(p_kv.key),
 			value(p_kv.value) {
 	}
-	_FORCE_INLINE_ KeyValue(const K &p_key, const V &p_value) :
+	GD_FORCE_INLINE KeyValue(const K &p_key, const V &p_value) :
 			key(p_key),
 			value(p_value) {
 	}

@@ -50,7 +50,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	_FORCE_INLINE_ const StringName &get_name() const { return name; }
+	GD_FORCE_INLINE const StringName &get_name() const { return name; }
 	Variant _new();
 	Object *instantiate();
 	virtual Variant callp(const StringName &p_method, const Variant **p_args, int p_argcount, Callable::CallError &r_error) override;
@@ -235,11 +235,11 @@ public:
 #endif
 
 	static String canonicalize_path(const String &p_path);
-	_FORCE_INLINE_ static bool is_canonically_equal_paths(const String &p_path_a, const String &p_path_b) {
+	GD_FORCE_INLINE static bool is_canonically_equal_paths(const String &p_path_a, const String &p_path_b) {
 		return canonicalize_path(p_path_a) == canonicalize_path(p_path_b);
 	}
 
-	_FORCE_INLINE_ StringName get_local_name() const { return local_name; }
+	GD_FORCE_INLINE StringName get_local_name() const { return local_name; }
 
 	void clear(GDScript::ClearData *p_clear_data = nullptr);
 
@@ -265,12 +265,12 @@ public:
 	}
 	const Ref<GDScriptNativeClass> &get_native() const { return native; }
 
-	_FORCE_INLINE_ const HashMap<StringName, GDScriptFunction *> &get_member_functions() const { return member_functions; }
-	_FORCE_INLINE_ const HashMap<GDScriptFunction *, LambdaInfo> &get_lambda_info() const { return lambda_info; }
+	GD_FORCE_INLINE const HashMap<StringName, GDScriptFunction *> &get_member_functions() const { return member_functions; }
+	GD_FORCE_INLINE const HashMap<GDScriptFunction *, LambdaInfo> &get_lambda_info() const { return lambda_info; }
 
-	_FORCE_INLINE_ const GDScriptFunction *get_implicit_initializer() const { return implicit_initializer; }
-	_FORCE_INLINE_ const GDScriptFunction *get_implicit_ready() const { return implicit_ready; }
-	_FORCE_INLINE_ const GDScriptFunction *get_static_initializer() const { return static_initializer; }
+	GD_FORCE_INLINE const GDScriptFunction *get_implicit_initializer() const { return implicit_initializer; }
+	GD_FORCE_INLINE const GDScriptFunction *get_implicit_ready() const { return implicit_ready; }
+	GD_FORCE_INLINE const GDScriptFunction *get_static_initializer() const { return static_initializer; }
 
 	RBSet<GDScript *> get_dependencies();
 	HashMap<GDScript *, RBSet<GDScript *>> get_all_dependencies();
@@ -489,7 +489,7 @@ public:
 	bool debug_break(const String &p_error, bool p_allow_continue = true);
 	bool debug_break_parse(const String &p_file, int p_line, const String &p_error);
 
-	_FORCE_INLINE_ void enter_function(GDScriptInstance *p_instance, GDScriptFunction *p_function, Variant *p_stack, int *p_ip, int *p_line) {
+	GD_FORCE_INLINE void enter_function(GDScriptInstance *p_instance, GDScriptFunction *p_function, Variant *p_stack, int *p_ip, int *p_line) {
 		if (unlikely(_call_stack.levels == nullptr)) {
 			_call_stack.levels = memnew_arr(CallLevel, _debug_max_call_stack + 1);
 		}
@@ -513,7 +513,7 @@ public:
 		_call_stack.stack_pos++;
 	}
 
-	_FORCE_INLINE_ void exit_function() {
+	GD_FORCE_INLINE void exit_function() {
 		if (EngineDebugger::get_script_debugger()->get_lines_left() > 0 && EngineDebugger::get_script_debugger()->get_depth() >= 0) {
 			EngineDebugger::get_script_debugger()->set_depth(EngineDebugger::get_script_debugger()->get_depth() - 1);
 		}
@@ -554,15 +554,15 @@ public:
 
 	} strings;
 
-	_FORCE_INLINE_ int get_global_array_size() const { return global_array.size(); }
-	_FORCE_INLINE_ Variant *get_global_array() { return _global_array; }
-	_FORCE_INLINE_ const HashMap<StringName, int> &get_global_map() const { return globals; }
-	_FORCE_INLINE_ const HashMap<StringName, Variant> &get_named_globals_map() const { return named_globals; }
+	GD_FORCE_INLINE int get_global_array_size() const { return global_array.size(); }
+	GD_FORCE_INLINE Variant *get_global_array() { return _global_array; }
+	GD_FORCE_INLINE const HashMap<StringName, int> &get_global_map() const { return globals; }
+	GD_FORCE_INLINE const HashMap<StringName, Variant> &get_named_globals_map() const { return named_globals; }
 	// These two functions should be used when behavior needs to be consistent between in-editor and running the scene
 	bool has_any_global_constant(const StringName &p_name) { return named_globals.has(p_name) || globals.has(p_name); }
 	Variant get_any_global_constant(const StringName &p_name);
 
-	_FORCE_INLINE_ static GDScriptLanguage *get_singleton() { return singleton; }
+	GD_FORCE_INLINE static GDScriptLanguage *get_singleton() { return singleton; }
 
 	virtual String get_name() const override;
 

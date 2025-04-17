@@ -120,7 +120,7 @@ private:
 	mutable Transform2D global_transform;
 	mutable MTFlag global_invalid;
 
-	_FORCE_INLINE_ bool _is_global_invalid() const { return is_group_processing() ? global_invalid.mt.is_set() : global_invalid.st; }
+	GD_FORCE_INLINE bool _is_global_invalid() const { return is_group_processing() ? global_invalid.mt.is_set() : global_invalid.st; }
 	void _set_global_invalid(bool p_invalid) const;
 
 	void _top_level_raise_self();
@@ -160,7 +160,7 @@ protected:
 	virtual void _update_self_texture_repeat(RS::CanvasItemTextureRepeat p_texture_repeat);
 	virtual void _update_self_texture_filter(RS::CanvasItemTextureFilter p_texture_filter);
 
-	_FORCE_INLINE_ void _notify_transform() {
+	GD_FORCE_INLINE void _notify_transform() {
 		_notify_transform(this);
 		if (is_inside_tree() && !block_transform_notify && notify_local_transform) {
 			notification(NOTIFICATION_LOCAL_TRANSFORM_CHANGED);
@@ -191,7 +191,7 @@ protected:
 
 	void _validate_property(PropertyInfo &p_property) const;
 
-	_FORCE_INLINE_ void set_hide_clip_children(bool p_value) { hide_clip_children = p_value; }
+	GD_FORCE_INLINE void set_hide_clip_children(bool p_value) { hide_clip_children = p_value; }
 
 	GDVIRTUAL0(_draw)
 
@@ -351,7 +351,7 @@ public:
 	virtual Transform2D get_screen_transform() const;
 
 	CanvasItem *get_top_level() const;
-	_FORCE_INLINE_ RID get_canvas_item() const {
+	GD_FORCE_INLINE RID get_canvas_item() const {
 		return canvas_item;
 	}
 

@@ -47,7 +47,7 @@
 
 template <typename T>
 struct VariantCaster {
-	static _FORCE_INLINE_ T cast(const Variant &p_variant) {
+	static GD_FORCE_INLINE T cast(const Variant &p_variant) {
 		using TStripped = std::remove_pointer_t<T>;
 		if constexpr (std::is_base_of_v<Object, TStripped>) {
 			return Object::cast_to<TStripped>(p_variant);
@@ -59,7 +59,7 @@ struct VariantCaster {
 
 template <typename T>
 struct VariantCaster<T &> {
-	static _FORCE_INLINE_ T cast(const Variant &p_variant) {
+	static GD_FORCE_INLINE T cast(const Variant &p_variant) {
 		using TStripped = std::remove_pointer_t<T>;
 		if constexpr (std::is_base_of_v<Object, TStripped>) {
 			return Object::cast_to<TStripped>(p_variant);
@@ -71,7 +71,7 @@ struct VariantCaster<T &> {
 
 template <typename T>
 struct VariantCaster<const T &> {
-	static _FORCE_INLINE_ T cast(const Variant &p_variant) {
+	static GD_FORCE_INLINE T cast(const Variant &p_variant) {
 		using TStripped = std::remove_pointer_t<T>;
 		if constexpr (std::is_base_of_v<Object, TStripped>) {
 			return Object::cast_to<TStripped>(p_variant);
@@ -125,25 +125,25 @@ VARIANT_ENUM_CAST(KeyLocation);
 
 template <>
 struct VariantCaster<char32_t> {
-	static _FORCE_INLINE_ char32_t cast(const Variant &p_variant) {
+	static GD_FORCE_INLINE char32_t cast(const Variant &p_variant) {
 		return (char32_t)p_variant.operator int();
 	}
 };
 
 template <>
 struct PtrToArg<char32_t> {
-	_FORCE_INLINE_ static char32_t convert(const void *p_ptr) {
+	GD_FORCE_INLINE static char32_t convert(const void *p_ptr) {
 		return char32_t(*reinterpret_cast<const int64_t *>(p_ptr));
 	}
 	typedef int64_t EncodeT;
-	_FORCE_INLINE_ static void encode(char32_t p_val, const void *p_ptr) {
+	GD_FORCE_INLINE static void encode(char32_t p_val, const void *p_ptr) {
 		*(int64_t *)p_ptr = p_val;
 	}
 };
 
 template <typename T>
 struct VariantObjectClassChecker {
-	static _FORCE_INLINE_ bool check(const Variant &p_variant) {
+	static GD_FORCE_INLINE bool check(const Variant &p_variant) {
 		using TStripped = std::remove_pointer_t<T>;
 		if constexpr (std::is_base_of_v<Object, TStripped>) {
 			Object *obj = p_variant;
@@ -159,7 +159,7 @@ class Ref;
 
 template <typename T>
 struct VariantObjectClassChecker<const Ref<T> &> {
-	static _FORCE_INLINE_ bool check(const Variant &p_variant) {
+	static GD_FORCE_INLINE bool check(const Variant &p_variant) {
 		Object *obj = p_variant;
 		const Ref<T> node = p_variant;
 		return node.ptr() || !obj;
@@ -170,7 +170,7 @@ struct VariantObjectClassChecker<const Ref<T> &> {
 
 template <typename T>
 struct VariantCasterAndValidate {
-	static _FORCE_INLINE_ T cast(const Variant **p_args, uint32_t p_arg_idx, Callable::CallError &r_error) {
+	static GD_FORCE_INLINE T cast(const Variant **p_args, uint32_t p_arg_idx, Callable::CallError &r_error) {
 		Variant::Type argtype = GetTypeInfo<T>::VARIANT_TYPE;
 		if (!Variant::can_convert_strict(p_args[p_arg_idx]->get_type(), argtype) ||
 				!VariantObjectClassChecker<T>::check(*p_args[p_arg_idx])) {
@@ -185,7 +185,7 @@ struct VariantCasterAndValidate {
 
 template <typename T>
 struct VariantCasterAndValidate<T &> {
-	static _FORCE_INLINE_ T cast(const Variant **p_args, uint32_t p_arg_idx, Callable::CallError &r_error) {
+	static GD_FORCE_INLINE T cast(const Variant **p_args, uint32_t p_arg_idx, Callable::CallError &r_error) {
 		Variant::Type argtype = GetTypeInfo<T>::VARIANT_TYPE;
 		if (!Variant::can_convert_strict(p_args[p_arg_idx]->get_type(), argtype) ||
 				!VariantObjectClassChecker<T>::check(*p_args[p_arg_idx])) {
@@ -200,7 +200,7 @@ struct VariantCasterAndValidate<T &> {
 
 template <typename T>
 struct VariantCasterAndValidate<const T &> {
-	static _FORCE_INLINE_ T cast(const Variant **p_args, uint32_t p_arg_idx, Callable::CallError &r_error) {
+	static GD_FORCE_INLINE T cast(const Variant **p_args, uint32_t p_arg_idx, Callable::CallError &r_error) {
 		Variant::Type argtype = GetTypeInfo<T>::VARIANT_TYPE;
 		if (!Variant::can_convert_strict(p_args[p_arg_idx]->get_type(), argtype) ||
 				!VariantObjectClassChecker<T>::check(*p_args[p_arg_idx])) {

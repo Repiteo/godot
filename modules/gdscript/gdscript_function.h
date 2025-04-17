@@ -551,7 +551,7 @@ private:
 	} profile;
 #endif
 
-	_FORCE_INLINE_ String _get_call_error(const String &p_where, const Variant **p_argptrs, const Variant &p_ret, const Callable::CallError &p_err) const;
+	GD_FORCE_INLINE String _get_call_error(const String &p_where, const Variant **p_argptrs, const Variant &p_ret, const Callable::CallError &p_err) const;
 	Variant _get_default_variant_for_data_type(const GDScriptDataType &p_data_type);
 
 public:
@@ -573,14 +573,14 @@ public:
 		Variant result;
 	};
 
-	_FORCE_INLINE_ StringName get_name() const { return name; }
-	_FORCE_INLINE_ StringName get_source() const { return source; }
-	_FORCE_INLINE_ GDScript *get_script() const { return _script; }
-	_FORCE_INLINE_ bool is_static() const { return _static; }
-	_FORCE_INLINE_ MethodInfo get_method_info() const { return method_info; }
-	_FORCE_INLINE_ int get_argument_count() const { return _argument_count; }
-	_FORCE_INLINE_ Variant get_rpc_config() const { return rpc_config; }
-	_FORCE_INLINE_ int get_max_stack_size() const { return _stack_size; }
+	GD_FORCE_INLINE StringName get_name() const { return name; }
+	GD_FORCE_INLINE StringName get_source() const { return source; }
+	GD_FORCE_INLINE GDScript *get_script() const { return _script; }
+	GD_FORCE_INLINE bool is_static() const { return _static; }
+	GD_FORCE_INLINE MethodInfo get_method_info() const { return method_info; }
+	GD_FORCE_INLINE int get_argument_count() const { return _argument_count; }
+	GD_FORCE_INLINE Variant get_rpc_config() const { return rpc_config; }
+	GD_FORCE_INLINE int get_max_stack_size() const { return _stack_size; }
 
 	Variant get_constant(int p_idx) const;
 	StringName get_global_name(int p_idx) const;

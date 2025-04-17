@@ -56,7 +56,7 @@ class UniformSetCacheRD : public Object {
 
 	Cache *hash_table[HASH_TABLE_SIZE] = {};
 
-	static _FORCE_INLINE_ uint32_t _hash_uniform(const RD::Uniform &u, uint32_t h) {
+	static GD_FORCE_INLINE uint32_t _hash_uniform(const RD::Uniform &u, uint32_t h) {
 		h = hash_murmur3_one_32(u.uniform_type, h);
 		h = hash_murmur3_one_32(u.binding, h);
 		uint32_t rsize = u.get_id_count();
@@ -66,7 +66,7 @@ class UniformSetCacheRD : public Object {
 		return hash_fmix32(h);
 	}
 
-	static _FORCE_INLINE_ bool _compare_uniform(const RD::Uniform &a, const RD::Uniform &b) {
+	static GD_FORCE_INLINE bool _compare_uniform(const RD::Uniform &a, const RD::Uniform &b) {
 		if (a.binding != b.binding) {
 			return false;
 		}
@@ -85,7 +85,7 @@ class UniformSetCacheRD : public Object {
 		return true;
 	}
 
-	_FORCE_INLINE_ uint32_t _hash_args(uint32_t h, const RD::Uniform &arg) {
+	GD_FORCE_INLINE uint32_t _hash_args(uint32_t h, const RD::Uniform &arg) {
 		return _hash_uniform(arg, h);
 	}
 
@@ -95,24 +95,24 @@ class UniformSetCacheRD : public Object {
 		return _hash_args(h, args...);
 	}
 
-	_FORCE_INLINE_ bool _compare_args(uint32_t idx, const LocalVector<RD::Uniform> &uniforms, const RD::Uniform &arg) {
+	GD_FORCE_INLINE bool _compare_args(uint32_t idx, const LocalVector<RD::Uniform> &uniforms, const RD::Uniform &arg) {
 		return _compare_uniform(uniforms[idx], arg);
 	}
 
 	template <typename... Args>
-	_FORCE_INLINE_ bool _compare_args(uint32_t idx, const LocalVector<RD::Uniform> &uniforms, const RD::Uniform &arg, Args... args) {
+	GD_FORCE_INLINE bool _compare_args(uint32_t idx, const LocalVector<RD::Uniform> &uniforms, const RD::Uniform &arg, Args... args) {
 		if (!_compare_uniform(uniforms[idx], arg)) {
 			return false;
 		}
 		return _compare_args(idx + 1, uniforms, args...);
 	}
 
-	_FORCE_INLINE_ void _create_args(Vector<RD::Uniform> &uniforms, const RD::Uniform &arg) {
+	GD_FORCE_INLINE void _create_args(Vector<RD::Uniform> &uniforms, const RD::Uniform &arg) {
 		uniforms.push_back(arg);
 	}
 
 	template <typename... Args>
-	_FORCE_INLINE_ void _create_args(Vector<RD::Uniform> &uniforms, const RD::Uniform &arg, Args... args) {
+	GD_FORCE_INLINE void _create_args(Vector<RD::Uniform> &uniforms, const RD::Uniform &arg, Args... args) {
 		uniforms.push_back(arg);
 		_create_args(uniforms, args...);
 	}

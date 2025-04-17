@@ -40,7 +40,7 @@ class GPUParticlesCollision3D : public VisualInstance3D {
 	RID collision;
 
 protected:
-	_FORCE_INLINE_ RID _get_collision() { return collision; }
+	GD_FORCE_INLINE RID _get_collision() { return collision; }
 	static void _bind_methods();
 
 	GPUParticlesCollision3D(RS::ParticlesCollisionType p_type);
@@ -277,7 +277,7 @@ class GPUParticlesAttractor3D : public VisualInstance3D {
 	real_t directionality = 0.0;
 
 protected:
-	_FORCE_INLINE_ RID _get_collision() { return collision; }
+	GD_FORCE_INLINE RID _get_collision() { return collision; }
 	static void _bind_methods();
 
 	GPUParticlesAttractor3D(RS::ParticlesCollisionType p_type);

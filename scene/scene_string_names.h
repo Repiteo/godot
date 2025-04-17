@@ -43,7 +43,7 @@ public:
 		singleton = nullptr;
 	}
 
-	_FORCE_INLINE_ static SceneStringNames *get_singleton() { return singleton; }
+	GD_FORCE_INLINE static SceneStringNames *get_singleton() { return singleton; }
 
 	const StringName resized = StaticCString::create("resized");
 	const StringName draw = StaticCString::create("draw");

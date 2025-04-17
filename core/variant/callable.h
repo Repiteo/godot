@@ -85,13 +85,13 @@ public:
 
 	Error rpcp(int p_id, const Variant **p_arguments, int p_argcount, CallError &r_call_error) const;
 
-	_FORCE_INLINE_ bool is_null() const {
+	GD_FORCE_INLINE bool is_null() const {
 		return method == StringName() && object == 0;
 	}
-	_FORCE_INLINE_ bool is_custom() const {
+	GD_FORCE_INLINE bool is_custom() const {
 		return method == StringName() && custom != nullptr;
 	}
-	_FORCE_INLINE_ bool is_standard() const {
+	GD_FORCE_INLINE bool is_standard() const {
 		return method != StringName();
 	}
 	bool is_valid() const;
@@ -179,7 +179,7 @@ class Signal {
 	ObjectID object;
 
 public:
-	_FORCE_INLINE_ bool is_null() const {
+	GD_FORCE_INLINE bool is_null() const {
 		return object.is_null() && name == StringName();
 	}
 	Object *get_object() const;

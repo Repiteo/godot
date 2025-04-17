@@ -59,7 +59,7 @@ protected:
 
 	static void _bind_methods();
 
-	_FORCE_INLINE_ bool is_configured() const { return configured; }
+	GD_FORCE_INLINE bool is_configured() const { return configured; }
 
 public:
 	virtual PackedStringArray get_configuration_warnings() const override;

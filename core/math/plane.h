@@ -39,19 +39,19 @@ struct [[nodiscard]] Plane {
 	real_t d = 0;
 
 	void set_normal(const Vector3 &p_normal);
-	_FORCE_INLINE_ Vector3 get_normal() const { return normal; }
+	GD_FORCE_INLINE Vector3 get_normal() const { return normal; }
 
 	void normalize();
 	Plane normalized() const;
 
 	/* Plane-Point operations */
 
-	_FORCE_INLINE_ Vector3 get_center() const { return normal * d; }
+	GD_FORCE_INLINE Vector3 get_center() const { return normal * d; }
 	Vector3 get_any_perpendicular_normal() const;
 
-	_FORCE_INLINE_ bool is_point_over(const Vector3 &p_point) const; ///< Point is over plane
-	_FORCE_INLINE_ real_t distance_to(const Vector3 &p_point) const;
-	_FORCE_INLINE_ bool has_point(const Vector3 &p_point, real_t p_tolerance = CMP_EPSILON) const;
+	GD_FORCE_INLINE bool is_point_over(const Vector3 &p_point) const; ///< Point is over plane
+	GD_FORCE_INLINE real_t distance_to(const Vector3 &p_point) const;
+	GD_FORCE_INLINE bool has_point(const Vector3 &p_point, real_t p_tolerance = CMP_EPSILON) const;
 
 	/* intersections */
 
@@ -64,7 +64,7 @@ struct [[nodiscard]] Plane {
 	Variant intersects_ray_bind(const Vector3 &p_from, const Vector3 &p_dir) const;
 	Variant intersects_segment_bind(const Vector3 &p_begin, const Vector3 &p_end) const;
 
-	_FORCE_INLINE_ Vector3 project(const Vector3 &p_point) const {
+	GD_FORCE_INLINE Vector3 project(const Vector3 &p_point) const {
 		return p_point - normal * distance_to(p_point);
 	}
 
@@ -86,8 +86,8 @@ struct [[nodiscard]] Plane {
 			d(p_d) {}
 
 	constexpr Plane(const Vector3 &p_normal, real_t p_d = 0.0);
-	_FORCE_INLINE_ Plane(const Vector3 &p_normal, const Vector3 &p_point);
-	_FORCE_INLINE_ Plane(const Vector3 &p_point1, const Vector3 &p_point2, const Vector3 &p_point3, ClockDirection p_dir = CLOCKWISE);
+	GD_FORCE_INLINE Plane(const Vector3 &p_normal, const Vector3 &p_point);
+	GD_FORCE_INLINE Plane(const Vector3 &p_point1, const Vector3 &p_point2, const Vector3 &p_point3, ClockDirection p_dir = CLOCKWISE);
 };
 
 bool Plane::is_point_over(const Vector3 &p_point) const {

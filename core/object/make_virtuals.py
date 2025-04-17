@@ -16,7 +16,7 @@ script_has_method = """ScriptInstance *_script_instance = ((Object *)(this))->ge
 
 proto = """#define GDVIRTUAL$VER($ALIAS $RET m_name $ARG)\\
 	mutable void *_gdvirtual_##$VARNAME = nullptr;\\
-	_FORCE_INLINE_ bool _gdvirtual_##$VARNAME##_call($CALLARGS) $CONST {\\
+	GD_FORCE_INLINE bool _gdvirtual_##$VARNAME##_call($CALLARGS) $CONST {\\
 		static const StringName _gdvirtual_##$VARNAME##_sn = _scs_create(#m_name, true);\\
 		$SCRIPTCALL\\
 		if (_get_extension()) {\\
@@ -52,7 +52,7 @@ proto = """#define GDVIRTUAL$VER($ALIAS $RET m_name $ARG)\\
 		$RVOID\\
 		return false;\\
 	}\\
-	_FORCE_INLINE_ bool _gdvirtual_##$VARNAME##_overridden() const {\\
+	GD_FORCE_INLINE bool _gdvirtual_##$VARNAME##_overridden() const {\\
 		static const StringName _gdvirtual_##$VARNAME##_sn = _scs_create(#m_name, true);\\
 		$SCRIPTHASMETHOD\\
 		if (_get_extension()) {\\
@@ -77,7 +77,7 @@ proto = """#define GDVIRTUAL$VER($ALIAS $RET m_name $ARG)\\
 		}\\
 		return false;\\
 	}\\
-	_FORCE_INLINE_ static MethodInfo _gdvirtual_##$VARNAME##_get_method_info() {\\
+	GD_FORCE_INLINE static MethodInfo _gdvirtual_##$VARNAME##_get_method_info() {\\
 		MethodInfo method_info;\\
 		method_info.name = #m_name;\\
 		method_info.flags = $METHOD_FLAGS;\\

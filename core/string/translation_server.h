@@ -95,12 +95,12 @@ class TranslationServer : public Object {
 	void init_locale_info();
 
 public:
-	_FORCE_INLINE_ static TranslationServer *get_singleton() { return singleton; }
+	GD_FORCE_INLINE static TranslationServer *get_singleton() { return singleton; }
 
 	Ref<TranslationDomain> get_editor_domain() const { return editor_domain; }
 
 	void set_enabled(bool p_enabled) { enabled = p_enabled; }
-	_FORCE_INLINE_ bool is_enabled() const { return enabled; }
+	GD_FORCE_INLINE bool is_enabled() const { return enabled; }
 
 	void set_locale(const String &p_locale);
 	String get_locale() const;
