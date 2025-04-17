@@ -72,3 +72,6 @@ e06d83860d798b6766b23d6eae48557387a7db85
 
 # Style: Replace header guards with `#pragma once`
 324512e11c1b7663c3cf47bec6ddbe65c6b8db2b
+
+# Style: Replace deprecated macros
+d0c131d0c967c73d8bbf30de0f100a7a40cc98a2
