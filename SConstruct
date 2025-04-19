@@ -876,11 +876,15 @@ if env.msvc and not methods.using_clang(env):  # MSVC
             "/wd4625",  # 'type': copy constructor was implicitly defined as deleted.
             "/wd4626",  # 'type': move constructor was implicitly defined as deleted.
             "/wd4668",  # 'symbol' is not defined as a preprocessor macro, replacing with '0' for 'directives'.
+            "/wd4710",  # 'function' : function not inlined.  # NEW
+            "/wd4711",  # function 'function' selected for inline expansion.  # NEW
+            "/wd4755",  # Conversion rules for arithmetic operations in the comparison at description(number) mean that one branch cannot be executed in an inlined function. Cast 'type' to 'type' (or similar type of number bytes).  # NEW
             "/wd4774",  # 'string' : format string expected in argument number is not a string literal.
             "/wd4777",  # 'description' : format string 'string' requires an argument of type 'type', but variadic argument number has type 'type'.
             "/wd4800",  # Implicit conversion from 'type' to bool. Possible information loss.
             "/wd4866",  # 'file(line_number)' compiler may not enforce left-to-right evaluation order for call to 'operator_name'.
             "/wd4868",  # 'file(line_number)' compiler may not enforce left-to-right evaluation order in braced initializer list.
+            "/wd4883",  # 'function name': function size suppresses optimizations.  # NEW
             "/wd4946",  # `reinterpret_cast` used between related classes: 'class1' and 'class2'.
             "/wd5026",  # 'type': assignment operator was implicitly defined as deleted.
             "/wd5027",  # 'type': move assignment operator was implicitly defined as deleted.
@@ -937,6 +941,7 @@ else:  # GCC, Clang
     if env["warnings"] == "everything":
         # TODO: Determine which of these warnings should be addressed, if any.
         common_warnings += [
+            "-Wno-alloca",  # NEW
             "-Wno-anon-enum-enum-conversion",
             "-Wno-bitfield-enum-conversion",
             "-Wno-c++20-extensions",
@@ -966,6 +971,7 @@ else:  # GCC, Clang
             "-Wno-global-constructors",
             "-Wno-gnu-anonymous-struct",
             "-Wno-gnu-label-as-value",
+            "-Wno-gnu-zero-variadic-macro-arguments",  # NEW
             "-Wno-header-hygiene",
             "-Wno-implicit-float-conversion",
             "-Wno-implicit-int-conversion",
@@ -978,13 +984,19 @@ else:  # GCC, Clang
             "-Wno-nested-anon-types",
             "-Wno-nonportable-system-include-path",
             "-Wno-nullability-extension",
+            "-Wno-objc-missing-property-synthesis",  # NEW
+            "-Wno-objc-property-assign-on-object-type",  # NEW
             "-Wno-old-style-cast",
             "-Wno-overlength-strings",
+            "-Wno-padded",  # NEW
+            "-Wno-pedantic",  # NEW
             "-Wno-redundant-parens",
+            "-Wno-reserved-id-macro",  # NEW
             "-Wno-reserved-identifier",
             "-Wno-shadow-field",
             "-Wno-shadow",
             "-Wno-shift-sign-overflow",
+            "-Wno-shorten-64-to-32",  # NEW
             "-Wno-sign-conversion",
             "-Wno-signed-enum-bitfield",
             "-Wno-string-conversion",
@@ -996,6 +1008,7 @@ else:  # GCC, Clang
             "-Wno-undef",
             "-Wno-undefined-func-template",
             "-Wno-undefined-reinterpret-cast",
+            "-Wno-unknown-warning-option",  # NEW
             "-Wno-unreachable-code-break",
             "-Wno-unreachable-code-return",
             "-Wno-unreachable-code",
@@ -1003,10 +1016,11 @@ else:  # GCC, Clang
             "-Wno-unused-macros",
             "-Wno-unused-parameter",
             "-Wno-unused-template",
+            "-Wno-weak-vtables",  # NEW
             "-Wno-zero-as-null-pointer-constant",
         ]
         env["WARNLEVEL"] = "-Weverything"
-        env.AppendUnique(CCFLAGS=common_warnings)
+        env.AppendUnique(CCFLAGS=common_warnings + ["-ferror-limit=0"])
     elif env["warnings"] == "extra":
         env.AppendUnique(CCFLAGS=["-Wextra", "-Wwrite-strings", "-Wno-unused-parameter"] + common_warnings)
         env.AppendUnique(CXXFLAGS=["-Wctor-dtor-privacy", "-Wnon-virtual-dtor"])

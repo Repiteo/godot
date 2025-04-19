@@ -5,7 +5,7 @@ on:
 # Global Settings
 env:
   GODOT_CPP_BRANCH: 4.4
-  SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes strict_checks=yes "accesskit_sdk_path=${{ github.workspace }}/accesskit-c-0.15.1/"
+  SCONSFLAGS: verbose=yes warnings=everything werror=yes module_text_server_fb_enabled=yes strict_checks=yes "accesskit_sdk_path=${{ github.workspace }}/accesskit-c-0.15.1/"
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   TSAN_OPTIONS: suppressions=${{ github.workspace }}/misc/error_suppressions/tsan.txt

@@ -4,7 +4,7 @@ on:
 
 # Global Settings
 env:
-  SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes strict_checks=yes "accesskit_sdk_path=${{ github.workspace }}/accesskit-c-0.15.1/"
+  SCONSFLAGS: verbose=yes warnings=everything werror=yes module_text_server_fb_enabled=yes strict_checks=yes "accesskit_sdk_path=${{ github.workspace }}/accesskit-c-0.15.1/"
 
 jobs:
   build-macos:

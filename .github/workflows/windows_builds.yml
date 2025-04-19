@@ -5,7 +5,7 @@ on:
 # Global Settings
 # SCONS_CACHE for windows must be set in the build environment
 env:
-  SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes d3d12=yes strict_checks=yes "angle_libs=${{ github.workspace }}/" "accesskit_sdk_path=${{ github.workspace }}/accesskit-c-0.15.1/"
+  SCONSFLAGS: verbose=yes warnings=everything werror=yes module_text_server_fb_enabled=yes d3d12=yes strict_checks=yes "angle_libs=${{ github.workspace }}/" "accesskit_sdk_path=${{ github.workspace }}/accesskit-c-0.15.1/"
   SCONS_CACHE_MSVC_CONFIG: true
 
 jobs:
