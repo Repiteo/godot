@@ -760,12 +760,12 @@ protected:
 
 	virtual bool _uses_signal_mutex() const;
 
-#ifdef TOOLS_ENABLED
 	struct VirtualMethodTracker {
 		void **method;
 		VirtualMethodTracker *next;
 	};
 
+#ifdef TOOLS_ENABLED
 	mutable VirtualMethodTracker *virtual_method_list = nullptr;
 #endif
 

@@ -28,14 +28,28 @@ proto = """#define GDVIRTUAL$VER($ALIAS $RET m_name $ARG)\\
 					_gdvirtual_##$VARNAME = _get_extension()->get_virtual_call_data2(_get_extension()->class_userdata, &_gdvirtual_##$VARNAME##_sn, hash);\\
 				} else if (_get_extension()->get_virtual2) {\\
 					_gdvirtual_##$VARNAME = (void *)_get_extension()->get_virtual2(_get_extension()->class_userdata, &_gdvirtual_##$VARNAME##_sn, hash);\\
+				} else if constexpr (!GD_IS_DEFINED(DISABLE_DEPRECATED)) {\\
+					if ($COMPAT || ClassDB::get_virtual_method_compatibility_hashes(get_class_static(), _gdvirtual_##$VARNAME##_sn).size() == 0) {\\
+						if (_get_extension()->get_virtual_call_data && _get_extension()->call_virtual_with_data) {\\
+							_gdvirtual_##$VARNAME = _get_extension()->get_virtual_call_data(_get_extension()->class_userdata, &_gdvirtual_##$VARNAME##_sn);\\
+						} else if (_get_extension()->get_virtual) {\\
+							_gdvirtual_##$VARNAME = (void *)_get_extension()->get_virtual(_get_extension()->class_userdata, &_gdvirtual_##$VARNAME##_sn);\\
+						}\\
+					}\\
 				}\\
-				_GDVIRTUAL_GET_DEPRECATED(_gdvirtual_##$VARNAME, _gdvirtual_##$VARNAME##_sn, $COMPAT)\\
-				_GDVIRTUAL_TRACK(_gdvirtual_##$VARNAME);\\
+				if constexpr (GD_IS_DEFINED(TOOLS_ENABLED)) {\\
+					if (_get_extension()->reloadable) {\\
+						VirtualMethodTracker *tracker = memnew(VirtualMethodTracker);\\
+						tracker->method = (void **)&_gdvirtual_##$VARNAME;\\
+						tracker->next = virtual_method_list;\\
+						virtual_method_list = tracker;\\
+					}\\
+				}\\
 				if (_gdvirtual_##$VARNAME == nullptr) {\\
-					_gdvirtual_##$VARNAME = reinterpret_cast<void*>(_INVALID_GDVIRTUAL_FUNC_ADDR);\\
+					_gdvirtual_##$VARNAME = Internal::INVALID_GDVIRTUAL_PTR;\\
 				}\\
 			}\\
-			if (_gdvirtual_##$VARNAME != reinterpret_cast<void*>(_INVALID_GDVIRTUAL_FUNC_ADDR)) {\\
+			if (_gdvirtual_##$VARNAME != Internal::INVALID_GDVIRTUAL_PTR) {\\
 				$CALLPTRARGS\\
 				$CALLPTRRETDEF\\
 				if (_get_extension()->call_virtual_with_data) {\\
@@ -64,14 +78,28 @@ proto = """#define GDVIRTUAL$VER($ALIAS $RET m_name $ARG)\\
 					_gdvirtual_##$VARNAME = _get_extension()->get_virtual_call_data2(_get_extension()->class_userdata, &_gdvirtual_##$VARNAME##_sn, hash);\\
 				} else if (_get_extension()->get_virtual2) {\\
 					_gdvirtual_##$VARNAME = (void *)_get_extension()->get_virtual2(_get_extension()->class_userdata, &_gdvirtual_##$VARNAME##_sn, hash);\\
+				} else if constexpr (!GD_IS_DEFINED(DISABLE_DEPRECATED)) {\\
+					if ($COMPAT || ClassDB::get_virtual_method_compatibility_hashes(get_class_static(), _gdvirtual_##$VARNAME##_sn).size() == 0) {\\
+						if (_get_extension()->get_virtual_call_data && _get_extension()->call_virtual_with_data) {\\
+							_gdvirtual_##$VARNAME = _get_extension()->get_virtual_call_data(_get_extension()->class_userdata, &_gdvirtual_##$VARNAME##_sn);\\
+						} else if (_get_extension()->get_virtual) {\\
+							_gdvirtual_##$VARNAME = (void *)_get_extension()->get_virtual(_get_extension()->class_userdata, &_gdvirtual_##$VARNAME##_sn);\\
+						}\\
+					}\\
 				}\\
-				_GDVIRTUAL_GET_DEPRECATED(_gdvirtual_##$VARNAME, _gdvirtual_##$VARNAME##_sn, $COMPAT)\\
-				_GDVIRTUAL_TRACK(_gdvirtual_##$VARNAME);\\
+				if constexpr (GD_IS_DEFINED(TOOLS_ENABLED)) {\\
+					if (_get_extension()->reloadable) {\\
+						VirtualMethodTracker *tracker = memnew(VirtualMethodTracker);\\
+						tracker->method = (void **)&_gdvirtual_##$VARNAME;\\
+						tracker->next = virtual_method_list;\\
+						virtual_method_list = tracker;\\
+					}\\
+				}\\
 				if (_gdvirtual_##$VARNAME == nullptr) {\\
-					_gdvirtual_##$VARNAME = reinterpret_cast<void*>(_INVALID_GDVIRTUAL_FUNC_ADDR);\\
+					_gdvirtual_##$VARNAME = Internal::INVALID_GDVIRTUAL_PTR;\\
 				}\\
 			}\\
-			if (_gdvirtual_##$VARNAME != reinterpret_cast<void*>(_INVALID_GDVIRTUAL_FUNC_ADDR)) {\\
+			if (_gdvirtual_##$VARNAME != Internal::INVALID_GDVIRTUAL_PTR) {\\
 				return true;\\
 			}\\
 		}\\
@@ -219,32 +247,10 @@ def run(target, source, env):
 
 #include "core/object/script_instance.h"
 
-inline constexpr uintptr_t _INVALID_GDVIRTUAL_FUNC_ADDR = static_cast<uintptr_t>(-1);
-
-#ifdef TOOLS_ENABLED
-#define _GDVIRTUAL_TRACK(m_virtual)\\
-	if (_get_extension()->reloadable) {\\
-		VirtualMethodTracker *tracker = memnew(VirtualMethodTracker);\\
-		tracker->method = (void **)&m_virtual;\\
-		tracker->next = virtual_method_list;\\
-		virtual_method_list = tracker;\\
-	}
-#else
-#define _GDVIRTUAL_TRACK(m_virtual)
-#endif
-
-#ifndef DISABLE_DEPRECATED
-#define _GDVIRTUAL_GET_DEPRECATED(m_virtual, m_name_sn, m_compat)\\
-	else if (m_compat || ClassDB::get_virtual_method_compatibility_hashes(get_class_static(), m_name_sn).size() == 0) {\\
-		if (_get_extension()->get_virtual_call_data && _get_extension()->call_virtual_with_data) {\\
-			m_virtual = _get_extension()->get_virtual_call_data(_get_extension()->class_userdata, &m_name_sn);\\
-		} else if (_get_extension()->get_virtual) {\\
-			m_virtual = (void *)_get_extension()->get_virtual(_get_extension()->class_userdata, &m_name_sn);\\
-		}\\
-	}
-#else
-#define _GDVIRTUAL_GET_DEPRECATED(m_name, m_name_sn, m_compat)
-#endif
+namespace Internal {
+	inline constexpr size_t INVALID_GDVIRTUAL_VARIABLE = 0;
+	inline constexpr void *INVALID_GDVIRTUAL_PTR = static_cast<void *>(const_cast<size_t *>(&INVALID_GDVIRTUAL_VARIABLE));
+} // namespace Internal
 
 """
 
