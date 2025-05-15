@@ -838,7 +838,7 @@ void _physics_interpolation_warning(const char *p_function, const char *p_file, 
 	} else                                                                                                              \
 		((void)0)
 #else
-#define DEV_ASSERT(m_cond)
+#define DEV_ASSERT(m_cond) GODOT_ASSUME(m_cond)
 #endif
 
 #ifdef DEV_ENABLED
@@ -852,7 +852,7 @@ void _physics_interpolation_warning(const char *p_function, const char *p_file, 
 	} else                                                                                                               \
 		((void)0)
 #else
-#define DEV_CHECK_ONCE(m_cond)
+#define DEV_CHECK_ONCE(m_cond) GODOT_ASSUME(m_cond)
 #endif
 
 /**

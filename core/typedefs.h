@@ -446,6 +446,21 @@ inline constexpr bool is_zero_constructible_v = is_zero_constructible<T>::value;
 #define GODOT_MSVC_WARNING_PUSH_AND_IGNORE(m_warning)
 #endif
 
+// Assumption macros. If reachable, contents are treated as always valid. A false constant implies
+//  unreachable code; use with caution.
+#if defined(_MSC_VER)
+#define GODOT_ASSUME(m_condition) __assume(m_condition)
+#elif defined(__clang__)
+#define GODOT_ASSUME(m_condition)                    \
+	GODOT_CLANG_WARNING_PUSH_AND_IGNORE("-Wassume"); \
+	__builtin_assume(m_condition);                   \
+	GODOT_CLANG_WARNING_POP
+#elif defined(__GNUC__)
+#define GODOT_ASSUME(m_condition) __attribute__((assume(m_condition)))
+#else
+#define GODOT_ASSUME(m_condition) static_assert(true) // Force trailing semicolon.
+#endif
+
 template <typename T, typename = void>
 struct is_fully_defined : std::false_type {};
 
