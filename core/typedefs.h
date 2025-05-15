@@ -346,6 +346,17 @@ struct is_zero_constructible<const volatile T> : is_zero_constructible<T> {};
 template <typename T>
 inline constexpr bool is_zero_constructible_v = is_zero_constructible<T>::value;
 
+// Assumption macros. If reachable, contents are treated as always valid. A false constant implies unreachable code. Use with caution.
+#if defined(_MSC_VER)
+#define GODOT_ASSUME(m_condition) __assume(m_condition)
+#elif defined(__clang__)
+#define GODOT_ASSUME(m_condition) __builtin_assume(m_condition)
+#elif defined(__GNUC__)
+#define GODOT_ASSUME(m_condition) __attribute__((assume(m_condition)))
+#else
+#define GODOT_ASSUME(m_condition) static_assert(true) // Force trailing semicolon.
+#endif
+
 // Warning suppression helper macros.
 #if defined(__clang__)
 #define GODOT_CLANG_PRAGMA(m_content) _Pragma(#m_content)

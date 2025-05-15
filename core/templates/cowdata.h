@@ -40,10 +40,6 @@
 
 static_assert(std::is_trivially_destructible_v<std::atomic<uint64_t>>);
 
-GODOT_GCC_WARNING_PUSH
-GODOT_GCC_WARNING_IGNORE("-Wplacement-new") // Silence a false positive warning (see GH-52119).
-GODOT_GCC_WARNING_IGNORE("-Wmaybe-uninitialized") // False positive raised when using constexpr.
-
 template <typename T>
 class CowData {
 public:
@@ -193,18 +189,20 @@ public:
 	_FORCE_INLINE_ void set(Size p_index, const T &p_elem) {
 		ERR_FAIL_INDEX(p_index, size());
 		_copy_on_write();
+		GODOT_ASSUME(_ptr != nullptr);
 		_ptr[p_index] = p_elem;
 	}
 
 	_FORCE_INLINE_ T &get_m(Size p_index) {
 		CRASH_BAD_INDEX(p_index, size());
 		_copy_on_write();
+		GODOT_ASSUME(_ptr != nullptr);
 		return _ptr[p_index];
 	}
 
 	_FORCE_INLINE_ const T &get(Size p_index) const {
 		CRASH_BAD_INDEX(p_index, size());
-
+		GODOT_ASSUME(_ptr != nullptr);
 		return _ptr[p_index];
 	}
 
@@ -448,8 +446,6 @@ CowData<T>::CowData(std::initializer_list<T> p_init) {
 		set(i++, element);
 	}
 }
-
-GODOT_GCC_WARNING_POP
 
 // Zero-constructing CowData initializes _ptr to nullptr (and thus empty).
 template <typename T>

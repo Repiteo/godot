@@ -221,6 +221,8 @@ void String::append_utf32(const Span<char32_t> &p_cstr) {
 // p_length <= p_char strlen
 // p_char is a valid UTF32 string
 void String::copy_from_unchecked(const char32_t *p_char, const int p_length) {
+	GODOT_ASSUME(p_char != nullptr);
+	GODOT_ASSUME(p_length > 0);
 	resize(p_length + 1); // + 1 for \0
 	char32_t *dst = ptrw();
 	memcpy(dst, p_char, p_length * sizeof(char32_t));
