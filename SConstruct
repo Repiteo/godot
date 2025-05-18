@@ -161,10 +161,19 @@ opts = Variables(customs, ARGUMENTS)
 opts.Add((["platform", "p"], "Target platform (%s)" % "|".join(platform_list), ""))
 opts.Add(
     EnumVariable(
-        "target", "Compilation target", "editor", ["editor", "template_release", "template_debug"], ignorecase=2
+        ["target", "t"],
+        "Compilation target",
+        "editor",
+        ["editor", "template_release", "template_debug"],
+        {"release": "template_release", "debug": "template_debug"},
+        ignorecase=2,
     )
 )
-opts.Add(EnumVariable("arch", "CPU architecture", "auto", ["auto"] + architectures, architecture_aliases, ignorecase=2))
+opts.Add(
+    EnumVariable(
+        ["arch", "a"], "CPU architecture", "auto", ["auto"] + architectures, architecture_aliases, ignorecase=2
+    )
+)
 opts.Add(BoolVariable("dev_build", "Developer build with dev-only debugging code (DEV_ENABLED)", False))
 opts.Add(
     EnumVariable(
@@ -198,7 +207,7 @@ opts.Add(BoolVariable("vulkan", "Enable the vulkan rendering driver", True))
 opts.Add(BoolVariable("opengl3", "Enable the OpenGL/GLES3 rendering driver", True))
 opts.Add(BoolVariable("d3d12", "Enable the Direct3D 12 rendering driver on supported platforms", False))
 opts.Add(BoolVariable("metal", "Enable the Metal rendering driver on supported platforms (Apple arm64 only)", False))
-opts.Add(BoolVariable("use_volk", "Use the volk library to load the Vulkan loader dynamically", True))
+opts.Add(BoolVariable(["use_volk", "volk"], "Use the volk library to load the Vulkan loader dynamically", True))
 opts.Add(BoolVariable("disable_exceptions", "Force disabling exception handling code", True))
 opts.Add("custom_modules", "A list of comma-separated directory paths containing custom modules to build.", "")
 opts.Add(BoolVariable("custom_modules_recursive", "Detect custom modules recursively for each specified path.", True))
@@ -248,7 +257,11 @@ opts.Add(
     "Use this path as TLS certificates default for editor and Linux/BSD export templates (for package maintainers)",
     "",
 )
-opts.Add(BoolVariable("use_precise_math_checks", "Math checks use very precise epsilon (debug option)", False))
+opts.Add(
+    BoolVariable(
+        ["use_precise_math_checks", "precise_math_checks"], "Math checks use very precise epsilon (debug option)", False
+    )
+)
 opts.Add(BoolVariable("strict_checks", "Enforce stricter checks (debug option)", False))
 opts.Add(BoolVariable("scu_build", "Use single compilation unit build", False))
 opts.Add("scu_limit", "Max includes per SCU file when using scu_build (determines RAM use)", "0")
@@ -620,7 +633,7 @@ if env["dev_mode"]:
     env["tests"] = methods.get_cmdline_bool("tests", True)
     env["strict_checks"] = methods.get_cmdline_bool("strict_checks", True)
 if env["production"]:
-    env["use_static_cpp"] = methods.get_cmdline_bool("use_static_cpp", True)
+    env["use_static_cpp"] = methods.get_cmdline_bool("use_static_cpp", methods.get_cmdline_bool("static_cpp", True))
     env["debug_symbols"] = methods.get_cmdline_bool("debug_symbols", False)
     if env["platform"] == "android":
         env["swappy"] = methods.get_cmdline_bool("swappy", True)
