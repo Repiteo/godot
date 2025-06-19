@@ -440,7 +440,7 @@ void ParticlesStorage::particles_set_trails(RID p_particles, bool p_enable, doub
 	Particles *particles = particles_owner.get_or_null(p_particles);
 	ERR_FAIL_NULL(particles);
 	ERR_FAIL_COND(p_length < 0.01);
-	p_length = MIN(10.0, p_length);
+	p_length = Math::min(10.0, p_length);
 
 	particles->trails_enabled = p_enable;
 	particles->trail_lifetime = p_length;
@@ -674,7 +674,7 @@ AABB ParticlesStorage::particles_get_current_aabb(RID p_particles) {
 	for (int i = 0; i < particles->draw_passes.size(); i++) {
 		if (particles->draw_passes[i].is_valid()) {
 			AABB maabb = MeshStorage::get_singleton()->mesh_get_aabb(particles->draw_passes[i], RID());
-			longest_axis_size = MAX(maabb.get_longest_axis_size(), longest_axis_size);
+			longest_axis_size = Math::max(maabb.get_longest_axis_size(), longest_axis_size);
 		}
 	}
 
@@ -1267,7 +1267,7 @@ void ParticlesStorage::particles_set_view_axis(RID p_particles, const Vector3 &p
 	}
 
 	copy_push_constant.order_by_lifetime = (particles->draw_order == RS::PARTICLES_DRAW_ORDER_LIFETIME || particles->draw_order == RS::PARTICLES_DRAW_ORDER_REVERSE_LIFETIME);
-	copy_push_constant.lifetime_split = (MIN(int(particles->amount * particles->phase), particles->amount - 1) + 1) % particles->amount;
+	copy_push_constant.lifetime_split = (Math::min(int(particles->amount * particles->phase), particles->amount - 1) + 1) % particles->amount;
 	copy_push_constant.lifetime_reverse = particles->draw_order == RS::PARTICLES_DRAW_ORDER_REVERSE_LIFETIME;
 	copy_push_constant.motion_vectors_current_offset = particles->instance_motion_vectors_current_offset;
 
@@ -1477,7 +1477,7 @@ void ParticlesStorage::update_particles() {
 			int history_size = 1;
 			int trail_steps = 1;
 			if (particles->trails_enabled && particles->trail_bind_poses.size() > 1) {
-				history_size = MAX(1, int(particles->trail_lifetime * fixed_fps));
+				history_size = Math::max(1, int(particles->trail_lifetime * fixed_fps));
 				trail_steps = particles->trail_bind_poses.size();
 			}
 
@@ -1559,7 +1559,7 @@ void ParticlesStorage::update_particles() {
 			particles->speed_scale = tmp_scale;
 		}
 
-		double time_scale = MAX(particles->speed_scale, 0.0);
+		double time_scale = Math::max(particles->speed_scale, 0.0);
 
 		if (fixed_fps > 0) {
 			double frame_time = 1.0 / fixed_fps;
@@ -1636,7 +1636,7 @@ void ParticlesStorage::update_particles() {
 			}
 
 			copy_push_constant.order_by_lifetime = (particles->draw_order == RS::PARTICLES_DRAW_ORDER_LIFETIME || particles->draw_order == RS::PARTICLES_DRAW_ORDER_REVERSE_LIFETIME);
-			copy_push_constant.lifetime_split = (MIN(int(particles->amount * particles->phase), particles->amount - 1) + 1) % particles->amount;
+			copy_push_constant.lifetime_split = (Math::min(int(particles->amount * particles->phase), particles->amount - 1) + 1) % particles->amount;
 			copy_push_constant.lifetime_reverse = particles->draw_order == RS::PARTICLES_DRAW_ORDER_REVERSE_LIFETIME;
 			copy_push_constant.motion_vectors_current_offset = particles->instance_motion_vectors_current_offset;
 

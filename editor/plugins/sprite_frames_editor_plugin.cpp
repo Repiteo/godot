@@ -184,7 +184,7 @@ void SpriteFramesEditor::_sheet_preview_input(const Ref<InputEvent> &p_event) {
 				const int to = idx;
 
 				const int diff = Math::abs(to - from);
-				const int dir = SIGN(to - from);
+				const int dir = Math::sign(to - from);
 
 				for (int i = 0; i <= diff; i++) {
 					const int this_idx = from + i * dir;
@@ -312,7 +312,7 @@ void SpriteFramesEditor::_sheet_add_frames() {
 
 void SpriteFramesEditor::_sheet_zoom_on_position(float p_zoom, const Vector2 &p_position) {
 	const float old_zoom = sheet_zoom;
-	sheet_zoom = CLAMP(sheet_zoom * p_zoom, min_sheet_zoom, max_sheet_zoom);
+	sheet_zoom = Math::clamp(sheet_zoom * p_zoom, min_sheet_zoom, max_sheet_zoom);
 
 	const Size2 texture_size = split_sheet_preview->get_texture()->get_size();
 	split_sheet_preview->set_custom_minimum_size(texture_size * sheet_zoom);
@@ -333,7 +333,7 @@ void SpriteFramesEditor::_sheet_zoom_out() {
 
 void SpriteFramesEditor::_sheet_zoom_reset() {
 	// Default the zoom to match the editor scale, but don't dezoom on editor scales below 100% to prevent pixel art from looking bad.
-	sheet_zoom = MAX(1.0f, EDSCALE);
+	sheet_zoom = Math::max(1.0f, EDSCALE);
 	Size2 texture_size = split_sheet_preview->get_texture()->get_size();
 	split_sheet_preview->set_custom_minimum_size(texture_size * sheet_zoom);
 }
@@ -1433,7 +1433,7 @@ void SpriteFramesEditor::_zoom_out() {
 }
 
 void SpriteFramesEditor::_zoom_reset() {
-	thumbnail_zoom = MAX(1.0f, EDSCALE);
+	thumbnail_zoom = Math::max(1.0f, EDSCALE);
 	frame_list->set_fixed_column_width(thumbnail_default_size * 3 / 2);
 	frame_list->set_fixed_icon_size(Size2(thumbnail_default_size, thumbnail_default_size));
 }
@@ -2536,14 +2536,14 @@ SpriteFramesEditor::SpriteFramesEditor() {
 
 	// Config scale.
 	scale_ratio = 1.2f;
-	thumbnail_default_size = 96 * MAX(1, EDSCALE);
-	thumbnail_zoom = MAX(1.0f, EDSCALE);
-	max_thumbnail_zoom = 8.0f * MAX(1.0f, EDSCALE);
-	min_thumbnail_zoom = 0.1f * MAX(1.0f, EDSCALE);
+	thumbnail_default_size = 96 * Math::max(1, EDSCALE);
+	thumbnail_zoom = Math::max(1.0f, EDSCALE);
+	max_thumbnail_zoom = 8.0f * Math::max(1.0f, EDSCALE);
+	min_thumbnail_zoom = 0.1f * Math::max(1.0f, EDSCALE);
 	// Default the zoom to match the editor scale, but don't dezoom on editor scales below 100% to prevent pixel art from looking bad.
-	sheet_zoom = MAX(1.0f, EDSCALE);
-	max_sheet_zoom = 128.0f * MAX(1.0f, EDSCALE);
-	min_sheet_zoom = 0.01f * MAX(1.0f, EDSCALE);
+	sheet_zoom = Math::max(1.0f, EDSCALE);
+	max_sheet_zoom = 128.0f * Math::max(1.0f, EDSCALE);
+	min_sheet_zoom = 0.01f * Math::max(1.0f, EDSCALE);
 	_zoom_reset();
 
 	// Ensure the anim search box is wide enough by default.

@@ -204,7 +204,7 @@ void AudioStreamPlaybackPlaylist::start(double p_from_pos) {
 		stop();
 	}
 
-	p_from_pos = MAX(0, p_from_pos);
+	p_from_pos = Math::max(0, p_from_pos);
 
 	float pl_length = playlist->get_length();
 	if (p_from_pos >= pl_length) {
@@ -267,7 +267,7 @@ int AudioStreamPlaybackPlaylist::mix(AudioFrame *p_buffer, float p_rate_scale, i
 	int todo = p_frames;
 
 	while (todo) {
-		int to_mix = MIN(todo, MIX_BUFFER_SIZE);
+		int to_mix = Math::min(todo, MIX_BUFFER_SIZE);
 
 		playback[play_order[play_index]]->mix(mix_buffer, 1.0, to_mix);
 		if (fade_index != -1) {

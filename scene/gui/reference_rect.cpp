@@ -59,7 +59,7 @@ Color ReferenceRect::get_border_color() const {
 }
 
 void ReferenceRect::set_border_width(float p_width) {
-	float width_max = MAX(0.0, p_width);
+	float width_max = Math::max(0.0, p_width);
 	if (border_width == width_max) {
 		return;
 	}

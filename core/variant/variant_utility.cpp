@@ -289,10 +289,10 @@ Variant VariantUtilityFunctions::sign(const Variant &x, Callable::CallError &r_e
 	r_error.error = Callable::CallError::CALL_OK;
 	switch (x.get_type()) {
 		case Variant::INT: {
-			return SIGN(VariantInternalAccessor<int64_t>::get(&x));
+			return Math::sign(VariantInternalAccessor<int64_t>::get(&x));
 		} break;
 		case Variant::FLOAT: {
-			return SIGN(VariantInternalAccessor<double>::get(&x));
+			return Math::sign(VariantInternalAccessor<double>::get(&x));
 		} break;
 		case Variant::VECTOR2: {
 			return VariantInternalAccessor<Vector2>::get(&x).sign();
@@ -322,11 +322,11 @@ Variant VariantUtilityFunctions::sign(const Variant &x, Callable::CallError &r_e
 }
 
 double VariantUtilityFunctions::signf(double x) {
-	return SIGN(x);
+	return Math::sign(x);
 }
 
 int64_t VariantUtilityFunctions::signi(int64_t x) {
-	return SIGN(x);
+	return Math::sign(x);
 }
 
 double VariantUtilityFunctions::pow(double x, double y) {
@@ -677,11 +677,11 @@ Variant VariantUtilityFunctions::max(const Variant **p_args, int p_argcount, Cal
 }
 
 double VariantUtilityFunctions::maxf(double x, double y) {
-	return MAX(x, y);
+	return Math::max(x, y);
 }
 
 int64_t VariantUtilityFunctions::maxi(int64_t x, int64_t y) {
-	return MAX(x, y);
+	return Math::max(x, y);
 }
 
 Variant VariantUtilityFunctions::min(const Variant **p_args, int p_argcount, Callable::CallError &r_error) {
@@ -721,11 +721,11 @@ Variant VariantUtilityFunctions::min(const Variant **p_args, int p_argcount, Cal
 }
 
 double VariantUtilityFunctions::minf(double x, double y) {
-	return MIN(x, y);
+	return Math::min(x, y);
 }
 
 int64_t VariantUtilityFunctions::mini(int64_t x, int64_t y) {
-	return MIN(x, y);
+	return Math::min(x, y);
 }
 
 Variant VariantUtilityFunctions::clamp(const Variant &x, const Variant &min, const Variant &max, Callable::CallError &r_error) {
@@ -761,11 +761,11 @@ Variant VariantUtilityFunctions::clamp(const Variant &x, const Variant &min, con
 }
 
 double VariantUtilityFunctions::clampf(double x, double min, double max) {
-	return CLAMP(x, min, max);
+	return Math::clamp(x, min, max);
 }
 
 int64_t VariantUtilityFunctions::clampi(int64_t x, int64_t min, int64_t max) {
-	return CLAMP(x, min, max);
+	return Math::clamp(x, min, max);
 }
 
 int64_t VariantUtilityFunctions::nearest_po2(int64_t x) {

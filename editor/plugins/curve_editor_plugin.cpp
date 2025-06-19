@@ -108,7 +108,7 @@ void CurveEdit::set_snap_count(int p_snap_count) {
 }
 
 Size2 CurveEdit::get_minimum_size() const {
-	return Vector2(64, MAX(135, get_size().x * ASPECT_RATIO)) * EDSCALE;
+	return Vector2(64, Math::max(135, get_size().x * ASPECT_RATIO)) * EDSCALE;
 }
 
 void CurveEdit::_notification(int p_what) {
@@ -307,7 +307,7 @@ void CurveEdit::gui_input(const Ref<InputEvent> &p_event) {
 					if (mm->is_alt_pressed()) {
 						float prev_point_offset = (selected_index > 0) ? (curve->get_point_position(selected_index - 1).x + 0.00001) : curve->get_min_domain();
 						float next_point_offset = (selected_index < curve->get_point_count() - 1) ? (curve->get_point_position(selected_index + 1).x - 0.00001) : curve->get_max_domain();
-						new_pos.x = CLAMP(new_pos.x, prev_point_offset, next_point_offset);
+						new_pos.x = Math::clamp(new_pos.x, prev_point_offset, next_point_offset);
 					}
 
 					new_pos.x = get_offset_without_collision(selected_index, new_pos.x, mpos.x >= get_view_pos(new_pos).x);
@@ -317,7 +317,7 @@ void CurveEdit::gui_input(const Ref<InputEvent> &p_event) {
 					hovered_index = i;
 					set_selected_index(i);
 
-					new_pos.y = CLAMP(new_pos.y, curve->get_min_value(), curve->get_max_value());
+					new_pos.y = Math::clamp(new_pos.y, curve->get_min_value(), curve->get_max_value());
 					curve->set_point_value(selected_index, new_pos.y);
 
 				} else {
@@ -327,7 +327,7 @@ void CurveEdit::gui_input(const Ref<InputEvent> &p_event) {
 					const Vector2 control_pos = get_world_pos(mpos);
 
 					Vector2 dir = (control_pos - new_pos).normalized();
-					real_t tangent = dir.y / (dir.x > 0 ? MAX(dir.x, 0.00001) : MIN(dir.x, -0.00001));
+					real_t tangent = dir.y / (dir.x > 0 ? Math::max(dir.x, 0.00001) : Math::min(dir.x, -0.00001));
 
 					// Must keep track of the hovered index as the cursor might move outside of the editor while dragging.
 					hovered_tangent_index = selected_tangent_index;
@@ -708,10 +708,10 @@ Vector2 CurveEdit::get_tangent_view_pos(int p_index, TangentIndex p_tangent) con
 	// The code below shrinks the tangent control by up to 50% so it always stays inside the editor for points within the bounds.
 	float fraction_inside = 1.0;
 	if (distance_from_point.x != 0.0) {
-		fraction_inside = MIN(fraction_inside, ((distance_from_point.x > 0 ? get_rect().size.x : 0) - point_view_pos.x) / distance_from_point.x);
+		fraction_inside = Math::min(fraction_inside, ((distance_from_point.x > 0 ? get_rect().size.x : 0) - point_view_pos.x) / distance_from_point.x);
 	}
 	if (distance_from_point.y != 0.0) {
-		fraction_inside = MIN(fraction_inside, ((distance_from_point.y > 0 ? get_rect().size.y : 0) - point_view_pos.y) / distance_from_point.y);
+		fraction_inside = Math::min(fraction_inside, ((distance_from_point.y > 0 ? get_rect().size.y : 0) - point_view_pos.y) / distance_from_point.y);
 	}
 
 	if (fraction_inside < 1.0 && fraction_inside > 0.5) {
@@ -953,7 +953,7 @@ void CurveEditor::_set_snap_enabled(bool p_enabled) {
 }
 
 void CurveEditor::_set_snap_count(int p_snap_count) {
-	curve_editor_rect->set_snap_count(CLAMP(p_snap_count, 2, 100));
+	curve_editor_rect->set_snap_count(Math::clamp(p_snap_count, 2, 100));
 }
 
 void CurveEditor::_on_preset_item_selected(int p_preset_id) {
@@ -1078,7 +1078,7 @@ Ref<Texture2D> CurvePreviewGenerator::generate(const Ref<Resource> &p_from, cons
 
 	// Set the first pixel of the thumbnail.
 	float v = (curve->sample_baked(curve->get_min_domain()) - curve->get_min_value()) / curve->get_value_range();
-	int y = CLAMP(im.get_height() - v * im.get_height(), 0, im.get_height() - 1);
+	int y = Math::clamp(im.get_height() - v * im.get_height(), 0, im.get_height() - 1);
 	im.set_pixel(0, y, line_color);
 
 	// Plot a line towards the next point.
@@ -1086,7 +1086,7 @@ Ref<Texture2D> CurvePreviewGenerator::generate(const Ref<Resource> &p_from, cons
 	for (int x = 1; x < im.get_width(); ++x) {
 		float t = static_cast<float>(x) / im.get_width() * curve->get_domain_range() + curve->get_min_domain();
 		v = (curve->sample_baked(t) - curve->get_min_value()) / curve->get_value_range();
-		y = CLAMP(im.get_height() - v * im.get_height(), 0, im.get_height() - 1);
+		y = Math::clamp(im.get_height() - v * im.get_height(), 0, im.get_height() - 1);
 
 		Vector<Point2i> points = Geometry2D::bresenham_line(Point2i(x - 1, prev_y), Point2i(x, y));
 		for (Point2i point : points) {

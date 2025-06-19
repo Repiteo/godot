@@ -172,7 +172,7 @@ void RasterizerCanvasGLES3::canvas_render_items(RID p_to_render_target, Item *p_
 			state.light_uniforms[index].height = l->height; //0..1 here
 
 			for (int i = 0; i < 4; i++) {
-				state.light_uniforms[index].shadow_color[i] = uint8_t(CLAMP(int32_t(l->shadow_color[i] * 255.0), 0, 255));
+				state.light_uniforms[index].shadow_color[i] = uint8_t(Math::clamp(int32_t(l->shadow_color[i] * 255.0), 0, 255));
 				state.light_uniforms[index].color[i] = l->color[i];
 			}
 
@@ -243,7 +243,7 @@ void RasterizerCanvasGLES3::canvas_render_items(RID p_to_render_target, Item *p_
 
 			state.light_uniforms[index].height = l->height * (p_canvas_transform.columns[0].length() + p_canvas_transform.columns[1].length()) * 0.5; //approximate height conversion to the canvas size, since all calculations are done in canvas coords to avoid precision loss
 			for (int i = 0; i < 4; i++) {
-				state.light_uniforms[index].shadow_color[i] = uint8_t(CLAMP(int32_t(l->shadow_color[i] * 255.0), 0, 255));
+				state.light_uniforms[index].shadow_color[i] = uint8_t(Math::clamp(int32_t(l->shadow_color[i] * 255.0), 0, 255));
 				state.light_uniforms[index].color[i] = l->color[i];
 			}
 
@@ -1136,7 +1136,7 @@ void RasterizerCanvasGLES3::_record_item_commands(const Item *p_item, RID p_rend
 
 				_prepare_canvas_texture(state.canvas_instance_batches[state.current_batch_index].tex, state.canvas_instance_batches[state.current_batch_index].filter, state.canvas_instance_batches[state.current_batch_index].repeat, r_index, texpixel_size);
 
-				for (uint32_t j = 0; j < MIN(3u, primitive->point_count); j++) {
+				for (uint32_t j = 0; j < Math::min(3u, primitive->point_count); j++) {
 					state.instance_data_array[r_index].points[j * 2 + 0] = primitive->points[j].x;
 					state.instance_data_array[r_index].points[j * 2 + 1] = primitive->points[j].y;
 					state.instance_data_array[r_index].uvs[j * 2 + 0] = primitive->uvs[j].x;
@@ -2391,10 +2391,10 @@ void RasterizerCanvasGLES3::_prepare_canvas_texture(RID p_texture, RS::CanvasIte
 		state.canvas_instance_batches[state.current_batch_index].flags &= ~BATCH_FLAGS_DEFAULT_NORMAL_MAP_USED;
 	}
 
-	state.canvas_instance_batches[state.current_batch_index].specular_shininess = uint32_t(CLAMP(ct->specular_color.a * 255.0, 0, 255)) << 24;
-	state.canvas_instance_batches[state.current_batch_index].specular_shininess |= uint32_t(CLAMP(ct->specular_color.b * 255.0, 0, 255)) << 16;
-	state.canvas_instance_batches[state.current_batch_index].specular_shininess |= uint32_t(CLAMP(ct->specular_color.g * 255.0, 0, 255)) << 8;
-	state.canvas_instance_batches[state.current_batch_index].specular_shininess |= uint32_t(CLAMP(ct->specular_color.r * 255.0, 0, 255));
+	state.canvas_instance_batches[state.current_batch_index].specular_shininess = uint32_t(Math::clamp(ct->specular_color.a * 255.0, 0, 255)) << 24;
+	state.canvas_instance_batches[state.current_batch_index].specular_shininess |= uint32_t(Math::clamp(ct->specular_color.b * 255.0, 0, 255)) << 16;
+	state.canvas_instance_batches[state.current_batch_index].specular_shininess |= uint32_t(Math::clamp(ct->specular_color.g * 255.0, 0, 255)) << 8;
+	state.canvas_instance_batches[state.current_batch_index].specular_shininess |= uint32_t(Math::clamp(ct->specular_color.r * 255.0, 0, 255));
 
 	r_texpixel_size.x = 1.0 / float(size_cache.x);
 	r_texpixel_size.y = 1.0 / float(size_cache.y);
@@ -2534,10 +2534,10 @@ RendererCanvasRender::PolygonID RasterizerCanvasGLES3::request_polygon(const Vec
 			for (uint32_t i = 0; i < vertex_count; i++) {
 				uint16_t *weight16w = (uint16_t *)&uptr[base_offset + i * stride];
 
-				weight16w[0] = CLAMP(weight_ptr[i * 4 + 0] * 65535, 0, 65535);
-				weight16w[1] = CLAMP(weight_ptr[i * 4 + 1] * 65535, 0, 65535);
-				weight16w[2] = CLAMP(weight_ptr[i * 4 + 2] * 65535, 0, 65535);
-				weight16w[3] = CLAMP(weight_ptr[i * 4 + 3] * 65535, 0, 65535);
+				weight16w[0] = Math::clamp(weight_ptr[i * 4 + 0] * 65535, 0, 65535);
+				weight16w[1] = Math::clamp(weight_ptr[i * 4 + 1] * 65535, 0, 65535);
+				weight16w[2] = Math::clamp(weight_ptr[i * 4 + 2] * 65535, 0, 65535);
+				weight16w[3] = Math::clamp(weight_ptr[i * 4 + 3] * 65535, 0, 65535);
 			}
 
 			base_offset += 2;

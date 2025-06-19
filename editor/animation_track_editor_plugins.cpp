@@ -106,8 +106,8 @@ void AnimationTrackEditColor::draw_key_link(int p_index, float p_pixels_sec, int
 
 	int x_from = p_x + fh / 2 - 1;
 	int x_to = p_next_x - fh / 2 + 1;
-	x_from = MAX(x_from, p_clip_left);
-	x_to = MIN(x_to, p_clip_right);
+	x_from = Math::max(x_from, p_clip_left);
+	x_to = Math::min(x_to, p_clip_right);
 
 	int y_from = (get_size().height - fh) / 2;
 
@@ -234,7 +234,7 @@ Rect2 AnimationTrackEditAudio::get_key_rect(int p_index, float p_pixels_sec) {
 		}
 
 		if (get_animation()->track_get_key_count(get_track()) > p_index + 1) {
-			len = MIN(len, get_animation()->track_get_key_time(get_track(), p_index + 1) - get_animation()->track_get_key_time(get_track(), p_index));
+			len = Math::min(len, get_animation()->track_get_key_time(get_track(), p_index + 1) - get_animation()->track_get_key_time(get_track(), p_index));
 		}
 
 		return Rect2(0, 0, len * p_pixels_sec, get_size().height);
@@ -290,13 +290,13 @@ void AnimationTrackEditAudio::draw_key(int p_index, float p_pixels_sec, int p_x,
 			return;
 		}
 
-		int from_x = MAX(pixel_begin, p_clip_left);
-		int to_x = MIN(pixel_end, p_clip_right);
+		int from_x = Math::max(pixel_begin, p_clip_left);
+		int to_x = Math::min(pixel_end, p_clip_right);
 
 		if (get_animation()->track_get_key_count(get_track()) > p_index + 1) {
-			float limit = MIN(len, get_animation()->track_get_key_time(get_track(), p_index + 1) - get_animation()->track_get_key_time(get_track(), p_index));
+			float limit = Math::min(len, get_animation()->track_get_key_time(get_track(), p_index + 1) - get_animation()->track_get_key_time(get_track(), p_index));
 			int limit_x = pixel_begin + limit * p_pixels_sec;
-			to_x = MIN(limit_x, to_x);
+			to_x = Math::min(limit_x, to_x);
 		}
 
 		if (to_x <= from_x) {
@@ -590,7 +590,7 @@ Rect2 AnimationTrackEditSubAnim::get_key_rect(int p_index, float p_pixels_sec) {
 		float len = ap->get_animation(anim)->get_length();
 
 		if (get_animation()->track_get_key_count(get_track()) > p_index + 1) {
-			len = MIN(len, get_animation()->track_get_key_time(get_track(), p_index + 1) - get_animation()->track_get_key_time(get_track(), p_index));
+			len = Math::min(len, get_animation()->track_get_key_time(get_track(), p_index + 1) - get_animation()->track_get_key_time(get_track(), p_index));
 		}
 
 		return Rect2(0, 0, len * p_pixels_sec, get_size().height);
@@ -627,7 +627,7 @@ void AnimationTrackEditSubAnim::draw_key(int p_index, float p_pixels_sec, int p_
 		float len = ap->get_animation(anim)->get_length();
 
 		if (get_animation()->track_get_key_count(get_track()) > p_index + 1) {
-			len = MIN(len, get_animation()->track_get_key_time(get_track(), p_index + 1) - get_animation()->track_get_key_time(get_track(), p_index));
+			len = Math::min(len, get_animation()->track_get_key_time(get_track(), p_index + 1) - get_animation()->track_get_key_time(get_track(), p_index));
 		}
 
 		int pixel_len = len * p_pixels_sec;
@@ -643,8 +643,8 @@ void AnimationTrackEditSubAnim::draw_key(int p_index, float p_pixels_sec, int p_
 			return;
 		}
 
-		int from_x = MAX(pixel_begin, p_clip_left);
-		int to_x = MIN(pixel_end, p_clip_right);
+		int from_x = Math::max(pixel_begin, p_clip_left);
+		int to_x = Math::min(pixel_end, p_clip_right);
 
 		if (to_x <= from_x) {
 			return;
@@ -755,8 +755,8 @@ void AnimationTrackEditVolumeDB::draw_key_link(int p_index, float p_pixels_sec, 
 	float db = get_animation()->track_get_key_value(get_track(), p_index);
 	float db_n = get_animation()->track_get_key_value(get_track(), p_index + 1);
 
-	db = CLAMP(db, -60, 24);
-	db_n = CLAMP(db_n, -60, 24);
+	db = Math::clamp(db, -60, 24);
+	db_n = Math::clamp(db_n, -60, 24);
 
 	float h = 1.0 - ((db + 60) / 84.0);
 	float h_n = 1.0 - ((db_n + 60) / 84.0);
@@ -829,7 +829,7 @@ Rect2 AnimationTrackEditTypeAudio::get_key_rect(int p_index, float p_pixels_sec)
 	}
 
 	if (get_animation()->track_get_key_count(get_track()) > p_index + 1) {
-		len = MIN(len, get_animation()->track_get_key_time(get_track(), p_index + 1) - get_animation()->track_get_key_time(get_track(), p_index));
+		len = Math::min(len, get_animation()->track_get_key_time(get_track(), p_index + 1) - get_animation()->track_get_key_time(get_track(), p_index));
 	}
 
 	return Rect2(0, 0, len * p_pixels_sec, get_size().height);
@@ -894,13 +894,13 @@ void AnimationTrackEditTypeAudio::draw_key(int p_index, float p_pixels_sec, int 
 		return;
 	}
 
-	int from_x = MAX(pixel_begin, p_clip_left);
-	int to_x = MIN(pixel_end, p_clip_right);
+	int from_x = Math::max(pixel_begin, p_clip_left);
+	int to_x = Math::min(pixel_end, p_clip_right);
 
 	if (get_animation()->track_get_key_count(get_track()) > p_index + 1) {
-		float limit = MIN(len, get_animation()->track_get_key_time(get_track(), p_index + 1) - get_animation()->track_get_key_time(get_track(), p_index));
+		float limit = Math::min(len, get_animation()->track_get_key_time(get_track(), p_index + 1) - get_animation()->track_get_key_time(get_track(), p_index));
 		int limit_x = pixel_begin + limit * p_pixels_sec;
-		to_x = MIN(limit_x, to_x);
+		to_x = Math::min(limit_x, to_x);
 	}
 
 	if (to_x <= from_x) {
@@ -1040,7 +1040,7 @@ void AnimationTrackEditTypeAudio::gui_input(const Ref<InputEvent> &p_event) {
 			len -= start_ofs;
 
 			if (get_animation()->track_get_key_count(get_track()) > i + 1) {
-				len = MIN(len, get_animation()->track_get_key_time(get_track(), i + 1) - get_animation()->track_get_key_time(get_track(), i));
+				len = Math::min(len, get_animation()->track_get_key_time(get_track(), i + 1) - get_animation()->track_get_key_time(get_track(), i));
 			}
 
 			float ofs = get_animation()->track_get_key_time(get_track(), i);
@@ -1081,9 +1081,9 @@ void AnimationTrackEditTypeAudio::gui_input(const Ref<InputEvent> &p_event) {
 		}
 
 		if (len_resizing_start) {
-			len_resizing_rel = CLAMP(ofs_local, -prev_ofs_start, len - prev_ofs_end - prev_ofs_start) * get_timeline()->get_zoom_scale();
+			len_resizing_rel = Math::clamp(ofs_local, -prev_ofs_start, len - prev_ofs_end - prev_ofs_start) * get_timeline()->get_zoom_scale();
 		} else {
-			len_resizing_rel = CLAMP(ofs_local, -(len - prev_ofs_end - prev_ofs_start), prev_ofs_end) * get_timeline()->get_zoom_scale();
+			len_resizing_rel = Math::clamp(ofs_local, -(len - prev_ofs_end - prev_ofs_start), prev_ofs_end) * get_timeline()->get_zoom_scale();
 		}
 
 		queue_redraw();
@@ -1192,7 +1192,7 @@ Rect2 AnimationTrackEditTypeAnimation::get_key_rect(int p_index, float p_pixels_
 		float len = ap->get_animation(anim)->get_length();
 
 		if (get_animation()->track_get_key_count(get_track()) > p_index + 1) {
-			len = MIN(len, get_animation()->track_get_key_time(get_track(), p_index + 1) - get_animation()->track_get_key_time(get_track(), p_index));
+			len = Math::min(len, get_animation()->track_get_key_time(get_track(), p_index + 1) - get_animation()->track_get_key_time(get_track(), p_index));
 		}
 
 		return Rect2(0, 0, len * p_pixels_sec, get_size().height);
@@ -1229,7 +1229,7 @@ void AnimationTrackEditTypeAnimation::draw_key(int p_index, float p_pixels_sec, 
 		float len = ap->get_animation(anim)->get_length();
 
 		if (get_animation()->track_get_key_count(get_track()) > p_index + 1) {
-			len = MIN(len, get_animation()->track_get_key_time(get_track(), p_index + 1) - get_animation()->track_get_key_time(get_track(), p_index));
+			len = Math::min(len, get_animation()->track_get_key_time(get_track(), p_index + 1) - get_animation()->track_get_key_time(get_track(), p_index));
 		}
 
 		int pixel_len = len * p_pixels_sec;
@@ -1245,8 +1245,8 @@ void AnimationTrackEditTypeAnimation::draw_key(int p_index, float p_pixels_sec, 
 			return;
 		}
 
-		int from_x = MAX(pixel_begin, p_clip_left);
-		int to_x = MIN(pixel_end, p_clip_right);
+		int from_x = Math::max(pixel_begin, p_clip_left);
+		int to_x = Math::min(pixel_end, p_clip_right);
 
 		if (to_x <= from_x) {
 			return;

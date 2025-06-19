@@ -138,8 +138,8 @@ void SoftBodyRenderingServerHandler::commit_changes(real_t p_interpolation_fract
 			Vector2 curr = Vector2((normal_curr[0] & 0xffff) / 65535.0f, (normal_curr[0] >> 16) / 65535.0f);
 			Vector2 interp = Vector3::octahedron_decode(prev).lerp(Vector3::octahedron_decode(curr), f).octahedron_encode();
 			uint32_t n = 0;
-			n |= (uint16_t)CLAMP(interp.x * 65535, 0, 65535);
-			n |= (uint16_t)CLAMP(interp.y * 65535, 0, 65535) << 16;
+			n |= (uint16_t)Math::clamp(interp.x * 65535, 0, 65535);
+			n |= (uint16_t)Math::clamp(interp.y * 65535, 0, 65535) << 16;
 			normal_interp[0] = n;
 
 			normal_prev += normal_stride_units;
@@ -165,8 +165,8 @@ void SoftBodyRenderingServerHandler::set_vertex(int p_vertex_id, const Vector3 &
 void SoftBodyRenderingServerHandler::set_normal(int p_vertex_id, const Vector3 &p_normal) {
 	Vector2 res = p_normal.octahedron_encode();
 	uint32_t value = 0;
-	value |= (uint16_t)CLAMP(res.x * 65535, 0, 65535);
-	value |= (uint16_t)CLAMP(res.y * 65535, 0, 65535) << 16;
+	value |= (uint16_t)Math::clamp(res.x * 65535, 0, 65535);
+	value |= (uint16_t)Math::clamp(res.y * 65535, 0, 65535) << 16;
 	memcpy(&write_buffer[p_vertex_id * normal_stride + offset_normal], &value, sizeof(uint32_t));
 }
 

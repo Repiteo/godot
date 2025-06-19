@@ -172,8 +172,8 @@ void Range::set_min(double p_min) {
 	}
 
 	shared->min = p_min;
-	shared->max = MAX(shared->max, shared->min);
-	shared->page = CLAMP(shared->page, 0, shared->max - shared->min);
+	shared->max = Math::max(shared->max, shared->min);
+	shared->page = Math::clamp(shared->page, 0, shared->max - shared->min);
 	set_value(shared->val);
 
 	shared->emit_changed();
@@ -184,13 +184,13 @@ void Range::set_min(double p_min) {
 }
 
 void Range::set_max(double p_max) {
-	double max_validated = MAX(p_max, shared->min);
+	double max_validated = Math::max(p_max, shared->min);
 	if (shared->max == max_validated) {
 		return;
 	}
 
 	shared->max = max_validated;
-	shared->page = CLAMP(shared->page, 0, shared->max - shared->min);
+	shared->page = Math::clamp(shared->page, 0, shared->max - shared->min);
 	set_value(shared->val);
 
 	shared->emit_changed();
@@ -210,7 +210,7 @@ void Range::set_step(double p_step) {
 }
 
 void Range::set_page(double p_page) {
-	double page_validated = CLAMP(p_page, 0, shared->max - shared->min);
+	double page_validated = Math::clamp(p_page, 0, shared->max - shared->min);
 	if (shared->page == page_validated) {
 		return;
 	}
@@ -259,7 +259,7 @@ void Range::set_as_ratio(double p_value) {
 			v = percent + get_min();
 		}
 	}
-	v = CLAMP(v, get_min(), get_max());
+	v = Math::clamp(v, get_min(), get_max());
 	set_value(v);
 }
 
@@ -272,13 +272,13 @@ double Range::get_as_ratio() const {
 	if (shared->exp_ratio && get_min() >= 0) {
 		double exp_min = get_min() == 0 ? 0.0 : Math::log(get_min()) / Math::log((double)2);
 		double exp_max = Math::log(get_max()) / Math::log((double)2);
-		float value = CLAMP(get_value(), shared->min, shared->max);
+		float value = Math::clamp(get_value(), shared->min, shared->max);
 		double v = Math::log(value) / Math::log((double)2);
 
-		return CLAMP((v - exp_min) / (exp_max - exp_min), 0, 1);
+		return Math::clamp((v - exp_min) / (exp_max - exp_min), 0, 1);
 	} else {
-		float value = CLAMP(get_value(), shared->min, shared->max);
-		return CLAMP((value - get_min()) / (get_max() - get_min()), 0, 1);
+		float value = Math::clamp(get_value(), shared->min, shared->max);
+		return Math::clamp((value - get_min()) / (get_max() - get_min()), 0, 1);
 	}
 }
 

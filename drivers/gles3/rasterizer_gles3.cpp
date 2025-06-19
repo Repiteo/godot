@@ -437,7 +437,7 @@ void RasterizerGLES3::_blit_render_target_to_screen(RID p_render_target, Display
 
 	Rect2 screenrect = Rect2(Vector2(flip_x ? 1.0 : 0.0, flip_y ? 1.0 : 0.0), Vector2(flip_x ? -1.0 : 1.0, flip_y ? -1.0 : 1.0));
 
-	glViewport(int(MIN(p1.x, p2.x)), int(MIN(p1.y, p2.y)), Math::abs(size.x), Math::abs(size.y));
+	glViewport(int(Math::min(p1.x, p2.x)), int(Math::min(p1.y, p2.y)), Math::abs(size.x), Math::abs(size.y));
 
 	glActiveTexture(GL_TEXTURE0);
 	GLenum target = rt->view_count > 1 ? GL_TEXTURE_2D_ARRAY : GL_TEXTURE_2D;

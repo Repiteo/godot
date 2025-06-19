@@ -118,7 +118,7 @@ public:
 		}
 
 		// Metal supports a maximum of 3 drawables.
-		p_desired_framebuffer_count = MIN(3U, p_desired_framebuffer_count);
+		p_desired_framebuffer_count = Math::min(3U, p_desired_framebuffer_count);
 		layer.maximumDrawableCount = p_desired_framebuffer_count;
 
 #if TARGET_OS_OSX

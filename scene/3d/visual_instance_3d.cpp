@@ -239,7 +239,7 @@ Ref<Material> GeometryInstance3D::get_material_overlay() const {
 }
 
 void GeometryInstance3D::set_transparency(float p_transparency) {
-	transparency = CLAMP(p_transparency, 0.0f, 1.0f);
+	transparency = Math::clamp(p_transparency, 0.0f, 1.0f);
 	RS::get_singleton()->instance_geometry_set_transparency(get_instance(), transparency);
 	update_configuration_warnings();
 }

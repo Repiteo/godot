@@ -1288,7 +1288,7 @@ void RasterizerSceneGLES3::_fill_render_list(RenderListType p_render_list, const
 			}
 			inst->depth = p_render_data->cam_transform.origin.distance_to(center) - inst->sorting_offset;
 		}
-		uint32_t depth_layer = CLAMP(int(inst->depth * 16 / z_max), 0, 15);
+		uint32_t depth_layer = Math::clamp(int(inst->depth * 16 / z_max), 0, 15);
 
 		uint32_t flags = inst->base_flags; //fill flags if appropriate
 
@@ -1574,7 +1574,7 @@ void RasterizerSceneGLES3::_setup_environment(const RenderDataGLES3 *p_render_da
 		scene_state.ubo.fog_height = environment_get_fog_height(p_render_data->environment);
 		scene_state.ubo.fog_depth_curve = environment_get_fog_depth_curve(p_render_data->environment);
 		scene_state.ubo.fog_depth_end = environment_get_fog_depth_end(p_render_data->environment) > 0.0 ? environment_get_fog_depth_end(p_render_data->environment) : scene_state.ubo.z_far;
-		scene_state.ubo.fog_depth_begin = MIN(environment_get_fog_depth_begin(p_render_data->environment), scene_state.ubo.fog_depth_end - 0.001);
+		scene_state.ubo.fog_depth_begin = Math::min(environment_get_fog_depth_begin(p_render_data->environment), scene_state.ubo.fog_depth_end - 0.001);
 		scene_state.ubo.fog_height_density = environment_get_fog_height_density(p_render_data->environment);
 		scene_state.ubo.fog_aerial_perspective = environment_get_fog_aerial_perspective(p_render_data->environment);
 
@@ -1597,7 +1597,7 @@ void RasterizerSceneGLES3::_setup_environment(const RenderDataGLES3 *p_render_da
 			RID sky_rid = environment_get_sky(p_render_data->environment);
 			if (sky_rid.is_valid()) {
 				float current_exposure = RSG::camera_attributes->camera_attributes_get_exposure_normalization_factor(p_render_data->camera_attributes) * environment_get_bg_intensity(p_render_data->environment);
-				scene_state.ubo.IBL_exposure_normalization = current_exposure / MAX(0.001, sky_get_baked_exposure(sky_rid));
+				scene_state.ubo.IBL_exposure_normalization = current_exposure / Math::max(0.001, sky_get_baked_exposure(sky_rid));
 			}
 		}
 	} else if (scene_state.ubo.emissive_exposure_normalization > 0.0) {
@@ -1731,7 +1731,7 @@ void RasterizerSceneGLES3::_setup_lights(const RenderDataGLES3 *p_render_data, b
 						Projection correction;
 						correction.set_depth_correction(false, true, false);
 						Projection matrix = correction * li->shadow_transform[j].camera;
-						float split = li->shadow_transform[MIN(limit, j)].split;
+						float split = li->shadow_transform[Math::min(limit, j)].split;
 
 						Projection bias;
 						bias.set_light_bias();
@@ -1750,7 +1750,7 @@ void RasterizerSceneGLES3::_setup_lights(const RenderDataGLES3 *p_render_data, b
 						GLES3::MaterialStorage::store_camera(shadow_mtx, shadow_data.shadow_matrices[j]);
 					}
 					float fade_start = light_storage->light_get_param(base, RS::LIGHT_PARAM_SHADOW_FADE_START);
-					shadow_data.fade_from = -shadow_data.shadow_split_offsets[3] * MIN(fade_start, 0.999);
+					shadow_data.fade_from = -shadow_data.shadow_split_offsets[3] * Math::min(fade_start, 0.999);
 					shadow_data.fade_to = -shadow_data.shadow_split_offsets[3];
 
 					r_directional_shadow_count++;
@@ -1840,7 +1840,7 @@ void RasterizerSceneGLES3::_setup_lights(const RenderDataGLES3 *p_render_data, b
 
 		light_data.bake_mode = light_storage->light_get_bake_mode(base);
 
-		float radius = MAX(0.001, light_storage->light_get_param(base, RS::LIGHT_PARAM_RANGE));
+		float radius = Math::max(0.001, light_storage->light_get_param(base, RS::LIGHT_PARAM_RANGE));
 		light_data.inv_radius = 1.0 / radius;
 
 		Vector3 direction = inverse_transform.basis.xform(light_transform.basis.xform(Vector3(0, 0, -1))).normalized();
@@ -3075,7 +3075,7 @@ void RasterizerSceneGLES3::_render_list_template(RenderListParameters *p_params,
 		 * Disable depth draw
 		 */
 
-		for (int32_t pass = 0; pass < MAX(1, int32_t(inst->light_passes.size() + p_render_data->directional_shadow_count)); pass++) {
+		for (int32_t pass = 0; pass < Math::max(1, int32_t(inst->light_passes.size() + p_render_data->directional_shadow_count)); pass++) {
 			if constexpr (p_pass_mode == PASS_MODE_DEPTH || p_pass_mode == PASS_MODE_SHADOW) {
 				if (pass > 0) {
 					// Don't render shadow passes when doing depth or shadow pass.
@@ -4248,8 +4248,8 @@ RasterizerSceneGLES3::RasterizerSceneGLES3() {
 	{
 		// Setup Lights
 
-		config->max_renderable_lights = MIN(config->max_renderable_lights, config->max_uniform_buffer_size / (int)sizeof(RasterizerSceneGLES3::LightData));
-		config->max_lights_per_object = MIN(config->max_lights_per_object, config->max_renderable_lights);
+		config->max_renderable_lights = Math::min(config->max_renderable_lights, config->max_uniform_buffer_size / (int)sizeof(RasterizerSceneGLES3::LightData));
+		config->max_lights_per_object = Math::min(config->max_lights_per_object, config->max_renderable_lights);
 
 		uint32_t light_buffer_size = config->max_renderable_lights * sizeof(LightData);
 		scene_state.omni_lights = memnew_arr(LightData, config->max_renderable_lights);

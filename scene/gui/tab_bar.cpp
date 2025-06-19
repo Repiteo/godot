@@ -43,7 +43,7 @@ Size2 TabBar::get_minimum_size() const {
 		return ms;
 	}
 
-	int y_margin = MAX(MAX(MAX(theme_cache.tab_unselected_style->get_minimum_size().height, theme_cache.tab_hovered_style->get_minimum_size().height), theme_cache.tab_selected_style->get_minimum_size().height), theme_cache.tab_disabled_style->get_minimum_size().height);
+	int y_margin = Math::max(Math::max(Math::max(theme_cache.tab_unselected_style->get_minimum_size().height, theme_cache.tab_hovered_style->get_minimum_size().height), theme_cache.tab_selected_style->get_minimum_size().height), theme_cache.tab_disabled_style->get_minimum_size().height);
 
 	for (int i = 0; i < tabs.size(); i++) {
 		if (tabs[i].hidden) {
@@ -66,14 +66,14 @@ Size2 TabBar::get_minimum_size() const {
 
 		if (tabs[i].icon.is_valid()) {
 			const Size2 icon_size = _get_tab_icon_size(i);
-			ms.height = MAX(ms.height, icon_size.height + y_margin);
+			ms.height = Math::max(ms.height, icon_size.height + y_margin);
 			ms.width += icon_size.width + theme_cache.h_separation;
 		}
 
 		if (!tabs[i].text.is_empty()) {
 			ms.width += tabs[i].size_text + theme_cache.h_separation;
 		}
-		ms.height = MAX(ms.height, tabs[i].text_buf->get_size().y + y_margin);
+		ms.height = Math::max(ms.height, tabs[i].text_buf->get_size().y + y_margin);
 
 		bool close_visible = cb_displaypolicy == CLOSE_BUTTON_SHOW_ALWAYS || (cb_displaypolicy == CLOSE_BUTTON_SHOW_ACTIVE_ONLY && i == current);
 
@@ -86,13 +86,13 @@ Size2 TabBar::get_minimum_size() const {
 				ms.width += theme_cache.button_hl_style->get_margin(SIDE_LEFT) + rb->get_width() + theme_cache.h_separation;
 			}
 
-			ms.height = MAX(ms.height, rb->get_height() + y_margin);
+			ms.height = Math::max(ms.height, rb->get_height() + y_margin);
 		}
 
 		if (close_visible) {
 			ms.width += theme_cache.button_hl_style->get_margin(SIDE_LEFT) + theme_cache.close_icon->get_width() + theme_cache.h_separation;
 
-			ms.height = MAX(ms.height, theme_cache.close_icon->get_height() + y_margin);
+			ms.height = Math::max(ms.height, theme_cache.close_icon->get_height() + y_margin);
 		}
 
 		if (ms.width - ofs > style->get_minimum_size().width) {
@@ -740,9 +740,9 @@ void TabBar::set_tab_count(int p_count) {
 		current = -1;
 		previous = -1;
 	} else {
-		offset = MIN(offset, p_count - 1);
-		max_drawn_tab = MIN(max_drawn_tab, p_count - 1);
-		current = MIN(current, p_count - 1);
+		offset = Math::min(offset, p_count - 1);
+		max_drawn_tab = Math::min(max_drawn_tab, p_count - 1);
+		current = Math::min(current, p_count - 1);
 		// Fix range if unable to deselect.
 		if (current == -1 && !_can_deselect()) {
 			current = 0;
@@ -1164,9 +1164,9 @@ void TabBar::_update_cache(bool p_update_hover) {
 		tabs.write[i].truncated = max_width > 0 && tabs[i].size_cache > max_width;
 		if (tabs[i].truncated) {
 			int size_textless = tabs[i].size_cache - tabs[i].size_text;
-			int mw = MAX(size_textless, max_width);
+			int mw = Math::max(size_textless, max_width);
 
-			tabs.write[i].size_text = MAX(mw - size_textless, 1);
+			tabs.write[i].size_text = Math::max(mw - size_textless, 1);
 			tabs.write[i].text_buf->set_width(tabs[i].size_text);
 			tabs.write[i].size_cache = size_textless + tabs[i].size_text;
 		}
@@ -1345,8 +1345,8 @@ void TabBar::remove_tab(int p_idx) {
 				current = -1;
 			}
 		}
-		offset = MIN(offset, tabs.size() - 1);
-		max_drawn_tab = MIN(max_drawn_tab, tabs.size() - 1);
+		offset = Math::min(offset, tabs.size() - 1);
+		max_drawn_tab = Math::min(max_drawn_tab, tabs.size() - 1);
 
 		_update_cache();
 		_ensure_no_over_offset();

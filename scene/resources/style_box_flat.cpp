@@ -75,7 +75,7 @@ void StyleBoxFlat::set_border_width_all(int p_size) {
 }
 
 int StyleBoxFlat::get_border_width_min() const {
-	return MIN(MIN(border_width[0], border_width[1]), MIN(border_width[2], border_width[3]));
+	return Math::min(Math::min(border_width[0], border_width[1]), Math::min(border_width[2], border_width[3]));
 }
 
 void StyleBoxFlat::set_border_width(Side p_side, int p_width) {
@@ -127,7 +127,7 @@ int StyleBoxFlat::get_corner_radius(const Corner p_corner) const {
 }
 
 void StyleBoxFlat::set_corner_detail(const int &p_corner_detail) {
-	corner_detail = CLAMP(p_corner_detail, 1, 20);
+	corner_detail = Math::clamp(p_corner_detail, 1, 20);
 	emit_changed();
 }
 
@@ -217,7 +217,7 @@ bool StyleBoxFlat::is_anti_aliased() const {
 }
 
 void StyleBoxFlat::set_aa_size(const real_t p_aa_size) {
-	aa_size = CLAMP(p_aa_size, 0.01, 10);
+	aa_size = Math::clamp(p_aa_size, 0.01, 10);
 	emit_changed();
 }
 
@@ -231,10 +231,10 @@ inline void set_inner_corner_radius(const Rect2 style_rect, const Rect2 inner_re
 	real_t border_right = style_rect.size.width - inner_rect.size.width - border_left;
 	real_t border_bottom = style_rect.size.height - inner_rect.size.height - border_top;
 
-	inner_corner_radius[0] = MAX(corner_radius[0] - MIN(border_top, border_left), 0); // Top left.
-	inner_corner_radius[1] = MAX(corner_radius[1] - MIN(border_top, border_right), 0); // Top right.
-	inner_corner_radius[2] = MAX(corner_radius[2] - MIN(border_bottom, border_right), 0); // Bottom right.
-	inner_corner_radius[3] = MAX(corner_radius[3] - MIN(border_bottom, border_left), 0); // Bottom left.
+	inner_corner_radius[0] = Math::max(corner_radius[0] - Math::min(border_top, border_left), 0); // Top left.
+	inner_corner_radius[1] = Math::max(corner_radius[1] - Math::min(border_top, border_right), 0); // Top right.
+	inner_corner_radius[2] = Math::max(corner_radius[2] - Math::min(border_bottom, border_right), 0); // Bottom right.
+	inner_corner_radius[3] = Math::max(corner_radius[3] - Math::min(border_bottom, border_left), 0); // Bottom left.
 }
 
 inline void set_corner_scale(const Rect2 &style_rect, const Rect2 &inner_rect, const real_t corner_radius[4], Point2 *inner_scale) {
@@ -245,12 +245,12 @@ inline void set_corner_scale(const Rect2 &style_rect, const Rect2 &inner_rect, c
 
 	// Amount of overflow along an edge.
 	// Ex. SIDE_LEFT edge is the overflow between top_left and bottom_left corners.
-	// MIN(0,) is to ignore underflow, and negating is to make values positive.
+	// Math::min(0,) is to ignore underflow, and negating is to make values positive.
 	real_t edge_overflow[4] = {
-		-MIN(0, inner_rect.size.y - corner_radius[CORNER_TOP_LEFT] - corner_radius[CORNER_BOTTOM_LEFT]),
-		-MIN(0, inner_rect.size.x - corner_radius[CORNER_TOP_LEFT] - corner_radius[CORNER_TOP_RIGHT]),
-		-MIN(0, inner_rect.size.y - corner_radius[CORNER_TOP_RIGHT] - corner_radius[CORNER_BOTTOM_RIGHT]),
-		-MIN(0, inner_rect.size.x - corner_radius[CORNER_BOTTOM_LEFT] - corner_radius[CORNER_BOTTOM_RIGHT])
+		-Math::min(0, inner_rect.size.y - corner_radius[CORNER_TOP_LEFT] - corner_radius[CORNER_BOTTOM_LEFT]),
+		-Math::min(0, inner_rect.size.x - corner_radius[CORNER_TOP_LEFT] - corner_radius[CORNER_TOP_RIGHT]),
+		-Math::min(0, inner_rect.size.y - corner_radius[CORNER_TOP_RIGHT] - corner_radius[CORNER_BOTTOM_RIGHT]),
+		-Math::min(0, inner_rect.size.x - corner_radius[CORNER_BOTTOM_LEFT] - corner_radius[CORNER_BOTTOM_RIGHT])
 	};
 
 	// Sums of borders.
@@ -436,9 +436,9 @@ inline void draw_rounded_rectangle(Vector<Vector2> &verts, Vector<int> &indices,
 inline void adapt_values(int p_index_a, int p_index_b, real_t *adapted_values, const real_t *p_values, const real_t p_width, const real_t p_max_a, const real_t p_max_b) {
 	real_t value_a = p_values[p_index_a];
 	real_t value_b = p_values[p_index_b];
-	real_t factor = MIN(1.0, p_width / (value_a + value_b));
-	adapted_values[p_index_a] = MIN(MIN(value_a * factor, p_max_a), adapted_values[p_index_a]);
-	adapted_values[p_index_b] = MIN(MIN(value_b * factor, p_max_b), adapted_values[p_index_b]);
+	real_t factor = Math::min(1.0, p_width / (value_a + value_b));
+	adapted_values[p_index_a] = Math::min(Math::min(value_a * factor, p_max_a), adapted_values[p_index_a]);
+	adapted_values[p_index_b] = Math::min(Math::min(value_b * factor, p_max_b), adapted_values[p_index_b]);
 }
 
 Rect2 StyleBoxFlat::get_draw_rect(const Rect2 &p_rect) const {
@@ -477,8 +477,8 @@ void StyleBoxFlat::draw(RID p_canvas_item, const Rect2 &p_rect) const {
 	Color border_color_inner = blend_on ? border_color_blend : border_color;
 
 	// Adapt borders (prevent weird overlapping/glitchy drawings).
-	real_t width = MAX(style_rect.size.width, 0);
-	real_t height = MAX(style_rect.size.height, 0);
+	real_t width = Math::max(style_rect.size.width, 0);
+	real_t height = Math::max(style_rect.size.height, 0);
 	real_t adapted_border[4] = { 1000000.0, 1000000.0, 1000000.0, 1000000.0 };
 	adapt_values(SIDE_TOP, SIDE_BOTTOM, adapted_border, border_width, height, height, height);
 	adapt_values(SIDE_LEFT, SIDE_RIGHT, adapted_border, border_width, width, width, width);
@@ -501,7 +501,7 @@ void StyleBoxFlat::draw(RID p_canvas_item, const Rect2 &p_rect) const {
 		if (tree) {
 			const Window *window = tree->get_root();
 			const Vector2 stretch_scale = window->get_stretch_transform().get_scale();
-			scale_factor = MIN(stretch_scale.x, stretch_scale.y);
+			scale_factor = Math::min(stretch_scale.x, stretch_scale.y);
 		}
 
 		// Adjust AA feather size to account for the 2D scale factor, so that

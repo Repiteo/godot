@@ -315,7 +315,7 @@ void ScriptEditorDebugger::_video_mem_export() {
 
 Size2 ScriptEditorDebugger::get_minimum_size() const {
 	Size2 ms = MarginContainer::get_minimum_size();
-	ms.y = MAX(ms.y, 250 * EDSCALE);
+	ms.y = Math::max(ms.y, 250 * EDSCALE);
 	return ms;
 }
 
@@ -1023,7 +1023,7 @@ void ScriptEditorDebugger::_update_reason_content_height() {
 		content_max_height += reason->get_line_height(i);
 	}
 
-	reason->set_custom_minimum_size(Size2(0, CLAMP(content_height, 0, content_max_height)));
+	reason->set_custom_minimum_size(Size2(0, Math::clamp(content_height, 0, content_max_height)));
 }
 
 void ScriptEditorDebugger::_notification(int p_what) {
@@ -1301,7 +1301,7 @@ void ScriptEditorDebugger::_profiler_activate(bool p_enable, int p_type) {
 				// Add max funcs options to request.
 				int max_funcs = EDITOR_GET("debugger/profiler_frame_max_functions");
 				bool include_native = EDITOR_GET("debugger/profile_native_calls");
-				Array opts = { CLAMP(max_funcs, 16, 512), include_native };
+				Array opts = { Math::clamp(max_funcs, 16, 512), include_native };
 				msg_data.push_back(opts);
 			}
 			_put_msg("profiler:servers", msg_data);

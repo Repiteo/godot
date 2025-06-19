@@ -335,8 +335,8 @@ Size2 GraphFrame::get_minimum_size() const {
 		Size2i size = child->get_combined_minimum_size();
 		size.width += sb_panel->get_minimum_size().width;
 
-		minsize.x = MAX(minsize.x, size.x);
-		minsize.y += MAX(minsize.y, size.y);
+		minsize.x = Math::max(minsize.x, size.x);
+		minsize.y += Math::max(minsize.y, size.y);
 	}
 
 	minsize.height += sb_panel->get_minimum_size().height;

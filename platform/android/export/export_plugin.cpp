@@ -1229,7 +1229,7 @@ void EditorExportPlatformAndroid::_fix_manifest(const Ref<EditorExportPreset> &p
 							uint16_t c = decode_uint16(&p_manifest[string_at + 2 + 2 * j]);
 							ucstring.write[j] = c;
 						}
-						string_end = MAX(string_at + 2 + 2 * len, string_end);
+						string_end = Math::max(string_at + 2 + 2 * len, string_end);
 						ucstring.write[len] = 0;
 						string_table.write[i] = ucstring.ptr();
 					}

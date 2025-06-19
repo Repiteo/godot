@@ -111,7 +111,7 @@ bool JoltPhysicsDirectSpaceState3D::_cast_motion_impl(const JPH::Shape &p_jolt_s
 	};
 
 	// Figure out the number of steps we need in our binary search in order to achieve millimeter precision, within reason.
-	const int step_count = CLAMP(int(std::log(1000.0f * motion_length) / (float)Math::LN2), 4, 16);
+	const int step_count = Math::clamp(int(std::log(1000.0f * motion_length) / (float)Math::LN2), 4, 16);
 
 	bool collided = false;
 
@@ -208,7 +208,7 @@ bool JoltPhysicsDirectSpaceState3D::_body_motion_recover(const JoltBody3D &p_bod
 			combined_priority += other_body->get_collision_priority();
 		}
 
-		const float average_priority = MAX(combined_priority / (float)hit_count, (float)CMP_EPSILON);
+		const float average_priority = Math::max(combined_priority / (float)hit_count, (float)CMP_EPSILON);
 
 		recovered = true;
 
@@ -292,8 +292,8 @@ bool JoltPhysicsDirectSpaceState3D::_body_motion_cast(const JoltBody3D &p_body, 
 
 		collided |= _cast_motion_impl(*jolt_shape, transform_com, scale, p_motion, JoltProjectSettings::use_enhanced_internal_edge_removal_for_motion_queries, false, settings, motion_filter, motion_filter, motion_filter, motion_filter, shape_safe_fraction, shape_unsafe_fraction);
 
-		r_safe_fraction = MIN(r_safe_fraction, shape_safe_fraction);
-		r_unsafe_fraction = MIN(r_unsafe_fraction, shape_unsafe_fraction);
+		r_safe_fraction = Math::min(r_safe_fraction, shape_safe_fraction);
+		r_unsafe_fraction = Math::min(r_unsafe_fraction, shape_unsafe_fraction);
 	}
 
 	return collided;
@@ -863,8 +863,8 @@ bool JoltPhysicsDirectSpaceState3D::body_test_motion(const JoltBody3D &p_body, c
 
 	space->flush_pending_objects();
 
-	const float margin = MAX((float)p_parameters.margin, 0.0001f);
-	const int max_collisions = MIN(p_parameters.max_collisions, 32);
+	const float margin = Math::max((float)p_parameters.margin, 0.0001f);
+	const int max_collisions = Math::min(p_parameters.max_collisions, 32);
 
 	Transform3D transform = p_parameters.from;
 	JOLT_ENSURE_SCALE_NOT_ZERO(transform, vformat("body_test_motion (maybe from move_and_slide?) was passed an invalid transform along with body '%s'.", p_body.to_string()));

@@ -694,9 +694,9 @@ AnimationNode::NodeTimeInfo AnimationNodeOneShot::_process(const AnimationMixer:
 			}
 		}
 		if (!do_start) {
-			cur_fade_in_remaining = MAX(0, cur_fade_in_remaining - abs_delta); // Don't consider seeked delta by restart.
+			cur_fade_in_remaining = Math::max(0, cur_fade_in_remaining - abs_delta); // Don't consider seeked delta by restart.
 		}
-		cur_fade_out_remaining = MAX(0, cur_fade_out_remaining - abs_delta);
+		cur_fade_out_remaining = Math::max(0, cur_fade_out_remaining - abs_delta);
 	}
 
 	set_parameter(fade_in_remaining, cur_fade_in_remaining);
@@ -830,11 +830,11 @@ AnimationNode::NodeTimeInfo AnimationNodeAdd3::_process(const AnimationMixer::Pl
 	double amount = get_parameter(add_amount);
 
 	AnimationMixer::PlaybackInfo pi = p_playback_info;
-	pi.weight = MAX(0, -amount);
+	pi.weight = Math::max(0, -amount);
 	blend_input(0, pi, FILTER_PASS, sync, p_test_only);
 	pi.weight = 1.0;
 	NodeTimeInfo nti = blend_input(1, pi, FILTER_IGNORE, sync, p_test_only);
-	pi.weight = MAX(0, amount);
+	pi.weight = Math::max(0, amount);
 	blend_input(2, pi, FILTER_PASS, sync, p_test_only);
 
 	return nti;
@@ -911,11 +911,11 @@ AnimationNode::NodeTimeInfo AnimationNodeBlend3::_process(const AnimationMixer::
 	double amount = get_parameter(blend_amount);
 
 	AnimationMixer::PlaybackInfo pi = p_playback_info;
-	pi.weight = MAX(0, -amount);
+	pi.weight = Math::max(0, -amount);
 	NodeTimeInfo nti0 = blend_input(0, pi, FILTER_IGNORE, sync, p_test_only);
 	pi.weight = 1.0 - Math::abs(amount);
 	NodeTimeInfo nti1 = blend_input(1, pi, FILTER_IGNORE, sync, p_test_only);
-	pi.weight = MAX(0, amount);
+	pi.weight = Math::max(0, amount);
 	NodeTimeInfo nti2 = blend_input(2, pi, FILTER_IGNORE, sync, p_test_only);
 
 	return amount > 0.5 ? nti2 : (amount < -0.5 ? nti0 : nti1); // Hacky but good enough.

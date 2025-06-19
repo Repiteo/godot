@@ -31,6 +31,7 @@
 #pragma once
 
 #include "core/error/error_macros.h"
+#include "core/math/math_funcs.h"
 #include "core/os/memory.h"
 #include "core/templates/safe_refcount.h"
 #include "core/templates/span.h"
@@ -334,7 +335,7 @@ Error CowData<T>::_fork_allocate(USize p_size) {
 		}
 
 		// Copy over elements.
-		const USize copied_element_count = MIN(prev_size, p_size);
+		const USize copied_element_count = Math::min(prev_size, p_size);
 		if (copied_element_count > 0) {
 			if constexpr (std::is_trivially_copyable_v<T>) {
 				memcpy((uint8_t *)_ptr, (uint8_t *)prev_data._ptr, copied_element_count * sizeof(T));

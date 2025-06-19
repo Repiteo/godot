@@ -213,7 +213,7 @@ T convert_to_vector(const Variant &p_variant, bool p_linear_color = false) {
 		return construct_vector<T>({ c.r, c.g, c.b, c.a });
 	} else if (p_variant.is_array()) {
 		const Array &array = p_variant;
-		const int size = MIN(array.size(), T::AXIS_COUNT);
+		const int size = Math::min(array.size(), T::AXIS_COUNT);
 		T vector{};
 		for (int i = 0; i < size; i++) {
 			vector[i] = array.get(i);

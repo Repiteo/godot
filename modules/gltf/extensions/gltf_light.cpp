@@ -149,7 +149,7 @@ Ref<GLTFLight> GLTFLight::from_node(const Light3D *p_light) {
 		l->outer_cone_angle = Math::deg_to_rad(light->get_param(SpotLight3D::PARAM_SPOT_ANGLE));
 		// This equation is the inverse of the import equation (which has a desmos link).
 		float angle_ratio = 1 - (0.2 / (0.1 + light->get_param(SpotLight3D::PARAM_SPOT_ATTENUATION)));
-		angle_ratio = MAX(0, angle_ratio);
+		angle_ratio = Math::max(0, angle_ratio);
 		l->inner_cone_angle = l->outer_cone_angle * angle_ratio;
 	}
 	return l;
@@ -164,12 +164,12 @@ Light3D *GLTFLight::to_node() const {
 	} else if (light_type == "point") {
 		OmniLight3D *omni_light = memnew(OmniLight3D);
 		omni_light->set_param(OmniLight3D::PARAM_ENERGY, intensity);
-		omni_light->set_param(OmniLight3D::PARAM_RANGE, CLAMP(range, 0, 4096));
+		omni_light->set_param(OmniLight3D::PARAM_RANGE, Math::clamp(range, 0, 4096));
 		light = omni_light;
 	} else if (light_type == "spot") {
 		SpotLight3D *spot_light = memnew(SpotLight3D);
 		spot_light->set_param(SpotLight3D::PARAM_ENERGY, intensity);
-		spot_light->set_param(SpotLight3D::PARAM_RANGE, CLAMP(range, 0, 4096));
+		spot_light->set_param(SpotLight3D::PARAM_RANGE, Math::clamp(range, 0, 4096));
 		spot_light->set_param(SpotLight3D::PARAM_SPOT_ANGLE, Math::rad_to_deg(outer_cone_angle));
 		// Line of best fit derived from guessing, see https://www.desmos.com/calculator/biiflubp8b
 		// The points in desmos are not exact, except for (1, infinity).

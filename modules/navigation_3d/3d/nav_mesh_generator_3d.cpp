@@ -356,7 +356,7 @@ void NavMeshGenerator3D::generator_bake_from_source_geometry_data(NavMeshGenerat
 	cfg.minRegionArea = (int)(p_navigation_mesh->get_region_min_size() * p_navigation_mesh->get_region_min_size());
 	cfg.mergeRegionArea = (int)(p_navigation_mesh->get_region_merge_size() * p_navigation_mesh->get_region_merge_size());
 	cfg.maxVertsPerPoly = (int)p_navigation_mesh->get_vertices_per_polygon();
-	cfg.detailSampleDist = MAX(p_navigation_mesh->get_cell_size() * p_navigation_mesh->get_detail_sample_distance(), 0.1f);
+	cfg.detailSampleDist = Math::max(p_navigation_mesh->get_cell_size() * p_navigation_mesh->get_detail_sample_distance(), 0.1f);
 	cfg.detailSampleMaxError = p_navigation_mesh->get_cell_height() * p_navigation_mesh->get_detail_sample_max_error();
 
 	if (p_navigation_mesh->get_border_size() > 0.0 && !Math::is_zero_approx(Math::fmod(p_navigation_mesh->get_border_size(), p_navigation_mesh->get_cell_size()))) {

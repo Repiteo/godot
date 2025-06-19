@@ -444,39 +444,39 @@
 			NSRect frame = [wd.window_object frame];
 			switch (wd.edge) {
 				case DisplayServer::WINDOW_EDGE_TOP_LEFT: {
-					int clamped_dx = CLAMP(frame.size.width - event.deltaX, min_size.x, max_size.x) - frame.size.width;
-					int clamped_dy = CLAMP(frame.size.height - event.deltaY, min_size.y, max_size.y) - frame.size.height;
+					int clamped_dx = Math::clamp(frame.size.width - event.deltaX, min_size.x, max_size.x) - frame.size.width;
+					int clamped_dy = Math::clamp(frame.size.height - event.deltaY, min_size.y, max_size.y) - frame.size.height;
 					[wd.window_object setFrame:NSMakeRect(frame.origin.x - clamped_dx, frame.origin.y, frame.size.width + clamped_dx, frame.size.height + clamped_dy) display:YES];
 				} break;
 				case DisplayServer::WINDOW_EDGE_TOP: {
-					int clamped_dy = CLAMP(frame.size.height - event.deltaY, min_size.y, max_size.y) - frame.size.height;
+					int clamped_dy = Math::clamp(frame.size.height - event.deltaY, min_size.y, max_size.y) - frame.size.height;
 					[wd.window_object setFrame:NSMakeRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height + clamped_dy) display:YES];
 				} break;
 				case DisplayServer::WINDOW_EDGE_TOP_RIGHT: {
-					int clamped_dx = CLAMP(frame.size.width + event.deltaX, min_size.x, max_size.x) - frame.size.width;
-					int clamped_dy = CLAMP(frame.size.height - event.deltaY, min_size.y, max_size.y) - frame.size.height;
+					int clamped_dx = Math::clamp(frame.size.width + event.deltaX, min_size.x, max_size.x) - frame.size.width;
+					int clamped_dy = Math::clamp(frame.size.height - event.deltaY, min_size.y, max_size.y) - frame.size.height;
 					[wd.window_object setFrame:NSMakeRect(frame.origin.x, frame.origin.y, frame.size.width + clamped_dx, frame.size.height + clamped_dy) display:YES];
 				} break;
 				case DisplayServer::WINDOW_EDGE_LEFT: {
-					int clamped_dx = CLAMP(frame.size.width - event.deltaX, min_size.x, max_size.x) - frame.size.width;
+					int clamped_dx = Math::clamp(frame.size.width - event.deltaX, min_size.x, max_size.x) - frame.size.width;
 					[wd.window_object setFrame:NSMakeRect(frame.origin.x - clamped_dx, frame.origin.y, frame.size.width + clamped_dx, frame.size.height) display:YES];
 				} break;
 				case DisplayServer::WINDOW_EDGE_RIGHT: {
-					int clamped_dx = CLAMP(frame.size.width + event.deltaX, min_size.x, max_size.x) - frame.size.width;
+					int clamped_dx = Math::clamp(frame.size.width + event.deltaX, min_size.x, max_size.x) - frame.size.width;
 					[wd.window_object setFrame:NSMakeRect(frame.origin.x, frame.origin.y, frame.size.width + clamped_dx, frame.size.height) display:YES];
 				} break;
 				case DisplayServer::WINDOW_EDGE_BOTTOM_LEFT: {
-					int clamped_dx = CLAMP(frame.size.width - event.deltaX, min_size.x, max_size.x) - frame.size.width;
-					int clamped_dy = CLAMP(frame.size.height + event.deltaY, min_size.y, max_size.y) - frame.size.height;
+					int clamped_dx = Math::clamp(frame.size.width - event.deltaX, min_size.x, max_size.x) - frame.size.width;
+					int clamped_dy = Math::clamp(frame.size.height + event.deltaY, min_size.y, max_size.y) - frame.size.height;
 					[wd.window_object setFrame:NSMakeRect(frame.origin.x - clamped_dx, frame.origin.y - clamped_dy, frame.size.width + clamped_dx, frame.size.height + clamped_dy) display:YES];
 				} break;
 				case DisplayServer::WINDOW_EDGE_BOTTOM: {
-					int clamped_dy = CLAMP(frame.size.height + event.deltaY, min_size.y, max_size.y) - frame.size.height;
+					int clamped_dy = Math::clamp(frame.size.height + event.deltaY, min_size.y, max_size.y) - frame.size.height;
 					[wd.window_object setFrame:NSMakeRect(frame.origin.x, frame.origin.y - clamped_dy, frame.size.width, frame.size.height + clamped_dy) display:YES];
 				} break;
 				case DisplayServer::WINDOW_EDGE_BOTTOM_RIGHT: {
-					int clamped_dx = CLAMP(frame.size.width + event.deltaX, min_size.x, max_size.x) - frame.size.width;
-					int clamped_dy = CLAMP(frame.size.height + event.deltaY, min_size.y, max_size.y) - frame.size.height;
+					int clamped_dx = Math::clamp(frame.size.width + event.deltaX, min_size.x, max_size.x) - frame.size.width;
+					int clamped_dy = Math::clamp(frame.size.height + event.deltaY, min_size.y, max_size.y) - frame.size.height;
 					[wd.window_object setFrame:NSMakeRect(frame.origin.x, frame.origin.y - clamped_dy, frame.size.width + clamped_dx, frame.size.height + clamped_dy) display:YES];
 				} break;
 				default:

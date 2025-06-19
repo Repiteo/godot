@@ -225,7 +225,7 @@ void NavMapBuilder2D::_build_step_edge_connection_margin_connections(NavMapItera
 			}
 
 			// Check if the two edges are close to each other enough and compute a pathway between the two regions.
-			Vector2 self1 = edge_vector * CLAMP(projected_p1_ratio, 0.0, 1.0) + edge_p1;
+			Vector2 self1 = edge_vector * Math::clamp(projected_p1_ratio, 0.0, 1.0) + edge_p1;
 			Vector2 other1;
 			if (projected_p1_ratio >= 0.0 && projected_p1_ratio <= 1.0) {
 				other1 = other_edge_p1;
@@ -236,7 +236,7 @@ void NavMapBuilder2D::_build_step_edge_connection_margin_connections(NavMapItera
 				continue;
 			}
 
-			Vector2 self2 = edge_vector * CLAMP(projected_p2_ratio, 0.0, 1.0) + edge_p1;
+			Vector2 self2 = edge_vector * Math::clamp(projected_p2_ratio, 0.0, 1.0) + edge_p1;
 			Vector2 other2;
 			if (projected_p2_ratio >= 0.0 && projected_p2_ratio <= 1.0) {
 				other2 = other_edge_p2;

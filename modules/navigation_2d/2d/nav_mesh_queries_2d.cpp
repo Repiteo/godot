@@ -1190,7 +1190,7 @@ bool NavMeshQueries2D::_query_task_is_connection_owner_usable(const NavMeshPathQ
 }
 
 LocalVector<uint32_t> NavMeshQueries2D::get_simplified_path_indices(const LocalVector<Vector2> &p_path, real_t p_epsilon) {
-	p_epsilon = MAX(0.0, p_epsilon);
+	p_epsilon = Math::max(0.0, p_epsilon);
 	real_t squared_epsilon = p_epsilon * p_epsilon;
 
 	LocalVector<uint32_t> simplified_path_indices;

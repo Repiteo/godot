@@ -426,7 +426,7 @@ size_t ENetConnection::Compressor::enet_compress(void *context, const ENetBuffer
 	size_t ofs = 0;
 	while (total) {
 		for (size_t i = 0; i < inBufferCount; i++) {
-			const size_t to_copy = MIN(total, inBuffers[i].dataLength);
+			const size_t to_copy = Math::min(total, inBuffers[i].dataLength);
 			memcpy(&compressor->src_mem.write[ofs], inBuffers[i].data, to_copy);
 			ofs += to_copy;
 			total -= to_copy;

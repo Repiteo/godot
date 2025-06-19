@@ -448,7 +448,7 @@ void AudioDriverPulseAudio::thread_func(void *p_udata) {
 		if (avail_bytes > 0 && pa_stream_get_state(ad->pa_str) == PA_STREAM_READY) {
 			size_t bytes = pa_stream_writable_size(ad->pa_str);
 			if (bytes > 0) {
-				size_t bytes_to_write = MIN(bytes, avail_bytes);
+				size_t bytes_to_write = Math::min(bytes, avail_bytes);
 				const void *ptr = ad->samples_out.ptr();
 				ret = pa_stream_write(ad->pa_str, (char *)ptr + write_ofs, bytes_to_write, nullptr, 0LL, PA_SEEK_RELATIVE);
 				if (ret != 0) {
@@ -530,7 +530,7 @@ void AudioDriverPulseAudio::thread_func(void *p_udata) {
 				const void *ptr = nullptr;
 				size_t maxbytes = ad->input_buffer.size() * sizeof(int16_t);
 
-				bytes = MIN(bytes, maxbytes);
+				bytes = Math::min(bytes, maxbytes);
 				ret = pa_stream_peek(ad->pa_rec_str, &ptr, &bytes);
 				if (ret != 0) {
 					ERR_PRINT("pa_stream_peek error");

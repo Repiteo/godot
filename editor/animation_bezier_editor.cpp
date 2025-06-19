@@ -164,8 +164,8 @@ void AnimationBezierTrackEdit::_draw_track(int p_track, const Color &p_color) {
 			continue;
 		}
 
-		from_x = MAX(from_x, limit);
-		to_x = MIN(to_x, right_limit);
+		from_x = Math::max(from_x, limit);
+		to_x = Math::min(to_x, right_limit);
 
 		Vector<Vector2> lines;
 
@@ -366,7 +366,7 @@ void AnimationBezierTrackEdit::_notification(int p_what) {
 						TextLine text_buf = TextLine(text, font, font_size);
 						text_buf.set_width(limit - ofs - icon->get_width() - h_separation);
 
-						int h = MAX(text_buf.get_size().y, icon->get_height());
+						int h = Math::max(text_buf.get_size().y, icon->get_height());
 
 						draw_texture(icon, Point2(ofs, vofs + int(h - icon->get_height()) / 2.0));
 						ofs += icon->get_width() + h_separation;
@@ -945,17 +945,17 @@ void AnimationBezierTrackEdit::auto_fit_vertically() {
 		for (int j = 0; j < key_count; ++j) {
 			real_t value = animation->bezier_track_get_key_value(i, j);
 
-			minimum_value = MIN(value, minimum_value);
-			maximum_value = MAX(value, maximum_value);
+			minimum_value = Math::min(value, minimum_value);
+			maximum_value = Math::max(value, maximum_value);
 
 			// We also want to includes the handles...
 			Vector2 in_vec = animation->bezier_track_get_key_in_handle(i, j);
 			Vector2 out_vec = animation->bezier_track_get_key_out_handle(i, j);
 
-			minimum_value = MIN(value + in_vec.y, minimum_value);
-			maximum_value = MAX(value + in_vec.y, maximum_value);
-			minimum_value = MIN(value + out_vec.y, minimum_value);
-			maximum_value = MAX(value + out_vec.y, maximum_value);
+			minimum_value = Math::min(value + in_vec.y, minimum_value);
+			maximum_value = Math::max(value + in_vec.y, maximum_value);
+			minimum_value = Math::min(value + out_vec.y, minimum_value);
+			maximum_value = Math::max(value + out_vec.y, maximum_value);
 		}
 
 		nb_track_visible++;
@@ -1154,16 +1154,16 @@ void AnimationBezierTrackEdit::gui_input(const Ref<InputEvent> &p_event) {
 				real_t time = animation->track_get_key_time(key_pair.first, key_pair.second);
 				real_t value = animation->bezier_track_get_key_value(key_pair.first, key_pair.second);
 
-				minimum_time = MIN(time, minimum_time);
-				maximum_time = MAX(time, maximum_time);
-				minimum_value = MIN(value, minimum_value);
-				maximum_value = MAX(value, maximum_value);
+				minimum_time = Math::min(time, minimum_time);
+				maximum_time = Math::max(time, maximum_time);
+				minimum_value = Math::min(value, minimum_value);
+				maximum_value = Math::max(value, maximum_value);
 			}
 
 			float width = get_size().width - timeline->get_name_limit() - timeline->get_buttons_width();
 			float padding = width * 0.1;
 			float desired_scale = (width - padding / 2.0) / (maximum_time - minimum_time);
-			minimum_time = MAX(0, minimum_time - (padding / 2.0) / desired_scale);
+			minimum_time = Math::max(0, minimum_time - (padding / 2.0) / desired_scale);
 
 			float zv = Math::pow(100 / desired_scale, 0.125f);
 			if (zv < 1) {
@@ -1298,7 +1298,7 @@ void AnimationBezierTrackEdit::gui_input(const Ref<InputEvent> &p_event) {
 
 							undo_redo->commit_action();
 
-							selected_track = CLAMP(selected_track, 0, animation->get_track_count() - 1);
+							selected_track = Math::clamp(selected_track, 0, animation->get_track_count() - 1);
 						}
 						return;
 					} else if (I.key == LOCK_ICON) {
@@ -1900,7 +1900,7 @@ void AnimationBezierTrackEdit::gui_input(const Ref<InputEvent> &p_event) {
 		if (scaling_selection_handles.x != 0) {
 			if (scaling_selection_handles.x == 1) { // Right Handle
 				const int handle_adjust = Math::round(mp.x - (scaling_selection_scale.x >= 0 ? selection_rect.position.x : (selection_rect.position.x + selection_rect.size.width)));
-				mp.x -= MIN(Math::abs(handle_adjust), handle_length) * scaling_selection_handles.x * SIGN(handle_adjust);
+				mp.x -= Math::min(Math::abs(handle_adjust), handle_length) * scaling_selection_handles.x * Math::sign(handle_adjust);
 
 				if (editor->is_snap_keys_enabled()) {
 					mp.x = editor->snap_time((mp.x - limit) / timeline->get_zoom_scale(), true) + timeline->get_value();
@@ -1910,7 +1910,7 @@ void AnimationBezierTrackEdit::gui_input(const Ref<InputEvent> &p_event) {
 				rel_pos.x = scaling_selection_scale.x >= 0 ? (mp.x - selection_rect.position.x) : selection_rect.position.x + selection_rect.size.width - mp.x;
 			} else { // Left Handle
 				const int handle_adjust = Math::round((scaling_selection_scale.x >= 0 ? (selection_rect.position.x + selection_rect.size.width) : selection_rect.position.x) - mp.x);
-				mp.x -= MIN(Math::abs(handle_adjust), handle_length) * scaling_selection_handles.x * SIGN(handle_adjust);
+				mp.x -= Math::min(Math::abs(handle_adjust), handle_length) * scaling_selection_handles.x * Math::sign(handle_adjust);
 
 				const float x = editor->snap_time((mp.x - limit) / timeline->get_zoom_scale(), true) + timeline->get_value();
 				if (editor->is_snap_keys_enabled()) {
@@ -1930,7 +1930,7 @@ void AnimationBezierTrackEdit::gui_input(const Ref<InputEvent> &p_event) {
 		if (scaling_selection_handles.y != 0) {
 			if (scaling_selection_handles.y == 1) { // Bottom Handle
 				const int handle_adjust = Math::round(mp.y - (scaling_selection_scale.y >= 0 ? selection_rect.position.y : (selection_rect.position.y + selection_rect.size.height)));
-				mp.y -= MIN(Math::abs(handle_adjust), handle_length) * scaling_selection_handles.y * SIGN(handle_adjust);
+				mp.y -= Math::min(Math::abs(handle_adjust), handle_length) * scaling_selection_handles.y * Math::sign(handle_adjust);
 
 				if (scaling_selection_scale.y >= 0) {
 					rel_pos.y = mp.y - selection_rect.position.y;
@@ -1939,7 +1939,7 @@ void AnimationBezierTrackEdit::gui_input(const Ref<InputEvent> &p_event) {
 				}
 			} else { // Top Handle
 				const int handle_adjust = Math::round((scaling_selection_scale.y >= 0 ? (selection_rect.position.y + selection_rect.size.height) : selection_rect.position.y) - mp.y);
-				mp.y -= MIN(Math::abs(handle_adjust), handle_length) * scaling_selection_handles.y * SIGN(handle_adjust);
+				mp.y -= Math::min(Math::abs(handle_adjust), handle_length) * scaling_selection_handles.y * Math::sign(handle_adjust);
 
 				if (scaling_selection_scale.y >= 0) {
 					rel_pos.y = selection_rect.position.y + selection_rect.size.height - mp.y;
@@ -2087,7 +2087,7 @@ void AnimationBezierTrackEdit::_pan_callback(Vector2 p_scroll_vec, Ref<InputEven
 	if (mm.is_valid()) {
 		if (mm->get_position().x > timeline->get_name_limit()) {
 			timeline_v_scroll += p_scroll_vec.y * timeline_v_zoom;
-			timeline_v_scroll = CLAMP(timeline_v_scroll, -100000, 100000);
+			timeline_v_scroll = Math::clamp(timeline_v_scroll, -100000, 100000);
 			timeline->set_value(timeline->get_value() - p_scroll_vec.x / timeline->get_zoom_scale());
 		} else {
 			track_v_scroll += p_scroll_vec.y;
@@ -2106,7 +2106,7 @@ void AnimationBezierTrackEdit::_zoom_callback(float p_zoom_factor, Vector2 p_ori
 	Ref<InputEventWithModifiers> iewm = p_event;
 	if (iewm.is_valid() && iewm->is_alt_pressed()) {
 		// Alternate zoom (doesn't affect timeline).
-		timeline_v_zoom = CLAMP(timeline_v_zoom / p_zoom_factor, 0.000001, 100000);
+		timeline_v_zoom = Math::clamp(timeline_v_zoom / p_zoom_factor, 0.000001, 100000);
 	} else {
 		float zoom_factor = p_zoom_factor > 1.0 ? AnimationTimelineEdit::SCROLL_ZOOM_FACTOR_IN : AnimationTimelineEdit::SCROLL_ZOOM_FACTOR_OUT;
 		timeline->_zoom_callback(zoom_factor, p_origin, p_event);

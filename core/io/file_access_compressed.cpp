@@ -55,7 +55,7 @@ Error FileAccessCompressed::open_after_magic(Ref<FileAccess> p_base) {
 		rb.offset = acc_ofs;
 		rb.csize = f->get_32();
 		acc_ofs += rb.csize;
-		max_bs = MAX(max_bs, rb.csize);
+		max_bs = Math::max(max_bs, rb.csize);
 		read_blocks.push_back(rb);
 	}
 
@@ -264,7 +264,7 @@ uint64_t FileAccessCompressed::get_buffer(uint8_t *p_dst, uint64_t p_length) con
 	uint64_t dst_idx = 0;
 	while (true) {
 		// Copy over as much of our current block as possible.
-		const uint32_t copied_bytes_count = MIN(p_length - dst_idx, read_block_size - read_pos);
+		const uint32_t copied_bytes_count = Math::min(p_length - dst_idx, read_block_size - read_pos);
 		memcpy(p_dst + dst_idx, read_ptr + read_pos, copied_bytes_count);
 		dst_idx += copied_bytes_count;
 		read_pos += copied_bytes_count;

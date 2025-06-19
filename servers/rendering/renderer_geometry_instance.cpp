@@ -73,8 +73,8 @@ void RenderGeometryInstanceBase::set_transform(const Transform3D &p_transform, c
 	Vector3 model_scale_vec = p_transform.basis.get_scale_abs();
 	// handle non uniform scale here
 
-	float max_scale = MAX(model_scale_vec.x, MAX(model_scale_vec.y, model_scale_vec.z));
-	float min_scale = MIN(model_scale_vec.x, MIN(model_scale_vec.y, model_scale_vec.z));
+	float max_scale = Math::max(model_scale_vec.x, Math::max(model_scale_vec.y, model_scale_vec.z));
+	float min_scale = Math::min(model_scale_vec.x, Math::min(model_scale_vec.y, model_scale_vec.z));
 	non_uniform_scale = max_scale >= 0.0 && (min_scale / max_scale) < 0.9;
 
 	lod_model_scale = max_scale;
@@ -107,7 +107,7 @@ void RenderGeometryInstanceBase::set_parent_fade_alpha(float p_alpha) {
 }
 
 void RenderGeometryInstanceBase::set_transparency(float p_transparency) {
-	force_alpha = CLAMP(1.0 - p_transparency, 0, 1);
+	force_alpha = Math::clamp(1.0 - p_transparency, 0, 1);
 }
 
 void RenderGeometryInstanceBase::set_use_baked_light(bool p_enable) {

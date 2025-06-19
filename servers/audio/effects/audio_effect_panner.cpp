@@ -31,8 +31,8 @@
 #include "audio_effect_panner.h"
 
 void AudioEffectPannerInstance::process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) {
-	float lvol = CLAMP(1.0 - base->pan, 0, 1);
-	float rvol = CLAMP(1.0 + base->pan, 0, 1);
+	float lvol = Math::clamp(1.0 - base->pan, 0, 1);
+	float rvol = Math::clamp(1.0 + base->pan, 0, 1);
 
 	for (int i = 0; i < p_frame_count; i++) {
 		p_dst_frames[i].left = p_src_frames[i].left * lvol + p_src_frames[i].right * (1.0 - rvol);

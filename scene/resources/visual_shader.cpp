@@ -999,7 +999,7 @@ Vector<int> VisualShader::get_node_list(Type p_type) const {
 int VisualShader::get_valid_node_id(Type p_type) const {
 	ERR_FAIL_INDEX_V(p_type, TYPE_MAX, NODE_ID_INVALID);
 	const Graph *g = &graph[p_type];
-	return g->nodes.size() ? MAX(2, g->nodes.back()->key() + 1) : 2;
+	return g->nodes.size() ? Math::max(2, g->nodes.back()->key() + 1) : 2;
 }
 
 int VisualShader::find_node_id(Type p_type, const Ref<VisualShaderNode> &p_node) const {
@@ -1215,7 +1215,7 @@ bool VisualShader::can_connect_nodes(Type p_type, int p_from_node, int p_from_po
 }
 
 bool VisualShader::is_port_types_compatible(int p_a, int p_b) const {
-	return MAX(0, p_a - (int)VisualShaderNode::PORT_TYPE_BOOLEAN) == (MAX(0, p_b - (int)VisualShaderNode::PORT_TYPE_BOOLEAN));
+	return Math::max(0, p_a - (int)VisualShaderNode::PORT_TYPE_BOOLEAN) == (Math::max(0, p_b - (int)VisualShaderNode::PORT_TYPE_BOOLEAN));
 }
 
 void VisualShader::attach_node_to_frame(Type p_type, int p_node, int p_frame) {

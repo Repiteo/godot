@@ -193,8 +193,8 @@ void SpriteBase3D::draw_texture_rect(Ref<Texture2D> p_texture, Rect2 p_dst_rect,
 	{
 		Vector2 res = normal.octahedron_encode();
 		uint32_t value = 0;
-		value |= (uint16_t)CLAMP(res.x * 65535, 0, 65535);
-		value |= (uint16_t)CLAMP(res.y * 65535, 0, 65535) << 16;
+		value |= (uint16_t)Math::clamp(res.x * 65535, 0, 65535);
+		value |= (uint16_t)Math::clamp(res.y * 65535, 0, 65535) << 16;
 
 		v_normal = value;
 	}
@@ -203,8 +203,8 @@ void SpriteBase3D::draw_texture_rect(Ref<Texture2D> p_texture, Rect2 p_dst_rect,
 		Plane t = tangent;
 		Vector2 res = t.normal.octahedron_tangent_encode(t.d);
 		uint32_t value = 0;
-		value |= (uint16_t)CLAMP(res.x * 65535, 0, 65535);
-		value |= (uint16_t)CLAMP(res.y * 65535, 0, 65535) << 16;
+		value |= (uint16_t)Math::clamp(res.x * 65535, 0, 65535);
+		value |= (uint16_t)Math::clamp(res.y * 65535, 0, 65535) << 16;
 		if (value == 4294901760) {
 			// (1, 1) and (0, 1) decode to the same value, but (0, 1) messes with our compression detection.
 			// So we sanitize here.
@@ -215,10 +215,10 @@ void SpriteBase3D::draw_texture_rect(Ref<Texture2D> p_texture, Rect2 p_dst_rect,
 	}
 
 	uint8_t v_color[4] = {
-		uint8_t(CLAMP(color.r * 255.0, 0.0, 255.0)),
-		uint8_t(CLAMP(color.g * 255.0, 0.0, 255.0)),
-		uint8_t(CLAMP(color.b * 255.0, 0.0, 255.0)),
-		uint8_t(CLAMP(color.a * 255.0, 0.0, 255.0))
+		uint8_t(Math::clamp(color.r * 255.0, 0.0, 255.0)),
+		uint8_t(Math::clamp(color.g * 255.0, 0.0, 255.0)),
+		uint8_t(Math::clamp(color.b * 255.0, 0.0, 255.0)),
+		uint8_t(Math::clamp(color.a * 255.0, 0.0, 255.0))
 	};
 
 	for (int i = 0; i < 4; i++) {
@@ -245,15 +245,15 @@ void SpriteBase3D::draw_texture_rect(Ref<Texture2D> p_texture, Rect2 p_dst_rect,
 
 	switch (get_billboard_mode()) {
 		case StandardMaterial3D::BILLBOARD_ENABLED: {
-			real_t size_new = MAX(Math::abs(final_rect.position.x) * px_size, (final_rect.position.x + final_rect.size.x) * px_size);
-			size_new = MAX(size_new, MAX(Math::abs(final_rect.position.y) * px_size, (final_rect.position.y + final_rect.size.y) * px_size));
+			real_t size_new = Math::max(Math::abs(final_rect.position.x) * px_size, (final_rect.position.x + final_rect.size.x) * px_size);
+			size_new = Math::max(size_new, Math::max(Math::abs(final_rect.position.y) * px_size, (final_rect.position.y + final_rect.size.y) * px_size));
 			aabb_new.position = Vector3(-size_new, -size_new, -size_new);
 			aabb_new.size = Vector3(size_new * 2.0, size_new * 2.0, size_new * 2.0);
 		} break;
 		case StandardMaterial3D::BILLBOARD_FIXED_Y: {
-			real_t size_new = MAX(Math::abs(final_rect.position.x) * px_size, (final_rect.position.x + final_rect.size.x) * px_size);
+			real_t size_new = Math::max(Math::abs(final_rect.position.x) * px_size, (final_rect.position.x + final_rect.size.x) * px_size);
 			if (ax == Vector3::AXIS_Y) {
-				size_new = MAX(size_new, MAX(Math::abs(final_rect.position.y) * px_size, (final_rect.position.y + final_rect.size.y) * px_size));
+				size_new = Math::max(size_new, Math::max(Math::abs(final_rect.position.y) * px_size, (final_rect.position.y + final_rect.size.y) * px_size));
 			}
 			aabb_new.position.x = -size_new;
 			aabb_new.position.z = -size_new;
@@ -1162,7 +1162,7 @@ void AnimatedSprite3D::_notification(int p_what) {
 						_queue_redraw();
 						emit_signal(SceneStringName(frame_changed));
 					}
-					double to_process = MIN((1.0 - frame_progress) / abs_speed, remaining);
+					double to_process = Math::min((1.0 - frame_progress) / abs_speed, remaining);
 					frame_progress += to_process * abs_speed;
 					remaining -= to_process;
 				} else {
@@ -1186,7 +1186,7 @@ void AnimatedSprite3D::_notification(int p_what) {
 						_queue_redraw();
 						emit_signal(SceneStringName(frame_changed));
 					}
-					double to_process = MIN(frame_progress / abs_speed, remaining);
+					double to_process = Math::min(frame_progress / abs_speed, remaining);
 					frame_progress -= to_process * abs_speed;
 					remaining -= to_process;
 				}
@@ -1260,7 +1260,7 @@ void AnimatedSprite3D::set_frame_and_progress(int p_frame, real_t p_progress) {
 	}
 
 	bool has_animation = frames->has_animation(animation);
-	int end_frame = has_animation ? MAX(0, frames->get_frame_count(animation) - 1) : 0;
+	int end_frame = has_animation ? Math::max(0, frames->get_frame_count(animation) - 1) : 0;
 	bool is_changed = frame != p_frame;
 
 	if (p_frame < 0) {
@@ -1366,7 +1366,7 @@ void AnimatedSprite3D::play(const StringName &p_name, float p_custom_scale, bool
 
 	if (name != animation) {
 		animation = name;
-		int end_frame = MAX(0, frames->get_frame_count(animation) - 1);
+		int end_frame = Math::max(0, frames->get_frame_count(animation) - 1);
 
 		if (p_from_end) {
 			set_frame_and_progress(end_frame, 1.0);
@@ -1375,7 +1375,7 @@ void AnimatedSprite3D::play(const StringName &p_name, float p_custom_scale, bool
 		}
 		emit_signal(SceneStringName(animation_changed));
 	} else {
-		int end_frame = MAX(0, frames->get_frame_count(animation) - 1);
+		int end_frame = Math::max(0, frames->get_frame_count(animation) - 1);
 		bool is_backward = std::signbit(speed_scale * custom_speed_scale);
 
 		if (p_from_end && is_backward && frame == 0 && frame_progress <= 0.0) {

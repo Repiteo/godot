@@ -308,7 +308,7 @@ Error ResourceImporterImageFont::import(ResourceUID::ID p_source_id, const Strin
 			remaining -= list.size();
 		} else {
 			ERR_FAIL_COND_V_MSG(Math::abs(end - start) > remaining, ERR_CANT_CREATE, vformat("Too many characters in range \"%s\", got %d but expected %d.", range, Math::abs(end - start), remaining));
-			for (int32_t idx = MIN(start, end); idx <= MAX(start, end); idx++) {
+			for (int32_t idx = Math::min(start, end); idx <= Math::max(start, end); idx++) {
 				int x = pos % columns;
 				int y = pos / columns;
 				font->set_glyph_advance(0, chr_height, idx, Vector2(chr_width + chr_adv, 0));

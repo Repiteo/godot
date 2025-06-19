@@ -84,7 +84,7 @@ void GPUParticles3D::set_lifetime(double p_lifetime) {
 }
 
 void GPUParticles3D::set_interp_to_end(float p_interp) {
-	interp_to_end_factor = CLAMP(p_interp, 0.0, 1.0);
+	interp_to_end_factor = Math::clamp(p_interp, 0.0, 1.0);
 	RS::get_singleton()->particles_set_interp_to_end(particles, interp_to_end_factor);
 }
 

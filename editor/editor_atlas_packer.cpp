@@ -36,7 +36,7 @@
 #include "scene/resources/bit_map.h"
 
 void EditorAtlasPacker::chart_pack(Vector<Chart> &charts, int &r_width, int &r_height, int p_atlas_max_size, int p_cell_resolution) {
-	int divide_by = MIN(64, p_cell_resolution);
+	int divide_by = Math::min(64, p_cell_resolution);
 	Vector<PlottedBitmap> bitmaps;
 
 	int max_w = 0;
@@ -102,7 +102,7 @@ void EditorAtlasPacker::chart_pack(Vector<Chart> &charts, int &r_width, int &r_h
 			heights_size = bmw;
 		}
 
-		max_w = MAX(max_w, heights_size);
+		max_w = Math::max(max_w, heights_size);
 
 		Vector<int> top_heights;
 		Vector<int> bottom_heights;
@@ -203,7 +203,7 @@ void EditorAtlasPacker::chart_pack(Vector<Chart> &charts, int &r_width, int &r_h
 						continue; //no pixel here, anything is fine
 					}
 
-					int h = MAX(0, atlas_ptr[j + k] - pixmap_h);
+					int h = Math::max(0, atlas_ptr[j + k] - pixmap_h);
 					if (h > height) {
 						height = h;
 					}
@@ -221,7 +221,7 @@ void EditorAtlasPacker::chart_pack(Vector<Chart> &charts, int &r_width, int &r_h
 				}
 				int height = best_height + top_heights[j] + 1;
 				atlas_ptr[j + best_height_offset] = height;
-				atlas_h = MAX(atlas_h, height);
+				atlas_h = Math::max(atlas_h, height);
 			}
 
 			// set

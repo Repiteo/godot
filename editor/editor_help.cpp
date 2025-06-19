@@ -372,7 +372,7 @@ void EditorHelp::_class_desc_resized(bool p_force_update_theme) {
 	// Add extra horizontal margins for better readability.
 	// The margins increase as the width of the editor help container increases.
 	real_t char_width = theme_cache.doc_code_font->get_char_size('x', theme_cache.doc_code_font_size).width;
-	const int new_display_margin = MAX(30 * EDSCALE, get_parent_anchorable_rect().size.width - char_width * 120 * EDSCALE) * 0.5;
+	const int new_display_margin = Math::max(30 * EDSCALE, get_parent_anchorable_rect().size.width - char_width * 120 * EDSCALE) * 0.5;
 	if (display_margin != new_display_margin || p_force_update_theme) {
 		display_margin = new_display_margin;
 
@@ -2461,7 +2461,7 @@ static void _add_text_to_rt(const String &p_bbcode, RichTextLabel *p_rt, const C
 	}
 
 	const bool using_space_indent = int(EDITOR_GET("text_editor/behavior/indent/type")) == 1;
-	const int indent_size = MAX(1, int(EDITOR_GET("text_editor/behavior/indent/size")));
+	const int indent_size = Math::max(1, int(EDITOR_GET("text_editor/behavior/indent/size")));
 
 	const Ref<Font> doc_font = p_owner_node->get_theme_font(SNAME("doc"), EditorStringName(EditorFonts));
 	const Ref<Font> doc_bold_font = p_owner_node->get_theme_font(SNAME("doc_bold"), EditorStringName(EditorFonts));
@@ -4507,7 +4507,7 @@ void EditorHelpBit::update_content_height() {
 	if (style.is_valid()) {
 		content_height += style->get_content_margin(SIDE_TOP) + style->get_content_margin(SIDE_BOTTOM);
 	}
-	content->set_custom_minimum_size(Size2(content->get_custom_minimum_size().x, CLAMP(content_height, content_min_height, content_max_height)));
+	content->set_custom_minimum_size(Size2(content->get_custom_minimum_size().x, Math::clamp(content_height, content_min_height, content_max_height)));
 }
 
 EditorHelpBit::EditorHelpBit(const String &p_symbol, const String &p_prologue, bool p_use_class_prefix, bool p_allow_selection) {

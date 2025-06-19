@@ -205,7 +205,7 @@ void RenderSceneDataRD::update_ubo(RID p_uniform_buffer, RS::ViewportDebugDraw p
 
 		ubo.fog_depth_curve = render_scene_render->environment_get_fog_depth_curve(p_env);
 		ubo.fog_depth_end = render_scene_render->environment_get_fog_depth_end(p_env) > 0.0 ? render_scene_render->environment_get_fog_depth_end(p_env) : ubo.z_far;
-		ubo.fog_depth_begin = MIN(render_scene_render->environment_get_fog_depth_begin(p_env), ubo.fog_depth_end - 0.001);
+		ubo.fog_depth_begin = Math::min(render_scene_render->environment_get_fog_depth_begin(p_env), ubo.fog_depth_end - 0.001);
 
 		Color fog_color = render_scene_render->environment_get_fog_light_color(p_env).srgb_to_linear();
 		float fog_energy = render_scene_render->environment_get_fog_light_energy(p_env);
@@ -234,7 +234,7 @@ void RenderSceneDataRD::update_ubo(RID p_uniform_buffer, RS::ViewportDebugDraw p
 			RID sky_rid = render_scene_render->environment_get_sky(p_env);
 			if (sky_rid.is_valid()) {
 				float current_exposure = RSG::camera_attributes->camera_attributes_get_exposure_normalization_factor(p_camera_attributes) * render_scene_render->environment_get_bg_intensity(p_env) / p_luminance_multiplier;
-				ubo.IBL_exposure_normalization = current_exposure / MAX(0.001, render_scene_render->get_sky()->sky_get_baked_exposure(sky_rid));
+				ubo.IBL_exposure_normalization = current_exposure / Math::max(0.001, render_scene_render->get_sky()->sky_get_baked_exposure(sky_rid));
 			}
 		}
 	} else if (emissive_exposure_normalization > 0.0) {

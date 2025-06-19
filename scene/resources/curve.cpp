@@ -60,8 +60,8 @@ int Curve::_add_point(Vector2 p_position, real_t p_left_tangent, real_t p_right_
 	// Add a point and preserve order.
 
 	// Points must remain within the given value and domain ranges.
-	p_position.x = CLAMP(p_position.x, _min_domain, _max_domain);
-	p_position.y = CLAMP(p_position.y, _min_value, _max_value);
+	p_position.x = Math::clamp(p_position.x, _min_domain, _max_domain);
+	p_position.y = Math::clamp(p_position.y, _min_value, _max_value);
 
 	int ret = -1;
 
@@ -335,27 +335,27 @@ void Curve::set_limits(const Array &p_input) {
 }
 
 void Curve::set_min_value(real_t p_min) {
-	_min_value = MIN(p_min, _max_value - MIN_Y_RANGE);
+	_min_value = Math::min(p_min, _max_value - MIN_Y_RANGE);
 
 	for (const Point &p : _points) {
-		_min_value = MIN(_min_value, p.position.y);
+		_min_value = Math::min(_min_value, p.position.y);
 	}
 
 	emit_signal(SNAME(SIGNAL_RANGE_CHANGED));
 }
 
 void Curve::set_max_value(real_t p_max) {
-	_max_value = MAX(p_max, _min_value + MIN_Y_RANGE);
+	_max_value = Math::max(p_max, _min_value + MIN_Y_RANGE);
 
 	for (const Point &p : _points) {
-		_max_value = MAX(_max_value, p.position.y);
+		_max_value = Math::max(_max_value, p.position.y);
 	}
 
 	emit_signal(SNAME(SIGNAL_RANGE_CHANGED));
 }
 
 void Curve::set_min_domain(real_t p_min) {
-	_min_domain = MIN(p_min, _max_domain - MIN_X_RANGE);
+	_min_domain = Math::min(p_min, _max_domain - MIN_X_RANGE);
 
 	if (_points.size() > 0 && _min_domain > _points[0].position.x) {
 		_min_domain = _points[0].position.x;
@@ -366,7 +366,7 @@ void Curve::set_min_domain(real_t p_min) {
 }
 
 void Curve::set_max_domain(real_t p_max) {
-	_max_domain = MAX(p_max, _min_domain + MIN_X_RANGE);
+	_max_domain = Math::max(p_max, _min_domain + MIN_X_RANGE);
 
 	if (_points.size() > 0 && _max_domain < _points[_points.size() - 1].position.x) {
 		_max_domain = _points[_points.size() - 1].position.x;
@@ -1076,7 +1076,7 @@ Vector2 Curve2D::sample_baked(real_t p_offset, bool p_cubic) const {
 		return baked_point_cache[0];
 	}
 
-	p_offset = CLAMP(p_offset, 0.0, get_baked_length()); // PathFollower implement wrapping logic.
+	p_offset = Math::clamp(p_offset, 0.0, get_baked_length()); // PathFollower implement wrapping logic.
 
 	Curve2D::Interval interval = _find_interval(p_offset);
 	return _sample_baked(interval, p_cubic);
@@ -1100,7 +1100,7 @@ Transform2D Curve2D::sample_baked_with_rotation(real_t p_offset, bool p_cubic) c
 		ERR_FAIL_V_MSG(t, "Only 1 point in Curve2D.");
 	}
 
-	p_offset = CLAMP(p_offset, 0.0, get_baked_length()); // PathFollower implement wrapping logic.
+	p_offset = Math::clamp(p_offset, 0.0, get_baked_length()); // PathFollower implement wrapping logic.
 
 	// 0. Find interval for all sampling steps.
 	Curve2D::Interval interval = _find_interval(p_offset);
@@ -1161,7 +1161,7 @@ Vector2 Curve2D::get_closest_point(const Vector2 &p_to_point) const {
 		Vector2 origin = r[i];
 		Vector2 direction = (r[i + 1] - origin) / interval;
 
-		real_t d = CLAMP((p_to_point - origin).dot(direction), 0.0f, interval);
+		real_t d = Math::clamp((p_to_point - origin).dot(direction), 0.0f, interval);
 		Vector2 proj = origin + direction * d;
 
 		real_t dist = proj.distance_squared_to(p_to_point);
@@ -1203,7 +1203,7 @@ real_t Curve2D::get_closest_offset(const Vector2 &p_to_point) const {
 		Vector2 origin = r[i];
 		Vector2 direction = (r[i + 1] - origin) / interval;
 
-		real_t d = CLAMP((p_to_point - origin).dot(direction), 0.0f, interval);
+		real_t d = Math::clamp((p_to_point - origin).dot(direction), 0.0f, interval);
 		Vector2 proj = origin + direction * d;
 
 		real_t dist = proj.distance_squared_to(p_to_point);
@@ -1838,7 +1838,7 @@ void Curve3D::_bake() const {
 			const Vector3 up_start = up_write[0];
 			const Vector3 up_end = up_write[point_count - 1];
 
-			real_t sign = SIGN(up_end.cross(up_start).dot(forward_ptr[0]));
+			real_t sign = Math::sign(up_end.cross(up_start).dot(forward_ptr[0]));
 			real_t full_angle = Quaternion(up_end, up_start).get_angle();
 
 			if (std::abs(full_angle) < CMP_EPSILON) {
@@ -2021,7 +2021,7 @@ Vector3 Curve3D::sample_baked(real_t p_offset, bool p_cubic) const {
 		return baked_point_cache[0];
 	}
 
-	p_offset = CLAMP(p_offset, 0.0, get_baked_length()); // PathFollower implement wrapping logic.
+	p_offset = Math::clamp(p_offset, 0.0, get_baked_length()); // PathFollower implement wrapping logic.
 
 	Curve3D::Interval interval = _find_interval(p_offset);
 	return _sample_baked(interval, p_cubic);
@@ -2045,7 +2045,7 @@ Transform3D Curve3D::sample_baked_with_rotation(real_t p_offset, bool p_cubic, b
 		ERR_FAIL_V_MSG(t, "Only 1 point in Curve3D.");
 	}
 
-	p_offset = CLAMP(p_offset, 0.0, get_baked_length()); // PathFollower implement wrapping logic.
+	p_offset = Math::clamp(p_offset, 0.0, get_baked_length()); // PathFollower implement wrapping logic.
 
 	// 0. Find interval for all sampling steps.
 	Curve3D::Interval interval = _find_interval(p_offset);
@@ -2075,7 +2075,7 @@ real_t Curve3D::sample_baked_tilt(real_t p_offset) const {
 		return baked_tilt_cache.get(0);
 	}
 
-	p_offset = CLAMP(p_offset, 0.0, get_baked_length()); // PathFollower implement wrapping logic.
+	p_offset = Math::clamp(p_offset, 0.0, get_baked_length()); // PathFollower implement wrapping logic.
 
 	Curve3D::Interval interval = _find_interval(p_offset);
 	return _sample_baked_tilt(interval);
@@ -2097,7 +2097,7 @@ Vector3 Curve3D::sample_baked_up_vector(real_t p_offset, bool p_apply_tilt) cons
 		return baked_up_vector_cache.get(0);
 	}
 
-	p_offset = CLAMP(p_offset, 0.0, get_baked_length()); // PathFollower implement wrapping logic.
+	p_offset = Math::clamp(p_offset, 0.0, get_baked_length()); // PathFollower implement wrapping logic.
 
 	Curve3D::Interval interval = _find_interval(p_offset);
 	return _sample_posture(interval, p_apply_tilt).get_column(1);
@@ -2152,7 +2152,7 @@ Vector3 Curve3D::get_closest_point(const Vector3 &p_to_point) const {
 		Vector3 origin = r[i];
 		Vector3 direction = (r[i + 1] - origin) / interval;
 
-		real_t d = CLAMP((p_to_point - origin).dot(direction), 0.0f, interval);
+		real_t d = Math::clamp((p_to_point - origin).dot(direction), 0.0f, interval);
 		Vector3 proj = origin + direction * d;
 
 		real_t dist = proj.distance_squared_to(p_to_point);
@@ -2198,7 +2198,7 @@ real_t Curve3D::get_closest_offset(const Vector3 &p_to_point) const {
 		Vector3 origin = r[i];
 		Vector3 direction = (r[i + 1] - origin) / interval;
 
-		real_t d = CLAMP((p_to_point - origin).dot(direction), 0.0f, interval);
+		real_t d = Math::clamp((p_to_point - origin).dot(direction), 0.0f, interval);
 		Vector3 proj = origin + direction * d;
 
 		real_t dist = proj.distance_squared_to(p_to_point);

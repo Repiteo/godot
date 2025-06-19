@@ -235,7 +235,7 @@ void ShapeCast2D::_notification(int p_what) {
 				draw_col.b = g;
 			}
 			// Draw continuous chain of shapes along the cast.
-			const int steps = MAX(2, target_position.length() / shape->get_rect().get_size().length() * 4);
+			const int steps = Math::max(2, target_position.length() / shape->get_rect().get_size().length() * 4);
 			for (int i = 0; i <= steps; ++i) {
 				Vector2 t = (real_t(i) / steps) * target_position;
 				draw_set_transform(t, 0.0, Size2(1, 1));
@@ -248,7 +248,7 @@ void ShapeCast2D::_notification(int p_what) {
 				const real_t max_arrow_size = 6;
 				const real_t line_width = 1.4;
 				bool no_line = target_position.length() < line_width;
-				real_t arrow_size = CLAMP(target_position.length() * 2 / 3, line_width, max_arrow_size);
+				real_t arrow_size = Math::clamp(target_position.length() * 2 / 3, line_width, max_arrow_size);
 
 				if (no_line) {
 					arrow_size = target_position.length();

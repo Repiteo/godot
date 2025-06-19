@@ -445,7 +445,7 @@ PackedByteArray CryptoMbedTLS::generate_random_bytes(int p_bytes) {
 	int pos = 0;
 	// Ensure we generate random in chunks of no more than MBEDTLS_CTR_DRBG_MAX_REQUEST bytes or mbedtls_ctr_drbg_random will fail.
 	while (left > 0) {
-		int to_read = MIN(left, MBEDTLS_CTR_DRBG_MAX_REQUEST);
+		int to_read = Math::min(left, MBEDTLS_CTR_DRBG_MAX_REQUEST);
 		int ret = mbedtls_ctr_drbg_random(&ctr_drbg, out.ptrw() + pos, to_read);
 		ERR_FAIL_COND_V_MSG(ret != 0, PackedByteArray(), vformat("Failed to generate %d random bytes(s). Error: %d.", p_bytes, ret));
 		left -= to_read;

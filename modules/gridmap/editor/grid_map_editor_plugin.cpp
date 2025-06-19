@@ -833,7 +833,7 @@ EditorPlugin::AfterGUIInput GridMapEditor::forward_spatial_input_event(Camera3D 
 			accumulated_floor_delta += delta;
 			int step = 0;
 			if (Math::abs(accumulated_floor_delta) > 1.0) {
-				step = SIGN(accumulated_floor_delta);
+				step = Math::sign(accumulated_floor_delta);
 				accumulated_floor_delta -= step;
 			}
 			if (step) {
@@ -916,7 +916,7 @@ void GridMapEditor::update_palette() {
 	if (display_mode == DISPLAY_THUMBNAIL) {
 		mesh_library_palette->set_max_columns(0);
 		mesh_library_palette->set_icon_mode(ItemList::ICON_MODE_TOP);
-		mesh_library_palette->set_fixed_column_width(min_size * MAX(zoom_widget->get_zoom(), 1.5));
+		mesh_library_palette->set_fixed_column_width(min_size * Math::max(zoom_widget->get_zoom(), 1.5));
 	} else if (display_mode == DISPLAY_LIST) {
 		mesh_library_palette->set_max_columns(0);
 		mesh_library_palette->set_icon_mode(ItemList::ICON_MODE_LEFT);
@@ -1094,13 +1094,13 @@ void GridMapEditor::_draw_grids(const Vector3 &cell_size) {
 		for (int j = -GRID_CURSOR_SIZE; j <= GRID_CURSOR_SIZE; j++) {
 			for (int k = -GRID_CURSOR_SIZE; k <= GRID_CURSOR_SIZE; k++) {
 				Vector3 p = axis_n1 * j + axis_n2 * k;
-				float trans = Math::pow(MAX(0, 1.0 - (Vector2(j, k).length() / GRID_CURSOR_SIZE)), 2);
+				float trans = Math::pow(Math::max(0, 1.0 - (Vector2(j, k).length() / GRID_CURSOR_SIZE)), 2);
 
 				Vector3 pj = axis_n1 * (j + 1) + axis_n2 * k;
-				float transj = Math::pow(MAX(0, 1.0 - (Vector2(j + 1, k).length() / GRID_CURSOR_SIZE)), 2);
+				float transj = Math::pow(Math::max(0, 1.0 - (Vector2(j + 1, k).length() / GRID_CURSOR_SIZE)), 2);
 
 				Vector3 pk = axis_n1 * j + axis_n2 * (k + 1);
-				float transk = Math::pow(MAX(0, 1.0 - (Vector2(j, k + 1).length() / GRID_CURSOR_SIZE)), 2);
+				float transk = Math::pow(Math::max(0, 1.0 - (Vector2(j, k + 1).length() / GRID_CURSOR_SIZE)), 2);
 
 				grid_points[i].push_back(p);
 				grid_points[i].push_back(pk);

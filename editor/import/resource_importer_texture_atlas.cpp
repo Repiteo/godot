@@ -136,14 +136,14 @@ static void _plot_triangle(Vector2i *p_vertices, const Vector2i &p_offset, bool 
 	double dx_low = double(x[2] - x[1]) / (y[2] - y[1] + 1);
 	double xf = x[0];
 	double xt = x[0] + dx_upper; // if y[0] == y[1], special case
-	int max_y = MIN(y[2], p_transposed ? (width - p_offset.x - 1) : (height - p_offset.y - 1));
+	int max_y = Math::min(y[2], p_transposed ? (width - p_offset.x - 1) : (height - p_offset.y - 1));
 	for (int yi = y[0]; yi < max_y; yi++) {
 		if (yi >= 0) {
 			for (int xi = (xf > 0 ? int(xf) : 0); xi < (xt <= src_width ? xt : src_width); xi++) {
 				int px = xi, py = yi;
 				int sx = px, sy = py;
-				sx = CLAMP(sx, 0, src_width - 1);
-				sy = CLAMP(sy, 0, src_height - 1);
+				sx = Math::clamp(sx, 0, src_width - 1);
+				sy = Math::clamp(sy, 0, src_height - 1);
 				Color color = p_src_image->get_pixel(sx, sy);
 				if (p_transposed) {
 					SWAP(px, py);
@@ -164,8 +164,8 @@ static void _plot_triangle(Vector2i *p_vertices, const Vector2i &p_offset, bool 
 			for (int xi = (xf < src_width ? int(xf) : src_width - 1); xi >= (xt > 0 ? xt : 0); xi--) {
 				int px = xi, py = yi;
 				int sx = px, sy = py;
-				sx = CLAMP(sx, 0, src_width - 1);
-				sy = CLAMP(sy, 0, src_height - 1);
+				sx = Math::clamp(sx, 0, src_width - 1);
+				sy = Math::clamp(sy, 0, src_height - 1);
 				Color color = p_src_image->get_pixel(sx, sy);
 				if (p_transposed) {
 					SWAP(px, py);

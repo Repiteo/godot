@@ -1233,7 +1233,7 @@ void EditorFileDialog::update_filters() {
 		const int max_filters = 5;
 
 		// "All Recognized" display name.
-		for (int i = 0; i < MIN(max_filters, filters.size()); i++) {
+		for (int i = 0; i < Math::min(max_filters, filters.size()); i++) {
 			String flt = filters[i].get_slicec(';', 0).strip_edges();
 			if (!all_filters.is_empty() && !flt.is_empty()) {
 				all_filters += ", ";
@@ -1401,7 +1401,7 @@ void EditorFileDialog::set_current_path(const String &p_path) {
 	if (!p_path.size()) {
 		return;
 	}
-	int pos = MAX(p_path.rfind_char('/'), p_path.rfind_char('\\'));
+	int pos = Math::max(p_path.rfind_char('/'), p_path.rfind_char('\\'));
 	if (pos == -1) {
 		set_current_file(p_path);
 	} else {
@@ -2076,9 +2076,9 @@ void EditorFileDialog::set_option_values(int p_option, const Vector<String> &p_v
 	ERR_FAIL_INDEX(p_option, options.size());
 	options.write[p_option].values = p_values;
 	if (p_values.is_empty()) {
-		options.write[p_option].default_idx = CLAMP(options[p_option].default_idx, 0, 1);
+		options.write[p_option].default_idx = Math::clamp(options[p_option].default_idx, 0, 1);
 	} else {
-		options.write[p_option].default_idx = CLAMP(options[p_option].default_idx, 0, options[p_option].values.size() - 1);
+		options.write[p_option].default_idx = Math::clamp(options[p_option].default_idx, 0, options[p_option].values.size() - 1);
 	}
 	options_dirty = true;
 	if (is_visible()) {
@@ -2092,9 +2092,9 @@ void EditorFileDialog::set_option_default(int p_option, int p_index) {
 	}
 	ERR_FAIL_INDEX(p_option, options.size());
 	if (options[p_option].values.is_empty()) {
-		options.write[p_option].default_idx = CLAMP(p_index, 0, 1);
+		options.write[p_option].default_idx = Math::clamp(p_index, 0, 1);
 	} else {
-		options.write[p_option].default_idx = CLAMP(p_index, 0, options[p_option].values.size() - 1);
+		options.write[p_option].default_idx = Math::clamp(p_index, 0, options[p_option].values.size() - 1);
 	}
 	options_dirty = true;
 	if (is_visible()) {
@@ -2107,9 +2107,9 @@ void EditorFileDialog::add_option(const String &p_name, const Vector<String> &p_
 	opt.name = p_name;
 	opt.values = p_values;
 	if (opt.values.is_empty()) {
-		opt.default_idx = CLAMP(p_index, 0, 1);
+		opt.default_idx = Math::clamp(p_index, 0, 1);
 	} else {
-		opt.default_idx = CLAMP(p_index, 0, opt.values.size() - 1);
+		opt.default_idx = Math::clamp(p_index, 0, opt.values.size() - 1);
 	}
 	options.push_back(opt);
 	options_dirty = true;

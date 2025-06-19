@@ -66,7 +66,7 @@ void ColorModeRGB::_greater_value_inputted() {
 		}
 	}
 	Color linear_color = color_prev.srgb_to_linear();
-	float multiplier = MAX(1, MAX(MAX(linear_color.r, linear_color.g), linear_color.b));
+	float multiplier = Math::max(1, Math::max(Math::max(linear_color.r, linear_color.g), linear_color.b));
 	Color srgb = Color(linear_color.r / multiplier, linear_color.g / multiplier, linear_color.b / multiplier, linear_color.a).linear_to_srgb();
 	sliders[0]->set_value_no_signal(srgb.r * 255);
 	sliders[1]->set_value_no_signal(srgb.g * 255);
@@ -264,7 +264,7 @@ void ColorModeLinear::_greater_value_inputted() {
 		}
 	}
 
-	float multiplier = MAX(1, MAX(MAX(linear_color.r, linear_color.g), linear_color.b));
+	float multiplier = Math::max(1, Math::max(Math::max(linear_color.r, linear_color.g), linear_color.b));
 
 	sliders[0]->set_value_no_signal(linear_color.r / multiplier);
 	sliders[1]->set_value_no_signal(linear_color.g / multiplier);

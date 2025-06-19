@@ -54,7 +54,7 @@ int AudioStreamPlaybackOggVorbis::_mix_internal(AudioFrame *p_buffer, int p_fram
 
 		int to_mix = todo;
 		if (beat_length_frames >= 0 && (beat_length_frames - (int)frames_mixed) < to_mix) {
-			to_mix = MAX(0, beat_length_frames - (int)frames_mixed);
+			to_mix = Math::max(0, beat_length_frames - (int)frames_mixed);
 		}
 
 		int mixed = _mix_frames_vorbis(buffer, to_mix);
@@ -63,7 +63,7 @@ int AudioStreamPlaybackOggVorbis::_mix_internal(AudioFrame *p_buffer, int p_fram
 		frames_mixed += mixed;
 
 		if (loop_fade_remaining < FADE_SIZE) {
-			int to_fade = loop_fade_remaining + MIN(FADE_SIZE - loop_fade_remaining, mixed);
+			int to_fade = loop_fade_remaining + Math::min(FADE_SIZE - loop_fade_remaining, mixed);
 			for (int i = loop_fade_remaining; i < to_fade; i++) {
 				buffer[i - loop_fade_remaining] += loop_fade[i] * (float(FADE_SIZE - i) / float(FADE_SIZE));
 			}
@@ -84,7 +84,7 @@ int AudioStreamPlaybackOggVorbis::_mix_internal(AudioFrame *p_buffer, int p_fram
 				//No loop, just fade and finish
 				for (int i = 0; i < mixed; i++) {
 					int idx = frames_mixed + i - mixed;
-					buffer[i] *= 1.0 - float(MAX(0, (idx - (beat_length_frames - FADE_SIZE)))) / float(FADE_SIZE);
+					buffer[i] *= 1.0 - float(Math::max(0, (idx - (beat_length_frames - FADE_SIZE)))) / float(FADE_SIZE);
 				}
 				if ((int)frames_mixed == beat_length_frames) {
 					for (int i = p_frames - todo; i < p_frames; i++) {

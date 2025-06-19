@@ -701,7 +701,7 @@ void LightStorage::update_light_buffers(RenderDataRD *p_render_data, const Paged
 						Projection correction;
 						correction.set_depth_correction(false, true, false);
 						Projection matrix = correction * light_instance->shadow_transform[j].camera;
-						float split = light_instance->shadow_transform[MIN(limit, j)].split;
+						float split = light_instance->shadow_transform[Math::min(limit, j)].split;
 
 						Projection bias;
 						bias.set_light_bias();
@@ -743,7 +743,7 @@ void LightStorage::update_light_buffers(RenderDataRD *p_render_data, const Paged
 					}
 
 					float fade_start = light->param[RS::LIGHT_PARAM_SHADOW_FADE_START];
-					light_data.fade_from = -light_data.shadow_split_offsets[3] * MIN(fade_start, 0.999); //using 1.0 would break smoothstep
+					light_data.fade_from = -light_data.shadow_split_offsets[3] * Math::min(fade_start, 0.999); //using 1.0 would break smoothstep
 					light_data.fade_to = -light_data.shadow_split_offsets[3];
 				}
 
@@ -885,7 +885,7 @@ void LightStorage::update_light_buffers(RenderDataRD *p_render_data, const Paged
 		light_data.volumetric_fog_energy = light->param[RS::LIGHT_PARAM_VOLUMETRIC_FOG_ENERGY];
 		light_data.bake_mode = light->bake_mode;
 
-		float radius = MAX(0.001, light->param[RS::LIGHT_PARAM_RANGE]);
+		float radius = Math::max(0.001, light->param[RS::LIGHT_PARAM_RANGE]);
 		light_data.inv_radius = 1.0 / radius;
 
 		Vector3 pos = inverse_transform.xform(light_transform.origin);
@@ -1516,7 +1516,7 @@ bool LightStorage::reflection_probe_instance_begin_render(RID p_instance, RID p_
 	}
 
 	if (atlas->reflection.is_null()) {
-		int mipmaps = MIN(RendererSceneRenderRD::get_singleton()->get_sky()->roughness_layers, Image::get_image_required_mipmaps(atlas->size, atlas->size, Image::FORMAT_RGBAH) + 1);
+		int mipmaps = Math::min(RendererSceneRenderRD::get_singleton()->get_sky()->roughness_layers, Image::get_image_required_mipmaps(atlas->size, atlas->size, Image::FORMAT_RGBAH) + 1);
 		mipmaps = LightStorage::get_singleton()->reflection_probe_get_update_mode(rpi->probe) == RS::REFLECTION_PROBE_UPDATE_ALWAYS ? 8 : mipmaps; // always use 8 mipmaps with real time filtering
 		{
 			//reflection atlas was unused, create:
@@ -2006,7 +2006,7 @@ void LightStorage::lightmap_tap_sh_light(RID p_lightmap, const Vector3 &p_point,
 	Color barycentric = Geometry3D::tetrahedron_get_barycentric_coords(points[0], points[1], points[2], points[3], p_point);
 
 	for (int i = 0; i < 4; i++) {
-		float c = CLAMP(barycentric[i], 0.0, 1.0);
+		float c = Math::clamp(barycentric[i], 0.0, 1.0);
 		for (int j = 0; j < 9; j++) {
 			r_sh[j] += sh_colors[i][j] * c;
 		}
@@ -2201,7 +2201,7 @@ void LightStorage::shadow_atlas_set_quadrant_subdivision(RID p_atlas, int p_quad
 
 	for (int i = 0; i < 4; i++) {
 		if (shadow_atlas->quadrants[i].subdivision) {
-			shadow_atlas->smallest_subdiv = MIN(shadow_atlas->smallest_subdiv, shadow_atlas->quadrants[i].subdivision);
+			shadow_atlas->smallest_subdiv = Math::min(shadow_atlas->smallest_subdiv, shadow_atlas->quadrants[i].subdivision);
 		}
 	}
 
@@ -2363,7 +2363,7 @@ bool LightStorage::shadow_atlas_update_light(RID p_atlas, RID p_light_instance, 
 	}
 
 	uint32_t quad_size = shadow_atlas->size >> 1;
-	int desired_fit = MIN(quad_size / shadow_atlas->smallest_subdiv, next_power_of_2(uint32_t(quad_size * p_coverage)));
+	int desired_fit = Math::min(quad_size / shadow_atlas->smallest_subdiv, next_power_of_2(uint32_t(quad_size * p_coverage)));
 
 	int valid_quadrants[4];
 	int valid_quadrant_count = 0;
@@ -2594,7 +2594,7 @@ int LightStorage::get_directional_light_shadow_size(RID p_light_instance) {
 			break;
 	}
 
-	return MAX(r.size.width, r.size.height);
+	return Math::max(r.size.width, r.size.height);
 }
 
 /* SHADOW CUBEMAPS */

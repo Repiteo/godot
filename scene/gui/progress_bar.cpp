@@ -39,7 +39,7 @@ Size2 ProgressBar::get_minimum_size() const {
 	if (show_percentage) {
 		String txt = "100%";
 		TextLine tl = TextLine(txt, theme_cache.font, theme_cache.font_size);
-		minimum_size.height = MAX(minimum_size.height, theme_cache.background_style->get_minimum_size().height + tl.get_size().y);
+		minimum_size.height = Math::max(minimum_size.height, theme_cache.background_style->get_minimum_size().height + tl.get_size().y);
 	} else { // this is needed, else the progressbar will collapse
 		minimum_size = minimum_size.maxf(1);
 	}
@@ -50,7 +50,7 @@ void ProgressBar::_notification(int p_what) {
 	switch (p_what) {
 		case NOTIFICATION_INTERNAL_PROCESS: {
 			if (is_visible_in_tree()) {
-				_indeterminate_fill_progress += get_process_delta_time() * MAX(indeterminate_min_speed, MAX(get_size().width, get_size().height) / 2);
+				_indeterminate_fill_progress += get_process_delta_time() * Math::max(indeterminate_min_speed, Math::max(get_size().width, get_size().height) / 2);
 				queue_redraw();
 			}
 		} break;
@@ -67,11 +67,11 @@ void ProgressBar::_notification(int p_what) {
 
 			if (indeterminate) {
 				Size2 size = get_size();
-				real_t fill_size = MIN(size.width, size.height) * 2;
+				real_t fill_size = Math::min(size.width, size.height) * 2;
 
 				if (is_part_of_edited_scene() && !editor_preview_indeterminate) {
 					// Center the filled bar when we're not previewing the animation.
-					_indeterminate_fill_progress = (MAX(size.width, size.height) / 2) + (fill_size / 2);
+					_indeterminate_fill_progress = (Math::max(size.width, size.height) / 2) + (fill_size / 2);
 				}
 
 				switch (mode) {
@@ -157,11 +157,11 @@ void ProgressBar::_notification(int p_what) {
 					double exp_value = get_value() == 0 ? 0.0 : Math::log(get_value()) / Math::log((double)2);
 					double percentage = (exp_value - exp_min) / (exp_max - exp_min);
 
-					ratio = CLAMP(percentage, is_lesser_allowed() ? percentage : 0, is_greater_allowed() ? percentage : 1);
+					ratio = Math::clamp(percentage, is_lesser_allowed() ? percentage : 0, is_greater_allowed() ? percentage : 1);
 				} else {
 					double percentage = (get_value() - get_min()) / (get_max() - get_min());
 
-					ratio = CLAMP(percentage, is_lesser_allowed() ? percentage : 0, is_greater_allowed() ? percentage : 1);
+					ratio = Math::clamp(percentage, is_lesser_allowed() ? percentage : 0, is_greater_allowed() ? percentage : 1);
 				}
 
 				String txt = itos(int(ratio * 100));

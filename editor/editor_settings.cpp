@@ -1880,7 +1880,7 @@ float EditorSettings::get_auto_display_scale() {
 	}
 
 	// Use the smallest dimension to use a correct display scale on portrait displays.
-	const int smallest_dimension = MIN(DisplayServer::get_singleton()->screen_get_size(screen).x, DisplayServer::get_singleton()->screen_get_size(screen).y);
+	const int smallest_dimension = Math::min(DisplayServer::get_singleton()->screen_get_size(screen).x, DisplayServer::get_singleton()->screen_get_size(screen).y);
 	if (DisplayServer::get_singleton()->screen_get_dpi(screen) >= 192 && smallest_dimension >= 1400) {
 		// hiDPI display.
 		return 2.0;

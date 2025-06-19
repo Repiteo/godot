@@ -197,7 +197,7 @@ void AudioStreamImportSettingsDialog::_preview_zoom_out() {
 		return;
 	}
 	float page_size = zoom_bar->get_page();
-	zoom_bar->set_page(MIN(zoom_bar->get_max(), page_size * 2.0));
+	zoom_bar->set_page(Math::min(zoom_bar->get_max(), page_size * 2.0));
 	zoom_bar->set_value(zoom_bar->get_value() - page_size * 0.5);
 	if (zoom_bar->get_value() == 0) {
 		zoom_bar->hide();
@@ -377,7 +377,7 @@ void AudioStreamImportSettingsDialog::_on_input_indicator(Ref<InputEvent> p_even
 
 int AudioStreamImportSettingsDialog::_get_beat_at_pos(real_t p_x) {
 	float ofs_sec = zoom_bar->get_value() + p_x * zoom_bar->get_page() / _preview->get_size().width;
-	ofs_sec = CLAMP(ofs_sec, 0, stream->get_length());
+	ofs_sec = Math::clamp(ofs_sec, 0, stream->get_length());
 	float beat_size = 60 / float(stream->get_bpm());
 	int beat = int(ofs_sec / beat_size + 0.5);
 
@@ -401,7 +401,7 @@ void AudioStreamImportSettingsDialog::_set_beat_len_to(real_t p_x) {
 
 void AudioStreamImportSettingsDialog::_seek_to(real_t p_x) {
 	_current = zoom_bar->get_value() + p_x / _preview->get_rect().size.x * zoom_bar->get_page();
-	_current = CLAMP(_current, 0, stream->get_length());
+	_current = Math::clamp(_current, 0, stream->get_length());
 	_player->seek(_current);
 	_indicator->queue_redraw();
 }

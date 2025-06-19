@@ -152,7 +152,7 @@ void EditorResourcePreview::_preview_ready(const String &p_path, int p_hash, con
 			modified_time = FileAccess::get_modified_time(p_path);
 			String import_path = p_path + ".import";
 			if (FileAccess::exists(import_path)) {
-				modified_time = MAX(modified_time, FileAccess::get_modified_time(import_path));
+				modified_time = Math::max(modified_time, FileAccess::get_modified_time(import_path));
 			}
 		}
 
@@ -248,7 +248,7 @@ void EditorResourcePreview::_generate_preview(Ref<ImageTexture> &r_texture, Ref<
 			uint64_t modtime = FileAccess::get_modified_time(p_item.path);
 			String import_path = p_item.path + ".import";
 			if (FileAccess::exists(import_path)) {
-				modtime = MAX(modtime, FileAccess::get_modified_time(import_path));
+				modtime = Math::max(modtime, FileAccess::get_modified_time(import_path));
 			}
 
 			_write_preview_cache(f, thumbnail_size, has_small_texture, modtime, FileAccess::get_md5(p_item.path), p_metadata);
@@ -320,7 +320,7 @@ void EditorResourcePreview::_iterate() {
 		uint64_t modtime = FileAccess::get_modified_time(item.path);
 		String import_path = item.path + ".import";
 		if (FileAccess::exists(import_path)) {
-			modtime = MAX(modtime, FileAccess::get_modified_time(import_path));
+			modtime = Math::max(modtime, FileAccess::get_modified_time(import_path));
 		}
 
 		int tsize;
@@ -597,7 +597,7 @@ void EditorResourcePreview::check_for_invalidation(const String &p_path) {
 			uint64_t modified_time = FileAccess::get_modified_time(p_path);
 			String import_path = p_path + ".import";
 			if (FileAccess::exists(import_path)) {
-				modified_time = MAX(modified_time, FileAccess::get_modified_time(import_path));
+				modified_time = Math::max(modified_time, FileAccess::get_modified_time(import_path));
 			}
 
 			if (modified_time != cache[p_path].modified_time) {

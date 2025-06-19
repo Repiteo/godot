@@ -1044,7 +1044,7 @@ Error RenderingDeviceDriverVulkan::_add_queue_create_info(LocalVector<VkDeviceQu
 		VkDeviceQueueCreateInfo create_info = {};
 		create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
 		create_info.queueFamilyIndex = i;
-		create_info.queueCount = MIN(queue_family_properties[i].queueCount, max_queue_count_per_family);
+		create_info.queueCount = Math::min(queue_family_properties[i].queueCount, max_queue_count_per_family);
 		create_info.pQueuePriorities = queue_priorities;
 		r_queue_create_info.push_back(create_info);
 
@@ -2198,9 +2198,9 @@ void RenderingDeviceDriverVulkan::texture_get_copyable_layout(TextureID p_textur
 			r_layout->offset = get_image_format_required_size(tex_info->rd_format, w, h, d, p_subresource.mipmap);
 		}
 		for (uint32_t i = 0; i < p_subresource.mipmap; i++) {
-			w = MAX(1u, w >> 1);
-			h = MAX(1u, h >> 1);
-			d = MAX(1u, d >> 1);
+			w = Math::max(1u, w >> 1);
+			h = Math::max(1u, h >> 1);
+			d = Math::max(1u, d >> 1);
 		}
 		uint32_t bw = 0, bh = 0;
 		get_compressed_image_format_block_dimensions(tex_info->rd_format, bw, bh);
@@ -3127,10 +3127,10 @@ Error RenderingDeviceDriverVulkan::swap_chain_resize(CommandQueueID p_cmd_queue,
 		if (surface_capabilities.currentExtent.width == 0xFFFFFFFF) {
 			// The current extent is currently undefined, so the current surface width and height will be clamped to the surface's capabilities.
 			// We make sure to overwrite surface_capabilities.currentExtent.width so that the same check further below
-			// does not set extent.width = CLAMP( surface->width, ... ) on the first run of this function, because
+			// does not set extent.width = Math::clamp( surface->width, ... ) on the first run of this function, because
 			// that'd be potentially unswapped.
-			surface_capabilities.currentExtent.width = CLAMP(surface->width, surface_capabilities.minImageExtent.width, surface_capabilities.maxImageExtent.width);
-			surface_capabilities.currentExtent.height = CLAMP(surface->height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height);
+			surface_capabilities.currentExtent.width = Math::clamp(surface->width, surface_capabilities.minImageExtent.width, surface_capabilities.maxImageExtent.width);
+			surface_capabilities.currentExtent.height = Math::clamp(surface->height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height);
 		}
 
 		// We must SWAP() only once otherwise we'll keep ping-ponging between
@@ -3146,8 +3146,8 @@ Error RenderingDeviceDriverVulkan::swap_chain_resize(CommandQueueID p_cmd_queue,
 	if (surface_capabilities.currentExtent.width == 0xFFFFFFFF) {
 		// The current extent is currently undefined, so the current surface width and height will be clamped to the surface's capabilities.
 		// We can only be here on the second call to swap_chain_resize(), by which time surface->width & surface->height should already be swapped if needed.
-		extent.width = CLAMP(surface->width, surface_capabilities.minImageExtent.width, surface_capabilities.maxImageExtent.width);
-		extent.height = CLAMP(surface->height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height);
+		extent.width = Math::clamp(surface->width, surface_capabilities.minImageExtent.width, surface_capabilities.maxImageExtent.width);
+		extent.height = Math::clamp(surface->height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height);
 	} else {
 		// Grab the dimensions from the current extent.
 		extent = surface_capabilities.currentExtent;
@@ -3201,10 +3201,10 @@ Error RenderingDeviceDriverVulkan::swap_chain_resize(CommandQueueID p_cmd_queue,
 	}
 
 	// Clamp the desired image count to the surface's capabilities.
-	uint32_t desired_swapchain_images = MAX(p_desired_framebuffer_count, surface_capabilities.minImageCount);
+	uint32_t desired_swapchain_images = Math::max(p_desired_framebuffer_count, surface_capabilities.minImageCount);
 	if (surface_capabilities.maxImageCount > 0) {
 		// Only clamp to the max image count if it's defined. A max image count of 0 means there's no upper limit to the amount of images.
-		desired_swapchain_images = MIN(desired_swapchain_images, surface_capabilities.maxImageCount);
+		desired_swapchain_images = Math::min(desired_swapchain_images, surface_capabilities.maxImageCount);
 	}
 
 	// Refer to the comment in command_queue_present() for more details.
@@ -3471,7 +3471,7 @@ void RenderingDeviceDriverVulkan::swap_chain_set_max_fps(SwapChainID p_swap_chai
 	SwapChain *swap_chain = (SwapChain *)(p_swap_chain.id);
 	if (swap_chain->vk_swapchain != VK_NULL_HANDLE) {
 		const uint64_t max_time = p_max_fps > 0 ? uint64_t((1000.0 * 1000.0 * 1000.0) / p_max_fps) : 0;
-		SwappyVk_setSwapIntervalNS(vk_device, swap_chain->vk_swapchain, MAX(swap_chain->refresh_duration, max_time));
+		SwappyVk_setSwapIntervalNS(vk_device, swap_chain->vk_swapchain, Math::max(swap_chain->refresh_duration, max_time));
 	}
 #endif
 }
@@ -4278,9 +4278,9 @@ void RenderingDeviceDriverVulkan::command_resolve_texture(CommandBufferID p_cmd_
 	vk_resolve.dstSubresource.mipLevel = p_dst_mipmap;
 	vk_resolve.dstSubresource.baseArrayLayer = p_dst_layer;
 	vk_resolve.dstSubresource.layerCount = 1;
-	vk_resolve.extent.width = MAX(1u, src_tex_info->vk_create_info.extent.width >> p_src_mipmap);
-	vk_resolve.extent.height = MAX(1u, src_tex_info->vk_create_info.extent.height >> p_src_mipmap);
-	vk_resolve.extent.depth = MAX(1u, src_tex_info->vk_create_info.extent.depth >> p_src_mipmap);
+	vk_resolve.extent.width = Math::max(1u, src_tex_info->vk_create_info.extent.width >> p_src_mipmap);
+	vk_resolve.extent.height = Math::max(1u, src_tex_info->vk_create_info.extent.height >> p_src_mipmap);
+	vk_resolve.extent.depth = Math::max(1u, src_tex_info->vk_create_info.extent.depth >> p_src_mipmap);
 
 #ifdef DEBUG_ENABLED
 	if (src_tex_info->transient) {
@@ -5865,7 +5865,7 @@ uint64_t RenderingDeviceDriverVulkan::limit_get(Limit p_limit) {
 		case LIMIT_MAX_SHADER_VARYINGS:
 			// The Vulkan spec states that built in varyings like gl_FragCoord should count against this, but in
 			// practice, that doesn't seem to be the case. The validation layers don't even complain.
-			return MIN(limits.maxVertexOutputComponents / 4, limits.maxFragmentInputComponents / 4);
+			return Math::min(limits.maxVertexOutputComponents / 4, limits.maxFragmentInputComponents / 4);
 		default: {
 #ifdef DEV_ENABLED
 			WARN_PRINT("Returning maximum value for unknown limit " + itos(p_limit) + ".");
@@ -5878,7 +5878,7 @@ uint64_t RenderingDeviceDriverVulkan::limit_get(Limit p_limit) {
 uint64_t RenderingDeviceDriverVulkan::api_trait_get(ApiTrait p_trait) {
 	switch (p_trait) {
 		case API_TRAIT_TEXTURE_TRANSFER_ALIGNMENT:
-			return (uint64_t)MAX((uint64_t)16, physical_device_properties.limits.optimalBufferCopyOffsetAlignment);
+			return (uint64_t)Math::max((uint64_t)16, physical_device_properties.limits.optimalBufferCopyOffsetAlignment);
 		case API_TRAIT_SHADER_CHANGE_INVALIDATION:
 			return (uint64_t)SHADER_CHANGE_INVALIDATION_INCOMPATIBLE_SETS_PLUS_CASCADE;
 		default:

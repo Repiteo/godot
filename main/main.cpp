@@ -1664,7 +1664,7 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 		} else if (arg.ends_with("project.godot")) {
 			String path;
 			String file = arg;
-			int sep = MAX(file.rfind_char('/'), file.rfind_char('\\'));
+			int sep = Math::max(file.rfind_char('/'), file.rfind_char('\\'));
 			if (sep == -1) {
 				path = ".";
 			} else {
@@ -4735,8 +4735,8 @@ bool Main::iteration() {
 		NavigationServer3D::get_singleton()->physics_process(physics_step * time_scale);
 #endif // NAVIGATION_3D_DISABLED
 
-		navigation_process_ticks = MAX(navigation_process_ticks, OS::get_singleton()->get_ticks_usec() - navigation_begin); // keep the largest one for reference
-		navigation_process_max = MAX(OS::get_singleton()->get_ticks_usec() - navigation_begin, navigation_process_max);
+		navigation_process_ticks = Math::max(navigation_process_ticks, OS::get_singleton()->get_ticks_usec() - navigation_begin); // keep the largest one for reference
+		navigation_process_max = Math::max(OS::get_singleton()->get_ticks_usec() - navigation_begin, navigation_process_max);
 
 		message_queue->flush();
 #endif // !defined(NAVIGATION_2D_DISABLED) || !defined(NAVIGATION_3D_DISABLED)
@@ -4755,8 +4755,8 @@ bool Main::iteration() {
 
 		OS::get_singleton()->get_main_loop()->iteration_end();
 
-		physics_process_ticks = MAX(physics_process_ticks, OS::get_singleton()->get_ticks_usec() - physics_begin); // keep the largest one for reference
-		physics_process_max = MAX(OS::get_singleton()->get_ticks_usec() - physics_begin, physics_process_max);
+		physics_process_ticks = Math::max(physics_process_ticks, OS::get_singleton()->get_ticks_usec() - physics_begin); // keep the largest one for reference
+		physics_process_max = Math::max(OS::get_singleton()->get_ticks_usec() - physics_begin, physics_process_max);
 
 		Engine::get_singleton()->_in_physics = false;
 	}
@@ -4801,7 +4801,7 @@ bool Main::iteration() {
 	}
 
 	process_ticks = OS::get_singleton()->get_ticks_usec() - process_begin;
-	process_max = MAX(process_ticks, process_max);
+	process_max = Math::max(process_ticks, process_max);
 	uint64_t frame_time = OS::get_singleton()->get_ticks_usec() - ticks;
 
 	GDExtensionManager::get_singleton()->frame();

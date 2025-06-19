@@ -218,7 +218,7 @@ public:
 			if (i >= datamax) {
 				xm_sample = 0;
 			} else {
-				xm_sample = CLAMP(in[i] * 32767.0, -32768, 32767);
+				xm_sample = Math::clamp(in[i] * 32767.0, -32768, 32767);
 			}
 
 			diff = (int)xm_sample - prev;
@@ -248,10 +248,10 @@ public:
 				prev += vpdiff;
 			}
 
-			prev = CLAMP(prev, -32768, 32767);
+			prev = Math::clamp(prev, -32768, 32767);
 
 			step_idx += _ima_adpcm_index_table[nibble];
-			step_idx = CLAMP(step_idx, 0, 88);
+			step_idx = Math::clamp(step_idx, 0, 88);
 
 			if (i & 1) {
 				*out |= nibble << 4;
@@ -282,9 +282,9 @@ public:
 
 		uint32_t frame_len = QOA_FRAME_LEN;
 		for (uint32_t s = 0; s < p_desc->samples; s += frame_len) {
-			frame_len = MIN(frame_len, p_desc->samples - s);
+			frame_len = Math::min(frame_len, p_desc->samples - s);
 			for (uint32_t i = 0; i < frame_len * p_desc->channels; i++) {
-				data16[i] = CLAMP(p_data[s * p_desc->channels + i] * 32767.0, -32768, 32767);
+				data16[i] = Math::clamp(p_data[s * p_desc->channels + i] * 32767.0, -32768, 32767);
 			}
 			dst_ptr += qoa_encode_frame(data16.ptr(), p_desc, frame_len, dst_ptr);
 		}

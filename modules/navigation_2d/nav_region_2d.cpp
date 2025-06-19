@@ -133,7 +133,7 @@ void NavRegion2D::set_navigation_layers(uint32_t p_navigation_layers) {
 }
 
 void NavRegion2D::set_enter_cost(real_t p_enter_cost) {
-	real_t new_enter_cost = MAX(p_enter_cost, 0.0);
+	real_t new_enter_cost = Math::max(p_enter_cost, 0.0);
 	if (enter_cost == new_enter_cost) {
 		return;
 	}
@@ -144,7 +144,7 @@ void NavRegion2D::set_enter_cost(real_t p_enter_cost) {
 }
 
 void NavRegion2D::set_travel_cost(real_t p_travel_cost) {
-	real_t new_travel_cost = MAX(p_travel_cost, 0.0);
+	real_t new_travel_cost = Math::max(p_travel_cost, 0.0);
 	if (travel_cost == new_travel_cost) {
 		return;
 	}

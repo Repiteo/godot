@@ -51,13 +51,13 @@ void ScrollBar::gui_input(const Ref<InputEvent> &p_event) {
 
 		if (b->get_button_index() == MouseButton::WHEEL_DOWN && b->is_pressed()) {
 			double change = ((get_page() != 0.0) ? get_page() / PAGE_DIVISOR : (get_max() - get_min()) / 16.0) * b->get_factor();
-			scroll(MAX(change, get_step()));
+			scroll(Math::max(change, get_step()));
 			accept_event();
 		}
 
 		if (b->get_button_index() == MouseButton::WHEEL_UP && b->is_pressed()) {
 			double change = ((get_page() != 0.0) ? get_page() / PAGE_DIVISOR : (get_max() - get_min()) / 16.0) * b->get_factor();
-			scroll(-MAX(change, get_step()));
+			scroll(-Math::max(change, get_step()));
 			accept_event();
 		}
 
@@ -94,10 +94,10 @@ void ScrollBar::gui_input(const Ref<InputEvent> &p_event) {
 
 			if (ofs < grabber_ofs) {
 				if (scrolling) {
-					target_scroll = CLAMP(target_scroll - get_page(), get_min(), get_max() - get_page());
+					target_scroll = Math::clamp(target_scroll - get_page(), get_min(), get_max() - get_page());
 				} else {
 					double change = get_page() != 0.0 ? get_page() : (get_max() - get_min()) / 16.0;
-					target_scroll = CLAMP(get_value() - change, get_min(), get_max() - get_page());
+					target_scroll = Math::clamp(get_value() - change, get_min(), get_max() - get_page());
 				}
 
 				if (smooth_scroll_enabled) {
@@ -118,10 +118,10 @@ void ScrollBar::gui_input(const Ref<InputEvent> &p_event) {
 				queue_redraw();
 			} else {
 				if (scrolling) {
-					target_scroll = CLAMP(target_scroll + get_page(), get_min(), get_max() - get_page());
+					target_scroll = Math::clamp(target_scroll + get_page(), get_min(), get_max() - get_page());
 				} else {
 					double change = get_page() != 0.0 ? get_page() : (get_max() - get_min()) / 16.0;
-					target_scroll = CLAMP(get_value() + change, get_min(), get_max() - get_page());
+					target_scroll = Math::clamp(get_value() + change, get_min(), get_max() - get_page());
 				}
 
 				if (smooth_scroll_enabled) {
@@ -488,7 +488,7 @@ Size2 ScrollBar::get_minimum_size() const {
 	Size2 minsize;
 
 	if (orientation == VERTICAL) {
-		minsize.width = MAX(incr->get_size().width, bg->get_minimum_size().width);
+		minsize.width = Math::max(incr->get_size().width, bg->get_minimum_size().width);
 		minsize.height += incr->get_size().height;
 		minsize.height += decr->get_size().height;
 		minsize.height += bg->get_minimum_size().height;
@@ -496,7 +496,7 @@ Size2 ScrollBar::get_minimum_size() const {
 	}
 
 	if (orientation == HORIZONTAL) {
-		minsize.height = MAX(incr->get_size().height, bg->get_minimum_size().height);
+		minsize.height = Math::max(incr->get_size().height, bg->get_minimum_size().height);
 		minsize.width += incr->get_size().width;
 		minsize.width += decr->get_size().width;
 		minsize.width += bg->get_minimum_size().width;

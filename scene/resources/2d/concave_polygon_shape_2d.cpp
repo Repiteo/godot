@@ -100,7 +100,7 @@ real_t ConcavePolygonShape2D::get_enclosing_radius() const {
 	const Vector2 *read = data.ptr();
 	real_t r = 0.0;
 	for (int i(0); i < data.size(); i++) {
-		r = MAX(read[i].length_squared(), r);
+		r = Math::max(read[i].length_squared(), r);
 	}
 	return Math::sqrt(r);
 }

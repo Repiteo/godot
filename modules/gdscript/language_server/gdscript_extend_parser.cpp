@@ -139,7 +139,7 @@ void ExtendGDScriptParser::update_diagnostics() {
 		LSP::Range range;
 		LSP::Position pos;
 		const PackedStringArray line_array = get_lines();
-		int line = CLAMP(LINE_NUMBER_TO_INDEX(error.line), 0, line_array.size() - 1);
+		int line = Math::clamp(LINE_NUMBER_TO_INDEX(error.line), 0, line_array.size() - 1);
 		const String &line_text = line_array[line];
 		pos.line = line;
 		pos.character = line_text.length() - line_text.strip_edges(true, false).length();
@@ -798,7 +798,7 @@ Error ExtendGDScriptParser::get_left_function_call(const LSP::Position &p_positi
 		String line = lines[l];
 		int c = line.length() - 1;
 		if (l == p_position.line) {
-			c = MIN(c, p_position.character - 1);
+			c = Math::min(c, p_position.character - 1);
 		}
 
 		while (c >= 0) {

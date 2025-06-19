@@ -74,7 +74,7 @@ void post_process_preview(Ref<Image> p_image) {
 	const int w = p_image->get_width();
 	const int h = p_image->get_height();
 
-	const int r = MIN(w, h) / 32;
+	const int r = Math::min(w, h) / 32;
 	const int r2 = r * r;
 	Color transparent = Color(0, 0, 0, 0);
 
@@ -510,9 +510,9 @@ Ref<Texture2D> EditorPackedScenePreviewPlugin::generate_from_path(const String &
 		camera->set_position(Point2(scene_true_center));
 
 		// Render viewport
-		uint16_t scene_rect_long = MAX(scene_rect.get_size().x, scene_rect.get_size().y);
+		uint16_t scene_rect_long = Math::max(scene_rect.get_size().x, scene_rect.get_size().y);
 		if (scene_rect_long == 0) {
-			scene_rect_long = MAX(p_size.x, p_size.y); // Prevent 0 size rect (which causes error) and defaults to thumbnail size.
+			scene_rect_long = Math::max(p_size.x, p_size.y); // Prevent 0 size rect (which causes error) and defaults to thumbnail size.
 		}
 		sub_viewport->set_size(p_size);
 		camera->set_zoom(Vector2(p_size.x / float(scene_rect_long), p_size.y / float(scene_rect_long)));
@@ -1037,7 +1037,7 @@ Ref<Texture2D> EditorMaterialPreviewPlugin::generate(const Ref<Resource> &p_from
 		ERR_FAIL_COND_V(img.is_null(), Ref<ImageTexture>());
 
 		img->convert(Image::FORMAT_RGBA8);
-		int thumbnail_size = MAX(p_size.x, p_size.y);
+		int thumbnail_size = Math::max(p_size.x, p_size.y);
 		img->resize(thumbnail_size, thumbnail_size, Image::INTERPOLATE_CUBIC);
 		post_process_preview(img);
 		return ImageTexture::create_from_image(img);
@@ -1218,7 +1218,7 @@ Ref<Texture2D> EditorScriptPreviewPlugin::_generate_from_source_code(const Scrip
 
 	int line = 0;
 	int col = 0;
-	int thumbnail_size = MAX(p_size.x, p_size.y);
+	int thumbnail_size = Math::max(p_size.x, p_size.y);
 	Ref<Image> img = Image::create_empty(thumbnail_size, thumbnail_size, false, Image::FORMAT_RGBA8);
 
 	Color bg_color = EDITOR_GET("text_editor/theme/highlighting/background_color");
@@ -1232,7 +1232,7 @@ Ref<Texture2D> EditorScriptPreviewPlugin::_generate_from_source_code(const Scrip
 	if (bg_color.a == 0) {
 		bg_color = Color(0, 0, 0, 0);
 	}
-	bg_color.a = MAX(bg_color.a, 0.2); // Ensure we have some background, regardless of the text editor setting.
+	bg_color.a = Math::max(bg_color.a, 0.2); // Ensure we have some background, regardless of the text editor setting.
 
 	img->fill(bg_color);
 
@@ -1366,22 +1366,22 @@ Ref<Texture2D> EditorAudioStreamPreviewPlugin::generate(const Ref<Resource> &p_f
 		real_t min = 1000;
 		int from = uint64_t(i) * frame_length / w;
 		int to = (uint64_t(i) + 1) * frame_length / w;
-		to = MIN(to, frame_length);
-		from = MIN(from, frame_length - 1);
+		to = Math::min(to, frame_length);
+		from = Math::min(from, frame_length - 1);
 		if (to == from) {
 			to = from + 1;
 		}
 
 		for (int j = from; j < to; j++) {
-			max = MAX(max, frames[j].left);
-			max = MAX(max, frames[j].right);
+			max = Math::max(max, frames[j].left);
+			max = Math::max(max, frames[j].right);
 
-			min = MIN(min, frames[j].left);
-			min = MIN(min, frames[j].right);
+			min = Math::min(min, frames[j].left);
+			min = Math::min(min, frames[j].right);
 		}
 
-		int pfrom = CLAMP((min * 0.5 + 0.5) * h / 2, 0, h / 2) + h / 4;
-		int pto = CLAMP((max * 0.5 + 0.5) * h / 2, 0, h / 2) + h / 4;
+		int pfrom = Math::clamp((min * 0.5 + 0.5) * h / 2, 0, h / 2) + h / 4;
+		int pto = Math::clamp((max * 0.5 + 0.5) * h / 2, 0, h / 2) + h / 4;
 
 		for (int j = 0; j < h; j++) {
 			uint8_t *p = &imgw[(j * w + i) * 3];
@@ -1428,7 +1428,7 @@ Ref<Texture2D> EditorMeshPreviewPlugin::generate(const Ref<Resource> &p_from, co
 	xform.basis = Basis().rotated(Vector3(0, 1, 0), -Math::PI * 0.125);
 	xform.basis = Basis().rotated(Vector3(1, 0, 0), Math::PI * 0.125) * xform.basis;
 	AABB rot_aabb = xform.xform(aabb);
-	real_t m = MAX(rot_aabb.size.x, rot_aabb.size.y) * 0.5;
+	real_t m = Math::max(rot_aabb.size.x, rot_aabb.size.y) * 0.5;
 	if (m == 0) {
 		return Ref<Texture2D>();
 	}

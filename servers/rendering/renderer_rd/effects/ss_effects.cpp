@@ -716,7 +716,7 @@ void SSEffects::screen_space_indirect_lighting(Ref<RenderSceneBuffersRD> p_rende
 		ssil.gather_push_constant.load_counter_avg_div = 9.0 / float((p_ssil_buffers.half_buffer_width) * (p_ssil_buffers.half_buffer_height) * 255);
 		ssil.gather_push_constant.adaptive_sample_limit = ssil_adaptive_target;
 
-		ssil.gather_push_constant.quality = MAX(0, ssil_quality - 1);
+		ssil.gather_push_constant.quality = Math::max(0, ssil_quality - 1);
 		ssil.gather_push_constant.size_multiplier = ssil_half_size ? 2 : 1;
 
 		// We are using our uniform cache so our uniform sets are automatically freed when our textures are freed.
@@ -1116,7 +1116,7 @@ void SSEffects::generate_ssao(Ref<RenderSceneBuffersRD> p_render_buffers, SSAORe
 		ssao.gather_push_constant.adaptive_sample_limit = ssao_adaptive_target;
 
 		ssao.gather_push_constant.detail_intensity = p_settings.detail;
-		ssao.gather_push_constant.quality = MAX(0, ssao_quality - 1);
+		ssao.gather_push_constant.quality = Math::max(0, ssao_quality - 1);
 		ssao.gather_push_constant.size_multiplier = ssao_half_size ? 2 : 1;
 
 		// We are using our uniform cache so our uniform sets are automatically freed when our textures are freed.

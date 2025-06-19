@@ -83,9 +83,9 @@ Size2i TileAtlasView::_compute_alternative_tiles_control_size() {
 			int alternative_id = tile_set_atlas_source->get_alternative_tile_id(tile_id, j);
 			bool transposed = tile_set_atlas_source->get_tile_data(tile_id, alternative_id)->get_transpose();
 			line_size.x += transposed ? texture_region_size.y : texture_region_size.x;
-			line_size.y = MAX(line_size.y, transposed ? texture_region_size.x : texture_region_size.y);
+			line_size.y = Math::max(line_size.y, transposed ? texture_region_size.x : texture_region_size.y);
 		}
-		size.x = MAX(size.x, line_size.x);
+		size.x = Math::max(size.x, line_size.x);
 		size.y += line_size.y;
 	}
 
@@ -426,10 +426,10 @@ void TileAtlasView::_draw_alternatives() {
 				Vector2i offset_pos;
 				if (transposed) {
 					offset_pos = (current_pos + Vector2(texture_region_size.y, texture_region_size.x) / 2 + tile_data->get_texture_origin());
-					y_increment = MAX(y_increment, texture_region_size.x);
+					y_increment = Math::max(y_increment, texture_region_size.x);
 				} else {
 					offset_pos = (current_pos + texture_region_size / 2 + tile_data->get_texture_origin());
-					y_increment = MAX(y_increment, texture_region_size.y);
+					y_increment = Math::max(y_increment, texture_region_size.y);
 				}
 
 				// Draw the tile.
@@ -559,7 +559,7 @@ void TileAtlasView::_update_alternative_tiles_rect_cache() {
 			alternative_tiles_rect_cache[tile_id][alternative_id] = current;
 
 			current.position.x += transposed ? texture_region_size.y : texture_region_size.x;
-			line_height = MAX(line_height, transposed ? texture_region_size.x : texture_region_size.y);
+			line_height = Math::max(line_height, transposed ? texture_region_size.x : texture_region_size.y);
 		}
 
 		current.position.x = 0;

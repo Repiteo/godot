@@ -243,7 +243,7 @@ void GodotConeTwistJoint3D::solve(real_t p_timestep) {
 
 			// Clamp the accumulated impulse
 			real_t temp = m_accSwingLimitImpulse;
-			m_accSwingLimitImpulse = MAX(m_accSwingLimitImpulse + impulseMag, real_t(0.0));
+			m_accSwingLimitImpulse = Math::max(m_accSwingLimitImpulse + impulseMag, real_t(0.0));
 			impulseMag = m_accSwingLimitImpulse - temp;
 
 			Vector3 impulse = m_swingAxis * impulseMag;
@@ -263,7 +263,7 @@ void GodotConeTwistJoint3D::solve(real_t p_timestep) {
 
 			// Clamp the accumulated impulse
 			real_t temp = m_accTwistLimitImpulse;
-			m_accTwistLimitImpulse = MAX(m_accTwistLimitImpulse + impulseMag, real_t(0.0));
+			m_accTwistLimitImpulse = Math::max(m_accTwistLimitImpulse + impulseMag, real_t(0.0));
 			impulseMag = m_accTwistLimitImpulse - temp;
 
 			Vector3 impulse = m_twistAxis * impulseMag;

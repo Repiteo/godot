@@ -571,8 +571,8 @@ ssize_t WSLPeer::_wsl_recv_callback(wslay_event_context_ptr ctx, uint8_t *data, 
 		return -1;
 	}
 	// Make sure we don't read more than what our buffer can hold.
-	size_t buffer_limit = MIN(peer->in_buffer.payload_space_left(), peer->in_buffer.packets_space_left() * 2); // The minimum size of a websocket message is 2 bytes.
-	size_t to_read = MIN(len, buffer_limit);
+	size_t buffer_limit = Math::min(peer->in_buffer.payload_space_left(), peer->in_buffer.packets_space_left() * 2); // The minimum size of a websocket message is 2 bytes.
+	size_t to_read = Math::min(len, buffer_limit);
 	if (to_read == 0) {
 		wslay_event_set_error(ctx, WSLAY_ERR_WOULDBLOCK);
 		return -1;

@@ -908,7 +908,7 @@ Rect2 GraphEdit::_compute_shrinked_frame_rect(const GraphFrame *p_frame) {
 
 	const Size2 titlebar_size = p_frame->get_titlebar_size();
 
-	min_point -= Size2(autoshrink_margin, MAX(autoshrink_margin, titlebar_size.y));
+	min_point -= Size2(autoshrink_margin, Math::max(autoshrink_margin, titlebar_size.y));
 	max_point += Size2(autoshrink_margin, autoshrink_margin);
 
 	return Rect2(min_point, max_point - min_point);
@@ -1005,7 +1005,7 @@ bool GraphEdit::_filter_input(const Point2 &p_point) {
 			int slot_index = graph_node->get_input_port_slot(j);
 			Control *child = Object::cast_to<Control>(graph_node->get_child(slot_index, false));
 
-			port_size.height = MAX(port_size.height, child ? child->get_size().y : 0);
+			port_size.height = Math::max(port_size.height, child ? child->get_size().y : 0);
 
 			if (is_in_input_hotzone(graph_node, j, p_point / zoom, port_size)) {
 				return true;
@@ -1018,7 +1018,7 @@ bool GraphEdit::_filter_input(const Point2 &p_point) {
 			// Determine slot height.
 			int slot_index = graph_node->get_output_port_slot(j);
 			Control *child = Object::cast_to<Control>(graph_node->get_child(slot_index, false));
-			port_size.height = MAX(port_size.height, child ? child->get_size().y : 0);
+			port_size.height = Math::max(port_size.height, child ? child->get_size().y : 0);
 
 			if (is_in_output_hotzone(graph_node, j, p_point / zoom, port_size)) {
 				return true;
@@ -1218,7 +1218,7 @@ void GraphEdit::_top_connection_layer_input(const Ref<InputEvent> &p_ev) {
 				// Determine slot height.
 				int slot_index = graph_node->get_output_port_slot(j);
 				Control *child = Object::cast_to<Control>(graph_node->get_child(slot_index, false));
-				port_size.height = MAX(port_size.height, child ? child->get_size().y : 0);
+				port_size.height = Math::max(port_size.height, child ? child->get_size().y : 0);
 
 				if (is_in_output_hotzone(graph_node, j, click_pos, port_size)) {
 					if (valid_left_disconnect_types.has(graph_node->get_output_port_type(j))) {
@@ -1275,7 +1275,7 @@ void GraphEdit::_top_connection_layer_input(const Ref<InputEvent> &p_ev) {
 				// Determine slot height.
 				int slot_index = graph_node->get_input_port_slot(j);
 				Control *child = Object::cast_to<Control>(graph_node->get_child(slot_index, false));
-				port_size.height = MAX(port_size.height, child ? child->get_size().y : 0);
+				port_size.height = Math::max(port_size.height, child ? child->get_size().y : 0);
 
 				if (is_in_input_hotzone(graph_node, j, click_pos, port_size)) {
 					if (right_disconnects || valid_right_disconnect_types.has(graph_node->get_input_port_type(j))) {
@@ -1351,7 +1351,7 @@ void GraphEdit::_top_connection_layer_input(const Ref<InputEvent> &p_ev) {
 						// Determine slot height.
 						int slot_index = graph_node->get_output_port_slot(j);
 						Control *child = Object::cast_to<Control>(graph_node->get_child(slot_index, false));
-						port_size.height = MAX(port_size.height, child ? child->get_size().y : 0);
+						port_size.height = Math::max(port_size.height, child ? child->get_size().y : 0);
 
 						int type = graph_node->get_output_port_type(j);
 						if ((type == connecting_type || graph_node->is_ignoring_valid_connection_type() ||
@@ -1376,7 +1376,7 @@ void GraphEdit::_top_connection_layer_input(const Ref<InputEvent> &p_ev) {
 						// Determine slot height.
 						int slot_index = graph_node->get_input_port_slot(j);
 						Control *child = Object::cast_to<Control>(graph_node->get_child(slot_index, false));
-						port_size.height = MAX(port_size.height, child ? child->get_size().y : 0);
+						port_size.height = Math::max(port_size.height, child ? child->get_size().y : 0);
 
 						int type = graph_node->get_input_port_type(j);
 						if ((type == connecting_type || graph_node->is_ignoring_valid_connection_type() || valid_connection_types.has(ConnectionType(connecting_type, type))) &&
@@ -1928,7 +1928,7 @@ void GraphEdit::_draw_grid() {
 		} break;
 		case GRID_PATTERN_DOTS: {
 			Color transparent_grid_minor = theme_cache.grid_minor;
-			transparent_grid_minor.a *= CLAMP(1.0 * (zoom - 0.4), 0, 1);
+			transparent_grid_minor.a *= Math::clamp(1.0 * (zoom - 0.4), 0, 1);
 
 			// Minor dots.
 			if (transparent_grid_minor.a != 0) {
@@ -2422,7 +2422,7 @@ void GraphEdit::set_zoom(float p_zoom) {
 void GraphEdit::set_zoom_custom(float p_zoom, const Vector2 &p_center) {
 	ERR_FAIL_NULL_MSG(connections_layer, "connections_layer is missing.");
 
-	p_zoom = CLAMP(p_zoom, zoom_min, zoom_max);
+	p_zoom = Math::clamp(p_zoom, zoom_min, zoom_max);
 	if (zoom == p_zoom) {
 		return;
 	}

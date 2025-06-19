@@ -197,7 +197,7 @@ private:
 				children[0]->get_max_depth(depth + 1, maxdepth);
 				children[1]->get_max_depth(depth + 1, maxdepth);
 			} else {
-				maxdepth = MAX(maxdepth, depth);
+				maxdepth = Math::max(maxdepth, depth);
 			}
 		}
 

@@ -1937,7 +1937,7 @@ Size2i DisplayServerWindows::window_get_title_size(const String &p_title, Window
 			PhysicalToLogicalPointForPerMonitorDPI(nullptr, (POINT *)&rect.right);
 
 			size.x += (rect.right - rect.left);
-			size.y = MAX(size.y, rect.bottom - rect.top);
+			size.y = Math::max(size.y, rect.bottom - rect.top);
 		}
 	}
 	if (icon.is_valid()) {
@@ -4054,7 +4054,7 @@ DisplayServer::IndicatorID DisplayServerWindows::create_status_indicator(const R
 	ndat.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE;
 	ndat.uCallbackMessage = WM_INDICATOR_CALLBACK_MESSAGE;
 	ndat.hIcon = hicon;
-	memcpy(ndat.szTip, p_tooltip.utf16().get_data(), MIN(p_tooltip.utf16().length(), 127) * sizeof(WCHAR));
+	memcpy(ndat.szTip, p_tooltip.utf16().get_data(), Math::min(p_tooltip.utf16().length(), 127) * sizeof(WCHAR));
 	ndat.uVersion = NOTIFYICON_VERSION;
 
 	Shell_NotifyIconW(NIM_ADD, &ndat);
@@ -4137,7 +4137,7 @@ void DisplayServerWindows::status_indicator_set_tooltip(IndicatorID p_id, const 
 	ndat.hWnd = windows[MAIN_WINDOW_ID].hWnd;
 	ndat.uID = p_id;
 	ndat.uFlags = NIF_TIP;
-	memcpy(ndat.szTip, p_tooltip.utf16().get_data(), MIN(p_tooltip.utf16().length(), 127) * sizeof(WCHAR));
+	memcpy(ndat.szTip, p_tooltip.utf16().get_data(), Math::min(p_tooltip.utf16().length(), 127) * sizeof(WCHAR));
 	ndat.uVersion = NOTIFYICON_VERSION;
 
 	Shell_NotifyIconW(NIM_MODIFY, &ndat);

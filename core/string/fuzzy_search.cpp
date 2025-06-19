@@ -46,7 +46,7 @@ static Vector2i _extend_interval(const Vector2i &p_a, const Vector2i &p_b) {
 	if (!_is_valid_interval(p_b)) {
 		return p_a;
 	}
-	return Vector2i(MIN(p_a.x, p_b.x), MAX(p_a.y, p_b.y));
+	return Vector2i(Math::min(p_a.x, p_b.x), Math::max(p_a.y, p_b.y));
 }
 
 static bool _is_word_boundary(const String &p_str, int p_index) {
@@ -232,13 +232,13 @@ void FuzzySearch::sort_and_filter(Vector<FuzzySearchResult> &p_results) const {
 
 	for (const FuzzySearchResult &result : p_results) {
 		avg_score += result.score;
-		max_score = MAX(max_score, result.score);
+		max_score = Math::max(max_score, result.score);
 	}
 
 	// TODO: Tune scoring and culling here to display fewer subsequence soup matches when good matches
 	//  are available.
 	avg_score /= p_results.size();
-	float cull_score = MIN(cull_cutoff, Math::lerp(avg_score, max_score, cull_factor));
+	float cull_score = Math::min(cull_cutoff, Math::lerp(avg_score, max_score, cull_factor));
 	remove_low_scores(p_results, cull_score);
 
 	struct FuzzySearchResultComparator {

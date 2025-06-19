@@ -55,12 +55,12 @@ void GridContainer::_notification(int p_what) {
 
 				Size2i ms = c->get_combined_minimum_size();
 				if (col_minw.has(col)) {
-					col_minw[col] = MAX(col_minw[col], ms.width);
+					col_minw[col] = Math::max(col_minw[col], ms.width);
 				} else {
 					col_minw[col] = ms.width;
 				}
 				if (row_minh.has(row)) {
-					row_minh[row] = MAX(row_minh[row], ms.height);
+					row_minh[row] = Math::max(row_minh[row], ms.height);
 				} else {
 					row_minh[row] = ms.height;
 				}
@@ -73,7 +73,7 @@ void GridContainer::_notification(int p_what) {
 				}
 			}
 
-			int max_col = MIN(valid_controls_index, columns);
+			int max_col = Math::min(valid_controls_index, columns);
 			int max_row = std::ceil((float)valid_controls_index / (float)columns);
 
 			// Consider all empty columns expanded.
@@ -94,8 +94,8 @@ void GridContainer::_notification(int p_what) {
 					remaining_space.height -= E.value;
 				}
 			}
-			remaining_space.height -= theme_cache.v_separation * MAX(max_row - 1, 0);
-			remaining_space.width -= theme_cache.h_separation * MAX(max_col - 1, 0);
+			remaining_space.height -= theme_cache.v_separation * Math::max(max_row - 1, 0);
+			remaining_space.width -= theme_cache.h_separation * Math::max(max_col - 1, 0);
 
 			bool can_fit = false;
 			while (!can_fit && col_expanded.size() > 0) {
@@ -289,18 +289,18 @@ Size2 GridContainer::get_minimum_size() const {
 
 		Size2i ms = c->get_combined_minimum_size();
 		if (col_minw.has(col)) {
-			col_minw[col] = MAX(col_minw[col], ms.width);
+			col_minw[col] = Math::max(col_minw[col], ms.width);
 		} else {
 			col_minw[col] = ms.width;
 		}
 
 		if (row_minh.has(row)) {
-			row_minh[row] = MAX(row_minh[row], ms.height);
+			row_minh[row] = Math::max(row_minh[row], ms.height);
 		} else {
 			row_minh[row] = ms.height;
 		}
-		max_col = MAX(col, max_col);
-		max_row = MAX(row, max_row);
+		max_col = Math::max(col, max_col);
+		max_row = Math::max(row, max_row);
 	}
 
 	Size2 ms;

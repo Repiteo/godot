@@ -125,18 +125,18 @@ int64_t VideoStreamPlaybackTheora::seek_streams(double p_time, int64_t &cur_vide
 	// in practice there's a lot of linear scanning to do to find the right pages.
 	// We want to catch the previous keyframe to the seek time. Since we only know the max GOP, we use that.
 	if (p_time == -1) { // This is a special case to find the last packets and calculate the video length.
-		seek_pos = MAX(stream_data_size - min_seek, stream_data_offset);
+		seek_pos = Math::max(stream_data_size - min_seek, stream_data_offset);
 		target_video_granulepos = INT64_MAX;
 		target_audio_granulepos = INT64_MAX;
 	} else {
 		int64_t video_frame = (int64_t)(p_time / frame_duration);
-		target_video_granulepos = MAX(1LL, video_frame - (1LL << ti.keyframe_granule_shift)) << ti.keyframe_granule_shift;
+		target_video_granulepos = Math::max(1LL, video_frame - (1LL << ti.keyframe_granule_shift)) << ti.keyframe_granule_shift;
 		target_audio_granulepos = 0;
-		seek_pos = MAX(((target_video_granulepos >> ti.keyframe_granule_shift) - 1) * frame_duration * stream_data_size / stream_length, stream_data_offset);
+		seek_pos = Math::max(((target_video_granulepos >> ti.keyframe_granule_shift) - 1) * frame_duration * stream_data_size / stream_length, stream_data_offset);
 		target_time = th_granule_time(td, target_video_granulepos);
 		if (has_audio) {
 			target_audio_granulepos = video_frame * frame_duration * vi.rate;
-			target_time = MIN(target_time, vorbis_granule_time(&vd, target_audio_granulepos));
+			target_time = Math::min(target_time, vorbis_granule_time(&vd, target_audio_granulepos));
 		}
 	}
 
@@ -180,7 +180,7 @@ int64_t VideoStreamPlaybackTheora::seek_streams(double p_time, int64_t &cur_vide
 						video_catch = true;
 						if (cur_video_granulepos < 0) {
 							// Adding 1s helps catching the start of the page and avoids backtrack_time = 0.
-							backtrack_time = MAX(backtrack_time, 1 + th_granule_time(td, cur_granulepos) - target_time);
+							backtrack_time = Math::max(backtrack_time, 1 + th_granule_time(td, cur_granulepos) - target_time);
 						}
 					} else {
 						video_seek_pos = last_video_granule_seek_pos;
@@ -193,7 +193,7 @@ int64_t VideoStreamPlaybackTheora::seek_streams(double p_time, int64_t &cur_vide
 						audio_catch = true;
 						if (cur_audio_granulepos < 0) {
 							// Adding 1s helps catching the start of the page and avoids backtrack_time = 0.
-							backtrack_time = MAX(backtrack_time, 1 + vorbis_granule_time(&vd, cur_granulepos) - target_time);
+							backtrack_time = Math::max(backtrack_time, 1 + vorbis_granule_time(&vd, cur_granulepos) - target_time);
 						}
 					} else {
 						audio_seek_pos = last_audio_granule_seek_pos;
@@ -207,7 +207,7 @@ int64_t VideoStreamPlaybackTheora::seek_streams(double p_time, int64_t &cur_vide
 			if (seek_pos <= stream_data_offset) {
 				break;
 			}
-			int64_t delta_seek = MAX(backtrack_time * stream_data_size / stream_length, min_seek);
+			int64_t delta_seek = Math::max(backtrack_time * stream_data_size / stream_length, min_seek);
 			seek_pos -= delta_seek;
 		}
 		video_catch = cur_video_granulepos != -1;
@@ -223,7 +223,7 @@ int64_t VideoStreamPlaybackTheora::seek_streams(double p_time, int64_t &cur_vide
 			audio_seek_pos = stream_data_offset;
 			cur_audio_granulepos = 0;
 		}
-		seek_pos = MIN(video_seek_pos, audio_seek_pos);
+		seek_pos = Math::min(video_seek_pos, audio_seek_pos);
 	} else {
 		seek_pos = video_seek_pos;
 	}
@@ -457,7 +457,7 @@ void VideoStreamPlaybackTheora::set_file(const String &p_file) {
 	if (has_audio) {
 		vorbis_synthesis_init(&vd, &vi);
 		vorbis_block_init(&vd, &vb);
-		audio_buffer_size = MIN(vi.channels, 8) * 1024;
+		audio_buffer_size = Math::min(vi.channels, 8) * 1024;
 		audio_buffer = memnew_arr(float, audio_buffer_size);
 	}
 
@@ -465,7 +465,7 @@ void VideoStreamPlaybackTheora::set_file(const String &p_file) {
 	stream_data_size = file->get_length() - stream_data_offset;
 
 	// Sync to last page to find video length.
-	int64_t seek_pos = MAX(stream_data_offset, (int64_t)file->get_length() - 64 * 1024);
+	int64_t seek_pos = Math::max(stream_data_offset, (int64_t)file->get_length() - 64 * 1024);
 	int64_t video_granulepos = INT64_MAX;
 	int64_t audio_granulepos = INT64_MAX;
 	file->seek(seek_pos);
@@ -478,7 +478,7 @@ void VideoStreamPlaybackTheora::set_file(const String &p_file) {
 	while (read_page(&page) > 0) {
 		// Use MAX because, even though pages are ordered, page time can be -1
 		// for pages without full frames. Streams could be truncated too.
-		stream_length = MAX(stream_length, get_page_time(&page));
+		stream_length = Math::max(stream_length, get_page_time(&page));
 	}
 
 	seek(0);
@@ -525,7 +525,7 @@ void VideoStreamPlaybackTheora::update(double p_delta) {
 			if (ret > 0) {
 				int frames_read = 0;
 				while (frames_read < ret) {
-					int m = MIN(audio_buffer_size / vi.channels, ret - frames_read);
+					int m = Math::min(audio_buffer_size / vi.channels, ret - frames_read);
 					int count = 0;
 					for (int j = 0; j < m; j++) {
 						for (int i = 0; i < vi.channels; i++) {
@@ -709,7 +709,7 @@ void VideoStreamPlaybackTheora::seek(double p_time) {
 					float **pcm;
 					int samples_left = ceil((p_time - last_audio_time) * vi.rate);
 					int samples_read = vorbis_synthesis_pcmout(&vd, &pcm);
-					int samples_consumed = MIN(samples_left, samples_read);
+					int samples_consumed = Math::min(samples_left, samples_read);
 					vorbis_synthesis_read(&vd, samples_consumed);
 					last_audio_time += (double)samples_consumed / vi.rate;
 				}

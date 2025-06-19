@@ -213,7 +213,7 @@ real_t Font::get_height(int p_font_size) const {
 
 	real_t ret = 0.f;
 	for (int i = 0; i < rids.size(); i++) {
-		ret = MAX(ret, TS->font_get_ascent(rids.get(i), p_font_size) + TS->font_get_descent(rids.get(i), p_font_size));
+		ret = Math::max(ret, TS->font_get_ascent(rids.get(i), p_font_size) + TS->font_get_descent(rids.get(i), p_font_size));
 	}
 	return ret + get_spacing(TextServer::SPACING_BOTTOM) + get_spacing(TextServer::SPACING_TOP);
 }
@@ -224,7 +224,7 @@ real_t Font::get_ascent(int p_font_size) const {
 	}
 	real_t ret = 0.f;
 	for (int i = 0; i < rids.size(); i++) {
-		ret = MAX(ret, TS->font_get_ascent(rids.get(i), p_font_size));
+		ret = Math::max(ret, TS->font_get_ascent(rids.get(i), p_font_size));
 	}
 	return ret + get_spacing(TextServer::SPACING_TOP);
 }
@@ -235,7 +235,7 @@ real_t Font::get_descent(int p_font_size) const {
 	}
 	real_t ret = 0.f;
 	for (int i = 0; i < rids.size(); i++) {
-		ret = MAX(ret, TS->font_get_descent(rids.get(i), p_font_size));
+		ret = Math::max(ret, TS->font_get_descent(rids.get(i), p_font_size));
 	}
 	return ret + get_spacing(TextServer::SPACING_BOTTOM);
 }
@@ -246,7 +246,7 @@ real_t Font::get_underline_position(int p_font_size) const {
 	}
 	real_t ret = 0.f;
 	for (int i = 0; i < rids.size(); i++) {
-		ret = MAX(ret, TS->font_get_underline_position(rids.get(i), p_font_size));
+		ret = Math::max(ret, TS->font_get_underline_position(rids.get(i), p_font_size));
 	}
 	return ret + get_spacing(TextServer::SPACING_TOP);
 }
@@ -257,7 +257,7 @@ real_t Font::get_underline_thickness(int p_font_size) const {
 	}
 	real_t ret = 0.f;
 	for (int i = 0; i < rids.size(); i++) {
-		ret = MAX(ret, TS->font_get_underline_thickness(rids.get(i), p_font_size));
+		ret = Math::max(ret, TS->font_get_underline_thickness(rids.get(i), p_font_size));
 	}
 	return ret;
 }
@@ -2362,21 +2362,21 @@ RID FontFile::find_variation(const Dictionary &p_variation_coordinates, int p_fa
 				real_t c_v = def.z;
 				if (cache_var.has(*V)) {
 					real_t val = cache_var[*V];
-					c_v = CLAMP(val, def.x, def.y);
+					c_v = Math::clamp(val, def.x, def.y);
 				}
 				if (cache_var.has(TS->tag_to_name(*V))) {
 					real_t val = cache_var[TS->tag_to_name(*V)];
-					c_v = CLAMP(val, def.x, def.y);
+					c_v = Math::clamp(val, def.x, def.y);
 				}
 
 				real_t s_v = def.z;
 				if (p_variation_coordinates.has(*V)) {
 					real_t val = p_variation_coordinates[*V];
-					s_v = CLAMP(val, def.x, def.y);
+					s_v = Math::clamp(val, def.x, def.y);
 				}
 				if (p_variation_coordinates.has(TS->tag_to_name(*V))) {
 					real_t val = p_variation_coordinates[TS->tag_to_name(*V)];
-					s_v = CLAMP(val, def.x, def.y);
+					s_v = Math::clamp(val, def.x, def.y);
 				}
 
 				match = match && (c_v == s_v);
@@ -3553,7 +3553,7 @@ bool SystemFont::get_font_italic() const {
 
 void SystemFont::set_font_weight(int p_weight) {
 	if (weight != p_weight) {
-		weight = CLAMP(p_weight, 100, 999);
+		weight = Math::clamp(p_weight, 100, 999);
 		_update_base_font();
 	}
 }
@@ -3564,7 +3564,7 @@ int SystemFont::get_font_weight() const {
 
 void SystemFont::set_font_stretch(int p_stretch) {
 	if (stretch != p_stretch) {
-		stretch = CLAMP(p_stretch, 50, 200);
+		stretch = Math::clamp(p_stretch, 50, 200);
 		_update_base_font();
 	}
 }
@@ -3596,7 +3596,7 @@ RID SystemFont::find_variation(const Dictionary &p_variation_coordinates, int p_
 		}
 
 		if (!face_indices.is_empty()) {
-			int face_index = CLAMP(p_face_index, 0, face_indices.size() - 1);
+			int face_index = Math::clamp(p_face_index, 0, face_indices.size() - 1);
 			return f->find_variation(var, face_indices[face_index], p_strength, p_transform, p_spacing_top, p_spacing_bottom, p_spacing_space, p_spacing_glyph, p_baseline_offset);
 		} else {
 			return f->find_variation(var, 0, p_strength, p_transform, p_spacing_top, p_spacing_bottom, p_spacing_space, p_spacing_glyph, p_baseline_offset);

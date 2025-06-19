@@ -981,7 +981,7 @@ void TileSetAtlasSourceEditor::_update_atlas_view() {
 	if (tools_button_group->get_pressed_button() != tool_paint_button) {
 		Vector2i pos;
 		Vector2 texture_region_base_size = tile_set_atlas_source->get_texture_region_size();
-		int texture_region_base_size_min = MIN(texture_region_base_size.x, texture_region_base_size.y);
+		int texture_region_base_size_min = Math::min(texture_region_base_size.x, texture_region_base_size.y);
 		for (int i = 0; i < tile_set_atlas_source->get_tiles_count(); i++) {
 			Vector2i tile_id = tile_set_atlas_source->get_tile_id(i);
 			int alternative_count = tile_set_atlas_source->get_alternative_tiles_count(tile_id);
@@ -992,8 +992,8 @@ void TileSetAtlasSourceEditor::_update_atlas_view() {
 				for (int j = 1; j < alternative_count; j++) {
 					int alternative_id = tile_set_atlas_source->get_alternative_tile_id(tile_id, j);
 					Rect2i rect = tile_atlas_view->get_alternative_tile_rect(tile_id, alternative_id);
-					pos.x = MAX(pos.x, rect.get_end().x);
-					y_increment = MAX(y_increment, rect.size.y);
+					pos.x = Math::max(pos.x, rect.get_end().x);
+					y_increment = Math::max(y_increment, rect.size.y);
 				}
 
 				// Create and position the button.
@@ -1171,22 +1171,22 @@ void TileSetAtlasSourceEditor::_tile_atlas_control_gui_input(const Ref<InputEven
 
 				if (drag_type == DRAG_TYPE_RESIZE_LEFT || drag_type == DRAG_TYPE_RESIZE_TOP_LEFT || drag_type == DRAG_TYPE_RESIZE_BOTTOM_LEFT) {
 					new_base_tiles_coords = _get_drag_offset_tile_coords(Vector2i(-1, 0));
-					new_rect.position.x = MIN(new_base_tiles_coords.x + 1, old_rect.get_end().x - 1);
+					new_rect.position.x = Math::min(new_base_tiles_coords.x + 1, old_rect.get_end().x - 1);
 					new_rect.size.x = old_rect.get_end().x - new_rect.position.x;
 				}
 				if (drag_type == DRAG_TYPE_RESIZE_TOP || drag_type == DRAG_TYPE_RESIZE_TOP_LEFT || drag_type == DRAG_TYPE_RESIZE_TOP_RIGHT) {
 					new_base_tiles_coords = _get_drag_offset_tile_coords(Vector2i(0, -1));
-					new_rect.position.y = MIN(new_base_tiles_coords.y + 1, old_rect.get_end().y - 1);
+					new_rect.position.y = Math::min(new_base_tiles_coords.y + 1, old_rect.get_end().y - 1);
 					new_rect.size.y = old_rect.get_end().y - new_rect.position.y;
 				}
 
 				if (drag_type == DRAG_TYPE_RESIZE_RIGHT || drag_type == DRAG_TYPE_RESIZE_TOP_RIGHT || drag_type == DRAG_TYPE_RESIZE_BOTTOM_RIGHT) {
 					new_base_tiles_coords = _get_drag_offset_tile_coords(Vector2i(1, 0));
-					new_rect.set_end(Vector2i(MAX(new_base_tiles_coords.x, old_rect.position.x + 1), new_rect.get_end().y));
+					new_rect.set_end(Vector2i(Math::max(new_base_tiles_coords.x, old_rect.position.x + 1), new_rect.get_end().y));
 				}
 				if (drag_type == DRAG_TYPE_RESIZE_BOTTOM || drag_type == DRAG_TYPE_RESIZE_BOTTOM_LEFT || drag_type == DRAG_TYPE_RESIZE_BOTTOM_RIGHT) {
 					new_base_tiles_coords = _get_drag_offset_tile_coords(Vector2i(0, 1));
-					new_rect.set_end(Vector2i(new_rect.get_end().x, MAX(new_base_tiles_coords.y, old_rect.position.y + 1)));
+					new_rect.set_end(Vector2i(new_rect.get_end().x, Math::max(new_base_tiles_coords.y, old_rect.position.y + 1)));
 				}
 
 				if (tile_set_atlas_source->has_room_for_tile(new_rect.position, new_rect.size, tile_set_atlas_source->get_tile_animation_columns(drag_current_tile), tile_set_atlas_source->get_tile_animation_separation(drag_current_tile), tile_set_atlas_source->get_tile_animation_frames_count(drag_current_tile), drag_current_tile)) {

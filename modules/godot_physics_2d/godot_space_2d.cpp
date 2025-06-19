@@ -442,7 +442,7 @@ bool GodotPhysicsDirectSpaceState2D::rest_info(const ShapeParameters &p_paramete
 	GodotShape2D *shape = GodotPhysicsServer2D::godot_singleton->shape_owner.get_or_null(p_parameters.shape_rid);
 	ERR_FAIL_NULL_V(shape, false);
 
-	real_t margin = MAX(p_parameters.margin, TEST_MOTION_MARGIN_MIN_VALUE);
+	real_t margin = Math::max(p_parameters.margin, TEST_MOTION_MARGIN_MIN_VALUE);
 
 	Rect2 aabb = p_parameters.transform.xform(shape->get_aabb());
 	aabb = aabb.merge(Rect2(aabb.position + p_parameters.motion, aabb.size)); //motion
@@ -455,7 +455,7 @@ bool GodotPhysicsDirectSpaceState2D::rest_info(const ShapeParameters &p_paramete
 	// Allowed depth can't be lower than motion length, in order to handle contacts at low speed.
 	real_t motion_length = p_parameters.motion.length();
 	real_t min_contact_depth = margin * TEST_MOTION_MIN_CONTACT_DEPTH_FACTOR;
-	rcd.min_allowed_depth = MIN(motion_length, min_contact_depth);
+	rcd.min_allowed_depth = Math::min(motion_length, min_contact_depth);
 
 	for (int i = 0; i < amount; i++) {
 		if (!_can_collide_with(space->intersection_query_results[i], p_parameters.collision_mask, p_parameters.collide_with_bodies, p_parameters.collide_with_areas)) {
@@ -571,7 +571,7 @@ bool GodotSpace2D::test_body_motion(GodotBody2D *p_body, const PhysicsServer2D::
 		return false;
 	}
 
-	real_t margin = MAX(p_parameters.margin, TEST_MOTION_MARGIN_MIN_VALUE);
+	real_t margin = Math::max(p_parameters.margin, TEST_MOTION_MARGIN_MIN_VALUE);
 
 	// Undo the currently transform the physics server is aware of and apply the provided one
 	body_aabb = p_parameters.from.xform(p_body->get_inv_transform().xform(body_aabb));
@@ -640,7 +640,7 @@ bool GodotSpace2D::test_body_motion(GodotBody2D *p_body, const PhysicsServer2D::
 						cbk.valid_dir = col_obj_shape_xform.columns[1].normalized();
 
 						real_t owc_margin = col_obj->get_shape_one_way_collision_margin(shape_idx);
-						cbk.valid_depth = MAX(owc_margin, margin); //user specified, but never less than actual margin or it won't work
+						cbk.valid_depth = Math::max(owc_margin, margin); //user specified, but never less than actual margin or it won't work
 						cbk.invalid_by_dir = 0;
 
 						if (col_obj->get_type() == GodotCollisionObject2D::TYPE_BODY) {
@@ -652,7 +652,7 @@ bool GodotSpace2D::test_body_motion(GodotBody2D *p_body, const PhysicsServer2D::
 								Vector2 motion = lv * last_step;
 								real_t motion_len = motion.length();
 								motion.normalize();
-								cbk.valid_depth += motion_len * MAX(motion.dot(-cbk.valid_dir), 0.0);
+								cbk.valid_depth += motion_len * Math::max(motion.dot(-cbk.valid_dir), 0.0);
 							}
 						}
 					} else {
@@ -900,7 +900,7 @@ bool GodotSpace2D::test_body_motion(GodotBody2D *p_body, const PhysicsServer2D::
 		_RestCallbackData2D rcd;
 
 		// Allowed depth can't be lower than motion length, in order to handle contacts at low speed.
-		rcd.min_allowed_depth = MIN(motion_length, min_contact_depth);
+		rcd.min_allowed_depth = Math::min(motion_length, min_contact_depth);
 
 		body_aabb.position += p_parameters.motion * unsafe;
 		int amount = _cull_aabb_for_body(p_body, body_aabb);
@@ -946,7 +946,7 @@ bool GodotSpace2D::test_body_motion(GodotBody2D *p_body, const PhysicsServer2D::
 					rcd.valid_dir = col_obj_shape_xform.columns[1].normalized();
 
 					real_t owc_margin = col_obj->get_shape_one_way_collision_margin(shape_idx);
-					rcd.valid_depth = MAX(owc_margin, margin); //user specified, but never less than actual margin or it won't work
+					rcd.valid_depth = Math::max(owc_margin, margin); //user specified, but never less than actual margin or it won't work
 
 					if (col_obj->get_type() == GodotCollisionObject2D::TYPE_BODY) {
 						const GodotBody2D *b = static_cast<const GodotBody2D *>(col_obj);
@@ -957,7 +957,7 @@ bool GodotSpace2D::test_body_motion(GodotBody2D *p_body, const PhysicsServer2D::
 							Vector2 motion = lv * last_step;
 							real_t motion_len = motion.length();
 							motion.normalize();
-							rcd.valid_depth += motion_len * MAX(motion.dot(-rcd.valid_dir), 0.0);
+							rcd.valid_depth += motion_len * Math::max(motion.dot(-rcd.valid_dir), 0.0);
 						}
 					}
 				} else {

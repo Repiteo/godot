@@ -105,7 +105,7 @@ void TTS_Android::_java_utterance_callback(int p_event, int p_id, int p_pos) {
 		if ((DisplayServer::TTSUtteranceEvent)p_event == DisplayServer::TTS_UTTERANCE_BOUNDARY) {
 			// Convert position from UTF-16 to UTF-32.
 			const Char16String &string = ids[p_id];
-			for (int i = 0; i < MIN(p_pos, string.length()); i++) {
+			for (int i = 0; i < Math::min(p_pos, string.length()); i++) {
 				char16_t c = string[i];
 				if ((c & 0xfffffc00) == 0xd800) {
 					i++;
@@ -202,7 +202,7 @@ void TTS_Android::speak(const String &p_text, const String &p_voice, int p_volum
 
 		jstring jStrT = env->NewStringUTF(p_text.utf8().get_data());
 		jstring jStrV = env->NewStringUTF(p_voice.utf8().get_data());
-		env->CallVoidMethod(tts, _speak, jStrT, jStrV, CLAMP(p_volume, 0, 100), CLAMP(p_pitch, 0.f, 2.f), CLAMP(p_rate, 0.1f, 10.f), p_utterance_id, p_interrupt);
+		env->CallVoidMethod(tts, _speak, jStrT, jStrV, Math::clamp(p_volume, 0, 100), Math::clamp(p_pitch, 0.f, 2.f), Math::clamp(p_rate, 0.1f, 10.f), p_utterance_id, p_interrupt);
 		env->DeleteLocalRef(jStrT);
 		env->DeleteLocalRef(jStrV);
 	}

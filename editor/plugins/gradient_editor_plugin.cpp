@@ -309,7 +309,7 @@ void GradientEdit::gui_input(const Ref<InputEvent> &p_event) {
 				pre_grab_index = selected_index;
 			} else if (grabbing == GRAB_NONE) {
 				// Adding a new point. Insert a temporary point for the user to adjust, so it's not in the undo/redo.
-				float new_offset = CLAMP(adjusted_mb_x / float(total_w), 0, 1);
+				float new_offset = Math::clamp(adjusted_mb_x / float(total_w), 0, 1);
 				if (should_snap) {
 					new_offset = Math::snapped(new_offset, 1.0 / snap_count);
 				}
@@ -319,7 +319,7 @@ void GradientEdit::gui_input(const Ref<InputEvent> &p_event) {
 						// If another point with the same offset is found, then
 						// tweak it if Alt was pressed, otherwise something has gone wrong, so stop the operation.
 						if (mb->is_alt_pressed()) {
-							new_offset = MIN(gradient->get_offset(i) + 0.00001, 1);
+							new_offset = Math::min(gradient->get_offset(i) + 0.00001, 1);
 						} else {
 							return;
 						}
@@ -377,7 +377,7 @@ void GradientEdit::gui_input(const Ref<InputEvent> &p_event) {
 		}
 
 		// Grabbing logic.
-		float new_offset = CLAMP(adjusted_mm_x / float(total_w), 0, 1);
+		float new_offset = Math::clamp(adjusted_mm_x / float(total_w), 0, 1);
 
 		// Give the ability to snap right next to a point when using Shift.
 		if (mm->is_shift_pressed()) {
@@ -401,7 +401,7 @@ void GradientEdit::gui_input(const Ref<InputEvent> &p_event) {
 			if (nearest_idx != -1) {
 				// Snap to the point with a slight adjustment to the left or right.
 				float adjustment = gradient->get_offset(nearest_idx) < new_offset ? 0.00001 : -0.00001;
-				new_offset = CLAMP(gradient->get_offset(nearest_idx) + adjustment, 0, 1);
+				new_offset = Math::clamp(gradient->get_offset(nearest_idx) + adjustment, 0, 1);
 			} else if (should_snap) {
 				new_offset = Math::snapped(new_offset, 1.0 / snap_count);
 			}
@@ -473,7 +473,7 @@ void GradientEdit::_redraw() {
 		Color inside_col = gradient->get_color(i);
 		Color border_col = Math::lerp(0.75f, inside_col.get_luminance(), inside_col.a) > 0.455 ? Color(0, 0, 0) : Color(1, 1, 1);
 
-		int handle_thickness = MAX(1, Math::round(EDSCALE));
+		int handle_thickness = Math::max(1, Math::round(EDSCALE));
 		float handle_x_pos = gradient->get_offset(i) * total_w + half_handle_width;
 		float handle_start_x = handle_x_pos - half_handle_width;
 		Rect2 rect = Rect2(handle_start_x, h / 2, handle_width, h / 2);
@@ -602,7 +602,7 @@ void GradientEditor::_set_snap_enabled(bool p_enabled) {
 }
 
 void GradientEditor::_set_snap_count(int p_count) {
-	gradient_editor_rect->set_snap_count(CLAMP(p_count, 2, 100));
+	gradient_editor_rect->set_snap_count(Math::clamp(p_count, 2, 100));
 }
 
 void GradientEditor::set_gradient(const Ref<Gradient> &p_gradient) {

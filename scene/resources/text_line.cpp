@@ -430,10 +430,10 @@ void TextLine::draw(RID p_canvas, const Vector2 &p_pos, const Color &p_color, fl
 	float clip_l;
 	if (TS->shaped_text_get_orientation(rid) == TextServer::ORIENTATION_HORIZONTAL) {
 		ofs.y += TS->shaped_text_get_ascent(rid);
-		clip_l = MAX(0, p_pos.x - ofs.x);
+		clip_l = Math::max(0, p_pos.x - ofs.x);
 	} else {
 		ofs.x += TS->shaped_text_get_ascent(rid);
-		clip_l = MAX(0, p_pos.y - ofs.y);
+		clip_l = Math::max(0, p_pos.y - ofs.y);
 	}
 	return TS->shaped_text_draw(rid, p_canvas, ofs, clip_l, clip_l + width, p_color, p_oversampling);
 }
@@ -477,10 +477,10 @@ void TextLine::draw_outline(RID p_canvas, const Vector2 &p_pos, int p_outline_si
 	float clip_l;
 	if (TS->shaped_text_get_orientation(rid) == TextServer::ORIENTATION_HORIZONTAL) {
 		ofs.y += TS->shaped_text_get_ascent(rid);
-		clip_l = MAX(0, p_pos.x - ofs.x);
+		clip_l = Math::max(0, p_pos.x - ofs.x);
 	} else {
 		ofs.x += TS->shaped_text_get_ascent(rid);
-		clip_l = MAX(0, p_pos.y - ofs.y);
+		clip_l = Math::max(0, p_pos.y - ofs.y);
 	}
 	return TS->shaped_text_draw_outline(rid, p_canvas, ofs, clip_l, clip_l + width, p_outline_size, p_color, p_oversampling);
 }

@@ -394,7 +394,7 @@ void EditorPropertyArray::update_property() {
 	object->set_array(array);
 
 	int size = array.call("size");
-	int max_page = MAX(0, size - 1) / page_length;
+	int max_page = Math::max(0, size - 1) / page_length;
 	if (page_index > max_page) {
 		_page_changed(max_page);
 	}
@@ -1315,7 +1315,7 @@ void EditorPropertyDictionary::update_property() {
 
 		int size = dict.size();
 
-		int max_page = MAX(0, size - 1) / page_length;
+		int max_page = Math::max(0, size - 1) / page_length;
 		if (page_index > max_page) {
 			_page_changed(max_page);
 		}
@@ -1614,15 +1614,15 @@ void EditorPropertyLocalizableString::update_property() {
 
 		int size = dict.size();
 
-		int max_page = MAX(0, size - 1) / page_length;
-		page_index = MIN(page_index, max_page);
+		int max_page = Math::max(0, size - 1) / page_length;
+		page_index = Math::min(page_index, max_page);
 
 		paginator->update(page_index, max_page);
 		paginator->set_visible(max_page > 0);
 
 		int offset = page_index * page_length;
 
-		int amount = MIN(size - offset, page_length);
+		int amount = Math::min(size - offset, page_length);
 
 		for (int i = 0; i < amount; i++) {
 			String prop_name;

@@ -243,7 +243,7 @@ void LinkButton::_notification(int p_what) {
 			if (do_underline) {
 				int underline_spacing = theme_cache.underline_spacing + text_buf->get_line_underline_position();
 				int y = text_buf->get_line_ascent() + underline_spacing;
-				int underline_thickness = MAX(1, text_buf->get_line_underline_thickness());
+				int underline_thickness = Math::max(1, text_buf->get_line_underline_thickness());
 
 				if (is_layout_rtl()) {
 					draw_line(Vector2(size.width - width, y), Vector2(size.width, y), color, underline_thickness);

@@ -140,7 +140,7 @@ bool AudioStreamGeneratorPlayback::push_buffer(const PackedVector2Array &p_frame
 		AudioFrame buf[2048];
 		int ofs = 0;
 		while (to_write) {
-			int w = MIN(to_write, 2048);
+			int w = Math::min(to_write, 2048);
 			for (int i = 0; i < w; i++) {
 				buf[i] = r[i + ofs];
 			}

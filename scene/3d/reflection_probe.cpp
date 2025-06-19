@@ -78,7 +78,7 @@ Color ReflectionProbe::get_ambient_color() const {
 }
 
 void ReflectionProbe::set_max_distance(float p_distance) {
-	max_distance = CLAMP(p_distance, 0.0, 262'144.0);
+	max_distance = Math::clamp(p_distance, 0.0, 262'144.0);
 	// Reflection rendering breaks if distance exceeds 262,144 units (due to floating-point precision with the near plane being 0.01).
 	RS::get_singleton()->reflection_probe_set_max_distance(probe, max_distance);
 }
@@ -106,7 +106,7 @@ void ReflectionProbe::set_size(const Vector3 &p_size) {
 		}
 
 		if (half_size - 0.01 < Math::abs(origin_offset[i])) {
-			origin_offset[i] = SIGN(origin_offset[i]) * (half_size - 0.01);
+			origin_offset[i] = Math::sign(origin_offset[i]) * (half_size - 0.01);
 		}
 	}
 
@@ -126,7 +126,7 @@ void ReflectionProbe::set_origin_offset(const Vector3 &p_offset) {
 	for (int i = 0; i < 3; i++) {
 		float half_size = size[i] / 2;
 		if (half_size - 0.01 < Math::abs(origin_offset[i])) {
-			origin_offset[i] = SIGN(origin_offset[i]) * (half_size - 0.01);
+			origin_offset[i] = Math::sign(origin_offset[i]) * (half_size - 0.01);
 		}
 	}
 	RS::get_singleton()->reflection_probe_set_size(probe, size);

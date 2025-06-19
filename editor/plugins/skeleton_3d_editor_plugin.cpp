@@ -655,7 +655,7 @@ void Skeleton3DEditor::_file_selected(const String &p_file) {
 	// Layout handles provisionaly.
 	Vector2 bound = Vector2(position_max.x - position_min.x, position_max.y - position_min.y);
 	Vector2 center = Vector2((position_max.x + position_min.x) * 0.5, (position_max.y + position_min.y) * 0.5);
-	float nrm = MAX(bound.x, bound.y);
+	float nrm = Math::max(bound.x, bound.y);
 	if (nrm > 0) {
 		for (int i = 0; i < bone_count; i++) {
 			handle_positions.write[i] = (handle_positions[i] - center) / nrm * 0.9;

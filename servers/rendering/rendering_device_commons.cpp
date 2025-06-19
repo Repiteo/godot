@@ -792,9 +792,9 @@ uint32_t RenderingDeviceCommons::get_image_format_required_size(DataFormat p_for
 		if (r_depth) {
 			*r_depth = d;
 		}
-		w = MAX(blockw, w >> 1);
-		h = MAX(blockh, h >> 1);
-		d = MAX(1u, d >> 1);
+		w = Math::max(blockw, w >> 1);
+		h = Math::max(blockh, h >> 1);
+		d = Math::max(1u, d >> 1);
 	}
 
 	return size;
@@ -813,9 +813,9 @@ uint32_t RenderingDeviceCommons::get_image_required_mipmaps(uint32_t p_width, ui
 			break;
 		}
 
-		w = MAX(1u, w >> 1);
-		h = MAX(1u, h >> 1);
-		d = MAX(1u, d >> 1);
+		w = Math::max(1u, w >> 1);
+		h = Math::max(1u, h >> 1);
+		d = Math::max(1u, d >> 1);
 
 		mipmaps++;
 	}

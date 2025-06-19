@@ -63,7 +63,7 @@ Color FogMaterial::get_emission() const {
 }
 
 void FogMaterial::set_height_falloff(float p_falloff) {
-	height_falloff = MAX(p_falloff, 0.0f);
+	height_falloff = Math::max(p_falloff, 0.0f);
 	RS::get_singleton()->material_set_param(_get_material(), "height_falloff", height_falloff);
 }
 
@@ -72,7 +72,7 @@ float FogMaterial::get_height_falloff() const {
 }
 
 void FogMaterial::set_edge_fade(float p_edge_fade) {
-	edge_fade = MAX(p_edge_fade, 0.0f);
+	edge_fade = Math::max(p_edge_fade, 0.0f);
 	RS::get_singleton()->material_set_param(_get_material(), "edge_fade", edge_fade);
 }
 

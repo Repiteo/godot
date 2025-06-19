@@ -349,7 +349,7 @@ void ConvertTransformModifier3D::_process_constraint(int p_index, Skeleton3D *p_
 	} else {
 		point = Math::inverse_lerp((double)setting->reference_range_min, (double)setting->reference_range_max, point);
 	}
-	point = Math::lerp((double)setting->apply_range_min, (double)setting->apply_range_max, CLAMP(point, 0, 1));
+	point = Math::lerp((double)setting->apply_range_min, (double)setting->apply_range_max, Math::clamp(point, 0, 1));
 	axis = (int)setting->apply_axis;
 	switch (setting->apply_transform_mode) {
 		case TRANSFORM_MODE_POSITION: {
@@ -364,7 +364,7 @@ void ConvertTransformModifier3D::_process_constraint(int p_index, Skeleton3D *p_
 			Vector3 rot_axis = get_vector_from_axis(setting->apply_axis);
 			Vector3 dest_scl = destination.basis.get_scale();
 			if (influence < 1.0 || p_amount < 1.0) {
-				point = CLAMP(point, CMP_EPSILON - Math::PI, Math::PI - CMP_EPSILON); // Hack to consistent slerp (interpolate_with) orientation since -180/180 deg rot is mixed in slerp.
+				point = Math::clamp(point, CMP_EPSILON - Math::PI, Math::PI - CMP_EPSILON); // Hack to consistent slerp (interpolate_with) orientation since -180/180 deg rot is mixed in slerp.
 			}
 			Quaternion rot = Quaternion(rot_axis, point);
 			if (setting->additive) {

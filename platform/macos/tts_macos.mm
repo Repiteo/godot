@@ -57,7 +57,7 @@
 
 	// Convert from UTF-16 to UTF-32 position.
 	int pos = 0;
-	for (NSUInteger i = 0; i < MIN(characterRange.location, string.length); i++) {
+	for (NSUInteger i = 0; i < Math::min(characterRange.location, string.length); i++) {
 		unichar c = [string characterAtIndex:i];
 		if ((c & 0xfffffc00) == 0xd800) {
 			i++;
@@ -92,7 +92,7 @@
 	if (!paused && have_utterance) {
 		// Convert from UTF-16 to UTF-32 position.
 		int pos = 0;
-		for (NSUInteger i = 0; i < MIN(characterRange.location, string.length); i++) {
+		for (NSUInteger i = 0; i < Math::min(characterRange.location, string.length); i++) {
 			unichar c = [string characterAtIndex:i];
 			if ((c & 0xfffffc00) == 0xd800) {
 				i++;
@@ -223,9 +223,9 @@
 	DisplayServer::TTSUtterance message;
 	message.text = text;
 	message.voice = voice;
-	message.volume = CLAMP(volume, 0, 100);
-	message.pitch = CLAMP(pitch, 0.f, 2.f);
-	message.rate = CLAMP(rate, 0.1f, 10.f);
+	message.volume = Math::clamp(volume, 0, 100);
+	message.pitch = Math::clamp(pitch, 0.f, 2.f);
+	message.rate = Math::clamp(rate, 0.1f, 10.f);
 	message.id = utterance_id;
 	queue.push_back(message);
 

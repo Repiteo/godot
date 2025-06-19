@@ -253,17 +253,17 @@ void TileProxiesManagerDialog::_clear_all_button_pressed() {
 
 bool TileProxiesManagerDialog::_set(const StringName &p_name, const Variant &p_value) {
 	if (p_name == "from_source") {
-		from.source_id = MAX(int(p_value), -1);
+		from.source_id = Math::max(int(p_value), -1);
 	} else if (p_name == "from_coords") {
 		from.set_atlas_coords(Vector2i(p_value).maxi(-1));
 	} else if (p_name == "from_alternative") {
-		from.alternative_tile = MAX(int(p_value), -1);
+		from.alternative_tile = Math::max(int(p_value), -1);
 	} else if (p_name == "to_source") {
-		to.source_id = MAX(int(p_value), 0);
+		to.source_id = Math::max(int(p_value), 0);
 	} else if (p_name == "to_coords") {
 		to.set_atlas_coords(Vector2i(p_value).maxi(0));
 	} else if (p_name == "to_alternative") {
-		to.alternative_tile = MAX(int(p_value), 0);
+		to.alternative_tile = Math::max(int(p_value), 0);
 	} else {
 		return false;
 	}

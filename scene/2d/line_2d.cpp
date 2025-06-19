@@ -253,7 +253,7 @@ float Line2D::get_sharp_limit() const {
 }
 
 void Line2D::set_round_precision(int p_precision) {
-	_round_precision = MAX(1, p_precision);
+	_round_precision = Math::max(1, p_precision);
 	queue_redraw();
 }
 

@@ -109,7 +109,7 @@ DisplayServerMacOS::WindowID DisplayServerMacOS::_create_window(WindowMode p_mod
 
 		// initWithContentRect uses bottom-left corner of the window’s frame as origin.
 		wd.window_object = [[GodotWindow alloc]
-				initWithContentRect:NSMakeRect(100, 100, MAX(1, p_rect.size.width / scale), MAX(1, p_rect.size.height / scale))
+				initWithContentRect:NSMakeRect(100, 100, Math::max(1, p_rect.size.width / scale), Math::max(1, p_rect.size.height / scale))
 						  styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskResizable
 							backing:NSBackingStoreBuffered
 							  defer:NO];
@@ -1486,8 +1486,8 @@ bool DisplayServerMacOS::update_mouse_wrap(WindowData &p_wd, NSPoint &r_delta, N
 		// Confine mouse position to the window, and update delta.
 		NSRect frame = [p_wd.window_view frame];
 		NSPoint conf_pos = r_mpos;
-		conf_pos.x = CLAMP(conf_pos.x + r_delta.x, 0.f, frame.size.width);
-		conf_pos.y = CLAMP(conf_pos.y - r_delta.y, 0.f, frame.size.height);
+		conf_pos.x = Math::clamp(conf_pos.x + r_delta.x, 0.f, frame.size.width);
+		conf_pos.y = Math::clamp(conf_pos.y - r_delta.y, 0.f, frame.size.height);
 		r_delta.x = conf_pos.x - r_mpos.x;
 		r_delta.y = r_mpos.y - conf_pos.y;
 		r_mpos = conf_pos;
@@ -2024,7 +2024,7 @@ Size2i DisplayServerMacOS::window_get_title_size(const String &p_title, WindowID
 	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont titleBarFontOfSize:0], NSFontAttributeName, nil];
 	NSSize text_size = [[[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:p_title.utf8().get_data()] attributes:attributes] size];
 	size.x += text_size.width;
-	size.y = MAX(size.y, text_size.height);
+	size.y = Math::max(size.y, text_size.height);
 
 	return size * scale;
 }
@@ -2350,7 +2350,7 @@ void DisplayServerMacOS::window_set_size(const Size2i p_size, WindowID p_window)
 	top_left.x = old_frame.origin.x;
 	top_left.y = NSMaxY(old_frame);
 
-	NSRect new_frame = NSMakeRect(0, 0, MAX(1, size.x), MAX(1, size.y));
+	NSRect new_frame = NSMakeRect(0, 0, Math::max(1, size.x), Math::max(1, size.y));
 	new_frame = [wd.window_object frameRectForContentRect:new_frame];
 
 	new_frame.origin.x = top_left.x;

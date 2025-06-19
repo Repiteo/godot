@@ -523,10 +523,10 @@ void ImporterMesh::generate_lods(float p_normal_merge_angle, Array p_bone_transf
 			}
 
 			Surface::LOD lod;
-			lod.distance = MAX(mesh_error * scale, CMP_EPSILON2);
+			lod.distance = Math::max(mesh_error * scale, CMP_EPSILON2);
 			lod.indices = new_indices;
 			surfaces.write[i].lods.push_back(lod);
-			index_target = MAX(new_index_count, index_target) * 2;
+			index_target = Math::max(new_index_count, index_target) * 2;
 			last_index_count = new_index_count;
 
 			if (mesh_error == 0.0f) {

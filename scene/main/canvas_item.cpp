@@ -758,7 +758,7 @@ void CanvasItem::draw_arc(const Vector2 &p_center, real_t p_radius, real_t p_sta
 	Point2 *points_ptr = points.ptrw();
 
 	// Clamp angle difference to full circle so arc won't overlap itself.
-	const real_t delta_angle = CLAMP(p_end_angle - p_start_angle, -Math::TAU, Math::TAU);
+	const real_t delta_angle = Math::clamp(p_end_angle - p_start_angle, -Math::TAU, Math::TAU);
 	for (int i = 0; i < p_point_count; i++) {
 		real_t theta = (i / (p_point_count - 1.0f)) * delta_angle + p_start_angle;
 		points_ptr[i] = p_center + Vector2(Math::cos(theta), Math::sin(theta)) * p_radius;

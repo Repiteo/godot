@@ -129,8 +129,8 @@ Transform2D Camera2D::get_camera_transform() {
 	if (!first) {
 		if (anchor_mode == ANCHOR_MODE_DRAG_CENTER) {
 			if (drag_horizontal_enabled && !is_part_of_edited_scene() && !drag_horizontal_offset_changed) {
-				camera_pos.x = MIN(camera_pos.x, (new_camera_pos.x + screen_size.x * 0.5 * zoom_scale.x * drag_margin[SIDE_LEFT]));
-				camera_pos.x = MAX(camera_pos.x, (new_camera_pos.x - screen_size.x * 0.5 * zoom_scale.x * drag_margin[SIDE_RIGHT]));
+				camera_pos.x = Math::min(camera_pos.x, (new_camera_pos.x + screen_size.x * 0.5 * zoom_scale.x * drag_margin[SIDE_LEFT]));
+				camera_pos.x = Math::max(camera_pos.x, (new_camera_pos.x - screen_size.x * 0.5 * zoom_scale.x * drag_margin[SIDE_RIGHT]));
 			} else {
 				if (drag_horizontal_offset < 0) {
 					camera_pos.x = new_camera_pos.x + screen_size.x * 0.5 * drag_margin[SIDE_RIGHT] * drag_horizontal_offset;
@@ -142,8 +142,8 @@ Transform2D Camera2D::get_camera_transform() {
 			}
 
 			if (drag_vertical_enabled && !is_part_of_edited_scene() && !drag_vertical_offset_changed) {
-				camera_pos.y = MIN(camera_pos.y, (new_camera_pos.y + screen_size.y * 0.5 * zoom_scale.y * drag_margin[SIDE_TOP]));
-				camera_pos.y = MAX(camera_pos.y, (new_camera_pos.y - screen_size.y * 0.5 * zoom_scale.y * drag_margin[SIDE_BOTTOM]));
+				camera_pos.y = Math::min(camera_pos.y, (new_camera_pos.y + screen_size.y * 0.5 * zoom_scale.y * drag_margin[SIDE_TOP]));
+				camera_pos.y = Math::max(camera_pos.y, (new_camera_pos.y - screen_size.y * 0.5 * zoom_scale.y * drag_margin[SIDE_BOTTOM]));
 
 			} else {
 				if (drag_vertical_offset < 0) {
@@ -695,7 +695,7 @@ void Camera2D::set_position_smoothing_speed(real_t p_speed) {
 	if (position_smoothing_speed == p_speed) {
 		return;
 	}
-	position_smoothing_speed = MAX(0, p_speed);
+	position_smoothing_speed = Math::max(0, p_speed);
 	_update_process_callback();
 }
 
@@ -707,7 +707,7 @@ void Camera2D::set_rotation_smoothing_speed(real_t p_speed) {
 	if (rotation_smoothing_speed == p_speed) {
 		return;
 	}
-	rotation_smoothing_speed = MAX(0, p_speed);
+	rotation_smoothing_speed = Math::max(0, p_speed);
 	_update_process_callback();
 }
 

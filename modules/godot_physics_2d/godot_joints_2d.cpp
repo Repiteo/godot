@@ -191,7 +191,7 @@ bool GodotPinJoint2D::pre_solve(real_t p_step) {
 		}
 		real_t error_bias = Math::pow(1.0 - 0.15, 60.0);
 		// Calculate bias velocity.
-		bias_velocity = -CLAMP((-1.0 - Math::pow(error_bias, p_step)) * pdist / p_step, -get_max_bias(), get_max_bias());
+		bias_velocity = -Math::clamp((-1.0 - Math::pow(error_bias, p_step)) * pdist / p_step, -get_max_bias(), get_max_bias());
 		// If the bias velocity is 0, the joint is not at a limit.
 		if (bias_velocity >= -CMP_EPSILON && bias_velocity <= CMP_EPSILON) {
 			j_acc = 0;
@@ -232,12 +232,12 @@ void GodotPinJoint2D::solve(real_t p_step) {
 		// Only enable the limits if we have to.
 		if (angular_limit_enabled && is_joint_at_limit) {
 			if (bias_velocity < 0.0) {
-				j_acc = CLAMP(j_old + j, 0.0, j_max);
+				j_acc = Math::clamp(j_old + j, 0.0, j_max);
 			} else {
-				j_acc = CLAMP(j_old + j, -j_max, 0.0);
+				j_acc = Math::clamp(j_old + j, -j_max, 0.0);
 			}
 		} else {
-			j_acc = CLAMP(j_old + j, -j_max, j_max);
+			j_acc = Math::clamp(j_old + j, -j_max, j_max);
 		}
 		j = j_acc - j_old;
 		A->apply_torque_impulse(-j * A->get_inv_inertia());

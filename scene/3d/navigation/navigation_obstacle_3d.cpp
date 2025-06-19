@@ -329,7 +329,7 @@ void NavigationObstacle3D::set_height(real_t p_height) {
 	}
 
 	height = p_height;
-	const float scale_factor = MAX(Math::abs((is_inside_tree() ? get_global_basis() : get_basis()).get_scale().y), 0.001);
+	const float scale_factor = Math::max(Math::abs((is_inside_tree() ? get_global_basis() : get_basis()).get_scale().y), 0.001);
 	NavigationServer3D::get_singleton()->obstacle_set_height(obstacle, scale_factor * height);
 
 #ifdef DEBUG_ENABLED

@@ -2231,7 +2231,7 @@ CSGBrush *CSGPolygon3D::_build_brush() {
 		case MODE_PATH: {
 			curve_length = curve->get_baked_length();
 			if (path_interval_type == PATH_INTERVAL_DISTANCE) {
-				extrusions = MAX(1, Math::ceil(curve_length / path_interval)) + 1;
+				extrusions = Math::max(1, Math::ceil(curve_length / path_interval)) + 1;
 			} else {
 				extrusions = Math::ceil(1.0 * curve->get_point_count() / path_interval);
 			}

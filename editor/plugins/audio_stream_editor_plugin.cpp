@@ -187,7 +187,7 @@ void AudioStreamEditor::_on_input_indicator(Ref<InputEvent> p_event) {
 
 void AudioStreamEditor::_seek_to(real_t p_x) {
 	_current = p_x / _preview->get_rect().size.x * stream->get_length();
-	_current = CLAMP(_current, 0, stream->get_length());
+	_current = Math::clamp(_current, 0, stream->get_length());
 	_player->seek(_current);
 	_indicator->queue_redraw();
 }

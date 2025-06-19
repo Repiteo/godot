@@ -1302,7 +1302,7 @@ void AnimationTimelineEdit::_zoom_changed(double) {
 
 	if (zoom_callback_occurred) { // Zooming with scroll wheel will focus on the position of the mouse.
 		double zoom_scroll_origin_norm = (zoom_scroll_origin.x - get_name_limit()) / timeline_width_pixels;
-		zoom_scroll_origin_norm = MAX(zoom_scroll_origin_norm, 0);
+		zoom_scroll_origin_norm = Math::max(zoom_scroll_origin_norm, 0);
 		zoom_pivot = timeline_left + timeline_width_seconds * zoom_scroll_origin_norm;
 		zoom_pivot_delta = updated_timeline_width_seconds * zoom_scroll_origin_norm;
 		zoom_callback_occurred = false;
@@ -1333,7 +1333,7 @@ void AnimationTimelineEdit::_zoom_changed(double) {
 	}
 
 	double hscroll_pos = zoom_pivot - zoom_pivot_delta;
-	hscroll_pos = CLAMP(hscroll_pos, hscroll->get_min(), hscroll->get_max());
+	hscroll_pos = Math::clamp(hscroll_pos, hscroll->get_min(), hscroll->get_max());
 
 	hscroll->set_value(hscroll_pos);
 	hscroll_on_zoom_buffer = hscroll_pos; // In case of page update.
@@ -1363,7 +1363,7 @@ void AnimationTimelineEdit::_anim_length_changed(double p_new_len) {
 		return;
 	}
 
-	p_new_len = MAX(SECOND_DECIMAL, p_new_len);
+	p_new_len = Math::max(SECOND_DECIMAL, p_new_len);
 	if (use_fps && animation->get_step() > 0) {
 		p_new_len *= animation->get_step();
 	}
@@ -1445,9 +1445,9 @@ int AnimationTimelineEdit::get_name_limit() const {
 	Ref<Texture2D> hsize_icon = get_editor_theme_icon(SNAME("Hsize"));
 
 	int filter_track_width = filter_track->is_visible() ? filter_track->get_custom_minimum_size().width : 0;
-	int limit = MAX(name_limit, add_track->get_minimum_size().width + hsize_icon->get_width() + filter_track_width + 16 * EDSCALE);
+	int limit = Math::max(name_limit, add_track->get_minimum_size().width + hsize_icon->get_width() + filter_track_width + 16 * EDSCALE);
 
-	limit = MIN(limit, get_size().width - get_buttons_width() - 1);
+	limit = Math::min(limit, get_size().width - get_buttons_width() - 1);
 
 	return limit;
 }
@@ -1617,12 +1617,12 @@ void AnimationTimelineEdit::_notification(int p_what) {
 			float max_digit_width = font->get_char_size('0', font_size).width;
 			for (int i = 1; i <= 9; i++) {
 				const float digit_width = font->get_char_size('0' + i, font_size).width;
-				max_digit_width = MAX(digit_width, max_digit_width);
+				max_digit_width = Math::max(digit_width, max_digit_width);
 			}
 			const int max_sc = int(Math::ceil(zoomw / scale));
 			const int max_sc_width = String::num(max_sc).length() * Math::ceil(max_digit_width);
 
-			const int min_margin = MAX(text_secondary_margin, text_primary_margin);
+			const int min_margin = Math::max(text_secondary_margin, text_primary_margin);
 
 			while (!step_found) {
 				int min = max_sc_width;
@@ -1739,7 +1739,7 @@ Size2 AnimationTimelineEdit::get_minimum_size() const {
 	Size2 ms = filter_track->get_minimum_size();
 	const Ref<Font> font = get_theme_font(SceneStringName(font), SNAME("Label"));
 	const int font_size = get_theme_font_size(SceneStringName(font_size), SNAME("Label"));
-	ms.height = MAX(ms.height, font->get_height(font_size));
+	ms.height = Math::max(ms.height, font->get_height(font_size));
 	ms.width = get_buttons_width() + add_track->get_minimum_size().width + get_editor_theme_icon(SNAME("Hsize"))->get_width() + 2 + 8 * EDSCALE;
 	return ms;
 }
@@ -1976,7 +1976,7 @@ void AnimationTimelineEdit::_zoom_callback(float p_zoom_factor, Vector2 p_origin
 	double current_zoom_value = get_zoom()->get_value();
 	zoom_scroll_origin = p_origin;
 	zoom_callback_occurred = true;
-	get_zoom()->set_value(MAX(0.01, current_zoom_value - (1.0 - p_zoom_factor)));
+	get_zoom()->set_value(Math::max(0.01, current_zoom_value - (1.0 - p_zoom_factor)));
 }
 
 void AnimationTimelineEdit::set_use_fps(bool p_use_fps) {
@@ -2226,12 +2226,12 @@ void AnimationTrackEdit::_notification(int p_what) {
 					}
 
 					if (start_time < animation->get_length() && end_time >= 0) {
-						float start_ofs = MAX(0, start_time) - timeline->get_value();
-						float end_ofs = MIN(animation->get_length(), end_time) - timeline->get_value();
+						float start_ofs = Math::max(0, start_time) - timeline->get_value();
+						float end_ofs = Math::min(animation->get_length(), end_time) - timeline->get_value();
 						start_ofs = start_ofs * scale + limit;
 						end_ofs = end_ofs * scale + limit;
-						start_ofs = MAX(start_ofs, limit);
-						end_ofs = MIN(end_ofs, limit_end);
+						start_ofs = Math::max(start_ofs, limit);
+						end_ofs = Math::min(end_ofs, limit_end);
 						Rect2 rect;
 						rect.set_position(Vector2(start_ofs, 0));
 						rect.set_size(Vector2(end_ofs - start_ofs, get_size().height));
@@ -2291,7 +2291,7 @@ void AnimationTrackEdit::_notification(int p_what) {
 						}
 						int limit_string = (editor->is_key_selected(track, i + 1) && editor->is_moving_selection()) ? int(offset_last) : int(offset_n);
 						if (editor->is_key_selected(track, i) && editor->is_moving_selection()) {
-							limit_string = int(MAX(limit_end, offset_last));
+							limit_string = int(Math::max(limit_end, offset_last));
 						}
 						draw_key_link(i, scale, int(offset), int(offset_n), limit, limit_end);
 						draw_key(i, scale, int(offset), editor->is_key_selected(track, i), limit, limit_string);
@@ -2542,8 +2542,8 @@ void AnimationTrackEdit::draw_key_link(int p_index, float p_pixels_sec, int p_x,
 	Color color = get_theme_color(SceneStringName(font_color), SNAME("Label"));
 	color.a = 0.5;
 
-	int from_x = MAX(p_x, p_clip_left);
-	int to_x = MIN(p_next_x, p_clip_right);
+	int from_x = Math::max(p_x, p_clip_left);
+	int to_x = Math::min(p_next_x, p_clip_right);
 
 	draw_line(Point2(from_x + 1, get_size().height / 2), Point2(to_x, get_size().height / 2), color, Math::round(2 * EDSCALE));
 }
@@ -2600,7 +2600,7 @@ void AnimationTrackEdit::draw_key(int p_index, float p_pixels_sec, int p_x, bool
 		}
 		text += ")";
 
-		int limit = ((p_selected && editor->is_moving_selection()) || editor->is_function_name_pressed()) ? 0 : MAX(0, p_clip_right - p_x - icon_to_draw->get_width() * 2);
+		int limit = ((p_selected && editor->is_moving_selection()) || editor->is_function_name_pressed()) ? 0 : Math::max(0, p_clip_right - p_x - icon_to_draw->get_width() * 2);
 
 		if (limit > 0) {
 			draw_string(font, Vector2(p_x + icon_to_draw->get_width(), int(get_size().height - font->get_height(font_size)) / 2 + font->get_ascent(font_size)), text, HORIZONTAL_ALIGNMENT_LEFT, limit, font_size, color);
@@ -2706,8 +2706,8 @@ Size2 AnimationTrackEdit::get_minimum_size() const {
 	const int font_size = get_theme_font_size(SceneStringName(font_size), SNAME("Label"));
 	const int separation = get_theme_constant(SNAME("v_separation"), SNAME("ItemList"));
 
-	int max_h = MAX(texture->get_height(), font->get_height(font_size));
-	max_h = MAX(max_h, get_key_height());
+	int max_h = Math::max(texture->get_height(), font->get_height(font_size));
+	max_h = Math::max(max_h, get_key_height());
 
 	return Vector2(1, max_h + separation);
 }
@@ -3787,12 +3787,12 @@ void AnimationTrackEditGroup::_notification(int p_what) {
 					}
 
 					if (start_time < editor->get_current_animation()->get_length() && end_time >= 0) {
-						float start_ofs = MAX(0, start_time) - timeline->get_value();
-						float end_ofs = MIN(editor->get_current_animation()->get_length(), end_time) - timeline->get_value();
+						float start_ofs = Math::max(0, start_time) - timeline->get_value();
+						float end_ofs = Math::min(editor->get_current_animation()->get_length(), end_time) - timeline->get_value();
 						start_ofs = start_ofs * scale + limit;
 						end_ofs = end_ofs * scale + limit;
-						start_ofs = MAX(start_ofs, limit);
-						end_ofs = MIN(end_ofs, limit_end);
+						start_ofs = Math::max(start_ofs, limit);
+						end_ofs = Math::min(end_ofs, limit_end);
 						Rect2 rect;
 						rect.set_position(Vector2(start_ofs, 0));
 						rect.set_size(Vector2(end_ofs - start_ofs, get_size().height));
@@ -3876,7 +3876,7 @@ Size2 AnimationTrackEditGroup::get_minimum_size() const {
 	const Ref<StyleBox> &header_style = get_theme_stylebox(SNAME("header"), SNAME("AnimationTrackEditGroup"));
 	const int content_margin = header_style->get_content_margin(SIDE_TOP) + header_style->get_content_margin(SIDE_BOTTOM);
 
-	return Vector2(0, MAX(font->get_height(font_size), icon_size.y) + separation + content_margin);
+	return Vector2(0, Math::max(font->get_height(font_size), icon_size.y) + separation + content_margin);
 }
 
 String AnimationTrackEditGroup::get_node_name() const {
@@ -5394,7 +5394,7 @@ void AnimationTrackEditor::_update_step(double p_new_step) {
 	if (timeline->is_using_fps()) {
 		if (step_value != 0.0) {
 			// A step_value should be less than or equal to 1000 to ensure that no error accumulates due to interactions with retrieving values from inner range.
-			step_value = 1.0 / MIN(1000.0, p_new_step);
+			step_value = 1.0 / Math::min(1000.0, p_new_step);
 		}
 		timeline->queue_redraw();
 	}
@@ -6972,7 +6972,7 @@ void AnimationTrackEditor::_edit_menu_pressed(int p_option) {
 				double prev_time = animation->track_get_key_time(E.key.track, E.key.key);
 				float cur_time = timeline->get_play_position();
 				float diff = prev_offset + cur_time - prev_time;
-				float destination = cur_time - MIN(0, diff);
+				float destination = cur_time - Math::min(0, diff);
 				if (diff >= len || animation->track_find_key(E.key.track, destination, Animation::FIND_MODE_EXACT) >= 0) {
 					continue;
 				}
@@ -7599,7 +7599,7 @@ void AnimationTrackEditor::_update_snap_unit() {
 		snap_unit = 1.0 / step->get_value();
 	} else {
 		if (fps_compat->is_pressed()) {
-			snap_unit = CLAMP(step->get_value(), 0.0, 1.0);
+			snap_unit = Math::clamp(step->get_value(), 0.0, 1.0);
 			if (!Math::is_zero_approx(snap_unit)) {
 				real_t fps = Math::round(1.0 / snap_unit);
 				nearest_fps = int(fps);
@@ -8645,12 +8645,12 @@ void AnimationMarkerEdit::_notification(int p_what) {
 					}
 
 					if (start_time < animation->get_length() && end_time >= 0) {
-						float start_ofs = MAX(0, start_time) - timeline->get_value();
-						float end_ofs = MIN(animation->get_length(), end_time) - timeline->get_value();
+						float start_ofs = Math::max(0, start_time) - timeline->get_value();
+						float end_ofs = Math::min(animation->get_length(), end_time) - timeline->get_value();
 						start_ofs = start_ofs * scale + limit;
 						end_ofs = end_ofs * scale + limit;
-						start_ofs = MAX(start_ofs, limit);
-						end_ofs = MIN(end_ofs, limit_end);
+						start_ofs = Math::max(start_ofs, limit);
+						end_ofs = Math::min(end_ofs, limit_end);
 						Rect2 rect;
 						rect.set_position(Vector2(start_ofs, 0));
 						rect.set_size(Vector2(end_ofs - start_ofs, get_size().height));
@@ -8685,7 +8685,7 @@ void AnimationMarkerEdit::_notification(int p_what) {
 					Size2 string_size = font->get_string_size(name, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size);
 					if (int(offset) <= limit_end && int(offset) >= limit && should_show_all_marker_names) {
 						float bottom = get_size().height + string_size.y - font->get_descent(font_size);
-						float extrusion = MAX(0, offset + string_size.x - limit_end); // How much the string would extrude outside limit_end if unadjusted.
+						float extrusion = Math::max(0, offset + string_size.x - limit_end); // How much the string would extrude outside limit_end if unadjusted.
 						Color marker_color = animation->get_marker_color(name);
 						float margin = 4 * EDSCALE;
 						Point2 pos = Point2(offset - extrusion + margin, bottom + margin);
@@ -9049,8 +9049,8 @@ Size2 AnimationMarkerEdit::get_minimum_size() const {
 	int font_size = get_theme_font_size(SceneStringName(font_size), SNAME("Label"));
 	int separation = get_theme_constant(SNAME("v_separation"), SNAME("ItemList"));
 
-	int max_h = MAX(texture->get_height(), font->get_height(font_size));
-	max_h = MAX(max_h, get_key_height());
+	int max_h = Math::max(texture->get_height(), font->get_height(font_size));
+	max_h = Math::max(max_h, get_key_height());
 
 	return Vector2(1, max_h + separation);
 }

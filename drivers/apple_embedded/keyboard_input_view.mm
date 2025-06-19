@@ -89,7 +89,7 @@
 	self.text = existingString;
 	self.previousText = existingString;
 
-	NSInteger safeStartIndex = MAX(start, 0);
+	NSInteger safeStartIndex = Math::max(start, 0);
 
 	NSRange textRange;
 
@@ -162,8 +162,8 @@
 		// If previous cursor had a selection we have to calculate an inserted text.
 		if (self.previousSelectedRange.length != 0) {
 			NSInteger rangeEnd = self.selectedRange.location + self.selectedRange.length;
-			NSInteger rangeStart = MIN(self.previousSelectedRange.location, self.selectedRange.location);
-			NSInteger rangeLength = MAX(0, rangeEnd - rangeStart);
+			NSInteger rangeStart = Math::min(self.previousSelectedRange.location, self.selectedRange.location);
+			NSInteger rangeLength = Math::max(0, rangeEnd - rangeStart);
 
 			NSRange calculatedRange;
 
@@ -183,7 +183,7 @@
 
 	NSInteger skip = 0;
 	if (substringToDelete != nil) {
-		for (NSUInteger i = 0; i < MIN([substringToDelete length], [substringToEnter length]); i++) {
+		for (NSUInteger i = 0; i < Math::min([substringToDelete length], [substringToEnter length]); i++) {
 			if ([substringToDelete characterAtIndex:i] == [substringToEnter characterAtIndex:i]) {
 				skip++;
 			} else {

@@ -435,7 +435,7 @@ AABB ParticlesStorage::particles_get_current_aabb(RID p_particles) {
 	for (int i = 0; i < particles->draw_passes.size(); i++) {
 		if (particles->draw_passes[i].is_valid()) {
 			AABB maabb = MeshStorage::get_singleton()->mesh_get_aabb(particles->draw_passes[i], RID());
-			longest_axis_size = MAX(maabb.get_longest_axis_size(), longest_axis_size);
+			longest_axis_size = Math::max(maabb.get_longest_axis_size(), longest_axis_size);
 		}
 	}
 
@@ -967,7 +967,7 @@ void ParticlesStorage::_particles_update_instance_buffer(Particles *particles, c
 	glBeginTransformFeedback(GL_POINTS);
 
 	if (particles->draw_order == RS::PARTICLES_DRAW_ORDER_LIFETIME) {
-		uint32_t lifetime_split = (MIN(int(particles->amount * particles->phase), particles->amount - 1) + 1) % particles->amount;
+		uint32_t lifetime_split = (Math::min(int(particles->amount * particles->phase), particles->amount - 1) + 1) % particles->amount;
 		uint32_t stride = particles->process_buffer_stride_cache;
 
 		glBindBuffer(GL_ARRAY_BUFFER, particles->back_process_buffer);
@@ -1113,7 +1113,7 @@ void ParticlesStorage::update_particles() {
 			}
 		}
 
-		double time_scale = MAX(particles->speed_scale, 0.0);
+		double time_scale = Math::max(particles->speed_scale, 0.0);
 
 		if (fixed_fps > 0) {
 			double frame_time = 1.0 / fixed_fps;
@@ -1195,7 +1195,7 @@ void ParticlesStorage::_particles_reverse_lifetime_sort(Particles *particles) {
 	godot_webgl2_glGetBufferSubData(GL_ARRAY_BUFFER, 0, buffer_size, particle_array);
 #endif
 
-	uint32_t lifetime_split = (MIN(int(particles->amount * particles->sort_buffer_phase), particles->amount - 1) + 1) % particles->amount;
+	uint32_t lifetime_split = (Math::min(int(particles->amount * particles->sort_buffer_phase), particles->amount - 1) + 1) % particles->amount;
 	for (uint32_t i = 0; i < lifetime_split / 2; i++) {
 		SWAP(particle_array[i], particle_array[lifetime_split - i - 1]);
 	}

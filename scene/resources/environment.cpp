@@ -170,7 +170,7 @@ float Environment::get_ambient_light_energy() const {
 void Environment::set_ambient_light_sky_contribution(float p_ratio) {
 	// Sky contribution values outside the [0.0; 1.0] range don't make sense and
 	// can result in negative colors.
-	ambient_sky_contribution = CLAMP(p_ratio, 0.0, 1.0);
+	ambient_sky_contribution = Math::clamp(p_ratio, 0.0, 1.0);
 	_update_ambient_light();
 }
 
@@ -256,7 +256,7 @@ int Environment::get_ssr_max_steps() const {
 }
 
 void Environment::set_ssr_fade_in(float p_fade_in) {
-	ssr_fade_in = MAX(p_fade_in, 0.0f);
+	ssr_fade_in = Math::max(p_fade_in, 0.0f);
 	_update_ssr();
 }
 
@@ -265,7 +265,7 @@ float Environment::get_ssr_fade_in() const {
 }
 
 void Environment::set_ssr_fade_out(float p_fade_out) {
-	ssr_fade_out = MAX(p_fade_out, 0.0f);
+	ssr_fade_out = Math::max(p_fade_out, 0.0f);
 	_update_ssr();
 }
 
@@ -961,7 +961,7 @@ float Environment::get_volumetric_fog_length() const {
 	return volumetric_fog_length;
 }
 void Environment::set_volumetric_fog_detail_spread(float p_detail_spread) {
-	p_detail_spread = CLAMP(p_detail_spread, 0.5, 6.0);
+	p_detail_spread = Math::clamp(p_detail_spread, 0.5, 6.0);
 	volumetric_fog_detail_spread = p_detail_spread;
 	_update_volumetric_fog();
 }

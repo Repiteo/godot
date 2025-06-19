@@ -190,7 +190,7 @@ bool JoltSoftBody3D::_ref_shared_data() {
 
 		// Since Godot's stiffness is input as a coefficient between 0 and 1, and Jolt uses actual stiffness for its
 		// edge constraints, we crudely map one to the other with an arbitrary constant.
-		const float stiffness = MAX(Math::pow(stiffness_coefficient, 3.0f) * 100000.0f, 0.000001f);
+		const float stiffness = Math::max(Math::pow(stiffness_coefficient, 3.0f) * 100000.0f, 0.000001f);
 		const float inverse_stiffness = 1.0f / stiffness;
 
 		JPH::SoftBodySharedSettings::VertexAttributes vertex_attrib;
@@ -477,7 +477,7 @@ void JoltSoftBody3D::set_simulation_precision(int p_precision) {
 		return;
 	}
 
-	simulation_precision = MAX(p_precision, 0);
+	simulation_precision = Math::max(p_precision, 0);
 
 	_simulation_precision_changed();
 }
@@ -487,7 +487,7 @@ void JoltSoftBody3D::set_mass(float p_mass) {
 		return;
 	}
 
-	mass = MAX(p_mass, 0.0f);
+	mass = Math::max(p_mass, 0.0f);
 
 	_mass_changed();
 }
@@ -497,7 +497,7 @@ float JoltSoftBody3D::get_stiffness_coefficient() const {
 }
 
 void JoltSoftBody3D::set_stiffness_coefficient(float p_coefficient) {
-	stiffness_coefficient = CLAMP(p_coefficient, 0.0f, 1.0f);
+	stiffness_coefficient = Math::clamp(p_coefficient, 0.0f, 1.0f);
 }
 
 float JoltSoftBody3D::get_shrinking_factor() const {
@@ -513,7 +513,7 @@ void JoltSoftBody3D::set_pressure(float p_pressure) {
 		return;
 	}
 
-	pressure = MAX(p_pressure, 0.0f);
+	pressure = Math::max(p_pressure, 0.0f);
 
 	_pressure_changed();
 }
@@ -523,7 +523,7 @@ void JoltSoftBody3D::set_linear_damping(float p_damping) {
 		return;
 	}
 
-	linear_damping = MAX(p_damping, 0.0f);
+	linear_damping = Math::max(p_damping, 0.0f);
 
 	_damping_changed();
 }

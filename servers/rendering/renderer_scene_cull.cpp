@@ -1024,7 +1024,7 @@ void RendererSceneCull::instance_set_surface_override_material(RID p_instance, i
 
 	if (instance->base_type == RS::INSTANCE_MESH) {
 		//may not have been updated yet, may also have not been set yet. When updated will be correcte, worst case
-		instance->materials.resize(MAX(p_surface + 1, RSG::mesh_storage->mesh_get_surface_count(instance->base)));
+		instance->materials.resize(Math::max(p_surface + 1, RSG::mesh_storage->mesh_get_surface_count(instance->base)));
 	}
 
 	ERR_FAIL_INDEX(p_surface, instance->materials.size());
@@ -1429,7 +1429,7 @@ bool RendererSceneCull::_update_instance_visibility_depth(Instance *p_instance) 
 			if (!instance->visibility_dependencies.is_empty()) {
 				uint32_t depth = 0;
 				for (const Instance *E : instance->visibility_dependencies) {
-					depth = MAX(depth, E->visibility_dependencies_depth);
+					depth = Math::max(depth, E->visibility_dependencies_depth);
 				}
 				instance->visibility_dependencies_depth = depth + 1;
 			} else {
@@ -2097,11 +2097,11 @@ void RendererSceneCull::_update_instance_lightmap_captures(Instance *p_instance)
 
 		Vector3 inner_pos = ((lm_pos - bounds.position) / bounds.size) * 2.0 - Vector3(1.0, 1.0, 1.0);
 
-		real_t blend = MAX(Math::abs(inner_pos.x), MAX(Math::abs(inner_pos.y), Math::abs(inner_pos.z)));
+		real_t blend = Math::max(Math::abs(inner_pos.x), Math::max(Math::abs(inner_pos.y), Math::abs(inner_pos.z)));
 		//make blend more rounded
 		blend = Math::lerp(inner_pos.length(), blend, blend);
 		blend *= blend;
-		blend = MAX(0.0, 1.0 - blend);
+		blend = Math::max(0.0, 1.0 - blend);
 
 		if (interior && !inside) {
 			//do not blend, just replace
@@ -2143,10 +2143,10 @@ void RendererSceneCull::_light_instance_setup_directional_shadow(int p_shadow_in
 	real_t max_distance = p_cam_projection.get_z_far();
 	real_t shadow_max = RSG::light_storage->light_get_param(p_instance->base, RS::LIGHT_PARAM_SHADOW_MAX_DISTANCE);
 	if (shadow_max > 0 && !p_cam_orthogonal) { //its impractical (and leads to unwanted behaviors) to set max distance in orthogonal camera
-		max_distance = MIN(shadow_max, max_distance);
+		max_distance = Math::min(shadow_max, max_distance);
 	}
-	max_distance = MAX(max_distance, p_cam_projection.get_z_near() + 0.001);
-	real_t min_distance = MIN(p_cam_projection.get_z_near(), max_distance);
+	max_distance = Math::max(max_distance, p_cam_projection.get_z_near() + 0.001);
+	real_t min_distance = Math::min(p_cam_projection.get_z_near(), max_distance);
 
 	real_t pancake_size = RSG::light_storage->light_get_param(p_instance->base, RS::LIGHT_PARAM_SHADOW_PANCAKE_SIZE);
 
@@ -2440,7 +2440,7 @@ bool RendererSceneCull::_light_instance_update_shadow(Instance *p_instance, cons
 				}
 
 				real_t radius = RSG::light_storage->light_get_param(p_instance->base, RS::LIGHT_PARAM_RANGE);
-				real_t z_near = MIN(0.025f, radius);
+				real_t z_near = Math::min(0.025f, radius);
 				Projection cm;
 				cm.set_perspective(90, 1, z_near, radius);
 
@@ -2530,7 +2530,7 @@ bool RendererSceneCull::_light_instance_update_shadow(Instance *p_instance, cons
 
 			real_t radius = RSG::light_storage->light_get_param(p_instance->base, RS::LIGHT_PARAM_RANGE);
 			real_t angle = RSG::light_storage->light_get_param(p_instance->base, RS::LIGHT_PARAM_SPOT_ANGLE);
-			real_t z_near = MIN(0.025f, radius);
+			real_t z_near = Math::min(0.025f, radius);
 
 			Projection cm;
 			cm.set_perspective(angle * 2.0, 1.0, z_near, radius);
@@ -2781,12 +2781,12 @@ int RendererSceneCull::_visibility_range_check(InstanceVisibilityData &r_vis_dat
 				r_vis_data.children_fade_alpha = 1.0f;
 				if (r_vis_data.range_end > 0.0f && dist > r_vis_data.range_end - end_offset) {
 					if (fade_mode == RS::VISIBILITY_RANGE_FADE_DEPENDENCIES) {
-						r_vis_data.children_fade_alpha = MIN(1.0f, (dist - (r_vis_data.range_end - end_offset)) / (2.0f * r_vis_data.range_end_margin));
+						r_vis_data.children_fade_alpha = Math::min(1.0f, (dist - (r_vis_data.range_end - end_offset)) / (2.0f * r_vis_data.range_end_margin));
 					}
 					return 2;
 				} else if (r_vis_data.range_begin > 0.0f && dist < r_vis_data.range_begin - begin_offset) {
 					if (fade_mode == RS::VISIBILITY_RANGE_FADE_DEPENDENCIES) {
-						r_vis_data.children_fade_alpha = MIN(1.0f, 1.0 - (dist - (r_vis_data.range_begin + begin_offset)) / (2.0f * r_vis_data.range_begin_margin));
+						r_vis_data.children_fade_alpha = Math::min(1.0f, 1.0 - (dist - (r_vis_data.range_begin + begin_offset)) / (2.0f * r_vis_data.range_begin_margin));
 					}
 					return 2;
 				}
@@ -3025,7 +3025,7 @@ void RendererSceneCull::_scene_cull(CullData &cull_data, InstanceCullResult &cul
 						Color *sh = idata.instance->lightmap_sh.ptrw();
 						const Color *target_sh = idata.instance->lightmap_target_sh.ptr();
 						for (uint32_t j = 0; j < 9; j++) {
-							sh[j] = sh[j].lerp(target_sh[j], MIN(1.0, lightmap_probe_update_speed));
+							sh[j] = sh[j].lerp(target_sh[j], Math::min(1.0, lightmap_probe_update_speed));
 						}
 						ERR_FAIL_NULL(geom->geometry_instance);
 						cull_data.cull->lock.lock();
@@ -3599,7 +3599,7 @@ bool RendererSceneCull::_render_reflection_probe_step(Instance *p_instance, int 
 		Vector3 edge = view_normals[p_step] * probe_size / 2;
 		float distance = Math::abs(view_normals[p_step].dot(edge) - view_normals[p_step].dot(origin_offset)); //distance from origin offset to actual view distance limit
 
-		max_distance = MAX(max_distance, distance);
+		max_distance = Math::max(max_distance, distance);
 
 		//render cubemap side
 		Projection cm;
@@ -4295,7 +4295,7 @@ RendererSceneCull::RendererSceneCull() {
 
 	indexer_update_iterations = GLOBAL_GET("rendering/limits/spatial_indexer/update_iterations_per_frame");
 	thread_cull_threshold = GLOBAL_GET("rendering/limits/spatial_indexer/threaded_cull_minimum_instances");
-	thread_cull_threshold = MAX(thread_cull_threshold, (uint32_t)WorkerThreadPool::get_singleton()->get_thread_count()); //make sure there is at least one thread per CPU
+	thread_cull_threshold = Math::max(thread_cull_threshold, (uint32_t)WorkerThreadPool::get_singleton()->get_thread_count()); //make sure there is at least one thread per CPU
 	RendererSceneOcclusionCull::HZBuffer::occlusion_jitter_enabled = GLOBAL_GET("rendering/occlusion_culling/jitter_projection");
 
 	dummy_occlusion_culling = memnew(RendererSceneOcclusionCull);

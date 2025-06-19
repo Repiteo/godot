@@ -230,7 +230,7 @@ void AnimatedSprite2D::_notification(int p_what) {
 						queue_redraw();
 						emit_signal(SceneStringName(frame_changed));
 					}
-					double to_process = MIN((1.0 - frame_progress) / abs_speed, remaining);
+					double to_process = Math::min((1.0 - frame_progress) / abs_speed, remaining);
 					frame_progress += to_process * abs_speed;
 					remaining -= to_process;
 				} else {
@@ -254,7 +254,7 @@ void AnimatedSprite2D::_notification(int p_what) {
 						queue_redraw();
 						emit_signal(SceneStringName(frame_changed));
 					}
-					double to_process = MIN(frame_progress / abs_speed, remaining);
+					double to_process = Math::min(frame_progress / abs_speed, remaining);
 					frame_progress -= to_process * abs_speed;
 					remaining -= to_process;
 				}
@@ -362,7 +362,7 @@ void AnimatedSprite2D::set_frame_and_progress(int p_frame, real_t p_progress) {
 	}
 
 	bool has_animation = frames->has_animation(animation);
-	int end_frame = has_animation ? MAX(0, frames->get_frame_count(animation) - 1) : 0;
+	int end_frame = has_animation ? Math::max(0, frames->get_frame_count(animation) - 1) : 0;
 	bool is_changed = frame != p_frame;
 
 	if (p_frame < 0) {
@@ -493,7 +493,7 @@ void AnimatedSprite2D::play(const StringName &p_name, float p_custom_scale, bool
 
 	if (name != animation) {
 		animation = name;
-		int end_frame = MAX(0, frames->get_frame_count(animation) - 1);
+		int end_frame = Math::max(0, frames->get_frame_count(animation) - 1);
 
 		if (p_from_end) {
 			set_frame_and_progress(end_frame, 1.0);
@@ -502,7 +502,7 @@ void AnimatedSprite2D::play(const StringName &p_name, float p_custom_scale, bool
 		}
 		emit_signal(SceneStringName(animation_changed));
 	} else {
-		int end_frame = MAX(0, frames->get_frame_count(animation) - 1);
+		int end_frame = Math::max(0, frames->get_frame_count(animation) - 1);
 		bool is_backward = std::signbit(speed_scale * custom_speed_scale);
 
 		if (p_from_end && is_backward && frame == 0 && frame_progress <= 0.0) {

@@ -272,10 +272,10 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 			for (uint32_t i = 0; i < vertex_count; i++) {
 				uint16_t *weight16w = (uint16_t *)&uptr[base_offset + i * stride];
 
-				weight16w[0] = CLAMP(weight_ptr[i * 4 + 0] * 65535, 0, 65535);
-				weight16w[1] = CLAMP(weight_ptr[i * 4 + 1] * 65535, 0, 65535);
-				weight16w[2] = CLAMP(weight_ptr[i * 4 + 2] * 65535, 0, 65535);
-				weight16w[3] = CLAMP(weight_ptr[i * 4 + 3] * 65535, 0, 65535);
+				weight16w[0] = Math::clamp(weight_ptr[i * 4 + 0] * 65535, 0, 65535);
+				weight16w[1] = Math::clamp(weight_ptr[i * 4 + 1] * 65535, 0, 65535);
+				weight16w[2] = Math::clamp(weight_ptr[i * 4 + 2] * 65535, 0, 65535);
+				weight16w[3] = Math::clamp(weight_ptr[i * 4 + 3] * 65535, 0, 65535);
 			}
 
 			base_offset += 2;
@@ -548,7 +548,7 @@ void RendererCanvasRenderRD::canvas_render_items(RID p_to_render_target, Item *p
 			state.light_uniforms[index].height = l->height; //0..1 here
 
 			for (int i = 0; i < 4; i++) {
-				state.light_uniforms[index].shadow_color[i] = uint8_t(CLAMP(int32_t(l->shadow_color[i] * 255.0), 0, 255));
+				state.light_uniforms[index].shadow_color[i] = uint8_t(Math::clamp(int32_t(l->shadow_color[i] * 255.0), 0, 255));
 				state.light_uniforms[index].color[i] = l->color[i];
 			}
 
@@ -618,7 +618,7 @@ void RendererCanvasRenderRD::canvas_render_items(RID p_to_render_target, Item *p
 
 			state.light_uniforms[index].height = l->height * (p_canvas_transform.columns[0].length() + p_canvas_transform.columns[1].length()) * 0.5; //approximate height conversion to the canvas size, since all calculations are done in canvas coords to avoid precision loss
 			for (int i = 0; i < 4; i++) {
-				state.light_uniforms[index].shadow_color[i] = uint8_t(CLAMP(int32_t(l->shadow_color[i] * 255.0), 0, 255));
+				state.light_uniforms[index].shadow_color[i] = uint8_t(Math::clamp(int32_t(l->shadow_color[i] * 255.0), 0, 255));
 				state.light_uniforms[index].color[i] = l->color[i];
 			}
 
@@ -2084,7 +2084,7 @@ bool RendererCanvasRenderRD::free(RID p_rid) {
 }
 
 void RendererCanvasRenderRD::set_shadow_texture_size(int p_size) {
-	p_size = MAX(1, nearest_power_of_2_templated(p_size));
+	p_size = Math::max(1, nearest_power_of_2_templated(p_size));
 	if (p_size == state.shadow_texture_size) {
 		return;
 	}
@@ -2677,7 +2677,7 @@ void RendererCanvasRenderRD::_record_item_commands(const Item *p_item, RenderTar
 
 				InstanceData *instance_data = new_instance_data(world, lights, base_flags, r_index, uniforms_ofs, tex_info);
 
-				for (uint32_t j = 0; j < MIN(3u, primitive->point_count); j++) {
+				for (uint32_t j = 0; j < Math::min(3u, primitive->point_count); j++) {
 					instance_data->points[j * 2 + 0] = primitive->points[j].x;
 					instance_data->points[j * 2 + 1] = primitive->points[j].y;
 					instance_data->uvs[j * 2 + 0] = primitive->uvs[j].x;
@@ -3091,7 +3091,7 @@ void RendererCanvasRenderRD::_render_batch(RD::DrawListID p_draw_list, CanvasSha
 			RD::get_singleton()->draw_list_bind_render_pipeline(p_draw_list, pipeline);
 
 			RD::get_singleton()->draw_list_set_push_constant(p_draw_list, &push_constant, sizeof(PushConstant));
-			RD::get_singleton()->draw_list_bind_index_array(p_draw_list, primitive_arrays.index_array[MIN(3u, primitive->point_count) - 1]);
+			RD::get_singleton()->draw_list_bind_index_array(p_draw_list, primitive_arrays.index_array[Math::min(3u, primitive->point_count) - 1]);
 			uint32_t instance_count = p_batch->instance_count;
 			RD::get_singleton()->draw_list_draw(p_draw_list, true, instance_count);
 
@@ -3284,10 +3284,10 @@ void RendererCanvasRenderRD::_prepare_batch_texture_info(RID p_texture, TextureS
 		p_info->flags |= BATCH_FLAGS_DEFAULT_NORMAL_MAP_USED;
 	}
 
-	uint8_t a = uint8_t(CLAMP(info.specular_color.a * 255.0, 0.0, 255.0));
-	uint8_t b = uint8_t(CLAMP(info.specular_color.b * 255.0, 0.0, 255.0));
-	uint8_t g = uint8_t(CLAMP(info.specular_color.g * 255.0, 0.0, 255.0));
-	uint8_t r = uint8_t(CLAMP(info.specular_color.r * 255.0, 0.0, 255.0));
+	uint8_t a = uint8_t(Math::clamp(info.specular_color.a * 255.0, 0.0, 255.0));
+	uint8_t b = uint8_t(Math::clamp(info.specular_color.b * 255.0, 0.0, 255.0));
+	uint8_t g = uint8_t(Math::clamp(info.specular_color.g * 255.0, 0.0, 255.0));
+	uint8_t r = uint8_t(Math::clamp(info.specular_color.r * 255.0, 0.0, 255.0));
 	p_info->specular_shininess = uint32_t(a) << 24 | uint32_t(b) << 16 | uint32_t(g) << 8 | uint32_t(r);
 
 	p_info->texpixel_size = Vector2(1.0 / float(info.size.width), 1.0 / float(info.size.height));

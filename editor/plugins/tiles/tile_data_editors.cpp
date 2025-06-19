@@ -1284,11 +1284,11 @@ void TileDataDefaultEditor::draw_over_tile(CanvasItem *p_canvas_item, Transform2
 	Vector2 texture_origin = tile_data->get_texture_origin();
 	if (value.get_type() == Variant::BOOL) {
 		Ref<Texture2D> texture = (bool)value ? tile_bool_checked : tile_bool_unchecked;
-		int size = MIN(tile_set->get_tile_size().x, tile_set->get_tile_size().y) / 3;
+		int size = Math::min(tile_set->get_tile_size().x, tile_set->get_tile_size().y) / 3;
 		Rect2 rect = p_transform.xform(Rect2(Vector2(-size / 2, -size / 2) - texture_origin, Vector2(size, size)));
 		p_canvas_item->draw_texture_rect(texture, rect);
 	} else if (value.get_type() == Variant::COLOR) {
-		int size = MIN(tile_set->get_tile_size().x, tile_set->get_tile_size().y) / 3;
+		int size = Math::min(tile_set->get_tile_size().x, tile_set->get_tile_size().y) / 3;
 		Rect2 rect = p_transform.xform(Rect2(Vector2(-size / 2, -size / 2) - texture_origin, Vector2(size, size)));
 		p_canvas_item->draw_rect(rect, value);
 	} else {

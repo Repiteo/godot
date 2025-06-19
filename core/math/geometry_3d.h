@@ -850,7 +850,7 @@ public:
 		// https://twitter.com/Stubbesaurus/status/937994790553227264
 		const Vector2 f = p_uv * 2.0f - Vector2(1.0f, 1.0f);
 		Vector3 n = Vector3(f.x, f.y, 1.0f - Math::abs(f.x) - Math::abs(f.y));
-		const real_t t = CLAMP(-n.z, 0.0f, 1.0f);
+		const real_t t = Math::clamp(-n.z, 0.0f, 1.0f);
 		n.x += n.x >= 0 ? -t : t;
 		n.y += n.y >= 0 ? -t : t;
 		return n.normalized();

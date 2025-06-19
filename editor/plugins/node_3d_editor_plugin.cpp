@@ -233,7 +233,7 @@ void ViewportNavigationControl::_update_navigation() {
 	Vector2 delta_normalized = delta.normalized();
 	switch (nav_mode) {
 		case Node3DEditorViewport::NavigationMode::NAVIGATION_MOVE: {
-			real_t speed_multiplier = MIN(delta.length() / (get_size().x * 100.0), 3.0);
+			real_t speed_multiplier = Math::min(delta.length() / (get_size().x * 100.0), 3.0);
 			real_t speed = viewport->freelook_speed * speed_multiplier;
 
 			const Node3DEditorViewport::FreelookNavigationScheme navigation_scheme = (Node3DEditorViewport::FreelookNavigationScheme)EDITOR_GET("editors/3d/freelook/freelook_navigation_scheme").operator int();
@@ -256,23 +256,23 @@ void ViewportNavigationControl::_update_navigation() {
 		} break;
 
 		case Node3DEditorViewport::NavigationMode::NAVIGATION_LOOK: {
-			real_t speed_multiplier = MIN(delta.length() / (get_size().x * 2.5), 3.0);
+			real_t speed_multiplier = Math::min(delta.length() / (get_size().x * 2.5), 3.0);
 			real_t speed = viewport->freelook_speed * speed_multiplier;
 			viewport->_nav_look(nullptr, delta_normalized * speed);
 		} break;
 
 		case Node3DEditorViewport::NAVIGATION_PAN: {
-			real_t speed_multiplier = MIN(delta.length() / (get_size().x), 3.0);
+			real_t speed_multiplier = Math::min(delta.length() / (get_size().x), 3.0);
 			real_t speed = viewport->freelook_speed * speed_multiplier;
 			viewport->_nav_pan(nullptr, -delta_normalized * speed);
 		} break;
 		case Node3DEditorViewport::NAVIGATION_ZOOM: {
-			real_t speed_multiplier = MIN(delta.length() / (get_size().x), 3.0);
+			real_t speed_multiplier = Math::min(delta.length() / (get_size().x), 3.0);
 			real_t speed = viewport->freelook_speed * speed_multiplier;
 			viewport->_nav_zoom(nullptr, delta_normalized * speed);
 		} break;
 		case Node3DEditorViewport::NAVIGATION_ORBIT: {
-			real_t speed_multiplier = MIN(delta.length() / (get_size().x), 3.0);
+			real_t speed_multiplier = Math::min(delta.length() / (get_size().x), 3.0);
 			real_t speed = viewport->freelook_speed * speed_multiplier;
 			viewport->_nav_orbit(nullptr, delta_normalized * speed);
 		} break;
@@ -349,7 +349,7 @@ void ViewportRotationControl::_draw_axis(const Axis2D &p_axis) {
 		// Draw axis lines for the positive axes.
 		const Vector2 center = get_size() / 2.0;
 		const Vector2 diff = p_axis.screen_point - center;
-		const float line_length = MAX(diff.length() - AXIS_CIRCLE_RADIUS - 0.5 * EDSCALE, 0);
+		const float line_length = Math::max(diff.length() - AXIS_CIRCLE_RADIUS - 0.5 * EDSCALE, 0);
 
 		draw_line(center + diff.limit_length(0.5 * EDSCALE), center + diff.limit_length(line_length), c, 1.5 * EDSCALE, true);
 
@@ -554,11 +554,11 @@ void Node3DEditorViewport::_update_camera(real_t p_interp_delta) {
 			real_t factor = (1.0 / inertia) * p_interp_delta;
 
 			// We interpolate a different point here, because in freelook mode the focus point (cursor.pos) orbits around eye_pos
-			camera_cursor.eye_pos = old_camera_cursor.eye_pos.lerp(cursor.eye_pos, CLAMP(factor, 0, 1));
+			camera_cursor.eye_pos = old_camera_cursor.eye_pos.lerp(cursor.eye_pos, Math::clamp(factor, 0, 1));
 
 			const real_t orbit_inertia = EDITOR_GET("editors/3d/navigation_feel/orbit_inertia");
-			camera_cursor.x_rot = Math::lerp(old_camera_cursor.x_rot, cursor.x_rot, MIN(1.f, p_interp_delta * (1 / orbit_inertia)));
-			camera_cursor.y_rot = Math::lerp(old_camera_cursor.y_rot, cursor.y_rot, MIN(1.f, p_interp_delta * (1 / orbit_inertia)));
+			camera_cursor.x_rot = Math::lerp(old_camera_cursor.x_rot, cursor.x_rot, Math::min(1.f, p_interp_delta * (1 / orbit_inertia)));
+			camera_cursor.y_rot = Math::lerp(old_camera_cursor.y_rot, cursor.y_rot, Math::min(1.f, p_interp_delta * (1 / orbit_inertia)));
 
 			if (Math::abs(camera_cursor.x_rot - cursor.x_rot) < 0.1) {
 				camera_cursor.x_rot = cursor.x_rot;
@@ -576,8 +576,8 @@ void Node3DEditorViewport::_update_camera(real_t p_interp_delta) {
 			const real_t translation_inertia = EDITOR_GET("editors/3d/navigation_feel/translation_inertia");
 			const real_t zoom_inertia = EDITOR_GET("editors/3d/navigation_feel/zoom_inertia");
 
-			camera_cursor.x_rot = Math::lerp(old_camera_cursor.x_rot, cursor.x_rot, MIN(1.f, p_interp_delta * (1 / orbit_inertia)));
-			camera_cursor.y_rot = Math::lerp(old_camera_cursor.y_rot, cursor.y_rot, MIN(1.f, p_interp_delta * (1 / orbit_inertia)));
+			camera_cursor.x_rot = Math::lerp(old_camera_cursor.x_rot, cursor.x_rot, Math::min(1.f, p_interp_delta * (1 / orbit_inertia)));
+			camera_cursor.y_rot = Math::lerp(old_camera_cursor.y_rot, cursor.y_rot, Math::min(1.f, p_interp_delta * (1 / orbit_inertia)));
 
 			if (Math::abs(camera_cursor.x_rot - cursor.x_rot) < 0.1) {
 				camera_cursor.x_rot = cursor.x_rot;
@@ -587,8 +587,8 @@ void Node3DEditorViewport::_update_camera(real_t p_interp_delta) {
 				camera_cursor.y_rot = cursor.y_rot;
 			}
 
-			camera_cursor.pos = old_camera_cursor.pos.lerp(cursor.pos, MIN(1.f, p_interp_delta * (1 / translation_inertia)));
-			camera_cursor.distance = Math::lerp(old_camera_cursor.distance, cursor.distance, MIN((real_t)1.0, p_interp_delta * (1 / zoom_inertia)));
+			camera_cursor.pos = old_camera_cursor.pos.lerp(cursor.pos, Math::min(1.f, p_interp_delta * (1 / translation_inertia)));
+			camera_cursor.distance = Math::lerp(old_camera_cursor.distance, cursor.distance, Math::min((real_t)1.0, p_interp_delta * (1 / zoom_inertia)));
 		}
 	}
 
@@ -705,15 +705,15 @@ void Node3DEditorViewport::_update_shrink() {
 }
 
 float Node3DEditorViewport::get_znear() const {
-	return CLAMP(spatial_editor->get_znear(), MIN_Z, MAX_Z);
+	return Math::clamp(spatial_editor->get_znear(), MIN_Z, MAX_Z);
 }
 
 float Node3DEditorViewport::get_zfar() const {
-	return CLAMP(spatial_editor->get_zfar(), MIN_Z, MAX_Z);
+	return Math::clamp(spatial_editor->get_zfar(), MIN_Z, MAX_Z);
 }
 
 float Node3DEditorViewport::get_fov() const {
-	return CLAMP(spatial_editor->get_fov() * cursor.fov_scale, MIN_FOV, MAX_FOV);
+	return Math::clamp(spatial_editor->get_fov() * cursor.fov_scale, MIN_FOV, MAX_FOV);
 }
 
 Transform3D Node3DEditorViewport::_get_camera_transform() const {
@@ -969,24 +969,24 @@ void Node3DEditorViewport::_select_region() {
 		return; //nothing really
 	}
 
-	const real_t z_offset = MAX(0.0, 5.0 - get_znear());
+	const real_t z_offset = Math::max(0.0, 5.0 - get_znear());
 
 	Vector3 box[4] = {
 		Vector3(
-				MIN(cursor.region_begin.x, cursor.region_end.x),
-				MIN(cursor.region_begin.y, cursor.region_end.y),
+				Math::min(cursor.region_begin.x, cursor.region_end.x),
+				Math::min(cursor.region_begin.y, cursor.region_end.y),
 				z_offset),
 		Vector3(
-				MAX(cursor.region_begin.x, cursor.region_end.x),
-				MIN(cursor.region_begin.y, cursor.region_end.y),
+				Math::max(cursor.region_begin.x, cursor.region_end.x),
+				Math::min(cursor.region_begin.y, cursor.region_end.y),
 				z_offset),
 		Vector3(
-				MAX(cursor.region_begin.x, cursor.region_end.x),
-				MAX(cursor.region_begin.y, cursor.region_end.y),
+				Math::max(cursor.region_begin.x, cursor.region_end.x),
+				Math::max(cursor.region_begin.y, cursor.region_end.y),
 				z_offset),
 		Vector3(
-				MIN(cursor.region_begin.x, cursor.region_end.x),
-				MAX(cursor.region_begin.y, cursor.region_end.y),
+				Math::min(cursor.region_begin.x, cursor.region_end.x),
+				Math::max(cursor.region_begin.y, cursor.region_end.y),
 				z_offset)
 	};
 
@@ -2401,13 +2401,13 @@ void Node3DEditorViewport::_sinput(const Ref<InputEvent> &p_event) {
 		}
 		if (ED_IS_SHORTCUT("spatial_editor/orbit_view_down", p_event)) {
 			// Clamp rotation to roughly -90..90 degrees so the user can't look upside-down and end up disoriented.
-			cursor.x_rot = CLAMP(cursor.x_rot - Math::PI / 12.0, -1.57, 1.57);
+			cursor.x_rot = Math::clamp(cursor.x_rot - Math::PI / 12.0, -1.57, 1.57);
 			view_type = VIEW_TYPE_USER;
 			_update_name();
 		}
 		if (ED_IS_SHORTCUT("spatial_editor/orbit_view_up", p_event)) {
 			// Clamp rotation to roughly -90..90 degrees so the user can't look upside-down and end up disoriented.
-			cursor.x_rot = CLAMP(cursor.x_rot + Math::PI / 12.0, -1.57, 1.57);
+			cursor.x_rot = Math::clamp(cursor.x_rot + Math::PI / 12.0, -1.57, 1.57);
 			view_type = VIEW_TYPE_USER;
 			_update_name();
 		}
@@ -2633,7 +2633,7 @@ void Node3DEditorViewport::_nav_orbit(Ref<InputEventWithModifiers> p_event, cons
 		cursor.x_rot += p_relative.y * radians_per_pixel;
 	}
 	// Clamp the Y rotation to roughly -90..90 degrees so the user can't look upside-down and end up disoriented.
-	cursor.x_rot = CLAMP(cursor.x_rot, -1.57, 1.57);
+	cursor.x_rot = Math::clamp(cursor.x_rot, -1.57, 1.57);
 
 	if (invert_x_axis) {
 		cursor.y_rot -= p_relative.x * radians_per_pixel;
@@ -2655,7 +2655,7 @@ void Node3DEditorViewport::_nav_look(Ref<InputEventWithModifiers> p_event, const
 	}
 
 	// Scale mouse sensitivity with camera FOV scale when zoomed in to make it easier to point at things.
-	const real_t degrees_per_pixel = real_t(EDITOR_GET("editors/3d/freelook/freelook_sensitivity")) * MIN(1.0, cursor.fov_scale);
+	const real_t degrees_per_pixel = real_t(EDITOR_GET("editors/3d/freelook/freelook_sensitivity")) * Math::min(1.0, cursor.fov_scale);
 	const real_t radians_per_pixel = Math::deg_to_rad(degrees_per_pixel);
 	const bool invert_y_axis = EDITOR_GET("editors/3d/navigation/invert_y_axis");
 
@@ -2668,7 +2668,7 @@ void Node3DEditorViewport::_nav_look(Ref<InputEventWithModifiers> p_event, const
 		cursor.x_rot += p_relative.y * radians_per_pixel;
 	}
 	// Clamp the Y rotation to roughly -90..90 degrees so the user can't look upside-down and end up disoriented.
-	cursor.x_rot = CLAMP(cursor.x_rot, -1.57, 1.57);
+	cursor.x_rot = Math::clamp(cursor.x_rot, -1.57, 1.57);
 
 	cursor.y_rot += p_relative.x * radians_per_pixel;
 
@@ -2722,7 +2722,7 @@ void Node3DEditorViewport::set_freelook_active(bool active_now) {
 }
 
 void Node3DEditorViewport::scale_fov(real_t p_fov_offset) {
-	cursor.fov_scale = CLAMP(cursor.fov_scale + p_fov_offset, 0.1, 2.5);
+	cursor.fov_scale = Math::clamp(cursor.fov_scale + p_fov_offset, 0.1, 2.5);
 	surface->queue_redraw();
 }
 
@@ -2732,12 +2732,12 @@ void Node3DEditorViewport::reset_fov() {
 }
 
 void Node3DEditorViewport::scale_cursor_distance(real_t scale) {
-	real_t min_distance = MAX(camera->get_near() * 4, ZOOM_FREELOOK_MIN);
-	real_t max_distance = MIN(camera->get_far() / 4, ZOOM_FREELOOK_MAX);
+	real_t min_distance = Math::max(camera->get_near() * 4, ZOOM_FREELOOK_MIN);
+	real_t max_distance = Math::min(camera->get_far() / 4, ZOOM_FREELOOK_MAX);
 	if (unlikely(min_distance > max_distance)) {
 		cursor.distance = (min_distance + max_distance) / 2;
 	} else {
-		cursor.distance = CLAMP(cursor.distance * scale, min_distance, max_distance);
+		cursor.distance = Math::clamp(cursor.distance * scale, min_distance, max_distance);
 	}
 
 	if (cursor.distance == max_distance || cursor.distance == min_distance) {
@@ -2751,12 +2751,12 @@ void Node3DEditorViewport::scale_cursor_distance(real_t scale) {
 }
 
 void Node3DEditorViewport::scale_freelook_speed(real_t scale) {
-	real_t min_speed = MAX(camera->get_near() * 4, ZOOM_FREELOOK_MIN);
-	real_t max_speed = MIN(camera->get_far() / 4, ZOOM_FREELOOK_MAX);
+	real_t min_speed = Math::max(camera->get_near() * 4, ZOOM_FREELOOK_MIN);
+	real_t max_speed = Math::min(camera->get_far() / 4, ZOOM_FREELOOK_MAX);
 	if (unlikely(min_speed > max_speed)) {
 		freelook_speed = (min_speed + max_speed) / 2;
 	} else {
-		freelook_speed = CLAMP(freelook_speed * scale, min_speed, max_speed);
+		freelook_speed = Math::clamp(freelook_speed * scale, min_speed, max_speed);
 	}
 
 	zoom_indicator_delay = ZOOM_FREELOOK_INDICATOR_DELAY_S;
@@ -2943,7 +2943,7 @@ void Node3DEditorViewport::_notification(int p_what) {
 	switch (p_what) {
 		case NOTIFICATION_TRANSLATION_CHANGED: {
 			_update_name();
-			message_time = MIN(message_time, 0.001); // Make it disappear.
+			message_time = Math::min(message_time, 0.001); // Make it disappear.
 
 			Key key = (OS::get_singleton()->has_feature("macos") || OS::get_singleton()->has_feature("web_macos") || OS::get_singleton()->has_feature("web_ios")) ? Key::META : Key::CTRL;
 			preview_material_label_desc->set_text(vformat(TTR("Drag and drop to override the material of any geometry node.\nHold %s when dropping to override a specific surface."), find_keycode_name(key)));
@@ -3193,7 +3193,7 @@ void Node3DEditorViewport::_notification(int p_what) {
 				}
 				cpu_time /= FRAME_TIME_HISTORY;
 				// Prevent unrealistically low values.
-				cpu_time = MAX(0.01, cpu_time);
+				cpu_time = Math::max(0.01, cpu_time);
 
 				gpu_time_history[gpu_time_history_index] = RS::get_singleton()->viewport_get_measured_render_time_gpu(viewport->get_viewport_rid());
 				gpu_time_history_index = (gpu_time_history_index + 1) % FRAME_TIME_HISTORY;
@@ -3204,7 +3204,7 @@ void Node3DEditorViewport::_notification(int p_what) {
 				gpu_time /= FRAME_TIME_HISTORY;
 				// Prevent division by zero for the FPS counter (and unrealistically low values).
 				// This limits the reported FPS to 100000.
-				gpu_time = MAX(0.01, gpu_time);
+				gpu_time = Math::max(0.01, gpu_time);
 
 				// Color labels depending on performance level ("good" = green, "OK" = yellow, "bad" = red).
 				// Middle point is at 15 ms.
@@ -3490,8 +3490,8 @@ void Node3DEditorViewport::_draw() {
 			if (is_freelook_active()) {
 				// Show speed
 
-				real_t min_speed = MAX(camera->get_near() * 4, ZOOM_FREELOOK_MIN);
-				real_t max_speed = MIN(camera->get_far() / 4, ZOOM_FREELOOK_MAX);
+				real_t min_speed = Math::max(camera->get_near() * 4, ZOOM_FREELOOK_MIN);
+				real_t max_speed = Math::min(camera->get_far() / 4, ZOOM_FREELOOK_MAX);
 				real_t scale_length = (max_speed - min_speed);
 
 				if (!Math::is_zero_approx(scale_length)) {
@@ -3513,8 +3513,8 @@ void Node3DEditorViewport::_draw() {
 				// Show zoom
 				zoom_limit_label->set_visible(zoom_failed_attempts_count > 15);
 
-				real_t min_distance = MAX(camera->get_near() * 4, ZOOM_FREELOOK_MIN);
-				real_t max_distance = MIN(camera->get_far() / 4, ZOOM_FREELOOK_MAX);
+				real_t min_distance = Math::max(camera->get_near() * 4, ZOOM_FREELOOK_MIN);
+				real_t max_distance = Math::min(camera->get_far() / 4, ZOOM_FREELOOK_MAX);
 				real_t scale_length = (max_distance - min_distance);
 
 				if (!Math::is_zero_approx(scale_length)) {
@@ -4144,18 +4144,18 @@ void Node3DEditorViewport::update_transform_gizmo_view() {
 	const Vector3 camz = -camera_xform.get_basis().get_column(2).normalized();
 	const Vector3 camy = -camera_xform.get_basis().get_column(1).normalized();
 	const Plane p = Plane(camz, camera_xform.origin);
-	const real_t gizmo_d = MAX(Math::abs(p.distance_to(xform.origin)), CMP_EPSILON);
+	const real_t gizmo_d = Math::max(Math::abs(p.distance_to(xform.origin)), CMP_EPSILON);
 	const real_t d0 = camera->unproject_position(camera_xform.origin + camz * gizmo_d).y;
 	const real_t d1 = camera->unproject_position(camera_xform.origin + camz * gizmo_d + camy).y;
-	const real_t dd = MAX(Math::abs(d0 - d1), CMP_EPSILON);
+	const real_t dd = Math::max(Math::abs(d0 - d1), CMP_EPSILON);
 
 	const real_t gizmo_size = EDITOR_GET("editors/3d/manipulator_gizmo_size");
 	// At low viewport heights, multiply the gizmo scale based on the viewport height.
 	// This prevents the gizmo from growing very large and going outside the viewport.
-	const int viewport_base_height = 400 * MAX(1, EDSCALE);
+	const int viewport_base_height = 400 * Math::max(1, EDSCALE);
 	gizmo_scale =
-			(gizmo_size / Math::abs(dd)) * MAX(1, EDSCALE) *
-			MIN(viewport_base_height, subviewport_container->get_size().height) / viewport_base_height /
+			(gizmo_size / Math::abs(dd)) * Math::max(1, EDSCALE) *
+			Math::min(viewport_base_height, subviewport_container->get_size().height) / viewport_base_height /
 			subviewport_container->get_stretch_shrink();
 	Vector3 scale = Vector3(1, 1, 1) * gizmo_scale;
 
@@ -6060,14 +6060,14 @@ void Node3DEditorViewportContainer::gui_input(const Ref<InputEvent> &p_event) {
 
 		if (dragging_h) {
 			real_t new_ratio = drag_begin_ratio.x + (mm->get_position().x - drag_begin_pos.x) / get_size().width;
-			new_ratio = CLAMP(new_ratio, 40 / get_size().width, (get_size().width - 40) / get_size().width);
+			new_ratio = Math::clamp(new_ratio, 40 / get_size().width, (get_size().width - 40) / get_size().width);
 			ratio_h = new_ratio;
 			queue_sort();
 			queue_redraw();
 		}
 		if (dragging_v) {
 			real_t new_ratio = drag_begin_ratio.y + (mm->get_position().y - drag_begin_pos.y) / get_size().height;
-			new_ratio = CLAMP(new_ratio, 40 / get_size().height, (get_size().height - 40) / get_size().height);
+			new_ratio = Math::clamp(new_ratio, 40 / get_size().height, (get_size().height - 40) / get_size().height);
 			ratio_v = new_ratio;
 			queue_sort();
 			queue_redraw();
@@ -7803,7 +7803,7 @@ void Node3DEditor::_init_grid() {
 
 		real_t division_level = Math::log(Math::abs(camera_distance)) / Math::log((double)primary_grid_steps) + division_level_bias;
 
-		real_t clamped_division_level = CLAMP(division_level, division_level_min, division_level_max);
+		real_t clamped_division_level = Math::clamp(division_level, division_level_min, division_level_max);
 		real_t division_level_floored = Math::floor(clamped_division_level);
 		real_t division_level_decimals = clamped_division_level - division_level_floored;
 
@@ -7820,7 +7820,7 @@ void Node3DEditor::_init_grid() {
 		real_t fade_size = Math::pow(primary_grid_steps, division_level - 1.0);
 		real_t min_fade_size = Math::pow(primary_grid_steps, float(division_level_min));
 		real_t max_fade_size = Math::pow(primary_grid_steps, float(division_level_max));
-		fade_size = CLAMP(fade_size, min_fade_size, max_fade_size);
+		fade_size = Math::clamp(fade_size, min_fade_size, max_fade_size);
 
 		real_t grid_fade_size = (grid_size - primary_grid_steps) * fade_size;
 		grid_mat[c]->set_shader_parameter("grid_size", grid_fade_size);
@@ -8962,7 +8962,7 @@ void Node3DEditor::_sun_direction_input(const Ref<InputEvent> &p_event) {
 	if (mm.is_valid() && mm->get_button_mask().has_flag(MouseButtonMask::LEFT)) {
 		sun_rotation.x += mm->get_relative().y * (0.02 * EDSCALE);
 		sun_rotation.y -= mm->get_relative().x * (0.02 * EDSCALE);
-		sun_rotation.x = CLAMP(sun_rotation.x, -Math::TAU / 4, Math::TAU / 4);
+		sun_rotation.x = Math::clamp(sun_rotation.x, -Math::TAU / 4, Math::TAU / 4);
 
 		EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
 		undo_redo->create_action(TTR("Set Preview Sun Direction"), UndoRedo::MergeMode::MERGE_ENDS);

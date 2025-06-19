@@ -44,7 +44,7 @@ void SceneTreeFTITests::debug_verify_failed(const Node3D *p_node_3d, const Trans
 	bool first = true;
 
 	while (p_node_3d) {
-		int32_t depth = MAX(p_node_3d->_get_scene_tree_depth(), 0);
+		int32_t depth = Math::max(p_node_3d->_get_scene_tree_depth(), 0);
 		String tabs;
 		for (int32_t n = 0; n < depth; n++) {
 			tabs += "\t";

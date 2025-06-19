@@ -1904,7 +1904,7 @@ void RenderForwardMobile::_update_instance_data_buffer(RenderListType p_render_l
 			if (scene_state.instance_buffer[p_render_list] != RID()) {
 				RD::get_singleton()->free(scene_state.instance_buffer[p_render_list]);
 			}
-			uint32_t new_size = nearest_power_of_2_templated(MAX(uint64_t(INSTANCE_DATA_BUFFER_MIN_SIZE), scene_state.instance_data[p_render_list].size()));
+			uint32_t new_size = nearest_power_of_2_templated(Math::max(uint64_t(INSTANCE_DATA_BUFFER_MIN_SIZE), scene_state.instance_data[p_render_list].size()));
 			scene_state.instance_buffer[p_render_list] = RD::get_singleton()->storage_buffer_create(new_size * sizeof(SceneState::InstanceData));
 			scene_state.instance_buffer_size[p_render_list] = new_size;
 		}
@@ -2028,7 +2028,7 @@ void RenderForwardMobile::_fill_render_list(RenderListType p_render_list, const 
 			}
 			inst->depth = p_render_data->scene_data->cam_transform.origin.distance_to(center) - inst->sorting_offset;
 		}
-		uint32_t depth_layer = CLAMP(int(inst->depth * 16 / z_max), 0, 15);
+		uint32_t depth_layer = Math::clamp(int(inst->depth * 16 / z_max), 0, 15);
 
 		uint32_t flags = inst->base_flags; //fill flags if appropriate
 

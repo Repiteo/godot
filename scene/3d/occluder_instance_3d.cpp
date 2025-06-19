@@ -299,7 +299,7 @@ void SphereOccluder3D::set_radius(float p_radius) {
 		return;
 	}
 
-	radius = MAX(p_radius, 0.0f);
+	radius = Math::max(p_radius, 0.0f);
 	_update();
 }
 
@@ -479,7 +479,7 @@ uint32_t OccluderInstance3D::get_bake_mask() const {
 }
 
 void OccluderInstance3D::set_bake_simplification_distance(float p_dist) {
-	bake_simplification_dist = MAX(p_dist, 0.0f);
+	bake_simplification_dist = Math::max(p_dist, 0.0f);
 }
 
 float OccluderInstance3D::get_bake_simplification_distance() const {
@@ -536,7 +536,7 @@ void OccluderInstance3D::_bake_surface(const Transform3D &p_transform, Array p_s
 		float error_scale = SurfaceTool::simplify_scale_func(vertices_f32.ptr(), vertices.size(), sizeof(float) * 3);
 		float target_error = p_simplification_dist / error_scale;
 		float error = -1.0f;
-		int target_index_count = MIN(indices.size(), 36);
+		int target_index_count = Math::min(indices.size(), 36);
 
 		const int simplify_options = SurfaceTool::SIMPLIFY_LOCK_BORDER;
 

@@ -39,21 +39,21 @@ namespace WebPCommon {
 Vector<uint8_t> _webp_lossy_pack(const Ref<Image> &p_image, float p_quality) {
 	ERR_FAIL_COND_V(p_image.is_null() || p_image->is_empty(), Vector<uint8_t>());
 
-	return _webp_packer(p_image, CLAMP(p_quality * 100.0f, 0.0f, 100.0f), false);
+	return _webp_packer(p_image, Math::clamp(p_quality * 100.0f, 0.0f, 100.0f), false);
 }
 
 Vector<uint8_t> _webp_lossless_pack(const Ref<Image> &p_image) {
 	ERR_FAIL_COND_V(p_image.is_null() || p_image->is_empty(), Vector<uint8_t>());
 
 	float compression_factor = GLOBAL_GET("rendering/textures/webp_compression/lossless_compression_factor");
-	compression_factor = CLAMP(compression_factor, 0.0f, 100.0f);
+	compression_factor = Math::clamp(compression_factor, 0.0f, 100.0f);
 
 	return _webp_packer(p_image, compression_factor, true);
 }
 
 Vector<uint8_t> _webp_packer(const Ref<Image> &p_image, float p_quality, bool p_lossless) {
 	int compression_method = GLOBAL_GET("rendering/textures/webp_compression/compression_method");
-	compression_method = CLAMP(compression_method, 0, 6);
+	compression_method = Math::clamp(compression_method, 0, 6);
 
 	Ref<Image> img = p_image->duplicate();
 	if (img->is_compressed()) {

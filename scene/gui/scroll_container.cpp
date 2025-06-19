@@ -335,8 +335,8 @@ void ScrollContainer::ensure_control_visible(Control *p_control) {
 	float side_margin = v_scroll->is_visible() ? v_scroll->get_size().x : 0.0f;
 	float bottom_margin = h_scroll->is_visible() ? h_scroll->get_size().y : 0.0f;
 
-	Vector2 diff = Vector2(MAX(MIN(other_rect.position.x - (is_layout_rtl() ? side_margin : 0.0f), 0.0f), other_rect.position.x + other_rect.size.x - size.x + (!is_layout_rtl() ? side_margin : 0.0f)),
-			MAX(MIN(other_rect.position.y, 0.0f), other_rect.position.y + other_rect.size.y - size.y + bottom_margin));
+	Vector2 diff = Vector2(Math::max(Math::min(other_rect.position.x - (is_layout_rtl() ? side_margin : 0.0f), 0.0f), other_rect.position.x + other_rect.size.x - size.x + (!is_layout_rtl() ? side_margin : 0.0f)),
+			Math::max(Math::min(other_rect.position.y, 0.0f), other_rect.position.y + other_rect.size.y - size.y + bottom_margin));
 
 	set_h_scroll(get_h_scroll() + diff.x);
 	set_v_scroll(get_v_scroll() + diff.y);
@@ -386,10 +386,10 @@ void ScrollContainer::_reposition_children() {
 
 		Rect2 r = Rect2(-Size2(get_h_scroll(), get_v_scroll()), minsize);
 		if (c->get_h_size_flags().has_flag(SIZE_EXPAND)) {
-			r.size.width = MAX(size.width, minsize.width);
+			r.size.width = Math::max(size.width, minsize.width);
 		}
 		if (c->get_v_size_flags().has_flag(SIZE_EXPAND)) {
-			r.size.height = MAX(size.height, minsize.height);
+			r.size.height = Math::max(size.height, minsize.height);
 		}
 		r.position += ofs;
 		if (rtl && reserve_vscroll) {

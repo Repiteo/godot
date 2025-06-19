@@ -435,10 +435,10 @@ public:
 			uint32_t raBottom = render_area.position.y;
 			uint32_t raTop = raBottom + render_area.size.height;
 
-			p_rect.x = CLAMP(p_rect.x, raLeft, MAX(raRight - 1, raLeft));
-			p_rect.y = CLAMP(p_rect.y, raBottom, MAX(raTop - 1, raBottom));
-			p_rect.width = MIN(p_rect.width, raRight - p_rect.x);
-			p_rect.height = MIN(p_rect.height, raTop - p_rect.y);
+			p_rect.x = Math::clamp(p_rect.x, raLeft, Math::max(raRight - 1, raLeft));
+			p_rect.y = Math::clamp(p_rect.y, raBottom, Math::max(raTop - 1, raBottom));
+			p_rect.width = Math::min(p_rect.width, raRight - p_rect.x);
+			p_rect.height = Math::min(p_rect.height, raTop - p_rect.y);
 
 			return p_rect;
 		}
@@ -449,10 +449,10 @@ public:
 			int32_t raBottom = render_area.position.y;
 			int32_t raTop = raBottom + render_area.size.height;
 
-			p_rect.position.x = CLAMP(p_rect.position.x, raLeft, MAX(raRight - 1, raLeft));
-			p_rect.position.y = CLAMP(p_rect.position.y, raBottom, MAX(raTop - 1, raBottom));
-			p_rect.size.width = MIN(p_rect.size.width, raRight - p_rect.position.x);
-			p_rect.size.height = MIN(p_rect.size.height, raTop - p_rect.position.y);
+			p_rect.position.x = Math::clamp(p_rect.position.x, raLeft, Math::max(raRight - 1, raLeft));
+			p_rect.position.y = Math::clamp(p_rect.position.y, raBottom, Math::max(raTop - 1, raBottom));
+			p_rect.size.width = Math::min(p_rect.size.width, raRight - p_rect.position.x);
+			p_rect.size.height = Math::min(p_rect.size.height, raTop - p_rect.position.y);
 
 			return p_rect;
 		}

@@ -100,7 +100,7 @@ int CallableCustomBind::get_argument_count(bool &r_is_valid) const {
 }
 
 int CallableCustomBind::get_bound_arguments_count() const {
-	return callable.get_bound_arguments_count() + MAX(0, binds.size() - callable.get_unbound_arguments_count());
+	return callable.get_bound_arguments_count() + Math::max(0, binds.size() - callable.get_unbound_arguments_count());
 }
 
 void CallableCustomBind::get_bound_arguments(Vector<Variant> &r_arguments) const {
@@ -115,7 +115,7 @@ void CallableCustomBind::get_bound_arguments(Vector<Variant> &r_arguments) const
 		return;
 	}
 
-	int added_count = MAX(0, binds.size() - sub_unbound_count);
+	int added_count = Math::max(0, binds.size() - sub_unbound_count);
 	int new_count = sub_bound_count + added_count;
 
 	if (added_count <= 0) {
@@ -135,7 +135,7 @@ void CallableCustomBind::get_bound_arguments(Vector<Variant> &r_arguments) const
 }
 
 int CallableCustomBind::get_unbound_arguments_count() const {
-	return MAX(0, callable.get_unbound_arguments_count() - binds.size());
+	return Math::max(0, callable.get_unbound_arguments_count() - binds.size());
 }
 
 void CallableCustomBind::call(const Variant **p_arguments, int p_argcount, Variant &r_return_value, Callable::CallError &r_call_error) const {

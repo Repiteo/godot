@@ -214,12 +214,12 @@ void DebugEffects::draw_shadow_frustum(RID p_light, const Projection &p_cam_proj
 	real_t max_distance = p_cam_projection.get_z_far();
 	real_t shadow_max = RSG::light_storage->light_get_param(base, RS::LIGHT_PARAM_SHADOW_MAX_DISTANCE);
 	if (shadow_max > 0 && !is_orthogonal) {
-		max_distance = MIN(shadow_max, max_distance);
+		max_distance = Math::min(shadow_max, max_distance);
 	}
 
 	// Make sure we've not got bad info coming in.
-	max_distance = MAX(max_distance, min_distance + 0.001);
-	min_distance = MIN(min_distance, max_distance);
+	max_distance = Math::max(max_distance, min_distance + 0.001);
+	min_distance = Math::min(min_distance, max_distance);
 	real_t range = max_distance - min_distance;
 
 	real_t distances[5];

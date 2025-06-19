@@ -92,7 +92,7 @@ int AudioStreamSynchronized::get_beat_count() const {
 	int max_beats = 0;
 	for (int i = 0; i < stream_count; i++) {
 		if (audio_streams[i].is_valid()) {
-			max_beats = MAX(max_beats, audio_streams[i]->get_beat_count());
+			max_beats = Math::max(max_beats, audio_streams[i]->get_beat_count());
 		}
 	}
 	return max_beats;
@@ -125,7 +125,7 @@ double AudioStreamSynchronized::get_length() const {
 	double max_length = 0.0;
 	for (int i = 0; i < stream_count; i++) {
 		if (audio_streams[i].is_valid()) {
-			max_length = MAX(max_length, audio_streams[i]->get_length());
+			max_length = Math::max(max_length, audio_streams[i]->get_length());
 		}
 	}
 	return max_length;
@@ -223,7 +223,7 @@ int AudioStreamPlaybackSynchronized::mix(AudioFrame *p_buffer, float p_rate_scal
 
 	bool any_active = false;
 	while (todo) {
-		int to_mix = MIN(todo, MIX_BUFFER_SIZE);
+		int to_mix = Math::min(todo, MIX_BUFFER_SIZE);
 
 		bool first = true;
 		for (int i = 0; i < stream->stream_count; i++) {

@@ -181,8 +181,8 @@ void JoltBody3D::_integrate_forces(float p_step, JPH::Body &p_jolt_body) {
 		// consistent results across different update frequencies when using high (>1) damping values, so we apply the
 		// damping ourselves instead, before any force integration happens.
 
-		linear_velocity *= MAX(1.0f - total_linear_damp * p_step, 0.0f);
-		angular_velocity *= MAX(1.0f - total_angular_damp * p_step, 0.0f);
+		linear_velocity *= Math::max(1.0f - total_linear_damp * p_step, 0.0f);
+		angular_velocity *= Math::max(1.0f - total_angular_damp * p_step, 0.0f);
 
 		linear_velocity += to_jolt(gravity) * p_step;
 
@@ -828,7 +828,7 @@ void JoltBody3D::set_max_contacts_reported(int p_count) {
 	}
 
 	contacts.resize(p_count);
-	contact_count = MIN(contact_count, p_count);
+	contact_count = Math::min(contact_count, p_count);
 
 	const bool use_manifold_reduction = !reports_contacts();
 
@@ -1247,7 +1247,7 @@ void JoltBody3D::set_gravity_scale(float p_scale) {
 }
 
 void JoltBody3D::set_linear_damp(float p_damp) {
-	p_damp = MAX(0.0f, p_damp);
+	p_damp = Math::max(0.0f, p_damp);
 
 	if (p_damp == linear_damp) {
 		return;
@@ -1259,7 +1259,7 @@ void JoltBody3D::set_linear_damp(float p_damp) {
 }
 
 void JoltBody3D::set_angular_damp(float p_damp) {
-	p_damp = MAX(0.0f, p_damp);
+	p_damp = Math::max(0.0f, p_damp);
 
 	if (p_damp == angular_damp) {
 		return;

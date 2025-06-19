@@ -767,7 +767,7 @@ void RenderForwardClustered::_update_instance_data_buffer(RenderListType p_rende
 			if (scene_state.instance_buffer[p_render_list] != RID()) {
 				RD::get_singleton()->free(scene_state.instance_buffer[p_render_list]);
 			}
-			uint32_t new_size = nearest_power_of_2_templated(MAX(uint64_t(INSTANCE_DATA_BUFFER_MIN_SIZE), scene_state.instance_data[p_render_list].size()));
+			uint32_t new_size = nearest_power_of_2_templated(Math::max(uint64_t(INSTANCE_DATA_BUFFER_MIN_SIZE), scene_state.instance_data[p_render_list].size()));
 			scene_state.instance_buffer[p_render_list] = RD::get_singleton()->storage_buffer_create(new_size * sizeof(SceneState::InstanceData));
 			scene_state.instance_buffer_size[p_render_list] = new_size;
 		}
@@ -918,7 +918,7 @@ void RenderForwardClustered::_fill_render_list(RenderListType p_render_list, con
 			}
 			inst->depth = p_render_data->scene_data->cam_transform.origin.distance_to(center) - inst->sorting_offset;
 		}
-		uint32_t depth_layer = CLAMP(int(inst->depth * 16 / z_max), 0, 15);
+		uint32_t depth_layer = Math::clamp(int(inst->depth * 16 / z_max), 0, 15);
 
 		uint32_t flags = inst->base_flags; //fill flags if appropriate
 
@@ -1156,7 +1156,7 @@ void RenderForwardClustered::_fill_render_list(RenderListType p_render_list, con
 }
 
 void RenderForwardClustered::_setup_voxelgis(const PagedArray<RID> &p_voxelgis) {
-	scene_state.voxelgis_used = MIN(p_voxelgis.size(), uint32_t(MAX_VOXEL_GI_INSTANCESS));
+	scene_state.voxelgis_used = Math::min(p_voxelgis.size(), uint32_t(MAX_VOXEL_GI_INSTANCESS));
 	for (uint32_t i = 0; i < scene_state.voxelgis_used; i++) {
 		scene_state.voxelgi_ids[i] = p_voxelgis[i];
 	}
@@ -1432,8 +1432,8 @@ void RenderForwardClustered::_copy_framebuffer_to_ssil(Ref<RenderSceneBuffersRD>
 			int width = size.x;
 			int height = size.y;
 			for (uint32_t m = 1; m < mipmaps; m++) {
-				width = MAX(1, width >> 1);
-				height = MAX(1, height >> 1);
+				width = Math::max(1, width >> 1);
+				height = Math::max(1, height >> 1);
 
 				source = dest;
 				dest = p_render_buffers->get_texture_slice(RB_SCOPE_SSIL, RB_LAST_FRAME, v, m);
@@ -2421,7 +2421,7 @@ void RenderForwardClustered::_render_scene(RenderDataRD *p_render_data, const Co
 				RendererRD::FSR2Effect::Parameters params;
 				params.context = rb_data->get_fsr2_context();
 				params.internal_size = rb->get_internal_size();
-				params.sharpness = CLAMP(1.0f - (rb->get_fsr_sharpness() / 2.0f), 0.0f, 1.0f);
+				params.sharpness = Math::clamp(1.0f - (rb->get_fsr_sharpness() / 2.0f), 0.0f, 1.0f);
 				params.color = rb->get_internal_texture(v);
 				params.depth = rb->get_depth_texture(v);
 				params.velocity = rb->get_velocity_buffer(false, v);

@@ -41,7 +41,7 @@ GDExtensionManager::LoadStatus GDExtensionManager::_load_extension_internal(cons
 		int32_t minimum_level = 0;
 		if (!p_first_load) {
 			minimum_level = p_extension->get_minimum_library_initialization_level();
-			if (minimum_level < MIN(level, GDExtension::INITIALIZATION_LEVEL_SCENE)) {
+			if (minimum_level < Math::min(level, GDExtension::INITIALIZATION_LEVEL_SCENE)) {
 				return LOAD_STATUS_NEEDS_RESTART;
 			}
 		}

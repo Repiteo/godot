@@ -102,7 +102,7 @@ void Gizmo3DHelper::box_set_handle(const Vector3 p_segment[2], int p_id, Vector3
 	if (Node3DEditor::get_singleton()->is_snap_enabled()) {
 		r_box_size[axis] = Math::snapped(r_box_size[axis], Node3DEditor::get_singleton()->get_translate_snap());
 	}
-	r_box_size[axis] = MAX(r_box_size[axis], 0.001);
+	r_box_size[axis] = Math::max(r_box_size[axis], 0.001);
 
 	// Adjust position.
 	if (Input::get_singleton()->is_key_pressed(Key::ALT)) {
@@ -183,7 +183,7 @@ void Gizmo3DHelper::_cylinder_or_capsule_set_handle(const Vector3 p_segment[2], 
 		r_cylinder_position = initial_transform.get_origin();
 
 		if (p_is_capsule) {
-			r_height = MAX(initial_height, r_radius * 2.0);
+			r_height = Math::max(initial_height, r_radius * 2.0);
 		} else {
 			r_height = initial_height;
 		}
@@ -209,7 +209,7 @@ void Gizmo3DHelper::_cylinder_or_capsule_set_handle(const Vector3 p_segment[2], 
 		}
 
 		if (p_is_capsule) {
-			r_radius = MIN(initial_radius, r_height / 2.0);
+			r_radius = Math::min(initial_radius, r_height / 2.0);
 		} else {
 			r_radius = initial_radius;
 		}

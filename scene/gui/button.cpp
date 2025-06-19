@@ -74,56 +74,56 @@ void Button::_update_theme_item_cache() {
 	if (has_theme_stylebox("hover_pressed")) {
 		if (rtl && has_theme_stylebox(SNAME("hover_pressed_mirrored"))) {
 			theme_cache.max_style_size = theme_cache.max_style_size.max(theme_cache.hover_pressed_mirrored->get_minimum_size());
-			theme_cache.style_margin_left = MAX(theme_cache.style_margin_left, theme_cache.hover_pressed_mirrored->get_margin(SIDE_LEFT));
-			theme_cache.style_margin_right = MAX(theme_cache.style_margin_right, theme_cache.hover_pressed_mirrored->get_margin(SIDE_RIGHT));
-			theme_cache.style_margin_top = MAX(theme_cache.style_margin_top, theme_cache.hover_pressed_mirrored->get_margin(SIDE_TOP));
-			theme_cache.style_margin_bottom = MAX(theme_cache.style_margin_bottom, theme_cache.hover_pressed_mirrored->get_margin(SIDE_BOTTOM));
+			theme_cache.style_margin_left = Math::max(theme_cache.style_margin_left, theme_cache.hover_pressed_mirrored->get_margin(SIDE_LEFT));
+			theme_cache.style_margin_right = Math::max(theme_cache.style_margin_right, theme_cache.hover_pressed_mirrored->get_margin(SIDE_RIGHT));
+			theme_cache.style_margin_top = Math::max(theme_cache.style_margin_top, theme_cache.hover_pressed_mirrored->get_margin(SIDE_TOP));
+			theme_cache.style_margin_bottom = Math::max(theme_cache.style_margin_bottom, theme_cache.hover_pressed_mirrored->get_margin(SIDE_BOTTOM));
 		} else {
 			theme_cache.max_style_size = theme_cache.max_style_size.max(theme_cache.hover_pressed->get_minimum_size());
-			theme_cache.style_margin_left = MAX(theme_cache.style_margin_left, theme_cache.hover_pressed->get_margin(SIDE_LEFT));
-			theme_cache.style_margin_right = MAX(theme_cache.style_margin_right, theme_cache.hover_pressed->get_margin(SIDE_RIGHT));
-			theme_cache.style_margin_top = MAX(theme_cache.style_margin_top, theme_cache.hover_pressed->get_margin(SIDE_TOP));
-			theme_cache.style_margin_bottom = MAX(theme_cache.style_margin_bottom, theme_cache.hover_pressed->get_margin(SIDE_BOTTOM));
+			theme_cache.style_margin_left = Math::max(theme_cache.style_margin_left, theme_cache.hover_pressed->get_margin(SIDE_LEFT));
+			theme_cache.style_margin_right = Math::max(theme_cache.style_margin_right, theme_cache.hover_pressed->get_margin(SIDE_RIGHT));
+			theme_cache.style_margin_top = Math::max(theme_cache.style_margin_top, theme_cache.hover_pressed->get_margin(SIDE_TOP));
+			theme_cache.style_margin_bottom = Math::max(theme_cache.style_margin_bottom, theme_cache.hover_pressed->get_margin(SIDE_BOTTOM));
 		}
 	}
 	if (rtl && has_theme_stylebox(SNAME("pressed_mirrored"))) {
 		theme_cache.max_style_size = theme_cache.max_style_size.max(theme_cache.pressed_mirrored->get_minimum_size());
-		theme_cache.style_margin_left = MAX(theme_cache.style_margin_left, theme_cache.pressed_mirrored->get_margin(SIDE_LEFT));
-		theme_cache.style_margin_right = MAX(theme_cache.style_margin_right, theme_cache.pressed_mirrored->get_margin(SIDE_RIGHT));
-		theme_cache.style_margin_top = MAX(theme_cache.style_margin_top, theme_cache.pressed_mirrored->get_margin(SIDE_TOP));
-		theme_cache.style_margin_bottom = MAX(theme_cache.style_margin_bottom, theme_cache.pressed_mirrored->get_margin(SIDE_BOTTOM));
+		theme_cache.style_margin_left = Math::max(theme_cache.style_margin_left, theme_cache.pressed_mirrored->get_margin(SIDE_LEFT));
+		theme_cache.style_margin_right = Math::max(theme_cache.style_margin_right, theme_cache.pressed_mirrored->get_margin(SIDE_RIGHT));
+		theme_cache.style_margin_top = Math::max(theme_cache.style_margin_top, theme_cache.pressed_mirrored->get_margin(SIDE_TOP));
+		theme_cache.style_margin_bottom = Math::max(theme_cache.style_margin_bottom, theme_cache.pressed_mirrored->get_margin(SIDE_BOTTOM));
 	} else {
 		theme_cache.max_style_size = theme_cache.max_style_size.max(theme_cache.pressed->get_minimum_size());
-		theme_cache.style_margin_left = MAX(theme_cache.style_margin_left, theme_cache.pressed->get_margin(SIDE_LEFT));
-		theme_cache.style_margin_right = MAX(theme_cache.style_margin_right, theme_cache.pressed->get_margin(SIDE_RIGHT));
-		theme_cache.style_margin_top = MAX(theme_cache.style_margin_top, theme_cache.pressed->get_margin(SIDE_TOP));
-		theme_cache.style_margin_bottom = MAX(theme_cache.style_margin_bottom, theme_cache.pressed->get_margin(SIDE_BOTTOM));
+		theme_cache.style_margin_left = Math::max(theme_cache.style_margin_left, theme_cache.pressed->get_margin(SIDE_LEFT));
+		theme_cache.style_margin_right = Math::max(theme_cache.style_margin_right, theme_cache.pressed->get_margin(SIDE_RIGHT));
+		theme_cache.style_margin_top = Math::max(theme_cache.style_margin_top, theme_cache.pressed->get_margin(SIDE_TOP));
+		theme_cache.style_margin_bottom = Math::max(theme_cache.style_margin_bottom, theme_cache.pressed->get_margin(SIDE_BOTTOM));
 	}
 	if (rtl && has_theme_stylebox(SNAME("hover_mirrored"))) {
 		theme_cache.max_style_size = theme_cache.max_style_size.max(theme_cache.hover_mirrored->get_minimum_size());
-		theme_cache.style_margin_left = MAX(theme_cache.style_margin_left, theme_cache.hover_mirrored->get_margin(SIDE_LEFT));
-		theme_cache.style_margin_right = MAX(theme_cache.style_margin_right, theme_cache.hover_mirrored->get_margin(SIDE_RIGHT));
-		theme_cache.style_margin_top = MAX(theme_cache.style_margin_top, theme_cache.hover_mirrored->get_margin(SIDE_TOP));
-		theme_cache.style_margin_bottom = MAX(theme_cache.style_margin_bottom, theme_cache.hover_mirrored->get_margin(SIDE_BOTTOM));
+		theme_cache.style_margin_left = Math::max(theme_cache.style_margin_left, theme_cache.hover_mirrored->get_margin(SIDE_LEFT));
+		theme_cache.style_margin_right = Math::max(theme_cache.style_margin_right, theme_cache.hover_mirrored->get_margin(SIDE_RIGHT));
+		theme_cache.style_margin_top = Math::max(theme_cache.style_margin_top, theme_cache.hover_mirrored->get_margin(SIDE_TOP));
+		theme_cache.style_margin_bottom = Math::max(theme_cache.style_margin_bottom, theme_cache.hover_mirrored->get_margin(SIDE_BOTTOM));
 	} else {
 		theme_cache.max_style_size = theme_cache.max_style_size.max(theme_cache.hover->get_minimum_size());
-		theme_cache.style_margin_left = MAX(theme_cache.style_margin_left, theme_cache.hover->get_margin(SIDE_LEFT));
-		theme_cache.style_margin_right = MAX(theme_cache.style_margin_right, theme_cache.hover->get_margin(SIDE_RIGHT));
-		theme_cache.style_margin_top = MAX(theme_cache.style_margin_top, theme_cache.hover->get_margin(SIDE_TOP));
-		theme_cache.style_margin_bottom = MAX(theme_cache.style_margin_bottom, theme_cache.hover->get_margin(SIDE_BOTTOM));
+		theme_cache.style_margin_left = Math::max(theme_cache.style_margin_left, theme_cache.hover->get_margin(SIDE_LEFT));
+		theme_cache.style_margin_right = Math::max(theme_cache.style_margin_right, theme_cache.hover->get_margin(SIDE_RIGHT));
+		theme_cache.style_margin_top = Math::max(theme_cache.style_margin_top, theme_cache.hover->get_margin(SIDE_TOP));
+		theme_cache.style_margin_bottom = Math::max(theme_cache.style_margin_bottom, theme_cache.hover->get_margin(SIDE_BOTTOM));
 	}
 	if (rtl && has_theme_stylebox(SNAME("disabled_mirrored"))) {
 		theme_cache.max_style_size = theme_cache.max_style_size.max(theme_cache.disabled_mirrored->get_minimum_size());
-		theme_cache.style_margin_left = MAX(theme_cache.style_margin_left, theme_cache.disabled_mirrored->get_margin(SIDE_LEFT));
-		theme_cache.style_margin_right = MAX(theme_cache.style_margin_right, theme_cache.disabled_mirrored->get_margin(SIDE_RIGHT));
-		theme_cache.style_margin_top = MAX(theme_cache.style_margin_top, theme_cache.disabled_mirrored->get_margin(SIDE_TOP));
-		theme_cache.style_margin_bottom = MAX(theme_cache.style_margin_bottom, theme_cache.disabled_mirrored->get_margin(SIDE_BOTTOM));
+		theme_cache.style_margin_left = Math::max(theme_cache.style_margin_left, theme_cache.disabled_mirrored->get_margin(SIDE_LEFT));
+		theme_cache.style_margin_right = Math::max(theme_cache.style_margin_right, theme_cache.disabled_mirrored->get_margin(SIDE_RIGHT));
+		theme_cache.style_margin_top = Math::max(theme_cache.style_margin_top, theme_cache.disabled_mirrored->get_margin(SIDE_TOP));
+		theme_cache.style_margin_bottom = Math::max(theme_cache.style_margin_bottom, theme_cache.disabled_mirrored->get_margin(SIDE_BOTTOM));
 	} else {
 		theme_cache.max_style_size = theme_cache.max_style_size.max(theme_cache.disabled->get_minimum_size());
-		theme_cache.style_margin_left = MAX(theme_cache.style_margin_left, theme_cache.disabled->get_margin(SIDE_LEFT));
-		theme_cache.style_margin_right = MAX(theme_cache.style_margin_right, theme_cache.disabled->get_margin(SIDE_RIGHT));
-		theme_cache.style_margin_top = MAX(theme_cache.style_margin_top, theme_cache.disabled->get_margin(SIDE_TOP));
-		theme_cache.style_margin_bottom = MAX(theme_cache.style_margin_bottom, theme_cache.disabled->get_margin(SIDE_BOTTOM));
+		theme_cache.style_margin_left = Math::max(theme_cache.style_margin_left, theme_cache.disabled->get_margin(SIDE_LEFT));
+		theme_cache.style_margin_right = Math::max(theme_cache.style_margin_right, theme_cache.disabled->get_margin(SIDE_RIGHT));
+		theme_cache.style_margin_top = Math::max(theme_cache.style_margin_top, theme_cache.disabled->get_margin(SIDE_TOP));
+		theme_cache.style_margin_bottom = Math::max(theme_cache.style_margin_bottom, theme_cache.disabled->get_margin(SIDE_BOTTOM));
 	}
 	theme_cache.max_style_size = theme_cache.max_style_size.max(Vector2(theme_cache.style_margin_left + theme_cache.style_margin_right, theme_cache.style_margin_top + theme_cache.style_margin_bottom));
 }
@@ -273,7 +273,7 @@ void Button::_notification(int p_what) {
 				drawable_size_remained.height -= style_margin_top + style_margin_bottom;
 			}
 
-			const int h_separation = MAX(0, theme_cache.h_separation);
+			const int h_separation = Math::max(0, theme_cache.h_separation);
 
 			float left_internal_margin_with_h_separation = _internal_margin[SIDE_LEFT];
 			float right_internal_margin_with_h_separation = _internal_margin[SIDE_RIGHT];
@@ -456,7 +456,7 @@ void Button::_notification(int p_what) {
 			if (!xl_text.is_empty()) {
 				text_buf->set_alignment(align_rtl_checked);
 
-				float text_buf_width = Math::ceil(MAX(1.0f, drawable_size_remained.width)); // The space's width filled by the text_buf.
+				float text_buf_width = Math::ceil(Math::max(1.0f, drawable_size_remained.width)); // The space's width filled by the text_buf.
 				if (autowrap_mode != TextServer::AUTOWRAP_OFF && !Math::is_equal_approx(text_buf_width, text_buf->get_width())) {
 					update_minimum_size();
 				}
@@ -528,7 +528,7 @@ Size2 Button::get_minimum_size_for_text_and_icon(const String &p_text, Ref<Textu
 	if (!expand_icon && p_icon.is_valid()) {
 		Size2 icon_size = _fit_icon_size(p_icon->get_size());
 		if (vertical_icon_alignment == VERTICAL_ALIGNMENT_CENTER) {
-			minsize.height = MAX(minsize.height, icon_size.height);
+			minsize.height = Math::max(minsize.height, icon_size.height);
 		} else {
 			minsize.height += icon_size.height;
 		}
@@ -536,10 +536,10 @@ Size2 Button::get_minimum_size_for_text_and_icon(const String &p_text, Ref<Textu
 		if (horizontal_icon_alignment != HORIZONTAL_ALIGNMENT_CENTER) {
 			minsize.width += icon_size.width;
 			if (!xl_text.is_empty() || !p_text.is_empty()) {
-				minsize.width += MAX(0, theme_cache.h_separation);
+				minsize.width += Math::max(0, theme_cache.h_separation);
 			}
 		} else {
-			minsize.width = MAX(minsize.width, icon_size.width);
+			minsize.width = Math::max(minsize.width, icon_size.width);
 		}
 	}
 
@@ -547,7 +547,7 @@ Size2 Button::get_minimum_size_for_text_and_icon(const String &p_text, Ref<Textu
 		Ref<Font> font = theme_cache.font;
 		float font_height = font->get_height(theme_cache.font_size);
 		if (vertical_icon_alignment == VERTICAL_ALIGNMENT_CENTER) {
-			minsize.height = MAX(font_height, minsize.height);
+			minsize.height = Math::max(font_height, minsize.height);
 		} else {
 			minsize.height += font_height;
 		}

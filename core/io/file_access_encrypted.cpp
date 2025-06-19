@@ -229,7 +229,7 @@ uint64_t FileAccessEncrypted::get_buffer(uint8_t *p_dst, uint64_t p_length) cons
 
 	ERR_FAIL_NULL_V(p_dst, -1);
 
-	uint64_t to_copy = MIN(p_length, get_length() - pos);
+	uint64_t to_copy = Math::min(p_length, get_length() - pos);
 
 	memcpy(p_dst, data.ptr() + pos, to_copy);
 	pos += to_copy;

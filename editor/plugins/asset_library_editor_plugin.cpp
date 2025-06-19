@@ -1529,7 +1529,7 @@ void EditorAssetLibrary::_install_external_asset(String p_zip_path, String p_tit
 
 void EditorAssetLibrary::_update_asset_items_columns() {
 	int new_columns = get_size().x / (450.0 * EDSCALE);
-	new_columns = MAX(1, new_columns);
+	new_columns = Math::max(1, new_columns);
 
 	if (new_columns != asset_items->get_columns()) {
 		asset_items->set_columns(new_columns);

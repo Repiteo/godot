@@ -785,7 +785,7 @@ void GDScriptParser::parse_program() {
 
 	int max_line = head->end_line;
 	if (!head->members.is_empty()) {
-		max_line = MIN(max_script_doc_line, head->members[0].get_line() - 1);
+		max_line = Math::min(max_script_doc_line, head->members[0].get_line() - 1);
 	}
 
 	int line = 0;
@@ -3998,7 +3998,7 @@ GDScriptParser::MemberDocData GDScriptParser::parse_doc_comment(int p_line, bool
 		}
 	}
 
-	max_script_doc_line = MIN(max_script_doc_line, line - 1);
+	max_script_doc_line = Math::min(max_script_doc_line, line - 1);
 
 	String space_prefix;
 	{
@@ -4053,7 +4053,7 @@ GDScriptParser::ClassDocData GDScriptParser::parse_class_doc_comment(int p_line,
 		}
 	}
 
-	max_script_doc_line = MIN(max_script_doc_line, line - 1);
+	max_script_doc_line = Math::min(max_script_doc_line, line - 1);
 
 	String space_prefix;
 	{
@@ -5045,8 +5045,8 @@ bool GDScriptParser::warning_ignore_annotation(AnnotationNode *p_annotation, Nod
 				case Node::CLASS: {
 					end_line = p_target->start_line;
 					for (const AnnotationNode *annotation : p_target->annotations) {
-						start_line = MIN(start_line, annotation->start_line);
-						end_line = MAX(end_line, annotation->end_line);
+						start_line = Math::min(start_line, annotation->start_line);
+						end_line = Math::max(end_line, annotation->end_line);
 					}
 				} break;
 
@@ -5054,9 +5054,9 @@ bool GDScriptParser::warning_ignore_annotation(AnnotationNode *p_annotation, Nod
 					FunctionNode *function = static_cast<FunctionNode *>(p_target);
 					end_line = function->start_line;
 					for (int i = 0; i < function->parameters.size(); i++) {
-						end_line = MAX(end_line, function->parameters[i]->end_line);
+						end_line = Math::max(end_line, function->parameters[i]->end_line);
 						if (function->parameters[i]->initializer != nullptr) {
-							end_line = MAX(end_line, function->parameters[i]->initializer->end_line);
+							end_line = Math::max(end_line, function->parameters[i]->initializer->end_line);
 						}
 					}
 				} break;
@@ -5065,7 +5065,7 @@ bool GDScriptParser::warning_ignore_annotation(AnnotationNode *p_annotation, Nod
 					MatchBranchNode *branch = static_cast<MatchBranchNode *>(p_target);
 					end_line = branch->start_line;
 					for (int i = 0; i < branch->patterns.size(); i++) {
-						end_line = MAX(end_line, branch->patterns[i]->end_line);
+						end_line = Math::max(end_line, branch->patterns[i]->end_line);
 					}
 				} break;
 
@@ -5073,7 +5073,7 @@ bool GDScriptParser::warning_ignore_annotation(AnnotationNode *p_annotation, Nod
 				} break;
 			}
 
-			end_line = MAX(start_line, end_line); // Prevent infinite loop.
+			end_line = Math::max(start_line, end_line); // Prevent infinite loop.
 			for (int line = start_line; line <= end_line; line++) {
 				warning_ignored_lines[warning_code].insert(line);
 			}
@@ -5111,7 +5111,7 @@ bool GDScriptParser::warning_ignore_region_annotations(AnnotationNode *p_annotat
 				continue;
 			}
 			const int start_line = warning_ignore_start_lines[warning_code];
-			const int end_line = MAX(start_line, p_annotation->start_line); // Prevent infinite loop.
+			const int end_line = Math::max(start_line, p_annotation->start_line); // Prevent infinite loop.
 			for (int i = start_line; i <= end_line; i++) {
 				warning_ignored_lines[warning_code].insert(i);
 			}

@@ -231,8 +231,8 @@ void JoltPhysicsDirectBodyState3D::integrate_forces() {
 	Vector3 linear_velocity = get_linear_velocity();
 	Vector3 angular_velocity = get_angular_velocity();
 
-	linear_velocity *= MAX(1.0f - (float)get_total_linear_damp() * step, 0.0f);
-	angular_velocity *= MAX(1.0f - (float)get_total_angular_damp() * step, 0.0f);
+	linear_velocity *= Math::max(1.0f - (float)get_total_linear_damp() * step, 0.0f);
+	angular_velocity *= Math::max(1.0f - (float)get_total_angular_damp() * step, 0.0f);
 
 	linear_velocity += get_total_gravity() * step;
 

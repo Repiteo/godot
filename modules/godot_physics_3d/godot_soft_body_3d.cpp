@@ -545,7 +545,7 @@ bool GodotSoftBody3D::create_from_trimesh(const Vector<int> &p_indices, const Ve
 					int visual_index = 3 * triangle_index + i;
 					int physics_index = map_visual_to_physics[p_indices[visual_index]];
 					triangles[visual_index] = physics_index;
-					node_count = MAX((int)node_count, physics_index);
+					node_count = Math::max((int)node_count, physics_index);
 				}
 			}
 		}
@@ -1068,7 +1068,7 @@ void GodotSoftBody3D::predict_motion(real_t p_delta) {
 		node.q = node.x;
 		Vector3 delta_v = node.f * node.im * p_delta;
 		for (int c = 0; c < 3; c++) {
-			delta_v[c] = CLAMP(delta_v[c], -clamp_delta_v, clamp_delta_v);
+			delta_v[c] = Math::clamp(delta_v[c], -clamp_delta_v, clamp_delta_v);
 		}
 		node.v += delta_v;
 		node.x += node.v * p_delta;

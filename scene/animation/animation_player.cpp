@@ -257,7 +257,7 @@ float AnimationPlayer::get_current_blend_amount() {
 	for (const Blend &b : c.blend) {
 		blend = blend - b.blend_left;
 	}
-	return MAX(0, blend);
+	return Math::max(0, blend);
 }
 
 void AnimationPlayer::_blend_playback_data(double p_delta, bool p_started) {
@@ -282,7 +282,7 @@ void AnimationPlayer::_blend_playback_data(double p_delta, bool p_started) {
 	List<List<Blend>::Element *> to_erase;
 	for (List<Blend>::Element *E = c.blend.front(); E; E = E->next()) {
 		Blend &b = E->get();
-		b.blend_left = MAX(0, b.blend_left - Math::abs(speed_scale * p_delta) / b.blend_time);
+		b.blend_left = Math::max(0, b.blend_left - Math::abs(speed_scale * p_delta) / b.blend_time);
 		if (Animation::is_less_or_equal_approx(b.blend_left, 0)) {
 			to_erase.push_back(E);
 			b.blend_left = CMP_EPSILON; // May want to play last frame.
@@ -560,7 +560,7 @@ void AnimationPlayer::_capture(const StringName &p_name, bool p_from_end, double
 			if (anim->track_get_key_count(i) == 0) {
 				continue;
 			}
-			max_dur = MAX(max_dur, p_from_end ? current_pos - anim->track_get_key_time(i, anim->track_get_key_count(i) - 1) : anim->track_get_key_time(i, 0) - current_pos);
+			max_dur = Math::max(max_dur, p_from_end ? current_pos - anim->track_get_key_time(i, anim->track_get_key_count(i) - 1) : anim->track_get_key_time(i, 0) - current_pos);
 		}
 		p_duration = max_dur;
 	}
@@ -662,7 +662,7 @@ void AnimationPlayer::seek_internal(double p_time, bool p_update, bool p_update_
 	double end = playback.current.get_end_time();
 
 	// Clamp the seek position.
-	p_time = CLAMP(p_time, start, end);
+	p_time = Math::clamp(p_time, start, end);
 
 	playback.seeked = true;
 	playback.internal_seeked = p_is_internal_seek;
@@ -723,7 +723,7 @@ void AnimationPlayer::set_section(double p_start_time, double p_end_time) {
 	ERR_FAIL_COND_MSG(Animation::is_greater_or_equal_approx(p_start_time, 0) && Animation::is_greater_or_equal_approx(p_end_time, 0) && Animation::is_greater_or_equal_approx(p_start_time, p_end_time), vformat("Start time %f is greater than end time %f.", p_start_time, p_end_time));
 	playback.current.start_time = p_start_time;
 	playback.current.end_time = p_end_time;
-	playback.current.pos = CLAMP(playback.current.pos, playback.current.get_start_time(), playback.current.get_end_time());
+	playback.current.pos = Math::clamp(playback.current.pos, playback.current.get_start_time(), playback.current.get_end_time());
 }
 
 void AnimationPlayer::reset_section() {

@@ -36,7 +36,7 @@ void AudioEffectChorusInstance::process(const AudioFrame *p_src_frames, AudioFra
 	int todo = p_frame_count;
 
 	while (todo) {
-		int to_mix = MIN(todo, 256); //can't mix too much
+		int to_mix = Math::min(todo, 256); //can't mix too much
 
 		_process_chunk(p_src_frames, p_dst_frames, to_mix);
 
@@ -96,8 +96,8 @@ void AudioEffectChorusInstance::_process_chunk(const AudioFrame *p_src_frames, A
 		//vol modifier
 
 		AudioFrame vol_modifier = AudioFrame(base->wet, base->wet) * Math::db_to_linear(v.level);
-		vol_modifier.left *= CLAMP(1.0 - v.pan, 0, 1);
-		vol_modifier.right *= CLAMP(1.0 + v.pan, 0, 1);
+		vol_modifier.left *= Math::clamp(1.0 - v.pan, 0, 1);
+		vol_modifier.right *= Math::clamp(1.0 + v.pan, 0, 1);
 
 		for (int i = 0; i < p_frame_count; i++) {
 			/** COMPUTE WAVEFORM **/

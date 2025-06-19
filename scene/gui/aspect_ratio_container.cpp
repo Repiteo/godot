@@ -127,10 +127,10 @@ void AspectRatioContainer::_notification(int p_what) {
 						scale_factor = size.y / child_size.y;
 					} break;
 					case STRETCH_FIT: {
-						scale_factor = MIN(size.x / child_size.x, size.y / child_size.y);
+						scale_factor = Math::min(size.x / child_size.x, size.y / child_size.y);
 					} break;
 					case STRETCH_COVER: {
-						scale_factor = MAX(size.x / child_size.x, size.y / child_size.y);
+						scale_factor = Math::max(size.x / child_size.x, size.y / child_size.y);
 					} break;
 				}
 				child_size *= scale_factor;

@@ -37,9 +37,9 @@ Size2 Slider::get_minimum_size() const {
 	Size2i rs = theme_cache.grabber_icon->get_size();
 
 	if (orientation == HORIZONTAL) {
-		return Size2i(ss.width, MAX(ss.height, rs.height));
+		return Size2i(ss.width, Math::max(ss.height, rs.height));
 	} else {
-		return Size2i(MAX(ss.width, rs.width), ss.height);
+		return Size2i(Math::max(ss.width, rs.width), ss.height);
 	}
 }
 

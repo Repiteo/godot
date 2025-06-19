@@ -298,8 +298,8 @@ Error EditorExportPlatformWeb::_build_pwa(const Ref<EditorExportPreset> &p_prese
 	// Manifest
 	const char *modes[4] = { "fullscreen", "standalone", "minimal-ui", "browser" };
 	const char *orientations[3] = { "any", "landscape", "portrait" };
-	const int display = CLAMP(int(p_preset->get("progressive_web_app/display")), 0, 4);
-	const int orientation = CLAMP(int(p_preset->get("progressive_web_app/orientation")), 0, 3);
+	const int display = Math::clamp(int(p_preset->get("progressive_web_app/display")), 0, 4);
+	const int orientation = Math::clamp(int(p_preset->get("progressive_web_app/orientation")), 0, 3);
 
 	Dictionary manifest;
 	manifest["name"] = proj_name;

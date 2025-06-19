@@ -119,13 +119,13 @@ bool FileSystemList::edit_selected() {
 			if (get_h_scroll_bar()->is_visible()) {
 				rect.position.x -= get_h_scroll_bar()->get_value();
 			}
-			ofs = Vector2(0, Math::floor((MAX(line_editor->get_minimum_size().height, rect.size.height) - rect.size.height) / 2));
+			ofs = Vector2(0, Math::floor((Math::max(line_editor->get_minimum_size().height, rect.size.height) - rect.size.height) / 2));
 			popup_rect.position = rect.position - ofs;
 			popup_rect.size = rect.size;
 
 			// Adjust for icon position and size.
-			popup_rect.size.x -= MAX(theme_cache.h_separation, 0) / 2 + icon_size.x;
-			popup_rect.position.x += MAX(theme_cache.h_separation, 0) / 2 + icon_size.x;
+			popup_rect.size.x -= Math::max(theme_cache.h_separation, 0) / 2 + icon_size.x;
+			popup_rect.position.x += Math::max(theme_cache.h_separation, 0) / 2 + icon_size.x;
 			break;
 		case ItemList::ICON_MODE_TOP:
 			rect = get_item_rect(s, false);
@@ -139,8 +139,8 @@ bool FileSystemList::edit_selected() {
 			popup_rect.size = rect.size;
 
 			// Adjust for icon position and size.
-			popup_rect.size.y -= MAX(theme_cache.v_separation, 0) / 2 + theme_cache.icon_margin + icon_size.y;
-			popup_rect.position.y += MAX(theme_cache.v_separation, 0) / 2 + theme_cache.icon_margin + icon_size.y;
+			popup_rect.size.y -= Math::max(theme_cache.v_separation, 0) / 2 + theme_cache.icon_margin + icon_size.y;
+			popup_rect.position.y += Math::max(theme_cache.v_separation, 0) / 2 + theme_cache.icon_margin + icon_size.y;
 			break;
 	}
 	if (is_layout_rtl()) {

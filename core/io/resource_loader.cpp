@@ -678,7 +678,7 @@ float ResourceLoader::_dependency_get_progress(const String &p_path) {
 		} else {
 			current_progress = load_task.progress;
 		}
-		load_task.max_reported_progress = MAX(load_task.max_reported_progress, current_progress);
+		load_task.max_reported_progress = Math::max(load_task.max_reported_progress, current_progress);
 		return load_task.max_reported_progress;
 	} else {
 		return 1.0; //assume finished loading it so it no longer exists

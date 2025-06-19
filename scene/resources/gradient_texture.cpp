@@ -120,10 +120,10 @@ void GradientTexture1D::_update() const {
 				float ofs = float(i) / (width - 1);
 				Color color = g.get_color_at_offset(ofs);
 
-				wd8[i * 4 + 0] = uint8_t(CLAMP(color.r * 255.0, 0, 255));
-				wd8[i * 4 + 1] = uint8_t(CLAMP(color.g * 255.0, 0, 255));
-				wd8[i * 4 + 2] = uint8_t(CLAMP(color.b * 255.0, 0, 255));
-				wd8[i * 4 + 3] = uint8_t(CLAMP(color.a * 255.0, 0, 255));
+				wd8[i * 4 + 0] = uint8_t(Math::clamp(color.r * 255.0, 0, 255));
+				wd8[i * 4 + 1] = uint8_t(Math::clamp(color.g * 255.0, 0, 255));
+				wd8[i * 4 + 2] = uint8_t(Math::clamp(color.b * 255.0, 0, 255));
+				wd8[i * 4 + 3] = uint8_t(Math::clamp(color.a * 255.0, 0, 255));
 			}
 		}
 
@@ -259,10 +259,10 @@ void GradientTexture2D::_update() const {
 						float ofs = _get_gradient_offset_at(x, y);
 						const Color &c = g.get_color_at_offset(ofs);
 
-						wd8[(x + (y * width)) * 4 + 0] = uint8_t(CLAMP(c.r * 255.0, 0, 255));
-						wd8[(x + (y * width)) * 4 + 1] = uint8_t(CLAMP(c.g * 255.0, 0, 255));
-						wd8[(x + (y * width)) * 4 + 2] = uint8_t(CLAMP(c.b * 255.0, 0, 255));
-						wd8[(x + (y * width)) * 4 + 3] = uint8_t(CLAMP(c.a * 255.0, 0, 255));
+						wd8[(x + (y * width)) * 4 + 0] = uint8_t(Math::clamp(c.r * 255.0, 0, 255));
+						wd8[(x + (y * width)) * 4 + 1] = uint8_t(Math::clamp(c.g * 255.0, 0, 255));
+						wd8[(x + (y * width)) * 4 + 2] = uint8_t(Math::clamp(c.b * 255.0, 0, 255));
+						wd8[(x + (y * width)) * 4 + 3] = uint8_t(Math::clamp(c.a * 255.0, 0, 255));
 					}
 				}
 			}
@@ -300,10 +300,10 @@ float GradientTexture2D::_get_gradient_offset_at(int x, int y) const {
 	} else if (fill == Fill::FILL_RADIAL) {
 		ofs = (pos - fill_from).length() / (fill_to - fill_from).length();
 	} else if (fill == Fill::FILL_SQUARE) {
-		ofs = MAX(Math::abs(pos.x - fill_from.x), Math::abs(pos.y - fill_from.y)) / MAX(Math::abs(fill_to.x - fill_from.x), Math::abs(fill_to.y - fill_from.y));
+		ofs = Math::max(Math::abs(pos.x - fill_from.x), Math::abs(pos.y - fill_from.y)) / Math::max(Math::abs(fill_to.x - fill_from.x), Math::abs(fill_to.y - fill_from.y));
 	}
 	if (repeat == Repeat::REPEAT_NONE) {
-		ofs = CLAMP(ofs, 0.0, 1.0);
+		ofs = Math::clamp(ofs, 0.0, 1.0);
 	} else if (repeat == Repeat::REPEAT) {
 		ofs = Math::fmod(ofs, 1.0f);
 		if (ofs < 0) {

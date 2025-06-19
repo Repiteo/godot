@@ -114,15 +114,15 @@ Config::Config() {
 	glGetIntegerv(GL_MAX_VERTEX_OUTPUT_COMPONENTS, &max_vertex_output);
 	GLint max_fragment_input;
 	glGetIntegerv(GL_MAX_FRAGMENT_INPUT_COMPONENTS, &max_fragment_input);
-	max_shader_varyings = (uint32_t)MIN(max_vertex_output, max_fragment_input) / 4;
+	max_shader_varyings = (uint32_t)Math::min(max_vertex_output, max_fragment_input) / 4;
 
 	// sanity clamp buffer size to 16K..1MB
-	max_uniform_buffer_size = CLAMP(max_uniform_buffer_size, 16384, 1048576);
+	max_uniform_buffer_size = Math::clamp(max_uniform_buffer_size, 16384, 1048576);
 
 	support_anisotropic_filter = extensions.has("GL_EXT_texture_filter_anisotropic");
 	if (support_anisotropic_filter) {
 		glGetFloatv(_GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &anisotropic_level);
-		anisotropic_level = MIN(float(1 << int(GLOBAL_GET("rendering/textures/default_filters/anisotropic_filtering_level"))), anisotropic_level);
+		anisotropic_level = Math::min(float(1 << int(GLOBAL_GET("rendering/textures/default_filters/anisotropic_filtering_level"))), anisotropic_level);
 	}
 
 	glGetIntegerv(GL_MAX_SAMPLES, &msaa_max_samples);

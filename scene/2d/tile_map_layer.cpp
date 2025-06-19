@@ -680,7 +680,7 @@ void TileMapLayer::_rendering_draw_cell_debug(const RID &p_canvas_item, const Ve
 					Transform2D cell_to_quadrant;
 					cell_to_quadrant.set_origin(tile_set->map_to_local(r_cell_data.coords) - p_quadrant_pos);
 					rs->canvas_item_add_set_transform(p_canvas_item, cell_to_quadrant);
-					rs->canvas_item_add_circle(p_canvas_item, Vector2(), MIN(tile_set->get_tile_size().x, tile_set->get_tile_size().y) / 4.0, color);
+					rs->canvas_item_add_circle(p_canvas_item, Vector2(), Math::min(tile_set->get_tile_size().x, tile_set->get_tile_size().y) / 4.0, color);
 				}
 			}
 		}
@@ -1624,7 +1624,7 @@ void TileMapLayer::_scenes_draw_cell_debug(const RID &p_canvas_item, const Vecto
 				Transform2D cell_to_quadrant;
 				cell_to_quadrant.set_origin(tile_set->map_to_local(r_cell_data.coords) - p_quadrant_pos);
 				rs->canvas_item_add_set_transform(p_canvas_item, cell_to_quadrant);
-				rs->canvas_item_add_circle(p_canvas_item, Vector2(), MIN(tile_set->get_tile_size().x, tile_set->get_tile_size().y) / 4.0, color);
+				rs->canvas_item_add_circle(p_canvas_item, Vector2(), Math::min(tile_set->get_tile_size().x, tile_set->get_tile_size().y) / 4.0, color);
 			}
 		}
 	}

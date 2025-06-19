@@ -156,13 +156,13 @@ void YuyvToRgbBufferDecoder::decode(StreamingBuffer p_buffer) {
 		int rg = (((u - 128) << 1) + (u - 128) + ((v - 128) << 2) + ((v - 128) << 1)) >> 3;
 		int v1 = (((v - 128) << 1) + (v - 128)) >> 1;
 
-		*dst++ = CLAMP(*y0_src + v1, 0, 255);
-		*dst++ = CLAMP(*y0_src - rg, 0, 255);
-		*dst++ = CLAMP(*y0_src + u1, 0, 255);
+		*dst++ = Math::clamp(*y0_src + v1, 0, 255);
+		*dst++ = Math::clamp(*y0_src - rg, 0, 255);
+		*dst++ = Math::clamp(*y0_src + u1, 0, 255);
 
-		*dst++ = CLAMP(*y1_src + v1, 0, 255);
-		*dst++ = CLAMP(*y1_src - rg, 0, 255);
-		*dst++ = CLAMP(*y1_src + u1, 0, 255);
+		*dst++ = Math::clamp(*y1_src + v1, 0, 255);
+		*dst++ = Math::clamp(*y1_src - rg, 0, 255);
+		*dst++ = Math::clamp(*y1_src + u1, 0, 255);
 
 		y0_src += 4;
 		y1_src += 4;

@@ -41,10 +41,10 @@ void EditorZoomWidget::_update_zoom_label() {
 	// lower the editor scale to increase the available real estate,
 	// even if their display doesn't have a particularly low DPI.
 	if (zoom >= 10) {
-		zoom_text = TS->format_number(rtos(Math::round((zoom / MAX(1, EDSCALE)) * 100)));
+		zoom_text = TS->format_number(rtos(Math::round((zoom / Math::max(1, EDSCALE)) * 100)));
 	} else {
 		// 2 decimal places if the zoom is below 10%, 1 decimal place if it's below 1000%.
-		zoom_text = TS->format_number(rtos(Math::snapped((zoom / MAX(1, EDSCALE)) * 100, (zoom >= 0.1) ? 0.1 : 0.01)));
+		zoom_text = TS->format_number(rtos(Math::snapped((zoom / Math::max(1, EDSCALE)) * 100, (zoom >= 0.1) ? 0.1 : 0.01)));
 	}
 	zoom_text += " " + TS->percent_sign();
 	zoom_reset->set_text(zoom_text);
@@ -56,7 +56,7 @@ void EditorZoomWidget::_button_zoom_minus() {
 }
 
 void EditorZoomWidget::_button_zoom_reset() {
-	set_zoom(1.0 * MAX(1, EDSCALE));
+	set_zoom(1.0 * Math::max(1, EDSCALE));
 	emit_signal(SNAME("zoom_changed"), zoom);
 }
 
@@ -70,7 +70,7 @@ float EditorZoomWidget::get_zoom() {
 }
 
 void EditorZoomWidget::set_zoom(float p_zoom) {
-	float new_zoom = CLAMP(p_zoom, min_zoom, max_zoom);
+	float new_zoom = Math::clamp(p_zoom, min_zoom, max_zoom);
 	if (zoom != new_zoom) {
 		zoom = new_zoom;
 		_update_zoom_label();
@@ -102,7 +102,7 @@ void EditorZoomWidget::setup_zoom_limits(float p_min, float p_max) {
 
 void EditorZoomWidget::set_zoom_by_increments(int p_increment_count, bool p_integer_only) {
 	// Remove editor scale from the index computation.
-	const float zoom_noscale = zoom / MAX(1, EDSCALE);
+	const float zoom_noscale = zoom / Math::max(1, EDSCALE);
 
 	if (p_integer_only) {
 		// Only visit integer scaling factors above 100%, and fractions with an integer denominator below 100%
@@ -114,10 +114,10 @@ void EditorZoomWidget::set_zoom_by_increments(int p_increment_count, bool p_inte
 			// New zoom is certain to be above 100%.
 			if (p_increment_count >= 1) {
 				// Zooming.
-				set_zoom(Math::floor(zoom_noscale + p_increment_count) * MAX(1, EDSCALE));
+				set_zoom(Math::floor(zoom_noscale + p_increment_count) * Math::max(1, EDSCALE));
 			} else {
 				// Dezooming.
-				set_zoom(Math::ceil(zoom_noscale + p_increment_count) * MAX(1, EDSCALE));
+				set_zoom(Math::ceil(zoom_noscale + p_increment_count) * Math::max(1, EDSCALE));
 			}
 		} else {
 			if (p_increment_count >= 1) {
@@ -128,7 +128,7 @@ void EditorZoomWidget::set_zoom_by_increments(int p_increment_count, bool p_inte
 					// This can happen due to floating-point precision issues.
 					new_zoom = 1.0 / Math::ceil(1.0 / zoom_noscale - p_increment_count - 1);
 				}
-				set_zoom(new_zoom * MAX(1, EDSCALE));
+				set_zoom(new_zoom * Math::max(1, EDSCALE));
 			} else {
 				// Zooming out. Convert the current zoom into a denominator.
 				float new_zoom = 1.0 / Math::floor(1.0 / zoom_noscale - p_increment_count);
@@ -137,7 +137,7 @@ void EditorZoomWidget::set_zoom_by_increments(int p_increment_count, bool p_inte
 					// This can happen due to floating-point precision issues.
 					new_zoom = 1.0 / Math::floor(1.0 / zoom_noscale - p_increment_count + 1);
 				}
-				set_zoom(new_zoom * MAX(1, EDSCALE));
+				set_zoom(new_zoom * Math::max(1, EDSCALE));
 			}
 		}
 	} else {
@@ -152,7 +152,7 @@ void EditorZoomWidget::set_zoom_by_increments(int p_increment_count, bool p_inte
 		float new_zoom = Math::pow(zoom_factor, current_zoom_step + p_increment_count);
 
 		// Restore Editor scale transformation.
-		new_zoom *= MAX(1, EDSCALE);
+		new_zoom *= Math::max(1, EDSCALE);
 
 		set_zoom(new_zoom);
 	}

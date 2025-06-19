@@ -88,7 +88,7 @@ public:
 			sum_squared_gains += r[speaker_num].squared_gain;
 		}
 
-		for (unsigned int speaker_num = 0; speaker_num < MIN(volume_count, (unsigned int)speakers.size()); speaker_num++) {
+		for (unsigned int speaker_num = 0; speaker_num < Math::min(volume_count, (unsigned int)speakers.size()); speaker_num++) {
 			volumes[speaker_num] = std::sqrt(r[speaker_num].squared_gain / sum_squared_gains);
 		}
 	}
@@ -151,9 +151,9 @@ void AudioStreamPlayer3D::_calc_output_vol(const Vector3 &source_dir, real_t tig
 // See https://github.com/godotengine/godot/issues/103989 for evidence that this is the most standard implementation.
 AudioFrame AudioStreamPlayer3D::_calc_output_vol_stereo(const Vector3 &source_dir, real_t panning_strength) {
 	double flatrad = sqrt(source_dir.x * source_dir.x + source_dir.z * source_dir.z);
-	double g = CLAMP((1.0 - panning_strength) * (1.0 - panning_strength), 0.0, 1.0);
+	double g = Math::clamp((1.0 - panning_strength) * (1.0 - panning_strength), 0.0, 1.0);
 	double f = (1.0 - g) / (1.0 + g);
-	double cosx = CLAMP(source_dir.x / (flatrad == 0.0 ? 1.0 : flatrad), -1.0, 1.0);
+	double cosx = Math::clamp(source_dir.x / (flatrad == 0.0 ? 1.0 : flatrad), -1.0, 1.0);
 	double fcosx = cosx * f;
 	return AudioFrame(sqrt((-fcosx + 1.0) / 2.0), sqrt((fcosx + 1.0) / 2.0));
 }
@@ -426,7 +426,7 @@ Vector<AudioFrame> AudioStreamPlayer3D::_update_panning() {
 
 #ifndef PHYSICS_3D_DISABLED
 			if (area && area->is_using_reverb_bus() && area->get_reverb_uniformity() > 0) {
-				total_max = MAX(total_max, listener_area_pos.length());
+				total_max = Math::max(total_max, listener_area_pos.length());
 			}
 #endif // PHYSICS_3D_DISABLED
 			if (dist > total_max || total_max > max_distance) {
@@ -445,10 +445,10 @@ Vector<AudioFrame> AudioStreamPlayer3D::_update_panning() {
 
 		float multiplier = Math::db_to_linear(_get_attenuation_db(dist));
 		if (max_distance > 0) {
-			multiplier *= MAX(0, 1.0 - (dist / max_distance));
+			multiplier *= Math::max(0, 1.0 - (dist / max_distance));
 		}
 
-		float db_att = (1.0 - MIN(1.0, multiplier)) * attenuation_filter_db;
+		float db_att = (1.0 - Math::min(1.0, multiplier)) * attenuation_filter_db;
 
 		if (emission_angle_enabled) {
 			Vector3 listenertopos = global_pos - listener_node->get_global_transform().origin;
@@ -519,7 +519,7 @@ Vector<AudioFrame> AudioStreamPlayer3D::_update_panning() {
 				float speed_of_sound = 343.0;
 
 				float doppler_pitch_scale = internal->pitch_scale * speed_of_sound / (speed_of_sound + velocity * approaching);
-				doppler_pitch_scale = CLAMP(doppler_pitch_scale, (1 / 8.0), 8.0); //avoid crazy stuff
+				doppler_pitch_scale = Math::clamp(doppler_pitch_scale, (1 / 8.0), 8.0); //avoid crazy stuff
 
 				actual_pitch_scale = doppler_pitch_scale;
 			} else {

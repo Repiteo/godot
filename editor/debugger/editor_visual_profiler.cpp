@@ -78,7 +78,7 @@ void EditorVisualProfiler::add_frame_metric(const Metric &p_metric) {
 	updating_frame = true;
 	clear_button->set_disabled(false);
 	cursor_metric_edit->set_max(frame_metrics[last_metric].frame_number);
-	cursor_metric_edit->set_min(MAX(int64_t(frame_metrics[last_metric].frame_number) - frame_metrics.size(), 0));
+	cursor_metric_edit->set_min(Math::max(int64_t(frame_metrics[last_metric].frame_number) - frame_metrics.size(), 0));
 
 	if (!seeking) {
 		cursor_metric_edit->set_value(frame_metrics[last_metric].frame_number);
@@ -104,14 +104,14 @@ void EditorVisualProfiler::add_frame_metric(const Metric &p_metric) {
 
 void EditorVisualProfiler::clear() {
 	int metric_size = EDITOR_GET("debugger/profiler_frame_history_size");
-	metric_size = CLAMP(metric_size, 60, 10000);
+	metric_size = Math::clamp(metric_size, 60, 10000);
 	frame_metrics.clear();
 	frame_metrics.resize(metric_size);
 	last_metric = -1;
 	variables->clear();
 	//activate->set_pressed(false);
 
-	graph_limit = 1000.0f / CLAMP(int(EDITOR_GET("debugger/profiler_target_fps")), 1, 1000);
+	graph_limit = 1000.0f / Math::clamp(int(EDITOR_GET("debugger/profiler_target_fps")), 1, 1000);
 
 	updating_frame = true;
 	cursor_metric_edit->set_min(0);
@@ -191,19 +191,19 @@ void EditorVisualProfiler::_update_plot() {
 		}
 
 		if (m.areas.size()) {
-			highest_cpu = MAX(highest_cpu, m.areas[m.areas.size() - 1].cpu_time);
-			highest_gpu = MAX(highest_gpu, m.areas[m.areas.size() - 1].gpu_time);
+			highest_cpu = Math::max(highest_cpu, m.areas[m.areas.size() - 1].cpu_time);
+			highest_gpu = Math::max(highest_gpu, m.areas[m.areas.size() - 1].gpu_time);
 		}
 	}
 
 	if (highest_cpu > 0 || highest_gpu > 0) {
 		if (frame_relative->is_pressed()) {
-			highest_cpu = MAX(graph_limit, highest_cpu);
-			highest_gpu = MAX(graph_limit, highest_gpu);
+			highest_cpu = Math::max(graph_limit, highest_cpu);
+			highest_gpu = Math::max(graph_limit, highest_gpu);
 		}
 
 		if (linked->is_pressed()) {
-			float highest = MAX(highest_cpu, highest_gpu);
+			float highest = Math::max(highest_cpu, highest_gpu);
 			highest_cpu = highest_gpu = highest;
 		}
 
@@ -250,7 +250,7 @@ void EditorVisualProfiler::_update_plot() {
 				int prev_gpu = 0;
 				for (int k = 1; k < area_count; k++) {
 					int ofs_cpu = int(areas[k].cpu_time * h / highest_cpu);
-					ofs_cpu = CLAMP(ofs_cpu, 0, h - 1);
+					ofs_cpu = Math::clamp(ofs_cpu, 0, h - 1);
 					Color color = selected_area == areas[k - 1].fullpath_cache ? Color(1, 1, 1, 1) : areas[k - 1].color_cache;
 
 					for (int l = prev_cpu; l < ofs_cpu; l++) {
@@ -259,7 +259,7 @@ void EditorVisualProfiler::_update_plot() {
 					prev_cpu = ofs_cpu;
 
 					int ofs_gpu = int(areas[k].gpu_time * h / highest_gpu);
-					ofs_gpu = CLAMP(ofs_gpu, 0, h - 1);
+					ofs_gpu = Math::clamp(ofs_gpu, 0, h - 1);
 					for (int l = prev_gpu; l < ofs_gpu; l++) {
 						column_gpu[h - l - 1] += color;
 					}
@@ -277,9 +277,9 @@ void EditorVisualProfiler::_update_plot() {
 					g = Math::fast_ftoi(background_color.g * 255);
 					b = Math::fast_ftoi(background_color.b * 255);
 				} else {
-					r = CLAMP((column_cpu[j].r / column_cpu[j].a) * 255.0, 0, 255);
-					g = CLAMP((column_cpu[j].g / column_cpu[j].a) * 255.0, 0, 255);
-					b = CLAMP((column_cpu[j].b / column_cpu[j].a) * 255.0, 0, 255);
+					r = Math::clamp((column_cpu[j].r / column_cpu[j].a) * 255.0, 0, 255);
+					g = Math::clamp((column_cpu[j].g / column_cpu[j].a) * 255.0, 0, 255);
+					b = Math::clamp((column_cpu[j].b / column_cpu[j].a) * 255.0, 0, 255);
 				}
 
 				int widx = (j * w + i) * 4;
@@ -297,9 +297,9 @@ void EditorVisualProfiler::_update_plot() {
 					g = Math::fast_ftoi(background_color.g * 255);
 					b = Math::fast_ftoi(background_color.b * 255);
 				} else {
-					r = CLAMP((column_gpu[j].r / column_gpu[j].a) * 255.0, 0, 255);
-					g = CLAMP((column_gpu[j].g / column_gpu[j].a) * 255.0, 0, 255);
-					b = CLAMP((column_gpu[j].b / column_gpu[j].a) * 255.0, 0, 255);
+					r = Math::clamp((column_gpu[j].r / column_gpu[j].a) * 255.0, 0, 255);
+					g = Math::clamp((column_gpu[j].g / column_gpu[j].a) * 255.0, 0, 255);
+					b = Math::clamp((column_gpu[j].b / column_gpu[j].a) * 255.0, 0, 255);
 				}
 
 				int widx = (j * w + w / 2 + i) * 4;
@@ -843,10 +843,10 @@ EditorVisualProfiler::EditorVisualProfiler() {
 	h_split->add_child(graph);
 	graph->set_h_size_flags(SIZE_EXPAND_FILL);
 
-	int metric_size = CLAMP(int(EDITOR_GET("debugger/profiler_frame_history_size")), 60, 10000);
+	int metric_size = Math::clamp(int(EDITOR_GET("debugger/profiler_frame_history_size")), 60, 10000);
 	frame_metrics.resize(metric_size);
 
-	graph_limit = 1000.0f / CLAMP(int(EDITOR_GET("debugger/profiler_target_fps")), 1, 1000);
+	graph_limit = 1000.0f / Math::clamp(int(EDITOR_GET("debugger/profiler_target_fps")), 1, 1000);
 
 	frame_delay = memnew(Timer);
 	frame_delay->set_wait_time(0.1);

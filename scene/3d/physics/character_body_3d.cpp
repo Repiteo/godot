@@ -225,7 +225,7 @@ void CharacterBody3D::_move_and_slide_grounded(double p_delta, bool p_was_on_flo
 							// Cancel the motion.
 							Transform3D gt = get_global_transform();
 							real_t travel_total = result.travel.length();
-							real_t cancel_dist_max = MIN(0.1, margin * 20);
+							real_t cancel_dist_max = Math::min(0.1, margin * 20);
 							if (travel_total <= margin + CMP_EPSILON) {
 								gt.origin -= result.travel;
 								result.travel = Vector3(); // Cancel for constant speed computation.
@@ -354,7 +354,7 @@ void CharacterBody3D::_move_and_slide_grounded(double p_delta, bool p_was_on_flo
 			// Apply Constant Speed.
 			if (p_was_on_floor && floor_constant_speed && can_apply_constant_speed && collision_state.floor && !motion.is_zero_approx()) {
 				Vector3 travel_slide_up = total_travel.slide(up_direction);
-				motion = motion.normalized() * MAX(0, (motion_slide_up.length() - travel_slide_up.length()));
+				motion = motion.normalized() * Math::max(0, (motion_slide_up.length() - travel_slide_up.length()));
 			}
 		}
 		// When you move forward in a downward slope you don’t collide because you will be in the air.
@@ -455,7 +455,7 @@ void CharacterBody3D::apply_floor_snap() {
 	}
 
 	// Snap by at least collision margin to keep floor state consistent.
-	real_t length = MAX(floor_snap_length, margin);
+	real_t length = Math::max(floor_snap_length, margin);
 
 	PhysicsServer3D::MotionParameters parameters(get_global_transform(), -up_direction * length, margin);
 	parameters.max_collisions = 4;
@@ -499,7 +499,7 @@ bool CharacterBody3D::_on_floor_if_snapped(bool p_was_on_floor, bool p_vel_dir_f
 	}
 
 	// Snap by at least collision margin to keep floor state consistent.
-	real_t length = MAX(floor_snap_length, margin);
+	real_t length = Math::max(floor_snap_length, margin);
 
 	PhysicsServer3D::MotionParameters parameters(get_global_transform(), -up_direction * length, margin);
 	parameters.max_collisions = 4;

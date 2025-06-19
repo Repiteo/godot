@@ -122,8 +122,8 @@ int32_t _logic_balance(int32_t iA, uint32_t p_tree_id) {
 			A->aabb = _logic_abb_merge(B->aabb, G->aabb);
 			C->aabb = _logic_abb_merge(A->aabb, F->aabb);
 
-			A->height = 1 + MAX(B->height, G->height);
-			C->height = 1 + MAX(A->height, F->height);
+			A->height = 1 + Math::max(B->height, G->height);
+			C->height = 1 + Math::max(A->height, F->height);
 		}
 
 		else {
@@ -133,8 +133,8 @@ int32_t _logic_balance(int32_t iA, uint32_t p_tree_id) {
 			A->aabb = _logic_abb_merge(B->aabb, F->aabb);
 			C->aabb = _logic_abb_merge(A->aabb, G->aabb);
 
-			A->height = 1 + MAX(B->height, F->height);
-			C->height = 1 + MAX(A->height, G->height);
+			A->height = 1 + Math::max(B->height, F->height);
+			C->height = 1 + Math::max(A->height, G->height);
 		}
 
 		return iC;
@@ -174,8 +174,8 @@ int32_t _logic_balance(int32_t iA, uint32_t p_tree_id) {
 			A->aabb = _logic_abb_merge(C->aabb, E->aabb);
 			B->aabb = _logic_abb_merge(A->aabb, D->aabb);
 
-			A->height = 1 + MAX(C->height, E->height);
-			B->height = 1 + MAX(A->height, D->height);
+			A->height = 1 + Math::max(C->height, E->height);
+			B->height = 1 + Math::max(A->height, D->height);
 		}
 
 		else {
@@ -185,8 +185,8 @@ int32_t _logic_balance(int32_t iA, uint32_t p_tree_id) {
 			A->aabb = _logic_abb_merge(C->aabb, D->aabb);
 			B->aabb = _logic_abb_merge(A->aabb, E->aabb);
 
-			A->height = 1 + MAX(C->height, D->height);
-			B->height = 1 + MAX(A->height, E->height);
+			A->height = 1 + Math::max(C->height, D->height);
+			B->height = 1 + Math::max(A->height, E->height);
 		}
 
 		return iB;

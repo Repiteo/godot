@@ -258,8 +258,8 @@ private:
 			}
 		}
 		for (int64_t type_i = 0; type_i < p_element_count; type_i++) {
-			p_type_max.write[type_i] = MAX(p_attribs[(p_i * p_element_count) + type_i], p_type_max[type_i]);
-			p_type_min.write[type_i] = MIN(p_attribs[(p_i * p_element_count) + type_i], p_type_min[type_i]);
+			p_type_max.write[type_i] = Math::max(p_attribs[(p_i * p_element_count) + type_i], p_type_max[type_i]);
+			p_type_min.write[type_i] = Math::min(p_attribs[(p_i * p_element_count) + type_i], p_type_min[type_i]);
 			p_type_max.write[type_i] = _filter_number(p_type_max.write[type_i]);
 			p_type_min.write[type_i] = _filter_number(p_type_min.write[type_i]);
 		}

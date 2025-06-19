@@ -823,7 +823,7 @@ bool LightStorage::reflection_probe_instance_begin_render(RID p_instance, RID p_
 	if (atlas->depth == 0) {
 		// We need to create our textures
 		atlas->mipmap_count = Image::get_image_required_mipmaps(atlas->size, atlas->size, Image::FORMAT_RGBAH) - 1;
-		atlas->mipmap_count = MIN(atlas->mipmap_count, 8); // No more than 8 please..
+		atlas->mipmap_count = Math::min(atlas->mipmap_count, 8); // No more than 8 please..
 
 		glActiveTexture(GL_TEXTURE0);
 
@@ -874,7 +874,7 @@ bool LightStorage::reflection_probe_instance_begin_render(RID p_instance, RID p_
 			for (int m = 0; m < atlas->mipmap_count; m++) {
 				atlas->mipmap_size[m] = mipmap_size;
 				data_size += mipmap_size * mipmap_size * 6 * 4;
-				mipmap_size = MAX(mipmap_size >> 1, 1);
+				mipmap_size = Math::max(mipmap_size >> 1, 1);
 			}
 
 			GLES3::Utilities::get_singleton()->texture_allocated_data(color, data_size, String("Reflection probe atlas (") + String::num_int64(i) + String(", color)"));
@@ -1189,7 +1189,7 @@ void LightStorage::lightmap_tap_sh_light(RID p_lightmap, const Vector3 &p_point,
 	Color barycentric = Geometry3D::tetrahedron_get_barycentric_coords(points[0], points[1], points[2], points[3], p_point);
 
 	for (int i = 0; i < 4; i++) {
-		float c = CLAMP(barycentric[i], 0.0, 1.0);
+		float c = Math::clamp(barycentric[i], 0.0, 1.0);
 		for (int j = 0; j < 9; j++) {
 			r_sh[j] += sh_colors[i][j] * c;
 		}
@@ -1356,7 +1356,7 @@ void LightStorage::shadow_atlas_set_quadrant_subdivision(RID p_atlas, int p_quad
 
 	for (int i = 0; i < 4; i++) {
 		if (shadow_atlas->quadrants[i].subdivision) {
-			shadow_atlas->smallest_subdiv = MIN(shadow_atlas->smallest_subdiv, shadow_atlas->quadrants[i].subdivision);
+			shadow_atlas->smallest_subdiv = Math::min(shadow_atlas->smallest_subdiv, shadow_atlas->quadrants[i].subdivision);
 		}
 	}
 
@@ -1391,7 +1391,7 @@ bool LightStorage::shadow_atlas_update_light(RID p_atlas, RID p_light_instance, 
 	}
 
 	uint32_t quad_size = shadow_atlas->size >> 1;
-	int desired_fit = MIN(quad_size / shadow_atlas->smallest_subdiv, next_power_of_2(uint32_t(quad_size * p_coverage)));
+	int desired_fit = Math::min(quad_size / shadow_atlas->smallest_subdiv, next_power_of_2(uint32_t(quad_size * p_coverage)));
 
 	int valid_quadrants[4];
 	int valid_quadrant_count = 0;
@@ -1727,7 +1727,7 @@ int LightStorage::get_directional_light_shadow_size(RID p_light_instance) {
 			break;
 	}
 
-	return MAX(r.size.width, r.size.height);
+	return Math::max(r.size.width, r.size.height);
 }
 
 #endif // !GLES3_ENABLED

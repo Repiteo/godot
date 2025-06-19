@@ -442,7 +442,7 @@ public:
 				c = n;
 			}
 			{
-				uint32_t cbc = MIN((current_block + 1), (uint32_t)blocks.size());
+				uint32_t cbc = Math::min((current_block + 1), (uint32_t)blocks.size());
 				CommandBlock *blockptr = blocks.ptrw();
 				for (uint32_t i = 0; i < cbc; i++) {
 					blockptr[i].usage = 0;

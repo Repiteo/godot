@@ -382,7 +382,7 @@ class GDScriptByteCodeGenerator : public GDScriptCodeGenerator {
 	void append_opcode_and_argcount(GDScriptFunction::Opcode p_code, int p_argument_count) {
 		opcodes.push_back(p_code);
 		opcodes.push_back(p_argument_count);
-		instr_args_max = MAX(instr_args_max, p_argument_count);
+		instr_args_max = Math::max(instr_args_max, p_argument_count);
 	}
 
 	void append(int p_code) {

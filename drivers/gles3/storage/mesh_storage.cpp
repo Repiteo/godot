@@ -1568,7 +1568,7 @@ void MeshStorage::_multimesh_allocate_data(RID p_multimesh, int p_instances, RS:
 	multimesh->data_cache = Vector<float>();
 	multimesh->aabb = AABB();
 	multimesh->aabb_dirty = false;
-	multimesh->visible_instances = MIN(multimesh->visible_instances, multimesh->instances);
+	multimesh->visible_instances = Math::min(multimesh->visible_instances, multimesh->instances);
 
 	if (multimesh->instances) {
 		glGenBuffers(1, &multimesh->buffer);
@@ -2189,7 +2189,7 @@ void MeshStorage::_update_dirty_multimeshes() {
 				if (multimesh->data_cache_used_dirty_regions > 32 || multimesh->data_cache_used_dirty_regions > visible_region_count / 2) {
 					// If there too many dirty regions, or represent the majority of regions, just copy all, else transfer cost piles up too much
 					glBindBuffer(GL_ARRAY_BUFFER, multimesh->buffer);
-					glBufferSubData(GL_ARRAY_BUFFER, 0, MIN(visible_region_count * region_size, multimesh->instances * multimesh->stride_cache * sizeof(float)), data);
+					glBufferSubData(GL_ARRAY_BUFFER, 0, Math::min(visible_region_count * region_size, multimesh->instances * multimesh->stride_cache * sizeof(float)), data);
 					glBindBuffer(GL_ARRAY_BUFFER, 0);
 				} else {
 					// Not that many regions? update them all
@@ -2200,7 +2200,7 @@ void MeshStorage::_update_dirty_multimeshes() {
 							GLint offset = i * region_size;
 							GLint size = multimesh->stride_cache * (uint32_t)multimesh->instances * (uint32_t)sizeof(float);
 							uint32_t region_start_index = multimesh->stride_cache * MULTIMESH_DIRTY_REGION_SIZE * i;
-							glBufferSubData(GL_ARRAY_BUFFER, offset, MIN(region_size, size - offset), &data[region_start_index]);
+							glBufferSubData(GL_ARRAY_BUFFER, offset, Math::min(region_size, size - offset), &data[region_start_index]);
 						}
 					}
 					glBindBuffer(GL_ARRAY_BUFFER, 0);

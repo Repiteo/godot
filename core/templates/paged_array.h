@@ -30,6 +30,7 @@
 
 #pragma once
 
+#include "core/math/math_funcs.h"
 #include "core/os/memory.h"
 #include "core/os/spin_lock.h"
 #include "core/typedefs.h"
@@ -300,7 +301,7 @@ public:
 			page_data[page_count] = p_array.page_data[src_page_index];
 			page_ids[page_count] = p_array.page_ids[src_page_index];
 
-			uint32_t take = MIN(p_array.count, page_size); //pages to take away
+			uint32_t take = Math::min(p_array.count, page_size); //pages to take away
 			p_array.count -= take;
 			count += take;
 			src_page_index++;
@@ -314,7 +315,7 @@ public:
 				//must merge old remainder with new remainder
 
 				T *dst_page = page_data[_get_pages_in_use() - 1];
-				uint32_t to_copy = MIN(page_size - new_remainder, remainder);
+				uint32_t to_copy = Math::min(page_size - new_remainder, remainder);
 
 				for (uint32_t i = 0; i < to_copy; i++) {
 					if constexpr (!std::is_trivially_constructible_v<T>) {

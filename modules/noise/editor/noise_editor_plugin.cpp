@@ -102,7 +102,7 @@ private:
 	}
 
 	void update_preview() {
-		if (MIN(_preview_texture_size.width, _preview_texture_size.height) > 0) {
+		if (Math::min(_preview_texture_size.width, _preview_texture_size.height) > 0) {
 			Ref<NoiseTexture2D> tex;
 			tex.instantiate();
 			tex->set_width(_preview_texture_size.width);

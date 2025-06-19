@@ -1671,7 +1671,7 @@ void EditorPropertyEasing::_drag_easing(const Ref<InputEvent> &p_ev) {
 
 		// Limit to a reasonable value to prevent the curve going into infinity,
 		// which can cause crashes and other issues.
-		val = CLAMP(val, -1'000'000, 1'000'000);
+		val = Math::clamp(val, -1'000'000, 1'000'000);
 
 		emit_changed(get_edited_property(), val);
 		easing_draw->queue_redraw();
@@ -1751,11 +1751,11 @@ void EditorPropertyEasing::_spin_value_changed(double p_value) {
 
 	// Limit to a reasonable value to prevent the curve going into infinity,
 	// which can cause crashes and other issues.
-	p_value = CLAMP(p_value, -1'000'000, 1'000'000);
+	p_value = Math::clamp(p_value, -1'000'000, 1'000'000);
 
 	if (positive_only) {
 		// Force a positive or zero value if a negative value was manually entered by double-clicking.
-		p_value = MAX(0.0, p_value);
+		p_value = Math::max(0.0, p_value);
 	}
 
 	emit_changed(get_edited_property(), p_value);

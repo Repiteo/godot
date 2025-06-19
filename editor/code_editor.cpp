@@ -1373,7 +1373,7 @@ void CodeTextEditor::toggle_inline_comment(const String &delimiter) {
 void CodeTextEditor::goto_line(int p_line, int p_column) {
 	text_editor->remove_secondary_carets();
 	text_editor->deselect();
-	text_editor->unfold_line(CLAMP(p_line, 0, text_editor->get_line_count() - 1));
+	text_editor->unfold_line(Math::clamp(p_line, 0, text_editor->get_line_count() - 1));
 	text_editor->set_caret_line(p_line, false);
 	text_editor->set_caret_column(p_column, false);
 	text_editor->set_code_hint("");
@@ -1384,7 +1384,7 @@ void CodeTextEditor::goto_line(int p_line, int p_column) {
 
 void CodeTextEditor::goto_line_selection(int p_line, int p_begin, int p_end) {
 	text_editor->remove_secondary_carets();
-	text_editor->unfold_line(CLAMP(p_line, 0, text_editor->get_line_count() - 1));
+	text_editor->unfold_line(Math::clamp(p_line, 0, text_editor->get_line_count() - 1));
 	text_editor->select(p_line, p_begin, p_line, p_end);
 	text_editor->set_code_hint("");
 	text_editor->cancel_code_completion();
@@ -1394,7 +1394,7 @@ void CodeTextEditor::goto_line_selection(int p_line, int p_begin, int p_end) {
 void CodeTextEditor::goto_line_centered(int p_line, int p_column) {
 	text_editor->remove_secondary_carets();
 	text_editor->deselect();
-	text_editor->unfold_line(CLAMP(p_line, 0, text_editor->get_line_count() - 1));
+	text_editor->unfold_line(Math::clamp(p_line, 0, text_editor->get_line_count() - 1));
 	text_editor->set_caret_line(p_line, false);
 	text_editor->set_caret_column(p_column, false);
 	text_editor->set_code_hint("");
@@ -1540,7 +1540,7 @@ void CodeTextEditor::_update_error_content_height() {
 		content_max_height += error->get_line_height(i);
 	}
 
-	error->set_custom_minimum_size(Size2(0, CLAMP(content_height, 0, content_max_height)));
+	error->set_custom_minimum_size(Size2(0, Math::clamp(content_height, 0, content_max_height)));
 }
 
 void CodeTextEditor::set_error_pos(int p_line, int p_column) {
@@ -1818,12 +1818,12 @@ void CodeTextEditor::remove_all_bookmarks() {
 
 void CodeTextEditor::_zoom_in() {
 	int s = text_editor->get_theme_font_size(SceneStringName(font_size));
-	_zoom_to(zoom_factor * (s + MAX(1.0f, EDSCALE)) / s);
+	_zoom_to(zoom_factor * (s + Math::max(1.0f, EDSCALE)) / s);
 }
 
 void CodeTextEditor::_zoom_out() {
 	int s = text_editor->get_theme_font_size(SceneStringName(font_size));
-	_zoom_to(zoom_factor * (s - MAX(1.0f, EDSCALE)) / s);
+	_zoom_to(zoom_factor * (s - Math::max(1.0f, EDSCALE)) / s);
 }
 
 void CodeTextEditor::_zoom_to(float p_zoom_factor) {
@@ -1841,7 +1841,7 @@ void CodeTextEditor::_zoom_to(float p_zoom_factor) {
 }
 
 void CodeTextEditor::set_zoom_factor(float p_zoom_factor) {
-	zoom_factor = CLAMP(p_zoom_factor, 0.25f, 3.0f);
+	zoom_factor = Math::clamp(p_zoom_factor, 0.25f, 3.0f);
 	int neutral_font_size = int(EDITOR_GET("interface/editor/code_font_size")) * EDSCALE;
 	int new_font_size = Math::round(zoom_factor * neutral_font_size);
 

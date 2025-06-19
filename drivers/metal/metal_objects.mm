@@ -717,8 +717,8 @@ void MDCommandBuffer::render_next_subpass() {
 		}
 	}
 
-	desc.renderTargetWidth = MAX((NSUInteger)MIN(render.render_area.position.x + render.render_area.size.width, fb.size.width), 1u);
-	desc.renderTargetHeight = MAX((NSUInteger)MIN(render.render_area.position.y + render.render_area.size.height, fb.size.height), 1u);
+	desc.renderTargetWidth = Math::max((NSUInteger)Math::min(render.render_area.position.x + render.render_area.size.width, fb.size.width), 1u);
+	desc.renderTargetHeight = Math::max((NSUInteger)Math::min(render.render_area.position.y + render.render_area.size.height, fb.size.height), 1u);
 
 	if (attachmentCount == 0) {
 		// If there are no attachments, delay the creation of the encoder,
@@ -1097,7 +1097,7 @@ void MDUniformSet::bind_uniforms_direct(MDShader *p_shader, MDCommandBuffer::Ren
 
 	UniformSet const &set = p_shader->sets[p_set_index];
 
-	for (uint32_t i = 0; i < MIN(uniforms.size(), set.uniforms.size()); i++) {
+	for (uint32_t i = 0; i < Math::min(uniforms.size(), set.uniforms.size()); i++) {
 		RDD::BoundUniform const &uniform = uniforms[i];
 		const UniformInfo &ui = set.uniforms[i];
 
@@ -1635,8 +1635,8 @@ void MDAttachment::linkToSubpass(const MDRenderPass &p_pass) {
 	for (MDSubpass const &subpass : p_pass.subpasses) {
 		MTLFmtCaps reqCaps = subpass.getRequiredFmtCapsForAttachmentAt(index);
 		if (reqCaps) {
-			firstUseSubpassIndex = MIN(subpass.subpass_index, firstUseSubpassIndex);
-			lastUseSubpassIndex = MAX(subpass.subpass_index, lastUseSubpassIndex);
+			firstUseSubpassIndex = Math::min(subpass.subpass_index, firstUseSubpassIndex);
+			lastUseSubpassIndex = Math::max(subpass.subpass_index, lastUseSubpassIndex);
 		}
 	}
 }

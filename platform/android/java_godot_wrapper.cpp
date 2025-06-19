@@ -458,7 +458,7 @@ void GodotJavaWrapper::vibrate(int p_duration_ms, float p_amplitude) {
 		int j_amplitude = -1.0;
 
 		if (p_amplitude != -1.0) {
-			j_amplitude = CLAMP(int(p_amplitude * 255), 1, 255);
+			j_amplitude = Math::clamp(int(p_amplitude * 255), 1, 255);
 		}
 
 		env->CallVoidMethod(godot_instance, _vibrate, p_duration_ms, j_amplitude);

@@ -1232,9 +1232,9 @@ TextureRegionEditor::TextureRegionEditor() {
 	sb_sep_y->set_value(snap_separation.y);
 
 	// Default the zoom to match the editor scale, but don't dezoom on editor scales below 100% to prevent pixel art from looking bad.
-	draw_zoom = MAX(1.0f, EDSCALE);
-	max_draw_zoom = 128.0f * MAX(1.0f, EDSCALE);
-	min_draw_zoom = 0.01f * MAX(1.0f, EDSCALE);
+	draw_zoom = Math::max(1.0f, EDSCALE);
+	max_draw_zoom = 128.0f * Math::max(1.0f, EDSCALE);
+	min_draw_zoom = 0.01f * Math::max(1.0f, EDSCALE);
 
 	texture_preview = memnew(PanelContainer);
 	vb->add_child(texture_preview);

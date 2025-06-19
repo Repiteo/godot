@@ -272,7 +272,7 @@ void image_compress_cvtt(Image *p_image, Image::UsedChannels p_channels) {
 			out_bytes += 16 * (bw / 4);
 		}
 
-		dst_ofs += (MAX(4, bw) * MAX(4, bh)) >> shift;
+		dst_ofs += (Math::max(4, bw) * Math::max(4, bh)) >> shift;
 	}
 
 	const CVTTCompressionRowTask *tasks_rb = tasks.ptr();

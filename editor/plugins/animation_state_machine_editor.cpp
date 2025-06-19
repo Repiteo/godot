@@ -460,14 +460,14 @@ void AnimationNodeStateMachineEditor::_state_machine_gui_input(const Ref<InputEv
 				Vector2 npos = state_machine->get_node_position(E);
 
 				float d_x = Math::abs(npos.x - cpos.x);
-				if (d_x < MIN(5, best_d_x)) {
+				if (d_x < Math::min(5, best_d_x)) {
 					drag_ofs.x -= cpos.x - npos.x;
 					best_d_x = d_x;
 					snap_x = E;
 				}
 
 				float d_y = Math::abs(npos.y - cpos.y);
-				if (d_y < MIN(5, best_d_y)) {
+				if (d_y < Math::min(5, best_d_y)) {
 					drag_ofs.y -= cpos.y - npos.y;
 					best_d_y = d_y;
 					snap_y = E;
@@ -988,7 +988,7 @@ void AnimationNodeStateMachineEditor::_state_machine_draw() {
 
 		Size2 s = (is_selected ? theme_cache.node_frame_selected : theme_cache.node_frame)->get_minimum_size();
 		s.width += name_string_size;
-		s.height += MAX(theme_cache.node_title_font->get_height(theme_cache.node_title_font_size), theme_cache.play_node->get_height());
+		s.height += Math::max(theme_cache.node_title_font->get_height(theme_cache.node_title_font_size), theme_cache.play_node->get_height());
 		s.width += sep + theme_cache.play_node->get_width();
 
 		if (needs_editor) {
@@ -1090,7 +1090,7 @@ void AnimationNodeStateMachineEditor::_state_machine_draw() {
 
 		if (blend_from == tl.from_node && current == tl.to_node) {
 			tl.travel = true;
-			tl.fade_ratio = MIN(1.0, fading_pos / fading_time);
+			tl.fade_ratio = Math::min(1.0, fading_pos / fading_time);
 		}
 
 		if (travel_path.size()) {
@@ -1331,15 +1331,15 @@ void AnimationNodeStateMachineEditor::_state_machine_pos_draw_all() {
 	}
 
 	{
-		float len = MAX(0.0001, current_length);
-		float pos = CLAMP(current_play_pos, 0, len);
+		float len = Math::max(0.0001, current_length);
+		float pos = Math::clamp(current_play_pos, 0, len);
 		float c = pos / len;
 		_state_machine_pos_draw_individual(playback->get_current_node(), c);
 	}
 
 	{
-		float len = MAX(0.0001, fade_from_length);
-		float pos = CLAMP(fade_from_current_play_pos, 0, len);
+		float len = Math::max(0.0001, fade_from_length);
+		float pos = Math::clamp(fade_from_current_play_pos, 0, len);
 		float c = pos / len;
 		_state_machine_pos_draw_individual(playback->get_fading_from_node(), c);
 	}

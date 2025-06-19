@@ -151,7 +151,7 @@ uint64_t PluginConfigAppleEmbedded::get_plugin_modification_time(const PluginCon
 	uint64_t last_updated = FileAccess::get_modified_time(config_path);
 
 	if (!plugin_config.supports_targets) {
-		last_updated = MAX(last_updated, FileAccess::get_modified_time(plugin_config.binary));
+		last_updated = Math::max(last_updated, FileAccess::get_modified_time(plugin_config.binary));
 	} else {
 		String file_path = plugin_config.binary.get_base_dir();
 		String file_name = plugin_config.binary.get_basename().get_file();
@@ -159,8 +159,8 @@ uint64_t PluginConfigAppleEmbedded::get_plugin_modification_time(const PluginCon
 		String release_file_name = file_path.path_join(file_name + ".release." + plugin_extension);
 		String debug_file_name = file_path.path_join(file_name + ".debug." + plugin_extension);
 
-		last_updated = MAX(last_updated, FileAccess::get_modified_time(release_file_name));
-		last_updated = MAX(last_updated, FileAccess::get_modified_time(debug_file_name));
+		last_updated = Math::max(last_updated, FileAccess::get_modified_time(release_file_name));
+		last_updated = Math::max(last_updated, FileAccess::get_modified_time(debug_file_name));
 	}
 
 	return last_updated;

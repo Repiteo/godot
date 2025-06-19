@@ -160,7 +160,7 @@ void AudioStreamPlayer3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 			// sound can't be heard in *most* (but not all) scenarios.
 			float radius = player->get_unit_size() * soft_multiplier;
 			if (player->get_max_distance() > CMP_EPSILON) {
-				radius = MIN(radius, player->get_max_distance());
+				radius = Math::min(radius, player->get_max_distance());
 			}
 
 #define PUSH_QUARTER_XY(m_from_x, m_from_y, m_to_x, m_to_y, m_y)   \

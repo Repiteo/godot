@@ -1070,7 +1070,7 @@ bool Viewport::_set_size(const Size2i &p_size, const Size2 &p_size_2d_override, 
 
 		if (use_font_oversampling) {
 			if (font_oversampling_override <= 0.0) {
-				new_font_oversampling = MAX(scale.x, scale.y);
+				new_font_oversampling = Math::max(scale.x, scale.y);
 			} else {
 				new_font_oversampling = font_oversampling_override;
 			}
@@ -1663,7 +1663,7 @@ void Viewport::_gui_show_tooltip_at(const Point2i &p_pos) {
 		window = gui.tooltip_popup->get_parent_visible_window();
 	}
 	Size2 scale = get_popup_base_transform().get_scale();
-	real_t popup_scale = MIN(scale.x, scale.y);
+	real_t popup_scale = Math::min(scale.x, scale.y);
 	Point2 tooltip_offset = GLOBAL_GET_CACHED(Point2, "display/mouse_cursor/tooltip_position_offset");
 	tooltip_offset *= popup_scale;
 	Rect2 r(gui.tooltip_pos + tooltip_offset, gui.tooltip_popup->get_contents_minimum_size());
@@ -2901,50 +2901,50 @@ bool Viewport::_sub_windows_forward_input(const Ref<InputEvent> &p_event) {
 
 				switch (gui.subwindow_resize_mode) {
 					case SUB_WINDOW_RESIZE_TOP_LEFT: {
-						diff.x = MIN(diff.x, limit.x);
-						diff.y = MIN(diff.y, limit.y);
+						diff.x = Math::min(diff.x, limit.x);
+						diff.y = Math::min(diff.y, limit.y);
 						r.position += diff;
 						r.size -= diff;
 					} break;
 					case SUB_WINDOW_RESIZE_TOP: {
 						diff.x = 0;
-						diff.y = MIN(diff.y, limit.y);
+						diff.y = Math::min(diff.y, limit.y);
 						r.position += diff;
 						r.size -= diff;
 					} break;
 					case SUB_WINDOW_RESIZE_TOP_RIGHT: {
-						diff.x = MAX(diff.x, -limit.x);
-						diff.y = MIN(diff.y, limit.y);
+						diff.x = Math::max(diff.x, -limit.x);
+						diff.y = Math::min(diff.y, limit.y);
 						r.position.y += diff.y;
 						r.size.y -= diff.y;
 						r.size.x += diff.x;
 					} break;
 					case SUB_WINDOW_RESIZE_LEFT: {
-						diff.x = MIN(diff.x, limit.x);
+						diff.x = Math::min(diff.x, limit.x);
 						diff.y = 0;
 						r.position += diff;
 						r.size -= diff;
 
 					} break;
 					case SUB_WINDOW_RESIZE_RIGHT: {
-						diff.x = MAX(diff.x, -limit.x);
+						diff.x = Math::max(diff.x, -limit.x);
 						r.size.x += diff.x;
 					} break;
 					case SUB_WINDOW_RESIZE_BOTTOM_LEFT: {
-						diff.x = MIN(diff.x, limit.x);
-						diff.y = MAX(diff.y, -limit.y);
+						diff.x = Math::min(diff.x, limit.x);
+						diff.y = Math::max(diff.y, -limit.y);
 						r.position.x += diff.x;
 						r.size.x -= diff.x;
 						r.size.y += diff.y;
 
 					} break;
 					case SUB_WINDOW_RESIZE_BOTTOM: {
-						diff.y = MAX(diff.y, -limit.y);
+						diff.y = Math::max(diff.y, -limit.y);
 						r.size.y += diff.y;
 					} break;
 					case SUB_WINDOW_RESIZE_BOTTOM_RIGHT: {
-						diff.x = MAX(diff.x, -limit.x);
-						diff.y = MAX(diff.y, -limit.y);
+						diff.x = Math::max(diff.x, -limit.x);
+						diff.y = Math::max(diff.y, -limit.y);
 						r.size += diff;
 
 					} break;
@@ -4845,7 +4845,7 @@ void Viewport::set_scaling_3d_scale(float p_scaling_3d_scale) {
 	// Clamp to reasonable values that are actually useful.
 	// Values above 2.0 don't serve a practical purpose since the viewport
 	// isn't displayed with mipmaps.
-	scaling_3d_scale = CLAMP(p_scaling_3d_scale, 0.1, 2.0);
+	scaling_3d_scale = Math::clamp(p_scaling_3d_scale, 0.1, 2.0);
 
 	RS::get_singleton()->viewport_set_scaling_3d_scale(viewport, scaling_3d_scale);
 }

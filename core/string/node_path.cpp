@@ -247,16 +247,16 @@ NodePath NodePath::slice(int p_begin, int p_end) const {
 	const int name_count = get_name_count();
 	const int total_count = get_total_name_count();
 
-	int begin = CLAMP(p_begin, -total_count, total_count);
+	int begin = Math::clamp(p_begin, -total_count, total_count);
 	if (begin < 0) {
 		begin += total_count;
 	}
-	int end = CLAMP(p_end, -total_count, total_count);
+	int end = Math::clamp(p_end, -total_count, total_count);
 	if (end < 0) {
 		end += total_count;
 	}
-	const int sub_begin = MAX(begin - name_count, 0);
-	const int sub_end = MAX(end - name_count, 0);
+	const int sub_begin = Math::max(begin - name_count, 0);
+	const int sub_end = Math::max(end - name_count, 0);
 
 	const Vector<StringName> names = get_names().slice(begin, end);
 	const Vector<StringName> sub_names = get_subnames().slice(sub_begin, sub_end);

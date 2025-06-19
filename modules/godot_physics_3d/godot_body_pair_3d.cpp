@@ -251,11 +251,11 @@ bool GodotBodyPair3D::_test_ccd(real_t p_step, GodotBody3D *p_A, int p_shape_A, 
 }
 
 real_t combine_bounce(GodotBody3D *A, GodotBody3D *B) {
-	return CLAMP(A->get_bounce() + B->get_bounce(), 0, 1);
+	return Math::clamp(A->get_bounce() + B->get_bounce(), 0, 1);
 }
 
 real_t combine_friction(GodotBody3D *A, GodotBody3D *B) {
-	return Math::abs(MIN(A->get_friction(), B->get_friction()));
+	return Math::abs(Math::min(A->get_friction(), B->get_friction()));
 }
 
 bool GodotBodyPair3D::setup(real_t p_step) {
@@ -402,7 +402,7 @@ bool GodotBodyPair3D::pre_solve(real_t p_step) {
 		kNormal += c.normal.dot(inertia_A.cross(c.rA)) + c.normal.dot(inertia_B.cross(c.rB));
 		c.mass_normal = 1.0f / kNormal;
 
-		c.bias = -bias * inv_dt * MIN(0.0f, -depth + max_penetration);
+		c.bias = -bias * inv_dt * Math::min(0.0f, -depth + max_penetration);
 		c.depth = depth;
 
 		Vector3 j_vec = c.normal * c.acc_normal_impulse + c.acc_tangent_impulse;
@@ -486,7 +486,7 @@ void GodotBodyPair3D::solve(real_t p_step) {
 		if (Math::abs(-vbn + c.bias) > MIN_VELOCITY) {
 			real_t jbn = (-vbn + c.bias) * c.mass_normal;
 			real_t jbnOld = c.acc_bias_impulse;
-			c.acc_bias_impulse = MAX(jbnOld + jbn, 0.0f);
+			c.acc_bias_impulse = Math::max(jbnOld + jbn, 0.0f);
 
 			Vector3 jb = c.normal * (c.acc_bias_impulse - jbnOld);
 
@@ -506,7 +506,7 @@ void GodotBodyPair3D::solve(real_t p_step) {
 			if (Math::abs(-vbn + c.bias) > MIN_VELOCITY) {
 				real_t jbn_com = (-vbn + c.bias) / (inv_mass_A + inv_mass_B);
 				real_t jbnOld_com = c.acc_bias_impulse_center_of_mass;
-				c.acc_bias_impulse_center_of_mass = MAX(jbnOld_com + jbn_com, 0.0f);
+				c.acc_bias_impulse_center_of_mass = Math::max(jbnOld_com + jbn_com, 0.0f);
 
 				Vector3 jb_com = c.normal * (c.acc_bias_impulse_center_of_mass - jbnOld_com);
 
@@ -531,7 +531,7 @@ void GodotBodyPair3D::solve(real_t p_step) {
 		if (Math::abs(vn) > MIN_VELOCITY) {
 			real_t jn = -(c.bounce + vn) * c.mass_normal;
 			real_t jnOld = c.acc_normal_impulse;
-			c.acc_normal_impulse = MAX(jnOld + jn, 0.0f);
+			c.acc_normal_impulse = Math::max(jnOld + jn, 0.0f);
 
 			Vector3 j = c.normal * (c.acc_normal_impulse - jnOld);
 
@@ -790,7 +790,7 @@ bool GodotBodySoftBodyPair3D::pre_solve(real_t p_step) {
 		kNormal += c.normal.dot(inertia_A.cross(c.rA));
 		c.mass_normal = 1.0f / kNormal;
 
-		c.bias = -bias * inv_dt * MIN(0.0f, -depth + max_penetration);
+		c.bias = -bias * inv_dt * Math::min(0.0f, -depth + max_penetration);
 		c.depth = depth;
 
 		Vector3 j_vec = c.normal * c.acc_normal_impulse + c.acc_tangent_impulse;
@@ -867,7 +867,7 @@ void GodotBodySoftBodyPair3D::solve(real_t p_step) {
 		if (Math::abs(-vbn + c.bias) > MIN_VELOCITY) {
 			real_t jbn = (-vbn + c.bias) * c.mass_normal;
 			real_t jbnOld = c.acc_bias_impulse;
-			c.acc_bias_impulse = MAX(jbnOld + jbn, 0.0f);
+			c.acc_bias_impulse = Math::max(jbnOld + jbn, 0.0f);
 
 			Vector3 jb = c.normal * (c.acc_bias_impulse - jbnOld);
 
@@ -886,7 +886,7 @@ void GodotBodySoftBodyPair3D::solve(real_t p_step) {
 			if (Math::abs(-vbn + c.bias) > MIN_VELOCITY) {
 				real_t jbn_com = (-vbn + c.bias) / (body_inv_mass + node_inv_mass);
 				real_t jbnOld_com = c.acc_bias_impulse_center_of_mass;
-				c.acc_bias_impulse_center_of_mass = MAX(jbnOld_com + jbn_com, 0.0f);
+				c.acc_bias_impulse_center_of_mass = Math::max(jbnOld_com + jbn_com, 0.0f);
 
 				Vector3 jb_com = c.normal * (c.acc_bias_impulse_center_of_mass - jbnOld_com);
 
@@ -910,7 +910,7 @@ void GodotBodySoftBodyPair3D::solve(real_t p_step) {
 		if (Math::abs(vn) > MIN_VELOCITY) {
 			real_t jn = -(c.bounce + vn) * c.mass_normal;
 			real_t jnOld = c.acc_normal_impulse;
-			c.acc_normal_impulse = MAX(jnOld + jn, 0.0f);
+			c.acc_normal_impulse = Math::max(jnOld + jn, 0.0f);
 
 			Vector3 j = c.normal * (c.acc_normal_impulse - jnOld);
 

@@ -2564,10 +2564,10 @@ T Animation::_interpolate(const Vector<TKey<T>> &p_keys, double p_time, Interpol
 		if (is_start_edge) {
 			idx = p_backward ? maxi : 0;
 		}
-		next = CLAMP(idx + (p_backward ? -1 : 1), 0, maxi);
+		next = Math::clamp(idx + (p_backward ? -1 : 1), 0, maxi);
 		if (use_cubic) {
-			pre = CLAMP(idx + (p_backward ? 1 : -1), 0, maxi);
-			post = CLAMP(idx + (p_backward ? -2 : 2), 0, maxi);
+			pre = Math::clamp(idx + (p_backward ? 1 : -1), 0, maxi);
+			post = Math::clamp(idx + (p_backward ? -2 : 2), 0, maxi);
 		}
 	} else if (loop_mode == LOOP_LINEAR) {
 		if (is_start_edge) {
@@ -3326,9 +3326,9 @@ Array Animation::make_default_bezier_key(float p_value) {
 	new_point.resize(5);
 
 	new_point[0] = p_value;
-	new_point[1] = MAX(-0.25, -max_width);
+	new_point[1] = Math::max(-0.25, -max_width);
 	new_point[2] = 0;
-	new_point[3] = MIN(0.25, max_width);
+	new_point[3] = Math::min(0.25, max_width);
 	new_point[4] = 0;
 
 	return new_point;
@@ -3521,8 +3521,8 @@ bool Animation::bezier_track_calculate_handles(int p_track, int p_index, HandleM
 	BezierTrack *bt = static_cast<BezierTrack *>(t);
 	ERR_FAIL_INDEX_V(p_index, bt->values.size(), false);
 
-	int prev_key = MAX(0, p_index - 1);
-	int next_key = MIN(bt->values.size() - 1, p_index + 1);
+	int prev_key = Math::max(0, p_index - 1);
+	int next_key = Math::min(bt->values.size() - 1, p_index + 1);
 	if (prev_key == next_key) {
 		return false;
 	}
@@ -3571,7 +3571,7 @@ bool Animation::bezier_track_calculate_handles(float p_time, float p_prev_time, 
 		} else if (Math::is_zero_approx(next_interval)) {
 			min_time = prev_interval;
 		} else {
-			min_time = MIN(prev_interval, next_interval);
+			min_time = Math::min(prev_interval, next_interval);
 		}
 		if (p_set_mode == HANDLE_SET_MODE_RESET) {
 			in_handle.x = -min_time * handle_length;
@@ -4578,11 +4578,11 @@ struct AnimationCompressionDataState {
 
 		for (uint32_t i = p_from + 1; i <= p_to; i++) {
 			int32_t frame_delta = temp_packets[i].frame - temp_packets[i - 1].frame;
-			max_frame_delta_shift = MAX(max_frame_delta_shift, nearest_shift((uint32_t)frame_delta));
+			max_frame_delta_shift = Math::max(max_frame_delta_shift, nearest_shift((uint32_t)frame_delta));
 			for (uint32_t j = 0; j < components; j++) {
 				int32_t diff = _compute_delta16_signed(temp_packets[i - 1].data[j], temp_packets[i].data[j]);
 				uint32_t shift = _compute_shift_bits_signed(diff);
-				max_shifts[j] = MAX(shift, max_shifts[j]);
+				max_shifts[j] = Math::max(shift, max_shifts[j]);
 			}
 		}
 	}
@@ -4797,7 +4797,7 @@ Vector3i Animation::_compress_key(uint32_t p_track, const AABB &p_bounds, int32_
 			}
 			pos = (pos - p_bounds.position) / p_bounds.size;
 			for (int j = 0; j < 3; j++) {
-				values[j] = CLAMP(int32_t(pos[j] * 65535.0), 0, 65535);
+				values[j] = Math::clamp(int32_t(pos[j] * 65535.0), 0, 65535);
 			}
 		} break;
 		case TYPE_ROTATION_3D: {
@@ -4814,7 +4814,7 @@ Vector3i Animation::_compress_key(uint32_t p_track, const AABB &p_bounds, int32_
 			Vector3 rot_norm(oct.x, oct.y, angle / (Math::PI * 2.0)); // high resolution rotation in 0-1 angle.
 
 			for (int j = 0; j < 3; j++) {
-				values[j] = CLAMP(int32_t(rot_norm[j] * 65535.0), 0, 65535);
+				values[j] = Math::clamp(int32_t(rot_norm[j] * 65535.0), 0, 65535);
 			}
 		} break;
 		case TYPE_SCALE_3D: {
@@ -4826,7 +4826,7 @@ Vector3i Animation::_compress_key(uint32_t p_track, const AABB &p_bounds, int32_
 			}
 			scale = (scale - p_bounds.position) / p_bounds.size;
 			for (int j = 0; j < 3; j++) {
-				values[j] = CLAMP(int32_t(scale[j] * 65535.0), 0, 65535);
+				values[j] = Math::clamp(int32_t(scale[j] * 65535.0), 0, 65535);
 			}
 		} break;
 		case TYPE_BLEND_SHAPE: {
@@ -4838,7 +4838,7 @@ Vector3i Animation::_compress_key(uint32_t p_track, const AABB &p_bounds, int32_
 			}
 
 			blend = (blend / float(Compression::BLEND_SHAPE_RANGE)) * 0.5 + 0.5;
-			values[0] = CLAMP(int32_t(blend * 65535.0), 0, 65535);
+			values[0] = Math::clamp(int32_t(blend * 65535.0), 0, 65535);
 		} break;
 		default: {
 			ERR_FAIL_V(Vector3i()); // Safety check.
@@ -4862,7 +4862,7 @@ struct AnimationCompressionBufferBitsRead {
 				buffer = *src_data;
 				src_data++;
 			}
-			uint32_t to_write = MIN(used, p_bits);
+			uint32_t to_write = Math::min(used, p_bits);
 			output |= (buffer & ((1 << to_write) - 1)) << written;
 			buffer >>= to_write;
 			used -= to_write;
@@ -4876,7 +4876,7 @@ struct AnimationCompressionBufferBitsRead {
 void Animation::compress(uint32_t p_page_size, uint32_t p_fps, float p_split_tolerance) {
 	ERR_FAIL_COND_MSG(compression.enabled, "This animation is already compressed");
 
-	p_split_tolerance = CLAMP(p_split_tolerance, 1.1, 8.0);
+	p_split_tolerance = Math::clamp(p_split_tolerance, 1.1, 8.0);
 	compression.pages.clear();
 
 	uint32_t base_page_size = 0; // Before compressing pages, compute how large the "end page" datablock is.
@@ -5019,7 +5019,7 @@ void Animation::compress(uint32_t p_page_size, uint32_t p_fps, float p_split_tol
 
 			if (key_frame - base_page_frame >= max_frames_per_page) {
 				// Invalid because beyond the max frames allowed per page
-				best_invalid_frame = MIN(best_invalid_frame, key_frame);
+				best_invalid_frame = Math::min(best_invalid_frame, key_frame);
 			} else if (key_frame < best_frame) {
 				best_frame = key_frame;
 				best_frame_track = i;
@@ -5340,7 +5340,7 @@ template <uint32_t COMPONENTS>
 bool Animation::_fetch_compressed(uint32_t p_compressed_track, double p_time, Vector3i &r_current_value, double &r_current_time, Vector3i &r_next_value, double &r_next_time, uint32_t *key_index) const {
 	ERR_FAIL_COND_V(!compression.enabled, false);
 	ERR_FAIL_UNSIGNED_INDEX_V(p_compressed_track, compression.bounds.size(), false);
-	p_time = CLAMP(p_time, 0, length);
+	p_time = Math::clamp(p_time, 0, length);
 	if (key_index) {
 		*key_index = 0;
 	}
@@ -5875,7 +5875,7 @@ Variant Animation::add_variant(const Variant &a, const Variant &b) {
 				bool is_a_larger = inform_variant_array(min_size, max_size);
 
 				Array result;
-				result.set_typed(MAX(arr_a.get_typed_builtin(), arr_b.get_typed_builtin()), StringName(), Variant());
+				result.set_typed(Math::max(arr_a.get_typed_builtin(), arr_b.get_typed_builtin()), StringName(), Variant());
 				result.resize(min_size);
 				int i = 0;
 				for (; i < min_size; i++) {
@@ -5989,7 +5989,7 @@ Variant Animation::subtract_variant(const Variant &a, const Variant &b) {
 				bool is_a_larger = inform_variant_array(min_size, max_size);
 
 				Array result;
-				result.set_typed(MAX(arr_a.get_typed_builtin(), arr_b.get_typed_builtin()), StringName(), Variant());
+				result.set_typed(Math::max(arr_a.get_typed_builtin(), arr_b.get_typed_builtin()), StringName(), Variant());
 				result.resize(min_size);
 				int i = 0;
 				for (; i < min_size; i++) {
@@ -6125,7 +6125,7 @@ Variant Animation::blend_variant(const Variant &a, const Variant &b, float c) {
 				bool is_a_larger = inform_variant_array(min_size, max_size);
 
 				Array result;
-				result.set_typed(MAX(arr_a.get_typed_builtin(), arr_b.get_typed_builtin()), StringName(), Variant());
+				result.set_typed(Math::max(arr_a.get_typed_builtin(), arr_b.get_typed_builtin()), StringName(), Variant());
 				result.resize(min_size);
 				int i = 0;
 				for (; i < min_size; i++) {
@@ -6262,7 +6262,7 @@ Variant Animation::interpolate_variant(const Variant &a, const Variant &b, float
 				bool is_a_larger = inform_variant_array(min_size, max_size);
 
 				Array result;
-				result.set_typed(MAX(arr_a.get_typed_builtin(), arr_b.get_typed_builtin()), StringName(), Variant());
+				result.set_typed(Math::max(arr_a.get_typed_builtin(), arr_b.get_typed_builtin()), StringName(), Variant());
 				result.resize(min_size);
 				int i = 0;
 				for (; i < min_size; i++) {
@@ -6443,7 +6443,7 @@ Variant Animation::cubic_interpolate_in_time_variant(const Variant &pre_a, const
 				bool is_a_larger = inform_variant_array(min_size, max_size);
 
 				Array result;
-				result.set_typed(MAX(arr_a.get_typed_builtin(), arr_b.get_typed_builtin()), StringName(), Variant());
+				result.set_typed(Math::max(arr_a.get_typed_builtin(), arr_b.get_typed_builtin()), StringName(), Variant());
 				result.resize(min_size);
 
 				if (min_size == 0 && max_size == 0) {

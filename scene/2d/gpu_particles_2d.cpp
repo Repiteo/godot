@@ -208,7 +208,7 @@ void GPUParticles2D::set_trail_section_subdivisions(int p_subdivisions) {
 }
 
 void GPUParticles2D::set_interp_to_end(float p_interp) {
-	interp_to_end_factor = CLAMP(p_interp, 0.0, 1.0);
+	interp_to_end_factor = Math::clamp(p_interp, 0.0, 1.0);
 	RS::get_singleton()->particles_set_interp_to_end(particles, interp_to_end_factor);
 }
 
@@ -642,7 +642,7 @@ void GPUParticles2D::_notification(int p_what) {
 
 					for (int i = 0; i < 2; i++) {
 						bone_indices.push_back(bone);
-						bone_indices.push_back(MIN(trail_sections, bone + 1));
+						bone_indices.push_back(Math::min(trail_sections, bone + 1));
 						bone_indices.push_back(0);
 						bone_indices.push_back(0);
 
@@ -833,7 +833,7 @@ void GPUParticles2D::_draw_emission_gizmo() {
 				draw_circle(Vector2(), pm->get_emission_ring_radius(), emission_ring_color, false);
 			} else {
 				Vector2 a = Vector2(pm->get_emission_ring_height() / -2.0, pm->get_emission_ring_radius() / -1.0);
-				Vector2 b = Vector2(-a.x, MIN(a.y + std::tan((90.0 - pm->get_emission_ring_cone_angle()) * 0.01745329) * pm->get_emission_ring_height(), 0.0));
+				Vector2 b = Vector2(-a.x, Math::min(a.y + std::tan((90.0 - pm->get_emission_ring_cone_angle()) * 0.01745329) * pm->get_emission_ring_height(), 0.0));
 				Vector2 c = Vector2(b.x, -b.y);
 				Vector2 d = Vector2(a.x, -a.y);
 				if (ring_axis.is_equal_approx(Vector3(1.0, 0.0, 0.0))) {

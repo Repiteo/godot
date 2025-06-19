@@ -265,7 +265,7 @@ VkAllocationCallbacks *RenderingContextDriverVulkan::get_allocation_callbacks(Vk
 			driver_memory_tracker[type][allocation_scope].add(size);
 			driver_memory_allocation_count[type][allocation_scope].increment();
 
-			alignment = MAX(alignment, tracking_data_size);
+			alignment = Math::max(alignment, tracking_data_size);
 
 			uint8_t *ret = reinterpret_cast<uint8_t *>(Memory::alloc_aligned_static(size + alignment, alignment));
 			if (ret == nullptr) {

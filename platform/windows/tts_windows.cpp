@@ -47,7 +47,7 @@ void __stdcall TTS_Windows::speech_event_callback(WPARAM wParam, LPARAM lParam) 
 			} else if (event.eEventId == SPEI_WORD_BOUNDARY) {
 				const Char16String &string = tts->ids[stream_num].string;
 				int pos = 0;
-				for (int i = 0; i < MIN(event.lParam, string.length()); i++) {
+				for (int i = 0; i < Math::min(event.lParam, string.length()); i++) {
 					char16_t c = string[i];
 					if ((c & 0xfffffc00) == 0xd800) {
 						i++;
@@ -200,9 +200,9 @@ void TTS_Windows::speak(const String &p_text, const String &p_voice, int p_volum
 	DisplayServer::TTSUtterance message;
 	message.text = p_text;
 	message.voice = p_voice;
-	message.volume = CLAMP(p_volume, 0, 100);
-	message.pitch = CLAMP(p_pitch, 0.f, 2.f);
-	message.rate = CLAMP(p_rate, 0.1f, 10.f);
+	message.volume = Math::clamp(p_volume, 0, 100);
+	message.pitch = Math::clamp(p_pitch, 0.f, 2.f);
+	message.rate = Math::clamp(p_rate, 0.1f, 10.f);
 	message.id = p_utterance_id;
 	queue.push_back(message);
 

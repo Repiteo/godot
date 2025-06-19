@@ -119,7 +119,7 @@ int AudioDriver::_get_configured_mix_rate() {
 
 #ifdef WEB_ENABLED
 	// `0` is an acceptable value (resorts to the browser's default).
-	return MAX(0, mix_rate);
+	return Math::max(0, mix_rate);
 #else // !WEB_ENABLED
 	// In the case of invalid mix rate, let's default to a sensible value..
 	if (mix_rate <= 0) {
@@ -275,7 +275,7 @@ void AudioServer::_driver_process(int p_frames, int32_t *p_buffer) {
 			_mix_step();
 		}
 
-		int to_copy = MIN(to_mix, todo);
+		int to_copy = Math::min(to_mix, todo);
 
 		Bus *master = buses[0];
 
@@ -300,13 +300,13 @@ void AudioServer::_driver_process(int p_frames, int32_t *p_buffer) {
 				const AudioFrame *buf = master->channels[k].buffer.ptr();
 
 				for (int j = 0; j < to_copy; j++) {
-					float l = CLAMP(buf[from + j].left, -1.0, 1.0);
+					float l = Math::clamp(buf[from + j].left, -1.0, 1.0);
 					int32_t vl = l * ((1 << 20) - 1);
 					int32_t vl2 = (vl < 0 ? -1 : 1) * (Math::abs(vl) << 11);
 					*dest = vl2;
 					dest++;
 
-					float r = CLAMP(buf[from + j].right, -1.0, 1.0);
+					float r = Math::clamp(buf[from + j].right, -1.0, 1.0);
 					int32_t vr = r * ((1 << 20) - 1);
 					int32_t vr2 = (vr < 0 ? -1 : 1) * (Math::abs(vr) << 11);
 					*dest = vr2;
@@ -638,7 +638,7 @@ void AudioServer::_mix_step() {
 			if (!bus->channels[k].used) {
 				// See if any audio is contained, because channel was not used.
 
-				if (MAX(peak.right, peak.left) > Math::db_to_linear(channel_disable_threshold_db)) {
+				if (Math::max(peak.right, peak.left) > Math::db_to_linear(channel_disable_threshold_db)) {
 					bus->channels.write[k].last_mix_with_audio = mix_frames;
 				} else if (mix_frames - bus->channels[k].last_mix_with_audio > channel_disable_frames) {
 					bus->channels.write[k].active = false;

@@ -190,7 +190,7 @@ void GradientTexture2DEdit::_draw() {
 	// Subtract handle sizes so they stay inside the preview, but keep the texture's aspect ratio.
 	Size2 available_size = rect_size - handle_size;
 	Size2 ratio = available_size / texture->get_size();
-	size = MIN(ratio.x, ratio.y) * texture->get_size();
+	size = Math::min(ratio.x, ratio.y) * texture->get_size();
 	offset = ((rect_size - size) / 2).round();
 
 	checkerboard->set_rect(Rect2(offset, size));

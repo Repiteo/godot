@@ -317,7 +317,7 @@ Vector<uint8_t> save_dds_buffer(const Ref<Image> &p_img) {
 
 	uint32_t pitch;
 	if (info.compressed) {
-		pitch = ((MAX(info.divisor, width) + info.divisor - 1) / info.divisor) * ((MAX(info.divisor, height) + info.divisor - 1) / info.divisor) * info.block_size;
+		pitch = ((Math::max(info.divisor, width) + info.divisor - 1) / info.divisor) * ((Math::max(info.divisor, height) + info.divisor - 1) / info.divisor) * info.block_size;
 	} else {
 		pitch = width * info.block_size;
 	}
@@ -409,8 +409,8 @@ Vector<uint8_t> save_dds_buffer(const Ref<Image> &p_img) {
 	}
 
 	for (uint32_t mip_i = 0; mip_i < mipmaps; mip_i++) {
-		uint32_t mip_width = MAX(1u, width >> mip_i);
-		uint32_t mip_height = MAX(1u, height >> mip_i);
+		uint32_t mip_width = Math::max(1u, width >> mip_i);
+		uint32_t mip_height = Math::max(1u, height >> mip_i);
 
 		uint32_t expected_size = 0;
 		if (info.compressed) {

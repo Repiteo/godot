@@ -165,8 +165,8 @@ void EditorAudioBus::_notification(int p_what) {
 
 				if (AudioServer::get_singleton()->is_bus_channel_active(get_index(), i)) {
 					activity_found = true;
-					real_peak[0] = MAX(real_peak[0], AudioServer::get_singleton()->get_bus_peak_volume_left_db(get_index(), i));
-					real_peak[1] = MAX(real_peak[1], AudioServer::get_singleton()->get_bus_peak_volume_right_db(get_index(), i));
+					real_peak[0] = Math::max(real_peak[0], AudioServer::get_singleton()->get_bus_peak_volume_left_db(get_index(), i));
+					real_peak[1] = Math::max(real_peak[1], AudioServer::get_singleton()->get_bus_peak_volume_right_db(get_index(), i));
 				}
 
 				if (real_peak[0] > channel[i].peak_l) {
@@ -1446,7 +1446,7 @@ Size2 EditorAudioMeterNotches::get_minimum_size() const {
 
 	for (const EditorAudioMeterNotches::AudioNotch &notch : notches) {
 		if (notch.render_db_value) {
-			width = MAX(width, font->get_string_size(String::num(Math::abs(notch.db_value)) + "dB", HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x);
+			width = Math::max(width, font->get_string_size(String::num(Math::abs(notch.db_value)) + "dB", HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x);
 			height += font_height;
 		}
 	}

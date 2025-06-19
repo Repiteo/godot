@@ -276,23 +276,23 @@ void GPUParticlesCollisionSDF3D::_find_closest_distance(const Vector3 &p_pos, co
 				Vector2 v1 = p2d - points[1];
 				Vector2 v2 = p2d - points[2];
 
-				Vector2 pq0 = v0 - e0 * CLAMP(v0.dot(e0) / e0.dot(e0), 0.0, 1.0);
-				Vector2 pq1 = v1 - e1 * CLAMP(v1.dot(e1) / e1.dot(e1), 0.0, 1.0);
-				Vector2 pq2 = v2 - e2 * CLAMP(v2.dot(e2) / e2.dot(e2), 0.0, 1.0);
+				Vector2 pq0 = v0 - e0 * Math::clamp(v0.dot(e0) / e0.dot(e0), 0.0, 1.0);
+				Vector2 pq1 = v1 - e1 * Math::clamp(v1.dot(e1) / e1.dot(e1), 0.0, 1.0);
+				Vector2 pq2 = v2 - e2 * Math::clamp(v2.dot(e2) / e2.dot(e2), 0.0, 1.0);
 
-				float s = SIGN(e0.x * e2.y - e0.y * e2.x);
+				float s = Math::sign(e0.x * e2.y - e0.y * e2.x);
 				Vector2 d2 = Vector2(pq0.dot(pq0), s * (v0.x * e0.y - v0.y * e0.x)).min(Vector2(pq1.dot(pq1), s * (v1.x * e1.y - v1.y * e1.x))).min(Vector2(pq2.dot(pq2), s * (v2.x * e2.y - v2.y * e2.x)));
 
-				inside_d = -Math::sqrt(d2.x) * SIGN(d2.y);
+				inside_d = -Math::sqrt(d2.x) * Math::sign(d2.y);
 			}
 
 			//make sure distance to planes is not shorter if inside
 			if (inside_d < 0) {
-				inside_d = MAX(inside_d, d);
-				inside_d = MAX(inside_d, -(p_thickness + d));
+				inside_d = Math::max(inside_d, d);
+				inside_d = Math::max(inside_d, -(p_thickness + d));
 			}
 
-			r_closest_distance = MIN(r_closest_distance, inside_d);
+			r_closest_distance = Math::min(r_closest_distance, inside_d);
 		} else {
 			if (d < 0) {
 				point -= p.normal * p_thickness; //flatten
@@ -312,14 +312,14 @@ void GPUParticlesCollisionSDF3D::_find_closest_distance(const Vector3 &p_pos, co
 			Vector3 nor = ba.cross(ac);
 
 			inside_d = Math::sqrt(
-					(SIGN(ba.cross(nor).dot(pa)) + SIGN(cb.cross(nor).dot(pb)) + SIGN(ac.cross(nor).dot(pc)) < 2.0)
-							? MIN(MIN(
-										  Vector3_dot2(ba * CLAMP(ba.dot(pa) / Vector3_dot2(ba), 0.0, 1.0) - pa),
-										  Vector3_dot2(cb * CLAMP(cb.dot(pb) / Vector3_dot2(cb), 0.0, 1.0) - pb)),
-									  Vector3_dot2(ac * CLAMP(ac.dot(pc) / Vector3_dot2(ac), 0.0, 1.0) - pc))
+					(Math::sign(ba.cross(nor).dot(pa)) + Math::sign(cb.cross(nor).dot(pb)) + Math::sign(ac.cross(nor).dot(pc)) < 2.0)
+							? Math::min(Math::min(
+												Vector3_dot2(ba * Math::clamp(ba.dot(pa) / Vector3_dot2(ba), 0.0, 1.0) - pa),
+												Vector3_dot2(cb * Math::clamp(cb.dot(pb) / Vector3_dot2(cb), 0.0, 1.0) - pb)),
+									  Vector3_dot2(ac * Math::clamp(ac.dot(pc) / Vector3_dot2(ac), 0.0, 1.0) - pc))
 							: nor.dot(pa) * nor.dot(pa) / Vector3_dot2(nor));
 
-			r_closest_distance = MIN(r_closest_distance, inside_d);
+			r_closest_distance = Math::min(r_closest_distance, inside_d);
 		}
 
 	} else {

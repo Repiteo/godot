@@ -62,7 +62,7 @@ void EditorRunNative::_notification(int p_what) {
 							break;
 						}
 					}
-					int dc = MIN(eep->get_options_count(), 9000);
+					int dc = Math::min(eep->get_options_count(), 9000);
 					String error;
 					if (dc > 0 && preset->is_runnable()) {
 						popup->add_icon_item(eep->get_run_icon(), eep->get_name(), -1);

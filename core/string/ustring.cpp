@@ -4176,7 +4176,7 @@ String String::repeat(int p_count) const {
 	while (offset < p_count) {
 		memcpy(dst + offset * len, dst, stride * len * sizeof(char32_t));
 		offset += stride;
-		stride = MIN(stride * 2, p_count - offset);
+		stride = Math::min(stride * 2, p_count - offset);
 	}
 	dst[p_count * len] = _null;
 	return new_string;
@@ -5284,7 +5284,7 @@ String String::get_base_dir() const {
 		rs = *this;
 	}
 
-	int sep = MAX(rs.rfind_char('/'), rs.rfind_char('\\'));
+	int sep = Math::max(rs.rfind_char('/'), rs.rfind_char('\\'));
 	if (sep == -1) {
 		return base;
 	}
@@ -5293,7 +5293,7 @@ String String::get_base_dir() const {
 }
 
 String String::get_file() const {
-	int sep = MAX(rfind_char('/'), rfind_char('\\'));
+	int sep = Math::max(rfind_char('/'), rfind_char('\\'));
 	if (sep == -1) {
 		return *this;
 	}
@@ -5303,7 +5303,7 @@ String String::get_file() const {
 
 String String::get_extension() const {
 	int pos = rfind_char('.');
-	if (pos < 0 || pos < MAX(rfind_char('/'), rfind_char('\\'))) {
+	if (pos < 0 || pos < Math::max(rfind_char('/'), rfind_char('\\'))) {
 		return "";
 	}
 
@@ -5402,7 +5402,7 @@ String String::validate_node_name() const {
 
 String String::get_basename() const {
 	int pos = rfind_char('.');
-	if (pos < 0 || pos < MAX(rfind_char('/'), rfind_char('\\'))) {
+	if (pos < 0 || pos < Math::max(rfind_char('/'), rfind_char('\\'))) {
 		return *this;
 	}
 

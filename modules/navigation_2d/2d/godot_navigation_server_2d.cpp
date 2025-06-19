@@ -152,7 +152,7 @@ Vector<Vector2> GodotNavigationServer2D::simplify_path(const Vector<Vector2> &p_
 		return p_path;
 	}
 
-	p_epsilon = MAX(0.0, p_epsilon);
+	p_epsilon = Math::max(0.0, p_epsilon);
 
 	LocalVector<Vector2> source_path;
 	{

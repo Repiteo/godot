@@ -452,7 +452,7 @@ bool RenderingShaderContainer::decompress_code(const uint8_t *p_compressed_bytes
 			ERR_FAIL_V_MSG(false, "Malformed zstd input for decompressing shader code.");
 		}
 	} else {
-		memcpy(p_decompressed_bytes, p_compressed_bytes, MIN(p_compressed_size, p_decompressed_size));
+		memcpy(p_decompressed_bytes, p_compressed_bytes, Math::min(p_compressed_size, p_decompressed_size));
 	}
 
 	return true;

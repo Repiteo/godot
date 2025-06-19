@@ -192,9 +192,9 @@ void ResourceImporterLayeredTexture::_save_tex(Vector<Ref<Image>> p_images, cons
 
 			while (w > 1 || h > 1 || d > 1) {
 				Vector<Ref<Image>> mipmaps;
-				int mm_w = MAX(1, w >> 1);
-				int mm_h = MAX(1, h >> 1);
-				int mm_d = MAX(1, d >> 1);
+				int mm_w = Math::max(1, w >> 1);
+				int mm_h = Math::max(1, h >> 1);
+				int mm_d = Math::max(1, d >> 1);
 
 				for (int i = 0; i < mm_d; i++) {
 					Ref<Image> mm = Image::create_empty(mm_w, mm_h, false, p_images[0]->get_format());

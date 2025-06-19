@@ -387,7 +387,7 @@ void CameraAttributesPhysical::_update_frustum() {
 	frustum_fov = Math::rad_to_deg(2 * std::atan(sensor_size.height / (2 * frustum_focal_length)));
 
 	// Based on https://en.wikipedia.org/wiki/Depth_of_field.
-	float u = MAX(frustum_focus_distance * 1000.0, frustum_focal_length + 1.0); // Focus distance expressed in mm and clamped to at least 1 mm away from lens.
+	float u = Math::max(frustum_focus_distance * 1000.0, frustum_focal_length + 1.0); // Focus distance expressed in mm and clamped to at least 1 mm away from lens.
 	float hyperfocal_length = frustum_focal_length + ((frustum_focal_length * frustum_focal_length) / (exposure_aperture * CoC));
 
 	// This computes the start and end of the depth of field. Anything between these two points has a Circle of Confusino so small

@@ -73,19 +73,19 @@ struct [[nodiscard]] Vector4i {
 	Vector4i::Axis max_axis_index() const;
 
 	Vector4i min(const Vector4i &p_vector4i) const {
-		return Vector4i(MIN(x, p_vector4i.x), MIN(y, p_vector4i.y), MIN(z, p_vector4i.z), MIN(w, p_vector4i.w));
+		return Vector4i(Math::min(x, p_vector4i.x), Math::min(y, p_vector4i.y), Math::min(z, p_vector4i.z), Math::min(w, p_vector4i.w));
 	}
 
 	Vector4i mini(int32_t p_scalar) const {
-		return Vector4i(MIN(x, p_scalar), MIN(y, p_scalar), MIN(z, p_scalar), MIN(w, p_scalar));
+		return Vector4i(Math::min(x, p_scalar), Math::min(y, p_scalar), Math::min(z, p_scalar), Math::min(w, p_scalar));
 	}
 
 	Vector4i max(const Vector4i &p_vector4i) const {
-		return Vector4i(MAX(x, p_vector4i.x), MAX(y, p_vector4i.y), MAX(z, p_vector4i.z), MAX(w, p_vector4i.w));
+		return Vector4i(Math::max(x, p_vector4i.x), Math::max(y, p_vector4i.y), Math::max(z, p_vector4i.z), Math::max(w, p_vector4i.w));
 	}
 
 	Vector4i maxi(int32_t p_scalar) const {
-		return Vector4i(MAX(x, p_scalar), MAX(y, p_scalar), MAX(z, p_scalar), MAX(w, p_scalar));
+		return Vector4i(Math::max(x, p_scalar), Math::max(y, p_scalar), Math::max(z, p_scalar), Math::max(w, p_scalar));
 	}
 
 	_FORCE_INLINE_ int64_t length_squared() const;
@@ -163,7 +163,7 @@ Vector4i Vector4i::abs() const {
 }
 
 Vector4i Vector4i::sign() const {
-	return Vector4i(SIGN(x), SIGN(y), SIGN(z), SIGN(w));
+	return Vector4i(Math::sign(x), Math::sign(y), Math::sign(z), Math::sign(w));
 }
 
 /* Operators */

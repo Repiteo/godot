@@ -579,7 +579,7 @@ void Input::joy_connection_changed(int p_idx, bool p_connected, const String &p_
 	if (p_connected) {
 		String uidname = p_guid;
 		if (p_guid.is_empty()) {
-			int uidlen = MIN(p_name.length(), 16);
+			int uidlen = Math::min(p_name.length(), 16);
 			for (int i = 0; i < uidlen; i++) {
 				uidname = uidname + _hex_str(p_name[i]);
 			}
@@ -1025,7 +1025,7 @@ void Input::action_press(const StringName &p_action, float p_strength) {
 	}
 	action_state.exact = true;
 	action_state.api_pressed = true;
-	action_state.api_strength = CLAMP(p_strength, 0.0f, 1.0f);
+	action_state.api_strength = Math::clamp(p_strength, 0.0f, 1.0f);
 	_update_action_cache(p_action, action_state);
 }
 
@@ -1388,15 +1388,15 @@ void Input::_update_action_cache(const StringName &p_action_name, ActionState &r
 		const ActionState::DeviceState &device_state = kv.value;
 		for (int i = 0; i < max_event; i++) {
 			r_action_state.cache.pressed = r_action_state.cache.pressed || device_state.pressed[i];
-			r_action_state.cache.strength = MAX(r_action_state.cache.strength, device_state.strength[i]);
-			r_action_state.cache.raw_strength = MAX(r_action_state.cache.raw_strength, device_state.raw_strength[i]);
+			r_action_state.cache.strength = Math::max(r_action_state.cache.strength, device_state.strength[i]);
+			r_action_state.cache.raw_strength = Math::max(r_action_state.cache.raw_strength, device_state.raw_strength[i]);
 		}
 	}
 
 	if (r_action_state.api_pressed) {
 		r_action_state.cache.pressed = true;
-		r_action_state.cache.strength = MAX(r_action_state.cache.strength, r_action_state.api_strength);
-		r_action_state.cache.raw_strength = MAX(r_action_state.cache.raw_strength, r_action_state.api_strength); // Use the strength as raw_strength for API-pressed states.
+		r_action_state.cache.strength = Math::max(r_action_state.cache.strength, r_action_state.api_strength);
+		r_action_state.cache.raw_strength = Math::max(r_action_state.cache.raw_strength, r_action_state.api_strength); // Use the strength as raw_strength for API-pressed states.
 	}
 }
 

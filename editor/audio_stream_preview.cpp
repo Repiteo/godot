@@ -48,8 +48,8 @@ float AudioStreamPreview::get_max(float p_time, float p_time_next) const {
 
 	int time_from = p_time / length * max;
 	int time_to = p_time_next / length * max;
-	time_from = CLAMP(time_from, 0, max - 1);
-	time_to = CLAMP(time_to, 0, max - 1);
+	time_from = Math::clamp(time_from, 0, max - 1);
+	time_to = Math::clamp(time_to, 0, max - 1);
 
 	if (time_to <= time_from) {
 		time_to = time_from + 1;
@@ -79,8 +79,8 @@ float AudioStreamPreview::get_min(float p_time, float p_time_next) const {
 
 	int time_from = p_time / length * max;
 	int time_to = p_time_next / length * max;
-	time_from = CLAMP(time_from, 0, max - 1);
-	time_to = CLAMP(time_to, 0, max - 1);
+	time_from = Math::clamp(time_from, 0, max - 1);
+	time_to = Math::clamp(time_to, 0, max - 1);
 
 	if (time_to <= time_from) {
 		time_to = time_from + 1;
@@ -127,9 +127,9 @@ void AudioStreamPreviewGenerator::_preview_thread(void *p_preview) {
 
 	while (frames_todo) {
 		int ofs_write = uint64_t(frames_total - frames_todo) * uint64_t(preview->preview->preview.size() / 2) / uint64_t(frames_total);
-		int to_read = MIN(frames_todo, mixbuff_chunk_frames);
+		int to_read = Math::min(frames_todo, mixbuff_chunk_frames);
 		int to_write = uint64_t(to_read) * uint64_t(preview->preview->preview.size() / 2) / uint64_t(frames_total);
-		to_write = MIN(to_write, (preview->preview->preview.size() / 2) - ofs_write);
+		to_write = Math::min(to_write, (preview->preview->preview.size() / 2) - ofs_write);
 
 		preview->playback->mix(mix_chunk.ptrw(), 1.0, to_read);
 
@@ -138,22 +138,22 @@ void AudioStreamPreviewGenerator::_preview_thread(void *p_preview) {
 			float min = 1000;
 			int from = uint64_t(i) * to_read / to_write;
 			int to = (uint64_t(i) + 1) * to_read / to_write;
-			to = MIN(to, to_read);
-			from = MIN(from, to_read - 1);
+			to = Math::min(to, to_read);
+			from = Math::min(from, to_read - 1);
 			if (to == from) {
 				to = from + 1;
 			}
 
 			for (int j = from; j < to; j++) {
-				max = MAX(max, mix_chunk[j].left);
-				max = MAX(max, mix_chunk[j].right);
+				max = Math::max(max, mix_chunk[j].left);
+				max = Math::max(max, mix_chunk[j].right);
 
-				min = MIN(min, mix_chunk[j].left);
-				min = MIN(min, mix_chunk[j].right);
+				min = Math::min(min, mix_chunk[j].left);
+				min = Math::min(min, mix_chunk[j].right);
 			}
 
-			uint8_t pfrom = CLAMP((min * 0.5 + 0.5) * 255, 0, 255);
-			uint8_t pto = CLAMP((max * 0.5 + 0.5) * 255, 0, 255);
+			uint8_t pfrom = Math::clamp((min * 0.5 + 0.5) * 255, 0, 255);
+			uint8_t pto = Math::clamp((max * 0.5 + 0.5) * 255, 0, 255);
 
 			preview->preview->preview.write[(ofs_write + i) * 2 + 0] = pfrom;
 			preview->preview->preview.write[(ofs_write + i) * 2 + 1] = pto;

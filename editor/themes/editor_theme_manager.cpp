@@ -239,8 +239,8 @@ EditorThemeManager::ThemeConfiguration EditorThemeManager::_create_theme_config(
 	config.base_spacing = EDITOR_GET("interface/theme/base_spacing");
 	config.extra_spacing = EDITOR_GET("interface/theme/additional_spacing");
 	// Ensure borders are visible when using an editor scale below 100%.
-	config.border_width = CLAMP((int)EDITOR_GET("interface/theme/border_size"), 0, 2) * MAX(1, EDSCALE);
-	config.corner_radius = CLAMP((int)EDITOR_GET("interface/theme/corner_radius"), 0, 6);
+	config.border_width = Math::clamp((int)EDITOR_GET("interface/theme/border_size"), 0, 2) * Math::max(1, EDSCALE);
+	config.corner_radius = Math::clamp((int)EDITOR_GET("interface/theme/corner_radius"), 0, 6);
 
 	config.draw_extra_borders = EDITOR_GET("interface/theme/draw_extra_borders");
 	config.relationship_line_opacity = EDITOR_GET("interface/theme/relationship_line_opacity");
@@ -396,7 +396,7 @@ EditorThemeManager::ThemeConfiguration EditorThemeManager::_create_theme_config(
 	config.separation_margin = (config.base_spacing + config.extra_spacing / 2) * EDSCALE;
 	config.popup_margin = config.base_margin * 2.4 * EDSCALE;
 	// Make sure content doesn't stick to window decorations; this can be fixed in future with layout changes.
-	config.window_border_margin = MAX(1, config.base_margin * 2);
+	config.window_border_margin = Math::max(1, config.base_margin * 2);
 	config.top_bar_separation = config.base_margin * 2 * EDSCALE;
 
 	// Force the v_separation to be even so that the spacing on top and bottom is even.
@@ -425,8 +425,8 @@ void EditorThemeManager::_create_shared_styles(const Ref<EditorTheme> &p_theme, 
 		p_config.dark_color_2 = p_config.base_color.lerp(Color(0, 0, 0, 1), p_config.contrast * 1.5).clamp();
 		p_config.dark_color_3 = p_config.base_color.lerp(Color(0, 0, 0, 1), p_config.contrast * 2).clamp();
 
-		p_config.contrast_color_1 = p_config.base_color.lerp(p_config.mono_color, MAX(p_config.contrast, p_config.default_contrast));
-		p_config.contrast_color_2 = p_config.base_color.lerp(p_config.mono_color, MAX(p_config.contrast * 1.5, p_config.default_contrast * 1.5));
+		p_config.contrast_color_1 = p_config.base_color.lerp(p_config.mono_color, Math::max(p_config.contrast, p_config.default_contrast));
+		p_config.contrast_color_2 = p_config.base_color.lerp(p_config.mono_color, Math::max(p_config.contrast * 1.5, p_config.default_contrast * 1.5));
 
 		p_config.highlight_color = Color(p_config.accent_color.r, p_config.accent_color.g, p_config.accent_color.b, 0.275);
 		p_config.highlight_disabled_color = p_config.highlight_color.lerp(p_config.dark_theme ? Color(0, 0, 0) : Color(1, 1, 1), 0.5);
@@ -608,7 +608,7 @@ void EditorThemeManager::_create_shared_styles(const Ref<EditorTheme> &p_theme, 
 
 			p_config.button_style_focus = p_config.button_style->duplicate();
 			p_config.button_style_focus->set_draw_center(false);
-			p_config.button_style_focus->set_border_width_all(Math::round(2 * MAX(1, EDSCALE)));
+			p_config.button_style_focus->set_border_width_all(Math::round(2 * Math::max(1, EDSCALE)));
 			p_config.button_style_focus->set_border_color(p_config.accent_color);
 
 			p_config.button_style_pressed = p_config.button_style->duplicate();
@@ -635,9 +635,9 @@ void EditorThemeManager::_create_shared_styles(const Ref<EditorTheme> &p_theme, 
 			p_config.popup_style->set_corner_radius_all(0);
 
 			p_config.popup_border_style = p_config.popup_style->duplicate();
-			p_config.popup_border_style->set_content_margin_all(MAX(Math::round(EDSCALE), p_config.border_width) + 2 + (p_config.base_margin * 1.5) * EDSCALE);
+			p_config.popup_border_style->set_content_margin_all(Math::max(Math::round(EDSCALE), p_config.border_width) + 2 + (p_config.base_margin * 1.5) * EDSCALE);
 			// Always display a border for popups like PopupMenus so they can be distinguished from their background.
-			p_config.popup_border_style->set_border_width_all(MAX(Math::round(EDSCALE), p_config.border_width));
+			p_config.popup_border_style->set_border_width_all(Math::max(Math::round(EDSCALE), p_config.border_width));
 			if (p_config.draw_extra_borders) {
 				p_config.popup_border_style->set_border_color(p_config.extra_border_color_2);
 			} else {
@@ -968,7 +968,7 @@ void EditorThemeManager::_populate_standard_styles(const Ref<EditorTheme> &p_the
 			p_theme->set_constant("v_separation", "Tree", p_config.separation_margin);
 			p_theme->set_constant("h_separation", "Tree", (p_config.increased_margin + 2) * EDSCALE);
 			p_theme->set_constant("guide_width", "Tree", p_config.border_width);
-			p_theme->set_constant("item_margin", "Tree", MAX(3 * p_config.increased_margin * EDSCALE, 12 * EDSCALE));
+			p_theme->set_constant("item_margin", "Tree", Math::max(3 * p_config.increased_margin * EDSCALE, 12 * EDSCALE));
 			p_theme->set_constant("inner_item_margin_top", "Tree", p_config.separation_margin);
 			p_theme->set_constant("inner_item_margin_bottom", "Tree", p_config.separation_margin);
 			p_theme->set_constant("inner_item_margin_left", "Tree", p_config.increased_margin * EDSCALE);
@@ -990,8 +990,8 @@ void EditorThemeManager::_populate_standard_styles(const Ref<EditorTheme> &p_the
 			p_theme->set_color("guide_color", "Tree", guide_color);
 
 			int relationship_line_width = 1;
-			Color parent_line_color = p_config.mono_color * Color(1, 1, 1, CLAMP(p_config.relationship_line_opacity + 0.45, 0.0, 1.0));
-			Color children_line_color = p_config.mono_color * Color(1, 1, 1, CLAMP(p_config.relationship_line_opacity + 0.25, 0.0, 1.0));
+			Color parent_line_color = p_config.mono_color * Color(1, 1, 1, Math::clamp(p_config.relationship_line_opacity + 0.45, 0.0, 1.0));
+			Color children_line_color = p_config.mono_color * Color(1, 1, 1, Math::clamp(p_config.relationship_line_opacity + 0.25, 0.0, 1.0));
 
 			p_theme->set_constant("draw_relationship_lines", "Tree", p_config.relationship_line_opacity >= 0.01);
 			p_theme->set_constant("relationship_line_width", "Tree", relationship_line_width);
@@ -1031,7 +1031,7 @@ void EditorThemeManager::_populate_standard_styles(const Ref<EditorTheme> &p_the
 
 			Ref<StyleBoxFlat> style_tree_cursor = p_config.base_style->duplicate();
 			style_tree_cursor->set_draw_center(false);
-			style_tree_cursor->set_border_width_all(MAX(1, p_config.border_width));
+			style_tree_cursor->set_border_width_all(Math::max(1, p_config.border_width));
 			style_tree_cursor->set_border_color(p_config.contrast_color_1);
 
 			Ref<StyleBoxFlat> style_tree_title = p_config.base_style->duplicate();
@@ -1060,7 +1060,7 @@ void EditorThemeManager::_populate_standard_styles(const Ref<EditorTheme> &p_the
 
 			Ref<StyleBoxFlat> style_itemlist_cursor = p_config.base_style->duplicate();
 			style_itemlist_cursor->set_draw_center(false);
-			style_itemlist_cursor->set_border_width_all(MAX(1 * EDSCALE, p_config.border_width));
+			style_itemlist_cursor->set_border_width_all(Math::max(1 * EDSCALE, p_config.border_width));
 			style_itemlist_cursor->set_border_color(p_config.highlight_color);
 
 			Ref<StyleBoxFlat> style_itemlist_hover = style_tree_selected->duplicate();
@@ -1192,8 +1192,8 @@ void EditorThemeManager::_populate_standard_styles(const Ref<EditorTheme> &p_the
 	}
 
 	// Separators.
-	p_theme->set_stylebox("separator", "HSeparator", make_line_stylebox(p_config.separator_color, MAX(Math::round(EDSCALE), p_config.border_width)));
-	p_theme->set_stylebox("separator", "VSeparator", make_line_stylebox(p_config.separator_color, MAX(Math::round(EDSCALE), p_config.border_width), 0, 0, true));
+	p_theme->set_stylebox("separator", "HSeparator", make_line_stylebox(p_config.separator_color, Math::max(Math::round(EDSCALE), p_config.border_width)));
+	p_theme->set_stylebox("separator", "VSeparator", make_line_stylebox(p_config.separator_color, Math::max(Math::round(EDSCALE), p_config.border_width), 0, 0, true));
 
 	// LineEdit & TextEdit.
 	{
@@ -1388,19 +1388,19 @@ void EditorThemeManager::_populate_standard_styles(const Ref<EditorTheme> &p_the
 
 			Ref<StyleBoxLine> style_popup_separator(memnew(StyleBoxLine));
 			style_popup_separator->set_color(p_config.separator_color);
-			style_popup_separator->set_grow_begin(Math::round(EDSCALE) - MAX(Math::round(EDSCALE), p_config.border_width));
-			style_popup_separator->set_grow_end(Math::round(EDSCALE) - MAX(Math::round(EDSCALE), p_config.border_width));
-			style_popup_separator->set_thickness(MAX(Math::round(EDSCALE), p_config.border_width));
+			style_popup_separator->set_grow_begin(Math::round(EDSCALE) - Math::max(Math::round(EDSCALE), p_config.border_width));
+			style_popup_separator->set_grow_end(Math::round(EDSCALE) - Math::max(Math::round(EDSCALE), p_config.border_width));
+			style_popup_separator->set_thickness(Math::max(Math::round(EDSCALE), p_config.border_width));
 
 			Ref<StyleBoxLine> style_popup_labeled_separator_left(memnew(StyleBoxLine));
-			style_popup_labeled_separator_left->set_grow_begin(Math::round(EDSCALE) - MAX(Math::round(EDSCALE), p_config.border_width));
+			style_popup_labeled_separator_left->set_grow_begin(Math::round(EDSCALE) - Math::max(Math::round(EDSCALE), p_config.border_width));
 			style_popup_labeled_separator_left->set_color(p_config.separator_color);
-			style_popup_labeled_separator_left->set_thickness(MAX(Math::round(EDSCALE), p_config.border_width));
+			style_popup_labeled_separator_left->set_thickness(Math::max(Math::round(EDSCALE), p_config.border_width));
 
 			Ref<StyleBoxLine> style_popup_labeled_separator_right(memnew(StyleBoxLine));
-			style_popup_labeled_separator_right->set_grow_end(Math::round(EDSCALE) - MAX(Math::round(EDSCALE), p_config.border_width));
+			style_popup_labeled_separator_right->set_grow_end(Math::round(EDSCALE) - Math::max(Math::round(EDSCALE), p_config.border_width));
 			style_popup_labeled_separator_right->set_color(p_config.separator_color);
-			style_popup_labeled_separator_right->set_thickness(MAX(Math::round(EDSCALE), p_config.border_width));
+			style_popup_labeled_separator_right->set_thickness(Math::max(Math::round(EDSCALE), p_config.border_width));
 
 			p_theme->set_stylebox("separator", "PopupMenu", style_popup_separator);
 			p_theme->set_stylebox("labeled_separator_left", "PopupMenu", style_popup_labeled_separator_left);
@@ -1474,7 +1474,7 @@ void EditorThemeManager::_populate_standard_styles(const Ref<EditorTheme> &p_the
 		p_theme->set_icon("decrement_pressed", "VScrollBar", empty_icon);
 
 		// Slider
-		const int background_margin = MAX(2, p_config.base_margin / 2);
+		const int background_margin = Math::max(2, p_config.base_margin / 2);
 
 		// HSlider.
 		p_theme->set_icon("grabber_highlight", "HSlider", p_theme->get_icon(SNAME("GuiSliderGrabberHl"), EditorStringName(EditorIcons)));
@@ -1742,7 +1742,7 @@ void EditorThemeManager::_populate_standard_styles(const Ref<EditorTheme> &p_the
 			// GraphFrame.
 
 			const int gf_corner_width = 7 * EDSCALE;
-			const int gf_border_width = 2 * MAX(1, EDSCALE);
+			const int gf_border_width = 2 * Math::max(1, EDSCALE);
 
 			Ref<StyleBoxFlat> graphframe_sb = make_flat_stylebox(Color(0.0, 0.0, 0.0, 0.2), gn_margin_side, gn_margin_side, gn_margin_side, gn_margin_bottom, gf_corner_width);
 			graphframe_sb->set_expand_margin(SIDE_TOP, 38 * EDSCALE);

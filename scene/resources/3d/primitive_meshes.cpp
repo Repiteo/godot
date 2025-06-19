@@ -392,8 +392,8 @@ void CapsuleMesh::_update_lightmap_size() {
 		float radial_length = radius * Math::PI * 0.5; // circumference of 90 degree bend
 		float vertical_length = radial_length * 2 + (height - 2.0 * radius); // total vertical length
 
-		_lightmap_size_hint.x = MAX(1.0, 4.0 * radial_length / texel_size) + padding;
-		_lightmap_size_hint.y = MAX(1.0, vertical_length / texel_size) + padding;
+		_lightmap_size_hint.x = Math::max(1.0, 4.0 * radial_length / texel_size) + padding;
+		_lightmap_size_hint.y = Math::max(1.0, vertical_length / texel_size) + padding;
 
 		set_lightmap_size_hint(_lightmap_size_hint);
 	}
@@ -700,10 +700,10 @@ void BoxMesh::_update_lightmap_size() {
 		float padding = get_uv2_padding();
 
 		float width = (size.x + size.z) / texel_size;
-		float length = (size.y + size.y + MAX(size.x, size.z)) / texel_size;
+		float length = (size.y + size.y + Math::max(size.x, size.z)) / texel_size;
 
-		_lightmap_size_hint.x = MAX(1.0, width) + 2.0 * padding;
-		_lightmap_size_hint.y = MAX(1.0, length) + 3.0 * padding;
+		_lightmap_size_hint.x = Math::max(1.0, width) + 2.0 * padding;
+		_lightmap_size_hint.y = Math::max(1.0, length) + 3.0 * padding;
 
 		set_lightmap_size_hint(_lightmap_size_hint);
 	}
@@ -732,7 +732,7 @@ void BoxMesh::create_mesh_array(Array &p_arr, Vector3 size, int subdivide_w, int
 	float padding_h = p_uv2_padding / total_h;
 	float width_h = size.x / total_h;
 	float depth_h = size.z / total_h;
-	float total_v = (size.y + size.y + MAX(size.x, size.z) + (3.0 * p_uv2_padding));
+	float total_v = (size.y + size.y + Math::max(size.x, size.z) + (3.0 * p_uv2_padding));
 	float padding_v = p_uv2_padding / total_v;
 	float width_v = size.x / total_v;
 	float height_v = size.y / total_v;
@@ -1047,13 +1047,13 @@ void CylinderMesh::_update_lightmap_size() {
 		float top_circumference = top_radius * Math::PI * 2.0;
 		float bottom_circumference = bottom_radius * Math::PI * 2.0;
 
-		float _width = MAX(top_circumference, bottom_circumference) / texel_size + padding;
-		_width = MAX(_width, (((top_radius + bottom_radius) / texel_size) + padding) * 2.0); // this is extremely unlikely to be larger, will only happen if padding is larger then our diameter.
-		_lightmap_size_hint.x = MAX(1.0, _width);
+		float _width = Math::max(top_circumference, bottom_circumference) / texel_size + padding;
+		_width = Math::max(_width, (((top_radius + bottom_radius) / texel_size) + padding) * 2.0); // this is extremely unlikely to be larger, will only happen if padding is larger then our diameter.
+		_lightmap_size_hint.x = Math::max(1.0, _width);
 
-		float _height = ((height + (MAX(top_radius, bottom_radius) * 2.0)) / texel_size) + (2.0 * padding);
+		float _height = ((height + (Math::max(top_radius, bottom_radius) * 2.0)) / texel_size) + (2.0 * padding);
 
-		_lightmap_size_hint.y = MAX(1.0, _height);
+		_lightmap_size_hint.y = Math::max(1.0, _height);
 
 		set_lightmap_size_hint(_lightmap_size_hint);
 	}
@@ -1073,11 +1073,11 @@ void CylinderMesh::create_mesh_array(Array &p_arr, float top_radius, float botto
 	// Only used if we calculate UV2
 	float top_circumference = top_radius * Math::PI * 2.0;
 	float bottom_circumference = bottom_radius * Math::PI * 2.0;
-	float vertical_length = height + MAX(2.0 * top_radius, 2.0 * bottom_radius) + (2.0 * p_uv2_padding);
+	float vertical_length = height + Math::max(2.0 * top_radius, 2.0 * bottom_radius) + (2.0 * p_uv2_padding);
 	float height_v = height / vertical_length;
 	float padding_v = p_uv2_padding / vertical_length;
 
-	float horizontal_length = MAX(MAX(2.0 * (top_radius + bottom_radius + p_uv2_padding), top_circumference + p_uv2_padding), bottom_circumference + p_uv2_padding);
+	float horizontal_length = Math::max(Math::max(2.0 * (top_radius + bottom_radius + p_uv2_padding), top_circumference + p_uv2_padding), bottom_circumference + p_uv2_padding);
 	float center_h = 0.5 * (horizontal_length - p_uv2_padding) / horizontal_length;
 	float top_h = top_circumference / horizontal_length;
 	float bottom_h = bottom_circumference / horizontal_length;
@@ -1174,7 +1174,7 @@ void CylinderMesh::create_mesh_array(Array &p_arr, float top_radius, float botto
 		ADD_TANGENT(1.0, 0.0, 0.0, 1.0)
 		uvs.push_back(Vector2(0.25, 0.75));
 		if (p_add_uv2) {
-			uv2s.push_back(Vector2(top_h, height_v + padding_v + MAX(top_v, bottom_v)));
+			uv2s.push_back(Vector2(top_h, height_v + padding_v + Math::max(top_v, bottom_v)));
 		}
 		point++;
 
@@ -1199,7 +1199,7 @@ void CylinderMesh::create_mesh_array(Array &p_arr, float top_radius, float botto
 			ADD_TANGENT(1.0, 0.0, 0.0, 1.0)
 			uvs.push_back(Vector2(u, v));
 			if (p_add_uv2) {
-				uv2s.push_back(Vector2(top_h + (x * top_h), height_v + padding_v + MAX(top_v, bottom_v) + (z * top_v)));
+				uv2s.push_back(Vector2(top_h + (x * top_h), height_v + padding_v + Math::max(top_v, bottom_v) + (z * top_v)));
 			}
 			point++;
 
@@ -1221,7 +1221,7 @@ void CylinderMesh::create_mesh_array(Array &p_arr, float top_radius, float botto
 		ADD_TANGENT(1.0, 0.0, 0.0, 1.0)
 		uvs.push_back(Vector2(0.75, 0.75));
 		if (p_add_uv2) {
-			uv2s.push_back(Vector2(top_h + top_h + padding_h + bottom_h, height_v + padding_v + MAX(top_v, bottom_v)));
+			uv2s.push_back(Vector2(top_h + top_h + padding_h + bottom_h, height_v + padding_v + Math::max(top_v, bottom_v)));
 		}
 		point++;
 
@@ -1246,7 +1246,7 @@ void CylinderMesh::create_mesh_array(Array &p_arr, float top_radius, float botto
 			ADD_TANGENT(1.0, 0.0, 0.0, 1.0)
 			uvs.push_back(Vector2(u, v));
 			if (p_add_uv2) {
-				uv2s.push_back(Vector2(top_h + top_h + padding_h + bottom_h + (x * bottom_h), height_v + padding_v + MAX(top_v, bottom_v) - (z * bottom_v)));
+				uv2s.push_back(Vector2(top_h + top_h + padding_h + bottom_h + (x * bottom_h), height_v + padding_v + Math::max(top_v, bottom_v) - (z * bottom_v)));
 			}
 			point++;
 
@@ -1401,8 +1401,8 @@ void PlaneMesh::_update_lightmap_size() {
 		Size2i _lightmap_size_hint;
 		float padding = get_uv2_padding();
 
-		_lightmap_size_hint.x = MAX(1.0, (size.x / texel_size) + padding);
-		_lightmap_size_hint.y = MAX(1.0, (size.y / texel_size) + padding);
+		_lightmap_size_hint.x = Math::max(1.0, (size.x / texel_size) + padding);
+		_lightmap_size_hint.y = Math::max(1.0, (size.y / texel_size) + padding);
 
 		set_lightmap_size_hint(_lightmap_size_hint);
 	}
@@ -1599,8 +1599,8 @@ void PrismMesh::_update_lightmap_size() {
 		float width = (size.x + size.z) / texel_size;
 		float length = (size.y + size.y + size.z) / texel_size;
 
-		_lightmap_size_hint.x = MAX(1.0, width) + 2.0 * padding;
-		_lightmap_size_hint.y = MAX(1.0, length) + 3.0 * padding;
+		_lightmap_size_hint.x = Math::max(1.0, width) + 2.0 * padding;
+		_lightmap_size_hint.y = Math::max(1.0, length) + 3.0 * padding;
 
 		set_lightmap_size_hint(_lightmap_size_hint);
 	}
@@ -1964,9 +1964,9 @@ void SphereMesh::_update_lightmap_size() {
 		float padding = get_uv2_padding();
 
 		float _width = radius * Math::TAU;
-		_lightmap_size_hint.x = MAX(1.0, (_width / texel_size) + padding);
+		_lightmap_size_hint.x = Math::max(1.0, (_width / texel_size) + padding);
 		float _height = (is_hemisphere ? 1.0 : 0.5) * height * Math::PI; // note, with hemisphere height is our radius, while with a full sphere it is the diameter..
-		_lightmap_size_hint.y = MAX(1.0, (_height / texel_size) + padding);
+		_lightmap_size_hint.y = Math::max(1.0, (_height / texel_size) + padding);
 
 		set_lightmap_size_hint(_lightmap_size_hint);
 	}
@@ -2191,9 +2191,9 @@ void TorusMesh::_update_lightmap_size() {
 		float radius = (max_radius - min_radius) * 0.5;
 
 		float _width = max_radius * Math::TAU;
-		_lightmap_size_hint.x = MAX(1.0, (_width / texel_size) + padding);
+		_lightmap_size_hint.x = Math::max(1.0, (_width / texel_size) + padding);
 		float _height = radius * Math::TAU;
-		_lightmap_size_hint.y = MAX(1.0, (_height / texel_size) + padding);
+		_lightmap_size_hint.y = Math::max(1.0, (_height / texel_size) + padding);
 
 		set_lightmap_size_hint(_lightmap_size_hint);
 	}
@@ -2567,7 +2567,7 @@ void TubeTrailMesh::_create_mesh_array(Array &p_arr) const {
 			point++;
 			{
 				bone_indices.push_back(bone);
-				bone_indices.push_back(MIN(sections, bone + 1));
+				bone_indices.push_back(Math::min(sections, bone + 1));
 				bone_indices.push_back(0);
 				bone_indices.push_back(0);
 
@@ -2952,7 +2952,7 @@ void RibbonTrailMesh::_create_mesh_array(Array &p_arr) const {
 
 		for (int i = 0; i < (shape == SHAPE_CROSS ? 4 : 2); i++) {
 			bone_indices.push_back(bone);
-			bone_indices.push_back(MIN(sections, bone + 1));
+			bone_indices.push_back(Math::min(sections, bone + 1));
 			bone_indices.push_back(0);
 			bone_indices.push_back(0);
 
@@ -3092,7 +3092,7 @@ void TextMesh::_generate_glyph_mesh_data(const GlyphMeshKey &p_key, const Glyph 
 					ERR_FAIL_MSG(vformat("Invalid conic arc point sequence at %d:%d", i, j));
 				}
 
-				real_t step = CLAMP(curve_step / (p0 - p2).length(), 0.01, 0.5);
+				real_t step = Math::clamp(curve_step / (p0 - p2).length(), 0.01, 0.5);
 				real_t t = step;
 				while (t < 1.0) {
 					real_t omt = (1.0 - t);
@@ -3130,7 +3130,7 @@ void TextMesh::_generate_glyph_mesh_data(const GlyphMeshKey &p_key, const Glyph 
 				Vector2 p2 = Vector2(points[next1].x, points[next1].y);
 				Vector2 p3 = Vector2(points[next2].x, points[next2].y);
 
-				real_t step = CLAMP(curve_step / (p0 - p3).length(), 0.01, 0.5);
+				real_t step = Math::clamp(curve_step / (p0 - p3).length(), 0.01, 0.5);
 				real_t t = step;
 				while (t < 1.0) {
 					Vector2 point = p0.bezier_interpolate(p1, p2, p3, t);
@@ -3275,7 +3275,7 @@ void TextMesh::_create_mesh_array(Array &p_arr) const {
 		float max_line_w = 0.0;
 		for (int i = 0; i < line_breaks.size(); i = i + 2) {
 			RID line = TS->shaped_text_substr(text_rid, line_breaks[i], line_breaks[i + 1] - line_breaks[i]);
-			max_line_w = MAX(max_line_w, TS->shaped_text_get_width(line));
+			max_line_w = Math::max(max_line_w, TS->shaped_text_get_width(line));
 			lines_rid.push_back(line);
 		}
 
@@ -3379,10 +3379,10 @@ void TextMesh::_create_mesh_array(Array &p_arr) const {
 				}
 
 				for (int r = 0; r < glyphs[j].repeat; r++) {
-					min_p.x = MIN(gl_data.min_p.x + offset.x + gl_of.x, min_p.x);
-					min_p.y = MIN(gl_data.min_p.y - offset.y + gl_of.y, min_p.y);
-					max_p.x = MAX(gl_data.max_p.x + offset.x + gl_of.x, max_p.x);
-					max_p.y = MAX(gl_data.max_p.y - offset.y + gl_of.y, max_p.y);
+					min_p.x = Math::min(gl_data.min_p.x + offset.x + gl_of.x, min_p.x);
+					min_p.y = Math::min(gl_data.min_p.y - offset.y + gl_of.y, min_p.y);
+					max_p.x = Math::max(gl_data.max_p.x + offset.x + gl_of.x, max_p.x);
+					max_p.y = Math::max(gl_data.max_p.y - offset.y + gl_of.y, max_p.y);
 
 					offset.x += glyphs[j].advance * pixel_size;
 				}
@@ -3811,7 +3811,7 @@ Ref<Font> TextMesh::_get_font_or_default() const {
 
 void TextMesh::set_font_size(int p_size) {
 	if (font_size != p_size) {
-		font_size = CLAMP(p_size, 1, 127);
+		font_size = Math::clamp(p_size, 1, 127);
 		dirty_font = true;
 		dirty_cache = true;
 		request_update();
@@ -3859,7 +3859,7 @@ BitField<TextServer::JustificationFlag> TextMesh::get_justification_flags() cons
 
 void TextMesh::set_depth(real_t p_depth) {
 	if (depth != p_depth) {
-		depth = MAX(p_depth, 0.0);
+		depth = Math::max(p_depth, 0.0);
 		request_update();
 	}
 }
@@ -3882,7 +3882,7 @@ real_t TextMesh::get_width() const {
 
 void TextMesh::set_pixel_size(real_t p_amount) {
 	if (pixel_size != p_amount) {
-		pixel_size = CLAMP(p_amount, 0.0001, 128.0);
+		pixel_size = Math::clamp(p_amount, 0.0001, 128.0);
 		dirty_cache = true;
 		request_update();
 	}
@@ -3905,7 +3905,7 @@ Point2 TextMesh::get_offset() const {
 
 void TextMesh::set_curve_step(real_t p_step) {
 	if (curve_step != p_step) {
-		curve_step = CLAMP(p_step, 0.1, 10.0);
+		curve_step = Math::clamp(p_step, 0.1, 10.0);
 		dirty_cache = true;
 		request_update();
 	}

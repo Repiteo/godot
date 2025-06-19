@@ -482,7 +482,7 @@ Array ScriptTextEditor::_inline_object_parse(const String &p_text, int p_line) {
 				}
 			}
 		}
-		i_end_previous = MAX(i_end_previous, i_start);
+		i_end_previous = Math::max(i_end_previous, i_start);
 		i_start = p_text.find("Color", i_start + 1);
 	}
 	return result;
@@ -614,8 +614,8 @@ void ScriptTextEditor::_update_background_color() {
 	// Set the warning background.
 	if (warning_line_color.a != 0.0) {
 		for (const ScriptLanguage::Warning &warning : warnings) {
-			int warning_start_line = CLAMP(warning.start_line - 1, 0, te->get_line_count() - 1);
-			int warning_end_line = CLAMP(warning.end_line - 1, 0, te->get_line_count() - 1);
+			int warning_start_line = Math::clamp(warning.start_line - 1, 0, te->get_line_count() - 1);
+			int warning_end_line = Math::clamp(warning.end_line - 1, 0, te->get_line_count() - 1);
 			int folded_line_header = te->get_folded_line_header(warning_start_line);
 
 			// If the warning highlight is too long, only highlight the start line.
@@ -633,7 +633,7 @@ void ScriptTextEditor::_update_background_color() {
 	// Set the error background.
 	if (marked_line_color.a != 0.0) {
 		for (const ScriptLanguage::ScriptError &error : errors) {
-			int error_line = CLAMP(error.line - 1, 0, te->get_line_count() - 1);
+			int error_line = Math::clamp(error.line - 1, 0, te->get_line_count() - 1);
 			int folded_line_header = te->get_folded_line_header(error_line);
 
 			te->set_line_background_color(folded_line_header, marked_line_color);

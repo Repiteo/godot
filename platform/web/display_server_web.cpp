@@ -440,7 +440,7 @@ void DisplayServerWeb::tts_speak(const String &p_text, const String &p_voice, in
 	CharString string = p_text.utf8();
 	utterance_ids[p_utterance_id] = string;
 
-	godot_js_tts_speak(string.get_data(), p_voice.utf8().get_data(), CLAMP(p_volume, 0, 100), CLAMP(p_pitch, 0.f, 2.f), CLAMP(p_rate, 0.1f, 10.f), p_utterance_id, DisplayServerWeb::js_utterance_callback);
+	godot_js_tts_speak(string.get_data(), p_voice.utf8().get_data(), Math::clamp(p_volume, 0, 100), Math::clamp(p_pitch, 0.f, 2.f), Math::clamp(p_rate, 0.1f, 10.f), p_utterance_id, DisplayServerWeb::js_utterance_callback);
 }
 
 void DisplayServerWeb::tts_pause() {
@@ -477,7 +477,7 @@ void DisplayServerWeb::_js_utterance_callback(int p_event, int p_id, int p_pos) 
 		if ((TTSUtteranceEvent)p_event == DisplayServer::TTS_UTTERANCE_BOUNDARY) {
 			// Convert position from UTF-8 to UTF-32.
 			const CharString &string = ds->utterance_ids[p_id];
-			for (int i = 0; i < MIN(p_pos, string.length()); i++) {
+			for (int i = 0; i < Math::min(p_pos, string.length()); i++) {
 				uint8_t c = string[i];
 				if ((c & 0xe0) == 0xc0) {
 					i += 1;

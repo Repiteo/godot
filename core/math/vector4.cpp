@@ -120,7 +120,7 @@ Vector4 Vector4::abs() const {
 }
 
 Vector4 Vector4::sign() const {
-	return Vector4(SIGN(x), SIGN(y), SIGN(z), SIGN(w));
+	return Vector4(Math::sign(x), Math::sign(y), Math::sign(z), Math::sign(w));
 }
 
 Vector4 Vector4::floor() const {
@@ -202,18 +202,18 @@ Vector4 Vector4::inverse() const {
 
 Vector4 Vector4::clamp(const Vector4 &p_min, const Vector4 &p_max) const {
 	return Vector4(
-			CLAMP(x, p_min.x, p_max.x),
-			CLAMP(y, p_min.y, p_max.y),
-			CLAMP(z, p_min.z, p_max.z),
-			CLAMP(w, p_min.w, p_max.w));
+			Math::clamp(x, p_min.x, p_max.x),
+			Math::clamp(y, p_min.y, p_max.y),
+			Math::clamp(z, p_min.z, p_max.z),
+			Math::clamp(w, p_min.w, p_max.w));
 }
 
 Vector4 Vector4::clampf(real_t p_min, real_t p_max) const {
 	return Vector4(
-			CLAMP(x, p_min, p_max),
-			CLAMP(y, p_min, p_max),
-			CLAMP(z, p_min, p_max),
-			CLAMP(w, p_min, p_max));
+			Math::clamp(x, p_min, p_max),
+			Math::clamp(y, p_min, p_max),
+			Math::clamp(z, p_min, p_max),
+			Math::clamp(w, p_min, p_max));
 }
 
 Vector4::operator String() const {

@@ -135,7 +135,7 @@ void EditorTitleBar::_notification(int p_what) {
 		int max_offset = next->get_position().x + next->get_size().x - next->get_combined_minimum_size().x - c_size.x;
 
 		int offset = (title_size.width - c_size.width) / 2;
-		offset = CLAMP(offset, min_offset, max_offset);
+		offset = Math::clamp(offset, min_offset, max_offset);
 
 		fit_child_in_rect(prev, Rect2i(prev->get_position().x, 0, offset - prev->get_position().x, title_size.height));
 		fit_child_in_rect(base, Rect2i(offset, 0, c_size.width, title_size.height));

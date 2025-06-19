@@ -114,9 +114,9 @@ RID XRVRS::make_vrs_texture(const Size2 &p_target_size, const PackedVector2Array
 	// Make sure we have at least one pixel.
 	vrs_size = vrs_size.maxf(1.0);
 
-	float max_radius = 0.5 * MIN(vrs_size.x, vrs_size.y); // Maximum radius that fits inside of our image
+	float max_radius = 0.5 * Math::min(vrs_size.x, vrs_size.y); // Maximum radius that fits inside of our image
 	float min_radius = vrs_min_radius * max_radius / 100.0; // Minimum radius as a percentage of our size
-	real_t outer_radius = MAX(1.0, (max_radius - min_radius) / vrs_strength);
+	real_t outer_radius = Math::max(1.0, (max_radius - min_radius) / vrs_strength);
 	Size2 vrs_sizei = vrs_size;
 
 	// Our density map is now unified, with a value of (0.0, 0.0) meaning a 1x1 texel size and (1.0, 1.0) an max texel size.
@@ -158,9 +158,9 @@ RID XRVRS::make_vrs_texture(const Size2 &p_target_size, const PackedVector2Array
 					// offered by the density map being different in each direction currently unused, it was found to give better tile
 					// distribution on hardware that supports the feature natively. This area is open to improvements in the future.
 					Vector2 offset = Vector2(x - view_center.x, y - view_center.y) / region_ratio;
-					real_t density = MAX(offset.length() - min_radius, 0.0) / outer_radius;
-					data_ptr[d++] = CLAMP(255.0 * density, 0, 255);
-					data_ptr[d++] = CLAMP(255.0 * density, 0, 255);
+					real_t density = Math::max(offset.length() - min_radius, 0.0) / outer_radius;
+					data_ptr[d++] = Math::clamp(255.0 * density, 0, 255);
+					data_ptr[d++] = Math::clamp(255.0 * density, 0, 255);
 				}
 			}
 			images.push_back(Image::create_from_data(vrs_sizei.x, vrs_sizei.y, false, Image::FORMAT_RG8, data));

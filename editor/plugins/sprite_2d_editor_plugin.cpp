@@ -493,7 +493,7 @@ void Sprite2DEditor::_center_view() {
 	Ref<Texture2D> tex = node->get_texture();
 	ERR_FAIL_COND(tex.is_null());
 	Vector2 zoom_factor = (debug_uv->get_size() - Vector2(1, 1) * 50 * EDSCALE) / tex->get_size();
-	zoom_widget->set_zoom(MIN(zoom_factor.x, zoom_factor.y));
+	zoom_widget->set_zoom(Math::min(zoom_factor.x, zoom_factor.y));
 	// Recalculate scroll limits.
 	_update_zoom_and_pan(false);
 

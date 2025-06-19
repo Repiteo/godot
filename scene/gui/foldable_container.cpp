@@ -50,7 +50,7 @@ Size2 FoldableContainer::get_minimum_size() const {
 	}
 	ms += theme_cache.panel_style->get_minimum_size();
 
-	return Size2(MAX(ms.width, title_minimum_size.width), ms.height + title_minimum_size.height);
+	return Size2(Math::max(ms.width, title_minimum_size.width), ms.height + title_minimum_size.height);
 }
 
 void FoldableContainer::fold() {
@@ -282,10 +282,10 @@ void FoldableContainer::_notification(int p_what) {
 
 			int title_style_ofs = (title_position == POSITION_TOP) ? title_style->get_margin(SIDE_TOP) : title_style->get_margin(SIDE_BOTTOM);
 			Point2 title_text_pos(title_style->get_margin(SIDE_LEFT), title_style_ofs);
-			title_text_pos.y += MAX((title_minimum_size.height - title_ms.height - text_buf->get_size().height) * 0.5, 0);
+			title_text_pos.y += Math::max((title_minimum_size.height - title_ms.height - text_buf->get_size().height) * 0.5, 0);
 
 			title_text_width -= icon->get_width() + h_separation + title_controls_width;
-			Point2 icon_pos(0, MAX((title_minimum_size.height - title_ms.height - icon->get_height()) * 0.5, 0) + title_style_ofs);
+			Point2 icon_pos(0, Math::max((title_minimum_size.height - title_ms.height - icon->get_height()) * 0.5, 0) + title_style_ofs);
 
 			bool rtl = is_layout_rtl();
 			if (rtl) {
@@ -330,7 +330,7 @@ void FoldableContainer::_notification(int p_what) {
 
 			uint32_t title_count = title_controls.size();
 			if (title_count > 0) {
-				int h_separation = MAX(theme_cache.h_separation, 0);
+				int h_separation = Math::max(theme_cache.h_separation, 0);
 				real_t offset = 0.0;
 				if (rtl) {
 					offset = title_style->get_margin(SIDE_LEFT);
@@ -443,7 +443,7 @@ void FoldableContainer::_update_title_min_size() const {
 	if (!title.is_empty()) {
 		title_minimum_size.width += h_separation;
 		Size2 text_size = text_buf->get_size();
-		title_minimum_size.height += MAX(text_size.height, icon->get_height());
+		title_minimum_size.height += Math::max(text_size.height, icon->get_height());
 		if (overrun_behavior == TextServer::OverrunBehavior::OVERRUN_NO_TRIMMING) {
 			title_minimum_size.width += text_size.width;
 		}
@@ -461,13 +461,13 @@ void FoldableContainer::_update_title_min_size() const {
 			}
 			Vector2 size = control->get_combined_minimum_size();
 			title_minimum_size.width += size.width;
-			controls_height = MAX(controls_height, size.height);
+			controls_height = Math::max(controls_height, size.height);
 			visible_controls++;
 		}
 		if (visible_controls > 0) {
 			title_minimum_size.width += h_separation * visible_controls;
 		}
-		title_minimum_size.height = MAX(title_minimum_size.height, title_ms.height + controls_height);
+		title_minimum_size.height = Math::max(title_minimum_size.height, title_ms.height + controls_height);
 	}
 }
 

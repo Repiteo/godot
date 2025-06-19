@@ -126,7 +126,7 @@ int Label::get_line_height(int p_line) const {
 		int h = font_h;
 		for (const Paragraph &para : paragraphs) {
 			for (const RID &line_rid : para.lines_rid) {
-				h = MAX(h, TS->shaped_text_get_size(line_rid).y);
+				h = Math::max(h, TS->shaped_text_get_size(line_rid).y);
 			}
 		}
 		return h;
@@ -385,7 +385,7 @@ void Label::_update_visible() const {
 	}
 
 	minsize.height = 0;
-	int last_line = MIN(total_line_count, lines_visible + lines_skipped);
+	int last_line = Math::min(total_line_count, lines_visible + lines_skipped);
 
 	int line_index = 0;
 	for (const Paragraph &para : paragraphs) {
@@ -587,7 +587,7 @@ int Label::get_layout_data(Vector2 &r_offset, int &r_last_line, int &r_line_spac
 		lines_visible = max_lines_visible;
 	}
 
-	r_last_line = MIN(total_line_count, lines_visible + lines_skipped);
+	r_last_line = Math::min(total_line_count, lines_visible + lines_skipped);
 
 	// Get real total height.
 	int total_glyphs = 0;
@@ -970,7 +970,7 @@ Size2 Label::get_minimum_size() const {
 	const Ref<Font> &font = (settings.is_valid() && settings->get_font().is_valid()) ? settings->get_font() : theme_cache.font;
 	int font_size = settings.is_valid() ? settings->get_font_size() : theme_cache.font_size;
 
-	min_size.height = MAX(min_size.height, font->get_height(font_size));
+	min_size.height = Math::max(min_size.height, font->get_height(font_size));
 
 	Size2 min_style = theme_cache.normal_style->get_minimum_size();
 	if (autowrap_mode != TextServer::AUTOWRAP_OFF) {

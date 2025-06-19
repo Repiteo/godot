@@ -150,8 +150,8 @@ void SkeletonModification2DTwoBoneIK::_execute(float p_delta) {
 	float joint_one_to_target = target_difference.length();
 	float angle_atan = target_difference.angle();
 
-	float bone_one_length = joint_one_bone->get_length() * MIN(joint_one_bone->get_global_scale().x, joint_one_bone->get_global_scale().y);
-	float bone_two_length = joint_two_bone->get_length() * MIN(joint_two_bone->get_global_scale().x, joint_two_bone->get_global_scale().y);
+	float bone_one_length = joint_one_bone->get_length() * Math::min(joint_one_bone->get_global_scale().x, joint_one_bone->get_global_scale().y);
+	float bone_two_length = joint_two_bone->get_length() * Math::min(joint_two_bone->get_global_scale().x, joint_two_bone->get_global_scale().y);
 	bool override_angles_due_to_out_of_range = false;
 
 	if (joint_one_to_target < target_minimum_distance) {

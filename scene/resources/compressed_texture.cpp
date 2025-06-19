@@ -269,8 +269,8 @@ bool CompressedTexture2D::is_pixel_opaque(int p_x, int p_y) const {
 		int x = p_x * aw / w;
 		int y = p_y * ah / h;
 
-		x = CLAMP(x, 0, aw - 1);
-		y = CLAMP(y, 0, ah - 1);
+		x = Math::clamp(x, 0, aw - 1);
+		y = Math::clamp(y, 0, ah - 1);
 
 		return alpha_cache->get_bit(x, y);
 	}
@@ -317,8 +317,8 @@ Ref<Image> CompressedTexture2D::load_image_from_file(Ref<FileAccess> f, int p_si
 
 			if (p_size_limit > 0 && i < (mipmaps - 1) && (sw > p_size_limit || sh > p_size_limit)) {
 				//can't load this due to size limit
-				sw = MAX(sw >> 1, 1);
-				sh = MAX(sh >> 1, 1);
+				sw = Math::max(sw >> 1, 1);
+				sh = Math::max(sh >> 1, 1);
 				f->seek(f->get_position() + size);
 				continue;
 			}
@@ -354,8 +354,8 @@ Ref<Image> CompressedTexture2D::load_image_from_file(Ref<FileAccess> f, int p_si
 
 			mipmap_images.push_back(img);
 
-			sw = MAX(sw >> 1, 1);
-			sh = MAX(sh >> 1, 1);
+			sw = Math::max(sw >> 1, 1);
+			sh = Math::max(sh >> 1, 1);
 		}
 
 		//print_line("mipmap read total: " + itos(mipmap_images.size()));
@@ -396,8 +396,8 @@ Ref<Image> CompressedTexture2D::load_image_from_file(Ref<FileAccess> f, int p_si
 		uint32_t size = f->get_32();
 		if (p_size_limit > 0 && (sw > p_size_limit || sh > p_size_limit)) {
 			//can't load this due to size limit
-			sw = MAX(sw >> 1, 1);
-			sh = MAX(sh >> 1, 1);
+			sw = Math::max(sw >> 1, 1);
+			sh = Math::max(sh >> 1, 1);
 			f->seek(f->get_position() + size);
 			return Ref<Image>();
 		}
@@ -413,8 +413,8 @@ Ref<Image> CompressedTexture2D::load_image_from_file(Ref<FileAccess> f, int p_si
 			ERR_FAIL_COND_V(img.is_null() || img->is_empty(), Ref<Image>());
 		}
 		format = img->get_format();
-		sw = MAX(sw >> 1, 1);
-		sh = MAX(sh >> 1, 1);
+		sw = Math::max(sw >> 1, 1);
+		sh = Math::max(sh >> 1, 1);
 		return img;
 	} else if (data_format == DATA_FORMAT_IMAGE) {
 		int size = Image::get_image_data_size(w, h, format, mipmaps ? true : false);

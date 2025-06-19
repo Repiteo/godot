@@ -1316,7 +1316,7 @@ void EditorAudioStreamPicker::_notification(int p_what) {
 					}
 					float offsets[MAX_TAGGED_FRAMES];
 
-					for (uint32_t i = 0; i < MIN(count, uint32_t(MAX_TAGGED_FRAMES)); i++) {
+					for (uint32_t i = 0; i < Math::min(count, uint32_t(MAX_TAGGED_FRAMES)); i++) {
 						offsets[i] = audio_stream->get_tagged_frame_offset(i);
 						if (offsets[i] != tagged_frame_offsets[i]) {
 							differ = true;
@@ -1401,7 +1401,7 @@ void EditorAudioStreamPicker::_preview_draw() {
 			Color accent = get_theme_color(SNAME("accent_color"), EditorStringName(Editor));
 
 			for (uint32_t i = 0; i < tagged_frame_offset_count; i++) {
-				int x = CLAMP(tagged_frame_offsets[i] * size.width / preview_len, 0, size.width);
+				int x = Math::clamp(tagged_frame_offsets[i] * size.width / preview_len, 0, size.width);
 				if (x == 0) {
 					continue; // Because some may always return 0, ignore offset 0.
 				}

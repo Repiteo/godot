@@ -933,11 +933,11 @@ void TileMapLayerEditorTilesPlugin::forward_canvas_draw_over_viewport(Control *p
 							Vector2i pos_in_rect = Vector2i(x, y) - drawn_grid_rect.position;
 
 							// Fade out the border of the grid.
-							float left_opacity = CLAMP(Math::inverse_lerp(0.0f, (float)fading, (float)pos_in_rect.x), 0.0f, 1.0f);
-							float right_opacity = CLAMP(Math::inverse_lerp((float)drawn_grid_rect.size.x, (float)(drawn_grid_rect.size.x - fading), (float)(pos_in_rect.x + 1)), 0.0f, 1.0f);
-							float top_opacity = CLAMP(Math::inverse_lerp(0.0f, (float)fading, (float)pos_in_rect.y), 0.0f, 1.0f);
-							float bottom_opacity = CLAMP(Math::inverse_lerp((float)drawn_grid_rect.size.y, (float)(drawn_grid_rect.size.y - fading), (float)(pos_in_rect.y + 1)), 0.0f, 1.0f);
-							float opacity = CLAMP(MIN(left_opacity, MIN(right_opacity, MIN(top_opacity, bottom_opacity))) + 0.1, 0.0f, 1.0f);
+							float left_opacity = Math::clamp(Math::inverse_lerp(0.0f, (float)fading, (float)pos_in_rect.x), 0.0f, 1.0f);
+							float right_opacity = Math::clamp(Math::inverse_lerp((float)drawn_grid_rect.size.x, (float)(drawn_grid_rect.size.x - fading), (float)(pos_in_rect.x + 1)), 0.0f, 1.0f);
+							float top_opacity = Math::clamp(Math::inverse_lerp(0.0f, (float)fading, (float)pos_in_rect.y), 0.0f, 1.0f);
+							float bottom_opacity = Math::clamp(Math::inverse_lerp((float)drawn_grid_rect.size.y, (float)(drawn_grid_rect.size.y - fading), (float)(pos_in_rect.y + 1)), 0.0f, 1.0f);
+							float opacity = Math::clamp(Math::min(left_opacity, Math::min(right_opacity, Math::min(top_opacity, bottom_opacity))) + 0.1, 0.0f, 1.0f);
 
 							Transform2D tile_xform;
 							tile_xform.set_origin(tile_set->map_to_local(Vector2(x, y)));
@@ -1734,7 +1734,7 @@ void TileMapLayerEditorTilesPlugin::_update_selection_pattern_from_tileset_tiles
 			selection_pattern->set_cell(Vector2(organized_size.x + unorganized_index, vertical_offset), cell->source_id, cell->get_atlas_coords(), cell->alternative_tile);
 			unorganized_index++;
 		}
-		vertical_offset += MAX(organized_size.y, 1);
+		vertical_offset += Math::max(organized_size.y, 1);
 	}
 	CanvasItemEditor::get_singleton()->update_viewport();
 	_update_transform_buttons();
@@ -3211,11 +3211,11 @@ void TileMapLayerEditorTerrainsPlugin::forward_canvas_draw_over_viewport(Control
 							Vector2i pos_in_rect = Vector2i(x, y) - drawn_grid_rect.position;
 
 							// Fade out the border of the grid.
-							float left_opacity = CLAMP(Math::inverse_lerp(0.0f, (float)fading, (float)pos_in_rect.x), 0.0f, 1.0f);
-							float right_opacity = CLAMP(Math::inverse_lerp((float)drawn_grid_rect.size.x, (float)(drawn_grid_rect.size.x - fading), (float)(pos_in_rect.x + 1)), 0.0f, 1.0f);
-							float top_opacity = CLAMP(Math::inverse_lerp(0.0f, (float)fading, (float)pos_in_rect.y), 0.0f, 1.0f);
-							float bottom_opacity = CLAMP(Math::inverse_lerp((float)drawn_grid_rect.size.y, (float)(drawn_grid_rect.size.y - fading), (float)(pos_in_rect.y + 1)), 0.0f, 1.0f);
-							float opacity = CLAMP(MIN(left_opacity, MIN(right_opacity, MIN(top_opacity, bottom_opacity))) + 0.1, 0.0f, 1.0f);
+							float left_opacity = Math::clamp(Math::inverse_lerp(0.0f, (float)fading, (float)pos_in_rect.x), 0.0f, 1.0f);
+							float right_opacity = Math::clamp(Math::inverse_lerp((float)drawn_grid_rect.size.x, (float)(drawn_grid_rect.size.x - fading), (float)(pos_in_rect.x + 1)), 0.0f, 1.0f);
+							float top_opacity = Math::clamp(Math::inverse_lerp(0.0f, (float)fading, (float)pos_in_rect.y), 0.0f, 1.0f);
+							float bottom_opacity = Math::clamp(Math::inverse_lerp((float)drawn_grid_rect.size.y, (float)(drawn_grid_rect.size.y - fading), (float)(pos_in_rect.y + 1)), 0.0f, 1.0f);
+							float opacity = Math::clamp(Math::min(left_opacity, Math::min(right_opacity, Math::min(top_opacity, bottom_opacity))) + 0.1, 0.0f, 1.0f);
 
 							Transform2D tile_xform;
 							tile_xform.set_origin(tile_set->map_to_local(Vector2(x, y)));
@@ -4164,8 +4164,8 @@ void TileMapLayerEditor::_move_tile_map_array_element(Object *p_undo_redo, Objec
 		begin = p_from_index;
 	} else {
 		// Moving.
-		begin = MIN(p_from_index, p_to_pos);
-		end = MIN(MAX(p_from_index, p_to_pos) + 1, end);
+		begin = Math::min(p_from_index, p_to_pos);
+		end = Math::min(Math::max(p_from_index, p_to_pos) + 1, end);
 	}
 
 #define ADD_UNDO(obj, property) undo_redo_man->add_undo_property(obj, property, obj->get(property));
@@ -4327,11 +4327,11 @@ void TileMapLayerEditor::_draw_overlay() {
 				Vector2i pos_in_rect = Vector2i(x, y) - displayed_rect.position;
 
 				// Fade out the border of the grid.
-				float left_opacity = CLAMP(Math::inverse_lerp(0.0f, (float)fading, (float)pos_in_rect.x), 0.0f, 1.0f);
-				float right_opacity = CLAMP(Math::inverse_lerp((float)displayed_rect.size.x, (float)(displayed_rect.size.x - fading), (float)(pos_in_rect.x + 1)), 0.0f, 1.0f);
-				float top_opacity = CLAMP(Math::inverse_lerp(0.0f, (float)fading, (float)pos_in_rect.y), 0.0f, 1.0f);
-				float bottom_opacity = CLAMP(Math::inverse_lerp((float)displayed_rect.size.y, (float)(displayed_rect.size.y - fading), (float)(pos_in_rect.y + 1)), 0.0f, 1.0f);
-				float opacity = CLAMP(MIN(left_opacity, MIN(right_opacity, MIN(top_opacity, bottom_opacity))) + 0.1, 0.0f, 1.0f);
+				float left_opacity = Math::clamp(Math::inverse_lerp(0.0f, (float)fading, (float)pos_in_rect.x), 0.0f, 1.0f);
+				float right_opacity = Math::clamp(Math::inverse_lerp((float)displayed_rect.size.x, (float)(displayed_rect.size.x - fading), (float)(pos_in_rect.x + 1)), 0.0f, 1.0f);
+				float top_opacity = Math::clamp(Math::inverse_lerp(0.0f, (float)fading, (float)pos_in_rect.y), 0.0f, 1.0f);
+				float bottom_opacity = Math::clamp(Math::inverse_lerp((float)displayed_rect.size.y, (float)(displayed_rect.size.y - fading), (float)(pos_in_rect.y + 1)), 0.0f, 1.0f);
+				float opacity = Math::clamp(Math::min(left_opacity, Math::min(right_opacity, Math::min(top_opacity, bottom_opacity))) + 0.1, 0.0f, 1.0f);
 
 				Transform2D tile_xform;
 				tile_xform.set_origin(tile_set->map_to_local(Vector2(x, y)));

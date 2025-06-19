@@ -868,7 +868,7 @@ int AudioStreamPlaybackInteractive::mix(AudioFrame *p_buffer, float p_rate_scale
 	int todo = p_frames;
 
 	while (todo) {
-		int to_mix = MIN(todo, BUFFER_SIZE);
+		int to_mix = Math::min(todo, BUFFER_SIZE);
 		_mix_internal(to_mix);
 		for (int i = 0; i < to_mix; i++) {
 			p_buffer[i] = mix_buffer[i];

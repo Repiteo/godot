@@ -573,11 +573,11 @@ bool RenderingShaderContainerD3D12::_generate_root_signature(BitField<RenderingD
 				} break;
 				case RES_CLASS_SRV: {
 					resource_range_type = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-					num_descriptors = MAX(1u, uniform.length); // An unbound R/O buffer is reflected as zero-size.
+					num_descriptors = Math::max(1u, uniform.length); // An unbound R/O buffer is reflected as zero-size.
 				} break;
 				case RES_CLASS_UAV: {
 					resource_range_type = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
-					num_descriptors = MAX(1u, uniform.length); // An unbound R/W buffer is reflected as zero-size.
+					num_descriptors = Math::max(1u, uniform.length); // An unbound R/W buffer is reflected as zero-size.
 					DEV_ASSERT(!uniform_d3d12.has_sampler);
 				} break;
 			}

@@ -54,13 +54,13 @@ public:
 
 	int read(T *p_buf, int p_size, bool p_advance = true) {
 		int left = data_left();
-		p_size = MIN(left, p_size);
+		p_size = Math::min(left, p_size);
 		int pos = read_pos;
 		int to_read = p_size;
 		int dst = 0;
 		while (to_read) {
 			int end = pos + to_read;
-			end = MIN(end, size());
+			end = Math::min(end, size());
 			int total = end - pos;
 			const T *read = data.ptr();
 			for (int i = 0; i < total; i++) {
@@ -83,14 +83,14 @@ public:
 				return 0;
 			}
 		}
-		p_size = MIN(left, p_size);
+		p_size = Math::min(left, p_size);
 		int pos = read_pos;
 		inc(pos, p_offset);
 		int to_read = p_size;
 		int dst = 0;
 		while (to_read) {
 			int end = pos + to_read;
-			end = MIN(end, size());
+			end = Math::min(end, size());
 			int total = end - pos;
 			for (int i = 0; i < total; i++) {
 				p_buf[dst++] = data[pos + i];
@@ -109,13 +109,13 @@ public:
 				return 0;
 			}
 		}
-		p_max_size = MIN(left, p_max_size);
+		p_max_size = Math::min(left, p_max_size);
 		int pos = read_pos;
 		inc(pos, p_offset);
 		int to_read = p_max_size;
 		while (to_read) {
 			int end = pos + to_read;
-			end = MIN(end, size());
+			end = Math::min(end, size());
 			int total = end - pos;
 			for (int i = 0; i < total; i++) {
 				if (data[pos + i] == t) {
@@ -129,13 +129,13 @@ public:
 	}
 
 	inline int advance_read(int p_n) {
-		p_n = MIN(p_n, data_left());
+		p_n = Math::min(p_n, data_left());
 		inc(read_pos, p_n);
 		return p_n;
 	}
 
 	inline int decrease_write(int p_n) {
-		p_n = MIN(p_n, data_left());
+		p_n = Math::min(p_n, data_left());
 		inc(write_pos, size_mask + 1 - p_n);
 		return p_n;
 	}
@@ -148,14 +148,14 @@ public:
 
 	int write(const T *p_buf, int p_size) {
 		int left = space_left();
-		p_size = MIN(left, p_size);
+		p_size = Math::min(left, p_size);
 
 		int pos = write_pos;
 		int to_write = p_size;
 		int src = 0;
 		while (to_write) {
 			int end = pos + to_write;
-			end = MIN(end, size());
+			end = Math::min(end, size());
 			int total = end - pos;
 
 			for (int i = 0; i < total; i++) {

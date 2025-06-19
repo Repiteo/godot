@@ -91,7 +91,7 @@ void Camera3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, int p_id,
 	if (camera->get_projection() == Camera3D::PROJECTION_PERSPECTIVE) {
 		Transform3D gt2 = camera->get_global_transform();
 		float a = _find_closest_angle_to_half_pi_arc(s[0], s[1], 1.0, gt2);
-		camera->set("fov", CLAMP(a * 2.0, 1, 179));
+		camera->set("fov", Math::clamp(a * 2.0, 1, 179));
 	} else {
 		Camera3D::KeepAspect aspect = camera->get_keep_aspect_mode();
 		Vector3 camera_far = aspect == Camera3D::KeepAspect::KEEP_WIDTH ? Vector3(4096, 0, -1) : Vector3(0, 4096, -1);
@@ -103,7 +103,7 @@ void Camera3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, int p_id,
 			d = Math::snapped(d, Node3DEditor::get_singleton()->get_translate_snap());
 		}
 
-		d = CLAMP(d, 0.1, 16384);
+		d = Math::clamp(d, 0.1, 16384);
 
 		camera->set("size", d);
 	}
@@ -196,7 +196,7 @@ void Camera3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 			ADD_TRIANGLE(Vector3(), side - up, nside - up);
 
 			handles.push_back(side);
-			side.x = MIN(side.x, hsize * 0.25);
+			side.x = Math::min(side.x, hsize * 0.25);
 			nside.x = -side.x;
 			Vector3 tup(0, up.y + hsize / 2, side.z);
 			ADD_TRIANGLE(tup, side + up, nside + up);
@@ -226,7 +226,7 @@ void Camera3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 			ADD_QUAD(up + right, up + right + back, up - right + back, up - right);
 			ADD_QUAD(-up + right, -up + right + back, -up - right + back, -up - right);
 
-			right.x = MIN(right.x, keep_size * 0.25);
+			right.x = Math::min(right.x, keep_size * 0.25);
 			Vector3 tup(0, up.y + keep_size / 2, back.z);
 			ADD_TRIANGLE(tup, right + up + back, -right + up + back);
 		} break;
@@ -245,7 +245,7 @@ void Camera3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 			ADD_TRIANGLE(Vector3(), side + up + offset, nside + up + offset);
 			ADD_TRIANGLE(Vector3(), side - up + offset, nside - up + offset);
 
-			side.x = MIN(side.x, hsize * 0.25);
+			side.x = Math::min(side.x, hsize * 0.25);
 			nside.x = -side.x;
 			Vector3 tup(0, up.y + hsize / 2, side.z);
 			ADD_TRIANGLE(tup + offset, side + up + offset, nside + up + offset);

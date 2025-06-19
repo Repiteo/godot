@@ -905,7 +905,7 @@ void BoneMapper::auto_mapping_process(Ref<BoneMap> &p_bone_map) {
 				// Tips detection by thumb children size.
 				if (tips_index < 0) {
 					if (i == 0) {
-						thumb_tips_size = MAX(0, search_path.size() - 3);
+						thumb_tips_size = Math::max(0, search_path.size() - 3);
 					}
 					tips_index = thumb_tips_size - 1;
 				}
@@ -962,7 +962,7 @@ void BoneMapper::auto_mapping_process(Ref<BoneMap> &p_bone_map) {
 				search_path.push_back(finger_root);
 				// Tips detection by thumb children size.
 				if (i == 0) {
-					thumb_tips_size = MAX(0, search_path.size() - 3);
+					thumb_tips_size = Math::max(0, search_path.size() - 3);
 				}
 				tips_index = thumb_tips_size - 1;
 				for (int j = 0; j <= tips_index; j++) {
@@ -1034,7 +1034,7 @@ void BoneMapper::auto_mapping_process(Ref<BoneMap> &p_bone_map) {
 				// Tips detection by thumb children size.
 				if (tips_index < 0) {
 					if (i == 0) {
-						thumb_tips_size = MAX(0, search_path.size() - 3);
+						thumb_tips_size = Math::max(0, search_path.size() - 3);
 					}
 					tips_index = thumb_tips_size - 1;
 				}
@@ -1091,7 +1091,7 @@ void BoneMapper::auto_mapping_process(Ref<BoneMap> &p_bone_map) {
 				search_path.push_back(finger_root);
 				// Tips detection by thumb children size.
 				if (i == 0) {
-					thumb_tips_size = MAX(0, search_path.size() - 3);
+					thumb_tips_size = Math::max(0, search_path.size() - 3);
 				}
 				tips_index = thumb_tips_size - 1;
 				for (int j = 0; j <= tips_index; j++) {

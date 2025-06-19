@@ -131,9 +131,9 @@ RID RenderingServer::get_test_texture() {
 					c.b = y;
 				}
 
-				w[(y * TEST_TEXTURE_SIZE + x) * 3 + 0] = uint8_t(CLAMP(c.r, 0, 255));
-				w[(y * TEST_TEXTURE_SIZE + x) * 3 + 1] = uint8_t(CLAMP(c.g, 0, 255));
-				w[(y * TEST_TEXTURE_SIZE + x) * 3 + 2] = uint8_t(CLAMP(c.b, 0, 255));
+				w[(y * TEST_TEXTURE_SIZE + x) * 3 + 0] = uint8_t(Math::clamp(c.r, 0, 255));
+				w[(y * TEST_TEXTURE_SIZE + x) * 3 + 1] = uint8_t(Math::clamp(c.g, 0, 255));
+				w[(y * TEST_TEXTURE_SIZE + x) * 3 + 2] = uint8_t(Math::clamp(c.b, 0, 255));
 			}
 		}
 	}
@@ -327,9 +327,9 @@ void _get_axis_angle(const Vector3 &p_normal, const Vector4 &p_tangent, float &r
 	r_angle = float(angle);
 
 	if (d < 0.0) {
-		r_angle = CLAMP((1.0 - r_angle / Math::PI) * 0.5, 0.0, 0.49999);
+		r_angle = Math::clamp((1.0 - r_angle / Math::PI) * 0.5, 0.0, 0.49999);
 	} else {
-		r_angle = CLAMP((r_angle / Math::PI) * 0.5 + 0.5, 0.500008, 1.0);
+		r_angle = Math::clamp((r_angle / Math::PI) * 0.5 + 0.5, 0.500008, 1.0);
 	}
 }
 
@@ -463,9 +463,9 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 							for (int i = 0; i < p_vertex_array_len; i++) {
 								Vector3 pos = (src[i] - r_aabb.position) / r_aabb.size;
 								uint16_t vector[4] = {
-									(uint16_t)CLAMP(pos.x * 65535, 0, 65535),
-									(uint16_t)CLAMP(pos.y * 65535, 0, 65535),
-									(uint16_t)CLAMP(pos.z * 65535, 0, 65535),
+									(uint16_t)Math::clamp(pos.x * 65535, 0, 65535),
+									(uint16_t)Math::clamp(pos.y * 65535, 0, 65535),
+									(uint16_t)Math::clamp(pos.z * 65535, 0, 65535),
 									(uint16_t)0
 								};
 
@@ -501,8 +501,8 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 								{
 									Vector2 res = axis.octahedron_encode();
 									uint16_t vector[2] = {
-										(uint16_t)CLAMP(res.x * 65535, 0, 65535),
-										(uint16_t)CLAMP(res.y * 65535, 0, 65535),
+										(uint16_t)Math::clamp(res.x * 65535, 0, 65535),
+										(uint16_t)Math::clamp(res.y * 65535, 0, 65535),
 									};
 
 									memcpy(&vw[p_offsets[RS::ARRAY_NORMAL] + i * p_normal_stride], vector, 4);
@@ -512,10 +512,10 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 								{
 									Vector3 pos = (src[i] - r_aabb.position) / r_aabb.size;
 									uint16_t vector[4] = {
-										(uint16_t)CLAMP(pos.x * 65535, 0, 65535),
-										(uint16_t)CLAMP(pos.y * 65535, 0, 65535),
-										(uint16_t)CLAMP(pos.z * 65535, 0, 65535),
-										(uint16_t)CLAMP(angle * 65535, 0, 65535)
+										(uint16_t)Math::clamp(pos.x * 65535, 0, 65535),
+										(uint16_t)Math::clamp(pos.y * 65535, 0, 65535),
+										(uint16_t)Math::clamp(pos.z * 65535, 0, 65535),
+										(uint16_t)Math::clamp(angle * 65535, 0, 65535)
 									};
 
 									memcpy(&vw[p_offsets[ai] + i * p_vertex_stride], vector, sizeof(uint16_t) * 4);
@@ -537,8 +537,8 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 								{
 									Vector2 res = axis.octahedron_encode();
 									uint16_t vector[2] = {
-										(uint16_t)CLAMP(res.x * 65535, 0, 65535),
-										(uint16_t)CLAMP(res.y * 65535, 0, 65535),
+										(uint16_t)Math::clamp(res.x * 65535, 0, 65535),
+										(uint16_t)Math::clamp(res.y * 65535, 0, 65535),
 									};
 
 									memcpy(&vw[p_offsets[RS::ARRAY_NORMAL] + i * p_normal_stride], vector, 4);
@@ -548,10 +548,10 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 								{
 									Vector3 pos = (src[i] - r_aabb.position) / r_aabb.size;
 									uint16_t vector[4] = {
-										(uint16_t)CLAMP(pos.x * 65535, 0, 65535),
-										(uint16_t)CLAMP(pos.y * 65535, 0, 65535),
-										(uint16_t)CLAMP(pos.z * 65535, 0, 65535),
-										(uint16_t)CLAMP(angle * 65535, 0, 65535)
+										(uint16_t)Math::clamp(pos.x * 65535, 0, 65535),
+										(uint16_t)Math::clamp(pos.y * 65535, 0, 65535),
+										(uint16_t)Math::clamp(pos.z * 65535, 0, 65535),
+										(uint16_t)Math::clamp(angle * 65535, 0, 65535)
 									};
 
 									memcpy(&vw[p_offsets[ai] + i * p_vertex_stride], vector, sizeof(uint16_t) * 4);
@@ -572,8 +572,8 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 								{
 									Vector2 res = axis.octahedron_encode();
 									uint16_t vector[2] = {
-										(uint16_t)CLAMP(res.x * 65535, 0, 65535),
-										(uint16_t)CLAMP(res.y * 65535, 0, 65535),
+										(uint16_t)Math::clamp(res.x * 65535, 0, 65535),
+										(uint16_t)Math::clamp(res.y * 65535, 0, 65535),
 									};
 
 									memcpy(&vw[p_offsets[RS::ARRAY_NORMAL] + i * p_normal_stride], vector, 4);
@@ -583,10 +583,10 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 								{
 									Vector3 pos = (src[i] - r_aabb.position) / r_aabb.size;
 									uint16_t vector[4] = {
-										(uint16_t)CLAMP(pos.x * 65535, 0, 65535),
-										(uint16_t)CLAMP(pos.y * 65535, 0, 65535),
-										(uint16_t)CLAMP(pos.z * 65535, 0, 65535),
-										(uint16_t)CLAMP(angle * 65535, 0, 65535)
+										(uint16_t)Math::clamp(pos.x * 65535, 0, 65535),
+										(uint16_t)Math::clamp(pos.y * 65535, 0, 65535),
+										(uint16_t)Math::clamp(pos.z * 65535, 0, 65535),
+										(uint16_t)Math::clamp(angle * 65535, 0, 65535)
 									};
 
 									memcpy(&vw[p_offsets[ai] + i * p_vertex_stride], vector, sizeof(uint16_t) * 4);
@@ -615,8 +615,8 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 					for (int i = 0; i < p_vertex_array_len; i++) {
 						Vector2 res = src[i].octahedron_encode();
 						uint16_t vector[2] = {
-							(uint16_t)CLAMP(res.x * 65535, 0, 65535),
-							(uint16_t)CLAMP(res.y * 65535, 0, 65535),
+							(uint16_t)Math::clamp(res.x * 65535, 0, 65535),
+							(uint16_t)Math::clamp(res.y * 65535, 0, 65535),
 						};
 
 						memcpy(&vw[p_offsets[ai] + i * p_normal_stride], vector, 4);
@@ -639,8 +639,8 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 							const Vector3 src(src_ptr[i * 4 + 0], src_ptr[i * 4 + 1], src_ptr[i * 4 + 2]);
 							Vector2 res = src.octahedron_tangent_encode(src_ptr[i * 4 + 3]);
 							uint16_t vector[2] = {
-								(uint16_t)CLAMP(res.x * 65535, 0, 65535),
-								(uint16_t)CLAMP(res.y * 65535, 0, 65535),
+								(uint16_t)Math::clamp(res.x * 65535, 0, 65535),
+								(uint16_t)Math::clamp(res.y * 65535, 0, 65535),
 							};
 
 							if (vector[0] == 0 && vector[1] == 65535) {
@@ -660,8 +660,8 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 							const Vector3 src(src_ptr[i * 4 + 0], src_ptr[i * 4 + 1], src_ptr[i * 4 + 2]);
 							Vector2 res = src.octahedron_tangent_encode(src_ptr[i * 4 + 3]);
 							uint16_t vector[2] = {
-								(uint16_t)CLAMP(res.x * 65535, 0, 65535),
-								(uint16_t)CLAMP(res.y * 65535, 0, 65535),
+								(uint16_t)Math::clamp(res.x * 65535, 0, 65535),
+								(uint16_t)Math::clamp(res.y * 65535, 0, 65535),
 							};
 
 							if (vector[0] == 0 && vector[1] == 65535) {
@@ -685,8 +685,8 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 							Vector3 tan = Vector3(normal_src[i].z, -normal_src[i].x, normal_src[i].y).cross(normal_src[i].normalized()).normalized();
 							Vector2 res = tan.octahedron_tangent_encode(1.0);
 							uint16_t vector[2] = {
-								(uint16_t)CLAMP(res.x * 65535, 0, 65535),
-								(uint16_t)CLAMP(res.y * 65535, 0, 65535),
+								(uint16_t)Math::clamp(res.x * 65535, 0, 65535),
+								(uint16_t)Math::clamp(res.y * 65535, 0, 65535),
 							};
 
 							if (vector[0] == 0 && vector[1] == 65535) {
@@ -710,10 +710,10 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 				const Color *src = array.ptr();
 				for (int i = 0; i < p_vertex_array_len; i++) {
 					uint8_t color8[4] = {
-						uint8_t(CLAMP(src[i].r * 255.0, 0.0, 255.0)),
-						uint8_t(CLAMP(src[i].g * 255.0, 0.0, 255.0)),
-						uint8_t(CLAMP(src[i].b * 255.0, 0.0, 255.0)),
-						uint8_t(CLAMP(src[i].a * 255.0, 0.0, 255.0))
+						uint8_t(Math::clamp(src[i].r * 255.0, 0.0, 255.0)),
+						uint8_t(Math::clamp(src[i].g * 255.0, 0.0, 255.0)),
+						uint8_t(Math::clamp(src[i].b * 255.0, 0.0, 255.0)),
+						uint8_t(Math::clamp(src[i].a * 255.0, 0.0, 255.0))
 					};
 					memcpy(&aw[p_offsets[ai] + i * p_attrib_stride], color8, 4);
 				}
@@ -734,7 +734,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 							vec = vec / (Vector2(r_uv_scale.x, r_uv_scale.y)) + Vector2(0.5, 0.5);
 						}
 
-						uint16_t uv[2] = { (uint16_t)CLAMP(vec.x * 65535, 0, 65535), (uint16_t)CLAMP(vec.y * 65535, 0, 65535) };
+						uint16_t uv[2] = { (uint16_t)Math::clamp(vec.x * 65535, 0, 65535), (uint16_t)Math::clamp(vec.y * 65535, 0, 65535) };
 						memcpy(&aw[p_offsets[ai] + i * p_attrib_stride], uv, 4);
 					}
 				} else {
@@ -761,7 +761,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 							// Normalize into 0-1 from possible range -uv_scale - uv_scale.
 							vec = vec / (Vector2(r_uv_scale.z, r_uv_scale.w)) + Vector2(0.5, 0.5);
 						}
-						uint16_t uv[2] = { (uint16_t)CLAMP(vec.x * 65535, 0, 65535), (uint16_t)CLAMP(vec.y * 65535, 0, 65535) };
+						uint16_t uv[2] = { (uint16_t)Math::clamp(vec.x * 65535, 0, 65535), (uint16_t)Math::clamp(vec.y * 65535, 0, 65535) };
 						memcpy(&aw[p_offsets[ai] + i * p_attrib_stride], uv, 4);
 					}
 				} else {
@@ -843,7 +843,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 						uint16_t data[8];
 						for (int i = 0; i < p_vertex_array_len; i++) {
 							for (uint32_t j = 0; j < bone_count; j++) {
-								data[j] = CLAMP(src[i * bone_count + j] * 65535, 0, 65535);
+								data[j] = Math::clamp(src[i * bone_count + j] * 65535, 0, 65535);
 							}
 
 							memcpy(&sw[p_offsets[ai] + i * p_skin_stride], data, 2 * bone_count);
@@ -857,7 +857,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 						uint16_t data[8];
 						for (int i = 0; i < p_vertex_array_len; i++) {
 							for (uint32_t j = 0; j < bone_count; j++) {
-								data[j] = CLAMP(src[i * bone_count + j] * 65535, 0, 65535);
+								data[j] = Math::clamp(src[i * bone_count + j] * 65535, 0, 65535);
 							}
 
 							memcpy(&sw[p_offsets[ai] + i * p_skin_stride], data, 2 * bone_count);
@@ -881,7 +881,7 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 				for (int i = 0; i < p_vertex_array_len; i++) {
 					for (uint32_t j = 0; j < bone_count; j++) {
 						data[j] = src[i * bone_count + j];
-						max_bone = MAX(data[j], max_bone);
+						max_bone = Math::max(data[j], max_bone);
 					}
 
 					memcpy(&sw[p_offsets[ai] + i * p_skin_stride], data, 2 * bone_count);

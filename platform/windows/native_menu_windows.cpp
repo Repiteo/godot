@@ -159,7 +159,7 @@ Size2 NativeMenuWindows::get_size(const RID &p_rid) const {
 	for (int i = 0; i < count; i++) {
 		RECT rect;
 		if (GetMenuItemRect(nullptr, md->menu, i, &rect)) {
-			size.x = MAX(size.x, rect.right - rect.left);
+			size.x = Math::max(size.x, rect.right - rect.left);
 			size.y += rect.bottom - rect.top;
 		}
 	}
@@ -247,7 +247,7 @@ int NativeMenuWindows::add_submenu_item(const RID &p_rid, const String &p_label,
 	if (p_index == -1) {
 		p_index = GetMenuItemCount(md->menu);
 	} else {
-		p_index = CLAMP(p_index, 0, GetMenuItemCount(md->menu));
+		p_index = Math::clamp(p_index, 0, GetMenuItemCount(md->menu));
 	}
 
 	MenuItemData *item_data = memnew(MenuItemData);
@@ -280,7 +280,7 @@ int NativeMenuWindows::add_item(const RID &p_rid, const String &p_label, const C
 	if (p_index == -1) {
 		p_index = GetMenuItemCount(md->menu);
 	} else {
-		p_index = CLAMP(p_index, 0, GetMenuItemCount(md->menu));
+		p_index = Math::clamp(p_index, 0, GetMenuItemCount(md->menu));
 	}
 
 	MenuItemData *item_data = memnew(MenuItemData);
@@ -313,7 +313,7 @@ int NativeMenuWindows::add_check_item(const RID &p_rid, const String &p_label, c
 	if (p_index == -1) {
 		p_index = GetMenuItemCount(md->menu);
 	} else {
-		p_index = CLAMP(p_index, 0, GetMenuItemCount(md->menu));
+		p_index = Math::clamp(p_index, 0, GetMenuItemCount(md->menu));
 	}
 
 	MenuItemData *item_data = memnew(MenuItemData);
@@ -346,7 +346,7 @@ int NativeMenuWindows::add_icon_item(const RID &p_rid, const Ref<Texture2D> &p_i
 	if (p_index == -1) {
 		p_index = GetMenuItemCount(md->menu);
 	} else {
-		p_index = CLAMP(p_index, 0, GetMenuItemCount(md->menu));
+		p_index = Math::clamp(p_index, 0, GetMenuItemCount(md->menu));
 	}
 
 	MenuItemData *item_data = memnew(MenuItemData);
@@ -388,7 +388,7 @@ int NativeMenuWindows::add_icon_check_item(const RID &p_rid, const Ref<Texture2D
 	if (p_index == -1) {
 		p_index = GetMenuItemCount(md->menu);
 	} else {
-		p_index = CLAMP(p_index, 0, GetMenuItemCount(md->menu));
+		p_index = Math::clamp(p_index, 0, GetMenuItemCount(md->menu));
 	}
 
 	MenuItemData *item_data = memnew(MenuItemData);
@@ -430,7 +430,7 @@ int NativeMenuWindows::add_radio_check_item(const RID &p_rid, const String &p_la
 	if (p_index == -1) {
 		p_index = GetMenuItemCount(md->menu);
 	} else {
-		p_index = CLAMP(p_index, 0, GetMenuItemCount(md->menu));
+		p_index = Math::clamp(p_index, 0, GetMenuItemCount(md->menu));
 	}
 
 	MenuItemData *item_data = memnew(MenuItemData);
@@ -463,7 +463,7 @@ int NativeMenuWindows::add_icon_radio_check_item(const RID &p_rid, const Ref<Tex
 	if (p_index == -1) {
 		p_index = GetMenuItemCount(md->menu);
 	} else {
-		p_index = CLAMP(p_index, 0, GetMenuItemCount(md->menu));
+		p_index = Math::clamp(p_index, 0, GetMenuItemCount(md->menu));
 	}
 
 	MenuItemData *item_data = memnew(MenuItemData);
@@ -505,7 +505,7 @@ int NativeMenuWindows::add_multistate_item(const RID &p_rid, const String &p_lab
 	if (p_index == -1) {
 		p_index = GetMenuItemCount(md->menu);
 	} else {
-		p_index = CLAMP(p_index, 0, GetMenuItemCount(md->menu));
+		p_index = Math::clamp(p_index, 0, GetMenuItemCount(md->menu));
 	}
 
 	MenuItemData *item_data = memnew(MenuItemData);
@@ -538,7 +538,7 @@ int NativeMenuWindows::add_separator(const RID &p_rid, int p_index) {
 	if (p_index == -1) {
 		p_index = GetMenuItemCount(md->menu);
 	} else {
-		p_index = CLAMP(p_index, 0, GetMenuItemCount(md->menu));
+		p_index = Math::clamp(p_index, 0, GetMenuItemCount(md->menu));
 	}
 
 	MenuItemData *item_data = memnew(MenuItemData);

@@ -134,7 +134,7 @@ void RemoteDebugger::_print_handler(void *p_this, const String &p_string, bool p
 	}
 
 	String s = p_string;
-	int allowed_chars = MIN(MAX(rd->max_chars_per_second - rd->char_count, 0), s.length());
+	int allowed_chars = Math::min(Math::max(rd->max_chars_per_second - rd->char_count, 0), s.length());
 
 	if (allowed_chars == 0 && s.length() > 0) {
 		return;

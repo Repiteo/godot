@@ -536,8 +536,8 @@ void Node::_move_child(Node *p_child, int p_index, bool p_ignore_end) {
 		return; //do nothing
 	}
 
-	int motion_from = MIN(p_index, child_index);
-	int motion_to = MAX(p_index, child_index);
+	int motion_from = Math::min(p_index, child_index);
+	int motion_to = Math::max(p_index, child_index);
 
 	data.children_cache.remove_at(child_index);
 	data.children_cache.insert(p_index, p_child);

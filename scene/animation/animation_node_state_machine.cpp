@@ -852,7 +852,7 @@ AnimationNode::NodeTimeInfo AnimationNodeStateMachinePlayback::_process(Animatio
 			if (!p_seek) {
 				fading_pos += Math::abs(p_delta);
 			}
-			fade_blend = MIN(1.0, fading_pos / fading_time);
+			fade_blend = Math::min(1.0, fading_pos / fading_time);
 		}
 	}
 	if (current_curve.is_valid()) {

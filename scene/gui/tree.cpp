@@ -374,8 +374,8 @@ void TreeItem::set_text(int p_column, String p_text) {
 			if (!strings[i].get_slicec(':', 1).is_empty()) {
 				value = strings[i].get_slicec(':', 1).to_int();
 			}
-			cells.write[p_column].min = MIN(cells[p_column].min, value);
-			cells.write[p_column].max = MAX(cells[p_column].max, value);
+			cells.write[p_column].min = Math::min(cells[p_column].min, value);
+			cells.write[p_column].max = Math::max(cells[p_column].max, value);
 		}
 		cells.write[p_column].step = 0;
 	} else {
@@ -1687,19 +1687,19 @@ Size2 TreeItem::get_minimum_size(int p_column) {
 			if (get_text_overrun_behavior(p_column) == TextServer::OVERRUN_NO_TRIMMING) {
 				size.width += text_size.width;
 			}
-			size.height = MAX(size.height, text_size.height);
+			size.height = Math::max(size.height, text_size.height);
 		}
 
 		// Icon.
 		if (cell.mode == CELL_MODE_CHECK) {
 			Size2i check_size = parent_tree->theme_cache.checked->get_size();
 			size.width += check_size.width + parent_tree->theme_cache.h_separation;
-			size.height = MAX(size.height, check_size.height);
+			size.height = Math::max(size.height, check_size.height);
 		}
 		if (cell.icon.is_valid()) {
 			Size2i icon_size = parent_tree->_get_cell_icon_size(cell);
 			size.width += icon_size.width + parent_tree->theme_cache.h_separation;
-			size.height = MAX(size.height, icon_size.height);
+			size.height = Math::max(size.height, icon_size.height);
 		}
 
 		// Buttons.
@@ -1709,7 +1709,7 @@ Size2 TreeItem::get_minimum_size(int p_column) {
 				Size2 button_size = texture->get_size();
 				button_size.width += parent_tree->theme_cache.button_pressed->get_minimum_size().width;
 				size.width += button_size.width + parent_tree->theme_cache.button_margin;
-				size.height = MAX(size.height, button_size.height);
+				size.height = Math::max(size.height, button_size.height);
 			}
 		}
 
@@ -1991,9 +1991,9 @@ int Tree::compute_item_height(TreeItem *p_item) const {
 	int height = 0;
 
 	for (int i = 0; i < columns.size(); i++) {
-		height = MAX(height, p_item->get_minimum_size(i).y);
+		height = Math::max(height, p_item->get_minimum_size(i).y);
 	}
-	int item_min_height = MAX(theme_cache.font->get_height(theme_cache.font_size), p_item->get_custom_minimum_height());
+	int item_min_height = Math::max(theme_cache.font->get_height(theme_cache.font_size), p_item->get_custom_minimum_height());
 	if (height < item_min_height) {
 		height = item_min_height;
 	}
@@ -2279,7 +2279,7 @@ int Tree::draw_item(const Point2i &p_pos, const Point2 &p_draw_ofs, const Size2 
 				// If part of the column is beyond the right side of the control due to scrolling, clamp the label width
 				// so that all buttons attached to the cell remain within view.
 				if (total_ofs + item_width > p_draw_size.width) {
-					item_width = MAX(buttons_width, p_draw_size.width - total_ofs);
+					item_width = Math::max(buttons_width, p_draw_size.width - total_ofs);
 				}
 			}
 
@@ -2639,9 +2639,9 @@ int Tree::draw_item(const Point2i &p_pos, const Point2 &p_draw_ofs, const Size2 
 						od.x = get_size().width - od.x - button_size.x;
 					}
 					if (should_draw_pressed && should_draw_hovered) {
-						theme_cache.button_pressed->draw(get_canvas_item(), Rect2(od.x, od.y, button_size.width, MAX(button_size.height, label_h)));
+						theme_cache.button_pressed->draw(get_canvas_item(), Rect2(od.x, od.y, button_size.width, Math::max(button_size.height, label_h)));
 					} else {
-						theme_cache.button_hover->draw(get_canvas_item(), Rect2(od.x, od.y, button_size.width, MAX(button_size.height, label_h)));
+						theme_cache.button_hover->draw(get_canvas_item(), Rect2(od.x, od.y, button_size.width, Math::max(button_size.height, label_h)));
 					}
 				}
 				if (selected_item == p_item && selected_col == i && selected_button == j) {
@@ -2649,7 +2649,7 @@ int Tree::draw_item(const Point2i &p_pos, const Point2 &p_draw_ofs, const Size2 
 					if (rtl) {
 						od.x = get_size().width - od.x - button_size.x;
 					}
-					theme_cache.button_hover->draw(get_canvas_item(), Rect2(od.x, od.y, button_size.width, MAX(button_size.height, label_h)));
+					theme_cache.button_hover->draw(get_canvas_item(), Rect2(od.x, od.y, button_size.width, Math::max(button_size.height, label_h)));
 				}
 
 				button_ofs.y += (label_h - button_size.height) / 2;
@@ -2752,7 +2752,7 @@ int Tree::draw_item(const Point2i &p_pos, const Point2 &p_draw_ofs, const Size2 
 				if (!hide_folding && !p_item->disable_folding && c->get_visible_child_count() > 0) {
 					root_pos -= Point2i(theme_cache.arrow->get_width(), 0);
 				}
-				root_pos.x = MIN(root_pos.x, get_column_width(0) + p_draw_ofs.x);
+				root_pos.x = Math::min(root_pos.x, get_column_width(0) + p_draw_ofs.x);
 
 				bool is_no_space = root_pos.x <= parent_pos.x;
 
@@ -3567,7 +3567,7 @@ void Tree::_go_up() {
 		prev = selected_item->get_prev_visible();
 	}
 
-	int col = MAX(selected_col, 0);
+	int col = Math::max(selected_col, 0);
 
 	if (select_mode == SELECT_MULTI) {
 		if (!prev) {
@@ -3643,7 +3643,7 @@ void Tree::_go_down() {
 		next = selected_item->get_next_visible();
 	}
 
-	int col = MAX(selected_col, 0);
+	int col = Math::max(selected_col, 0);
 
 	if (select_mode == SELECT_MULTI) {
 		if (!next) {
@@ -3960,9 +3960,9 @@ void Tree::gui_input(const Ref<InputEvent> &p_event) {
 			} else {
 				const TreeItem::Cell &c = popup_edited_item->cells[popup_edited_item_col];
 				float diff_y = -mm->get_relative().y;
-				diff_y = Math::pow(Math::abs(diff_y), 1.8f) * SIGN(diff_y);
+				diff_y = Math::pow(Math::abs(diff_y), 1.8f) * Math::sign(diff_y);
 				diff_y *= 0.1;
-				range_drag_base = CLAMP(range_drag_base + c.step * diff_y, c.min, c.max);
+				range_drag_base = Math::clamp(range_drag_base + c.step * diff_y, c.min, c.max);
 				popup_edited_item->set_range(popup_edited_item_col, range_drag_base);
 				item_edited(popup_edited_item_col, popup_edited_item);
 			}
@@ -4330,7 +4330,7 @@ bool Tree::edit_selected(bool p_force_edit) {
 	}
 
 	Size2 scale = popup_editor->get_parent_viewport()->get_popup_base_transform().get_scale() * get_global_transform_with_canvas().get_scale();
-	real_t popup_scale = MIN(scale.x, scale.y);
+	real_t popup_scale = Math::min(scale.x, scale.y);
 
 	Rect2 rect = _get_item_focus_rect(s);
 	rect.position *= popup_scale;
@@ -4372,7 +4372,7 @@ bool Tree::edit_selected(bool p_force_edit) {
 
 		Rect2 popup_rect;
 		// `floor()` centers vertically.
-		Vector2 ofs(0, Math::floor((MAX(line_editor->get_minimum_size().height, rect.size.height - value_editor_height) - rect.size.height) / 2));
+		Vector2 ofs(0, Math::floor((Math::max(line_editor->get_minimum_size().height, rect.size.height - value_editor_height) - rect.size.height) / 2));
 
 		// Account for icon.
 		real_t icon_ofs = 0;
@@ -4529,7 +4529,7 @@ int Tree::_get_title_button_height() const {
 	int h = 0;
 	if (show_column_titles) {
 		for (int i = 0; i < columns.size(); i++) {
-			h = MAX(h, columns[i].text_buf->get_size().y + theme_cache.title_button->get_minimum_size().height);
+			h = Math::max(h, columns[i].text_buf->get_size().y + theme_cache.title_button->get_minimum_size().height);
 		}
 	}
 	return h;
@@ -5458,7 +5458,7 @@ int Tree::get_column_minimum_width(int p_column) const {
 		// Check if the visible title of the column is wider.
 		if (show_column_titles) {
 			const float padding = theme_cache.title_button->get_margin(SIDE_LEFT) + theme_cache.title_button->get_margin(SIDE_RIGHT);
-			min_width = MAX(theme_cache.font->get_string_size(columns[p_column].xl_title, HORIZONTAL_ALIGNMENT_LEFT, -1, theme_cache.font_size).width + padding, min_width);
+			min_width = Math::max(theme_cache.font->get_string_size(columns[p_column].xl_title, HORIZONTAL_ALIGNMENT_LEFT, -1, theme_cache.font_size).width + padding, min_width);
 		}
 
 		if (root && !columns[p_column].clip_content) {
@@ -5490,7 +5490,7 @@ int Tree::get_column_minimum_width(int p_column) const {
 				item_size.width += indent;
 
 				// Check if the item is wider.
-				min_width = MAX(min_width, item_size.width);
+				min_width = Math::max(min_width, item_size.width);
 			}
 		}
 
@@ -5867,7 +5867,7 @@ void Tree::scroll_to_item(TreeItem *p_item, bool p_center_on_item) {
 
 		if (p_center_on_item) {
 			// This makes sure that centering the offset doesn't overflow.
-			const double v_scroll_value = y_offset - MAX((screen_h - cell_h) / 2.0, 0.0);
+			const double v_scroll_value = y_offset - Math::max((screen_h - cell_h) / 2.0, 0.0);
 			v_scroll->set_value(v_scroll_value);
 		} else {
 			if (cell_h > screen_h) { // Screen size is too small, maybe it was not resized yet.
@@ -6177,7 +6177,7 @@ Tree::FindColumnButtonResult Tree::_find_column_and_button_at_pos(int p_x, const
 				button_w += b->get_size().width + theme_cache.button_pressed->get_minimum_size().width + theme_cache.button_margin;
 			}
 
-			col_width = MAX(button_w, MIN(limit_w, col_width));
+			col_width = Math::max(button_w, Math::min(limit_w, col_width));
 		}
 
 		// Cell button detection code.

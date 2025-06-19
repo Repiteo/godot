@@ -257,7 +257,7 @@ void TextParagraph::_shape_lines() const {
 
 		// Fill after min_size calculation.
 		if (autowrap_enabled) {
-			int visible_lines = (max_lines_visible >= 0) ? MIN(max_lines_visible, (int)lines_rid.size()) : (int)lines_rid.size();
+			int visible_lines = (max_lines_visible >= 0) ? Math::min(max_lines_visible, (int)lines_rid.size()) : (int)lines_rid.size();
 			bool lines_hidden = visible_lines > 0 && visible_lines < (int)lines_rid.size();
 			if (lines_hidden) {
 				overrun_flags.set_flag(TextServer::OVERRUN_ENFORCE_ELLIPSIS);
@@ -597,14 +597,14 @@ Size2 TextParagraph::get_size() const {
 	}
 
 	Size2 size;
-	int visible_lines = (max_lines_visible >= 0) ? MIN(max_lines_visible, (int)lines_rid.size()) : (int)lines_rid.size();
+	int visible_lines = (max_lines_visible >= 0) ? Math::min(max_lines_visible, (int)lines_rid.size()) : (int)lines_rid.size();
 	for (int i = 0; i < visible_lines; i++) {
 		Size2 lsize = TS->shaped_text_get_size(lines_rid[i]);
 		if (TS->shaped_text_get_orientation(lines_rid[i]) == TextServer::ORIENTATION_HORIZONTAL) {
 			if (h_offset > 0 && i <= dropcap_lines) {
 				lsize.x += h_offset;
 			}
-			size.x = MAX(size.x, lsize.x);
+			size.x = Math::max(size.x, lsize.x);
 			size.y += lsize.y;
 			if (i != visible_lines - 1) {
 				size.y += line_spacing;
@@ -614,7 +614,7 @@ Size2 TextParagraph::get_size() const {
 				lsize.y += h_offset;
 			}
 			size.x += lsize.x;
-			size.y = MAX(size.y, lsize.y);
+			size.y = Math::max(size.y, lsize.y);
 			if (i != visible_lines - 1) {
 				size.x += line_spacing;
 			}
@@ -622,9 +622,9 @@ Size2 TextParagraph::get_size() const {
 	}
 	if (h_offset > 0) {
 		if (TS->shaped_text_get_orientation(dropcap_rid) == TextServer::ORIENTATION_HORIZONTAL) {
-			size.y = MAX(size.y, v_offset);
+			size.y = Math::max(size.y, v_offset);
 		} else {
-			size.x = MAX(size.x, v_offset);
+			size.x = Math::max(size.x, v_offset);
 		}
 	}
 	return size;
@@ -859,7 +859,7 @@ void TextParagraph::draw(RID p_canvas, const Vector2 &p_pos, const Color &p_colo
 		TS->shaped_text_draw(dropcap_rid, p_canvas, dc_off + Vector2(0, TS->shaped_text_get_ascent(dropcap_rid) + dropcap_margins.size.y + dropcap_margins.position.y / 2), -1, -1, p_dc_color, p_oversampling);
 	}
 
-	int lines_visible = (max_lines_visible >= 0) ? MIN(max_lines_visible, (int)lines_rid.size()) : (int)lines_rid.size();
+	int lines_visible = (max_lines_visible >= 0) ? Math::min(max_lines_visible, (int)lines_rid.size()) : (int)lines_rid.size();
 
 	for (int i = 0; i < lines_visible; i++) {
 		float l_width = width;
@@ -922,9 +922,9 @@ void TextParagraph::draw(RID p_canvas, const Vector2 &p_pos, const Color &p_colo
 		}
 		float clip_l;
 		if (TS->shaped_text_get_orientation(lines_rid[i]) == TextServer::ORIENTATION_HORIZONTAL) {
-			clip_l = MAX(0, p_pos.x - ofs.x);
+			clip_l = Math::max(0, p_pos.x - ofs.x);
 		} else {
-			clip_l = MAX(0, p_pos.y - ofs.y);
+			clip_l = Math::max(0, p_pos.y - ofs.y);
 		}
 		TS->shaped_text_draw(lines_rid[i], p_canvas, ofs, clip_l, clip_l + l_width, p_color, p_oversampling);
 		if (TS->shaped_text_get_orientation(lines_rid[i]) == TextServer::ORIENTATION_HORIZONTAL) {
@@ -1024,9 +1024,9 @@ void TextParagraph::draw_outline(RID p_canvas, const Vector2 &p_pos, int p_outli
 		}
 		float clip_l;
 		if (TS->shaped_text_get_orientation(lines_rid[i]) == TextServer::ORIENTATION_HORIZONTAL) {
-			clip_l = MAX(0, p_pos.x - ofs.x);
+			clip_l = Math::max(0, p_pos.x - ofs.x);
 		} else {
-			clip_l = MAX(0, p_pos.y - ofs.y);
+			clip_l = Math::max(0, p_pos.y - ofs.y);
 		}
 		TS->shaped_text_draw_outline(lines_rid[i], p_canvas, ofs, clip_l, clip_l + l_width, p_outline_size, p_color, p_oversampling);
 		if (TS->shaped_text_get_orientation(lines_rid[i]) == TextServer::ORIENTATION_HORIZONTAL) {

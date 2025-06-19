@@ -4068,7 +4068,7 @@ void TextureStorage::render_target_sdf_process(RID p_render_target) {
 
 	/* Process */
 
-	int stride = nearest_power_of_2_templated(MAX(push_constant.size[0], push_constant.size[1]) / 2);
+	int stride = nearest_power_of_2_templated(Math::max(push_constant.size[0], push_constant.size[1]) / 2);
 
 	RD::get_singleton()->compute_list_bind_compute_pipeline(compute_list, rt_sdf.pipelines[RenderTargetSDF::SHADER_PROCESS]);
 

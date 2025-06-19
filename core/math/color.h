@@ -137,12 +137,12 @@ struct [[nodiscard]] Color {
 		static const float kMinVal = float(1.f / (1 << 16));
 
 		// Clamp RGB to [0, 1.FF*2^16]
-		const float _r = CLAMP(r, 0.0f, kMaxVal);
-		const float _g = CLAMP(g, 0.0f, kMaxVal);
-		const float _b = CLAMP(b, 0.0f, kMaxVal);
+		const float _r = Math::clamp(r, 0.0f, kMaxVal);
+		const float _g = Math::clamp(g, 0.0f, kMaxVal);
+		const float _b = Math::clamp(b, 0.0f, kMaxVal);
 
 		// Compute the maximum channel, no less than 1.0*2^-15
-		const float MaxChannel = MAX(MAX(_r, _g), MAX(_b, kMinVal));
+		const float MaxChannel = Math::max(Math::max(_r, _g), Math::max(_b, kMinVal));
 
 		// Take the exponent of the maximum channel (rounding up the 9th bit) and
 		// add 15 to it.  When added to the channels, it causes the implicit '1.0'
@@ -223,14 +223,14 @@ struct [[nodiscard]] Color {
 	explicit operator String() const;
 
 	// For the binder.
-	_FORCE_INLINE_ void set_r8(int32_t r8) { r = (CLAMP(r8, 0, 255) / 255.0f); }
-	_FORCE_INLINE_ int32_t get_r8() const { return int32_t(CLAMP(Math::round(r * 255.0f), 0.0f, 255.0f)); }
-	_FORCE_INLINE_ void set_g8(int32_t g8) { g = (CLAMP(g8, 0, 255) / 255.0f); }
-	_FORCE_INLINE_ int32_t get_g8() const { return int32_t(CLAMP(Math::round(g * 255.0f), 0.0f, 255.0f)); }
-	_FORCE_INLINE_ void set_b8(int32_t b8) { b = (CLAMP(b8, 0, 255) / 255.0f); }
-	_FORCE_INLINE_ int32_t get_b8() const { return int32_t(CLAMP(Math::round(b * 255.0f), 0.0f, 255.0f)); }
-	_FORCE_INLINE_ void set_a8(int32_t a8) { a = (CLAMP(a8, 0, 255) / 255.0f); }
-	_FORCE_INLINE_ int32_t get_a8() const { return int32_t(CLAMP(Math::round(a * 255.0f), 0.0f, 255.0f)); }
+	_FORCE_INLINE_ void set_r8(int32_t r8) { r = (Math::clamp(r8, 0, 255) / 255.0f); }
+	_FORCE_INLINE_ int32_t get_r8() const { return int32_t(Math::clamp(Math::round(r * 255.0f), 0.0f, 255.0f)); }
+	_FORCE_INLINE_ void set_g8(int32_t g8) { g = (Math::clamp(g8, 0, 255) / 255.0f); }
+	_FORCE_INLINE_ int32_t get_g8() const { return int32_t(Math::clamp(Math::round(g * 255.0f), 0.0f, 255.0f)); }
+	_FORCE_INLINE_ void set_b8(int32_t b8) { b = (Math::clamp(b8, 0, 255) / 255.0f); }
+	_FORCE_INLINE_ int32_t get_b8() const { return int32_t(Math::clamp(Math::round(b * 255.0f), 0.0f, 255.0f)); }
+	_FORCE_INLINE_ void set_a8(int32_t a8) { a = (Math::clamp(a8, 0, 255) / 255.0f); }
+	_FORCE_INLINE_ int32_t get_a8() const { return int32_t(Math::clamp(Math::round(a * 255.0f), 0.0f, 255.0f)); }
 
 	_FORCE_INLINE_ void set_h(float p_h) { set_hsv(p_h, get_s(), get_v(), a); }
 	_FORCE_INLINE_ void set_s(float p_s) { set_hsv(get_h(), p_s, get_v(), a); }

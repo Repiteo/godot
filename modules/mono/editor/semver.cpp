@@ -83,7 +83,7 @@ int godotsharp::SemVer::cmp(const godotsharp::SemVer &p_a, const godotsharp::Sem
 		int a_field_count = a_field_set.size();
 		int b_field_count = b_field_set.size();
 
-		int min_field_count = MIN(a_field_count, b_field_count);
+		int min_field_count = Math::min(a_field_count, b_field_count);
 
 		for (int i = 0; i < min_field_count; i++) {
 			const String &a_field = a_field_set[i];

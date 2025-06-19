@@ -631,7 +631,7 @@ Variant EditorAutoloadSettings::get_drag_data_fw(const Point2 &p_point, Control 
 
 	VBoxContainer *preview = memnew(VBoxContainer);
 
-	int max_size = MIN(PREVIEW_LIST_MAX_SIZE, autoloads.size());
+	int max_size = Math::min(PREVIEW_LIST_MAX_SIZE, autoloads.size());
 
 	for (int i = 0; i < max_size; i++) {
 		Label *label = memnew(Label(autoloads[i]));

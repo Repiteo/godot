@@ -446,13 +446,13 @@ void WaylandThread::_wl_registry_on_global(void *data, struct wl_registry *wl_re
 	}
 
 	if (strcmp(interface, wl_compositor_interface.name) == 0) {
-		registry->wl_compositor = (struct wl_compositor *)wl_registry_bind(wl_registry, name, &wl_compositor_interface, CLAMP((int)version, 1, 6));
+		registry->wl_compositor = (struct wl_compositor *)wl_registry_bind(wl_registry, name, &wl_compositor_interface, Math::clamp((int)version, 1, 6));
 		registry->wl_compositor_name = name;
 		return;
 	}
 
 	if (strcmp(interface, wl_data_device_manager_interface.name) == 0) {
-		registry->wl_data_device_manager = (struct wl_data_device_manager *)wl_registry_bind(wl_registry, name, &wl_data_device_manager_interface, CLAMP((int)version, 1, 3));
+		registry->wl_data_device_manager = (struct wl_data_device_manager *)wl_registry_bind(wl_registry, name, &wl_data_device_manager_interface, Math::clamp((int)version, 1, 3));
 		registry->wl_data_device_manager_name = name;
 
 		// This global creates some seat data. Let's do that for the ones already available.
@@ -469,7 +469,7 @@ void WaylandThread::_wl_registry_on_global(void *data, struct wl_registry *wl_re
 	}
 
 	if (strcmp(interface, wl_output_interface.name) == 0) {
-		struct wl_output *wl_output = (struct wl_output *)wl_registry_bind(wl_registry, name, &wl_output_interface, CLAMP((int)version, 1, 4));
+		struct wl_output *wl_output = (struct wl_output *)wl_registry_bind(wl_registry, name, &wl_output_interface, Math::clamp((int)version, 1, 4));
 		wl_proxy_tag_godot((struct wl_proxy *)wl_output);
 
 		registry->wl_outputs.push_back(wl_output);
@@ -484,7 +484,7 @@ void WaylandThread::_wl_registry_on_global(void *data, struct wl_registry *wl_re
 	}
 
 	if (strcmp(interface, wl_seat_interface.name) == 0) {
-		struct wl_seat *wl_seat = (struct wl_seat *)wl_registry_bind(wl_registry, name, &wl_seat_interface, CLAMP((int)version, 1, 9));
+		struct wl_seat *wl_seat = (struct wl_seat *)wl_registry_bind(wl_registry, name, &wl_seat_interface, Math::clamp((int)version, 1, 9));
 		wl_proxy_tag_godot((struct wl_proxy *)wl_seat);
 
 		SeatState *ss = memnew(SeatState);
@@ -535,7 +535,7 @@ void WaylandThread::_wl_registry_on_global(void *data, struct wl_registry *wl_re
 	}
 
 	if (strcmp(interface, xdg_wm_base_interface.name) == 0) {
-		registry->xdg_wm_base = (struct xdg_wm_base *)wl_registry_bind(wl_registry, name, &xdg_wm_base_interface, CLAMP((int)version, 1, 6));
+		registry->xdg_wm_base = (struct xdg_wm_base *)wl_registry_bind(wl_registry, name, &xdg_wm_base_interface, Math::clamp((int)version, 1, 6));
 		registry->xdg_wm_base_name = name;
 
 		xdg_wm_base_add_listener(registry->xdg_wm_base, &xdg_wm_base_listener, nullptr);
@@ -4163,7 +4163,7 @@ DisplayServer::WindowID WaylandThread::pointer_get_pointed_window_id() const {
 				continue;
 			}
 
-			if (MAX(td.button_time, td.motion_time) > MAX(max_ts->data.button_time, max_ts->data.motion_time)) {
+			if (Math::max(td.button_time, td.motion_time) > Math::max(max_ts->data.button_time, max_ts->data.motion_time)) {
 				max_ts = ts;
 			}
 		}
@@ -4172,7 +4172,7 @@ DisplayServer::WindowID WaylandThread::pointer_get_pointed_window_id() const {
 
 		if (max_ts) {
 			TabletToolData &td = max_ts->data;
-			if (MAX(td.button_time, td.motion_time) > MAX(pd.button_time, pd.motion_time)) {
+			if (Math::max(td.button_time, td.motion_time) > Math::max(pd.button_time, pd.motion_time)) {
 				return td.proximal_id;
 			}
 		}
@@ -4199,7 +4199,7 @@ DisplayServer::WindowID WaylandThread::pointer_get_last_pointed_window_id() cons
 				continue;
 			}
 
-			if (MAX(td.button_time, td.motion_time) > MAX(max_ts->data.button_time, max_ts->data.motion_time)) {
+			if (Math::max(td.button_time, td.motion_time) > Math::max(max_ts->data.button_time, max_ts->data.motion_time)) {
 				max_ts = ts;
 			}
 		}
@@ -4208,7 +4208,7 @@ DisplayServer::WindowID WaylandThread::pointer_get_last_pointed_window_id() cons
 
 		if (max_ts) {
 			TabletToolData &td = max_ts->data;
-			if (MAX(td.button_time, td.motion_time) > MAX(pd.button_time, pd.motion_time)) {
+			if (Math::max(td.button_time, td.motion_time) > Math::max(pd.button_time, pd.motion_time)) {
 				return td.last_proximal_id;
 			}
 		}
@@ -4590,7 +4590,7 @@ void WaylandThread::selection_set_text(const String &p_text) {
 		wl_data_source_offer(ss->wl_data_source_selection, "text/plain");
 
 		// TODO: Implement a good way of getting the latest serial from the user.
-		wl_data_device_set_selection(ss->wl_data_device, ss->wl_data_source_selection, MAX(ss->pointer_data.button_serial, ss->last_key_pressed_serial));
+		wl_data_device_set_selection(ss->wl_data_device, ss->wl_data_source_selection, Math::max(ss->pointer_data.button_serial, ss->last_key_pressed_serial));
 	}
 
 	// Wait for the message to get to the server before continuing, otherwise the
@@ -4711,7 +4711,7 @@ void WaylandThread::primary_set_text(const String &p_text) {
 		zwp_primary_selection_source_v1_offer(ss->wp_primary_selection_source, "text/plain");
 
 		// TODO: Implement a good way of getting the latest serial from the user.
-		zwp_primary_selection_device_v1_set_selection(ss->wp_primary_selection_device, ss->wp_primary_selection_source, MAX(ss->pointer_data.button_serial, ss->last_key_pressed_serial));
+		zwp_primary_selection_device_v1_set_selection(ss->wp_primary_selection_device, ss->wp_primary_selection_source, Math::max(ss->pointer_data.button_serial, ss->last_key_pressed_serial));
 	}
 
 	// Wait for the message to get to the server before continuing, otherwise the

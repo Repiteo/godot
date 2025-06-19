@@ -91,7 +91,7 @@ void EditorProfiler::add_frame_metric(const Metric &p_metric, bool p_final) {
 
 void EditorProfiler::clear() {
 	int metric_size = EDITOR_GET("debugger/profiler_frame_history_size");
-	metric_size = CLAMP(metric_size, 60, 10000);
+	metric_size = Math::clamp(metric_size, 60, 10000);
 	frame_metrics.clear();
 	frame_metrics.resize(metric_size);
 	total_metrics = 0;
@@ -154,7 +154,7 @@ Color EditorProfiler::_get_color_from_signature(const StringName &p_signature) c
 
 int EditorProfiler::_get_zoom_left_border() const {
 	const int max_profiles_shown = frame_metrics.size() / Math::exp(graph_zoom);
-	return CLAMP(zoom_center - max_profiles_shown / 2, 0, frame_metrics.size() - max_profiles_shown);
+	return Math::clamp(zoom_center - max_profiles_shown / 2, 0, frame_metrics.size() - max_profiles_shown);
 }
 
 void EditorProfiler::_item_edited() {
@@ -184,8 +184,8 @@ void EditorProfiler::_item_edited() {
 }
 
 void EditorProfiler::_update_plot() {
-	const int w = MAX(1, graph->get_size().width); // Clamp to 1 to prevent from crashing when profiler is autostarted.
-	const int h = MAX(1, graph->get_size().height);
+	const int w = Math::max(1, graph->get_size().width); // Clamp to 1 to prevent from crashing when profiler is autostarted.
+	const int h = Math::max(1, graph->get_size().height);
 	bool reset_texture = false;
 	const int desired_len = w * h * 4;
 
@@ -216,15 +216,15 @@ void EditorProfiler::_update_plot() {
 		for (const StringName &E : plot_sigs) {
 			HashMap<StringName, Metric::Category *>::ConstIterator F = m.category_ptrs.find(E);
 			if (F) {
-				highest = MAX(F->value->total_time, highest);
+				highest = Math::max(F->value->total_time, highest);
 			}
 
 			HashMap<StringName, Metric::Category::Item *>::ConstIterator G = m.item_ptrs.find(E);
 			if (G) {
 				if (use_self) {
-					highest = MAX(G->value->self, highest);
+					highest = Math::max(G->value->self, highest);
 				} else {
-					highest = MAX(G->value->total, highest);
+					highest = Math::max(G->value->total, highest);
 				}
 			}
 		}
@@ -244,7 +244,7 @@ void EditorProfiler::_update_plot() {
 
 		const int max_profiles_shown = frame_metrics.size() / Math::exp(graph_zoom);
 		const int left_border = _get_zoom_left_border();
-		const int profiles_drawn = CLAMP(total_metrics - left_border, 0, max_profiles_shown);
+		const int profiles_drawn = Math::clamp(total_metrics - left_border, 0, max_profiles_shown);
 		const int pixel_cols = (profiles_drawn * w) / max_profiles_shown - 1;
 
 		for (int i = 0; i < pixel_cols; i++) {
@@ -273,7 +273,7 @@ void EditorProfiler::_update_plot() {
 					}
 				}
 
-				int plot_pos = CLAMP(int(value * h / highest), 0, h - 1);
+				int plot_pos = Math::clamp(int(value * h / highest), 0, h - 1);
 
 				int prev_plot = plot_pos;
 				HashMap<StringName, int>::Iterator H = prev_plots.find(E);
@@ -294,9 +294,9 @@ void EditorProfiler::_update_plot() {
 				Color col = _get_color_from_signature(E);
 
 				for (int j = prev_plot; j <= plot_pos; j++) {
-					column[j * 4 + 0] += Math::fast_ftoi(CLAMP(col.r * 255, 0, 255));
-					column[j * 4 + 1] += Math::fast_ftoi(CLAMP(col.g * 255, 0, 255));
-					column[j * 4 + 2] += Math::fast_ftoi(CLAMP(col.b * 255, 0, 255));
+					column[j * 4 + 0] += Math::fast_ftoi(Math::clamp(col.r * 255, 0, 255));
+					column[j * 4 + 1] += Math::fast_ftoi(Math::clamp(col.g * 255, 0, 255));
+					column[j * 4 + 2] += Math::fast_ftoi(Math::clamp(col.b * 255, 0, 255));
 					column[j * 4 + 3] += 1;
 				}
 			}
@@ -461,7 +461,7 @@ void EditorProfiler::_graph_tex_draw() {
 		int frame = cursor_metric_edit->get_value() - _get_frame_metric(0).frame_number;
 		frame = frame - _get_zoom_left_border() + 1;
 		int cur_x = (frame * graph->get_size().width * Math::exp(graph_zoom)) / frame_metrics.size();
-		cur_x = CLAMP(cur_x, 0, graph->get_size().width);
+		cur_x = Math::clamp(cur_x, 0, graph->get_size().width);
 		graph->draw_line(Vector2(cur_x, 0), Vector2(cur_x, graph->get_size().y), theme_cache.seek_line_color);
 	}
 	if (hover_metric > -1) {
@@ -502,7 +502,7 @@ void EditorProfiler::_graph_tex_input(const Ref<InputEvent> &p_ev) {
 
 		x = x * frame_metrics.size() / graph->get_size().width;
 		x = x / Math::exp(graph_zoom) + _get_zoom_left_border();
-		x = CLAMP(x, 0, frame_metrics.size() - 1);
+		x = Math::clamp(x, 0, frame_metrics.size() - 1);
 
 		if (mb.is_valid() || (mm->get_button_mask().has_flag(MouseButtonMask::LEFT))) {
 			updating_frame = true;
@@ -533,7 +533,7 @@ void EditorProfiler::_graph_tex_input(const Ref<InputEvent> &p_ev) {
 		pan_accumulator += (float)mm->get_relative().x * max_profiles_shown / graph->get_size().width;
 
 		if (Math::abs(pan_accumulator) > 1) {
-			zoom_center = CLAMP(zoom_center - (int)pan_accumulator, max_profiles_shown / 2, frame_metrics.size() - max_profiles_shown / 2);
+			zoom_center = Math::clamp(zoom_center - (int)pan_accumulator, max_profiles_shown / 2, frame_metrics.size() - max_profiles_shown / 2);
 			pan_accumulator -= (int)pan_accumulator;
 			_update_plot();
 		}
@@ -541,14 +541,14 @@ void EditorProfiler::_graph_tex_input(const Ref<InputEvent> &p_ev) {
 
 	if (button_idx == MouseButton::WHEEL_DOWN) {
 		// Zooming.
-		graph_zoom = MAX(-0.05 + graph_zoom, 0);
+		graph_zoom = Math::max(-0.05 + graph_zoom, 0);
 		_update_plot();
 	} else if (button_idx == MouseButton::WHEEL_UP) {
 		if (graph_zoom == 0) {
 			zoom_center = me->get_position().x;
 			zoom_center = zoom_center * frame_metrics.size() / graph->get_size().width;
 		}
-		graph_zoom = MIN(0.05 + graph_zoom, 2);
+		graph_zoom = Math::min(0.05 + graph_zoom, 2);
 		_update_plot();
 	}
 
@@ -777,7 +777,7 @@ EditorProfiler::EditorProfiler() {
 	h_split->add_child(graph);
 	graph->set_h_size_flags(SIZE_EXPAND_FILL);
 
-	int metric_size = CLAMP(int(EDITOR_GET("debugger/profiler_frame_history_size")), 60, 10000);
+	int metric_size = Math::clamp(int(EDITOR_GET("debugger/profiler_frame_history_size")), 60, 10000);
 	frame_metrics.resize(metric_size);
 
 	frame_delay = memnew(Timer);

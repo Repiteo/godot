@@ -1253,7 +1253,7 @@ void Window::_update_viewport_size() {
 
 		if (content_scale_stretch == Window::CONTENT_SCALE_STRETCH_INTEGER) {
 			Size2i screen_scale = (screen_size / viewport_size).floor();
-			int scale_factor = MIN(screen_scale.x, screen_scale.y);
+			int scale_factor = Math::min(screen_scale.x, screen_scale.y);
 
 			if (scale_factor < 1) {
 				scale_factor = 1;
@@ -1311,7 +1311,7 @@ void Window::_update_viewport_size() {
 	notification(NOTIFICATION_WM_SIZE_CHANGED);
 
 	if (embedder) {
-		float scale = MIN(embedder->stretch_transform.get_scale().width, embedder->stretch_transform.get_scale().height);
+		float scale = Math::min(embedder->stretch_transform.get_scale().width, embedder->stretch_transform.get_scale().height);
 		Viewport::set_oversampling_override(scale);
 		Size2 s = Size2(final_size.width * scale, final_size.height * scale).ceil();
 		RS::get_singleton()->viewport_set_global_canvas_transform(get_viewport_rid(), global_canvas_transform * scale * content_scale_factor);

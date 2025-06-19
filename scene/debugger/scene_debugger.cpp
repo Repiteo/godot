@@ -2264,7 +2264,7 @@ void RuntimeNodeSelect::_update_selection_drag(const Point2 &p_end_pos) {
 
 		selection_drawing.position = xform.affine_inverse().xform(selection_drag_area.position);
 		selection_drawing.size = xform.affine_inverse().xform(p_end_pos);
-		thickness = MAX(1, Math::ceil(1 / view_2d_zoom));
+		thickness = Math::max(1, Math::ceil(1 / view_2d_zoom));
 	} else {
 		RS::get_singleton()->canvas_item_set_transform(sel_drag_ci, Transform2D());
 		RS::get_singleton()->canvas_item_reset_physics_interpolation(sel_drag_ci);
@@ -2461,7 +2461,7 @@ void RuntimeNodeSelect::_pan_callback(Vector2 p_scroll_vec, Ref<InputEvent> p_ev
 // A very shallow copy of the same function inside CanvasItemEditor.
 void RuntimeNodeSelect::_zoom_callback(float p_zoom_factor, Vector2 p_origin, Ref<InputEvent> p_event) {
 	real_t prev_zoom = view_2d_zoom;
-	view_2d_zoom = CLAMP(view_2d_zoom * p_zoom_factor, VIEW_2D_MIN_ZOOM, VIEW_2D_MAX_ZOOM);
+	view_2d_zoom = Math::clamp(view_2d_zoom * p_zoom_factor, VIEW_2D_MIN_ZOOM, VIEW_2D_MAX_ZOOM);
 
 	Vector2 pos = SceneTree::get_singleton()->get_root()->get_screen_transform().affine_inverse().xform(p_origin);
 	view_2d_offset += pos / prev_zoom - pos / view_2d_zoom;
@@ -2615,25 +2615,25 @@ void RuntimeNodeSelect::_find_3d_items_at_rect(const Rect2 &p_rect, Vector<Selec
 		zfar = camera->get_far();
 		zofs -= znear;
 	}
-	zofs = MAX(0.0, zofs);
+	zofs = Math::max(0.0, zofs);
 
 	const Point2 pos_end = p_rect.position + p_rect.size;
 	Vector3 box[4] = {
 		Vector3(
-				MIN(p_rect.position.x, pos_end.x),
-				MIN(p_rect.position.y, pos_end.y),
+				Math::min(p_rect.position.x, pos_end.x),
+				Math::min(p_rect.position.y, pos_end.y),
 				zofs),
 		Vector3(
-				MAX(p_rect.position.x, pos_end.x),
-				MIN(p_rect.position.y, pos_end.y),
+				Math::max(p_rect.position.x, pos_end.x),
+				Math::min(p_rect.position.y, pos_end.y),
 				zofs),
 		Vector3(
-				MAX(p_rect.position.x, pos_end.x),
-				MAX(p_rect.position.y, pos_end.y),
+				Math::max(p_rect.position.x, pos_end.x),
+				Math::max(p_rect.position.y, pos_end.y),
 				zofs),
 		Vector3(
-				MIN(p_rect.position.x, pos_end.x),
-				MAX(p_rect.position.y, pos_end.y),
+				Math::min(p_rect.position.x, pos_end.x),
+				Math::max(p_rect.position.y, pos_end.y),
 				zofs)
 	};
 
@@ -2815,13 +2815,13 @@ bool RuntimeNodeSelect::_handle_3d_input(const Ref<InputEvent> &p_event) {
 		} else if (k->is_ctrl_pressed()) {
 			switch (k->get_physical_keycode()) {
 				case Key::EQUAL: {
-					cursor.fov_scale = CLAMP(cursor.fov_scale - 0.05, CAMERA_MIN_FOV_SCALE, CAMERA_MAX_FOV_SCALE);
+					cursor.fov_scale = Math::clamp(cursor.fov_scale - 0.05, CAMERA_MIN_FOV_SCALE, CAMERA_MAX_FOV_SCALE);
 					SceneTree::get_singleton()->get_root()->set_camera_3d_override_perspective(camera_fov * cursor.fov_scale, camera_znear, camera_zfar);
 
 					return true;
 				} break;
 				case Key::MINUS: {
-					cursor.fov_scale = CLAMP(cursor.fov_scale + 0.05, CAMERA_MIN_FOV_SCALE, CAMERA_MAX_FOV_SCALE);
+					cursor.fov_scale = Math::clamp(cursor.fov_scale + 0.05, CAMERA_MIN_FOV_SCALE, CAMERA_MAX_FOV_SCALE);
 					SceneTree::get_singleton()->get_root()->set_camera_3d_override_perspective(camera_fov * cursor.fov_scale, camera_znear, camera_zfar);
 
 					return true;
@@ -2868,20 +2868,20 @@ void RuntimeNodeSelect::_set_camera_freelook_enabled(bool p_enabled) {
 }
 
 void RuntimeNodeSelect::_cursor_scale_distance(real_t p_scale) {
-	real_t min_distance = MAX(camera_znear * 4, VIEW_3D_MIN_ZOOM);
-	real_t max_distance = MIN(camera_zfar / 4, VIEW_3D_MAX_ZOOM);
-	cursor.distance = CLAMP(cursor.distance * p_scale, min_distance, max_distance);
+	real_t min_distance = Math::max(camera_znear * 4, VIEW_3D_MIN_ZOOM);
+	real_t max_distance = Math::min(camera_zfar / 4, VIEW_3D_MAX_ZOOM);
+	cursor.distance = Math::clamp(cursor.distance * p_scale, min_distance, max_distance);
 
 	SceneTree::get_singleton()->get_root()->set_camera_3d_override_transform(_get_cursor_transform());
 }
 
 void RuntimeNodeSelect::_scale_freelook_speed(real_t p_scale) {
-	real_t min_speed = MAX(camera_znear * 4, VIEW_3D_MIN_ZOOM);
-	real_t max_speed = MIN(camera_zfar / 4, VIEW_3D_MAX_ZOOM);
+	real_t min_speed = Math::max(camera_znear * 4, VIEW_3D_MIN_ZOOM);
+	real_t max_speed = Math::min(camera_zfar / 4, VIEW_3D_MAX_ZOOM);
 	if (unlikely(min_speed > max_speed)) {
 		freelook_base_speed = (min_speed + max_speed) / 2;
 	} else {
-		freelook_base_speed = CLAMP(freelook_base_speed * p_scale, min_speed, max_speed);
+		freelook_base_speed = Math::clamp(freelook_base_speed * p_scale, min_speed, max_speed);
 	}
 }
 
@@ -2896,7 +2896,7 @@ void RuntimeNodeSelect::_cursor_look(Ref<InputEventWithModifiers> p_event) {
 		cursor.x_rot += relative.y * freelook_sensitivity;
 	}
 	// Clamp the Y rotation to roughly -90..90 degrees so the user can't look upside-down and end up disoriented.
-	cursor.x_rot = CLAMP(cursor.x_rot, -1.57, 1.57);
+	cursor.x_rot = Math::clamp(cursor.x_rot, -1.57, 1.57);
 
 	cursor.y_rot += relative.x * freelook_sensitivity;
 
@@ -2940,7 +2940,7 @@ void RuntimeNodeSelect::_cursor_orbit(Ref<InputEventWithModifiers> p_event) {
 		cursor.x_rot += relative.y * orbit_sensitivity;
 	}
 	// Clamp the Y rotation to roughly -90..90 degrees so the user can't look upside-down and end up disoriented.
-	cursor.x_rot = CLAMP(cursor.x_rot, -1.57, 1.57);
+	cursor.x_rot = Math::clamp(cursor.x_rot, -1.57, 1.57);
 
 	if (invert_x_axis) {
 		cursor.y_rot -= relative.x * orbit_sensitivity;
@@ -2985,7 +2985,7 @@ void RuntimeNodeSelect::_reset_camera_3d() {
 		cursor.x_rot = -camera->get_global_rotation().x;
 		cursor.y_rot = -camera->get_global_rotation().y;
 
-		cursor.fov_scale = CLAMP(camera->get_fov() / camera_fov, CAMERA_MIN_FOV_SCALE, CAMERA_MAX_FOV_SCALE);
+		cursor.fov_scale = Math::clamp(camera->get_fov() / camera_fov, CAMERA_MIN_FOV_SCALE, CAMERA_MAX_FOV_SCALE);
 	} else {
 		cursor.fov_scale = 1.0;
 	}

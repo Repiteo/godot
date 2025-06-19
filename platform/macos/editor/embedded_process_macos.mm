@@ -186,7 +186,7 @@ Rect2i EmbeddedProcessMacOS::get_adjusted_embedded_window_rect(const Rect2i &p_r
 			// Fixed at the desired size.
 			desired_rect.size = window_size;
 		} else {
-			float ratio = MIN((float)control_rect.size.x / window_size.x, (float)control_rect.size.y / window_size.y);
+			float ratio = Math::min((float)control_rect.size.x / window_size.x, (float)control_rect.size.y / window_size.y);
 			desired_rect.size = Size2i(window_size.x * ratio, window_size.y * ratio).maxi(1);
 		}
 		desired_rect.position = Size2i(control_rect.position.x + ((control_rect.size.x - desired_rect.size.x) / 2), control_rect.position.y + ((control_rect.size.y - desired_rect.size.y) / 2));

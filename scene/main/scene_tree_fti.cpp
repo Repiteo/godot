@@ -275,7 +275,7 @@ void SceneTreeFTI::_create_depth_lists() {
 
 			// This shouldn't happen, but wouldn't be terrible if it did.
 			DEV_ASSERT(depth >= 0);
-			depth = MIN(depth, (int32_t)data.scene_tree_depth_limit);
+			depth = Math::min(depth, (int32_t)data.scene_tree_depth_limit);
 
 			LocalVector<Node3D *> &dest_list = data.dirty_node_depth_lists[depth];
 #ifdef GODOT_SCENE_TREE_FTI_EXTRA_CHECKS

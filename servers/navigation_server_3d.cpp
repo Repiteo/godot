@@ -785,7 +785,7 @@ Color NavigationServer3D::get_debug_navigation_link_connection_disabled_color() 
 }
 
 void NavigationServer3D::set_debug_navigation_agent_path_point_size(real_t p_point_size) {
-	debug_navigation_agent_path_point_size = MAX(0.1, p_point_size);
+	debug_navigation_agent_path_point_size = Math::max(0.1, p_point_size);
 	if (debug_navigation_agent_path_point_material.is_valid()) {
 		debug_navigation_agent_path_point_material->set_point_size(debug_navigation_agent_path_point_size);
 	}

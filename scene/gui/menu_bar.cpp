@@ -863,7 +863,7 @@ Size2 MenuBar::get_minimum_size() const {
 			continue;
 		}
 		Size2 sz = menu_cache[i].text_buf->get_size() + style->get_minimum_size();
-		size.y = MAX(size.y, sz.y);
+		size.y = Math::max(size.y, sz.y);
 		size.x += sz.x;
 	}
 	if (menu_cache.size() > 1) {

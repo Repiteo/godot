@@ -232,7 +232,7 @@ void InputEventConfigurationDialog::_on_listen_input_changed(const Ref<InputEven
 	}
 
 	if (joym.is_valid()) {
-		joym->set_axis_value(SIGN(joym->get_axis_value()));
+		joym->set_axis_value(Math::sign(joym->get_axis_value()));
 	}
 
 	if (k.is_valid()) {

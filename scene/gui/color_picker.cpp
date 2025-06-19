@@ -699,7 +699,7 @@ void ColorPicker::_normalized_apply_intensity_to_color() {
 
 void ColorPicker::_copy_color_to_normalized_and_intensity() {
 	Color linear_color = color.srgb_to_linear();
-	float multiplier = MAX(1, MAX(MAX(linear_color.r, linear_color.g), linear_color.b));
+	float multiplier = Math::max(1, Math::max(Math::max(linear_color.r, linear_color.g), linear_color.b));
 	for (int i = 0; i < 3; i++) {
 		color_normalized.components[i] = linear_color.components[i] / multiplier;
 	}

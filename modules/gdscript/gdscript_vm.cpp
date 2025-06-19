@@ -575,7 +575,7 @@ Variant GDScriptFunction::call(GDScriptInstance *p_instance, const Variant **p_a
 		uint8_t *aptr = (uint8_t *)alloca(alloca_size);
 		stack = (Variant *)aptr;
 
-		const int non_vararg_arg_count = MIN(p_argcount, _argument_count);
+		const int non_vararg_arg_count = Math::min(p_argcount, _argument_count);
 		for (int i = 0; i < non_vararg_arg_count; i++) {
 			if (!argument_types[i].has_type) {
 				memnew_placement(&stack[i + FIXED_ADDRESSES_MAX], Variant(*p_args[i]));

@@ -143,9 +143,9 @@ void RootMotionView::_notification(int p_what) {
 					from_j = accumulated.xform_inv(from_j);
 
 					Color c = color, c_i = color, c_j = color;
-					c.a *= MAX(0, 1.0 - from.length() / radius);
-					c_i.a *= MAX(0, 1.0 - from_i.length() / radius);
-					c_j.a *= MAX(0, 1.0 - from_j.length() / radius);
+					c.a *= Math::max(0, 1.0 - from.length() / radius);
+					c_i.a *= Math::max(0, 1.0 - from_i.length() / radius);
+					c_j.a *= Math::max(0, 1.0 - from_j.length() / radius);
 
 					immediate->surface_set_color(c);
 					immediate->surface_add_vertex(from);

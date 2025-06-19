@@ -107,8 +107,8 @@ uint8_t LightmapRaycasterEmbree::AlphaTextureData::sample(float u, float v) cons
 	uint8_t texels[4];
 
 	for (int i = 0; i < 4; ++i) {
-		int sample_x = CLAMP(xi + i % 2, 0, size.x - 1);
-		int sample_y = CLAMP(yi + i / 2, 0, size.y - 1);
+		int sample_x = Math::clamp(xi + i % 2, 0, size.x - 1);
+		int sample_y = Math::clamp(yi + i / 2, 0, size.y - 1);
 		texels[i] = data[sample_y * size.x + sample_x];
 	}
 

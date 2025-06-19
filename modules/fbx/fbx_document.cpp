@@ -94,7 +94,7 @@ static Transform3D _as_transform(const ufbx_transform &p_xform) {
 }
 
 static real_t _relative_error(const Vector3 &p_a, const Vector3 &p_b) {
-	return p_a.distance_to(p_b) / MAX(p_a.length(), p_b.length());
+	return p_a.distance_to(p_b) / Math::max(p_a.length(), p_b.length());
 }
 
 static Color _material_color(const ufbx_material_map &p_map) {
@@ -720,7 +720,7 @@ Error FBXDocument::_parse_meshes(Ref<FBXState> p_state) {
 						uint32_t fbx_vertex_index = fbx_mesh->vertex_indices[indices[vertex_i]];
 						ufbx_skin_vertex skin_vertex = fbx_skin->vertices[fbx_vertex_index];
 						float total_weight = 0.0f;
-						int32_t num_weights = MIN(int32_t(skin_vertex.num_weights), num_skin_weights);
+						int32_t num_weights = Math::min(int32_t(skin_vertex.num_weights), num_skin_weights);
 						for (int32_t i = 0; i < num_weights; i++) {
 							ufbx_skin_weight skin_weight = fbx_skin->weights[skin_vertex.weight_begin + i];
 							int index = vertex_i * num_skin_weights + i;

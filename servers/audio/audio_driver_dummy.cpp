@@ -116,7 +116,7 @@ void AudioDriverDummy::mix_audio(int p_frames, int32_t *p_buffer) {
 
 	uint32_t todo = p_frames;
 	while (todo) {
-		uint32_t to_mix = MIN(buffer_frames, todo);
+		uint32_t to_mix = Math::min(buffer_frames, todo);
 		lock();
 		audio_server_process(to_mix, samples_in);
 		unlock();

@@ -267,7 +267,7 @@ void SectionedInspector::update_category_list() {
 		Vector<String> sectionarr = pi.name.split("/");
 		String metasection;
 
-		int sc = MIN(2, sectionarr.size() - 1);
+		int sc = Math::min(2, sectionarr.size() - 1);
 
 		for (int i = 0; i < sc; i++) {
 			TreeItem *parent = section_map[metasection];

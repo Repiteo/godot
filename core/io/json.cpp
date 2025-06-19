@@ -84,7 +84,7 @@ void JSON::_stringify(String &r_result, const Variant &p_var, const String &p_in
 
 			double magnitude = std::log10(Math::abs(num));
 			int total_digits = p_full_precision ? 17 : 14;
-			int precision = MAX(1, total_digits - (int)Math::floor(magnitude));
+			int precision = Math::max(1, total_digits - (int)Math::floor(magnitude));
 
 			r_result += String::num(num, precision);
 			return;

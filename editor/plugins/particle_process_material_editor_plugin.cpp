@@ -162,10 +162,10 @@ void ParticleProcessMaterialMinMaxPropertyEditor::_range_edit_gui_input(const Re
 			case Drag::RIGHT: {
 				float new_value = drag_from_value + (mm->get_position().x - drag_origin) / usable_area.x * property_length;
 				if (drag == Drag::LEFT) {
-					new_value = MIN(new_value, max_range->get_value());
+					new_value = Math::min(new_value, max_range->get_value());
 					_set_clamped_values(new_value, max_range->get_value());
 				} else {
-					new_value = MAX(new_value, min_range->get_value());
+					new_value = Math::max(new_value, min_range->get_value());
 					_set_clamped_values(min_range->get_value(), new_value);
 				}
 			} break;
@@ -173,13 +173,13 @@ void ParticleProcessMaterialMinMaxPropertyEditor::_range_edit_gui_input(const Re
 			case Drag::MIDDLE: {
 				float delta = (mm->get_position().x - drag_origin) / usable_area.x * property_length;
 				float diff = max_range->get_value() - min_range->get_value();
-				delta = CLAMP(drag_from_value + delta, property_range.x, property_range.y - diff) - drag_from_value;
+				delta = Math::clamp(drag_from_value + delta, property_range.x, property_range.y - diff) - drag_from_value;
 				_set_clamped_values(drag_from_value + delta, drag_from_value + delta + diff);
 			} break;
 
 			case Drag::SCALE: {
 				float delta = (mm->get_position().x - drag_origin) / usable_area.x * property_length + drag_from_value;
-				_set_clamped_values(MIN(drag_midpoint, drag_midpoint - delta), MAX(drag_midpoint, drag_midpoint + delta));
+				_set_clamped_values(Math::min(drag_midpoint, drag_midpoint - delta), Math::max(drag_midpoint, drag_midpoint + delta));
 			} break;
 		}
 	}
@@ -221,8 +221,8 @@ Rect2 ParticleProcessMaterialMinMaxPropertyEditor::_get_middle_rect() const {
 
 void ParticleProcessMaterialMinMaxPropertyEditor::_set_clamped_values(float p_min, float p_max) {
 	// This is required for editing widget in case the properties have or_less or or_greater hint.
-	min_range->set_value(MAX(p_min, property_range.x));
-	max_range->set_value(MIN(p_max, property_range.y));
+	min_range->set_value(Math::max(p_min, property_range.x));
+	max_range->set_value(Math::min(p_max, property_range.y));
 	_update_slider_values();
 	_sync_property();
 }
@@ -296,11 +296,11 @@ void ParticleProcessMaterialMinMaxPropertyEditor::_sync_sliders(float, const Edi
 	switch (slider_mode) {
 		case Mode::RANGE: {
 			if (p_changed_slider == max_edit) {
-				min_edit->set_value_no_signal(MIN(min_edit->get_value(), max_edit->get_value()));
+				min_edit->set_value_no_signal(Math::min(min_edit->get_value(), max_edit->get_value()));
 			}
 			min_range->set_value(min_edit->get_value());
 			if (p_changed_slider == min_edit) {
-				max_edit->set_value_no_signal(MAX(min_edit->get_value(), max_edit->get_value()));
+				max_edit->set_value_no_signal(Math::max(min_edit->get_value(), max_edit->get_value()));
 			}
 			max_range->set_value(max_edit->get_value());
 			_sync_property();
@@ -319,8 +319,8 @@ void ParticleProcessMaterialMinMaxPropertyEditor::_sync_sliders(float, const Edi
 		} break;
 	}
 
-	property_range.x = MIN(min_range->get_value(), min_range->get_min());
-	property_range.y = MAX(max_range->get_value(), max_range->get_max());
+	property_range.x = Math::min(min_range->get_value(), min_range->get_min());
+	property_range.y = Math::max(max_range->get_value(), max_range->get_max());
 }
 
 float ParticleProcessMaterialMinMaxPropertyEditor::_get_max_spread() const {
@@ -331,11 +331,11 @@ float ParticleProcessMaterialMinMaxPropertyEditor::_get_max_spread() const {
 	}
 
 	if (!min_edit->is_lesser_allowed()) {
-		max_spread = MIN(max_spread, min_edit->get_value() - min_edit->get_min());
+		max_spread = Math::min(max_spread, min_edit->get_value() - min_edit->get_min());
 	}
 
 	if (!min_edit->is_greater_allowed()) {
-		max_spread = MIN(max_spread, min_edit->get_max() - min_edit->get_value());
+		max_spread = Math::min(max_spread, min_edit->get_max() - min_edit->get_value());
 	}
 
 	return max_spread;

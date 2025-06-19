@@ -777,7 +777,7 @@ String DisplayServerX11::_clipboard_get_impl(Atom p_source, Window x11_window, A
 								incr_data.resize(initial_size);
 							} else {
 								// New chunk, resize to be safe and append data.
-								incr_data.resize(MAX(data_size + len, prev_size));
+								incr_data.resize(Math::max(data_size + len, prev_size));
 								memcpy(incr_data.ptr() + data_size, data, len);
 								data_size += len;
 							}
@@ -1022,7 +1022,7 @@ Ref<Image> DisplayServerX11::clipboard_get_image() const {
 						if (data && (len > 0)) {
 							uint32_t prev_size = incr_data.size();
 							// New chunk, resize to be safe and append data.
-							incr_data.resize(MAX(data_size + len, prev_size));
+							incr_data.resize(Math::max(data_size + len, prev_size));
 							memcpy(incr_data.ptr() + data_size, data, len);
 							data_size += len;
 						} else if (!(format == 0 && len == 0)) {
@@ -6082,18 +6082,18 @@ Error DisplayServerX11::embed_process(WindowID p_window, OS::ProcessID p_pid, co
 		Rect2i screens_full_rect = _screens_get_full_rect();
 		Vector2i screens_full_end = screens_full_rect.get_end();
 		if (desired_rect.position.x < screens_full_rect.position.x) {
-			desired_rect.size.x = MAX(desired_rect.size.x - (screens_full_rect.position.x - desired_rect.position.x), 0);
+			desired_rect.size.x = Math::max(desired_rect.size.x - (screens_full_rect.position.x - desired_rect.position.x), 0);
 			desired_rect.position.x = screens_full_rect.position.x;
 		}
 		if (desired_rect.position.x + desired_rect.size.x > screens_full_end.x) {
-			desired_rect.size.x = MAX(screens_full_end.x - desired_rect.position.x, 0);
+			desired_rect.size.x = Math::max(screens_full_end.x - desired_rect.position.x, 0);
 		}
 		if (desired_rect.position.y < screens_full_rect.position.y) {
-			desired_rect.size.y = MAX(desired_rect.size.y - (screens_full_rect.position.y - desired_rect.position.y), 0);
+			desired_rect.size.y = Math::max(desired_rect.size.y - (screens_full_rect.position.y - desired_rect.position.y), 0);
 			desired_rect.position.y = screens_full_rect.position.y;
 		}
 		if (desired_rect.position.y + desired_rect.size.y > screens_full_end.y) {
-			desired_rect.size.y = MAX(screens_full_end.y - desired_rect.position.y, 0);
+			desired_rect.size.y = Math::max(screens_full_end.y - desired_rect.position.y, 0);
 		}
 
 		// Second, for each screen, check if the desired rectangle is within a portion of the screen
@@ -6117,12 +6117,12 @@ Error DisplayServerX11::embed_process(WindowID p_window, OS::ProcessID p_pid, co
 
 			if (desired_rect.position.x >= screen_rect.position.x && desired_rect.position.x < screen_usable_rect.position.x) {
 				int offset = screen_usable_rect.position.x - desired_rect.position.x;
-				desired_rect.size.x = MAX(desired_rect.size.x - offset, 0);
+				desired_rect.size.x = Math::max(desired_rect.size.x - offset, 0);
 				desired_rect.position.x += offset;
 			}
 			if (desired_rect.position.y >= screen_rect.position.y && desired_rect.position.y < screen_usable_rect.position.y) {
 				int offset = screen_usable_rect.position.y - desired_rect.position.y;
-				desired_rect.size.y = MAX(desired_rect.size.y - offset, 0);
+				desired_rect.size.y = Math::max(desired_rect.size.y - offset, 0);
 				desired_rect.position.y += offset;
 			}
 
@@ -6130,10 +6130,10 @@ Error DisplayServerX11::embed_process(WindowID p_window, OS::ProcessID p_pid, co
 			Vector2i screen_end = screen_rect.get_end();
 			Vector2i screen_usable_end = screen_usable_rect.get_end();
 			if (desired_end.x > screen_usable_end.x && desired_end.x <= screen_end.x) {
-				desired_rect.size.x = MAX(desired_rect.size.x - (desired_end.x - screen_usable_end.x), 0);
+				desired_rect.size.x = Math::max(desired_rect.size.x - (desired_end.x - screen_usable_end.x), 0);
 			}
 			if (desired_end.y > screen_usable_end.y && desired_end.y <= screen_end.y) {
-				desired_rect.size.y = MAX(desired_rect.size.y - (desired_end.y - screen_usable_end.y), 0);
+				desired_rect.size.y = Math::max(desired_rect.size.y - (desired_end.y - screen_usable_end.y), 0);
 			}
 		}
 

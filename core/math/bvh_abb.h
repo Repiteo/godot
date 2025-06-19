@@ -79,8 +79,8 @@ struct BVH_ABB {
 
 	void merge(const BVH_ABB &p_o) {
 		for (int axis = 0; axis < POINT::AXIS_COUNT; ++axis) {
-			neg_max[axis] = MIN(neg_max[axis], p_o.neg_max[axis]);
-			min[axis] = MIN(min[axis], p_o.min[axis]);
+			neg_max[axis] = Math::min(neg_max[axis], p_o.neg_max[axis]);
+			min[axis] = Math::min(min[axis], p_o.min[axis]);
 		}
 	}
 

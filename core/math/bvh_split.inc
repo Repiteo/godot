@@ -59,7 +59,7 @@ void _split_leaf_sort_groups_simple(int &num_a, int &num_b, uint16_t *group_a, u
 	// detect when split on longest axis failed
 	int min_threshold = MAX_ITEMS / 4;
 	int min_group_size[POINT::AXIS_COUNT];
-	min_group_size[0] = MIN(num_a, num_b);
+	min_group_size[0] = Math::min(num_a, num_b);
 	if (min_group_size[0] < min_threshold) {
 		// slow but sure .. first move everything back into a
 		for (int b = 0; b < num_b; b++) {
@@ -80,7 +80,7 @@ void _split_leaf_sort_groups_simple(int &num_a, int &num_b, uint16_t *group_a, u
 				}
 			}
 
-			min_group_size[axis] = MIN(count, num_a - count);
+			min_group_size[axis] = Math::min(count, num_a - count);
 		} // for axis
 
 		// best axis

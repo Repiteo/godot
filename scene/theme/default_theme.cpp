@@ -62,7 +62,7 @@ static Ref<StyleBoxFlat> make_flat_stylebox(Color p_color, float p_margin_left =
 	style->set_corner_radius_all(Math::round(p_corner_radius * scale));
 	style->set_anti_aliased(true);
 	// Adjust level of detail based on the corners' effective sizes.
-	style->set_corner_detail(MIN(Math::ceil(1.5 * p_corner_radius), 6) * scale);
+	style->set_corner_detail(Math::min(Math::ceil(1.5 * p_corner_radius), 6) * scale);
 
 	style->set_draw_center(p_draw_center);
 	style->set_border_width_all(Math::round(p_border_width * scale));
@@ -1333,7 +1333,7 @@ void make_default_theme(float p_scale, Ref<Font> p_font, TextServer::SubpixelPos
 	Ref<FontVariation> bold_font;
 	Ref<FontVariation> bold_italics_font;
 	Ref<FontVariation> italics_font;
-	float default_scale = CLAMP(p_scale, 0.5, 8.0);
+	float default_scale = Math::clamp(p_scale, 0.5, 8.0);
 
 	if (p_font.is_valid()) {
 		// Use the custom font defined in the Project Settings.

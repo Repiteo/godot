@@ -205,7 +205,7 @@ public:
 				}
 			}
 			if (p_opts.size() > 0 && p_opts[0].get_type() == Variant::INT) {
-				max_frame_functions = MAX(0, int(p_opts[0]));
+				max_frame_functions = Math::max(0, int(p_opts[0]));
 			}
 		} else {
 			for (int i = 0; i < ScriptServer::get_language_count(); i++) {
@@ -231,7 +231,7 @@ public:
 		SortArray<ScriptLanguage::ProfilingInfo *, ProfileInfoSort> sa;
 		sa.sort(ptrs.ptrw(), ofs);
 
-		int to_send = MIN(ofs, max_frame_functions);
+		int to_send = Math::min(ofs, max_frame_functions);
 
 		// Check signatures first, and compute total time.
 		r_total = 0;

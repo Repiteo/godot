@@ -510,7 +510,7 @@ bool NavigationAgent3D::get_simplify_path() const {
 }
 
 void NavigationAgent3D::set_simplify_epsilon(real_t p_epsilon) {
-	simplify_epsilon = MAX(0.0, p_epsilon);
+	simplify_epsilon = Math::max(0.0, p_epsilon);
 	navigation_query->set_simplify_epsilon(simplify_epsilon);
 }
 
@@ -519,7 +519,7 @@ real_t NavigationAgent3D::get_simplify_epsilon() const {
 }
 
 void NavigationAgent3D::set_path_return_max_length(float p_length) {
-	path_return_max_length = MAX(0.0, p_length);
+	path_return_max_length = Math::max(0.0, p_length);
 	navigation_query->set_path_return_max_length(path_return_max_length);
 }
 
@@ -528,7 +528,7 @@ float NavigationAgent3D::get_path_return_max_length() const {
 }
 
 void NavigationAgent3D::set_path_return_max_radius(float p_radius) {
-	path_return_max_radius = MAX(0.0, p_radius);
+	path_return_max_radius = Math::max(0.0, p_radius);
 	navigation_query->set_path_return_max_radius(path_return_max_radius);
 }
 
@@ -546,7 +546,7 @@ int NavigationAgent3D::get_path_search_max_polygons() const {
 }
 
 void NavigationAgent3D::set_path_search_max_distance(float p_distance) {
-	path_search_max_distance = MAX(0.0, p_distance);
+	path_search_max_distance = Math::max(0.0, p_distance);
 	navigation_query->set_path_search_max_distance(path_search_max_distance);
 }
 
@@ -1118,7 +1118,7 @@ void NavigationAgent3D::set_debug_path_custom_point_size(float p_point_size) {
 		return;
 	}
 
-	debug_path_custom_point_size = MAX(0.0, p_point_size);
+	debug_path_custom_point_size = Math::max(0.0, p_point_size);
 	debug_path_dirty = true;
 #endif // DEBUG_ENABLED
 }

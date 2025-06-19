@@ -340,14 +340,14 @@ void PopupPanel::_update_shadow_offsets() const {
 	// Offset the background panel so it leaves space inside the window for the shadows to be drawn.
 	const Point2 shadow_offset = sb->get_shadow_offset();
 	if (is_layout_rtl()) {
-		panel->set_offset(SIDE_LEFT, MAX(0, shadow_size + shadow_offset.x));
-		panel->set_offset(SIDE_RIGHT, MIN(0, -shadow_size + shadow_offset.x));
+		panel->set_offset(SIDE_LEFT, Math::max(0, shadow_size + shadow_offset.x));
+		panel->set_offset(SIDE_RIGHT, Math::min(0, -shadow_size + shadow_offset.x));
 	} else {
-		panel->set_offset(SIDE_LEFT, MAX(0, shadow_size - shadow_offset.x));
-		panel->set_offset(SIDE_RIGHT, MIN(0, -shadow_size - shadow_offset.x));
+		panel->set_offset(SIDE_LEFT, Math::max(0, shadow_size - shadow_offset.x));
+		panel->set_offset(SIDE_RIGHT, Math::min(0, -shadow_size - shadow_offset.x));
 	}
-	panel->set_offset(SIDE_TOP, MAX(0, shadow_size - shadow_offset.y));
-	panel->set_offset(SIDE_BOTTOM, MIN(0, -shadow_size - shadow_offset.y));
+	panel->set_offset(SIDE_TOP, Math::max(0, shadow_size - shadow_offset.y));
+	panel->set_offset(SIDE_BOTTOM, Math::min(0, -shadow_size - shadow_offset.y));
 }
 
 void PopupPanel::_update_child_rects() const {

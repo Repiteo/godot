@@ -109,7 +109,7 @@ void AudioEffectSpectrumAnalyzerInstance::process(const AudioFrame *p_src_frames
 	//capture spectrum
 	while (p_frame_count) {
 		int to_fill = fft_size * 2 - temporal_fft_pos;
-		to_fill = MIN(to_fill, p_frame_count);
+		to_fill = Math::min(to_fill, p_frame_count);
 		const double to_fill_step = Math::TAU / (double)fft_size;
 
 		float *fftw = temporal_fft.ptrw();
@@ -177,8 +177,8 @@ Vector2 AudioEffectSpectrumAnalyzerInstance::get_magnitude_for_frequency_range(f
 	int begin_pos = p_begin * fft_size / (mix_rate * 0.5);
 	int end_pos = p_end * fft_size / (mix_rate * 0.5);
 
-	begin_pos = CLAMP(begin_pos, 0, fft_size - 1);
-	end_pos = CLAMP(end_pos, 0, fft_size - 1);
+	begin_pos = Math::clamp(begin_pos, 0, fft_size - 1);
+	end_pos = Math::clamp(end_pos, 0, fft_size - 1);
 
 	if (begin_pos > end_pos) {
 		SWAP(begin_pos, end_pos);
@@ -199,8 +199,8 @@ Vector2 AudioEffectSpectrumAnalyzerInstance::get_magnitude_for_frequency_range(f
 		Vector2 max;
 
 		for (int i = begin_pos; i <= end_pos; i++) {
-			max.x = MAX(max.x, r[i].left);
-			max.y = MAX(max.y, r[i].right);
+			max.x = Math::max(max.x, r[i].left);
+			max.y = Math::max(max.y, r[i].right);
 		}
 
 		return max;

@@ -2904,7 +2904,7 @@ static String _get_unsaved_scene_dialog_text(String p_scene_filename, uint64_t p
 	// Consider editor startup to be a point of saving, so that when you
 	// close and reopen the editor, you don't get an excessively long
 	// "modified X hours ago".
-	const uint64_t last_modified_seconds = Time::get_singleton()->get_unix_time_from_system() - MAX(p_started_timestamp, FileAccess::get_modified_time(p_scene_filename));
+	const uint64_t last_modified_seconds = Time::get_singleton()->get_unix_time_from_system() - Math::max(p_started_timestamp, FileAccess::get_modified_time(p_scene_filename));
 	String last_modified_string;
 	if (last_modified_seconds < 120) {
 		last_modified_string = vformat(TTRN("%d second ago", "%d seconds ago", last_modified_seconds), last_modified_seconds);
@@ -7315,9 +7315,9 @@ void EditorNode::_update_main_menu_type() {
 
 		if (project_run_bar != nullptr) {
 			// Adjust spacers to center 2D / 3D / Script buttons.
-			int max_w = MAX(project_run_bar->get_minimum_size().x + right_menu_hb->get_minimum_size().x, main_menu_button->get_minimum_size().x);
-			left_spacer->set_custom_minimum_size(Size2(MAX(0, max_w - main_menu_button->get_minimum_size().x), 0));
-			right_spacer->set_custom_minimum_size(Size2(MAX(0, max_w - project_run_bar->get_minimum_size().x - right_menu_hb->get_minimum_size().x), 0));
+			int max_w = Math::max(project_run_bar->get_minimum_size().x + right_menu_hb->get_minimum_size().x, main_menu_button->get_minimum_size().x);
+			left_spacer->set_custom_minimum_size(Size2(Math::max(0, max_w - main_menu_button->get_minimum_size().x), 0));
+			right_spacer->set_custom_minimum_size(Size2(Math::max(0, max_w - project_run_bar->get_minimum_size().x - right_menu_hb->get_minimum_size().x), 0));
 		}
 	} else {
 		main_menu_bar = memnew(MenuBar);
@@ -7352,9 +7352,9 @@ void EditorNode::_update_main_menu_type() {
 
 		if (project_run_bar != nullptr) {
 			// Adjust spacers to center 2D / 3D / Script buttons.
-			int max_w = MAX(project_run_bar->get_minimum_size().x + right_menu_hb->get_minimum_size().x, main_menu_bar->get_minimum_size().x);
-			left_spacer->set_custom_minimum_size(Size2(MAX(0, max_w - main_menu_bar->get_minimum_size().x), 0));
-			right_spacer->set_custom_minimum_size(Size2(MAX(0, max_w - project_run_bar->get_minimum_size().x - right_menu_hb->get_minimum_size().x), 0));
+			int max_w = Math::max(project_run_bar->get_minimum_size().x + right_menu_hb->get_minimum_size().x, main_menu_bar->get_minimum_size().x);
+			left_spacer->set_custom_minimum_size(Size2(Math::max(0, max_w - main_menu_bar->get_minimum_size().x), 0));
+			right_spacer->set_custom_minimum_size(Size2(Math::max(0, max_w - project_run_bar->get_minimum_size().x - right_menu_hb->get_minimum_size().x), 0));
 		}
 	}
 }
@@ -8733,13 +8733,13 @@ EditorNode::EditorNode() {
 
 	// Adjust spacers to center 2D / 3D / Script buttons.
 	if (main_menu_button != nullptr) {
-		int max_w = MAX(project_run_bar->get_minimum_size().x + right_menu_hb->get_minimum_size().x, main_menu_button->get_minimum_size().x);
-		left_spacer->set_custom_minimum_size(Size2(MAX(0, max_w - main_menu_button->get_minimum_size().x), 0));
-		right_spacer->set_custom_minimum_size(Size2(MAX(0, max_w - project_run_bar->get_minimum_size().x - right_menu_hb->get_minimum_size().x), 0));
+		int max_w = Math::max(project_run_bar->get_minimum_size().x + right_menu_hb->get_minimum_size().x, main_menu_button->get_minimum_size().x);
+		left_spacer->set_custom_minimum_size(Size2(Math::max(0, max_w - main_menu_button->get_minimum_size().x), 0));
+		right_spacer->set_custom_minimum_size(Size2(Math::max(0, max_w - project_run_bar->get_minimum_size().x - right_menu_hb->get_minimum_size().x), 0));
 	} else {
-		int max_w = MAX(project_run_bar->get_minimum_size().x + right_menu_hb->get_minimum_size().x, main_menu_bar->get_minimum_size().x);
-		left_spacer->set_custom_minimum_size(Size2(MAX(0, max_w - main_menu_bar->get_minimum_size().x), 0));
-		right_spacer->set_custom_minimum_size(Size2(MAX(0, max_w - project_run_bar->get_minimum_size().x - right_menu_hb->get_minimum_size().x), 0));
+		int max_w = Math::max(project_run_bar->get_minimum_size().x + right_menu_hb->get_minimum_size().x, main_menu_bar->get_minimum_size().x);
+		left_spacer->set_custom_minimum_size(Size2(Math::max(0, max_w - main_menu_bar->get_minimum_size().x), 0));
+		right_spacer->set_custom_minimum_size(Size2(Math::max(0, max_w - project_run_bar->get_minimum_size().x - right_menu_hb->get_minimum_size().x), 0));
 	}
 	// Extend menu bar to window title.
 	if (can_expand) {

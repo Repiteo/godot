@@ -651,7 +651,7 @@ void VehicleBody3D::_resolve_single_bilateral(PhysicsDirectBodyState3D *s, const
 	if (p_rollInfluence > 0.0) {
 		// !BAS! But seeing we apply this frame by frame, makes more sense to me to make this time based
 		// keeping in mind our anti roll factor if it is set
-		contactDamping = MIN(contactDamping, s->get_step() / p_rollInfluence);
+		contactDamping = Math::min(contactDamping, s->get_step() / p_rollInfluence);
 	}
 
 #define ONLY_USE_LINEAR_MASS
@@ -721,7 +721,7 @@ real_t VehicleBody3D::_calc_rolling_friction(btVehicleWheelContactPoint &contact
 	// calculate j that moves us to zero relative velocity
 	j1 = -vrel * contactPoint.m_jacDiagABInv;
 
-	return CLAMP(j1, -maxImpulse, maxImpulse);
+	return Math::clamp(j1, -maxImpulse, maxImpulse);
 }
 
 static const real_t sideFrictionStiffness2 = real_t(1.0);

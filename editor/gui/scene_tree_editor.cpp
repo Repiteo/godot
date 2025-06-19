@@ -818,7 +818,7 @@ void SceneTreeEditor::_move_node_item(TreeItem *p_parent, HashMap<Node *, Cached
 			TreeItem *neighbor_item = p_parent->get_child(0);
 			item->move_before(neighbor_item);
 		} else {
-			TreeItem *neighbor_item = p_parent->get_child(CLAMP(current_node_index - 1, 0, p_parent->get_child_count() - 1));
+			TreeItem *neighbor_item = p_parent->get_child(Math::clamp(current_node_index - 1, 0, p_parent->get_child_count() - 1));
 			item->move_after(neighbor_item);
 		}
 

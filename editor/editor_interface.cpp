@@ -165,7 +165,7 @@ Vector<Ref<Texture2D>> EditorInterface::make_mesh_previews(const Vector<Ref<Mesh
 		xform.basis = Basis().rotated(Vector3(0, 1, 0), -Math::PI / 6);
 		xform.basis = Basis().rotated(Vector3(1, 0, 0), Math::PI / 6) * xform.basis;
 		AABB rot_aabb = xform.xform(aabb);
-		float m = MAX(rot_aabb.size.x, rot_aabb.size.y) * 0.5;
+		float m = Math::max(rot_aabb.size.x, rot_aabb.size.y) * 0.5;
 		if (m == 0) {
 			textures.push_back(Ref<Texture2D>());
 			continue;

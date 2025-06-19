@@ -164,7 +164,7 @@ TEST_CASE("[SceneTree][SplitContainer] Dragger visibility") {
 	MessageQueue::get_singleton()->flush();
 
 	const int sep_constant = split_container->get_theme_constant("separation");
-	const Size2i separator_size = Size2i(MAX(sep_constant, split_container->get_theme_icon("h_grabber")->get_width()), MAX(sep_constant, split_container->get_theme_icon("v_grabber")->get_height()));
+	const Size2i separator_size = Size2i(Math::max(sep_constant, split_container->get_theme_icon("h_grabber")->get_width()), Math::max(sep_constant, split_container->get_theme_icon("v_grabber")->get_height()));
 
 	SUBCASE("[SplitContainer] Visibility based on child count") {
 		split_container->remove_child(child_a);
@@ -233,7 +233,7 @@ TEST_CASE("[SceneTree][SplitContainer] Collapsed") {
 	MessageQueue::get_singleton()->flush();
 
 	const int sep_constant = split_container->get_theme_constant("separation");
-	const Size2i separator_size = Size2i(MAX(sep_constant, split_container->get_theme_icon("h_grabber")->get_width()), MAX(sep_constant, split_container->get_theme_icon("v_grabber")->get_height()));
+	const Size2i separator_size = Size2i(Math::max(sep_constant, split_container->get_theme_icon("h_grabber")->get_width()), Math::max(sep_constant, split_container->get_theme_icon("v_grabber")->get_height()));
 
 	SUBCASE("[SplitContainer] Dragging and cursor") {
 		split_container->set_collapsed(true);
@@ -370,7 +370,7 @@ TEST_CASE("[SceneTree][SplitContainer] Two children") {
 	MessageQueue::get_singleton()->flush();
 
 	const int sep_constant = split_container->get_theme_constant("separation");
-	const Size2i separator_size = Size2i(MAX(sep_constant, split_container->get_theme_icon("h_grabber")->get_width()), MAX(sep_constant, split_container->get_theme_icon("v_grabber")->get_height()));
+	const Size2i separator_size = Size2i(Math::max(sep_constant, split_container->get_theme_icon("h_grabber")->get_width()), Math::max(sep_constant, split_container->get_theme_icon("v_grabber")->get_height()));
 
 	SUBCASE("[SplitContainer] Minimum size") {
 		// Minimum size is the sum of both children's minimum sizes and the separator depending on the vertical axis.

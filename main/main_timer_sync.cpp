@@ -186,7 +186,7 @@ void MainTimerSync::DeltaSmoother::update_refresh_rate_estimator(int64_t p_delta
 			// increase the estimate
 			int change = fps - _estimated_fps;
 			change /= 2;
-			change = MAX(1, change);
+			change = Math::max(1, change);
 
 			_estimated_fps += change;
 			made_new_estimate();
@@ -285,7 +285,7 @@ int64_t MainTimerSync::DeltaSmoother::smooth_delta(int64_t p_delta) {
 	// a delta must include minimum 1 vsync
 	// (if it is less than that, it is either random error or we are no longer running at the vsync rate,
 	// in which case we should switch off delta smoothing, or re-estimate the refresh rate)
-	units = MAX(units, 1);
+	units = Math::max(units, 1);
 
 	_leftover_time -= units * _vsync_delta;
 	// print_line("units " + itos(units) + ", leftover " + itos(_leftover_time/1000) + " ms");
@@ -417,7 +417,7 @@ MainFrameTime MainTimerSync::advance_checked(double p_physics_step, int p_physic
 	}
 
 	float min_output_step = p_process_step / 8;
-	min_output_step = MAX(min_output_step, 1E-6);
+	min_output_step = Math::max(min_output_step, 1E-6);
 
 	// compensate for last deficit
 	p_process_step += time_deficit;

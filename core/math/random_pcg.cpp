@@ -81,8 +81,8 @@ int RandomPCG::random(int p_from, int p_to) {
 		return p_from;
 	}
 
-	int64_t min = MIN(p_from, p_to);
-	int64_t max = MAX(p_from, p_to);
+	int64_t min = Math::min(p_from, p_to);
+	int64_t max = Math::max(p_from, p_to);
 	uint32_t diff = static_cast<uint32_t>(max - min);
 
 	if (diff == UINT32_MAX) {

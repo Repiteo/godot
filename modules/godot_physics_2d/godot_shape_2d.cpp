@@ -372,7 +372,7 @@ void GodotCapsuleShape2D::get_supports(const Vector2 &p_normal, Vector2 *r_suppo
 	if (h > 0 && Math::abs(n.x) > segment_is_valid_support_threshold) {
 		// make it flat
 		n.y = 0.0;
-		n.x = SIGN(n.x) * radius;
+		n.x = Math::sign(n.x) * radius;
 
 		r_amount = 2;
 		r_supports[0] = n;
@@ -774,7 +774,7 @@ bool GodotConcavePolygonShape2D::intersect_segment(const Vector2 &p_begin, const
 
 int GodotConcavePolygonShape2D::_generate_bvh(BVH *p_bvh, int p_len, int p_depth) {
 	if (p_len == 1) {
-		bvh_depth = MAX(p_depth, bvh_depth);
+		bvh_depth = Math::max(p_depth, bvh_depth);
 		bvh.push_back(*p_bvh);
 		return bvh.size() - 1;
 	}

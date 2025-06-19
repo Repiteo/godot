@@ -234,7 +234,7 @@ void AnimationPlayerEditor::_go_to_nearest_keyframe(bool p_backward) {
 
 	double current_time = player->get_current_animation_position();
 	// Offset the time to avoid finding the same keyframe with Animation::track_find_key().
-	double time_offset = MAX(CMP_EPSILON * 2, current_time * CMP_EPSILON * 2);
+	double time_offset = Math::max(CMP_EPSILON * 2, current_time * CMP_EPSILON * 2);
 	double current_time_offset = current_time + (p_backward ? -time_offset : time_offset);
 
 	float nearest_key_time = p_backward ? 0 : anim->get_length();
@@ -1400,11 +1400,11 @@ void AnimationPlayerEditor::_seek_value_changed(float p_value, bool p_timeline_o
 	Ref<Animation> anim;
 	anim = player->get_animation(current);
 
-	double pos = CLAMP((double)anim->get_length() * (p_value / frame->get_max()), 0, (double)anim->get_length());
+	double pos = Math::clamp((double)anim->get_length() * (p_value / frame->get_max()), 0, (double)anim->get_length());
 	if (track_editor->is_snap_timeline_enabled()) {
 		pos = Math::snapped(pos, _get_editor_step());
 	}
-	pos = CLAMP(pos, 0, (double)anim->get_length() - CMP_EPSILON2); // Hack: Avoid fposmod with LOOP_LINEAR.
+	pos = Math::clamp(pos, 0, (double)anim->get_length() - CMP_EPSILON2); // Hack: Avoid fposmod with LOOP_LINEAR.
 
 	if (!p_timeline_only && anim.is_valid() && (!player->is_valid() || !Math::is_equal_approx(pos, player->get_current_animation_position()))) {
 		player->seek_internal(pos, true, true, false);

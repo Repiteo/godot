@@ -236,7 +236,7 @@ Size2 EditorProperty::get_minimum_size() const {
 		Size2 bems = bottom_editor->get_combined_minimum_size();
 		//bems.width += get_constant("item_margin", "Tree");
 		ms.height += bems.height;
-		ms.width = MAX(ms.width, bems.width);
+		ms.width = Math::max(ms.width, bems.width);
 	}
 
 	return ms;
@@ -297,8 +297,8 @@ void EditorProperty::_notification(int p_what) {
 					}
 
 					Size2 minsize = c->get_combined_minimum_size();
-					child_room = MAX(child_room, minsize.width);
-					height = MAX(height, minsize.height);
+					child_room = Math::max(child_room, minsize.width);
+					height = Math::max(height, minsize.height);
 					no_children = false;
 				}
 
@@ -309,7 +309,7 @@ void EditorProperty::_notification(int p_what) {
 					text_size = 0;
 					rect = Rect2(1, 0, size.width - 1, height);
 				} else {
-					text_size = MAX(0, size.width - (child_room + 4 * EDSCALE));
+					text_size = Math::max(0, size.width - (child_room + 4 * EDSCALE));
 					if (is_layout_rtl()) {
 						rect = Rect2(1, 0, child_room, height);
 					} else {
@@ -738,7 +738,7 @@ void EditorProperty::_update_property_bg() {
 				}
 				n = n->get_parent();
 			}
-			count_subinspectors = MIN(16, count_subinspectors);
+			count_subinspectors = Math::min(16, count_subinspectors);
 		}
 		add_theme_style_override(SNAME("DictionaryAddItem"), get_theme_stylebox("DictionaryAddItem" + itos(count_subinspectors), EditorStringName(EditorStyles)));
 		add_theme_constant_override("v_separation", 0);
@@ -1607,7 +1607,7 @@ void EditorInspectorCategory::_notification(int p_what) {
 			if (icon.is_valid()) {
 				w += hs + icon_size;
 			}
-			w = MIN(w, get_size().width - sb->get_minimum_size().width);
+			w = Math::min(w, get_size().width - sb->get_minimum_size().width);
 
 			int ofs = (get_size().width - w) / 2;
 
@@ -1679,7 +1679,7 @@ Size2 EditorInspectorCategory::get_minimum_size() const {
 		ms.height = theme_cache.bold_font->get_height(theme_cache.bold_font_size);
 	}
 	if (icon.is_valid()) {
-		ms.height = MAX(theme_cache.class_icon_size, ms.height);
+		ms.height = Math::max(theme_cache.class_icon_size, ms.height);
 	}
 	ms.height += theme_cache.vertical_separation;
 
@@ -1814,7 +1814,7 @@ int EditorInspectorSection::_get_header_height() {
 	int header_height = theme_cache.bold_font->get_height(theme_cache.bold_font_size);
 	Ref<Texture2D> arrow = _get_arrow();
 	if (arrow.is_valid()) {
-		header_height = MAX(header_height, arrow->get_height());
+		header_height = Math::max(header_height, arrow->get_height());
 	}
 	header_height += theme_cache.vertical_separation;
 
@@ -2628,7 +2628,7 @@ void EditorInspectorArray::_move_element(int p_element_index, int p_to_pos) {
 		count += 1;
 	} else if (p_to_pos < 0) {
 		count -= 1;
-		if (page == max_page && (MAX(0, count - 1) / page_length != max_page)) {
+		if (page == max_page && (Math::max(0, count - 1) / page_length != max_page)) {
 			emit_signal(SNAME("page_change_request"), max_page - 1);
 		}
 	} else if (p_to_pos == begin_array_index - 1) {
@@ -2637,8 +2637,8 @@ void EditorInspectorArray::_move_element(int p_element_index, int p_to_pos) {
 		emit_signal(SNAME("page_change_request"), page + 1);
 	}
 	begin_array_index = page * page_length;
-	end_array_index = MIN(count, (page + 1) * page_length);
-	max_page = MAX(0, count - 1) / page_length;
+	end_array_index = Math::min(count, (page + 1) * page_length);
+	max_page = Math::max(0, count - 1) / page_length;
 }
 
 void EditorInspectorArray::_clear_array() {
@@ -2826,12 +2826,12 @@ void EditorInspectorArray::_setup() {
 	// Setup counts.
 	count = _get_array_count();
 	begin_array_index = page * page_length;
-	end_array_index = MIN(count, (page + 1) * page_length);
-	max_page = MAX(0, count - 1) / page_length;
-	array_elements.resize(MAX(0, end_array_index - begin_array_index));
+	end_array_index = Math::min(count, (page + 1) * page_length);
+	max_page = Math::max(0, count - 1) / page_length;
+	array_elements.resize(Math::max(0, end_array_index - begin_array_index));
 	if (page < 0 || page > max_page) {
 		WARN_PRINT(vformat("Invalid page number %d", page));
-		page = CLAMP(page, 0, max_page);
+		page = Math::clamp(page, 0, max_page);
 	}
 
 	Ref<Font> numbers_font;
@@ -3208,13 +3208,13 @@ void EditorPaginator::_first_page_button_pressed() {
 }
 
 void EditorPaginator::_prev_page_button_pressed() {
-	emit_signal("page_changed", MAX(0, page - 1));
+	emit_signal("page_changed", Math::max(0, page - 1));
 }
 
 void EditorPaginator::_page_line_edit_text_submitted(const String &p_text) {
 	if (p_text.is_valid_int()) {
 		int new_page = p_text.to_int() - 1;
-		new_page = MIN(MAX(0, new_page), max_page);
+		new_page = Math::min(Math::max(0, new_page), max_page);
 		page_line_edit->set_text(Variant(new_page));
 		emit_signal("page_changed", new_page);
 	} else {
@@ -3223,7 +3223,7 @@ void EditorPaginator::_page_line_edit_text_submitted(const String &p_text) {
 }
 
 void EditorPaginator::_next_page_button_pressed() {
-	emit_signal("page_changed", MIN(max_page, page + 1));
+	emit_signal("page_changed", Math::min(max_page, page + 1));
 }
 
 void EditorPaginator::_last_page_button_pressed() {
@@ -4005,7 +4005,7 @@ void EditorInspector::update_tree() {
 			}
 
 			current_vbox = vbox_per_path[root_vbox][acc_path];
-			level = (MIN(level + 1, 4));
+			level = (Math::min(level + 1, 4));
 		}
 
 		// If we did not find a section to add the property to, add it to the category vbox instead (the category vbox handles margins correctly).
@@ -4816,7 +4816,7 @@ void EditorInspector::set_use_deletable_properties(bool p_enabled) {
 
 void EditorInspector::_page_change_request(int p_new_page, const StringName &p_array_prefix) {
 	int prev_page = per_array_page.has(p_array_prefix) ? per_array_page[p_array_prefix] : 0;
-	int new_page = MAX(0, p_new_page);
+	int new_page = Math::max(0, p_new_page);
 	if (new_page != prev_page) {
 		per_array_page[p_array_prefix] = new_page;
 		update_tree_pending = true;

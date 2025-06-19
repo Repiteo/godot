@@ -197,8 +197,8 @@ void ImmediateMesh::surface_end() {
 				Vector2 n = normals[i].octahedron_encode();
 
 				uint32_t value = 0;
-				value |= (uint16_t)CLAMP(n.x * 65535, 0, 65535);
-				value |= (uint16_t)CLAMP(n.y * 65535, 0, 65535) << 16;
+				value |= (uint16_t)Math::clamp(n.x * 65535, 0, 65535);
+				value |= (uint16_t)Math::clamp(n.y * 65535, 0, 65535) << 16;
 
 				*normal = value;
 			}
@@ -213,8 +213,8 @@ void ImmediateMesh::surface_end() {
 				}
 
 				uint32_t value = 0;
-				value |= (uint16_t)CLAMP(t.x * 65535, 0, 65535);
-				value |= (uint16_t)CLAMP(t.y * 65535, 0, 65535) << 16;
+				value |= (uint16_t)Math::clamp(t.x * 65535, 0, 65535);
+				value |= (uint16_t)Math::clamp(t.y * 65535, 0, 65535) << 16;
 				if (value == 4294901760) {
 					// (1, 1) and (0, 1) decode to the same value, but (0, 1) messes with our compression detection.
 					// So we sanitize here.
@@ -254,10 +254,10 @@ void ImmediateMesh::surface_end() {
 			if (uses_colors) {
 				uint8_t *color8 = (uint8_t *)&surface_attribute_ptr[i * attribute_stride];
 
-				color8[0] = uint8_t(CLAMP(colors[i].r * 255.0, 0.0, 255.0));
-				color8[1] = uint8_t(CLAMP(colors[i].g * 255.0, 0.0, 255.0));
-				color8[2] = uint8_t(CLAMP(colors[i].b * 255.0, 0.0, 255.0));
-				color8[3] = uint8_t(CLAMP(colors[i].a * 255.0, 0.0, 255.0));
+				color8[0] = uint8_t(Math::clamp(colors[i].r * 255.0, 0.0, 255.0));
+				color8[1] = uint8_t(Math::clamp(colors[i].g * 255.0, 0.0, 255.0));
+				color8[2] = uint8_t(Math::clamp(colors[i].b * 255.0, 0.0, 255.0));
+				color8[3] = uint8_t(Math::clamp(colors[i].a * 255.0, 0.0, 255.0));
 			}
 			if (uses_uvs) {
 				float *uv = (float *)&surface_attribute_ptr[i * attribute_stride + uv_offset];

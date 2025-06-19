@@ -292,7 +292,7 @@ void AudioStreamInteractiveTransitionEditor::edit(Object *p_obj) {
 
 		int min_w = header_font->get_string_size(name + "XX").width;
 		tree->set_column_custom_minimum_width(cell_index, min_w);
-		max_w = MAX(max_w, min_w);
+		max_w = Math::max(max_w, min_w);
 
 		header->set_text(cell_index, name);
 

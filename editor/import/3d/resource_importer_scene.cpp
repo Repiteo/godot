@@ -3228,7 +3228,7 @@ Error ResourceImporterScene::import(ResourceUID::ID p_source_id, const String &p
 	bool create_shadow_meshes = bool(p_options["meshes/create_shadow_meshes"]);
 	int light_bake_mode = p_options["meshes/light_baking"];
 	float texel_size = p_options["meshes/lightmap_texel_size"];
-	float lightmap_texel_size = MAX(0.001, texel_size);
+	float lightmap_texel_size = Math::max(0.001, texel_size);
 
 	Vector<uint8_t> src_lightmap_cache;
 	Vector<Vector<uint8_t>> mesh_lightmap_caches;

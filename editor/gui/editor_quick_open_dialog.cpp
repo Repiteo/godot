@@ -60,7 +60,7 @@ void HighlightedLabel::draw_substr_rects(const Vector2i &p_substr, Vector2 p_off
 			rect.position = p_offset + line_rect.position;
 			rect.position.x += range.x;
 			rect.size = Size2(range.y - range.x, line_rect.size.y);
-			rect.size.x = MIN(rect.size.x, line_rect.size.x - range.x);
+			rect.size.x = Math::min(rect.size.x, line_rect.size.x - range.x);
 			if (rect.size.x > 0) {
 				draw_rect(rect, Color(1, 1, 1, 0.07), true);
 				draw_rect(rect, Color(0.5, 0.7, 1.0, 0.4), false, 1);
@@ -436,7 +436,7 @@ void QuickOpenResultContainer::_create_initial_results() {
 	}
 	_find_filepaths_in_folder(EditorFileSystem::get_singleton()->get_filesystem(), include_addons_toggle->is_pressed());
 	_sort_filepaths(result_items.size());
-	max_total_results = MIN(filepaths.size(), result_items.size());
+	max_total_results = Math::min(filepaths.size(), result_items.size());
 	update_results();
 }
 
@@ -517,7 +517,7 @@ void QuickOpenResultContainer::update_results() {
 	} else {
 		_score_and_sort_candidates();
 	}
-	_update_result_items(MIN(candidates.size(), max_total_results), 0);
+	_update_result_items(Math::min(candidates.size(), max_total_results), 0);
 }
 
 void QuickOpenResultContainer::_use_default_candidates() {
@@ -526,7 +526,7 @@ void QuickOpenResultContainer::_use_default_candidates() {
 		candidates.append_array(*history);
 	}
 	int count = candidates.size();
-	candidates.resize(MIN(max_total_results, filepaths.size()));
+	candidates.resize(Math::min(max_total_results, filepaths.size()));
 	for (const String &filepath : filepaths) {
 		if (count >= max_total_results) {
 			break;
@@ -560,7 +560,7 @@ void QuickOpenResultContainer::_score_and_sort_candidates() {
 
 void QuickOpenResultContainer::_update_result_items(int p_new_visible_results_count, int p_new_selection_index) {
 	// Only need to update items that were not hidden in previous update.
-	int num_items_needing_updates = MAX(num_visible_results, p_new_visible_results_count);
+	int num_items_needing_updates = Math::max(num_visible_results, p_new_visible_results_count);
 	num_visible_results = p_new_visible_results_count;
 
 	for (int i = 0; i < num_items_needing_updates; i++) {
@@ -639,9 +639,9 @@ void QuickOpenResultContainer::_move_selection_index(Key p_key) {
 		} else if (p_key == Key::DOWN) {
 			idx = (idx == max_index) ? 0 : (idx + 1);
 		} else if (p_key == Key::PAGEUP) {
-			idx = (idx == 0) ? idx : MAX(idx - 10, 0);
+			idx = (idx == 0) ? idx : Math::max(idx - 10, 0);
 		} else if (p_key == Key::PAGEDOWN) {
-			idx = (idx == max_index) ? idx : MIN(idx + 10, max_index);
+			idx = (idx == max_index) ? idx : Math::min(idx + 10, max_index);
 		}
 	} else {
 		int column_count = grid->get_line_max_child_count();
@@ -651,13 +651,13 @@ void QuickOpenResultContainer::_move_selection_index(Key p_key) {
 		} else if (p_key == Key::RIGHT) {
 			idx = (idx == max_index) ? 0 : (idx + 1);
 		} else if (p_key == Key::UP) {
-			idx = (idx == 0) ? max_index : MAX(idx - column_count, 0);
+			idx = (idx == 0) ? max_index : Math::max(idx - column_count, 0);
 		} else if (p_key == Key::DOWN) {
-			idx = (idx == max_index) ? 0 : MIN(idx + column_count, max_index);
+			idx = (idx == max_index) ? 0 : Math::min(idx + column_count, max_index);
 		} else if (p_key == Key::PAGEUP) {
-			idx = (idx == 0) ? idx : MAX(idx - (3 * column_count), 0);
+			idx = (idx == 0) ? idx : Math::max(idx - (3 * column_count), 0);
 		} else if (p_key == Key::PAGEDOWN) {
-			idx = (idx == max_index) ? idx : MIN(idx + (3 * column_count), max_index);
+			idx = (idx == max_index) ? idx : Math::min(idx + (3 * column_count), max_index);
 		}
 	}
 
@@ -993,7 +993,7 @@ static Vector2i _get_path_interval(const Vector2i &p_interval, int p_dir_index) 
 	if (p_interval.x >= p_dir_index || p_interval.y < 1) {
 		return { -1, -1 };
 	}
-	return { p_interval.x, MIN(p_interval.x + p_interval.y, p_dir_index) - p_interval.x };
+	return { p_interval.x, Math::min(p_interval.x + p_interval.y, p_dir_index) - p_interval.x };
 }
 
 static Vector2i _get_name_interval(const Vector2i &p_interval, int p_dir_index) {
@@ -1001,7 +1001,7 @@ static Vector2i _get_name_interval(const Vector2i &p_interval, int p_dir_index) 
 		return { -1, -1 };
 	}
 	int first_name_idx = p_dir_index + 1;
-	int start = MAX(p_interval.x, first_name_idx);
+	int start = Math::max(p_interval.x, first_name_idx);
 	return { start - first_name_idx, p_interval.y - start + p_interval.x };
 }
 

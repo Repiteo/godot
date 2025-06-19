@@ -981,7 +981,7 @@ Vector<int8_t> Geometry3D::generate_sdf8(const Vector<uint32_t> &p_positive, con
 	int8_t *wsdf = sdf8.ptrw();
 	for (int i = 0; i < s; i++) {
 		int32_t diff = int32_t(rpos[i]) - int32_t(rneg[i]);
-		wsdf[i] = CLAMP(diff, -128, 127);
+		wsdf[i] = Math::clamp(diff, -128, 127);
 	}
 	return sdf8;
 }

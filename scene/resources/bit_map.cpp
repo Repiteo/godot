@@ -344,7 +344,7 @@ Vector<Vector<Vector2>> BitMap::_march_square(const Rect2i &p_rect, const Point2
 		if (stepx == prevx && stepy == prevy) {
 			_points.set(points_size - 1, Vector2(curx, cury) - p_rect.position);
 		} else {
-			_points.resize(MAX(points_size + 1, _points.size()));
+			_points.resize(Math::max(points_size + 1, _points.size()));
 			_points.set(points_size, Vector2(curx, cury) - p_rect.position);
 			points_size++;
 		}
@@ -432,8 +432,8 @@ static Vector<Vector2> reduce(const Vector<Vector2> &points, const Rect2i &rect,
 		return points;
 	}
 
-	float maxEp = MIN(rect.size.width, rect.size.height);
-	float ep = CLAMP(epsilon, 0.0, maxEp / 2);
+	float maxEp = Math::min(rect.size.width, rect.size.height);
+	float ep = Math::clamp(epsilon, 0.0, maxEp / 2);
 	Vector<Vector2> result = rdp(points, ep);
 
 	Vector2 last = result[result.size() - 1];
@@ -494,7 +494,7 @@ static void fill_bits(const BitMap *p_src, Ref<BitMap> &p_map, const Point2i &p_
 					p_map->set_bit(i, j, true);
 
 					FillBitsStackEntry se = { pos, i, j };
-					stack.resize(MAX(stack_size + 1, stack.size()));
+					stack.resize(Math::max(stack_size + 1, stack.size()));
 					stack.set(stack_size, se);
 					stack_size++;
 

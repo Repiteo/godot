@@ -292,7 +292,7 @@ Vector3 Basis::get_scale_abs() const {
 }
 
 Vector3 Basis::get_scale_global() const {
-	real_t det_sign = SIGN(determinant());
+	real_t det_sign = Math::sign(determinant());
 	return det_sign * Vector3(rows[0].length(), rows[1].length(), rows[2].length());
 }
 
@@ -318,7 +318,7 @@ Vector3 Basis::get_scale() const {
 	// matrix elements.
 	//
 	// The rotation part of this decomposition is returned by get_rotation* functions.
-	real_t det_sign = SIGN(determinant());
+	real_t det_sign = Math::sign(determinant());
 	return det_sign * get_scale_abs();
 }
 
@@ -416,7 +416,7 @@ void Basis::rotate_to_align(Vector3 p_start_direction, Vector3 p_end_direction) 
 	const Vector3 axis = p_start_direction.cross(p_end_direction).normalized();
 	if (axis.length_squared() != 0) {
 		real_t dot = p_start_direction.dot(p_end_direction);
-		dot = CLAMP(dot, -1.0f, 1.0f);
+		dot = Math::clamp(dot, -1.0f, 1.0f);
 		const real_t angle_rads = Math::acos(dot);
 		*this = Basis(axis, angle_rads) * (*this);
 	}

@@ -110,10 +110,10 @@ void Parallax2D::_update_scroll() {
 		Size2 vps = get_viewport_rect().size;
 
 		if (limit_begin.x <= limit_end.x - vps.x) {
-			scroll_ofs.x = CLAMP(scroll_ofs.x, limit_begin.x, limit_end.x - vps.x);
+			scroll_ofs.x = Math::clamp(scroll_ofs.x, limit_begin.x, limit_end.x - vps.x);
 		}
 		if (limit_begin.y <= limit_end.y - vps.y) {
-			scroll_ofs.y = CLAMP(scroll_ofs.y, limit_begin.y, limit_end.y - vps.y);
+			scroll_ofs.y = Math::clamp(scroll_ofs.y, limit_begin.y, limit_end.y - vps.y);
 		}
 	}
 
@@ -178,7 +178,7 @@ void Parallax2D::set_repeat_times(int p_repeat_times) {
 		return;
 	}
 
-	repeat_times = MAX(p_repeat_times, 1);
+	repeat_times = Math::max(p_repeat_times, 1);
 
 	_update_repeat();
 }

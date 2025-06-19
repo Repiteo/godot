@@ -62,8 +62,8 @@ Size2 OptionButton::get_minimum_size() const {
 		const Size2 arrow_size = theme_cache.arrow_icon->get_size();
 
 		Size2 content_size = minsize - padding;
-		content_size.width += arrow_size.width + MAX(0, theme_cache.h_separation);
-		content_size.height = MAX(content_size.height, arrow_size.height);
+		content_size.width += arrow_size.width + Math::max(0, theme_cache.h_separation);
+		content_size.height = Math::max(content_size.height, arrow_size.height);
 
 		minsize = content_size + padding;
 	}

@@ -948,10 +948,10 @@ Ref<AudioStreamWAV> AudioStreamWAV::load_from_buffer(const Vector<uint8_t> &p_st
 			for (int i = 0; i < new_data_frames; i++) {
 				// Cubic interpolation should be enough.
 
-				float y0 = data[MAX(0, ipos - 1) * format_channels + c];
+				float y0 = data[Math::max(0, ipos - 1) * format_channels + c];
 				float y1 = data[ipos * format_channels + c];
-				float y2 = data[MIN(frames - 1, ipos + 1) * format_channels + c];
-				float y3 = data[MIN(frames - 1, ipos + 2) * format_channels + c];
+				float y2 = data[Math::min(frames - 1, ipos + 1) * format_channels + c];
+				float y3 = data[Math::min(frames - 1, ipos + 2) * format_channels + c];
 
 				new_data.write[i * format_channels + c] = Math::cubic_interpolate(y1, y2, y0, y3, frac);
 
@@ -1046,10 +1046,10 @@ Ref<AudioStreamWAV> AudioStreamWAV::load_from_buffer(const Vector<uint8_t> &p_st
 		loop_end = p_options["edit/loop_end"];
 		// Wrap around to max frames, so `-1` can be used to select the end, etc.
 		if (loop_begin < 0) {
-			loop_begin = CLAMP(loop_begin + frames, 0, frames - 1);
+			loop_begin = Math::clamp(loop_begin + frames, 0, frames - 1);
 		}
 		if (loop_end < 0) {
-			loop_end = CLAMP(loop_end + frames, 0, frames - 1);
+			loop_end = Math::clamp(loop_end + frames, 0, frames - 1);
 		}
 	}
 
@@ -1130,10 +1130,10 @@ Ref<AudioStreamWAV> AudioStreamWAV::load_from_buffer(const Vector<uint8_t> &p_st
 			int ds = data.size();
 			for (int i = 0; i < ds; i++) {
 				if (is16) {
-					int16_t v = CLAMP(data[i] * 32768, -32768, 32767);
+					int16_t v = Math::clamp(data[i] * 32768, -32768, 32767);
 					encode_uint16(v, &w[i * 2]);
 				} else {
-					int8_t v = CLAMP(data[i] * 128, -128, 127);
+					int8_t v = Math::clamp(data[i] * 128, -128, 127);
 					w[i] = v;
 				}
 			}

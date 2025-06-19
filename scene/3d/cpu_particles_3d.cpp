@@ -940,10 +940,10 @@ void CPUParticles3D::_particles_process(double p_delta) {
 					}
 				} break;
 				case EMISSION_SHAPE_RING: {
-					real_t radius_clamped = MAX(0.001, emission_ring_radius);
-					real_t top_radius = MAX(radius_clamped - Math::tan(Math::deg_to_rad(90.0 - emission_ring_cone_angle)) * emission_ring_height, 0.0);
+					real_t radius_clamped = Math::max(0.001, emission_ring_radius);
+					real_t top_radius = Math::max(radius_clamped - Math::tan(Math::deg_to_rad(90.0 - emission_ring_cone_angle)) * emission_ring_height, 0.0);
 					real_t y_pos = rng->randf();
-					real_t skew = MAX(MIN(radius_clamped, top_radius) / MAX(radius_clamped, top_radius), 0.5);
+					real_t skew = Math::max(Math::min(radius_clamped, top_radius) / Math::max(radius_clamped, top_radius), 0.5);
 					y_pos = radius_clamped < top_radius ? Math::pow(y_pos, skew) : 1.0 - Math::pow(y_pos, skew);
 					real_t ring_random_angle = rng->randf() * Math::TAU;
 					real_t ring_random_radius = Math::sqrt(rng->randf() * (radius_clamped * radius_clamped - emission_ring_inner_radius * emission_ring_inner_radius) + emission_ring_inner_radius * emission_ring_inner_radius);

@@ -184,7 +184,7 @@ String FileAccessFilesystemJAndroid::get_line() const {
 	uint64_t line_buffer_position = 0;
 
 	while (true) {
-		size_t line_buffer_size = MIN(buffer_size_limit, file_size - get_position());
+		size_t line_buffer_size = Math::min(buffer_size_limit, file_size - get_position());
 		if (line_buffer_size <= 0) {
 			const_cast<FileAccessFilesystemJAndroid *>(this)->_set_eof(true);
 			break;

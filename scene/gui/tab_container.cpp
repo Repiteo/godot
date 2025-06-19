@@ -979,7 +979,7 @@ Size2 TabContainer::get_minimum_size() const {
 
 	Size2 panel_ms = theme_cache.panel_style->get_minimum_size();
 
-	ms.x = MAX(ms.x, largest_child_min_size.x + panel_ms.x);
+	ms.x = Math::max(ms.x, largest_child_min_size.x + panel_ms.x);
 	ms.y += panel_ms.y;
 
 	return ms;

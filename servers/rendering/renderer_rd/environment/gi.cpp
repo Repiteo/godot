@@ -585,7 +585,7 @@ void GI::SDFGI::create(RID p_env, const Vector3 &p_world_position, uint32_t p_re
 		cascade.solid_cell_buffer = RD::get_singleton()->storage_buffer_create(sizeof(SDFGI::Cascade::SolidCell) * solid_cell_count);
 		cascade.solid_cell_dispatch_buffer_storage = RD::get_singleton()->storage_buffer_create(sizeof(uint32_t) * 4, Vector<uint8_t>());
 		cascade.solid_cell_dispatch_buffer_call = RD::get_singleton()->storage_buffer_create(sizeof(uint32_t) * 4, Vector<uint8_t>(), RD::STORAGE_BUFFER_USAGE_DISPATCH_INDIRECT);
-		cascade.lights_buffer = RD::get_singleton()->storage_buffer_create(sizeof(SDFGIShader::Light) * MAX(SDFGI::MAX_STATIC_LIGHTS, SDFGI::MAX_DYNAMIC_LIGHTS));
+		cascade.lights_buffer = RD::get_singleton()->storage_buffer_create(sizeof(SDFGIShader::Light) * Math::max(SDFGI::MAX_STATIC_LIGHTS, SDFGI::MAX_DYNAMIC_LIGHTS));
 		{
 			Vector<RD::Uniform> uniforms;
 			{
@@ -2653,7 +2653,7 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 			}
 
 			{
-				uint32_t dynamic_map_size = MAX(MAX(octree_size.x, octree_size.y), octree_size.z);
+				uint32_t dynamic_map_size = Math::max(Math::max(octree_size.x, octree_size.y), octree_size.z);
 				uint32_t oversample = nearest_power_of_2_templated(4);
 				int mipmap_index = 0;
 
@@ -2877,7 +2877,7 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 	uint32_t light_count = 0;
 
 	if (p_update_light_instances || p_dynamic_objects.size() > 0) {
-		light_count = MIN(gi->voxel_gi_max_lights, (uint32_t)p_light_instances.size());
+		light_count = Math::min(gi->voxel_gi_max_lights, (uint32_t)p_light_instances.size());
 
 		{
 			Transform3D to_cell = gi->voxel_gi_get_to_cell_xform(probe);
@@ -2945,7 +2945,7 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 
 	// probe size relative to 1 unit in world space
 	Vector3 ps = gi->voxel_gi_get_octree_size(probe) / gi->voxel_gi_get_bounds(probe).size;
-	float cell_size = (1.0 / MAX(MAX(ps.x, ps.y), ps.z));
+	float cell_size = (1.0 / Math::max(Math::max(ps.x, ps.y), ps.z));
 
 	if (has_dynamic_object_data || p_update_light_instances || p_dynamic_objects.size()) {
 		// PROCESS MIPMAPS
@@ -3005,7 +3005,7 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 
 						int64_t wg_todo = (mipmaps[i].cell_count + wg_size - 1) / wg_size;
 						while (wg_todo) {
-							int64_t wg_count = MIN(wg_todo, wg_limit_x);
+							int64_t wg_count = Math::min(wg_todo, wg_limit_x);
 							RD::get_singleton()->compute_list_set_push_constant(compute_list, &push_constant, sizeof(VoxelGIPushConstant));
 							RD::get_singleton()->compute_list_dispatch(compute_list, wg_count, 1, 1);
 							wg_todo -= wg_count;
@@ -3026,7 +3026,7 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 
 					int64_t wg_todo = (mipmaps[i].cell_count + wg_size - 1) / wg_size;
 					while (wg_todo) {
-						int64_t wg_count = MIN(wg_todo, wg_limit_x);
+						int64_t wg_count = Math::min(wg_todo, wg_limit_x);
 						RD::get_singleton()->compute_list_set_push_constant(compute_list, &push_constant, sizeof(VoxelGIPushConstant));
 						RD::get_singleton()->compute_list_dispatch(compute_list, wg_count, 1, 1);
 						wg_todo -= wg_count;
@@ -3043,7 +3043,7 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 
 	if (p_dynamic_objects.size() && dynamic_maps.size()) {
 		Vector3i octree_size = gi->voxel_gi_get_octree_size(probe);
-		int multiplier = dynamic_maps[0].size / MAX(MAX(octree_size.x, octree_size.y), octree_size.z);
+		int multiplier = dynamic_maps[0].size / Math::max(Math::max(octree_size.x, octree_size.y), octree_size.z);
 
 		Transform3D oversample_scale;
 		oversample_scale.basis.scale(Vector3(multiplier, multiplier, multiplier));
@@ -3070,8 +3070,8 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 				if ((end[j] - begin[j]) & 1) {
 					end[j]++; //for half extents split, it needs to be even
 				}
-				begin[j] = MAX(begin[j], 0);
-				end[j] = MIN(end[j], octree_size[j] * multiplier);
+				begin[j] = Math::max(begin[j], 0);
+				end[j] = Math::min(end[j], octree_size[j] * multiplier);
 			}
 
 			//aabb = aabb.intersection(probe_aabb); //intersect
@@ -3194,7 +3194,7 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 					}
 
 					rect.position.x >>= 1;
-					rect.size.x = MAX(1, rect.size.x >> 1);
+					rect.size.x = Math::max(1, rect.size.x >> 1);
 
 					//y
 					if (rect.position.y & 1) {
@@ -3208,12 +3208,12 @@ void GI::VoxelGIInstance::update(bool p_update_light_instances, const Vector<RID
 					}
 
 					rect.position.y >>= 1;
-					rect.size.y = MAX(1, rect.size.y >> 1);
+					rect.size.y = Math::max(1, rect.size.y >> 1);
 
 					//shrink limits to ensure plot does not go outside map
 					if (dynamic_maps[k].mipmap > 0) {
 						for (int l = 0; l < 3; l++) {
-							push_constant.limits[l] = MAX(1, push_constant.limits[l] >> 1);
+							push_constant.limits[l] = Math::max(1, push_constant.limits[l] >> 1);
 						}
 					}
 
@@ -3365,9 +3365,9 @@ void GI::VoxelGIInstance::debug(RD::DrawListID p_draw_list, RID p_framebuffer, c
 GI::GI() {
 	singleton = this;
 
-	sdfgi_ray_count = RS::EnvironmentSDFGIRayCount(CLAMP(int32_t(GLOBAL_GET("rendering/global_illumination/sdfgi/probe_ray_count")), 0, int32_t(RS::ENV_SDFGI_RAY_COUNT_MAX - 1)));
-	sdfgi_frames_to_converge = RS::EnvironmentSDFGIFramesToConverge(CLAMP(int32_t(GLOBAL_GET("rendering/global_illumination/sdfgi/frames_to_converge")), 0, int32_t(RS::ENV_SDFGI_CONVERGE_MAX - 1)));
-	sdfgi_frames_to_update_light = RS::EnvironmentSDFGIFramesToUpdateLight(CLAMP(int32_t(GLOBAL_GET("rendering/global_illumination/sdfgi/frames_to_update_lights")), 0, int32_t(RS::ENV_SDFGI_UPDATE_LIGHT_MAX - 1)));
+	sdfgi_ray_count = RS::EnvironmentSDFGIRayCount(Math::clamp(int32_t(GLOBAL_GET("rendering/global_illumination/sdfgi/probe_ray_count")), 0, int32_t(RS::ENV_SDFGI_RAY_COUNT_MAX - 1)));
+	sdfgi_frames_to_converge = RS::EnvironmentSDFGIFramesToConverge(Math::clamp(int32_t(GLOBAL_GET("rendering/global_illumination/sdfgi/frames_to_converge")), 0, int32_t(RS::ENV_SDFGI_CONVERGE_MAX - 1)));
+	sdfgi_frames_to_update_light = RS::EnvironmentSDFGIFramesToUpdateLight(Math::clamp(int32_t(GLOBAL_GET("rendering/global_illumination/sdfgi/frames_to_update_lights")), 0, int32_t(RS::ENV_SDFGI_UPDATE_LIGHT_MAX - 1)));
 }
 
 GI::~GI() {
@@ -3410,7 +3410,7 @@ void GI::init(SkyRD *p_sky) {
 
 		voxel_gi_lights = memnew_arr(VoxelGILight, voxel_gi_max_lights);
 		voxel_gi_lights_uniform = RD::get_singleton()->uniform_buffer_create(voxel_gi_max_lights * sizeof(VoxelGILight));
-		voxel_gi_quality = RS::VoxelGIQuality(CLAMP(int(GLOBAL_GET("rendering/global_illumination/voxel_gi/quality")), 0, 1));
+		voxel_gi_quality = RS::VoxelGIQuality(Math::clamp(int(GLOBAL_GET("rendering/global_illumination/voxel_gi/quality")), 0, 1));
 
 		String defines = "\n#define MAX_LIGHTS " + itos(voxel_gi_max_lights) + "\n";
 
@@ -3762,7 +3762,7 @@ void GI::setup_voxel_gi_instances(RenderDataRD *p_render_data, Ref<RenderSceneBu
 	if (p_voxel_gi_instances.size() > 0) {
 		RD::get_singleton()->draw_command_begin_label("VoxelGIs Setup");
 
-		RD::get_singleton()->buffer_update(voxel_gi_buffer, 0, sizeof(VoxelGIData) * MIN((uint64_t)MAX_VOXEL_GI_INSTANCES, p_voxel_gi_instances.size()), voxel_gi_data);
+		RD::get_singleton()->buffer_update(voxel_gi_buffer, 0, sizeof(VoxelGIData) * Math::min((uint64_t)MAX_VOXEL_GI_INSTANCES, p_voxel_gi_instances.size()), voxel_gi_data);
 
 		RD::get_singleton()->draw_command_end_label();
 	}
@@ -3868,7 +3868,7 @@ void GI::process_gi(Ref<RenderSceneBuffersRD> p_render_buffers, const RID *p_nor
 
 	PushConstant push_constant;
 
-	push_constant.max_voxel_gi_instances = MIN((uint64_t)MAX_VOXEL_GI_INSTANCES, p_voxel_gi_instances.size());
+	push_constant.max_voxel_gi_instances = Math::min((uint64_t)MAX_VOXEL_GI_INSTANCES, p_voxel_gi_instances.size());
 	push_constant.high_quality_vct = voxel_gi_quality == RS::VOXEL_GI_QUALITY_HIGH;
 
 	// these should be the same for all views

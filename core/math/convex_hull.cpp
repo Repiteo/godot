@@ -1757,7 +1757,7 @@ real_t ConvexHullInternal::shrink(real_t p_amount, real_t p_clamp_amount) {
 			return 0;
 		}
 
-		p_amount = MIN(p_amount, min_dist * p_clamp_amount);
+		p_amount = Math::min(p_amount, min_dist * p_clamp_amount);
 	}
 
 	uint32_t seed = 243703;

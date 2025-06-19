@@ -150,7 +150,7 @@ void CubemapFilter::filter_radiance(GLuint p_source_cubemap, GLuint p_dest_cubem
 
 	if (p_layer > 0) {
 		const uint32_t sample_counts[5] = { 1, ggx_samples / 16, ggx_samples / 8, ggx_samples / 4, ggx_samples };
-		uint32_t sample_count = sample_counts[MIN(4, p_layer)];
+		uint32_t sample_count = sample_counts[Math::min(4, p_layer)];
 
 		float roughness = float(p_layer) / (p_mipmap_count - 1);
 		roughness *= roughness; // Convert to non-perceptual roughness.
@@ -182,7 +182,7 @@ void CubemapFilter::filter_radiance(GLuint p_source_cubemap, GLuint p_dest_cubem
 
 			float solid_angle_sample = 1.0 / (float(sample_count) * pdf + 0.0001);
 
-			float mip_level = MAX(0.5 * std::log2(solid_angle_sample / solid_angle_texel) + float(MAX(1, p_layer - 3)), 1.0);
+			float mip_level = Math::max(0.5 * std::log2(solid_angle_sample / solid_angle_texel) + float(Math::max(1, p_layer - 3)), 1.0);
 
 			sample_directions[index * 4 + 3] = mip_level;
 			weight += light_vec.z;

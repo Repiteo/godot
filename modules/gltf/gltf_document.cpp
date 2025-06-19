@@ -1710,8 +1710,8 @@ GLTFAccessorIndex GLTFDocument::_encode_accessor_as_ints(Ref<GLTFState> p_state,
 			}
 		}
 		for (int32_t type_i = 0; type_i < element_count; type_i++) {
-			type_max.write[type_i] = MAX(attribs[(i * element_count) + type_i], type_max[type_i]);
-			type_min.write[type_i] = MIN(attribs[(i * element_count) + type_i], type_min[type_i]);
+			type_max.write[type_i] = Math::max(attribs[(i * element_count) + type_i], type_max[type_i]);
+			type_min.write[type_i] = Math::min(attribs[(i * element_count) + type_i], type_min[type_i]);
 		}
 	}
 	ERR_FAIL_COND_V(attribs.is_empty(), -1);
@@ -1917,8 +1917,8 @@ void GLTFDocument::_calc_accessor_min_max(int p_i, const int64_t p_element_count
 		}
 	}
 	for (int32_t type_i = 0; type_i < p_element_count; type_i++) {
-		p_type_max.write[type_i] = MAX(p_attribs[(p_i * p_element_count) + type_i], p_type_max[type_i]);
-		p_type_min.write[type_i] = MIN(p_attribs[(p_i * p_element_count) + type_i], p_type_min[type_i]);
+		p_type_max.write[type_i] = Math::max(p_attribs[(p_i * p_element_count) + type_i], p_type_max[type_i]);
+		p_type_min.write[type_i] = Math::min(p_attribs[(p_i * p_element_count) + type_i], p_type_min[type_i]);
 	}
 }
 
@@ -4674,7 +4674,7 @@ Error GLTFDocument::_serialize_materials(Ref<GLTFState> p_state) {
 								Vector2 red_green = Vector2(c.r, c.g);
 								red_green = red_green * Vector2(2.0f, 2.0f) - Vector2(1.0f, 1.0f);
 								float blue = 1.0f - red_green.dot(red_green);
-								blue = MAX(0.0f, blue);
+								blue = Math::max(0.0f, blue);
 								c.b = Math::sqrt(blue);
 								img->set_pixel(x, y, c);
 							}
@@ -4823,7 +4823,7 @@ Error GLTFDocument::_parse_materials(Ref<GLTFState> p_state) {
 
 			if (sgm.has("glossinessFactor")) {
 				spec_gloss->gloss_factor = sgm["glossinessFactor"];
-				material->set_roughness(1.0f - CLAMP(spec_gloss->gloss_factor, 0.0f, 1.0f));
+				material->set_roughness(1.0f - Math::clamp(spec_gloss->gloss_factor, 0.0f, 1.0f));
 			}
 			if (sgm.has("specularGlossinessTexture")) {
 				const Dictionary &spec_gloss_texture = sgm["specularGlossinessTexture"];
@@ -5054,8 +5054,8 @@ void GLTFDocument::spec_gloss_to_metal_base_color(const Color &p_specular_factor
 	const float brightness_specular = get_perceived_brightness(specular);
 	r_metallic = solve_metallic(dielectric_specular_red, brightness_diffuse, brightness_specular, one_minus_specular_strength);
 	const float one_minus_metallic = 1.0f - r_metallic;
-	const Color base_color_from_diffuse = p_diffuse * (one_minus_specular_strength / (1.0f - dielectric_specular_red) / MAX(one_minus_metallic, CMP_EPSILON));
-	const Color base_color_from_specular = (specular - (DIELECTRIC_SPECULAR * (one_minus_metallic))) * (1.0f / MAX(r_metallic, CMP_EPSILON));
+	const Color base_color_from_diffuse = p_diffuse * (one_minus_specular_strength / (1.0f - dielectric_specular_red) / Math::max(one_minus_metallic, CMP_EPSILON));
+	const Color base_color_from_specular = (specular - (DIELECTRIC_SPECULAR * (one_minus_metallic))) * (1.0f / Math::max(r_metallic, CMP_EPSILON));
 	r_base_color.r = Math::lerp(base_color_from_diffuse.r, base_color_from_specular.r, r_metallic * r_metallic);
 	r_base_color.g = Math::lerp(base_color_from_diffuse.g, base_color_from_specular.g, r_metallic * r_metallic);
 	r_base_color.b = Math::lerp(base_color_from_diffuse.b, base_color_from_specular.b, r_metallic * r_metallic);
@@ -5417,7 +5417,7 @@ Error GLTFDocument::_serialize_animations(Ref<GLTFState> p_state) {
 
 				for (int32_t track_idx = 0; track_idx < track.weight_tracks.size(); track_idx++) {
 					int32_t last_time_index = track.weight_tracks[track_idx].times.size() - 1;
-					length = MAX(length, track.weight_tracks[track_idx].times[last_time_index]);
+					length = Math::max(length, track.weight_tracks[track_idx].times[last_time_index]);
 				}
 
 				Dictionary t;
@@ -7291,37 +7291,37 @@ void GLTFDocument::_import_animation(Ref<GLTFState> p_state, AnimationPlayer *p_
 
 		if (p_trimming) {
 			for (int i = 0; i < track.rotation_track.times.size(); i++) {
-				anim_start = MIN(anim_start, track.rotation_track.times[i]);
-				anim_end = MAX(anim_end, track.rotation_track.times[i]);
+				anim_start = Math::min(anim_start, track.rotation_track.times[i]);
+				anim_end = Math::max(anim_end, track.rotation_track.times[i]);
 			}
 			for (int i = 0; i < track.position_track.times.size(); i++) {
-				anim_start = MIN(anim_start, track.position_track.times[i]);
-				anim_end = MAX(anim_end, track.position_track.times[i]);
+				anim_start = Math::min(anim_start, track.position_track.times[i]);
+				anim_end = Math::max(anim_end, track.position_track.times[i]);
 			}
 			for (int i = 0; i < track.scale_track.times.size(); i++) {
-				anim_start = MIN(anim_start, track.scale_track.times[i]);
-				anim_end = MAX(anim_end, track.scale_track.times[i]);
+				anim_start = Math::min(anim_start, track.scale_track.times[i]);
+				anim_end = Math::max(anim_end, track.scale_track.times[i]);
 			}
 			for (int i = 0; i < track.weight_tracks.size(); i++) {
 				for (int j = 0; j < track.weight_tracks[i].times.size(); j++) {
-					anim_start = MIN(anim_start, track.weight_tracks[i].times[j]);
-					anim_end = MAX(anim_end, track.weight_tracks[i].times[j]);
+					anim_start = Math::min(anim_start, track.weight_tracks[i].times[j]);
+					anim_end = Math::max(anim_end, track.weight_tracks[i].times[j]);
 				}
 			}
 		} else {
 			// If you don't use trimming and the first key time is not at 0.0, fake keys will be inserted.
 			for (int i = 0; i < track.rotation_track.times.size(); i++) {
-				anim_end = MAX(anim_end, track.rotation_track.times[i]);
+				anim_end = Math::max(anim_end, track.rotation_track.times[i]);
 			}
 			for (int i = 0; i < track.position_track.times.size(); i++) {
-				anim_end = MAX(anim_end, track.position_track.times[i]);
+				anim_end = Math::max(anim_end, track.position_track.times[i]);
 			}
 			for (int i = 0; i < track.scale_track.times.size(); i++) {
-				anim_end = MAX(anim_end, track.scale_track.times[i]);
+				anim_end = Math::max(anim_end, track.scale_track.times[i]);
 			}
 			for (int i = 0; i < track.weight_tracks.size(); i++) {
 				for (int j = 0; j < track.weight_tracks[i].times.size(); j++) {
-					anim_end = MAX(anim_end, track.weight_tracks[i].times[j]);
+					anim_end = Math::max(anim_end, track.weight_tracks[i].times[j]);
 				}
 			}
 		}
@@ -7517,12 +7517,12 @@ void GLTFDocument::_import_animation(Ref<GLTFState> p_state, AnimationPlayer *p_
 		ERR_CONTINUE_MSG(channel.times.size() != channel.values.size(), vformat("glTF: Animation pointer '%s' has mismatched keyframe times and values.", json_pointer));
 		if (p_trimming) {
 			for (int i = 0; i < channel.times.size(); i++) {
-				anim_start = MIN(anim_start, channel.times[i]);
-				anim_end = MAX(anim_end, channel.times[i]);
+				anim_start = Math::min(anim_start, channel.times[i]);
+				anim_end = Math::max(anim_end, channel.times[i]);
 			}
 		} else {
 			for (int i = 0; i < channel.times.size(); i++) {
-				anim_end = MAX(anim_end, channel.times[i]);
+				anim_end = Math::max(anim_end, channel.times[i]);
 			}
 		}
 		// Begin converting the glTF animation to a Godot animation.
@@ -7670,7 +7670,7 @@ float GLTFDocument::solve_metallic(float p_dielectric_specular, float p_diffuse,
 	const float b = p_diffuse * p_one_minus_specular_strength / (1.0f - p_dielectric_specular) + p_specular - 2.0f * p_dielectric_specular;
 	const float c = p_dielectric_specular - p_specular;
 	const float D = b * b - 4.0f * a * c;
-	return CLAMP((-b + Math::sqrt(D)) / (2.0f * a), 0.0f, 1.0f);
+	return Math::clamp((-b + Math::sqrt(D)) / (2.0f * a), 0.0f, 1.0f);
 }
 
 float GLTFDocument::get_perceived_brightness(const Color p_color) {
@@ -7689,7 +7689,7 @@ float GLTFDocument::get_max_component(const Color &p_color) {
 	const float g = p_color.g;
 	const float b = p_color.b;
 
-	return MAX(MAX(r, g), b);
+	return Math::max(Math::max(r, g), b);
 }
 
 void GLTFDocument::_process_mesh_instances(Ref<GLTFState> p_state, Node *p_scene_root) {

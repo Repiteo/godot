@@ -1132,7 +1132,7 @@ bool InputEventJoypadMotion::action_match(const Ref<InputEvent> &p_event, bool p
 				if (p_deadzone == 1.0f) {
 					*r_strength = 1.0f;
 				} else {
-					*r_strength = CLAMP(Math::inverse_lerp(p_deadzone, 1.0f, jm_abs_axis_value), 0.0f, 1.0f);
+					*r_strength = Math::clamp(Math::inverse_lerp(p_deadzone, 1.0f, jm_abs_axis_value), 0.0f, 1.0f);
 				}
 			} else {
 				*r_strength = 0.0f;
@@ -1583,7 +1583,7 @@ void InputEventAction::set_pressed(bool p_pressed) {
 }
 
 void InputEventAction::set_strength(float p_strength) {
-	strength = CLAMP(p_strength, 0.0f, 1.0f);
+	strength = Math::clamp(p_strength, 0.0f, 1.0f);
 }
 
 float InputEventAction::get_strength() const {

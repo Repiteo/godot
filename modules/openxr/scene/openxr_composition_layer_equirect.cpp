@@ -201,7 +201,7 @@ Vector2 OpenXRCompositionLayerEquirect::intersects_ray(const Vector3 &p_origin, 
 
 	float t0 = (-b - Math::sqrt(discriminant)) / (2.0 * a);
 	float t1 = (-b + Math::sqrt(discriminant)) / (2.0 * a);
-	float t = MAX(t0, t1);
+	float t = Math::max(t0, t1);
 
 	if (t < 0.0) {
 		return Vector2(-1.0, -1.0);

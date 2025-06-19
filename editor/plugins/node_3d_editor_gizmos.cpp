@@ -312,7 +312,7 @@ void EditorNode3DGizmo::add_vertices(const Vector<Vector3> &p_vertices, const Re
 	if (p_billboard) {
 		float md = 0;
 		for (int i = 0; i < p_vertices.size(); i++) {
-			md = MAX(0, p_vertices[i].length());
+			md = Math::max(0, p_vertices[i].length());
 		}
 		if (md) {
 			mesh->set_custom_aabb(AABB(Vector3(-md, -md, -md), Vector3(md, md, md) * 2.0));
@@ -367,7 +367,7 @@ void EditorNode3DGizmo::add_unscaled_billboard(const Ref<Material> &p_material, 
 
 	float md = 0;
 	for (int i = 0; i < vs.size(); i++) {
-		md = MAX(0, vs[i].length());
+		md = Math::max(0, vs[i].length());
 	}
 	if (md) {
 		mesh->set_custom_aabb(AABB(Vector3(-md, -md, -md), Vector3(md, md, md) * 2.0));
@@ -453,7 +453,7 @@ void EditorNode3DGizmo::add_handles(const Vector<Vector3> &p_handles, const Ref<
 	if (p_billboard) {
 		float md = 0;
 		for (int i = 0; i < p_handles.size(); i++) {
-			md = MAX(0, p_handles[i].length());
+			md = Math::max(0, p_handles[i].length());
 		}
 		if (md) {
 			mesh->set_custom_aabb(AABB(Vector3(-md, -md, -md), Vector3(md, md, md) * 2.0));

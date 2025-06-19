@@ -166,9 +166,9 @@ void TTS_Linux::_speech_event(int p_msg_id, int p_type) {
 		spd_set_voice_pitch(synth, (message.pitch - 1) * 100);
 		float rate = 0;
 		if (message.rate > 1.f) {
-			rate = std::log10(MIN(message.rate, 2.5f)) / std::log10(2.5f) * 100;
+			rate = std::log10(Math::min(message.rate, 2.5f)) / std::log10(2.5f) * 100;
 		} else if (message.rate < 1.f) {
-			rate = std::log10(MAX(message.rate, 0.5f)) / std::log10(0.5f) * -100;
+			rate = std::log10(Math::max(message.rate, 0.5f)) / std::log10(0.5f) * -100;
 		}
 		spd_set_voice_rate(synth, rate);
 		spd_set_data_mode(synth, SPD_DATA_SSML);
@@ -223,9 +223,9 @@ void TTS_Linux::speak(const String &p_text, const String &p_voice, int p_volume,
 	DisplayServer::TTSUtterance message;
 	message.text = p_text;
 	message.voice = p_voice;
-	message.volume = CLAMP(p_volume, 0, 100);
-	message.pitch = CLAMP(p_pitch, 0.f, 2.f);
-	message.rate = CLAMP(p_rate, 0.1f, 10.f);
+	message.volume = Math::clamp(p_volume, 0, 100);
+	message.pitch = Math::clamp(p_pitch, 0.f, 2.f);
+	message.rate = Math::clamp(p_rate, 0.1f, 10.f);
 	message.id = p_utterance_id;
 	queue.push_back(message);
 

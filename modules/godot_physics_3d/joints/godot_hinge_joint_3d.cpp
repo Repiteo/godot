@@ -302,7 +302,7 @@ void GodotHingeJoint3D::solve(real_t p_step) {
 
 				// Clamp the accumulated impulse
 				real_t temp = m_accLimitImpulse;
-				m_accLimitImpulse = MAX(m_accLimitImpulse + impulseMag, real_t(0));
+				m_accLimitImpulse = Math::max(m_accLimitImpulse + impulseMag, real_t(0));
 				impulseMag = m_accLimitImpulse - temp;
 
 				Vector3 impulse = axisA * impulseMag * m_limitSign;

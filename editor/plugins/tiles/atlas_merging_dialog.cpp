@@ -81,11 +81,11 @@ void AtlasMergingDialog::_generate_merged(const Vector<Ref<TileSetAtlasSource>> 
 					Vector2i new_position = new_tile_rect_in_atlas.position * new_texture_region_size;
 					if (frame > 0) {
 						new_position += src_rect.size * Vector2i(frame, 0);
-						atlas_size.x = MAX(frame + 1, atlas_size.x);
+						atlas_size.x = Math::max(frame + 1, atlas_size.x);
 					}
 					Rect2 dst_rect_wide = Rect2i(new_position, new_tile_rect_in_atlas.size * new_texture_region_size);
 					if (dst_rect_wide.get_end().x > output_image->get_width() || dst_rect_wide.get_end().y > output_image->get_height()) {
-						output_image->crop(MAX(dst_rect_wide.get_end().x, output_image->get_width()), MAX(dst_rect_wide.get_end().y, output_image->get_height()));
+						output_image->crop(Math::max(dst_rect_wide.get_end().x, output_image->get_width()), Math::max(dst_rect_wide.get_end().y, output_image->get_height()));
 					}
 					output_image->blit_rect(input_image, src_rect, dst_rect_wide.get_center() - src_rect.size / 2);
 				}
@@ -95,7 +95,7 @@ void AtlasMergingDialog::_generate_merged(const Vector<Ref<TileSetAtlasSource>> 
 			}
 
 			// Compute the atlas offset.
-			line_height = MAX(atlas_size.y, line_height);
+			line_height = Math::max(atlas_size.y, line_height);
 			atlas_offset.x += atlas_size.x;
 			if (atlas_offset.x >= p_max_columns) {
 				atlas_offset.x = 0;

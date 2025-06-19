@@ -139,8 +139,8 @@ public:
 		ofsb.columns[2] += p_cast;                                                                                                                                  \
 		project_range(p_normal, p_transform, mina, maxa);                                                                                                           \
 		project_range(p_normal, ofsb, minb, maxb);                                                                                                                  \
-		r_min = MIN(mina, minb);                                                                                                                                    \
-		r_max = MAX(maxa, maxb);                                                                                                                                    \
+		r_min = Math::min(mina, minb);                                                                                                                              \
+		r_max = Math::max(maxa, maxb);                                                                                                                              \
 	}
 
 class GodotWorldBoundaryShape2D : public GodotShape2D {

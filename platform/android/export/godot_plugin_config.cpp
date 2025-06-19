@@ -103,11 +103,11 @@ bool PluginConfigAndroid::is_plugin_config_valid(PluginConfigAndroid plugin_conf
 
 uint64_t PluginConfigAndroid::get_plugin_modification_time(const PluginConfigAndroid &plugin_config, const String &config_path) {
 	uint64_t last_updated = FileAccess::get_modified_time(config_path);
-	last_updated = MAX(last_updated, FileAccess::get_modified_time(plugin_config.binary));
+	last_updated = Math::max(last_updated, FileAccess::get_modified_time(plugin_config.binary));
 
 	for (int i = 0; i < plugin_config.local_dependencies.size(); i++) {
 		String binary = plugin_config.local_dependencies.get(i);
-		last_updated = MAX(last_updated, FileAccess::get_modified_time(binary));
+		last_updated = Math::max(last_updated, FileAccess::get_modified_time(binary));
 	}
 
 	return last_updated;

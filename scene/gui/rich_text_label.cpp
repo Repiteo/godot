@@ -302,7 +302,7 @@ void RichTextLabel::_update_line_font(ItemFrame *p_frame, int p_line, const Ref<
 					list_l.text_prefix.instantiate();
 					list_l.text_prefix->set_direction(_find_direction(list_l.from));
 					list_l.text_prefix->add_string(prefix, font, font_size);
-					list_items.write[0]->max_width = MAX(list_items[0]->max_width, list_l.text_prefix->get_size().x);
+					list_items.write[0]->max_width = Math::max(list_items[0]->max_width, list_l.text_prefix->get_size().x);
 				}
 			}
 		}
@@ -496,7 +496,7 @@ float RichTextLabel::_shape_line(ItemFrame *p_frame, int p_line, const Ref<Font>
 					list_l.text_prefix.instantiate();
 					list_l.text_prefix->set_direction(_find_direction(list_l.from));
 					list_l.text_prefix->add_string(prefix, font, font_size);
-					list_items.write[0]->max_width = MAX(list_items[0]->max_width, list_l.text_prefix->get_size().x);
+					list_items.write[0]->max_width = Math::max(list_items[0]->max_width, list_l.text_prefix->get_size().x);
 				}
 			}
 		}
@@ -630,8 +630,8 @@ float RichTextLabel::_shape_line(ItemFrame *p_frame, int p_line, const Ref<Font>
 						t_char_count += cell_ch;
 						remaining_characters -= cell_ch;
 
-						table->columns[column].min_width = MAX(table->columns[column].min_width, frame->lines[i].indent + std::ceil(frame->lines[i].text_buf->get_size().x));
-						table->columns[column].max_width = MAX(table->columns[column].max_width, frame->lines[i].indent + std::ceil(frame->lines[i].text_buf->get_non_wrapped_size().x));
+						table->columns[column].min_width = Math::max(table->columns[column].min_width, frame->lines[i].indent + std::ceil(frame->lines[i].text_buf->get_size().x));
+						table->columns[column].max_width = Math::max(table->columns[column].max_width, frame->lines[i].indent + std::ceil(frame->lines[i].text_buf->get_non_wrapped_size().x));
 					}
 					idx++;
 				}
@@ -718,7 +718,7 @@ void RichTextLabel::_set_table_size(ItemTable *p_table, int p_available_width) {
 					int dif = p_table->columns[i].max_width - p_table->columns[i].width;
 					if (dif > 0) {
 						int slice = p_table->columns[i].expand_ratio * remaining_width / total_ratio;
-						int incr = MIN(dif, slice);
+						int incr = Math::min(dif, slice);
 						p_table->columns[i].width += incr;
 						p_table->total_width += incr;
 						p_table->columns[i].width_with_padding = p_table->columns[i].width;
@@ -755,8 +755,8 @@ void RichTextLabel::_set_table_size(ItemTable *p_table, int p_available_width) {
 			MutexLock sub_lock(frame->lines[i].text_buf->get_mutex());
 
 			frame->lines[i].text_buf->set_width(p_table->columns[column].width);
-			p_table->columns[column].width = MAX(p_table->columns[column].width, std::ceil(frame->lines[i].text_buf->get_size().x));
-			p_table->columns[column].width_with_padding = MAX(p_table->columns[column].width_with_padding, std::ceil(frame->lines[i].text_buf->get_size().x + frame->padding.position.x + frame->padding.size.x));
+			p_table->columns[column].width = Math::max(p_table->columns[column].width, std::ceil(frame->lines[i].text_buf->get_size().x));
+			p_table->columns[column].width_with_padding = Math::max(p_table->columns[column].width_with_padding, std::ceil(frame->lines[i].text_buf->get_size().x + frame->padding.position.x + frame->padding.size.x));
 
 			frame->lines[i].offset.y = prev_h;
 
@@ -765,22 +765,22 @@ void RichTextLabel::_set_table_size(ItemTable *p_table, int p_available_width) {
 				h += theme_cache.paragraph_separation;
 			}
 			if (frame->min_size_over.y > 0) {
-				h = MAX(h, frame->min_size_over.y);
+				h = Math::max(h, frame->min_size_over.y);
 			}
 			if (frame->max_size_over.y > 0) {
-				h = MIN(h, frame->max_size_over.y);
+				h = Math::min(h, frame->max_size_over.y);
 			}
 			yofs += h;
 			prev_h = frame->lines[i].offset.y + frame->lines[i].text_buf->get_size().y + (frame->lines[i].text_buf->get_line_count() - 1) * theme_cache.line_separation + theme_cache.paragraph_separation;
 
 			frame->lines[i].offset += offset;
-			row_baseline = MAX(row_baseline, frame->lines[i].text_buf->get_line_ascent(frame->lines[i].text_buf->get_line_count() - 1));
+			row_baseline = Math::max(row_baseline, frame->lines[i].text_buf->get_line_ascent(frame->lines[i].text_buf->get_line_count() - 1));
 		}
-		row_top_padding = MAX(row_top_padding, frame->padding.position.y);
-		row_bottom_padding = MAX(row_bottom_padding, frame->padding.size.y);
+		row_top_padding = Math::max(row_top_padding, frame->padding.position.y);
+		row_bottom_padding = Math::max(row_bottom_padding, frame->padding.size.y);
 		offset.x += p_table->columns[column].width + theme_cache.table_h_separation + frame->padding.size.x;
 
-		row_height = MAX(yofs, row_height);
+		row_height = Math::max(yofs, row_height);
 		// Add row height after last column of the row or last cell of the table.
 		if (column == col_count - 1 || E->next() == nullptr) {
 			offset.x = Math::floor(theme_cache.table_h_separation * 0.5);
@@ -956,8 +956,8 @@ int RichTextLabel::_draw_line(ItemFrame *p_frame, int p_line, const Vector2 &p_o
 		int sel_end = -1;
 
 		if (selection.active && (selection.from_frame->lines[selection.from_line].char_offset + selection.from_char) <= (l.char_offset + chr_range.y) && (selection.to_frame->lines[selection.to_line].char_offset + selection.to_char) >= (l.char_offset + chr_range.x)) {
-			sel_start = MAX(chr_range.x, (selection.from_frame->lines[selection.from_line].char_offset + selection.from_char) - l.char_offset);
-			sel_end = MIN(chr_range.y, (selection.to_frame->lines[selection.to_line].char_offset + selection.to_char) - l.char_offset);
+			sel_start = Math::max(chr_range.x, (selection.from_frame->lines[selection.from_line].char_offset + selection.from_char) - l.char_offset);
+			sel_end = Math::min(chr_range.y, (selection.to_frame->lines[selection.to_line].char_offset + selection.to_char) - l.char_offset);
 		}
 
 		int processed_glyphs_step = 0;
@@ -1131,7 +1131,7 @@ int RichTextLabel::_draw_line(ItemFrame *p_frame, int p_line, const Vector2 &p_o
 						}
 						if (ul_started && new_ul_color != ul_color_prev) {
 							float y_off = upos;
-							float underline_width = MAX(1.0, uth * theme_cache.base_scale);
+							float underline_width = Math::max(1.0, uth * theme_cache.base_scale);
 							draw_line(ul_start + Vector2(0, y_off), p_ofs + Vector2(off_step.x, off_step.y + y_off), ul_color, underline_width);
 							ul_start = p_ofs + Vector2(off_step.x, off_step.y);
 							ul_color = new_ul_color;
@@ -1145,14 +1145,14 @@ int RichTextLabel::_draw_line(ItemFrame *p_frame, int p_line, const Vector2 &p_o
 					} else if (ul_started) {
 						ul_started = false;
 						float y_off = upos;
-						float underline_width = MAX(1.0, uth * theme_cache.base_scale);
+						float underline_width = Math::max(1.0, uth * theme_cache.base_scale);
 						draw_line(ul_start + Vector2(0, y_off), p_ofs + Vector2(off_step.x, off_step.y + y_off), ul_color, underline_width);
 					}
 					if (_find_hint(it, nullptr) && underline_hint) {
 						if (dot_ul_started && font_color != dot_ul_color_prev) {
 							float y_off = upos;
-							float underline_width = MAX(1.0, uth * theme_cache.base_scale);
-							draw_dashed_line(dot_ul_start + Vector2(0, y_off), p_ofs + Vector2(off_step.x, off_step.y + y_off), dot_ul_color, underline_width, MAX(2.0, underline_width * 2));
+							float underline_width = Math::max(1.0, uth * theme_cache.base_scale);
+							draw_dashed_line(dot_ul_start + Vector2(0, y_off), p_ofs + Vector2(off_step.x, off_step.y + y_off), dot_ul_color, underline_width, Math::max(2.0, underline_width * 2));
 							dot_ul_start = p_ofs + Vector2(off_step.x, off_step.y);
 							dot_ul_color_prev = font_color;
 							dot_ul_color = font_color;
@@ -1167,8 +1167,8 @@ int RichTextLabel::_draw_line(ItemFrame *p_frame, int p_line, const Vector2 &p_o
 					} else if (dot_ul_started) {
 						dot_ul_started = false;
 						float y_off = upos;
-						float underline_width = MAX(1.0, uth * theme_cache.base_scale);
-						draw_dashed_line(dot_ul_start + Vector2(0, y_off), p_ofs + Vector2(off_step.x, off_step.y + y_off), dot_ul_color, underline_width, MAX(2.0, underline_width * 2));
+						float underline_width = Math::max(1.0, uth * theme_cache.base_scale);
+						draw_dashed_line(dot_ul_start + Vector2(0, y_off), p_ofs + Vector2(off_step.x, off_step.y + y_off), dot_ul_color, underline_width, Math::max(2.0, underline_width * 2));
 					}
 					Color user_st_color = Color(0, 0, 0, 0);
 					if (_find_strikethrough(it, &user_st_color)) {
@@ -1181,7 +1181,7 @@ int RichTextLabel::_draw_line(ItemFrame *p_frame, int p_line, const Vector2 &p_o
 						}
 						if (st_started && new_st_color != st_color_prev) {
 							float y_off = -l_ascent + l_size.y / 2;
-							float underline_width = MAX(1.0, uth * theme_cache.base_scale);
+							float underline_width = Math::max(1.0, uth * theme_cache.base_scale);
 							draw_line(st_start + Vector2(0, y_off), p_ofs + Vector2(off_step.x, off_step.y + y_off), st_color, underline_width);
 							st_start = p_ofs + Vector2(off_step.x, off_step.y);
 							st_color = new_st_color;
@@ -1195,7 +1195,7 @@ int RichTextLabel::_draw_line(ItemFrame *p_frame, int p_line, const Vector2 &p_o
 					} else if (st_started) {
 						st_started = false;
 						float y_off = -l_ascent + l_size.y / 2;
-						float underline_width = MAX(1.0, uth * theme_cache.base_scale);
+						float underline_width = Math::max(1.0, uth * theme_cache.base_scale);
 						draw_line(st_start + Vector2(0, y_off), p_ofs + Vector2(off_step.x, off_step.y + y_off), st_color, underline_width);
 					}
 				}
@@ -1314,7 +1314,7 @@ int RichTextLabel::_draw_line(ItemFrame *p_frame, int p_line, const Vector2 &p_o
 						} else if (item_fx->type == ITEM_RAINBOW) {
 							ItemRainbow *item_rainbow = static_cast<ItemRainbow *>(item_fx);
 
-							font_color = font_color.from_ok_hsv(MAX(item_rainbow->frequency, 0) * Math::abs(item_rainbow->elapsed_time * item_rainbow->speed + ((p_ofs.x + off_step.x) / 50)), item_rainbow->saturation, item_rainbow->value, font_color.a);
+							font_color = font_color.from_ok_hsv(Math::max(item_rainbow->frequency, 0) * Math::abs(item_rainbow->elapsed_time * item_rainbow->speed + ((p_ofs.x + off_step.x) / 50)), item_rainbow->saturation, item_rainbow->value, font_color.a);
 						} else if (item_fx->type == ITEM_PULSE) {
 							ItemPulse *item_pulse = static_cast<ItemPulse *>(item_fx);
 
@@ -1379,19 +1379,19 @@ int RichTextLabel::_draw_line(ItemFrame *p_frame, int p_line, const Vector2 &p_o
 							if (ul_started) {
 								ul_started = false;
 								float y_off = upos;
-								float underline_width = MAX(1.0, uth * theme_cache.base_scale);
+								float underline_width = Math::max(1.0, uth * theme_cache.base_scale);
 								draw_line(ul_start + Vector2(0, y_off), p_ofs + Vector2(off_step.x, off_step.y + y_off), ul_color, underline_width);
 							}
 							if (dot_ul_started) {
 								dot_ul_started = false;
 								float y_off = upos;
-								float underline_width = MAX(1.0, uth * theme_cache.base_scale);
-								draw_dashed_line(dot_ul_start + Vector2(0, y_off), p_ofs + Vector2(off_step.x, off_step.y + y_off), dot_ul_color, underline_width, MAX(2.0, underline_width * 2));
+								float underline_width = Math::max(1.0, uth * theme_cache.base_scale);
+								draw_dashed_line(dot_ul_start + Vector2(0, y_off), p_ofs + Vector2(off_step.x, off_step.y + y_off), dot_ul_color, underline_width, Math::max(2.0, underline_width * 2));
 							}
 							if (st_started) {
 								st_started = false;
 								float y_off = -l_ascent + l_size.y / 2;
-								float underline_width = MAX(1.0, uth * theme_cache.base_scale);
+								float underline_width = Math::max(1.0, uth * theme_cache.base_scale);
 								draw_line(st_start + Vector2(0, y_off), p_ofs + Vector2(off_step.x, off_step.y + y_off), st_color, underline_width);
 							}
 						}
@@ -1457,19 +1457,19 @@ int RichTextLabel::_draw_line(ItemFrame *p_frame, int p_line, const Vector2 &p_o
 				if (ul_started) {
 					ul_started = false;
 					float y_off = upos;
-					float underline_width = MAX(1.0, uth * theme_cache.base_scale);
+					float underline_width = Math::max(1.0, uth * theme_cache.base_scale);
 					draw_line(ul_start + Vector2(0, y_off), p_ofs + Vector2(off_step.x, off_step.y + y_off), ul_color, underline_width);
 				}
 				if (dot_ul_started) {
 					dot_ul_started = false;
 					float y_off = upos;
-					float underline_width = MAX(1.0, uth * theme_cache.base_scale);
-					draw_dashed_line(dot_ul_start + Vector2(0, y_off), p_ofs + Vector2(off_step.x, off_step.y + y_off), dot_ul_color, underline_width, MAX(2.0, underline_width * 2));
+					float underline_width = Math::max(1.0, uth * theme_cache.base_scale);
+					draw_dashed_line(dot_ul_start + Vector2(0, y_off), p_ofs + Vector2(off_step.x, off_step.y + y_off), dot_ul_color, underline_width, Math::max(2.0, underline_width * 2));
 				}
 				if (st_started) {
 					st_started = false;
 					float y_off = -l_ascent + l_size.y / 2;
-					float underline_width = MAX(1.0, uth * theme_cache.base_scale);
+					float underline_width = Math::max(1.0, uth * theme_cache.base_scale);
 					draw_line(st_start + Vector2(0, y_off), p_ofs + Vector2(off_step.x, off_step.y + y_off), st_color, underline_width);
 				}
 			}
@@ -1668,8 +1668,8 @@ float RichTextLabel::_find_click_in_line(ItemFrame *p_frame, int p_line, const V
 												for (Item *F : table->subitems) {
 													ItemFrame *sub_frame = static_cast<ItemFrame *>(F);
 													for (int k = 0; k < (int)sub_frame->lines.size(); k++) {
-														table_range.x = MIN(table_range.x, sub_frame->lines[k].char_offset);
-														table_range.y = MAX(table_range.y, sub_frame->lines[k].char_offset + sub_frame->lines[k].char_count);
+														table_range.x = Math::min(table_range.x, sub_frame->lines[k].char_offset);
+														table_range.y = Math::max(table_range.y, sub_frame->lines[k].char_offset + sub_frame->lines[k].char_count);
 													}
 												}
 												table_offy = off.y;
@@ -1891,7 +1891,7 @@ int RichTextLabel::_find_first_line(int p_from, int p_to, int p_vofs) const {
 			r = m;
 		}
 	}
-	return MIN(l, (int)main->lines.size() - 1);
+	return Math::min(l, (int)main->lines.size() - 1);
 }
 
 _FORCE_INLINE_ float RichTextLabel::_calculate_line_vertical_offset(const RichTextLabel::Line &line) const {
@@ -3742,7 +3742,7 @@ void RichTextLabel::_process_line_caches() {
 
 	float total_height = 0;
 	if (fi != 0) {
-		int sr = MIN(main->first_invalid_font_line.load(), main->first_resized_line.load());
+		int sr = Math::min(main->first_invalid_font_line.load(), main->first_resized_line.load());
 
 		// Update fonts.
 		for (int i = main->first_invalid_font_line.load(); i < fi; i++) {
@@ -4293,14 +4293,14 @@ bool RichTextLabel::remove_paragraph(int p_paragraph, bool p_no_invalidate) {
 		vscroll->set_max(total_height);
 		updating_scroll = false;
 
-		main->first_invalid_line.store(MAX(main->first_invalid_line.load() - 1, 0));
-		main->first_resized_line.store(MAX(main->first_resized_line.load() - 1, 0));
-		main->first_invalid_font_line.store(MAX(main->first_invalid_font_line.load() - 1, 0));
+		main->first_invalid_line.store(Math::max(main->first_invalid_line.load() - 1, 0));
+		main->first_resized_line.store(Math::max(main->first_resized_line.load() - 1, 0));
+		main->first_invalid_font_line.store(Math::max(main->first_invalid_font_line.load() - 1, 0));
 	} else {
 		// Invalidate cache after the deleted paragraph.
-		main->first_invalid_line.store(MIN(main->first_invalid_line.load(), p_paragraph));
-		main->first_resized_line.store(MIN(main->first_resized_line.load(), p_paragraph));
-		main->first_invalid_font_line.store(MIN(main->first_invalid_font_line.load(), p_paragraph));
+		main->first_invalid_line.store(Math::min(main->first_invalid_line.load(), p_paragraph));
+		main->first_resized_line.store(Math::min(main->first_resized_line.load(), p_paragraph));
+		main->first_invalid_font_line.store(Math::min(main->first_invalid_font_line.load(), p_paragraph));
 	}
 	queue_redraw();
 
@@ -4316,9 +4316,9 @@ bool RichTextLabel::invalidate_paragraph(int p_paragraph) {
 	}
 
 	// Invalidate cache.
-	main->first_invalid_line.store(MIN(main->first_invalid_line.load(), p_paragraph));
-	main->first_resized_line.store(MIN(main->first_resized_line.load(), p_paragraph));
-	main->first_invalid_font_line.store(MIN(main->first_invalid_font_line.load(), p_paragraph));
+	main->first_invalid_line.store(Math::min(main->first_invalid_line.load(), p_paragraph));
+	main->first_resized_line.store(Math::min(main->first_resized_line.load(), p_paragraph));
+	main->first_invalid_font_line.store(Math::min(main->first_invalid_font_line.load(), p_paragraph));
 
 	_invalidate_accessibility();
 	if (is_inside_tree()) {
@@ -7184,8 +7184,8 @@ void RichTextLabel::set_visible_ratio(float p_ratio) {
 				}
 			}
 			Rect2 text_rect = _get_text_rect();
-			int first_invalid = MIN(new_from_l, old_from_l);
-			int second_invalid = MAX(new_from_l, old_from_l);
+			int first_invalid = Math::min(new_from_l, old_from_l);
+			int second_invalid = Math::max(new_from_l, old_from_l);
 
 			float total_height = (first_invalid == 0) ? 0 : _calculate_line_vertical_offset(main->lines[first_invalid - 1]);
 			if (first_invalid < to_line) {
@@ -7265,7 +7265,7 @@ int RichTextLabel::get_content_width() const {
 	int to_line = main->first_invalid_line.load();
 	for (int i = 0; i < to_line; i++) {
 		MutexLock lock(main->lines[i].text_buf->get_mutex());
-		total_width = MAX(total_width, main->lines[i].offset.x + main->lines[i].text_buf->get_size().x);
+		total_width = Math::max(total_width, main->lines[i].offset.x + main->lines[i].text_buf->get_size().x);
 	}
 	return total_width;
 }
@@ -7659,8 +7659,8 @@ void RichTextLabel::set_visible_characters(int p_visible) {
 				}
 			}
 			Rect2 text_rect = _get_text_rect();
-			int first_invalid = MIN(new_from_l, old_from_l);
-			int second_invalid = MAX(new_from_l, old_from_l);
+			int first_invalid = Math::min(new_from_l, old_from_l);
+			int second_invalid = Math::max(new_from_l, old_from_l);
 
 			float total_height = (first_invalid == 0) ? 0 : _calculate_line_vertical_offset(main->lines[first_invalid - 1]);
 			if (first_invalid < to_line) {

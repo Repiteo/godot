@@ -892,7 +892,7 @@ void MaterialData::update_textures(const HashMap<StringName, Variant> &p_paramet
 				if (V->value.is_array()) {
 					Array array = (Array)V->value;
 					if (uniform_array_size > 0) {
-						int size = MIN(uniform_array_size, array.size());
+						int size = Math::min(uniform_array_size, array.size());
 						for (int j = 0; j < size; j++) {
 							textures.push_back(array[j]);
 						}
@@ -1131,7 +1131,7 @@ MaterialStorage::MaterialStorage() {
 
 	static_assert(sizeof(GlobalShaderUniforms::Value) == 16);
 
-	global_shader_uniforms.buffer_size = MAX(16, (int)GLOBAL_GET("rendering/limits/global_shader_variables/buffer_size"));
+	global_shader_uniforms.buffer_size = Math::max(16, (int)GLOBAL_GET("rendering/limits/global_shader_variables/buffer_size"));
 	if (global_shader_uniforms.buffer_size * sizeof(GlobalShaderUniforms::Value) > uint32_t(Config::get_singleton()->max_uniform_buffer_size)) {
 		// Limit to maximum support UBO size.
 		global_shader_uniforms.buffer_size = uint32_t(Config::get_singleton()->max_uniform_buffer_size) / sizeof(GlobalShaderUniforms::Value);

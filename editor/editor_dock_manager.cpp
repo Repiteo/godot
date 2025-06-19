@@ -484,7 +484,7 @@ void EditorDockManager::_move_dock_tab_index(Control *p_dock, int p_tab_index, b
 	}
 
 	dock_tab_container->set_block_signals(true);
-	int target_index = CLAMP(p_tab_index, 0, dock_tab_container->get_tab_count() - 1);
+	int target_index = Math::clamp(p_tab_index, 0, dock_tab_container->get_tab_count() - 1);
 	dock_tab_container->move_child(p_dock, dock_tab_container->get_tab_control(target_index)->get_index(false));
 	all_docks[p_dock].previous_tab_index = target_index;
 
@@ -1198,7 +1198,7 @@ void DockContextPopup::_dock_select_draw() {
 			tab_draw_rect.position.x += dock_slot_draw_rect.size.x - tab_draw_rect.size.x;
 		}
 		bool is_context_dock = context_tab_container == dock_manager->dock_slot[i];
-		int tabs_to_draw = MIN(max_tabs, dock_manager->dock_slot[i]->get_tab_count());
+		int tabs_to_draw = Math::min(max_tabs, dock_manager->dock_slot[i]->get_tab_count());
 
 		if (i == dock_select_rect_over_idx) {
 			dock_select->draw_rect(dock_slot_draw_rect, hovered_dock_color);

@@ -320,34 +320,34 @@ void TextureProgressBar::draw_nine_patch_stretched(const Ref<Texture2D> &p_textu
 		}
 
 		double width_filled = width_total * p_ratio;
-		double middle_section_size = MAX(0.0, width_texture - first_section_size - last_section_size);
+		double middle_section_size = Math::max(0.0, width_texture - first_section_size - last_section_size);
 
 		// Maximum middle texture size.
 		double max_middle_texture_size = middle_section_size;
 
 		// Maximum real middle texture size.
-		double max_middle_real_size = MAX(0.0, width_total - (first_section_size + last_section_size));
+		double max_middle_real_size = Math::max(0.0, width_total - (first_section_size + last_section_size));
 
 		switch (p_mode) {
 			case FILL_BILINEAR_LEFT_AND_RIGHT:
 			case FILL_BILINEAR_TOP_AND_BOTTOM: {
-				last_section_size = MAX(0.0, last_section_size - (width_total - width_filled) * 0.5);
-				first_section_size = MAX(0.0, first_section_size - (width_total - width_filled) * 0.5);
+				last_section_size = Math::max(0.0, last_section_size - (width_total - width_filled) * 0.5);
+				first_section_size = Math::max(0.0, first_section_size - (width_total - width_filled) * 0.5);
 
 				// When `width_filled` increases, `middle_section_size` only increases when either of `first_section_size` and `last_section_size` is zero.
 				// Also, it should always be smaller than or equal to `(width_total - (first_section_size + last_section_size))`.
 				double real_middle_size = width_filled - first_section_size - last_section_size;
-				middle_section_size *= MIN(max_middle_real_size, real_middle_size) / max_middle_real_size;
+				middle_section_size *= Math::min(max_middle_real_size, real_middle_size) / max_middle_real_size;
 
-				width_texture = MIN(width_texture, first_section_size + middle_section_size + last_section_size);
+				width_texture = Math::min(width_texture, first_section_size + middle_section_size + last_section_size);
 			} break;
 			case FILL_MODE_MAX:
 				break;
 			default: {
-				middle_section_size *= MIN(1.0, (MAX(0.0, width_filled - first_section_size) / MAX(1.0, width_total - first_section_size - last_section_size)));
-				last_section_size = MAX(0.0, last_section_size - (width_total - width_filled));
-				first_section_size = MIN(first_section_size, width_filled);
-				width_texture = MIN(width_texture, first_section_size + middle_section_size + last_section_size);
+				middle_section_size *= Math::min(1.0, (Math::max(0.0, width_filled - first_section_size) / Math::max(1.0, width_total - first_section_size - last_section_size)));
+				last_section_size = Math::max(0.0, last_section_size - (width_total - width_filled));
+				first_section_size = Math::min(first_section_size, width_filled);
+				width_texture = Math::min(width_texture, first_section_size + middle_section_size + last_section_size);
 			}
 		}
 
@@ -497,8 +497,8 @@ void TextureProgressBar::_notification(int p_what) {
 								}
 
 								float end = start + direction * val;
-								float from = MIN(start, end);
-								float to = MAX(start, end);
+								float from = Math::min(start, end);
+								float to = Math::max(start, end);
 								pts.push_back(from);
 								for (float corner = Math::floor(from * 4 + 0.5) * 0.25 + 0.125; corner < to; corner += 0.25) {
 									pts.push_back(corner);
@@ -608,7 +608,7 @@ float TextureProgressBar::get_radial_initial_angle() {
 }
 
 void TextureProgressBar::set_fill_degrees(float p_angle) {
-	float angle_clamped = CLAMP(p_angle, 0, 360);
+	float angle_clamped = Math::clamp(p_angle, 0, 360);
 
 	if (rad_max_degrees == angle_clamped) {
 		return;

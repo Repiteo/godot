@@ -114,32 +114,6 @@ static_assert(__cplusplus >= 201703L, "Minimum of C++17 required.");
 #undef MONO_FONT
 #endif
 
-// Make room for our constexpr's below by overriding potential system-specific macros.
-#undef SIGN
-#undef MIN
-#undef MAX
-#undef CLAMP
-
-template <typename T>
-constexpr const T SIGN(const T m_v) {
-	return m_v > 0 ? +1.0f : (m_v < 0 ? -1.0f : 0.0f);
-}
-
-template <typename T, typename T2>
-constexpr auto MIN(const T m_a, const T2 m_b) {
-	return m_a < m_b ? m_a : m_b;
-}
-
-template <typename T, typename T2>
-constexpr auto MAX(const T m_a, const T2 m_b) {
-	return m_a > m_b ? m_a : m_b;
-}
-
-template <typename T, typename T2, typename T3>
-constexpr auto CLAMP(const T m_a, const T2 m_min, const T3 m_max) {
-	return m_a < m_min ? m_min : (m_a > m_max ? m_max : m_a);
-}
-
 // Generic swap template.
 #ifndef SWAP
 #define SWAP(m_x, m_y) std::swap((m_x), (m_y))

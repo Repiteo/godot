@@ -35,26 +35,26 @@
 namespace TestMath {
 
 TEST_CASE("[Math] C++ macros") {
-	CHECK(MIN(-2, 2) == -2);
-	CHECK(MIN(600, 2) == 2);
+	CHECK(Math::min(-2, 2) == -2);
+	CHECK(Math::min(600, 2) == 2);
 
-	CHECK(MAX(-2, 2) == 2);
-	CHECK(MAX(600, 2) == 600);
+	CHECK(Math::max(-2, 2) == 2);
+	CHECK(Math::max(600, 2) == 600);
 
-	CHECK(CLAMP(600, -2, 2) == 2);
-	CHECK(CLAMP(620, 600, 650) == 620);
+	CHECK(Math::clamp(600, -2, 2) == 2);
+	CHECK(Math::clamp(620, 600, 650) == 620);
 	// `max` is lower than `min`.
-	CHECK(CLAMP(620, 600, 50) == 50);
+	CHECK(Math::clamp(620, 600, 50) == 50);
 
 	CHECK(Math::abs(-5) == 5);
 	CHECK(Math::abs(0) == 0);
 	CHECK(Math::abs(5) == 5);
 
-	CHECK(SIGN(-5) == -1.0);
-	CHECK(SIGN(0) == 0.0);
-	CHECK(SIGN(5) == 1.0);
-	// Check that SIGN(Math::NaN) returns 0.0.
-	CHECK(SIGN(Math::NaN) == 0.0);
+	CHECK(Math::sign(-5) == -1.0);
+	CHECK(Math::sign(0) == 0.0);
+	CHECK(Math::sign(5) == 1.0);
+	// Check that Math::sign(Math::NaN) returns 0.0.
+	CHECK(Math::sign(Math::NaN) == 0.0);
 }
 
 TEST_CASE("[Math] Power of two functions") {

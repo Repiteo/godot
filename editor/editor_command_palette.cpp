@@ -87,7 +87,7 @@ void EditorCommandPalette::_update_command_search(const String &search_text) {
 				float key_name_score = is_subsequence_of_key_name ? _score_path(search_text, r.key_name.to_lower()) : .0f;
 				float display_name_score = is_subsequence_of_display_name ? _score_path(search_text, r.display_name.to_lower()) : .0f;
 
-				r.score = MAX(key_name_score, display_name_score);
+				r.score = Math::max(key_name_score, display_name_score);
 			}
 
 			entries.push_back(r);
@@ -111,7 +111,7 @@ void EditorCommandPalette::_update_command_search(const String &search_text) {
 		sorter.sort(entries.ptrw(), entries.size());
 	}
 
-	const int entry_limit = MIN(entries.size(), 300);
+	const int entry_limit = Math::min(entries.size(), 300);
 	for (int i = 0; i < entry_limit; i++) {
 		String section_name = entries[i].key_name.get_slicec('/', 0);
 		TreeItem *section;

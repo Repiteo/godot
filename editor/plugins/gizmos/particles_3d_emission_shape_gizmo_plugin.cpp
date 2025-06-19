@@ -147,7 +147,7 @@ void Particles3DEmissionShapeGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 				const float ring_inner_radius = mat->get_emission_ring_inner_radius();
 				const Vector3 ring_axis = mat->get_emission_ring_axis();
 				const float ring_cone_angle = mat->get_emission_ring_cone_angle();
-				const float ring_radius_top = MAX(ring_radius - Math::tan(Math::deg_to_rad(90.0 - ring_cone_angle)) * ring_height, 0.0);
+				const float ring_radius_top = Math::max(ring_radius - Math::tan(Math::deg_to_rad(90.0 - ring_cone_angle)) * ring_height, 0.0);
 				const float ring_inner_radius_top = (ring_inner_radius / ring_radius) * ring_radius_top;
 
 				Vector<Vector3> points;
@@ -268,7 +268,7 @@ void Particles3DEmissionShapeGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 			const float ring_inner_radius = particles->get_emission_ring_inner_radius();
 			const Vector3 ring_axis = particles->get_emission_ring_axis();
 			const float ring_cone_angle = particles->get_emission_ring_cone_angle();
-			const float ring_radius_top = MAX(ring_radius - Math::tan(Math::deg_to_rad(90.0 - ring_cone_angle)) * ring_height, 0.0);
+			const float ring_radius_top = Math::max(ring_radius - Math::tan(Math::deg_to_rad(90.0 - ring_cone_angle)) * ring_height, 0.0);
 			const float ring_inner_radius_top = (ring_inner_radius / ring_radius) * ring_radius_top;
 
 			Vector<Vector3> points;

@@ -253,7 +253,7 @@ void MovieWriter::end() {
 			String::num((real_time_seconds % 3600) / 60, 0).pad_zeros(2),
 			String::num(real_time_seconds % 60, 0).pad_zeros(2));
 
-	print_line(vformat("%d frames at %d FPS (movie length: %s), recorded in %s (%d%% of real-time speed).", Engine::get_singleton()->get_frames_drawn(), fps, movie_time, real_time, (float(MAX(1, movie_time_seconds)) / MAX(1, real_time_seconds)) * 100));
+	print_line(vformat("%d frames at %d FPS (movie length: %s), recorded in %s (%d%% of real-time speed).", Engine::get_singleton()->get_frames_drawn(), fps, movie_time, real_time, (float(Math::max(1, movie_time_seconds)) / Math::max(1, real_time_seconds)) * 100));
 	print_line(vformat("CPU render time: %.2f seconds (average: %.2f ms/frame)", cpu_time / 1000, cpu_time / Engine::get_singleton()->get_frames_drawn()));
 	print_line(vformat("GPU render time: %.2f seconds (average: %.2f ms/frame)", gpu_time / 1000, gpu_time / Engine::get_singleton()->get_frames_drawn()));
 	print_line(vformat("Encoding time: %.2f seconds (average: %.2f ms/frame)", encoding_time_usec / 1000000.f, encoding_time_usec / 1000.f / Engine::get_singleton()->get_frames_drawn()));

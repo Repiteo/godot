@@ -668,7 +668,7 @@ bool VisualShaderNodeParticleMeshEmitter::is_use_all_surfaces() const {
 void VisualShaderNodeParticleMeshEmitter::set_surface_index(int p_surface_index) {
 	if (mesh.is_valid()) {
 		if (mesh->get_surface_count() > 0) {
-			p_surface_index = CLAMP(p_surface_index, 0, mesh->get_surface_count() - 1);
+			p_surface_index = Math::clamp(p_surface_index, 0, mesh->get_surface_count() - 1);
 		} else {
 			p_surface_index = 0;
 		}

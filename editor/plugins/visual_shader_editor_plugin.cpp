@@ -976,7 +976,7 @@ void VisualShaderGraphPlugin::add_node(VisualShader::Type p_type, int p_id, bool
 			String input_port_name = "input" + itos(group_node->get_free_input_port_id());
 			String output_port_name = "output" + itos(group_node->get_free_output_port_id());
 
-			for (int i = 0; i < MAX(vsnode->get_input_port_count(), vsnode->get_output_port_count()); i++) {
+			for (int i = 0; i < Math::max(vsnode->get_input_port_count(), vsnode->get_output_port_count()); i++) {
 				if (i < vsnode->get_input_port_count()) {
 					if (input_port_name == vsnode->get_input_port_name(i)) {
 						input_port_name = "_" + input_port_name;
@@ -1024,7 +1024,7 @@ void VisualShaderGraphPlugin::add_node(VisualShader::Type p_type, int p_id, bool
 		}
 		output_port_count++;
 	}
-	int max_ports = MAX(vsnode->get_input_port_count(), output_port_count);
+	int max_ports = Math::max(vsnode->get_input_port_count(), output_port_count);
 	VisualShaderNode::PortType expanded_type = VisualShaderNode::PORT_TYPE_SCALAR;
 	int expanded_port_counter = 0;
 

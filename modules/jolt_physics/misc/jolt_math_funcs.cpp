@@ -62,7 +62,7 @@ void JoltMath::decompose(Basis &p_basis, Vector3 &r_scale) {
 
 	const real_t det = x.cross(y).dot(z);
 
-	r_scale = SIGN(det) * Vector3(Math::sqrt(x_dot_x), Math::sqrt(y_dot_y), Math::sqrt(z_dot_z));
+	r_scale = Math::sign(det) * Vector3(Math::sqrt(x_dot_x), Math::sqrt(y_dot_y), Math::sqrt(z_dot_z));
 
 	p_basis.set_column(Vector3::AXIS_X, x / r_scale.x);
 	p_basis.set_column(Vector3::AXIS_Y, y / r_scale.y);

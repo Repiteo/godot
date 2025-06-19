@@ -167,12 +167,12 @@ void AudioStreamPlayer2D::_update_panning() {
 
 		float pan = relative_to_listener.x / screen_size.x;
 		// Don't let the panning effect extend (too far) beyond the screen.
-		pan = CLAMP(pan, -1, 1);
+		pan = Math::clamp(pan, -1, 1);
 
 		// Bake in a constant factor here to allow the project setting defaults for 2d and 3d to be normalized to 1.0.
 		pan *= panning_strength * cached_global_panning_strength * 0.5f;
 
-		pan = CLAMP(pan + 0.5, 0.0, 1.0);
+		pan = Math::clamp(pan + 0.5, 0.0, 1.0);
 
 		float l = 1.0 - pan;
 		float r = pan;
@@ -180,7 +180,7 @@ void AudioStreamPlayer2D::_update_panning() {
 		const AudioFrame &prev_sample = volume_vector[0];
 		AudioFrame new_sample = AudioFrame(l, r) * multiplier;
 
-		volume_vector.write[0] = AudioFrame(MAX(prev_sample[0], new_sample[0]), MAX(prev_sample[1], new_sample[1]));
+		volume_vector.write[0] = AudioFrame(Math::max(prev_sample[0], new_sample[0]), Math::max(prev_sample[1], new_sample[1]));
 	}
 
 	for (const Ref<AudioStreamPlayback> &playback : internal->stream_playbacks) {

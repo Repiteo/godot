@@ -41,7 +41,7 @@ uint32_t MachO::seg_align(uint64_t p_vmaddr, uint32_t p_min, uint32_t p_max) {
 			seg_align = seg_align << 1;
 			salign++;
 		}
-		salign = CLAMP(salign, p_min, p_max);
+		salign = Math::clamp(salign, p_min, p_max);
 	}
 	return salign;
 }
@@ -178,23 +178,23 @@ bool MachO::open_file(const String &p_path) {
 					lc_seg.vmaddr = BSWAP32(lc_seg.vmaddr);
 					lc_seg.vmsize = BSWAP32(lc_seg.vmsize);
 				}
-				align = MAX(align, seg_align(lc_seg.vmaddr, 2, 15));
+				align = Math::max(align, seg_align(lc_seg.vmaddr, 2, 15));
 				if (String(lc_seg.segname) == "__TEXT") {
-					exe_limit = MAX(exe_limit, lc_seg.vmsize);
+					exe_limit = Math::max(exe_limit, lc_seg.vmsize);
 					for (uint32_t j = 0; j < lc_seg.nsects; j++) {
 						Section lc_sect;
 						fa->get_buffer((uint8_t *)&lc_sect, sizeof(Section));
 						if (String(lc_sect.sectname) == "__text") {
 							if (swap) {
-								exe_base = MIN(exe_base, BSWAP32(lc_sect.offset));
+								exe_base = Math::min(exe_base, BSWAP32(lc_sect.offset));
 							} else {
-								exe_base = MIN(exe_base, lc_sect.offset);
+								exe_base = Math::min(exe_base, lc_sect.offset);
 							}
 						}
 						if (swap) {
-							align = MAX(align, BSWAP32(lc_sect.align));
+							align = Math::max(align, BSWAP32(lc_sect.align));
 						} else {
-							align = MAX(align, lc_sect.align);
+							align = Math::max(align, lc_sect.align);
 						}
 					}
 				} else if (String(lc_seg.segname) == "__LINKEDIT") {
@@ -209,22 +209,22 @@ bool MachO::open_file(const String &p_path) {
 					lc_seg.vmaddr = BSWAP64(lc_seg.vmaddr);
 					lc_seg.vmsize = BSWAP64(lc_seg.vmsize);
 				}
-				align = MAX(align, seg_align(lc_seg.vmaddr, 3, 15));
+				align = Math::max(align, seg_align(lc_seg.vmaddr, 3, 15));
 				if (String(lc_seg.segname) == "__TEXT") {
-					exe_limit = MAX(exe_limit, lc_seg.vmsize);
+					exe_limit = Math::max(exe_limit, lc_seg.vmsize);
 					for (uint32_t j = 0; j < lc_seg.nsects; j++) {
 						Section64 lc_sect;
 						fa->get_buffer((uint8_t *)&lc_sect, sizeof(Section64));
 						if (String(lc_sect.sectname) == "__text") {
 							if (swap) {
-								exe_base = MIN(exe_base, BSWAP32(lc_sect.offset));
+								exe_base = Math::min(exe_base, BSWAP32(lc_sect.offset));
 							} else {
-								exe_base = MIN(exe_base, lc_sect.offset);
+								exe_base = Math::min(exe_base, lc_sect.offset);
 							}
 							if (swap) {
-								align = MAX(align, BSWAP32(lc_sect.align));
+								align = Math::max(align, BSWAP32(lc_sect.align));
 							} else {
-								align = MAX(align, lc_sect.align);
+								align = Math::max(align, lc_sect.align);
 							}
 						}
 					}

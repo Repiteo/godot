@@ -1018,7 +1018,7 @@ void Collada::_parse_mesh_geometry(XMLParser &p_parser, const String &p_id, cons
 							sref.source = source;
 							sref.offset = offset;
 							prim.sources[semantic] = sref;
-							prim.vertex_size = MAX(prim.vertex_size, offset + 1);
+							prim.vertex_size = Math::max(prim.vertex_size, offset + 1);
 
 							COLLADA_PRINT(section + " input semantic: " + semantic + " source: " + source + " offset: " + itos(offset));
 
@@ -1747,7 +1747,7 @@ void Collada::_parse_animation(XMLParser &p_parser) {
 
 			for (int j = 0; j < key_count; j++) {
 				track.keys.write[j].time = time_keys[j];
-				state.animation_length = MAX(state.animation_length, time_keys[j]);
+				state.animation_length = Math::max(state.animation_length, time_keys[j]);
 			}
 
 			//now read actual values

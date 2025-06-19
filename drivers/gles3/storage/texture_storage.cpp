@@ -1312,9 +1312,9 @@ Vector<Ref<Image>> TextureStorage::_texture_3d_read_framebuffer(GLES3::Texture *
 			ret.push_back(img);
 		}
 
-		width = MAX(1, width >> 1);
-		height = MAX(1, height >> 1);
-		depth = MAX(1, depth >> 1);
+		width = Math::max(1, width >> 1);
+		height = Math::max(1, height >> 1);
+		depth = Math::max(1, depth >> 1);
 	}
 
 	return ret;
@@ -1632,8 +1632,8 @@ void TextureStorage::_texture_set_data(RID p_texture, const Ref<Image> &p_image,
 
 		tsize += size;
 
-		w = MAX(1, w >> 1);
-		h = MAX(1, h >> 1);
+		w = Math::max(1, w >> 1);
+		h = Math::max(1, h >> 1);
 	}
 
 	if (texture->target == GL_TEXTURE_CUBE_MAP || texture->target == GL_TEXTURE_2D_ARRAY) {
@@ -1704,7 +1704,7 @@ void TextureStorage::_texture_set_3d_data(RID p_texture, const Vector<Ref<Image>
 
 		if (img_size != prev_size) {
 			mipmap_level++;
-			depth = MAX(1, depth >> 1);
+			depth = Math::max(1, depth >> 1);
 			layer = 0;
 		}
 		prev_size = img_size;
@@ -2271,7 +2271,7 @@ void TextureStorage::_create_render_target_backbuffer(RenderTarget *rt) {
 	ERR_FAIL_COND(rt->direct_to_screen);
 	// Allocate mipmap chains for full screen blur
 	// Limit mipmaps so smallest is 32x32 to avoid unnecessary framebuffer switches
-	int count = MAX(1, Image::get_image_required_mipmaps(rt->size.x, rt->size.y, Image::FORMAT_RGBA8) - 4);
+	int count = Math::max(1, Image::get_image_required_mipmaps(rt->size.x, rt->size.y, Image::FORMAT_RGBA8) - 4);
 	if (rt->size.x > 40 && rt->size.y > 40) {
 		GLsizei width = rt->size.x;
 		GLsizei height = rt->size.y;
@@ -2285,8 +2285,8 @@ void TextureStorage::_create_render_target_backbuffer(RenderTarget *rt) {
 		for (int l = 0; l < count; l++) {
 			texture_size_bytes += width * height * 4;
 			glTexImage2D(GL_TEXTURE_2D, l, rt->color_internal_format, width, height, 0, rt->color_format, rt->color_type, nullptr);
-			width = MAX(1, (width / 2));
-			height = MAX(1, (height / 2));
+			width = Math::max(1, (width / 2));
+			height = Math::max(1, (height / 2));
 		}
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
@@ -3103,7 +3103,7 @@ void TextureStorage::render_target_sdf_process(RID p_render_target) {
 
 	// Process
 
-	int stride = nearest_power_of_2_templated(MAX(size.width, size.height) / 2);
+	int stride = nearest_power_of_2_templated(Math::max(size.width, size.height) / 2);
 
 	variant = CanvasSdfShaderGLES3::MODE_PROCESS;
 	success = sdf_shader.shader.version_bind_shader(sdf_shader.shader_version, variant);

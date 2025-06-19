@@ -242,14 +242,14 @@ Color _color_from_temperature(float p_temperature) {
 	float y = 2.0f * v * d;
 
 	// Convert to XYZ space
-	const float a = 1.0 / MAX(y, 1e-5f);
+	const float a = 1.0 / Math::max(y, 1e-5f);
 	Vector3 xyz = Vector3(x * a, 1.0, (1.0f - x - y) * a);
 
 	// Convert from XYZ to sRGB(linear)
 	Vector3 linear = Vector3(3.2404542f * xyz.x - 1.5371385f * xyz.y - 0.4985314f * xyz.z,
 			-0.9692660f * xyz.x + 1.8760108f * xyz.y + 0.0415560f * xyz.z,
 			0.0556434f * xyz.x - 0.2040259f * xyz.y + 1.0572252f * xyz.z);
-	linear /= MAX(1e-5f, linear[linear.max_axis_index()]);
+	linear /= Math::max(1e-5f, linear[linear.max_axis_index()]);
 	// Normalize, clamp, and convert to sRGB.
 	return Color(linear.x, linear.y, linear.z).clamp().linear_to_srgb();
 }

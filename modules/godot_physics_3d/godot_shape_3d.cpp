@@ -432,7 +432,7 @@ Vector3 GodotBoxShape3D::get_closest_point_to(const Vector3 &p_point) const {
 			if (outside == 1) {
 				//use plane if only one side matches
 				Vector3 n;
-				n[i] = SIGN(p_point[i]);
+				n[i] = Math::sign(p_point[i]);
 
 				Plane p(n, half_extents[i]);
 				min_point = p.project(p_point);
@@ -755,7 +755,7 @@ Vector3 GodotCylinderShape3D::get_closest_point_to(const Vector3 &p_point) const
 		real_t dist_point_1 = delta_point_1.length_squared();
 		if (!Math::is_zero_approx(dist_point_1)) {
 			dist_point_1 = Math::sqrt(dist_point_1);
-			proj_point = circle_pos + delta_point_1 * MIN(dist_point_1, radius) / dist_point_1;
+			proj_point = circle_pos + delta_point_1 * Math::min(dist_point_1, radius) / dist_point_1;
 		}
 
 		return proj_point;
@@ -934,7 +934,7 @@ void GodotConvexPolygonShape3D::get_supports(const Vector3 &p_normal, int p_max,
 				continue;
 			}
 
-			int m = MIN(p_max, ic);
+			int m = Math::min(p_max, ic);
 			for (int j = 0; j < m; j++) {
 				r_supports[j] = vertices[ind[j]];
 			}
@@ -1876,8 +1876,8 @@ bool GodotHeightMapShape3D::_intersect_grid_segment(ProcessFunction &p_process, 
 	}
 
 	// Start inside the grid.
-	int x_start = MAX(MIN(x, p_width - 2), 0);
-	int z_start = MAX(MIN(z, p_depth - 2), 0);
+	int x_start = Math::max(Math::min(x, p_width - 2), 0);
+	int z_start = Math::max(Math::min(z, p_depth - 2), 0);
 
 	// Adjust initial cross values.
 	cross_x += delta_x * x_step * (x_start - x);
@@ -1959,8 +1959,8 @@ bool GodotHeightMapShape3D::intersect_segment(const Vector3 &p_begin, const Vect
 		params.face = &face;
 
 		_HeightmapGridCullState state;
-		state.x = MAX(MIN(begin_x, width - 2), 0);
-		state.z = MAX(MIN(begin_z, depth - 2), 0);
+		state.x = Math::max(Math::min(begin_x, width - 2), 0);
+		state.z = Math::max(Math::min(begin_z, depth - 2), 0);
 		if (_heightmap_cell_cull_segment(params, state)) {
 			r_point = params.result;
 			r_normal = params.normal;
@@ -2033,10 +2033,10 @@ void GodotHeightMapShape3D::cull(const AABB &p_local_aabb, QueryCallback p_callb
 		aabb_max[i]++;
 	}
 
-	int start_x = MAX(0, aabb_min[0]);
-	int end_x = MIN(width - 1, aabb_max[0]);
-	int start_z = MAX(0, aabb_min[2]);
-	int end_z = MIN(depth - 1, aabb_max[2]);
+	int start_x = Math::max(0, aabb_min[0]);
+	int end_x = Math::min(width - 1, aabb_max[0]);
+	int start_z = Math::max(0, aabb_min[2]);
+	int end_z = Math::min(depth - 1, aabb_max[2]);
 
 	GodotFaceShape3D face;
 	face.backface_collision = !p_invert_backface_collision;
@@ -2125,8 +2125,8 @@ void GodotHeightMapShape3D::_build_accelerator() {
 			// If the AABB for the Left chunk did not share vertices with the Right,
 			// then we would fail collision tests at x due to a gap.
 			//
-			int z_max = MIN(z0 + BOUNDS_CHUNK_SIZE + 1, depth);
-			int x_max = MIN(x0 + BOUNDS_CHUNK_SIZE + 1, width);
+			int z_max = Math::min(z0 + BOUNDS_CHUNK_SIZE + 1, depth);
+			int x_max = Math::min(x0 + BOUNDS_CHUNK_SIZE + 1, width);
 			for (int z = z0; z < z_max; ++z) {
 				for (int x = x0; x < x_max; ++x) {
 					real_t height = _get_height(x, z);

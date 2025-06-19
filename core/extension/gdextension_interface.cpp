@@ -952,7 +952,7 @@ static GDExtensionInt gdextension_string_to_latin1_chars(GDExtensionConstStringP
 	GDExtensionInt len = cs.length();
 	if (r_text) {
 		const char *s_text = cs.ptr();
-		for (GDExtensionInt i = 0; i < MIN(len, p_max_write_length); i++) {
+		for (GDExtensionInt i = 0; i < Math::min(len, p_max_write_length); i++) {
 			r_text[i] = s_text[i];
 		}
 	}
@@ -964,7 +964,7 @@ static GDExtensionInt gdextension_string_to_utf8_chars(GDExtensionConstStringPtr
 	GDExtensionInt len = cs.length();
 	if (r_text) {
 		const char *s_text = cs.ptr();
-		for (GDExtensionInt i = 0; i < MIN(len, p_max_write_length); i++) {
+		for (GDExtensionInt i = 0; i < Math::min(len, p_max_write_length); i++) {
 			r_text[i] = s_text[i];
 		}
 	}
@@ -976,7 +976,7 @@ static GDExtensionInt gdextension_string_to_utf16_chars(GDExtensionConstStringPt
 	GDExtensionInt len = cs.length();
 	if (r_text) {
 		const char16_t *s_text = cs.ptr();
-		for (GDExtensionInt i = 0; i < MIN(len, p_max_write_length); i++) {
+		for (GDExtensionInt i = 0; i < Math::min(len, p_max_write_length); i++) {
 			r_text[i] = s_text[i];
 		}
 	}
@@ -987,7 +987,7 @@ static GDExtensionInt gdextension_string_to_utf32_chars(GDExtensionConstStringPt
 	GDExtensionInt len = self->length();
 	if (r_text) {
 		const char32_t *s_text = self->ptr();
-		for (GDExtensionInt i = 0; i < MIN(len, p_max_write_length); i++) {
+		for (GDExtensionInt i = 0; i < Math::min(len, p_max_write_length); i++) {
 			r_text[i] = s_text[i];
 		}
 	}

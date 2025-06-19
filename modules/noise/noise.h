@@ -103,8 +103,8 @@ class Noise : public Resource {
 		*/
 		ERR_FAIL_COND_V(p_blend_skirt < 0, Vector<Ref<Image>>());
 
-		int skirt_width = MAX(1, p_width * p_blend_skirt);
-		int skirt_height = MAX(1, p_height * p_blend_skirt);
+		int skirt_width = Math::max(1, p_width * p_blend_skirt);
+		int skirt_height = Math::max(1, p_height * p_blend_skirt);
 		int src_width = p_width + skirt_width;
 		int src_height = p_height + skirt_height;
 		int half_width = p_width * 0.5;
@@ -201,7 +201,7 @@ class Noise : public Resource {
 
 		// Now blend across z.
 		if (p_depth > 1) {
-			int skirt_depth = MAX(1, p_depth * p_blend_skirt);
+			int skirt_depth = Math::max(1, p_depth * p_blend_skirt);
 			int half_depth = p_depth * 0.5;
 			int skirt_edge_z = half_depth + skirt_depth;
 

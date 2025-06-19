@@ -146,7 +146,7 @@ Error StreamPeerGZIP::put_partial_data(const uint8_t *p_data, int p_bytes, int &
 		int sent = 0;
 		int to_write = 0;
 		// Compress or decompress
-		Error err = _process(buffer.ptrw(), MIN(buffer.size(), rb.space_left()), p_data + r_sent, p_bytes - r_sent, sent, to_write);
+		Error err = _process(buffer.ptrw(), Math::min(buffer.size(), rb.space_left()), p_data + r_sent, p_bytes - r_sent, sent, to_write);
 		if (err != OK) {
 			return err;
 		}
@@ -179,7 +179,7 @@ Error StreamPeerGZIP::get_data(uint8_t *p_buffer, int p_bytes) {
 Error StreamPeerGZIP::get_partial_data(uint8_t *p_buffer, int p_bytes, int &r_received) {
 	ERR_FAIL_COND_V(p_bytes < 0, ERR_INVALID_PARAMETER);
 
-	r_received = MIN(p_bytes, rb.data_left());
+	r_received = Math::min(p_bytes, rb.data_left());
 	if (r_received == 0) {
 		return OK;
 	}

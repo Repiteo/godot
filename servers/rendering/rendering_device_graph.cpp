@@ -352,7 +352,7 @@ void RenderingDeviceGraph::_add_command_to_graph(ResourceTracker **p_resource_tr
 
 	if (r_command->type == RecordedCommand::TYPE_CAPTURE_TIMESTAMP) {
 		// All previous commands starting from the previous timestamp should be adjacent to this command.
-		int32_t start_command_index = uint32_t(MAX(command_timestamp_index, 0));
+		int32_t start_command_index = uint32_t(Math::max(command_timestamp_index, 0));
 		for (int32_t i = start_command_index; i < p_command_index; i++) {
 			_add_adjacent_command(i, p_command_index, r_command);
 		}
@@ -366,7 +366,7 @@ void RenderingDeviceGraph::_add_command_to_graph(ResourceTracker **p_resource_tr
 
 	if (command_synchronization_pending) {
 		// All previous commands should be adjacent to this command.
-		int32_t start_command_index = uint32_t(MAX(command_synchronization_index, 0));
+		int32_t start_command_index = uint32_t(Math::max(command_synchronization_index, 0));
 		for (int32_t i = start_command_index; i < p_command_index; i++) {
 			_add_adjacent_command(i, p_command_index, r_command);
 		}

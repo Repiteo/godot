@@ -206,7 +206,7 @@ void GraphNode::_resort() {
 	int stretch_diff = stretch_max - stretch_min;
 
 	// Avoid negative stretch space.
-	stretch_diff = MAX(stretch_diff, 0);
+	stretch_diff = Math::max(stretch_diff, 0);
 
 	available_stretch_space += stretch_diff - sb_panel->get_margin(SIDE_BOTTOM) - sb_panel->get_margin(SIDE_TOP) - titlebar_min_size.height - sb_titlebar->get_minimum_size().height;
 
@@ -959,7 +959,7 @@ Size2 GraphNode::get_minimum_size() const {
 		}
 
 		minsize.height += size.height;
-		minsize.width = MAX(minsize.width, size.width);
+		minsize.width = Math::max(minsize.width, size.width);
 
 		if (i > 0) {
 			minsize.height += separation;

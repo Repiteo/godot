@@ -453,7 +453,7 @@ Error AudioDriverWASAPI::audio_device_init(AudioDeviceWASAPI *p_device, bool p_i
 		if (Math::abs((int64_t)period_frames - (int64_t)desired_period_frames) > Math::abs((int64_t)(period_frames + fundamental_period_frames) - (int64_t)desired_period_frames)) {
 			period_frames = period_frames + fundamental_period_frames;
 		}
-		period_frames = CLAMP(period_frames, min_period_frames, max_period_frames);
+		period_frames = Math::clamp(period_frames, min_period_frames, max_period_frames);
 		print_verbose("WASAPI: fundamental_period_frames = " + itos(fundamental_period_frames));
 		print_verbose("WASAPI: min_period_frames = " + itos(min_period_frames));
 		print_verbose("WASAPI: max_period_frames = " + itos(max_period_frames));
@@ -776,7 +776,7 @@ void AudioDriverWASAPI::thread_func(void *p_udata) {
 			hr = ad->audio_output.audio_client->GetCurrentPadding(&cur_frames);
 			if (hr == S_OK) {
 				// Check how much frames are available on the WASAPI buffer
-				UINT32 write_frames = MIN(buffer_size - cur_frames, avail_frames);
+				UINT32 write_frames = Math::min(buffer_size - cur_frames, avail_frames);
 				if (write_frames > 0) {
 					BYTE *buffer = nullptr;
 					hr = ad->audio_output.render_client->GetBuffer(write_frames, &buffer);
@@ -801,7 +801,7 @@ void AudioDriverWASAPI::thread_func(void *p_udata) {
 							}
 						} else {
 							for (unsigned int i = 0; i < write_frames; i++) {
-								for (unsigned int j = 0; j < MIN(ad->channels, ad->audio_output.channels); j++) {
+								for (unsigned int j = 0; j < Math::min(ad->channels, ad->audio_output.channels); j++) {
 									ad->write_sample(ad->audio_output.format_tag, ad->audio_output.bits_per_sample, buffer, i * ad->audio_output.channels + j, ad->samples_in.write[write_ofs++]);
 								}
 								if (ad->audio_output.channels > ad->channels) {

@@ -226,8 +226,8 @@ void LightmapperRD::_sort_triangle_clusters(uint32_t p_cluster_size, uint32_t p_
 		}
 
 		uint32_t left_cluster_count = next_power_of_2(p_count / 2);
-		left_cluster_count = MAX(left_cluster_count, p_cluster_size);
-		left_cluster_count = MIN(left_cluster_count, p_count);
+		left_cluster_count = Math::max(left_cluster_count, p_cluster_size);
+		left_cluster_count = Math::min(left_cluster_count, p_count);
 		_sort_triangle_clusters(p_cluster_size, p_cluster_index, p_index_start, left_cluster_count, p_triangle_sort, p_cluster_aabb);
 
 		if (left_cluster_count < p_count) {
@@ -257,7 +257,7 @@ Lightmapper::BakeError LightmapperRD::_blit_meshes_into_atlas(int p_max_texture_
 	}
 
 	int max = nearest_power_of_2_templated(atlas_size.width);
-	max = MAX(max, nearest_power_of_2_templated(atlas_size.height));
+	max = Math::max(max, nearest_power_of_2_templated(atlas_size.height));
 
 	if (max > p_max_texture_size) {
 		return BAKE_ERROR_TEXTURE_EXCEEDS_MAX_SIZE;
@@ -395,7 +395,7 @@ void LightmapperRD::_create_acceleration_structures(RenderingDevice *rd, Size2i 
 
 	for (int m_i = 0; m_i < mesh_instances.size(); m_i++) {
 		if (p_step_function) {
-			float p = float(m_i + 1) / MAX(1, mesh_instances.size()) * 0.1;
+			float p = float(m_i + 1) / Math::max(1, mesh_instances.size()) * 0.1;
 			p_step_function(0.3 + p, vformat(RTR("Plotting mesh into acceleration structure %d/%d"), m_i + 1, mesh_instances.size()), p_bake_userdata, false);
 		}
 
@@ -491,9 +491,9 @@ void LightmapperRD::_create_acceleration_structures(RenderingDevice *rd, Size2i 
 			t.min_bounds[0] = taabb.position.x;
 			t.min_bounds[1] = taabb.position.y;
 			t.min_bounds[2] = taabb.position.z;
-			t.max_bounds[0] = taabb.position.x + MAX(taabb.size.x, 0.0001);
-			t.max_bounds[1] = taabb.position.y + MAX(taabb.size.y, 0.0001);
-			t.max_bounds[2] = taabb.position.z + MAX(taabb.size.z, 0.0001);
+			t.max_bounds[0] = taabb.position.x + Math::max(taabb.size.x, 0.0001);
+			t.max_bounds[1] = taabb.position.y + Math::max(taabb.size.y, 0.0001);
+			t.max_bounds[2] = taabb.position.z + Math::max(taabb.size.z, 0.0001);
 
 			t.cull_mode = RS::CULL_MODE_BACK;
 
@@ -1016,8 +1016,8 @@ LightmapperRD::BakeError LightmapperRD::_denoise(RenderingDevice *p_rd, Ref<RDSh
 			for (int j = 0; j < y_regions; j++) {
 				int x = i * max_region_size;
 				int y = j * max_region_size;
-				int w = MIN((i + 1) * max_region_size, p_atlas_size.width) - x;
-				int h = MIN((j + 1) * max_region_size, p_atlas_size.height) - y;
+				int w = Math::min((i + 1) * max_region_size, p_atlas_size.width) - x;
+				int h = Math::min((j + 1) * max_region_size, p_atlas_size.height) - y;
 				p_push_constant.region_ofs[0] = x;
 				p_push_constant.region_ofs[1] = y;
 
@@ -1692,7 +1692,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 		} break;
 	}
 
-	push_constant.ray_count = CLAMP(push_constant.ray_count, 16u, 8192u);
+	push_constant.ray_count = Math::clamp(push_constant.ray_count, 16u, 8192u);
 
 	/* PRIMARY (direct) LIGHT PASS */
 	{
@@ -1753,8 +1753,8 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 				for (int j = 0; j < y_regions; j++) {
 					int x = i * max_region_size;
 					int y = j * max_region_size;
-					int w = MIN((i + 1) * max_region_size, atlas_size.width) - x;
-					int h = MIN((j + 1) * max_region_size, atlas_size.height) - y;
+					int w = Math::min((i + 1) * max_region_size, atlas_size.width) - x;
+					int h = Math::min((j + 1) * max_region_size, atlas_size.height) - y;
 
 					push_constant.region_ofs[0] = x;
 					push_constant.region_ofs[1] = y;
@@ -1888,8 +1888,8 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 				for (int j = 0; j < y_regions; j++) {
 					int x = i * max_region_size;
 					int y = j * max_region_size;
-					int w = MIN((i + 1) * max_region_size, atlas_size.width) - x;
-					int h = MIN((j + 1) * max_region_size, atlas_size.height) - y;
+					int w = Math::min((i + 1) * max_region_size, atlas_size.width) - x;
+					int h = Math::min((j + 1) * max_region_size, atlas_size.height) - y;
 
 					push_constant.region_ofs[0] = x;
 					push_constant.region_ofs[1] = y;
@@ -1903,7 +1903,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 						rd->compute_list_bind_uniform_set(compute_list, secondary_uniform_set, 1);
 
 						push_constant.ray_from = k * max_rays;
-						push_constant.ray_to = MIN((k + 1) * max_rays, int32_t(push_constant.ray_count));
+						push_constant.ray_to = Math::min((k + 1) * max_rays, int32_t(push_constant.ray_count));
 						rd->compute_list_set_push_constant(compute_list, &push_constant, sizeof(PushConstant));
 						rd->compute_list_dispatch(compute_list, group_size.x, group_size.y, group_size.z);
 
@@ -1999,7 +1999,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 			} break;
 		}
 
-		push_constant.ray_count = CLAMP(push_constant.ray_count, 16u, 8192u);
+		push_constant.ray_count = Math::clamp(push_constant.ray_count, 16u, 8192u);
 		push_constant.probe_count = probe_positions.size();
 
 		int max_rays = GLOBAL_GET("rendering/lightmapping/bake_performance/max_rays_per_probe_pass");
@@ -2012,7 +2012,7 @@ LightmapperRD::BakeError LightmapperRD::bake(BakeQuality p_quality, bool p_use_d
 			rd->compute_list_bind_uniform_set(compute_list, light_probe_uniform_set, 1);
 
 			push_constant.ray_from = i * max_rays;
-			push_constant.ray_to = MIN((i + 1) * max_rays, int32_t(push_constant.ray_count));
+			push_constant.ray_to = Math::min((i + 1) * max_rays, int32_t(push_constant.ray_count));
 			rd->compute_list_set_push_constant(compute_list, &push_constant, sizeof(PushConstant));
 			rd->compute_list_dispatch(compute_list, Math::division_round_up((int)probe_positions.size(), 64), 1, 1);
 

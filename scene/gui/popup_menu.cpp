@@ -229,7 +229,7 @@ Size2 PopupMenu::_get_contents_minimum_size() const {
 
 	float max_w = 0.0;
 	float icon_w = 0.0;
-	int check_w = MAX(theme_cache.checked->get_width(), theme_cache.radio_checked->get_width()) + theme_cache.h_separation;
+	int check_w = Math::max(theme_cache.checked->get_width(), theme_cache.radio_checked->get_width()) + theme_cache.h_separation;
 	int accel_max_w = 0;
 	bool has_check = false;
 
@@ -239,7 +239,7 @@ Size2 PopupMenu::_get_contents_minimum_size() const {
 
 		Size2 icon_size = _get_item_icon_size(i);
 		item_size.height = _get_item_height(i);
-		icon_w = MAX(icon_size.width, icon_w);
+		icon_w = Math::max(icon_size.width, icon_w);
 
 		item_size.width += items[i].indent * theme_cache.indent;
 
@@ -253,14 +253,14 @@ Size2 PopupMenu::_get_contents_minimum_size() const {
 		if (items[i].accel != Key::NONE || (items[i].shortcut.is_valid() && items[i].shortcut->has_valid_event())) {
 			int accel_w = theme_cache.h_separation * 2;
 			accel_w += items[i].accel_text_buf->get_size().x;
-			accel_max_w = MAX(accel_w, accel_max_w);
+			accel_max_w = Math::max(accel_w, accel_max_w);
 		}
 
 		if (items[i].submenu) {
 			item_size.width += theme_cache.submenu->get_width();
 		}
 
-		max_w = MAX(max_w, item_size.width);
+		max_w = Math::max(max_w, item_size.width);
 
 		minsize.height += item_size.height;
 	}
@@ -289,7 +289,7 @@ int PopupMenu::_get_item_height(int p_idx) const {
 	Size2 icon_size = _get_item_icon_size(p_idx);
 	int icon_height = icon_size.height;
 	if (items[p_idx].checkable_type && !items[p_idx].separator) {
-		icon_height = MAX(icon_height, MAX(theme_cache.checked->get_height(), theme_cache.radio_checked->get_height()));
+		icon_height = Math::max(icon_height, Math::max(theme_cache.checked->get_height(), theme_cache.radio_checked->get_height()));
 	}
 
 	int text_height = items[p_idx].text_buf->get_size().height;
@@ -299,10 +299,10 @@ int PopupMenu::_get_item_height(int p_idx) const {
 
 	int separator_height = 0;
 	if (items[p_idx].separator) {
-		separator_height = MAX(theme_cache.separator_style->get_minimum_size().height, MAX(theme_cache.labeled_separator_left->get_minimum_size().height, theme_cache.labeled_separator_right->get_minimum_size().height));
+		separator_height = Math::max(theme_cache.separator_style->get_minimum_size().height, Math::max(theme_cache.labeled_separator_left->get_minimum_size().height, theme_cache.labeled_separator_right->get_minimum_size().height));
 	}
 
-	return MAX(separator_height, MAX(text_height, icon_height));
+	return Math::max(separator_height, Math::max(text_height, icon_height));
 }
 
 int PopupMenu::_get_items_total_height() const {
@@ -803,7 +803,7 @@ void PopupMenu::_draw_items() {
 		}
 
 		Size2 icon_size = _get_item_icon_size(i);
-		icon_ofs = MAX(icon_size.width, icon_ofs);
+		icon_ofs = Math::max(icon_size.width, icon_ofs);
 
 		if (items[i].checkable_type) {
 			has_check = true;
@@ -816,8 +816,8 @@ void PopupMenu::_draw_items() {
 	float check_ofs = 0.0;
 	if (has_check) {
 		for (int i = 0; i < 4; i++) {
-			check_ofs = MAX(check_ofs, check[i]->get_width());
-			check_ofs = MAX(check_ofs, uncheck[i]->get_width());
+			check_ofs = Math::max(check_ofs, check[i]->get_width());
+			check_ofs = Math::max(check_ofs, uncheck[i]->get_width());
 		}
 		check_ofs += theme_cache.h_separation;
 	}
@@ -856,12 +856,12 @@ void PopupMenu::_draw_items() {
 				if (content_left > item_ofs.x) {
 					int sep_h = theme_cache.labeled_separator_left->get_minimum_size().height;
 					int sep_ofs = Math::floor((h - sep_h) / 2.0);
-					theme_cache.labeled_separator_left->draw(ci, Rect2(item_ofs + Point2(0, sep_ofs), Size2(MAX(0, content_left - item_ofs.x), sep_h)));
+					theme_cache.labeled_separator_left->draw(ci, Rect2(item_ofs + Point2(0, sep_ofs), Size2(Math::max(0, content_left - item_ofs.x), sep_h)));
 				}
 				if (content_right < display_width) {
 					int sep_h = theme_cache.labeled_separator_right->get_minimum_size().height;
 					int sep_ofs = Math::floor((h - sep_h) / 2.0);
-					theme_cache.labeled_separator_right->draw(ci, Rect2(Point2(content_right, item_ofs.y + sep_ofs), Size2(MAX(0, display_width - content_right), sep_h)));
+					theme_cache.labeled_separator_right->draw(ci, Rect2(Point2(content_right, item_ofs.y + sep_ofs), Size2(Math::max(0, display_width - content_right), sep_h)));
 				}
 			} else {
 				int sep_h = theme_cache.separator_style->get_minimum_size().height;
@@ -1045,14 +1045,14 @@ void PopupMenu::_update_shadow_offsets() const {
 	// Offset the background panel so it leaves space inside the window for the shadows to be drawn.
 	const Point2 shadow_offset = sb->get_shadow_offset();
 	if (is_layout_rtl()) {
-		panel->set_offset(SIDE_LEFT, MAX(0, shadow_size + shadow_offset.x));
-		panel->set_offset(SIDE_RIGHT, MIN(0, -shadow_size + shadow_offset.x));
+		panel->set_offset(SIDE_LEFT, Math::max(0, shadow_size + shadow_offset.x));
+		panel->set_offset(SIDE_RIGHT, Math::min(0, -shadow_size + shadow_offset.x));
 	} else {
-		panel->set_offset(SIDE_LEFT, MAX(0, shadow_size - shadow_offset.x));
-		panel->set_offset(SIDE_RIGHT, MIN(0, -shadow_size - shadow_offset.x));
+		panel->set_offset(SIDE_LEFT, Math::max(0, shadow_size - shadow_offset.x));
+		panel->set_offset(SIDE_RIGHT, Math::min(0, -shadow_size - shadow_offset.x));
 	}
-	panel->set_offset(SIDE_TOP, MAX(0, shadow_size - shadow_offset.y));
-	panel->set_offset(SIDE_BOTTOM, MIN(0, -shadow_size - shadow_offset.y));
+	panel->set_offset(SIDE_TOP, Math::max(0, shadow_size - shadow_offset.y));
+	panel->set_offset(SIDE_BOTTOM, Math::min(0, -shadow_size - shadow_offset.y));
 }
 
 Rect2i PopupMenu::_popup_adjust_rect() const {
@@ -3221,7 +3221,7 @@ void PopupMenu::_pre_popup() {
 	if (c) {
 		scale *= c->get_global_transform_with_canvas().get_scale();
 	}
-	real_t popup_scale = MIN(scale.x, scale.y);
+	real_t popup_scale = Math::min(scale.x, scale.y);
 	set_content_scale_factor(popup_scale);
 	Size2 minsize = get_contents_minimum_size() * popup_scale;
 	minsize.height = Math::ceil(minsize.height); // Ensures enough height at fractional content scales to prevent the v_scroll_bar from showing.

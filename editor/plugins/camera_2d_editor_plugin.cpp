@@ -115,46 +115,46 @@ bool Camera2DEditor::forward_canvas_gui_input(const Ref<InputEvent> &p_event) {
 
 		switch (drag_type) {
 			case Drag::LEFT: {
-				selected_camera->set_limit(SIDE_LEFT, MIN(selected_camera->get_limit(SIDE_RIGHT), pos.x));
+				selected_camera->set_limit(SIDE_LEFT, Math::min(selected_camera->get_limit(SIDE_RIGHT), pos.x));
 				plugin->update_overlays();
 			} break;
 
 			case Drag::RIGHT: {
-				selected_camera->set_limit(SIDE_RIGHT, MAX(selected_camera->get_limit(SIDE_LEFT), pos.x));
+				selected_camera->set_limit(SIDE_RIGHT, Math::max(selected_camera->get_limit(SIDE_LEFT), pos.x));
 				plugin->update_overlays();
 			} break;
 
 			case Drag::TOP: {
-				selected_camera->set_limit(SIDE_TOP, MIN(selected_camera->get_limit(SIDE_BOTTOM), pos.y));
+				selected_camera->set_limit(SIDE_TOP, Math::min(selected_camera->get_limit(SIDE_BOTTOM), pos.y));
 				plugin->update_overlays();
 			} break;
 
 			case Drag::BOTTOM: {
-				selected_camera->set_limit(SIDE_BOTTOM, MAX(selected_camera->get_limit(SIDE_TOP), pos.y));
+				selected_camera->set_limit(SIDE_BOTTOM, Math::max(selected_camera->get_limit(SIDE_TOP), pos.y));
 				plugin->update_overlays();
 			} break;
 
 			case Drag::TOP_LEFT: {
-				selected_camera->set_limit(SIDE_LEFT, MIN(selected_camera->get_limit(SIDE_RIGHT), pos.x));
-				selected_camera->set_limit(SIDE_TOP, MIN(selected_camera->get_limit(SIDE_BOTTOM), pos.y));
+				selected_camera->set_limit(SIDE_LEFT, Math::min(selected_camera->get_limit(SIDE_RIGHT), pos.x));
+				selected_camera->set_limit(SIDE_TOP, Math::min(selected_camera->get_limit(SIDE_BOTTOM), pos.y));
 				plugin->update_overlays();
 			} break;
 
 			case Drag::TOP_RIGHT: {
-				selected_camera->set_limit(SIDE_RIGHT, MAX(selected_camera->get_limit(SIDE_LEFT), pos.x));
-				selected_camera->set_limit(SIDE_TOP, MIN(selected_camera->get_limit(SIDE_BOTTOM), pos.y));
+				selected_camera->set_limit(SIDE_RIGHT, Math::max(selected_camera->get_limit(SIDE_LEFT), pos.x));
+				selected_camera->set_limit(SIDE_TOP, Math::min(selected_camera->get_limit(SIDE_BOTTOM), pos.y));
 				plugin->update_overlays();
 			} break;
 
 			case Drag::BOTTOM_LEFT: {
-				selected_camera->set_limit(SIDE_LEFT, MIN(selected_camera->get_limit(SIDE_RIGHT), pos.x));
-				selected_camera->set_limit(SIDE_BOTTOM, MAX(selected_camera->get_limit(SIDE_TOP), pos.y));
+				selected_camera->set_limit(SIDE_LEFT, Math::min(selected_camera->get_limit(SIDE_RIGHT), pos.x));
+				selected_camera->set_limit(SIDE_BOTTOM, Math::max(selected_camera->get_limit(SIDE_TOP), pos.y));
 				plugin->update_overlays();
 			} break;
 
 			case Drag::BOTTOM_RIGHT: {
-				selected_camera->set_limit(SIDE_RIGHT, MAX(selected_camera->get_limit(SIDE_LEFT), pos.x));
-				selected_camera->set_limit(SIDE_BOTTOM, MAX(selected_camera->get_limit(SIDE_TOP), pos.y));
+				selected_camera->set_limit(SIDE_RIGHT, Math::max(selected_camera->get_limit(SIDE_LEFT), pos.x));
+				selected_camera->set_limit(SIDE_BOTTOM, Math::max(selected_camera->get_limit(SIDE_TOP), pos.y));
 				plugin->update_overlays();
 			} break;
 

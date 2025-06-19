@@ -724,8 +724,8 @@ String TextServer::tag_to_name(int64_t p_tag) const {
 
 Vector2 TextServer::get_hex_code_box_size(int64_t p_size, int64_t p_index) const {
 	int w = ((p_index <= 0xFF) ? 1 : ((p_index <= 0xFFFF) ? 2 : 3));
-	int sp = MAX(0, w - 1);
-	int sz = MAX(1, Math::round(p_size / 15.f));
+	int sp = Math::max(0, w - 1);
+	int sz = Math::max(1, Math::round(p_size / 15.f));
 
 	return Vector2(4 + 3 * w + sp + 1, 15) * sz;
 }
@@ -762,8 +762,8 @@ void TextServer::draw_hex_code_box(const RID &p_canvas, int64_t p_size, const Ve
 	}
 
 	int w = ((p_index <= 0xFF) ? 1 : ((p_index <= 0xFFFF) ? 2 : 3));
-	int sp = MAX(0, w - 1);
-	int sz = MAX(1, Math::round(p_size / 15.f));
+	int sp = Math::max(0, w - 1);
+	int sz = Math::max(1, Math::round(p_size / 15.f));
 
 	Size2 size = Vector2(4 + 3 * w + sp, 15) * sz;
 	Point2 pos = p_pos - Point2i(0, size.y * 0.85);
@@ -825,7 +825,7 @@ PackedInt32Array TextServer::shaped_text_get_line_breaks_adv(const RID &p_shaped
 	const Vector2i &range = shaped_text_get_range(p_shaped);
 
 	real_t width = 0.f;
-	int line_start = MAX(p_start, range.x);
+	int line_start = Math::max(p_start, range.x);
 	int last_end = line_start;
 	int prev_safe_break = 0;
 	int last_safe_break = -1;
@@ -862,7 +862,7 @@ PackedInt32Array TextServer::shaped_text_get_line_breaks_adv(const RID &p_shaped
 					break;
 				}
 			}
-			indent = MIN(indent, 0.6 * l_width);
+			indent = Math::min(indent, 0.6 * l_width);
 			prev_chunk = chunk;
 		}
 
@@ -997,7 +997,7 @@ PackedInt32Array TextServer::shaped_text_get_line_breaks_adv(const RID &p_shaped
 					lines.push_back(last_end);
 				}
 			} else {
-				lines.push_back(MAX(last_end, line_start));
+				lines.push_back(Math::max(last_end, line_start));
 			}
 			lines.push_back(range.y);
 		}
@@ -1016,7 +1016,7 @@ PackedInt32Array TextServer::shaped_text_get_line_breaks(const RID &p_shaped, do
 	const Vector2i &range = shaped_text_get_range(p_shaped);
 
 	double width = 0.f;
-	int line_start = MAX(p_start, range.x);
+	int line_start = Math::max(p_start, range.x);
 	int last_end = line_start;
 	int prev_safe_break = 0;
 	int last_safe_break = -1;
@@ -1047,7 +1047,7 @@ PackedInt32Array TextServer::shaped_text_get_line_breaks(const RID &p_shaped, do
 				break;
 			}
 		}
-		indent = MIN(indent, 0.6 * p_width);
+		indent = Math::min(indent, 0.6 * p_width);
 	}
 
 	double l_width = p_width;
@@ -1184,7 +1184,7 @@ PackedInt32Array TextServer::shaped_text_get_line_breaks(const RID &p_shaped, do
 					lines.push_back(last_end);
 				}
 			} else {
-				lines.push_back(MAX(last_end, line_start));
+				lines.push_back(Math::max(last_end, line_start));
 			}
 			lines.push_back(range.y);
 		}
@@ -1342,7 +1342,7 @@ CaretInfo TextServer::shaped_text_get_carets(const RID &p_shaped, int64_t p_posi
 						cr.size.y = char_adv;
 					}
 				}
-				cr.position.x += MAX(0.0, obj_off); // Prevent split caret when on an inline object.
+				cr.position.x += Math::max(0.0, obj_off); // Prevent split caret when on an inline object.
 				caret.l_caret = cr;
 			}
 			// Caret inside grapheme (middle).
@@ -1405,8 +1405,8 @@ TextServer::Direction TextServer::shaped_text_get_dominant_direction_in_range(co
 		return DIRECTION_AUTO;
 	}
 
-	int start = MIN(p_start, p_end);
-	int end = MAX(p_start, p_end);
+	int start = Math::min(p_start, p_end);
+	int end = Math::max(p_start, p_end);
 
 	int rtl = 0;
 	int ltr = 0;
@@ -1449,8 +1449,8 @@ Vector<Vector2> TextServer::shaped_text_get_selection(const RID &p_shaped, int64
 		return ranges;
 	}
 
-	int start = MIN(p_start, p_end);
-	int end = MAX(p_start, p_end);
+	int start = Math::min(p_start, p_end);
+	int end = Math::max(p_start, p_end);
 
 	int v_size = shaped_text_get_glyph_count(p_shaped);
 	const Glyph *glyphs = shaped_text_get_glyphs(p_shaped);

@@ -1262,7 +1262,7 @@ void SceneImportSettingsDialog::_viewport_input(const Ref<InputEvent> &p_input) 
 	if (mm.is_valid() && (mm->get_button_mask().has_flag(MouseButtonMask::LEFT))) {
 		(*rot_x) -= mm->get_relative().y * 0.01 * EDSCALE;
 		(*rot_y) -= mm->get_relative().x * 0.01 * EDSCALE;
-		(*rot_x) = CLAMP((*rot_x), -Math::PI / 2, Math::PI / 2);
+		(*rot_x) = Math::clamp((*rot_x), -Math::PI / 2, Math::PI / 2);
 		_update_camera();
 	}
 	if (mm.is_valid() && DisplayServer::get_singleton()->has_feature(DisplayServer::FEATURE_CURSOR_SHAPE)) {

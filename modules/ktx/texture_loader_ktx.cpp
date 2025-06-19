@@ -482,8 +482,8 @@ static Ref<Image> load_from_file_access(Ref<FileAccess> f, Error *r_error) {
 			mipmaps = 1;
 			break;
 		}
-		w = MAX(minw, w >> 1);
-		h = MAX(minh, h >> 1);
+		w = Math::max(minw, w >> 1);
+		h = Math::max(minh, h >> 1);
 	}
 
 	for (uint32_t i = 0; i < mipmaps; ++i) {

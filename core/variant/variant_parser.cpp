@@ -100,7 +100,7 @@ uint32_t VariantParser::StreamString::_read_buffer(char32_t *p_buffer, uint32_t 
 	ERR_FAIL_COND_V(!p_num_chars, 0);
 	ERR_FAIL_NULL_V(p_buffer, 0);
 
-	int available = MAX(s.length() - pos, 0);
+	int available = Math::max(s.length() - pos, 0);
 	if (available >= (int)p_num_chars) {
 		const char32_t *src = s.ptr();
 		src += pos;

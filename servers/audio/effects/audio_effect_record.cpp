@@ -209,7 +209,7 @@ Ref<AudioStreamWAV> AudioEffectRecord::get_recording() const {
 		uint8_t *w = dst_data.ptrw();
 
 		for (int i = 0; i < data_size; i++) {
-			int8_t v = CLAMP(current_instance->recording_data[i] * 128, -128, 127);
+			int8_t v = Math::clamp(current_instance->recording_data[i] * 128, -128, 127);
 			w[i] = v;
 		}
 	} else if (dst_format == AudioStreamWAV::FORMAT_16_BITS) {
@@ -218,7 +218,7 @@ Ref<AudioStreamWAV> AudioEffectRecord::get_recording() const {
 		uint8_t *w = dst_data.ptrw();
 
 		for (int i = 0; i < data_size; i++) {
-			int16_t v = CLAMP(current_instance->recording_data[i] * 32768, -32768, 32767);
+			int16_t v = Math::clamp(current_instance->recording_data[i] * 32768, -32768, 32767);
 			encode_uint16(v, &w[i * 2]);
 		}
 	} else if (dst_format == AudioStreamWAV::FORMAT_IMA_ADPCM) {

@@ -231,7 +231,7 @@ void Face3::get_support(const Vector3 &p_normal, const Transform3D &p_transform,
 
 	/** TEST FACE AS SUPPORT **/
 	if (get_plane().normal.dot(n) > face_support_threshold) {
-		*p_count = MIN(3, p_max);
+		*p_count = Math::min(3, p_max);
 
 		for (int i = 0; i < *p_count; i++) {
 			p_vertices[i] = p_transform.xform(vertex[i]);
@@ -265,7 +265,7 @@ void Face3::get_support(const Vector3 &p_normal, const Transform3D &p_transform,
 		real_t dot = (vertex[i] - vertex[(i + 1) % 3]).normalized().dot(n);
 		dot = Math::abs(dot);
 		if (dot < edge_support_threshold) {
-			*p_count = MIN(2, p_max);
+			*p_count = Math::min(2, p_max);
 
 			for (int j = 0; j < *p_count; j++) {
 				p_vertices[j] = p_transform.xform(vertex[(j + i) % 3]);
@@ -298,18 +298,18 @@ Vector3 Face3::get_closest_point_to(const Vector3 &p_point) const {
 		if (s < 0.f) {
 			if (t < 0.f) {
 				if (d < 0.f) {
-					s = CLAMP(-d / a, 0.f, 1.f);
+					s = Math::clamp(-d / a, 0.f, 1.f);
 					t = 0.f;
 				} else {
 					s = 0.f;
-					t = CLAMP(-e / c, 0.f, 1.f);
+					t = Math::clamp(-e / c, 0.f, 1.f);
 				}
 			} else {
 				s = 0.f;
-				t = CLAMP(-e / c, 0.f, 1.f);
+				t = Math::clamp(-e / c, 0.f, 1.f);
 			}
 		} else if (t < 0.f) {
-			s = CLAMP(-d / a, 0.f, 1.f);
+			s = Math::clamp(-d / a, 0.f, 1.f);
 			t = 0.f;
 		} else {
 			real_t invDet = 1.f / det;
@@ -323,26 +323,26 @@ Vector3 Face3::get_closest_point_to(const Vector3 &p_point) const {
 			if (tmp1 > tmp0) {
 				real_t numer = tmp1 - tmp0;
 				real_t denom = a - 2 * b + c;
-				s = CLAMP(numer / denom, 0.f, 1.f);
+				s = Math::clamp(numer / denom, 0.f, 1.f);
 				t = 1 - s;
 			} else {
-				t = CLAMP(-e / c, 0.f, 1.f);
+				t = Math::clamp(-e / c, 0.f, 1.f);
 				s = 0.f;
 			}
 		} else if (t < 0.f) {
 			if (a + d > b + e) {
 				real_t numer = c + e - b - d;
 				real_t denom = a - 2 * b + c;
-				s = CLAMP(numer / denom, 0.f, 1.f);
+				s = Math::clamp(numer / denom, 0.f, 1.f);
 				t = 1 - s;
 			} else {
-				s = CLAMP(-d / a, 0.f, 1.f);
+				s = Math::clamp(-d / a, 0.f, 1.f);
 				t = 0.f;
 			}
 		} else {
 			real_t numer = c + e - b - d;
 			real_t denom = a - 2 * b + c;
-			s = CLAMP(numer / denom, 0.f, 1.f);
+			s = Math::clamp(numer / denom, 0.f, 1.f);
 			t = 1.f - s;
 		}
 	}

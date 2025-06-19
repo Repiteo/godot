@@ -280,7 +280,7 @@ public:
 	virtual ExportMessageType get_worst_message_type() const {
 		ExportMessageType worst_type = EXPORT_MESSAGE_NONE;
 		for (int i = 0; i < messages.size(); i++) {
-			worst_type = MAX(worst_type, messages[i].msg_type);
+			worst_type = Math::max(worst_type, messages[i].msg_type);
 		}
 		return worst_type;
 	}

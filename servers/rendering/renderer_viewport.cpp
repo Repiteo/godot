@@ -213,8 +213,8 @@ void RendererViewport::_configure_3d_render_buffers(Viewport *p_viewport) {
 					// This prevents freezing the engine or outright crashing on lower-end GPUs.
 					target_width = p_viewport->size.width;
 					target_height = p_viewport->size.height;
-					render_width = CLAMP(target_width * scaling_3d_scale, 1, 16384);
-					render_height = CLAMP(target_height * scaling_3d_scale, 1, 16384);
+					render_width = Math::clamp(target_width * scaling_3d_scale, 1, 16384);
+					render_height = Math::clamp(target_height * scaling_3d_scale, 1, 16384);
 					break;
 				case RS::VIEWPORT_SCALING_3D_MODE_METALFX_SPATIAL:
 				case RS::VIEWPORT_SCALING_3D_MODE_METALFX_TEMPORAL:
@@ -222,8 +222,8 @@ void RendererViewport::_configure_3d_render_buffers(Viewport *p_viewport) {
 				case RS::VIEWPORT_SCALING_3D_MODE_FSR2:
 					target_width = p_viewport->size.width;
 					target_height = p_viewport->size.height;
-					render_width = MAX(target_width * scaling_3d_scale, 1.0); // target_width / (target_width * scaling)
-					render_height = MAX(target_height * scaling_3d_scale, 1.0);
+					render_width = Math::max(target_width * scaling_3d_scale, 1.0); // target_width / (target_width * scaling)
+					render_height = Math::max(target_height * scaling_3d_scale, 1.0);
 					break;
 				case RS::VIEWPORT_SCALING_3D_MODE_OFF:
 					target_width = p_viewport->size.width;
@@ -258,7 +258,7 @@ void RendererViewport::_configure_3d_render_buffers(Viewport *p_viewport) {
 
 			// At resolution scales lower than 1.0, use negative texture mipmap bias
 			// to compensate for the loss of sharpness.
-			const float texture_mipmap_bias = std::log2(MIN(scaling_3d_scale, 1.0)) + p_viewport->texture_mipmap_bias;
+			const float texture_mipmap_bias = std::log2(Math::min(scaling_3d_scale, 1.0)) + p_viewport->texture_mipmap_bias;
 
 			RenderSceneBuffersConfiguration rb_config;
 			rb_config.set_render_target(p_viewport->render_target);
@@ -296,7 +296,7 @@ void RendererViewport::_draw_3d(Viewport *p_viewport) {
 			int max_size = occlusion_rays_per_thread * WorkerThreadPool::get_singleton()->get_thread_count();
 
 			int viewport_size = p_viewport->size.width * p_viewport->size.height;
-			max_size = CLAMP(max_size, viewport_size / (32 * 32), viewport_size / (2 * 2)); // At least one depth pixel for every 16x16 region. At most one depth pixel for every 2x2 region.
+			max_size = Math::clamp(max_size, viewport_size / (32 * 32), viewport_size / (2 * 2)); // At least one depth pixel for every 16x16 region. At most one depth pixel for every 2x2 region.
 
 			float height = Math::sqrt(max_size / aspect);
 			Size2i new_size = Size2i(height * aspect, height);
@@ -1021,11 +1021,11 @@ void RendererViewport::viewport_set_scaling_3d_scale(RID p_viewport, float p_sca
 	// Clamp to reasonable values that are actually useful.
 	// Values above 2.0 don't serve a practical purpose since the viewport
 	// isn't displayed with mipmaps.
-	if (viewport->scaling_3d_scale == CLAMP(p_scaling_3d_scale, 0.1, 2.0)) {
+	if (viewport->scaling_3d_scale == Math::clamp(p_scaling_3d_scale, 0.1, 2.0)) {
 		return;
 	}
 
-	viewport->scaling_3d_scale = CLAMP(p_scaling_3d_scale, 0.1, 2.0);
+	viewport->scaling_3d_scale = Math::clamp(p_scaling_3d_scale, 0.1, 2.0);
 	_configure_3d_render_buffers(viewport);
 }
 

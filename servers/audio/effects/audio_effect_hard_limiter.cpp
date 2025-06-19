@@ -47,10 +47,10 @@ void AudioEffectHardLimiterInstance::process(const AudioFrame *p_src_frames, Aud
 		sample_left *= pre_gain;
 		sample_right *= pre_gain;
 
-		float largest_sample = MAX(Math::abs(sample_left), Math::abs(sample_right));
+		float largest_sample = Math::max(Math::abs(sample_left), Math::abs(sample_right));
 
-		release_factor = MAX(0.0, release_factor - 1.0 / sample_rate);
-		release_factor = MIN(release_factor, release);
+		release_factor = Math::max(0.0, release_factor - 1.0 / sample_rate);
+		release_factor = Math::min(release_factor, release);
 
 		if (release_factor > 0.0) {
 			gain = Math::lerp(gain_target, 1.0f, 1.0f - release_factor / release);
@@ -63,7 +63,7 @@ void AudioEffectHardLimiterInstance::process(const AudioFrame *p_src_frames, Aud
 		}
 
 		// Lerp gain over attack time to avoid distortion.
-		attack_factor = MAX(0.0f, attack_factor - 1.0f / sample_rate);
+		attack_factor = Math::max(0.0f, attack_factor - 1.0f / sample_rate);
 		if (attack_factor > 0.0) {
 			gain = Math::lerp(gain_target, gain, 1.0f - attack_factor / attack);
 		}
@@ -75,12 +75,12 @@ void AudioEffectHardLimiterInstance::process(const AudioFrame *p_src_frames, Aud
 			gain_buckets[bucket_id] = 1.0f;
 		}
 
-		gain_buckets[bucket_id] = MIN(gain_buckets[bucket_id], gain);
+		gain_buckets[bucket_id] = Math::min(gain_buckets[bucket_id], gain);
 
 		gain_bucket_cursor = (gain_bucket_cursor + 1) % gain_samples_to_store;
 
 		for (int j = 0; j < (int)gain_buckets.size(); j++) {
-			gain = MIN(gain, gain_buckets[j]);
+			gain = Math::min(gain, gain_buckets[j]);
 		}
 
 		// Introduce latency by grabbing the AudioFrame stored previously,

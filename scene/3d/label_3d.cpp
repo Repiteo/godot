@@ -265,7 +265,7 @@ Ref<TriangleMesh> Label3D::generate_triangle_mesh() const {
 	float max_line_w = 0.0;
 	for (int i = 0; i < lines_rid.size(); i++) {
 		total_h += TS->shaped_text_get_size(lines_rid[i]).y + line_spacing;
-		max_line_w = MAX(max_line_w, TS->shaped_text_get_width(lines_rid[i]));
+		max_line_w = Math::max(max_line_w, TS->shaped_text_get_width(lines_rid[i]));
 	}
 
 	float vbegin = 0;
@@ -532,7 +532,7 @@ void Label3D::_shape() {
 		float max_line_w = 0.0;
 		for (int i = 0; i < line_breaks.size(); i = i + 2) {
 			RID line = TS->shaped_text_substr(text_rid, line_breaks[i], line_breaks[i + 1] - line_breaks[i]);
-			max_line_w = MAX(max_line_w, TS->shaped_text_get_width(line));
+			max_line_w = Math::max(max_line_w, TS->shaped_text_get_width(line));
 			lines_rid.push_back(line);
 		}
 
@@ -625,13 +625,13 @@ void Label3D::_shape() {
 
 	switch (get_billboard_mode()) {
 		case StandardMaterial3D::BILLBOARD_ENABLED: {
-			real_t size_new = MAX(Math::abs(aabb.position.x), (aabb.position.x + aabb.size.x));
-			size_new = MAX(size_new, MAX(Math::abs(aabb.position.y), (aabb.position.y + aabb.size.y)));
+			real_t size_new = Math::max(Math::abs(aabb.position.x), (aabb.position.x + aabb.size.x));
+			size_new = Math::max(size_new, Math::max(Math::abs(aabb.position.y), (aabb.position.y + aabb.size.y)));
 			aabb.position = Vector3(-size_new, -size_new, -size_new);
 			aabb.size = Vector3(size_new * 2.0, size_new * 2.0, size_new * 2.0);
 		} break;
 		case StandardMaterial3D::BILLBOARD_FIXED_Y: {
-			real_t size_new = MAX(Math::abs(aabb.position.x), (aabb.position.x + aabb.size.x));
+			real_t size_new = Math::max(Math::abs(aabb.position.x), (aabb.position.x + aabb.size.x));
 			aabb.position.x = -size_new;
 			aabb.position.z = -size_new;
 			aabb.size.x = size_new * 2.0;

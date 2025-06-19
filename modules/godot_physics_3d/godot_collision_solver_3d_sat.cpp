@@ -482,7 +482,7 @@ static void _generate_contacts_circle_circle(const Vector3 *p_points_A, int p_po
 			real_t radius_b_sqr = circle_B_radius * circle_B_radius;
 			real_t d_sqr = proj_dist * proj_dist;
 			real_t s = (1.0 + (radius_a_sqr - radius_b_sqr) / d_sqr) * 0.5;
-			real_t h = Math::sqrt(MAX(radius_a_sqr - d_sqr * s * s, 0.0));
+			real_t h = Math::sqrt(Math::max(radius_a_sqr - d_sqr * s * s, 0.0));
 			Vector3 midpoint = circle_A_pos + s * comp_proj * proj_dist;
 			Vector3 h_vec = h * circle_A_normal.cross(comp_proj);
 
@@ -847,9 +847,9 @@ static void _collision_sphere_box(const GodotShape3D *p_a, const Transform3D &p_
 
 	Vector3 center = p_transform_b.affine_inverse().xform(p_transform_a.origin);
 	Vector3 extents = box_B->get_half_extents();
-	Vector3 nearest(MIN(MAX(center.x, -extents.x), extents.x),
-			MIN(MAX(center.y, -extents.y), extents.y),
-			MIN(MAX(center.z, -extents.z), extents.z));
+	Vector3 nearest(Math::min(Math::max(center.x, -extents.x), extents.x),
+			Math::min(Math::max(center.y, -extents.y), extents.y),
+			Math::min(Math::max(center.z, -extents.z), extents.z));
 	nearest = p_transform_b.xform(nearest);
 
 	// See if it is inside the sphere.
@@ -917,7 +917,7 @@ static void analytic_sphere_cylinder_collision(real_t p_radius_a, real_t p_radiu
 		nearest.z *= scale;
 	}
 	real_t half_height = p_height_b / 2;
-	nearest.y = MIN(MAX(center.y, -half_height), half_height);
+	nearest.y = Math::min(Math::max(center.y, -half_height), half_height);
 	nearest = p_transform_b.xform(nearest);
 
 	// See if it is inside the sphere.

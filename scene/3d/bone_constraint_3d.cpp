@@ -301,7 +301,7 @@ double BoneConstraint3D::get_roll_angle(const Quaternion &p_rotation, const Vect
 	}
 
 	// Extract the angle.
-	double angle = 2.0 * Math::acos(CLAMP(roll_component.w, -1.0, 1.0));
+	double angle = 2.0 * Math::acos(Math::clamp(roll_component.w, -1.0, 1.0));
 
 	// Determine the sign.
 	double direction = (roll_component.x * roll_axis.x + roll_component.y * roll_axis.y + roll_component.z * roll_axis.z > 0) ? 1.0 : -1.0;

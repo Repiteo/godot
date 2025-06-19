@@ -240,11 +240,11 @@ bool GodotBodyPair2D::_test_ccd(real_t p_step, GodotBody2D *p_A, int p_shape_A, 
 }
 
 real_t combine_bounce(GodotBody2D *A, GodotBody2D *B) {
-	return CLAMP(A->get_bounce() + B->get_bounce(), 0, 1);
+	return Math::clamp(A->get_bounce() + B->get_bounce(), 0, 1);
 }
 
 real_t combine_friction(GodotBody2D *A, GodotBody2D *B) {
-	return Math::abs(MIN(A->get_friction(), B->get_friction()));
+	return Math::abs(Math::min(A->get_friction(), B->get_friction()));
 }
 
 bool GodotBodyPair2D::setup(real_t p_step) {
@@ -453,7 +453,7 @@ bool GodotBodyPair2D::pre_solve(real_t p_step) {
 		kTangent += inv_inertia_A * (c.rA.dot(c.rA) - rtA * rtA) + inv_inertia_B * (c.rB.dot(c.rB) - rtB * rtB);
 		c.mass_tangent = 1.0f / kTangent;
 
-		c.bias = -bias * inv_dt * MIN(0.0f, -depth + max_penetration);
+		c.bias = -bias * inv_dt * Math::min(0.0f, -depth + max_penetration);
 		c.depth = depth;
 
 		Vector2 P = c.acc_normal_impulse * c.normal + c.acc_tangent_impulse * tangent;
@@ -538,7 +538,7 @@ void GodotBodyPair2D::solve(real_t p_step) {
 
 		real_t jbn = (c.bias - vbn) * c.mass_normal;
 		real_t jbnOld = c.acc_bias_impulse;
-		c.acc_bias_impulse = MAX(jbnOld + jbn, 0.0f);
+		c.acc_bias_impulse = Math::max(jbnOld + jbn, 0.0f);
 
 		Vector2 jb = c.normal * (c.acc_bias_impulse - jbnOld);
 
@@ -558,7 +558,7 @@ void GodotBodyPair2D::solve(real_t p_step) {
 		if (Math::abs(-vbn + c.bias) > MIN_VELOCITY) {
 			real_t jbn_com = (-vbn + c.bias) / (inv_mass_A + inv_mass_B);
 			real_t jbnOld_com = c.acc_bias_impulse_center_of_mass;
-			c.acc_bias_impulse_center_of_mass = MAX(jbnOld_com + jbn_com, 0.0f);
+			c.acc_bias_impulse_center_of_mass = Math::max(jbnOld_com + jbn_com, 0.0f);
 
 			Vector2 jb_com = c.normal * (c.acc_bias_impulse_center_of_mass - jbnOld_com);
 
@@ -572,14 +572,14 @@ void GodotBodyPair2D::solve(real_t p_step) {
 
 		real_t jn = -(c.bounce + vn) * c.mass_normal;
 		real_t jnOld = c.acc_normal_impulse;
-		c.acc_normal_impulse = MAX(jnOld + jn, 0.0f);
+		c.acc_normal_impulse = Math::max(jnOld + jn, 0.0f);
 
 		real_t friction = combine_friction(A, B);
 
 		real_t jtMax = friction * c.acc_normal_impulse;
 		real_t jt = -vt * c.mass_tangent;
 		real_t jtOld = c.acc_tangent_impulse;
-		c.acc_tangent_impulse = CLAMP(jtOld + jt, -jtMax, jtMax);
+		c.acc_tangent_impulse = Math::clamp(jtOld + jt, -jtMax, jtMax);
 
 		Vector2 j = c.normal * (c.acc_normal_impulse - jnOld) + tangent * (c.acc_tangent_impulse - jtOld);
 

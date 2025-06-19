@@ -291,7 +291,7 @@ AnimationNode::NodeTimeInfo AnimationNode::_blend_node(Ref<AnimationNode> p_node
 	if (r_activity) {
 		*r_activity = 0;
 		for (int i = 0; i < blend_count; i++) {
-			*r_activity = MAX(*r_activity, Math::abs(blendw[i]));
+			*r_activity = Math::max(*r_activity, Math::abs(blendw[i]));
 		}
 	}
 

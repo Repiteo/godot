@@ -149,7 +149,7 @@ void GraphEditArranger::arrange_nodes() {
 		Vector<StringName> layer = layers[i];
 		for (int j = 0; j < layer.size(); j++) {
 			float current_node_size = Object::cast_to<GraphNode>(node_names[layer[j]])->get_size().x;
-			largest_node_size = MAX(largest_node_size, current_node_size);
+			largest_node_size = Math::max(largest_node_size, current_node_size);
 		}
 
 		for (int j = 0; j < layer.size(); j++) {
@@ -410,7 +410,7 @@ void GraphEditArranger::_calculate_inner_shifts(Dictionary &r_inner_shifts, cons
 
 			real_t s = (real_t)r_inner_shifts[u] + (pos_from.y - pos_to.y) / graph_edit->get_zoom();
 			r_inner_shifts[v] = s;
-			left = MIN(left, s);
+			left = Math::min(left, s);
 
 			u = v;
 			v = (StringName)r_align[v];
@@ -538,14 +538,14 @@ void GraphEditArranger::_place_block(const StringName &p_v, float p_delta, const
 				Vector2 predecessor_node_size = Object::cast_to<GraphNode>(r_node_name[predecessor])->get_size();
 				if (r_sink[p_v] != r_sink[u]) {
 					real_t sc = pos.y + (real_t)r_inner_shift[w] - predecessor_root_pos.y - (real_t)r_inner_shift[predecessor] - predecessor_node_size.y - p_delta;
-					r_shift[r_sink[u]] = MIN(sc, (real_t)r_shift[r_sink[u]]);
+					r_shift[r_sink[u]] = Math::min(sc, (real_t)r_shift[r_sink[u]]);
 				} else {
 					real_t sb = predecessor_root_pos.y + (real_t)r_inner_shift[predecessor] + predecessor_node_size.y - (real_t)r_inner_shift[w] + p_delta;
-					sb = MAX(sb, threshold);
+					sb = Math::max(sb, threshold);
 					if (initial) {
 						pos.y = sb;
 					} else {
-						pos.y = MAX(pos.y, sb);
+						pos.y = Math::max(pos.y, sb);
 					}
 					initial = false;
 				}

@@ -273,7 +273,7 @@ struct	GJK
 				}
 				/* Check for termination				*/
 				const real_t	omega=vec3_dot(m_ray,w)/rl;
-				alpha=MAX(omega,alpha);
+				alpha=Math::max(omega,alpha);
 				if(((rl-alpha)-(GJK_ACCURACY*rl))<=0)
 				{/* Return old simplex				*/
 					removevertice(m_simplices[m_current]);
@@ -759,7 +759,7 @@ struct	GJK
 					} else {
 						// Pick distance to edge a->b
 						const real_t a_dot_b = vec3_dot(a->w, b->w);
-						dist = Math::sqrt(MAX((a->w.length_squared() * b->w.length_squared() - a_dot_b * a_dot_b) / ba_l2, 0.0));
+						dist = Math::sqrt(Math::max((a->w.length_squared() * b->w.length_squared() - a_dot_b * a_dot_b) / ba_l2, 0.0));
 					}
 
 					return true;

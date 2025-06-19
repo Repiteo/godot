@@ -630,7 +630,7 @@ String OS_AppleEmbedded::get_system_font_path(const String &p_font_name, int p_w
 void OS_AppleEmbedded::vibrate_handheld(int p_duration_ms, float p_amplitude) {
 	if (apple_embedded->supports_haptic_engine()) {
 		if (p_amplitude > 0.0) {
-			p_amplitude = CLAMP(p_amplitude, 0.0, 1.0);
+			p_amplitude = Math::clamp(p_amplitude, 0.0, 1.0);
 		}
 
 		apple_embedded->vibrate_haptic_engine((float)p_duration_ms / 1000.f, p_amplitude);

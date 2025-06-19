@@ -59,18 +59,18 @@ Vector2 Triangle2::get_closest_point_to(const Vector2 &p_point) const {
 		if (s < 0.f) {
 			if (t < 0.f) {
 				if (d < 0.f) {
-					s = CLAMP(-d / a, 0.f, 1.f);
+					s = Math::clamp(-d / a, 0.f, 1.f);
 					t = 0.f;
 				} else {
 					s = 0.f;
-					t = CLAMP(-e / c, 0.f, 1.f);
+					t = Math::clamp(-e / c, 0.f, 1.f);
 				}
 			} else {
 				s = 0.f;
-				t = CLAMP(-e / c, 0.f, 1.f);
+				t = Math::clamp(-e / c, 0.f, 1.f);
 			}
 		} else if (t < 0.f) {
-			s = CLAMP(-d / a, 0.f, 1.f);
+			s = Math::clamp(-d / a, 0.f, 1.f);
 			t = 0.f;
 		} else {
 			real_t inv_det = 1.f / det;
@@ -84,26 +84,26 @@ Vector2 Triangle2::get_closest_point_to(const Vector2 &p_point) const {
 			if (tmp1 > tmp0) {
 				real_t numer = tmp1 - tmp0;
 				real_t denom = a - 2 * b + c;
-				s = CLAMP(numer / denom, 0.f, 1.f);
+				s = Math::clamp(numer / denom, 0.f, 1.f);
 				t = 1 - s;
 			} else {
-				t = CLAMP(-e / c, 0.f, 1.f);
+				t = Math::clamp(-e / c, 0.f, 1.f);
 				s = 0.f;
 			}
 		} else if (t < 0.f) {
 			if (a + d > b + e) {
 				real_t numer = c + e - b - d;
 				real_t denom = a - 2 * b + c;
-				s = CLAMP(numer / denom, 0.f, 1.f);
+				s = Math::clamp(numer / denom, 0.f, 1.f);
 				t = 1 - s;
 			} else {
-				s = CLAMP(-d / a, 0.f, 1.f);
+				s = Math::clamp(-d / a, 0.f, 1.f);
 				t = 0.f;
 			}
 		} else {
 			real_t numer = c + e - b - d;
 			real_t denom = a - 2 * b + c;
-			s = CLAMP(numer / denom, 0.f, 1.f);
+			s = Math::clamp(numer / denom, 0.f, 1.f);
 			t = 1.f - s;
 		}
 	}

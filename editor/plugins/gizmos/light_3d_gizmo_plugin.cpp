@@ -122,7 +122,7 @@ void Light3DGizmoPlugin::set_handle(const EditorNode3DGizmo *p_gizmo, int p_id, 
 
 	} else if (p_id == 1) {
 		float a = _find_closest_angle_to_half_pi_arc(s[0], s[1], light->get_param(Light3D::PARAM_RANGE), gt);
-		light->set_param(Light3D::PARAM_SPOT_ANGLE, CLAMP(a, 0.01, 89.99));
+		light->set_param(Light3D::PARAM_SPOT_ANGLE, Math::clamp(a, 0.01, 89.99));
 	}
 }
 

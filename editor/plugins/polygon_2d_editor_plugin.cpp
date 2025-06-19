@@ -887,7 +887,7 @@ void Polygon2DEditor::_canvas_input(const Ref<InputEvent> &p_input) {
 
 					for (int i = 0; i < pc; i++) {
 						if (mtx.xform(rv[i]).distance_to(bone_paint_pos) < radius) {
-							w[i] = CLAMP(r[i] + amount, 0, 1);
+							w[i] = Math::clamp(r[i] + amount, 0, 1);
 						}
 					}
 				}
@@ -928,7 +928,7 @@ void Polygon2DEditor::_center_view() {
 	if (node->get_texture().is_valid()) {
 		texture_size = node->get_texture()->get_size();
 		Vector2 zoom_factor = (canvas->get_size() - Vector2(1, 1) * 50 * EDSCALE) / texture_size;
-		zoom_widget->set_zoom(MIN(zoom_factor.x, zoom_factor.y));
+		zoom_widget->set_zoom(Math::min(zoom_factor.x, zoom_factor.y));
 	} else {
 		zoom_widget->set_zoom(EDSCALE);
 	}

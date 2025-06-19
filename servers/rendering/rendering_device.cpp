@@ -482,7 +482,7 @@ Error RenderingDevice::buffer_update(RID p_buffer, uint32_t p_offset, uint32_t p
 		uint32_t block_write_amount;
 		StagingRequiredAction required_action;
 
-		Error err = _staging_buffer_allocate(upload_staging_buffers, MIN(to_submit, upload_staging_buffers.block_size), required_align, block_write_offset, block_write_amount, required_action);
+		Error err = _staging_buffer_allocate(upload_staging_buffers, Math::min(to_submit, upload_staging_buffers.block_size), required_align, block_write_offset, block_write_amount, required_action);
 		if (err) {
 			return err;
 		}
@@ -715,7 +715,7 @@ Error RenderingDevice::buffer_get_data_async(RID p_buffer, const Callable &p_cal
 	uint32_t to_submit = p_size;
 	uint32_t submit_from = 0;
 	while (to_submit > 0) {
-		Error err = _staging_buffer_allocate(download_staging_buffers, MIN(to_submit, download_staging_buffers.block_size), required_align, block_write_offset, block_write_amount, required_action);
+		Error err = _staging_buffer_allocate(download_staging_buffers, Math::min(to_submit, download_staging_buffers.block_size), required_align, block_write_offset, block_write_amount, required_action);
 		if (err) {
 			return err;
 		}
@@ -1299,9 +1299,9 @@ RID RenderingDevice::texture_create_shared_from_slice(const TextureView &p_view,
 		slice_range.base_layer = 0;
 
 		RDD::TextureFormat slice_format = texture.texture_format();
-		slice_format.width = MAX(texture.width >> p_mipmap, 1U);
-		slice_format.height = MAX(texture.height >> p_mipmap, 1U);
-		slice_format.depth = MAX(texture.depth >> p_mipmap, 1U);
+		slice_format.width = Math::max(texture.width >> p_mipmap, 1U);
+		slice_format.height = Math::max(texture.height >> p_mipmap, 1U);
+		slice_format.depth = Math::max(texture.depth >> p_mipmap, 1U);
 		slice_format.format = tv.format;
 		slice_format.usage_bits = TEXTURE_USAGE_SAMPLING_BIT | TEXTURE_USAGE_CAN_COPY_TO_BIT;
 
@@ -1511,8 +1511,8 @@ Error RenderingDevice::_texture_initialize(RID p_texture, uint32_t p_layer, cons
 			}
 
 			mipmap_offset = image_total;
-			logic_width = MAX(1u, logic_width >> 1);
-			logic_height = MAX(1u, logic_height >> 1);
+			logic_width = Math::max(1u, logic_width >> 1);
+			logic_height = Math::max(1u, logic_height >> 1);
 		}
 
 		if (copy_pass) {
@@ -1610,11 +1610,11 @@ Error RenderingDevice::texture_update(RID p_texture, uint32_t p_layer, const Vec
 			const uint8_t *read_ptr_mipmap_layer = read_ptr_mipmap + (tight_mip_size / depth) * z;
 			for (uint32_t y = 0; y < height; y += region_size) {
 				for (uint32_t x = 0; x < width; x += region_size) {
-					uint32_t region_w = MIN(region_size, width - x);
-					uint32_t region_h = MIN(region_size, height - y);
+					uint32_t region_w = Math::min(region_size, width - x);
+					uint32_t region_h = Math::min(region_size, height - y);
 
-					uint32_t region_logic_w = MIN(region_size, logic_width - x);
-					uint32_t region_logic_h = MIN(region_size, logic_height - y);
+					uint32_t region_logic_w = Math::min(region_size, logic_width - x);
+					uint32_t region_logic_h = Math::min(region_size, logic_height - y);
 
 					uint32_t region_pitch = (region_w * pixel_size * block_w) >> pixel_rshift;
 					uint32_t pitch_step = driver->api_trait_get(RDD::API_TRAIT_TEXTURE_DATA_ROW_PITCH_STEP);
@@ -1676,8 +1676,8 @@ Error RenderingDevice::texture_update(RID p_texture, uint32_t p_layer, const Vec
 		}
 
 		mipmap_offset = image_total;
-		logic_width = MAX(1u, logic_width >> 1);
-		logic_height = MAX(1u, logic_height >> 1);
+		logic_width = Math::max(1u, logic_width >> 1);
+		logic_height = Math::max(1u, logic_height >> 1);
 	}
 
 	if (_texture_make_mutable(texture, p_texture)) {
@@ -1808,9 +1808,9 @@ void RenderingDevice::_texture_copy_shared(RID p_src_texture_rid, Texture *p_src
 			get_data_region.texture_subresources.base_layer = p_dst_texture->base_layer;
 			get_data_region.texture_subresources.mipmap = mipmap;
 			get_data_region.texture_subresources.layer_count = p_dst_texture->layers;
-			get_data_region.texture_region_size.x = MAX(1U, p_src_texture->width >> mipmap);
-			get_data_region.texture_region_size.y = MAX(1U, p_src_texture->height >> mipmap);
-			get_data_region.texture_region_size.z = MAX(1U, p_src_texture->depth >> mipmap);
+			get_data_region.texture_region_size.x = Math::max(1U, p_src_texture->width >> mipmap);
+			get_data_region.texture_region_size.y = Math::max(1U, p_src_texture->height >> mipmap);
+			get_data_region.texture_region_size.z = Math::max(1U, p_src_texture->depth >> mipmap);
 			get_data_vector.push_back(get_data_region);
 
 			update_copy.from_buffer = shared_buffer;
@@ -1846,9 +1846,9 @@ void RenderingDevice::_texture_copy_shared(RID p_src_texture_rid, Texture *p_src
 			uint32_t mipmap = p_dst_texture->base_mipmap + i;
 			copy_region.src_subresources.mipmap = mipmap;
 			copy_region.dst_subresources.mipmap = i;
-			copy_region.size.x = MAX(1U, p_src_texture->width >> mipmap);
-			copy_region.size.y = MAX(1U, p_src_texture->height >> mipmap);
-			copy_region.size.z = MAX(1U, p_src_texture->depth >> mipmap);
+			copy_region.size.x = Math::max(1U, p_src_texture->width >> mipmap);
+			copy_region.size.y = Math::max(1U, p_src_texture->height >> mipmap);
+			copy_region.size.z = Math::max(1U, p_src_texture->depth >> mipmap);
 			region_vector.push_back(copy_region);
 		}
 
@@ -2003,9 +2003,9 @@ Vector<uint8_t> RenderingDevice::texture_get_data(RID p_texture, uint32_t p_laye
 			copy_region.texture_region_size.z = d;
 			command_buffer_texture_copy_regions_vector.push_back(copy_region);
 
-			w = MAX(1u, w >> 1);
-			h = MAX(1u, h >> 1);
-			d = MAX(1u, d >> 1);
+			w = Math::max(1u, w >> 1);
+			h = Math::max(1u, h >> 1);
+			d = Math::max(1u, d >> 1);
 		}
 
 		if (_texture_make_mutable(tex, p_texture)) {
@@ -2048,9 +2048,9 @@ Vector<uint8_t> RenderingDevice::texture_get_data(RID p_texture, uint32_t p_laye
 				wp += tight_row_pitch;
 			}
 
-			w = MAX(block_w, w >> 1);
-			h = MAX(block_h, h >> 1);
-			d = MAX(1u, d >> 1);
+			w = Math::max(block_w, w >> 1);
+			h = Math::max(block_h, h >> 1);
+			d = Math::max(1u, d >> 1);
 			read_ptr += mip_layouts[i].size;
 			write_ptr += tight_mip_size;
 		}
@@ -2125,13 +2125,13 @@ Error RenderingDevice::texture_get_data_async(RID p_texture, uint32_t p_layer, c
 		for (uint32_t z = 0; z < d; z++) {
 			for (uint32_t y = 0; y < h; y += region_size) {
 				for (uint32_t x = 0; x < w; x += region_size) {
-					uint32_t region_w = MIN(region_size, w - x);
-					uint32_t region_h = MIN(region_size, h - y);
+					uint32_t region_w = Math::min(region_size, w - x);
+					uint32_t region_h = Math::min(region_size, h - y);
 					ERR_FAIL_COND_V(region_w % block_w, ERR_BUG);
 					ERR_FAIL_COND_V(region_h % block_h, ERR_BUG);
 
-					uint32_t region_logic_w = MIN(region_size, logic_w - x);
-					uint32_t region_logic_h = MIN(region_size, logic_h - y);
+					uint32_t region_logic_w = Math::min(region_size, logic_w - x);
+					uint32_t region_logic_h = Math::min(region_size, logic_h - y);
 					uint32_t region_pitch = (region_w * pixel_size * block_w) >> pixel_rshift;
 					region_pitch = STEPIFY(region_pitch, pitch_step);
 
@@ -2173,8 +2173,8 @@ Error RenderingDevice::texture_get_data_async(RID p_texture, uint32_t p_layer, c
 		}
 
 		mipmap_offset = image_total;
-		logic_w = MAX(1u, logic_w >> 1);
-		logic_h = MAX(1u, logic_h >> 1);
+		logic_w = Math::max(1u, logic_w >> 1);
+		logic_h = Math::max(1u, logic_h >> 1);
 	}
 
 	if (get_data_request.frame_local_count > 0) {
@@ -3200,7 +3200,7 @@ RID RenderingDevice::vertex_array_create(uint32_t p_vertex_count, VertexFormatID
 						"Attachment (" + itos(i) + ") uses instancing, but it's just too small.");
 
 				uint32_t instances_allowed = available / atf.stride;
-				vertex_array.max_instances_allowed = MIN(instances_allowed, vertex_array.max_instances_allowed);
+				vertex_array.max_instances_allowed = Math::min(instances_allowed, vertex_array.max_instances_allowed);
 			}
 		}
 
@@ -3246,7 +3246,7 @@ RID RenderingDevice::index_buffer_create(uint32_t p_index_count, IndexBufferForm
 				if (p_use_restart_indices && index16[i] == 0xFFFF) {
 					continue; // Restart index, ignore.
 				}
-				index_buffer.max_index = MAX(index16[i], index_buffer.max_index);
+				index_buffer.max_index = Math::max(index16[i], index_buffer.max_index);
 			}
 		} else {
 			const uint32_t *index32 = (const uint32_t *)r;
@@ -3254,7 +3254,7 @@ RID RenderingDevice::index_buffer_create(uint32_t p_index_count, IndexBufferForm
 				if (p_use_restart_indices && index32[i] == 0xFFFFFFFF) {
 					continue; // Restart index, ignore.
 				}
-				index_buffer.max_index = MAX(index32[i], index_buffer.max_index);
+				index_buffer.max_index = Math::max(index32[i], index_buffer.max_index);
 			}
 		}
 	} else {
@@ -4211,7 +4211,7 @@ bool RenderingDevice::compute_pipeline_is_valid(RID p_pipeline) {
 /****************/
 
 uint32_t RenderingDevice::_get_swap_chain_desired_count() const {
-	return MAX(2U, uint32_t(GLOBAL_GET_CACHED(uint32_t, "rendering/rendering_device/vsync/swapchain_image_count")));
+	return Math::max(2U, uint32_t(GLOBAL_GET_CACHED(uint32_t, "rendering/rendering_device/vsync/swapchain_image_count")));
 }
 
 Error RenderingDevice::screen_create(DisplayServer::WindowID p_screen) {
@@ -4537,7 +4537,7 @@ void RenderingDevice::draw_list_bind_render_pipeline(DrawListID p_list, RID p_re
 		// Shader changed, so descriptor sets may become incompatible.
 
 		uint32_t pcount = pipeline->set_formats.size(); // Formats count in this pipeline.
-		draw_list.state.set_count = MAX(draw_list.state.set_count, pcount);
+		draw_list.state.set_count = Math::max(draw_list.state.set_count, pcount);
 		const uint32_t *pformats = pipeline->set_formats.ptr(); // Pipeline set formats.
 
 		uint32_t first_invalid_set = UINT32_MAX; // All valid by default.
@@ -5129,7 +5129,7 @@ void RenderingDevice::compute_list_bind_compute_pipeline(ComputeListID p_list, R
 		// Shader changed, so descriptor sets may become incompatible.
 
 		uint32_t pcount = pipeline->set_formats.size(); // Formats count in this pipeline.
-		compute_list.state.set_count = MAX(compute_list.state.set_count, pcount);
+		compute_list.state.set_count = Math::max(compute_list.state.set_count, pcount);
 		const uint32_t *pformats = pipeline->set_formats.ptr(); // Pipeline set formats.
 
 		uint32_t first_invalid_set = UINT32_MAX; // All valid by default.
@@ -5654,7 +5654,7 @@ RenderingDevice::TransferWorker *RenderingDevice::_acquire_transfer_worker(uint3
 	}
 
 	uint32_t alignment_offset = _get_alignment_offset(transfer_worker->staging_buffer_size_in_use, p_required_align);
-	transfer_worker->max_transfer_size = MAX(transfer_worker->max_transfer_size, p_transfer_size);
+	transfer_worker->max_transfer_size = Math::max(transfer_worker->max_transfer_size, p_transfer_size);
 
 	uint32_t required_size = transfer_worker->staging_buffer_size_in_use + p_transfer_size + alignment_offset;
 	if (required_size > transfer_worker->staging_buffer_size_allocated) {
@@ -5672,7 +5672,7 @@ RenderingDevice::TransferWorker *RenderingDevice::_acquire_transfer_worker(uint3
 
 		// If the staging buffer can't fit the transfer, we recreate the buffer.
 		const uint32_t expected_buffer_size_minimum = 16 * 1024;
-		uint32_t expected_buffer_size = MAX(transfer_worker->max_transfer_size, expected_buffer_size_minimum);
+		uint32_t expected_buffer_size = Math::max(transfer_worker->max_transfer_size, expected_buffer_size_minimum);
 		if (expected_buffer_size > transfer_worker->staging_buffer_size_allocated) {
 			if (transfer_worker->staging_buffer.id != 0) {
 				driver->buffer_free(transfer_worker->staging_buffer);
@@ -5760,7 +5760,7 @@ void RenderingDevice::_check_transfer_worker_operation(uint32_t p_transfer_worke
 	TransferWorker *transfer_worker = transfer_worker_pool[p_transfer_worker_index];
 	MutexLock lock(transfer_worker->operations_mutex);
 	uint64_t &dst_operation = transfer_worker_operation_used_by_draw[transfer_worker->index];
-	dst_operation = MAX(dst_operation, p_transfer_worker_operation);
+	dst_operation = Math::max(dst_operation, p_transfer_worker_operation);
 }
 
 void RenderingDevice::_check_transfer_worker_buffer(Buffer *p_buffer) {
@@ -6594,8 +6594,8 @@ void RenderingDevice::_stall_for_frame(uint32_t p_frame) {
 					const RDD::BufferTextureCopyRegion &region = frames[p_frame].download_buffer_texture_copy_regions[local_index];
 					uint32_t w = STEPIFY(request.width >> region.texture_subresources.mipmap, block_w);
 					uint32_t h = STEPIFY(request.height >> region.texture_subresources.mipmap, block_h);
-					uint32_t region_w = MIN(region_size, w - region.texture_offset.x);
-					uint32_t region_h = MIN(region_size, h - region.texture_offset.y);
+					uint32_t region_w = Math::min(region_size, w - region.texture_offset.x);
+					uint32_t region_h = Math::min(region_size, h - region.texture_offset.y);
 					uint32_t region_pitch = (region_w * pixel_size * block_w) >> pixel_rshift;
 					region_pitch = STEPIFY(region_pitch, pitch_step);
 
@@ -6683,7 +6683,7 @@ Error RenderingDevice::initialize(RenderingContextDriver *p_context, DisplayServ
 
 	uint32_t frame_count = 1;
 	if (main_surface != 0) {
-		frame_count = MAX(2U, uint32_t(GLOBAL_GET("rendering/rendering_device/vsync/frame_queue_size")));
+		frame_count = Math::max(2U, uint32_t(GLOBAL_GET("rendering/rendering_device/vsync/frame_queue_size")));
 	}
 
 	frame = 0;
@@ -6810,14 +6810,14 @@ Error RenderingDevice::initialize(RenderingContextDriver *p_context, DisplayServ
 
 	// Convert block size from KB.
 	upload_staging_buffers.block_size = GLOBAL_GET("rendering/rendering_device/staging_buffer/block_size_kb");
-	upload_staging_buffers.block_size = MAX(4u, upload_staging_buffers.block_size);
+	upload_staging_buffers.block_size = Math::max(4u, upload_staging_buffers.block_size);
 	upload_staging_buffers.block_size *= 1024;
 
 	// Convert staging buffer size from MB.
 	upload_staging_buffers.max_size = GLOBAL_GET("rendering/rendering_device/staging_buffer/max_size_mb");
-	upload_staging_buffers.max_size = MAX(1u, upload_staging_buffers.max_size);
+	upload_staging_buffers.max_size = Math::max(1u, upload_staging_buffers.max_size);
 	upload_staging_buffers.max_size *= 1024 * 1024;
-	upload_staging_buffers.max_size = MAX(upload_staging_buffers.max_size, upload_staging_buffers.block_size * 4);
+	upload_staging_buffers.max_size = Math::max(upload_staging_buffers.max_size, upload_staging_buffers.block_size * 4);
 
 	// Copy the sizes to the download staging buffers.
 	download_staging_buffers.block_size = upload_staging_buffers.block_size;

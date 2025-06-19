@@ -33,9 +33,9 @@
 Vector<Ref<Image>> Noise::_get_seamless_image(int p_width, int p_height, int p_depth, bool p_invert, bool p_in_3d_space, real_t p_blend_skirt, bool p_normalize) const {
 	ERR_FAIL_COND_V(p_width <= 0 || p_height <= 0 || p_depth <= 0, Vector<Ref<Image>>());
 
-	int skirt_width = MAX(1, p_width * p_blend_skirt);
-	int skirt_height = MAX(1, p_height * p_blend_skirt);
-	int skirt_depth = MAX(1, p_depth * p_blend_skirt);
+	int skirt_width = Math::max(1, p_width * p_blend_skirt);
+	int skirt_height = Math::max(1, p_height * p_blend_skirt);
+	int skirt_depth = Math::max(1, p_depth * p_blend_skirt);
 	int src_width = p_width + skirt_width;
 	int src_height = p_height + skirt_height;
 	int src_depth = p_depth + skirt_depth;
@@ -120,7 +120,7 @@ Vector<Ref<Image>> Noise::_get_image(int p_width, int p_height, int p_depth, boo
 					if (max_val == min_val) {
 						ivalue = 0;
 					} else {
-						ivalue = static_cast<uint8_t>(CLAMP((values[idx] - min_val) / (max_val - min_val) * 255.f, 0, 255));
+						ivalue = static_cast<uint8_t>(Math::clamp((values[idx] - min_val) / (max_val - min_val) * 255.f, 0, 255));
 					}
 
 					if (p_invert) {
@@ -148,7 +148,7 @@ Vector<Ref<Image>> Noise::_get_image(int p_width, int p_height, int p_depth, boo
 			for (int y = 0; y < p_height; y++) {
 				for (int x = 0; x < p_width; x++) {
 					float value = (p_in_3d_space ? get_noise_3d(x, y, d) : get_noise_2d(x, y));
-					ivalue = static_cast<uint8_t>(CLAMP(value * 127.5f + 127.5f, 0.0f, 255.0f));
+					ivalue = static_cast<uint8_t>(Math::clamp(value * 127.5f + 127.5f, 0.0f, 255.0f));
 					wd8[idx] = p_invert ? (255 - ivalue) : ivalue;
 					idx++;
 				}

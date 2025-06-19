@@ -253,7 +253,7 @@ RID AccessibilityDriverAccessKit::accessibility_create_sub_text_edit_elements(co
 
 	if (p_shaped_text.is_valid()) {
 		text_width = TS->shaped_text_get_size(p_shaped_text).x;
-		text_height = MAX(text_height, TS->shaped_text_get_size(p_shaped_text).y);
+		text_height = Math::max(text_height, TS->shaped_text_get_size(p_shaped_text).y);
 		words = TS->shaped_text_get_word_breaks(p_shaped_text);
 		run_count = TS->shaped_get_run_count(p_shaped_text);
 		gl = TS->shaped_text_get_glyphs(p_shaped_text);
@@ -265,7 +265,7 @@ RID AccessibilityDriverAccessKit::accessibility_create_sub_text_edit_elements(co
 	root_rect.x0 = 0;
 	root_rect.y0 = 0;
 	root_rect.x1 = text_width;
-	root_rect.y1 = MAX(p_min_height, text_height);
+	root_rect.y1 = Math::max(p_min_height, text_height);
 	accesskit_node_set_bounds(root_ae->node, root_rect);
 
 	// Create text element for each run.

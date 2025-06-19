@@ -458,11 +458,11 @@ float CreateDialog::_score_type(const String &p_type, const String &p_search) co
 	// Favor types where search term is a substring close to the start of the type.
 	float w = 0.5f;
 	int pos = type_name.findn(p_search);
-	float score = (pos > -1) ? 1.0f - w * MIN(1, 3 * pos * inverse_length) : MAX(0.f, .9f - w);
+	float score = (pos > -1) ? 1.0f - w * Math::min(1, 3 * pos * inverse_length) : Math::max(0.f, .9f - w);
 
 	// Favor shorter items: they resemble the search term more.
 	w = 0.9f;
-	score *= (1 - w) + w * MIN(1.0f, p_search.length() * inverse_length);
+	score *= (1 - w) + w * Math::min(1.0f, p_search.length() * inverse_length);
 
 	score *= _is_type_preferred(type_name) ? 1.0f : 0.9f;
 
@@ -472,7 +472,7 @@ float CreateDialog::_score_type(const String &p_type, const String &p_search) co
 	// Look through at most 5 recent items
 	bool in_recent = false;
 	constexpr int RECENT_COMPLETION_SIZE = 5;
-	for (int i = 0; i < MIN(RECENT_COMPLETION_SIZE - 1, recent->get_item_count()); i++) {
+	for (int i = 0; i < Math::min(RECENT_COMPLETION_SIZE - 1, recent->get_item_count()); i++) {
 		if (recent->get_item_text(i) == type_name) {
 			in_recent = true;
 			break;
@@ -509,7 +509,7 @@ void CreateDialog::_confirmed() {
 			f->store_line(selected_item);
 
 			constexpr int RECENT_HISTORY_SIZE = 15;
-			for (int i = 0; i < MIN(RECENT_HISTORY_SIZE - 1, recent->get_item_count()); i++) {
+			for (int i = 0; i < Math::min(RECENT_HISTORY_SIZE - 1, recent->get_item_count()); i++) {
 				if (recent->get_item_text(i) != selected_item) {
 					f->store_line(recent->get_item_text(i));
 				}

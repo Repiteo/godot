@@ -435,11 +435,11 @@ Dictionary PolygonPathFinder::_get_data() const {
 	Vector<Vector2> p;
 	Vector<int> ind;
 	Array path_connections;
-	p.resize(MAX(0, points.size() - 2));
-	path_connections.resize(MAX(0, points.size() - 2));
+	p.resize(Math::max(0, points.size() - 2));
+	path_connections.resize(Math::max(0, points.size() - 2));
 	ind.resize(edges.size() * 2);
 	Vector<real_t> penalties;
-	penalties.resize(MAX(0, points.size() - 2));
+	penalties.resize(Math::max(0, points.size() - 2));
 	{
 		Vector2 *wp = p.ptrw();
 		real_t *pw = penalties.ptrw();

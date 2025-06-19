@@ -161,7 +161,7 @@ bool Array::operator<(const Array &p_array) const {
 	int a_len = size();
 	int b_len = p_array.size();
 
-	int min_cmp = MIN(a_len, b_len);
+	int min_cmp = Math::min(a_len, b_len);
 
 	for (int i = 0; i < min_cmp; i++) {
 		if (operator[](i) < p_array[i]) {
@@ -567,11 +567,11 @@ Array Array::slice(int p_begin, int p_end, int p_step, bool p_deep) const {
 		return result;
 	}
 
-	int begin = CLAMP(p_begin, -s, s - 1);
+	int begin = Math::clamp(p_begin, -s, s - 1);
 	if (begin < 0) {
 		begin += s;
 	}
-	int end = CLAMP(p_end, -s - 1, s);
+	int end = Math::clamp(p_end, -s - 1, s);
 	if (end < 0) {
 		end += s;
 	}

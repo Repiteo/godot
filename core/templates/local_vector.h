@@ -170,7 +170,7 @@ public:
 			if (tight) {
 				capacity = p_size;
 			} else {
-				capacity = MAX((U)2, capacity + ((1 + capacity) >> 1));
+				capacity = Math::max((U)2, capacity + ((1 + capacity) >> 1));
 				if (p_size > capacity) {
 					capacity = p_size;
 				}

@@ -519,10 +519,10 @@ Array SurfaceTool::commit_to_arrays() {
 							const Vertex &v = vertex_array[idx];
 
 							const Color &c = v.custom[fmt];
-							w[idx * 4 + 0] = CLAMP(int32_t(c.r * 255.0), 0, 255);
-							w[idx * 4 + 1] = CLAMP(int32_t(c.g * 255.0), 0, 255);
-							w[idx * 4 + 2] = CLAMP(int32_t(c.b * 255.0), 0, 255);
-							w[idx * 4 + 3] = CLAMP(int32_t(c.a * 255.0), 0, 255);
+							w[idx * 4 + 0] = Math::clamp(int32_t(c.r * 255.0), 0, 255);
+							w[idx * 4 + 1] = Math::clamp(int32_t(c.g * 255.0), 0, 255);
+							w[idx * 4 + 2] = Math::clamp(int32_t(c.b * 255.0), 0, 255);
+							w[idx * 4 + 3] = Math::clamp(int32_t(c.a * 255.0), 0, 255);
 						}
 
 						a[i] = array;
@@ -536,10 +536,10 @@ Array SurfaceTool::commit_to_arrays() {
 							const Vertex &v = vertex_array[idx];
 
 							const Color &c = v.custom[fmt];
-							w[idx * 4 + 0] = uint8_t(int8_t(CLAMP(int32_t(c.r * 127.0), -128, 127)));
-							w[idx * 4 + 1] = uint8_t(int8_t(CLAMP(int32_t(c.g * 127.0), -128, 127)));
-							w[idx * 4 + 2] = uint8_t(int8_t(CLAMP(int32_t(c.b * 127.0), -128, 127)));
-							w[idx * 4 + 3] = uint8_t(int8_t(CLAMP(int32_t(c.a * 127.0), -128, 127)));
+							w[idx * 4 + 0] = uint8_t(int8_t(Math::clamp(int32_t(c.r * 127.0), -128, 127)));
+							w[idx * 4 + 1] = uint8_t(int8_t(Math::clamp(int32_t(c.g * 127.0), -128, 127)));
+							w[idx * 4 + 2] = uint8_t(int8_t(Math::clamp(int32_t(c.b * 127.0), -128, 127)));
+							w[idx * 4 + 3] = uint8_t(int8_t(Math::clamp(int32_t(c.a * 127.0), -128, 127)));
 						}
 
 						a[i] = array;

@@ -622,7 +622,7 @@ void WorkerThreadPool::notify_yield_over(TaskID p_task_id) {
 WorkerThreadPool::GroupID WorkerThreadPool::_add_group_task(const Callable &p_callable, void (*p_func)(void *, uint32_t), void *p_userdata, BaseTemplateUserdata *p_template_userdata, int p_elements, int p_tasks, bool p_high_priority, const String &p_description) {
 	ERR_FAIL_COND_V(p_elements < 0, INVALID_TASK_ID);
 	if (p_tasks < 0) {
-		p_tasks = MAX(1u, threads.size());
+		p_tasks = Math::max(1u, threads.size());
 	}
 
 	MutexLock<BinaryMutex> lock(task_mutex);
@@ -784,7 +784,7 @@ void WorkerThreadPool::init(int p_thread_count, float p_low_priority_task_ratio)
 		p_thread_count = OS::get_singleton()->get_default_thread_pool_size();
 	}
 
-	max_low_priority_threads = CLAMP(p_thread_count * p_low_priority_task_ratio, 1, p_thread_count - 1);
+	max_low_priority_threads = Math::clamp(p_thread_count * p_low_priority_task_ratio, 1, p_thread_count - 1);
 
 	print_verbose(vformat("WorkerThreadPool: %d threads, %d max low-priority.", p_thread_count, max_low_priority_threads));
 

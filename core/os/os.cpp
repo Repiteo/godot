@@ -675,7 +675,7 @@ uint64_t OS::get_frame_delay(bool p_can_draw) const {
 	const int max_fps = Engine::get_singleton()->get_max_fps();
 	if (max_fps > 0 && !Engine::get_singleton()->is_editor_hint()) {
 		// Override the low processor usage mode sleep delay if the target FPS is lower.
-		dynamic_delay = MAX(dynamic_delay, (uint64_t)(1000000 / max_fps));
+		dynamic_delay = Math::max(dynamic_delay, (uint64_t)(1000000 / max_fps));
 	}
 
 	return frame_delay + dynamic_delay;
@@ -700,7 +700,7 @@ void OS::add_frame_delay(bool p_can_draw, bool p_wake_for_events) {
 	const int max_fps = Engine::get_singleton()->get_max_fps();
 	if (max_fps > 0 && !Engine::get_singleton()->is_editor_hint()) {
 		// Override the low processor usage mode sleep delay if the target FPS is lower.
-		dynamic_delay = MAX(dynamic_delay, (uint64_t)(1000000 / max_fps));
+		dynamic_delay = Math::max(dynamic_delay, (uint64_t)(1000000 / max_fps));
 	}
 
 	if (dynamic_delay > 0) {
@@ -712,7 +712,7 @@ void OS::add_frame_delay(bool p_can_draw, bool p_wake_for_events) {
 		}
 
 		current_ticks = get_ticks_usec();
-		target_ticks = MIN(MAX(target_ticks, current_ticks - dynamic_delay), current_ticks + dynamic_delay);
+		target_ticks = Math::min(Math::max(target_ticks, current_ticks - dynamic_delay), current_ticks + dynamic_delay);
 	}
 }
 

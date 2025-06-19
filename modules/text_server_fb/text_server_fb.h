@@ -344,7 +344,7 @@ class TextServerFallback : public TextServerExtension {
 		if (p_font_data->msdf) {
 			return Vector2i(p_font_data->msdf_source_size * 64, 0);
 		} else if (p_font_data->fixed_size > 0) {
-			return Vector2i(p_font_data->fixed_size * 64, MIN(p_size.y, 1));
+			return Vector2i(p_font_data->fixed_size * 64, Math::min(p_size.y, 1));
 		} else {
 			return Vector2i(p_size.x * 64, p_size.y);
 		}

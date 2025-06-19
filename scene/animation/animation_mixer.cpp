@@ -1599,7 +1599,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 						} else {
 							value = Animation::cast_to_blendwise(value);
 							if (t->init_value.is_array()) {
-								t->element_size = MAX(t->element_size.operator int(), (value.operator Array()).size());
+								t->element_size = Math::max(t->element_size.operator int(), (value.operator Array()).size());
 							} else if (t->init_value.is_string()) {
 								real_t length = Animation::subtract_variant((real_t)(value.operator Array()).size(), (real_t)(t->init_value.operator String()).length());
 								t->element_size = Animation::blend_variant(t->element_size, length, blend);
@@ -1795,7 +1795,7 @@ void AnimationMixer::_blend_process(double p_delta, bool p_update_only) {
 								if (!is_external_seeking && ((!backward && Animation::is_greater_or_equal_approx(time, pos + end)) || (backward && Animation::is_less_or_equal_approx(time, pos + start)))) {
 									continue; // Do nothing if current time is outside of length when started.
 								}
-								at_anim_pos = MIN(end, time - pos); // Seek to end.
+								at_anim_pos = Math::min(end, time - pos); // Seek to end.
 							} break;
 							case Animation::LOOP_LINEAR: {
 								at_anim_pos = Math::fposmod(time - pos - start, end - start) + start; // Seek to loop.
@@ -2175,7 +2175,7 @@ void AnimationMixer::_build_backup_track_cache() {
 				t->use_continuous = true;
 				t->use_discrete = false;
 				if (t->init_value.is_array()) {
-					t->element_size = MAX(t->element_size.operator int(), (t->value.operator Array()).size());
+					t->element_size = Math::max(t->element_size.operator int(), (t->value.operator Array()).size());
 				} else if (t->init_value.is_string()) {
 					t->element_size = (real_t)(t->value.operator Array()).size();
 				}

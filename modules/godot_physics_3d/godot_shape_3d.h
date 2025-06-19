@@ -485,8 +485,8 @@ struct GodotMotionShape3D : public GodotShape3D {
 		ofsb.origin += cast;
 		shape->project_range(p_normal, p_transform, mina, maxa);
 		shape->project_range(p_normal, ofsb, minb, maxb);
-		r_min = MIN(mina, minb);
-		r_max = MAX(maxa, maxb);
+		r_min = Math::min(mina, minb);
+		r_max = Math::max(maxa, maxb);
 	}
 
 	virtual Vector3 get_support(const Vector3 &p_normal) const override {

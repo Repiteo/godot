@@ -45,7 +45,7 @@ Mutex SVGTexture::mutex;
 HashMap<double, SVGTexture::ScalingLevel> SVGTexture::scaling_levels;
 
 void SVGTexture::reference_scaling_level(double p_scale) {
-	uint32_t oversampling = CLAMP(p_scale, 0.1, 100.0) * 64;
+	uint32_t oversampling = Math::clamp(p_scale, 0.1, 100.0) * 64;
 	if (oversampling == 64) {
 		return;
 	}
@@ -62,7 +62,7 @@ void SVGTexture::reference_scaling_level(double p_scale) {
 }
 
 void SVGTexture::unreference_scaling_level(double p_scale) {
-	uint32_t oversampling = CLAMP(p_scale, 0.1, 100.0) * 64;
+	uint32_t oversampling = Math::clamp(p_scale, 0.1, 100.0) * 64;
 	if (oversampling == 64) {
 		return;
 	}
@@ -162,7 +162,7 @@ void SVGTexture::_remove_scale(double p_scale) {
 }
 
 RID SVGTexture::_ensure_scale(double p_scale) const {
-	uint32_t oversampling = CLAMP(p_scale, 0.1, 100.0) * 64;
+	uint32_t oversampling = Math::clamp(p_scale, 0.1, 100.0) * 64;
 	if (oversampling == 64) {
 		if (base_texture.is_null()) {
 			base_texture = _load_at_scale(p_scale, true);
@@ -328,8 +328,8 @@ bool SVGTexture::is_pixel_opaque(int p_x, int p_y) const {
 		int x = p_x * aw / size.x;
 		int y = p_y * ah / size.y;
 
-		x = CLAMP(x, 0, aw - 1);
-		y = CLAMP(y, 0, ah - 1);
+		x = Math::clamp(x, 0, aw - 1);
+		y = Math::clamp(y, 0, ah - 1);
 
 		return alpha_cache->get_bit(x, y);
 	}

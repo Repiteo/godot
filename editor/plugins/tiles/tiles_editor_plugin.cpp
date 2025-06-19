@@ -119,7 +119,7 @@ void TilesEditorUtils::_thread() {
 					}
 				}
 
-				Vector2 scale = thumbnail_size2 / MAX(encompassing_rect.size.x, encompassing_rect.size.y);
+				Vector2 scale = thumbnail_size2 / Math::max(encompassing_rect.size.x, encompassing_rect.size.y);
 				tile_map_layer->set_scale(scale);
 				tile_map_layer->set_position(-(scale * encompassing_rect.get_center()) + thumbnail_size2 / 2);
 

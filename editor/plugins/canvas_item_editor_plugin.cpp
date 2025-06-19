@@ -519,7 +519,7 @@ void CanvasItemEditor::shortcut_input(const Ref<InputEvent> &p_ev) {
 		if (k->is_pressed() && !k->is_command_or_control_pressed() && !k->is_echo() && (grid_snap_active || _is_grid_visible())) {
 			if (multiply_grid_step_shortcut.is_valid() && multiply_grid_step_shortcut->matches_event(p_ev)) {
 				// Multiply the grid size
-				grid_step_multiplier = MIN(grid_step_multiplier + 1, 12);
+				grid_step_multiplier = Math::min(grid_step_multiplier + 1, 12);
 				viewport->queue_redraw();
 			} else if (divide_grid_step_shortcut.is_valid() && divide_grid_step_shortcut->matches_event(p_ev)) {
 				// Divide the grid size
@@ -1127,7 +1127,7 @@ bool CanvasItemEditor::_gui_input_rulers_and_guides(const Ref<InputEvent> &p_eve
 			if (m.is_valid() && m->get_position().x < ruler_width_scaled) {
 				// Check if we are hovering an existing horizontal guide
 				for (int i = 0; i < hguides.size(); i++) {
-					if (Math::abs(xform.xform(Point2(0, hguides[i])).y - m->get_position().y) < MIN(minimum, 8)) {
+					if (Math::abs(xform.xform(Point2(0, hguides[i])).y - m->get_position().y) < Math::min(minimum, 8)) {
 						is_hovering_h_guide = true;
 						is_hovering_v_guide = false;
 						break;
@@ -1137,7 +1137,7 @@ bool CanvasItemEditor::_gui_input_rulers_and_guides(const Ref<InputEvent> &p_eve
 			} else if (m.is_valid() && m->get_position().y < ruler_width_scaled) {
 				// Check if we are hovering an existing vertical guide
 				for (int i = 0; i < vguides.size(); i++) {
-					if (Math::abs(xform.xform(Point2(vguides[i], 0)).x - m->get_position().x) < MIN(minimum, 8)) {
+					if (Math::abs(xform.xform(Point2(vguides[i], 0)).x - m->get_position().x) < Math::min(minimum, 8)) {
 						is_hovering_v_guide = true;
 						is_hovering_h_guide = false;
 						break;
@@ -1157,7 +1157,7 @@ bool CanvasItemEditor::_gui_input_rulers_and_guides(const Ref<InputEvent> &p_eve
 					// Check if we drag an existing horizontal guide
 					dragged_guide_index = -1;
 					for (int i = 0; i < hguides.size(); i++) {
-						if (Math::abs(xform.xform(Point2(0, hguides[i])).y - b->get_position().y) < MIN(minimum, 8)) {
+						if (Math::abs(xform.xform(Point2(0, hguides[i])).y - b->get_position().y) < Math::min(minimum, 8)) {
 							dragged_guide_index = i;
 						}
 					}
@@ -1174,7 +1174,7 @@ bool CanvasItemEditor::_gui_input_rulers_and_guides(const Ref<InputEvent> &p_eve
 					// Check if we drag an existing vertical guide
 					dragged_guide_index = -1;
 					for (int i = 0; i < vguides.size(); i++) {
-						if (Math::abs(xform.xform(Point2(vguides[i], 0)).x - b->get_position().x) < MIN(minimum, 8)) {
+						if (Math::abs(xform.xform(Point2(vguides[i], 0)).x - b->get_position().x) < Math::min(minimum, 8)) {
 							dragged_guide_index = i;
 						}
 					}
@@ -1867,16 +1867,16 @@ bool CanvasItemEditor::_gui_input_resize(const Ref<InputEvent> &p_event) {
 
 			// Horizontal resize
 			if (drag_type == DRAG_LEFT || drag_type == DRAG_TOP_LEFT || drag_type == DRAG_BOTTOM_LEFT) {
-				current_begin.x = MIN(drag_begin.x, max_begin.x);
+				current_begin.x = Math::min(drag_begin.x, max_begin.x);
 			} else if (drag_type == DRAG_RIGHT || drag_type == DRAG_TOP_RIGHT || drag_type == DRAG_BOTTOM_RIGHT) {
-				current_end.x = MAX(drag_end.x, min_end.x);
+				current_end.x = Math::max(drag_end.x, min_end.x);
 			}
 
 			// Vertical resize
 			if (drag_type == DRAG_TOP || drag_type == DRAG_TOP_LEFT || drag_type == DRAG_TOP_RIGHT) {
-				current_begin.y = MIN(drag_begin.y, max_begin.y);
+				current_begin.y = Math::min(drag_begin.y, max_begin.y);
 			} else if (drag_type == DRAG_BOTTOM || drag_type == DRAG_BOTTOM_LEFT || drag_type == DRAG_BOTTOM_RIGHT) {
-				current_end.y = MAX(drag_end.y, min_end.y);
+				current_end.y = Math::max(drag_end.y, min_end.y);
 			}
 
 			// Uniform resize
@@ -2579,7 +2579,7 @@ bool CanvasItemEditor::_gui_input_select(const Ref<InputEvent> &p_event) {
 		}
 		if (m.is_valid()) {
 			Point2 click = transform.affine_inverse().xform(m->get_position());
-			bool movement_threshold_passed = drag_start_origin.distance_to(click) > (8 * MAX(1, EDSCALE)) / zoom;
+			bool movement_threshold_passed = drag_start_origin.distance_to(click) > (8 * Math::max(1, EDSCALE)) / zoom;
 			if (m.is_valid() && movement_threshold_passed) {
 				List<CanvasItem *> selection2 = _get_edited_canvas_items();
 
@@ -3106,7 +3106,7 @@ void CanvasItemEditor::_draw_rulers() {
 		if (i % (major_subdivision * minor_subdivision) == 0) {
 			viewport->draw_line(Point2(position.x, 0), Point2(position.x, ruler_width_scaled), graduation_color, Math::round(EDSCALE));
 			real_t val = (ruler_transform * major_subdivide * minor_subdivide).xform(Point2(i, 0)).x;
-			viewport->draw_string(font, Point2(position.x + MAX(Math::round(ruler_font_size / 8.0), 2), font->get_ascent(ruler_font_size) + Math::round(EDSCALE)), TS->format_number(vformat(((int)val == val) ? "%d" : "%.1f", val)), HORIZONTAL_ALIGNMENT_LEFT, -1, ruler_font_size, font_color);
+			viewport->draw_string(font, Point2(position.x + Math::max(Math::round(ruler_font_size / 8.0), 2), font->get_ascent(ruler_font_size) + Math::round(EDSCALE)), TS->format_number(vformat(((int)val == val) ? "%d" : "%.1f", val)), HORIZONTAL_ALIGNMENT_LEFT, -1, ruler_font_size, font_color);
 		} else {
 			if (i % minor_subdivision == 0) {
 				viewport->draw_line(Point2(position.x, ruler_width_scaled * 0.33), Point2(position.x, ruler_width_scaled), graduation_color, Math::round(EDSCALE));
@@ -3246,8 +3246,8 @@ void CanvasItemEditor::_draw_ruler_tool() {
 		const float angle_text_width = 54;
 
 		Point2 text_pos = (begin + end) / 2 - Vector2(text_width / 2, text_height / 2);
-		text_pos.x = CLAMP(text_pos.x, text_width / 2, viewport->get_rect().size.x - text_width * 1.5);
-		text_pos.y = CLAMP(text_pos.y, text_height * 1.5, viewport->get_rect().size.y - text_height * 1.5);
+		text_pos.x = Math::clamp(text_pos.x, text_width / 2, viewport->get_rect().size.x - text_width * 1.5);
+		text_pos.y = Math::clamp(text_pos.y, text_height * 1.5, viewport->get_rect().size.y - text_height * 1.5);
 
 		// Draw lines.
 		viewport->draw_line(begin, end, ruler_primary_color, Math::round(EDSCALE * 3));
@@ -3271,14 +3271,14 @@ void CanvasItemEditor::_draw_ruler_tool() {
 					: (end_to_begin.y < 0 ? 3.0 * Math::PI / 2.0 : Math::PI / 2.0 - vertical_angle_rad);
 			real_t arc_1_end_angle = arc_1_start_angle + vertical_angle_rad;
 			// Constrain arc to triangle height & max size.
-			real_t arc_1_radius = MIN(MIN(arc_radius_max_length_percent * ruler_length, Math::abs(end_to_begin.y)), arc_max_radius);
+			real_t arc_1_radius = Math::min(Math::min(arc_radius_max_length_percent * ruler_length, Math::abs(end_to_begin.y)), arc_max_radius);
 
 			real_t arc_2_start_angle = end_to_begin.x < 0
 					? (end_to_begin.y < 0 ? 0.0 : -horizontal_angle_rad)
 					: (end_to_begin.y < 0 ? Math::PI - horizontal_angle_rad : Math::PI);
 			real_t arc_2_end_angle = arc_2_start_angle + horizontal_angle_rad;
 			// Constrain arc to triangle width & max size.
-			real_t arc_2_radius = MIN(MIN(arc_radius_max_length_percent * ruler_length, Math::abs(end_to_begin.x)), arc_max_radius);
+			real_t arc_2_radius = Math::min(Math::min(arc_radius_max_length_percent * ruler_length, Math::abs(end_to_begin.x)), arc_max_radius);
 
 			viewport->draw_arc(begin, arc_1_radius, arc_1_start_angle, arc_1_end_angle, arc_point_count, ruler_primary_color, Math::round(EDSCALE * arc_line_width));
 			viewport->draw_arc(end, arc_2_radius, arc_2_start_angle, arc_2_end_angle, arc_point_count, ruler_primary_color, Math::round(EDSCALE * arc_line_width));
@@ -3300,34 +3300,34 @@ void CanvasItemEditor::_draw_ruler_tool() {
 			const int vertical_angle = std::round(180 * vertical_angle_rad / Math::PI);
 
 			Point2 text_pos2 = text_pos;
-			text_pos2.x = begin.x < text_pos.x ? MIN(text_pos.x - text_width, begin.x - text_width / 2) : MAX(text_pos.x + text_width, begin.x - text_width / 2);
+			text_pos2.x = begin.x < text_pos.x ? Math::min(text_pos.x - text_width, begin.x - text_width / 2) : Math::max(text_pos.x + text_width, begin.x - text_width / 2);
 			viewport->draw_string_outline(font, text_pos2, TS->format_number(vformat("%.1f px", length_vector.y)), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_size, outline_color);
 			viewport->draw_string(font, text_pos2, TS->format_number(vformat("%.1f px", length_vector.y)), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, font_secondary_color);
 
 			Point2 v_angle_text_pos;
-			v_angle_text_pos.x = CLAMP(begin.x - angle_text_width / 2, angle_text_width / 2, viewport->get_rect().size.x - angle_text_width);
-			v_angle_text_pos.y = begin.y < end.y ? MIN(text_pos2.y - 2 * text_height, begin.y - text_height * 0.5) : MAX(text_pos2.y + text_height * 3, begin.y + text_height * 1.5);
+			v_angle_text_pos.x = Math::clamp(begin.x - angle_text_width / 2, angle_text_width / 2, viewport->get_rect().size.x - angle_text_width);
+			v_angle_text_pos.y = begin.y < end.y ? Math::min(text_pos2.y - 2 * text_height, begin.y - text_height * 0.5) : Math::max(text_pos2.y + text_height * 3, begin.y + text_height * 1.5);
 			viewport->draw_string_outline(font, v_angle_text_pos, TS->format_number(vformat(U"%d°", vertical_angle)), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_size, outline_color);
 			viewport->draw_string(font, v_angle_text_pos, TS->format_number(vformat(U"%d°", vertical_angle)), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, font_secondary_color);
 
 			text_pos2 = text_pos;
-			text_pos2.y = end.y < text_pos.y ? MIN(text_pos.y - text_height * 2, end.y - text_height / 2) : MAX(text_pos.y + text_height * 2, end.y - text_height / 2);
+			text_pos2.y = end.y < text_pos.y ? Math::min(text_pos.y - text_height * 2, end.y - text_height / 2) : Math::max(text_pos.y + text_height * 2, end.y - text_height / 2);
 			viewport->draw_string_outline(font, text_pos2, TS->format_number(vformat("%.1f px", length_vector.x)), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_size, outline_color);
 			viewport->draw_string(font, text_pos2, TS->format_number(vformat("%.1f px", length_vector.x)), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, font_secondary_color);
 
 			Point2 h_angle_text_pos;
-			h_angle_text_pos.x = CLAMP(end.x - angle_text_width / 2, angle_text_width / 2, viewport->get_rect().size.x - angle_text_width);
+			h_angle_text_pos.x = Math::clamp(end.x - angle_text_width / 2, angle_text_width / 2, viewport->get_rect().size.x - angle_text_width);
 			if (begin.y < end.y) {
 				h_angle_text_pos.y = end.y + text_height * 1.5;
 				if (Math::abs(text_pos2.x - h_angle_text_pos.x) < text_width) {
 					int height_multiplier = 1.5 + (int)grid_snap_active;
-					h_angle_text_pos.y = MAX(text_pos.y + height_multiplier * text_height, MAX(end.y + text_height * 1.5, text_pos2.y + height_multiplier * text_height));
+					h_angle_text_pos.y = Math::max(text_pos.y + height_multiplier * text_height, Math::max(end.y + text_height * 1.5, text_pos2.y + height_multiplier * text_height));
 				}
 			} else {
 				h_angle_text_pos.y = end.y - text_height * 0.5;
 				if (Math::abs(text_pos2.x - h_angle_text_pos.x) < text_width) {
 					int height_multiplier = 1 + (int)grid_snap_active;
-					h_angle_text_pos.y = MIN(text_pos.y - height_multiplier * text_height, MIN(end.y - text_height * 0.5, text_pos2.y - height_multiplier * text_height));
+					h_angle_text_pos.y = Math::min(text_pos.y - height_multiplier * text_height, Math::min(end.y - text_height * 0.5, text_pos2.y - height_multiplier * text_height));
 				}
 			}
 			viewport->draw_string_outline(font, h_angle_text_pos, TS->format_number(vformat(U"%d°", horizontal_angle)), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_size, outline_color);
@@ -3336,20 +3336,20 @@ void CanvasItemEditor::_draw_ruler_tool() {
 
 		if (grid_snap_active) {
 			text_pos = (begin + end) / 2 + Vector2(-text_width / 2, text_height / 2);
-			text_pos.x = CLAMP(text_pos.x, text_width / 2, viewport->get_rect().size.x - text_width * 1.5);
-			text_pos.y = CLAMP(text_pos.y, text_height * 2.5, viewport->get_rect().size.y - text_height / 2);
+			text_pos.x = Math::clamp(text_pos.x, text_width / 2, viewport->get_rect().size.x - text_width * 1.5);
+			text_pos.y = Math::clamp(text_pos.y, text_height * 2.5, viewport->get_rect().size.y - text_height / 2);
 
 			if (draw_secondary_lines) {
 				viewport->draw_string_outline(font, text_pos, TS->format_number(vformat("%.2f " + TTR("units"), (length_vector / grid_step).length())), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_size, outline_color);
 				viewport->draw_string(font, text_pos, TS->format_number(vformat("%.2f " + TTR("units"), (length_vector / grid_step).length())), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, font_color);
 
 				Point2 text_pos2 = text_pos;
-				text_pos2.x = begin.x < text_pos.x ? MIN(text_pos.x - text_width, begin.x - text_width / 2) : MAX(text_pos.x + text_width, begin.x - text_width / 2);
+				text_pos2.x = begin.x < text_pos.x ? Math::min(text_pos.x - text_width, begin.x - text_width / 2) : Math::max(text_pos.x + text_width, begin.x - text_width / 2);
 				viewport->draw_string_outline(font, text_pos2, TS->format_number(vformat("%d " + TTR("units"), std::round(length_vector.y / grid_step.y))), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_size, outline_color);
 				viewport->draw_string(font, text_pos2, TS->format_number(vformat("%d " + TTR("units"), std::round(length_vector.y / grid_step.y))), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, font_secondary_color);
 
 				text_pos2 = text_pos;
-				text_pos2.y = end.y < text_pos.y ? MIN(text_pos.y - text_height * 2, end.y + text_height / 2) : MAX(text_pos.y + text_height * 2, end.y + text_height / 2);
+				text_pos2.y = end.y < text_pos.y ? Math::min(text_pos.y - text_height * 2, end.y + text_height / 2) : Math::max(text_pos.y + text_height * 2, end.y + text_height / 2);
 				viewport->draw_string_outline(font, text_pos2, TS->format_number(vformat("%d " + TTR("units"), std::round(length_vector.x / grid_step.x))), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, outline_size, outline_color);
 				viewport->draw_string(font, text_pos2, TS->format_number(vformat("%d " + TTR("units"), std::round(length_vector.x / grid_step.x))), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, font_secondary_color);
 			} else {
@@ -3926,7 +3926,7 @@ void CanvasItemEditor::_draw_hover() {
 		Ref<Font> font = get_theme_font(SceneStringName(font), SNAME("Label"));
 		int font_size = get_theme_font_size(SceneStringName(font_size), SNAME("Label"));
 		Size2 node_name_size = font->get_string_size(node_name, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size);
-		Size2 item_size = Size2(icon_size.x + 4 + node_name_size.x, MAX(icon_size.y, node_name_size.y - 3));
+		Size2 item_size = Size2(icon_size.x + 4 + node_name_size.x, Math::max(icon_size.y, node_name_size.y - 3));
 
 		Point2 pos = transform.xform(hovering_results[i].position) - Point2(0, item_size.y) + (Point2(icon_size.x, -icon_size.y) / 4);
 		// Rectify the position to avoid overlapping items
@@ -4147,8 +4147,8 @@ void CanvasItemEditor::_update_editor_settings() {
 
 	// Compute the ruler width here so we can reuse the result throughout the various draw functions.
 	real_t ruler_width_unscaled = EDITOR_GET("editors/2d/ruler_width");
-	ruler_font_size = MAX(get_theme_font_size(SNAME("rulers_size"), EditorStringName(EditorFonts)) * ruler_width_unscaled / 15.0, 8);
-	ruler_width_scaled = MAX(ruler_width_unscaled * EDSCALE, ruler_font_size * 2.0);
+	ruler_font_size = Math::max(get_theme_font_size(SNAME("rulers_size"), EditorStringName(EditorFonts)) * ruler_width_unscaled / 15.0, 8);
+	ruler_width_scaled = Math::max(ruler_width_unscaled * EDSCALE, ruler_font_size * 2.0);
 }
 
 void CanvasItemEditor::_project_settings_changed() {
@@ -4342,8 +4342,8 @@ void CanvasItemEditor::_update_scrollbars() {
 		v_scroll->hide();
 	} else {
 		v_scroll->show();
-		v_scroll->set_min(MIN(view_offset.y, begin.y));
-		v_scroll->set_max(MAX(view_offset.y, end.y) + screen_rect.y);
+		v_scroll->set_min(Math::min(view_offset.y, begin.y));
+		v_scroll->set_max(Math::max(view_offset.y, end.y) + screen_rect.y);
 		v_scroll->set_page(screen_rect.y);
 	}
 
@@ -4351,8 +4351,8 @@ void CanvasItemEditor::_update_scrollbars() {
 		h_scroll->hide();
 	} else {
 		h_scroll->show();
-		h_scroll->set_min(MIN(view_offset.x, begin.x));
-		h_scroll->set_max(MAX(view_offset.x, end.x) + screen_rect.x);
+		h_scroll->set_min(Math::min(view_offset.x, begin.x));
+		h_scroll->set_max(Math::max(view_offset.x, end.x) + screen_rect.x);
 		h_scroll->set_page(screen_rect.x);
 	}
 
@@ -4386,7 +4386,7 @@ void CanvasItemEditor::_update_scroll(real_t) {
 }
 
 void CanvasItemEditor::_zoom_on_position(real_t p_zoom, Point2 p_position) {
-	p_zoom = CLAMP(p_zoom, zoom_widget->get_min_zoom(), zoom_widget->get_max_zoom());
+	p_zoom = Math::clamp(p_zoom, zoom_widget->get_min_zoom(), zoom_widget->get_max_zoom());
 
 	if (p_zoom == zoom) {
 		return;
@@ -4418,7 +4418,7 @@ void CanvasItemEditor::_update_zoom(real_t p_zoom) {
 }
 
 void CanvasItemEditor::_shortcut_zoom_set(real_t p_zoom) {
-	_zoom_on_position(p_zoom * MAX(1, EDSCALE), viewport->get_local_mouse_position());
+	_zoom_on_position(p_zoom * Math::max(1, EDSCALE), viewport->get_local_mouse_position());
 }
 
 void CanvasItemEditor::_button_toggle_smart_snap(bool p_status) {
@@ -4994,7 +4994,7 @@ void CanvasItemEditor::_bind_methods() {
 Dictionary CanvasItemEditor::get_state() const {
 	Dictionary state;
 	// Take the editor scale into account.
-	state["zoom"] = zoom / MAX(1, EDSCALE);
+	state["zoom"] = zoom / Math::max(1, EDSCALE);
 	state["ofs"] = view_offset;
 	state["grid_offset"] = grid_offset;
 	state["grid_step"] = grid_step;
@@ -5034,7 +5034,7 @@ void CanvasItemEditor::set_state(const Dictionary &p_state) {
 	if (state.has("zoom")) {
 		// Compensate the editor scale, so that the editor scale can be changed
 		// and the zoom level will still be the same (relative to the editor scale).
-		zoom = real_t(p_state["zoom"]) * MAX(1, EDSCALE);
+		zoom = real_t(p_state["zoom"]) * Math::max(1, EDSCALE);
 		zoom_widget->set_zoom(zoom);
 	}
 
@@ -5216,7 +5216,7 @@ void CanvasItemEditor::set_state(const Dictionary &p_state) {
 }
 
 void CanvasItemEditor::clear() {
-	zoom = 1.0 / MAX(1, EDSCALE);
+	zoom = 1.0 / Math::max(1, EDSCALE);
 	zoom_widget->set_zoom(zoom);
 
 	view_offset = Point2(-150 - ruler_width_scaled, -95 - ruler_width_scaled);

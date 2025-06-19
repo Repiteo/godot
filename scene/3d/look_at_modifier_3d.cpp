@@ -582,7 +582,7 @@ void LookAtModifier3D::_process_modification(double p_delta) {
 
 	// Do time-based interpolation.
 	if (remaining > 0) {
-		remaining = MAX(0, remaining - time_step * p_delta);
+		remaining = Math::max(0, remaining - time_step * p_delta);
 		if (is_flippable) {
 			// Interpolate through the rest same as AnimationTree blending for preventing to penetrate the bone into the body.
 			Quaternion rest = skeleton->get_bone_rest(bone).basis.get_rotation_quaternion();
@@ -663,13 +663,13 @@ float LookAtModifier3D::remap_damped(float p_from, float p_to, float p_damp_thre
 	float abs_value = Math::abs(p_value);
 
 	if (Math::is_equal_approx(p_damp_threshold, 1.0f) || Math::is_zero_approx(p_to)) {
-		return sign * CLAMP(abs_value, p_from, p_to); // Avoid division by zero.
+		return sign * Math::clamp(abs_value, p_from, p_to); // Avoid division by zero.
 	}
 
 	float value = Math::inverse_lerp(p_from, p_to, abs_value);
 
 	if (value <= p_damp_threshold) {
-		return sign * CLAMP(abs_value, p_from, p_to);
+		return sign * Math::clamp(abs_value, p_from, p_to);
 	}
 
 	double limit = Math::PI;

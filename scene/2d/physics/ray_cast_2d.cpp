@@ -236,7 +236,7 @@ void RayCast2D::_draw_debug_shape() {
 	const real_t max_arrow_size = 6;
 	const real_t line_width = 1.4;
 	bool no_line = target_position.length() < line_width;
-	real_t arrow_size = CLAMP(target_position.length() * 2 / 3, line_width, max_arrow_size);
+	real_t arrow_size = Math::clamp(target_position.length() * 2 / 3, line_width, max_arrow_size);
 
 	if (no_line) {
 		arrow_size = target_position.length();

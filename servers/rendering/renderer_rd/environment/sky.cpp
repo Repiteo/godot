@@ -304,8 +304,8 @@ void SkyRD::ReflectionData::update_reflection_data(int p_size, int p_mipmaps, bo
 
 				layer.views.write[j] = RD::get_singleton()->texture_create_shared_from_slice(RD::TextureView(), p_base_cube, p_base_layer + i * 6, j, 1, RD::TEXTURE_SLICE_CUBEMAP);
 
-				mmw = MAX(1u, mmw >> 1);
-				mmh = MAX(1u, mmh >> 1);
+				mmw = Math::max(1u, mmw >> 1);
+				mmh = Math::max(1u, mmh >> 1);
 			}
 
 			layers.push_back(layer);
@@ -332,8 +332,8 @@ void SkyRD::ReflectionData::update_reflection_data(int p_size, int p_mipmaps, bo
 
 			layer.views.write[j] = RD::get_singleton()->texture_create_shared_from_slice(RD::TextureView(), p_base_cube, p_base_layer, j, 1, RD::TEXTURE_SLICE_CUBEMAP);
 
-			mmw = MAX(1u, mmw >> 1);
-			mmh = MAX(1u, mmh >> 1);
+			mmw = Math::max(1u, mmw >> 1);
+			mmh = Math::max(1u, mmh >> 1);
 		}
 
 		layers.push_back(layer);
@@ -378,8 +378,8 @@ void SkyRD::ReflectionData::update_reflection_data(int p_size, int p_mipmaps, bo
 				}
 			}
 
-			mmw = MAX(1u, mmw >> 1);
-			mmh = MAX(1u, mmh >> 1);
+			mmw = Math::max(1u, mmw >> 1);
+			mmh = Math::max(1u, mmh >> 1);
 		}
 	}
 }
@@ -1627,7 +1627,7 @@ void SkyRD::update_dirty_skys() {
 				tf.array_layers = 6;
 				tf.format = texture_format;
 				tf.texture_type = RD::TEXTURE_TYPE_CUBE;
-				tf.mipmaps = MIN(mipmaps, layers);
+				tf.mipmaps = Math::min(mipmaps, layers);
 				tf.width = w;
 				tf.height = h;
 				tf.usage_bits = RD::TEXTURE_USAGE_COLOR_ATTACHMENT_BIT | RD::TEXTURE_USAGE_SAMPLING_BIT;
@@ -1637,7 +1637,7 @@ void SkyRD::update_dirty_skys() {
 
 				sky->radiance = RD::get_singleton()->texture_create(tf, RD::TextureView());
 
-				sky->reflection.update_reflection_data(sky->radiance_size, MIN(mipmaps, layers), false, sky->radiance, 0, sky->mode == RS::SKY_MODE_REALTIME, roughness_layers, texture_format);
+				sky->reflection.update_reflection_data(sky->radiance_size, Math::min(mipmaps, layers), false, sky->radiance, 0, sky->mode == RS::SKY_MODE_REALTIME, roughness_layers, texture_format);
 			}
 		}
 

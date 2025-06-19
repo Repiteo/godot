@@ -515,7 +515,7 @@ bool GodotPhysicsDirectSpaceState3D::rest_info(const ShapeParameters &p_paramete
 	GodotShape3D *shape = GodotPhysicsServer3D::godot_singleton->shape_owner.get_or_null(p_parameters.shape_rid);
 	ERR_FAIL_NULL_V(shape, false);
 
-	real_t margin = MAX(p_parameters.margin, TEST_MOTION_MARGIN_MIN_VALUE);
+	real_t margin = Math::max(p_parameters.margin, TEST_MOTION_MARGIN_MIN_VALUE);
 
 	AABB aabb = p_parameters.transform.xform(shape->get_aabb());
 	aabb = aabb.grow(margin);
@@ -527,7 +527,7 @@ bool GodotPhysicsDirectSpaceState3D::rest_info(const ShapeParameters &p_paramete
 	// Allowed depth can't be lower than motion length, in order to handle contacts at low speed.
 	real_t motion_length = p_parameters.motion.length();
 	real_t min_contact_depth = margin * TEST_MOTION_MIN_CONTACT_DEPTH_FACTOR;
-	rcd.min_allowed_depth = MIN(motion_length, min_contact_depth);
+	rcd.min_allowed_depth = Math::min(motion_length, min_contact_depth);
 
 	for (int i = 0; i < amount; i++) {
 		if (!_can_collide_with(space->intersection_query_results[i], p_parameters.collision_mask, p_parameters.collide_with_bodies, p_parameters.collide_with_areas)) {
@@ -687,7 +687,7 @@ bool GodotSpace3D::test_body_motion(GodotBody3D *p_body, const PhysicsServer3D::
 		return false;
 	}
 
-	real_t margin = MAX(p_parameters.margin, TEST_MOTION_MARGIN_MIN_VALUE);
+	real_t margin = Math::max(p_parameters.margin, TEST_MOTION_MARGIN_MIN_VALUE);
 
 	// Undo the currently transform the physics server is aware of and apply the provided one
 	body_aabb = p_parameters.from.xform(p_body->get_inv_transform().xform(body_aabb));
@@ -943,7 +943,7 @@ bool GodotSpace3D::test_body_motion(GodotBody3D *p_body, const PhysicsServer3D::
 		}
 
 		// Allowed depth can't be lower than motion length, in order to handle contacts at low speed.
-		rcd.min_allowed_depth = MIN(motion_length, min_contact_depth);
+		rcd.min_allowed_depth = Math::min(motion_length, min_contact_depth);
 
 		body_aabb.position += p_parameters.motion * unsafe;
 		int amount = _cull_aabb_for_body(p_body, body_aabb);

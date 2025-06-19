@@ -86,7 +86,7 @@ bool GodotCollisionSolver2D::solve_separation_ray(const GodotShape2D *p_shape_A,
 	if (p_motion_A != Vector2()) {
 		//not the best but should be enough
 		Vector2 normal = (to - from).normalized();
-		to += normal * MAX(0.0, normal.dot(p_motion_A));
+		to += normal * Math::max(0.0, normal.dot(p_motion_A));
 	}
 	Vector2 support_A = to;
 

@@ -260,15 +260,15 @@ void EditorPropertyFontMetaOverride::update_property() {
 
 		int size = dict.size();
 
-		int max_page = MAX(0, size - 1) / page_length;
-		page_index = MIN(page_index, max_page);
+		int max_page = Math::max(0, size - 1) / page_length;
+		page_index = Math::min(page_index, max_page);
 
 		paginator->update(page_index, max_page);
 		paginator->set_visible(max_page > 0);
 
 		int offset = page_index * page_length;
 
-		int amount = MIN(size - offset, page_length);
+		int amount = Math::min(size - offset, page_length);
 
 		dict = dict.duplicate();
 		object->set_dict(dict);
@@ -452,15 +452,15 @@ void EditorPropertyOTVariation::update_property() {
 
 		int size = supported.size();
 
-		int max_page = MAX(0, size - 1) / page_length;
-		page_index = MIN(page_index, max_page);
+		int max_page = Math::max(0, size - 1) / page_length;
+		page_index = Math::min(page_index, max_page);
 
 		paginator->update(page_index, max_page);
 		paginator->set_visible(max_page > 0);
 
 		int offset = page_index * page_length;
 
-		int amount = MIN(size - offset, page_length);
+		int amount = Math::min(size - offset, page_length);
 
 		dict = dict.duplicate();
 		object->set_dict(dict);
@@ -730,15 +730,15 @@ void EditorPropertyOTFeatures::update_property() {
 
 		int size = dict.size();
 
-		int max_page = MAX(0, size - 1) / page_length;
-		page_index = MIN(page_index, max_page);
+		int max_page = Math::max(0, size - 1) / page_length;
+		page_index = Math::min(page_index, max_page);
 
 		paginator->update(page_index, max_page);
 		paginator->set_visible(max_page > 0);
 
 		int offset = page_index * page_length;
 
-		int amount = MIN(size - offset, page_length);
+		int amount = Math::min(size - offset, page_length);
 
 		dict = dict.duplicate();
 		object->set_dict(dict);

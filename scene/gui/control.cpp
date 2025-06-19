@@ -2632,7 +2632,7 @@ Control *Control::_get_focus_neighbor(Side p_side, int p_count) {
 	Rect2 r = get_global_rect();
 	real_t begin_d = vdir.dot(r.get_position());
 	real_t end_d = vdir.dot(r.get_end());
-	real_t maxd = MAX(begin_d, end_d);
+	real_t maxd = Math::max(begin_d, end_d);
 
 	Rect2 clamp = Rect2(-1e7, -1e7, 2e7, 2e7);
 	Rect2 result_rect;
@@ -2738,7 +2738,7 @@ void Control::_window_find_focus_neighbor(const Vector2 &p_dir, Node *p_at, cons
 		r_c = r_c.intersection(p_clamp);
 		real_t begin_d = p_dir.dot(r_c.get_position());
 		real_t end_d = p_dir.dot(r_c.get_end());
-		real_t max = MAX(begin_d, end_d);
+		real_t max = Math::max(begin_d, end_d);
 
 		// Use max to allow navigation to overlapping controls (for ScrollContainer case).
 		if (max > (p_min + CMP_EPSILON)) {

@@ -74,8 +74,8 @@ static void test_tokenizer(const String &p_code, const Vector<String> &p_lines) 
 				line_width = p_lines[current.start_line - 1].replace("\t", tab).length();
 			}
 
-			const int offset = MAX(0, current.start_column - 1);
-			const int width = MAX(0, line_width - current.start_column + 1);
+			const int offset = Math::max(0, current.start_column - 1);
+			const int width = Math::max(0, line_width - current.start_column + 1);
 			pointer += String::chr(' ').repeat(offset) + String::chr('v').repeat(width);
 
 			print_line(pointer.as_string());
@@ -91,11 +91,11 @@ static void test_tokenizer(const String &p_code, const Vector<String> &p_lines) 
 			pointer += "     "; // Padding for line number.
 
 			if (current.start_line == current.end_line) {
-				const int offset = MAX(0, current.start_column - 1);
-				const int width = MAX(0, current.end_column - current.start_column);
+				const int offset = Math::max(0, current.start_column - 1);
+				const int width = Math::max(0, current.end_column - current.start_column);
 				pointer += String::chr(' ').repeat(offset) + String::chr('^').repeat(width);
 			} else {
-				const int width = MAX(0, current.end_column - 1);
+				const int width = Math::max(0, current.end_column - 1);
 				pointer += String::chr('^').repeat(width);
 			}
 

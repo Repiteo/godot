@@ -88,8 +88,8 @@ void Luminance::LuminanceBuffers::configure(RenderSceneBuffersRD *p_render_buffe
 	int h = internal_size.y;
 
 	while (true) {
-		w = MAX(w / 8, 1);
-		h = MAX(h / 8, 1);
+		w = Math::max(w / 8, 1);
+		h = Math::max(h / 8, 1);
 
 		RD::TextureFormat tf;
 		tf.format = RD::DATA_FORMAT_R32_SFLOAT;
@@ -175,8 +175,8 @@ void Luminance::luminance_reduction(RID p_source_texture, const Size2i p_source_
 		for (int i = 0; i < p_luminance_buffers->reduce.size(); i++) {
 			push_constant.source_size[0] = i == 0 ? p_source_size.x : push_constant.dest_size[0];
 			push_constant.source_size[1] = i == 0 ? p_source_size.y : push_constant.dest_size[1];
-			push_constant.dest_size[0] = MAX(push_constant.source_size[0] / 8, 1);
-			push_constant.dest_size[1] = MAX(push_constant.source_size[1] / 8, 1);
+			push_constant.dest_size[0] = Math::max(push_constant.source_size[0] / 8, 1);
+			push_constant.dest_size[1] = Math::max(push_constant.source_size[1] / 8, 1);
 
 			bool final = !p_set && (push_constant.dest_size[0] == 1) && (push_constant.dest_size[1] == 1);
 			LuminanceReduceRasterMode mode = final ? LUMINANCE_REDUCE_FRAGMENT_FINAL : (i == 0 ? LUMINANCE_REDUCE_FRAGMENT_FIRST : LUMINANCE_REDUCE_FRAGMENT);
@@ -245,8 +245,8 @@ void Luminance::luminance_reduction(RID p_source_texture, const Size2i p_source_
 
 			RD::get_singleton()->compute_list_dispatch_threads(compute_list, push_constant.source_size[0], push_constant.source_size[1], 1);
 
-			push_constant.source_size[0] = MAX(push_constant.source_size[0] / 8, 1);
-			push_constant.source_size[1] = MAX(push_constant.source_size[1] / 8, 1);
+			push_constant.source_size[0] = Math::max(push_constant.source_size[0] / 8, 1);
+			push_constant.source_size[1] = Math::max(push_constant.source_size[1] / 8, 1);
 		}
 
 		RD::get_singleton()->compute_list_end();

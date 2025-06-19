@@ -87,7 +87,7 @@ void FlowContainer::_resort() {
 				children_in_current_line = 0;
 			}
 
-			line_height = MAX(line_height, child_msc.x);
+			line_height = Math::max(line_height, child_msc.x);
 			if (child->get_v_size_flags().has_flag(SIZE_EXPAND)) {
 				line_stretch_ratio_total += child->get_stretch_ratio();
 			}
@@ -109,7 +109,7 @@ void FlowContainer::_resort() {
 				children_in_current_line = 0;
 			}
 
-			line_height = MAX(line_height, child_msc.y);
+			line_height = Math::max(line_height, child_msc.y);
 			if (child->get_h_size_flags().has_flag(SIZE_EXPAND)) {
 				line_stretch_ratio_total += child->get_stretch_ratio();
 			}
@@ -276,11 +276,11 @@ Size2 FlowContainer::get_minimum_size() const {
 		Size2i size = c->get_combined_minimum_size();
 
 		if (vertical) { /* VERTICAL */
-			minimum.height = MAX(minimum.height, size.height);
+			minimum.height = Math::max(minimum.height, size.height);
 			minimum.width = cached_size;
 
 		} else { /* HORIZONTAL */
-			minimum.width = MAX(minimum.width, size.width);
+			minimum.width = Math::max(minimum.width, size.width);
 			minimum.height = cached_size;
 		}
 	}

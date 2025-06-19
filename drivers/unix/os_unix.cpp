@@ -281,7 +281,7 @@ Error OS_Unix::get_entropy(uint8_t *r_buffer, int p_bytes) {
 	int left = p_bytes;
 	int ofs = 0;
 	do {
-		int chunk = MIN(left, 256);
+		int chunk = Math::min(left, 256);
 		ERR_FAIL_COND_V(getentropy(r_buffer + ofs, chunk), FAILED);
 		left -= chunk;
 		ofs += chunk;

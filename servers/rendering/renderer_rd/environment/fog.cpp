@@ -503,7 +503,7 @@ Fog::VolumetricFog::~VolumetricFog() {
 
 Vector3i Fog::_point_get_position_in_froxel_volume(const Vector3 &p_point, float fog_end, const Vector2 &fog_near_size, const Vector2 &fog_far_size, float volumetric_fog_detail_spread, const Vector3 &fog_size, const Transform3D &p_cam_transform) {
 	Vector3 view_position = p_cam_transform.affine_inverse().xform(p_point);
-	view_position.z = MIN(view_position.z, -0.01); // Clamp to the front of camera
+	view_position.z = Math::min(view_position.z, -0.01); // Clamp to the front of camera
 	Vector3 fog_position = Vector3(0, 0, 0);
 
 	view_position.y = -view_position.y;
@@ -704,7 +704,7 @@ void Fog::volumetric_fog_update(const VolumetricFogSettings &p_settings, const P
 					froxel_max.x = int32_t(fog->width);
 					froxel_max.y = int32_t(fog->height);
 					for (int j = 0; j < 8; j++) {
-						froxel_max.z = MAX(froxel_max.z, froxels[j].z);
+						froxel_max.z = Math::max(froxel_max.z, froxels[j].z);
 					}
 				} else {
 					// Camera is guaranteed to be outside the fog volume

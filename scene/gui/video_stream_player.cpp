@@ -61,7 +61,7 @@ int VideoStreamPlayer::_audio_mix_callback(void *p_udata, const float *p_data, i
 
 	VideoStreamPlayer *vp = static_cast<VideoStreamPlayer *>(p_udata);
 
-	int todo = MIN(vp->resampler.get_writer_space(), p_frames);
+	int todo = Math::min(vp->resampler.get_writer_space(), p_frames);
 
 	float *wb = vp->resampler.get_write_buffer();
 	int c = vp->resampler.get_channel_count();

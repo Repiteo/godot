@@ -94,9 +94,9 @@ static_assert(ENUM_MEMBERS_EQUAL(RDD::COMPARE_OP_ALWAYS, MTLCompareFunctionAlway
 
 _FORCE_INLINE_ MTLSize mipmapLevelSizeFromTexture(id<MTLTexture> p_tex, NSUInteger p_level) {
 	MTLSize lvlSize;
-	lvlSize.width = MAX(p_tex.width >> p_level, 1UL);
-	lvlSize.height = MAX(p_tex.height >> p_level, 1UL);
-	lvlSize.depth = MAX(p_tex.depth >> p_level, 1UL);
+	lvlSize.width = Math::max(p_tex.width >> p_level, 1UL);
+	lvlSize.height = Math::max(p_tex.height >> p_level, 1UL);
+	lvlSize.depth = Math::max(p_tex.depth >> p_level, 1UL);
 	return lvlSize;
 }
 
@@ -106,9 +106,9 @@ _FORCE_INLINE_ MTLSize mipmapLevelSizeFromSize(MTLSize p_size, NSUInteger p_leve
 	}
 
 	MTLSize lvlSize;
-	lvlSize.width = MAX(p_size.width >> p_level, 1UL);
-	lvlSize.height = MAX(p_size.height >> p_level, 1UL);
-	lvlSize.depth = MAX(p_size.depth >> p_level, 1UL);
+	lvlSize.width = Math::max(p_size.width >> p_level, 1UL);
+	lvlSize.height = Math::max(p_size.height >> p_level, 1UL);
+	lvlSize.depth = Math::max(p_size.depth >> p_level, 1UL);
 	return lvlSize;
 }
 
@@ -1408,9 +1408,9 @@ MTLOrigin MTLOriginFromVector3i(Vector3i p_origin) {
 // Clamps the size so that the sum of the origin and size do not exceed the maximum size.
 static inline MTLSize clampMTLSize(MTLSize p_size, MTLOrigin p_origin, MTLSize p_max_size) {
 	MTLSize clamped;
-	clamped.width = MIN(p_size.width, p_max_size.width - p_origin.x);
-	clamped.height = MIN(p_size.height, p_max_size.height - p_origin.y);
-	clamped.depth = MIN(p_size.depth, p_max_size.depth - p_origin.z);
+	clamped.width = Math::min(p_size.width, p_max_size.width - p_origin.x);
+	clamped.height = Math::min(p_size.height, p_max_size.height - p_origin.y);
+	clamped.depth = Math::min(p_size.depth, p_max_size.depth - p_origin.z);
 	return clamped;
 }
 

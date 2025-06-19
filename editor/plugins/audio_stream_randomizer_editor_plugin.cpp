@@ -73,8 +73,8 @@ void AudioStreamRandomizerEditorPlugin::_move_stream_array_element(Object *p_und
 		begin = p_from_index;
 	} else {
 		// Moving.
-		begin = MIN(p_from_index, p_to_pos);
-		end = MIN(MAX(p_from_index, p_to_pos) + 1, end);
+		begin = Math::min(p_from_index, p_to_pos);
+		end = Math::min(Math::max(p_from_index, p_to_pos) + 1, end);
 	}
 
 #define ADD_UNDO(obj, property) undo_redo_man->add_undo_property(obj, property, obj->get(property));

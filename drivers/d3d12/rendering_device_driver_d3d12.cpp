@@ -1197,7 +1197,7 @@ RDD::TextureID RenderingDeviceDriverD3D12::texture_create(const TextureFormat &p
 	resource_desc.SampleDesc = {};
 	DXGI_FORMAT format_to_test = (resource_desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL) ? RD_TO_D3D12_FORMAT[p_format.format].dsv_format : RD_TO_D3D12_FORMAT[p_format.format].general_format;
 	if (!(resource_desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS)) {
-		resource_desc.SampleDesc.Count = MIN(
+		resource_desc.SampleDesc.Count = Math::min(
 				_find_max_common_supported_sample_count(format_to_test),
 				TEXTURE_SAMPLES_COUNT[p_format.samples]);
 	} else {
@@ -3903,7 +3903,7 @@ void RenderingDeviceDriverD3D12::command_copy_texture(CommandBufferID p_cmd_buff
 	if (!barrier_capabilities.enhanced_barriers_supported) {
 		// Batch all barrier transitions for the textures before performing the copies.
 		for (uint32_t i = 0; i < p_regions.size(); i++) {
-			uint32_t layer_count = MIN(p_regions[i].src_subresources.layer_count, p_regions[i].dst_subresources.layer_count);
+			uint32_t layer_count = Math::min(p_regions[i].src_subresources.layer_count, p_regions[i].dst_subresources.layer_count);
 			for (uint32_t j = 0; j < layer_count; j++) {
 				UINT src_subresource = _compute_subresource_from_layers(src_tex_info, p_regions[i].src_subresources, j);
 				UINT dst_subresource = _compute_subresource_from_layers(dst_tex_info, p_regions[i].dst_subresources, j);
@@ -3917,7 +3917,7 @@ void RenderingDeviceDriverD3D12::command_copy_texture(CommandBufferID p_cmd_buff
 
 	CD3DX12_BOX src_box;
 	for (uint32_t i = 0; i < p_regions.size(); i++) {
-		uint32_t layer_count = MIN(p_regions[i].src_subresources.layer_count, p_regions[i].dst_subresources.layer_count);
+		uint32_t layer_count = Math::min(p_regions[i].src_subresources.layer_count, p_regions[i].dst_subresources.layer_count);
 		for (uint32_t j = 0; j < layer_count; j++) {
 			UINT src_subresource = _compute_subresource_from_layers(src_tex_info, p_regions[i].src_subresources, j);
 			UINT dst_subresource = _compute_subresource_from_layers(dst_tex_info, p_regions[i].dst_subresources, j);
@@ -4177,11 +4177,11 @@ void RenderingDeviceDriverD3D12::command_copy_texture_to_buffer(CommandBufferID 
 
 			CD3DX12_TEXTURE_COPY_LOCATION copy_src(tex_info->resource, src_subresource);
 
-			uint32_t computed_d = MAX(1, tex_info->desc.DepthOrArraySize >> p_regions[i].texture_subresources.mipmap);
+			uint32_t computed_d = Math::max(1, tex_info->desc.DepthOrArraySize >> p_regions[i].texture_subresources.mipmap);
 			uint32_t image_size = get_image_format_required_size(
 					tex_info->format,
-					MAX(1u, tex_info->desc.Width >> p_regions[i].texture_subresources.mipmap),
-					MAX(1u, tex_info->desc.Height >> p_regions[i].texture_subresources.mipmap),
+					Math::max(1u, tex_info->desc.Width >> p_regions[i].texture_subresources.mipmap),
+					Math::max(1u, tex_info->desc.Height >> p_regions[i].texture_subresources.mipmap),
 					computed_d,
 					1);
 			uint32_t row_pitch = image_size / (p_regions[i].texture_region_size.y * computed_d) * block_h;
@@ -5017,7 +5017,7 @@ RDD::PipelineID RenderingDeviceDriverD3D12::render_pipeline_create(
 	// Multisample.
 	ERR_FAIL_COND_V(p_multisample_state.enable_sample_shading, PipelineID()); // How one enables this in D3D12?
 	if ((&pipeline_desc.RTVFormats)->NumRenderTargets || pipeline_desc.DSVFormat != DXGI_FORMAT_UNKNOWN) {
-		uint32_t sample_count = MIN(
+		uint32_t sample_count = Math::min(
 				pass_info->max_supported_sample_count,
 				TEXTURE_SAMPLES_COUNT[p_multisample_state.sample_count]);
 		(&pipeline_desc.SampleDesc)->Count = sample_count;
@@ -5545,7 +5545,7 @@ uint64_t RenderingDeviceDriverD3D12::limit_get(Limit p_limit) {
 		case LIMIT_SUBGROUP_OPERATIONS:
 			return subgroup_capabilities.supported_operations_flags_rd();
 		case LIMIT_MAX_SHADER_VARYINGS:
-			return MIN(D3D12_VS_OUTPUT_REGISTER_COUNT, D3D12_PS_INPUT_REGISTER_COUNT);
+			return Math::min(D3D12_VS_OUTPUT_REGISTER_COUNT, D3D12_PS_INPUT_REGISTER_COUNT);
 		default: {
 #ifdef DEV_ENABLED
 			WARN_PRINT("Returning maximum value for unknown limit " + itos(p_limit) + ".");

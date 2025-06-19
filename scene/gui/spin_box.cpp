@@ -337,9 +337,9 @@ void SpinBox::gui_input(const Ref<InputEvent> &p_event) {
 	if (mm.is_valid() && (mm->get_button_mask().has_flag(MouseButtonMask::LEFT))) {
 		if (drag.enabled) {
 			drag.diff_y += mm->get_relative().y;
-			double diff_y = -0.01 * Math::pow(Math::abs(drag.diff_y), 1.8) * SIGN(drag.diff_y);
+			double diff_y = -0.01 * Math::pow(Math::abs(drag.diff_y), 1.8) * Math::sign(drag.diff_y);
 			use_custom_arrow_step = false;
-			set_value(CLAMP(drag.base_val + step * diff_y, get_min(), get_max()));
+			set_value(Math::clamp(drag.base_val + step * diff_y, get_min(), get_max()));
 		} else if (drag.allowed && drag.capture_pos.distance_to(mm->get_position()) > 2) {
 			Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_CAPTURED);
 			drag.enabled = true;
@@ -381,7 +381,7 @@ inline void SpinBox::_compute_sizes() {
 #else
 	const bool min_width_from_icons = theme_cache.buttons_width < 0;
 #endif
-	int w = min_width_from_icons != 0 ? MAX(buttons_block_icon_enforced_width, buttons_block_wanted_width) : buttons_block_wanted_width;
+	int w = min_width_from_icons != 0 ? Math::max(buttons_block_icon_enforced_width, buttons_block_wanted_width) : buttons_block_wanted_width;
 
 	if (w != sizing_cache.buttons_block_width) {
 		line_edit->set_offset(SIDE_LEFT, 0);
@@ -392,7 +392,7 @@ inline void SpinBox::_compute_sizes() {
 	Size2i size = get_size();
 
 	sizing_cache.buttons_width = w - theme_cache.field_and_buttons_separation;
-	sizing_cache.buttons_vertical_separation = CLAMP(theme_cache.buttons_vertical_separation, 0, size.height);
+	sizing_cache.buttons_vertical_separation = Math::clamp(theme_cache.buttons_vertical_separation, 0, size.height);
 	sizing_cache.buttons_left = is_layout_rtl() ? 0 : size.width - sizing_cache.buttons_width;
 	sizing_cache.button_up_height = (size.height - sizing_cache.buttons_vertical_separation) / 2;
 	sizing_cache.button_down_height = size.height - sizing_cache.button_up_height - sizing_cache.buttons_vertical_separation;
@@ -405,15 +405,15 @@ inline void SpinBox::_compute_sizes() {
 
 inline int SpinBox::_get_widest_button_icon_width() {
 	int max = 0;
-	max = MAX(max, theme_cache.updown_icon->get_width());
-	max = MAX(max, theme_cache.up_icon->get_width());
-	max = MAX(max, theme_cache.up_hover_icon->get_width());
-	max = MAX(max, theme_cache.up_pressed_icon->get_width());
-	max = MAX(max, theme_cache.up_disabled_icon->get_width());
-	max = MAX(max, theme_cache.down_icon->get_width());
-	max = MAX(max, theme_cache.down_hover_icon->get_width());
-	max = MAX(max, theme_cache.down_pressed_icon->get_width());
-	max = MAX(max, theme_cache.down_disabled_icon->get_width());
+	max = Math::max(max, theme_cache.updown_icon->get_width());
+	max = Math::max(max, theme_cache.up_icon->get_width());
+	max = Math::max(max, theme_cache.up_hover_icon->get_width());
+	max = Math::max(max, theme_cache.up_pressed_icon->get_width());
+	max = Math::max(max, theme_cache.up_disabled_icon->get_width());
+	max = Math::max(max, theme_cache.down_icon->get_width());
+	max = Math::max(max, theme_cache.down_hover_icon->get_width());
+	max = Math::max(max, theme_cache.down_pressed_icon->get_width());
+	max = Math::max(max, theme_cache.down_disabled_icon->get_width());
 	return max;
 }
 

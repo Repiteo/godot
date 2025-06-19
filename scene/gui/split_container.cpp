@@ -231,7 +231,7 @@ int SplitContainer::_get_separation() const {
 	}
 	// DRAGGER_VISIBLE or DRAGGER_HIDDEN.
 	Ref<Texture2D> g = _get_grabber_icon();
-	return MAX(theme_cache.separation, vertical ? g->get_height() : g->get_width());
+	return Math::max(theme_cache.separation, vertical ? g->get_height() : g->get_width());
 }
 
 void SplitContainer::_compute_split_offset(bool p_clamp) {
@@ -262,7 +262,7 @@ void SplitContainer::_compute_split_offset(bool p_clamp) {
 	// Clamp the split offset to acceptable values.
 	int first_min_size = first->get_combined_minimum_size()[axis_index];
 	int second_min_size = second->get_combined_minimum_size()[axis_index];
-	computed_split_offset = CLAMP(wished_size, first_min_size, size - sep - second_min_size);
+	computed_split_offset = Math::clamp(wished_size, first_min_size, size - sep - second_min_size);
 
 	// Clamp the split_offset if requested.
 	if (p_clamp) {
@@ -312,7 +312,7 @@ void SplitContainer::_resort() {
 	}
 
 	dragging_area_control->set_mouse_filter(dragging_enabled ? MOUSE_FILTER_STOP : MOUSE_FILTER_IGNORE);
-	const int dragger_ctrl_size = MAX(sep, theme_cache.minimum_grab_thickness);
+	const int dragger_ctrl_size = Math::max(sep, theme_cache.minimum_grab_thickness);
 	float split_bar_offset = (dragger_ctrl_size - sep) * 0.5;
 	if (vertical) {
 		Rect2 split_bar_rect = Rect2(is_rtl ? drag_area_margin_end : drag_area_margin_begin, computed_split_offset, get_size().width - drag_area_margin_begin - drag_area_margin_end, sep);
@@ -349,10 +349,10 @@ Size2 SplitContainer::get_minimum_size() const {
 
 		if (vertical) {
 			minimum.height += ms.height;
-			minimum.width = MAX(minimum.width, ms.width);
+			minimum.width = Math::max(minimum.width, ms.width);
 		} else {
 			minimum.width += ms.width;
-			minimum.height = MAX(minimum.height, ms.height);
+			minimum.height = Math::max(minimum.height, ms.height);
 		}
 	}
 

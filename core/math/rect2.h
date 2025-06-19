@@ -103,17 +103,17 @@ struct [[nodiscard]] Rect2 {
 		}
 		if (p_point.y < position.y) {
 			real_t d = position.y - p_point.y;
-			dist = inside ? d : MIN(dist, d);
+			dist = inside ? d : Math::min(dist, d);
 			inside = false;
 		}
 		if (p_point.x >= (position.x + size.x)) {
 			real_t d = p_point.x - (position.x + size.x);
-			dist = inside ? d : MIN(dist, d);
+			dist = inside ? d : Math::min(dist, d);
 			inside = false;
 		}
 		if (p_point.y >= (position.y + size.y)) {
 			real_t d = p_point.y - (position.y + size.y);
-			dist = inside ? d : MIN(dist, d);
+			dist = inside ? d : Math::min(dist, d);
 			inside = false;
 		}
 
@@ -332,8 +332,8 @@ struct [[nodiscard]] Rect2 {
 			Vector2 t13 = (position - a) * ir;
 			Vector2 t24 = (end - a) * ir;
 
-			const real_t tmin = MAX(MIN(t13.x, t24.x), MIN(t13.y, t24.y));
-			const real_t tmax = MIN(MAX(t13.x, t24.x), MAX(t13.y, t24.y));
+			const real_t tmin = Math::max(Math::min(t13.x, t24.x), Math::min(t13.y, t24.y));
+			const real_t tmax = Math::min(Math::max(t13.x, t24.x), Math::max(t13.y, t24.y));
 
 			// if tmax < 0, ray (line) is intersecting AABB, but the whole AABB is behind us
 			if (tmax < 0 || tmin > tmax || tmin >= l) {

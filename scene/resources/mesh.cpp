@@ -40,7 +40,7 @@
 #endif // PHYSICS_3D_DISABLED
 
 void MeshConvexDecompositionSettings::set_max_concavity(real_t p_max_concavity) {
-	max_concavity = CLAMP(p_max_concavity, 0.001, 1.0);
+	max_concavity = Math::clamp(p_max_concavity, 0.001, 1.0);
 }
 
 real_t MeshConvexDecompositionSettings::get_max_concavity() const {
@@ -48,7 +48,7 @@ real_t MeshConvexDecompositionSettings::get_max_concavity() const {
 }
 
 void MeshConvexDecompositionSettings::set_symmetry_planes_clipping_bias(real_t p_symmetry_planes_clipping_bias) {
-	symmetry_planes_clipping_bias = CLAMP(p_symmetry_planes_clipping_bias, 0.0, 1.0);
+	symmetry_planes_clipping_bias = Math::clamp(p_symmetry_planes_clipping_bias, 0.0, 1.0);
 }
 
 real_t MeshConvexDecompositionSettings::get_symmetry_planes_clipping_bias() const {
@@ -56,7 +56,7 @@ real_t MeshConvexDecompositionSettings::get_symmetry_planes_clipping_bias() cons
 }
 
 void MeshConvexDecompositionSettings::set_revolution_axes_clipping_bias(real_t p_revolution_axes_clipping_bias) {
-	revolution_axes_clipping_bias = CLAMP(p_revolution_axes_clipping_bias, 0.0, 1.0);
+	revolution_axes_clipping_bias = Math::clamp(p_revolution_axes_clipping_bias, 0.0, 1.0);
 }
 
 real_t MeshConvexDecompositionSettings::get_revolution_axes_clipping_bias() const {
@@ -64,7 +64,7 @@ real_t MeshConvexDecompositionSettings::get_revolution_axes_clipping_bias() cons
 }
 
 void MeshConvexDecompositionSettings::set_min_volume_per_convex_hull(real_t p_min_volume_per_convex_hull) {
-	min_volume_per_convex_hull = CLAMP(p_min_volume_per_convex_hull, 0.0001, 0.01);
+	min_volume_per_convex_hull = Math::clamp(p_min_volume_per_convex_hull, 0.0001, 0.01);
 }
 
 real_t MeshConvexDecompositionSettings::get_min_volume_per_convex_hull() const {
@@ -1094,8 +1094,8 @@ void _fix_array_compatibility(const Vector<uint8_t> &p_src, uint64_t p_old_forma
 							const int8_t *src = (const int8_t *)&src_vertex_ptr[i * src_vertex_stride + src_offset];
 							int16_t *dst = (int16_t *)&dst_vertex_ptr[i * dst_normal_tangent_stride + dst_offsets[Mesh::ARRAY_NORMAL]];
 
-							dst[0] = (int16_t)CLAMP(src[0] / 127.0f * 32767, -32768, 32767);
-							dst[1] = (int16_t)CLAMP(src[1] / 127.0f * 32767, -32768, 32767);
+							dst[0] = (int16_t)Math::clamp(src[0] / 127.0f * 32767, -32768, 32767);
+							dst[1] = (int16_t)Math::clamp(src[1] / 127.0f * 32767, -32768, 32767);
 						}
 						src_offset += sizeof(int8_t) * 2;
 					} else {
@@ -1116,8 +1116,8 @@ void _fix_array_compatibility(const Vector<uint8_t> &p_src, uint64_t p_old_forma
 							Vector2 res = original_normal.octahedron_encode();
 
 							uint16_t *dst = (uint16_t *)&dst_vertex_ptr[i * dst_normal_tangent_stride + dst_offsets[Mesh::ARRAY_NORMAL]];
-							dst[0] = (uint16_t)CLAMP(res.x * 65535, 0, 65535);
-							dst[1] = (uint16_t)CLAMP(res.y * 65535, 0, 65535);
+							dst[0] = (uint16_t)Math::clamp(res.x * 65535, 0, 65535);
+							dst[1] = (uint16_t)Math::clamp(res.y * 65535, 0, 65535);
 						}
 						src_offset += sizeof(uint8_t) * 4; // 1 byte padding
 					} else {
@@ -1127,8 +1127,8 @@ void _fix_array_compatibility(const Vector<uint8_t> &p_src, uint64_t p_old_forma
 							Vector2 res = original_normal.octahedron_encode();
 
 							uint16_t *dst = (uint16_t *)&dst_vertex_ptr[i * dst_normal_tangent_stride + dst_offsets[Mesh::ARRAY_NORMAL]];
-							dst[0] = (uint16_t)CLAMP(res.x * 65535, 0, 65535);
-							dst[1] = (uint16_t)CLAMP(res.y * 65535, 0, 65535);
+							dst[0] = (uint16_t)Math::clamp(res.x * 65535, 0, 65535);
+							dst[1] = (uint16_t)Math::clamp(res.y * 65535, 0, 65535);
 						}
 						src_offset += sizeof(float) * 3;
 					}
@@ -1142,8 +1142,8 @@ void _fix_array_compatibility(const Vector<uint8_t> &p_src, uint64_t p_old_forma
 							const int8_t *src = (const int8_t *)&src_vertex_ptr[i * src_vertex_stride + src_offset];
 							uint16_t *dst = (uint16_t *)&dst_vertex_ptr[i * dst_normal_tangent_stride + dst_offsets[Mesh::ARRAY_TANGENT]];
 
-							dst[0] = (uint16_t)CLAMP((src[0] / 127.0f * .5f + .5f) * 65535, 0, 65535);
-							dst[1] = (uint16_t)CLAMP((src[1] / 127.0f * .5f + .5f) * 65535, 0, 65535);
+							dst[0] = (uint16_t)Math::clamp((src[0] / 127.0f * .5f + .5f) * 65535, 0, 65535);
+							dst[1] = (uint16_t)Math::clamp((src[1] / 127.0f * .5f + .5f) * 65535, 0, 65535);
 						}
 						src_offset += sizeof(uint8_t) * 2;
 					} else { // int16 SNORM -> uint16 UNORM
@@ -1151,8 +1151,8 @@ void _fix_array_compatibility(const Vector<uint8_t> &p_src, uint64_t p_old_forma
 							const int16_t *src = (const int16_t *)&src_vertex_ptr[i * src_vertex_stride + src_offset];
 							uint16_t *dst = (uint16_t *)&dst_vertex_ptr[i * dst_normal_tangent_stride + dst_offsets[Mesh::ARRAY_TANGENT]];
 
-							dst[0] = (uint16_t)CLAMP((src[0] / 32767.0f * .5f + .5f) * 65535, 0, 65535);
-							dst[1] = (uint16_t)CLAMP((src[1] / 32767.0f * .5f + .5f) * 65535, 0, 65535);
+							dst[0] = (uint16_t)Math::clamp((src[0] / 32767.0f * .5f + .5f) * 65535, 0, 65535);
+							dst[1] = (uint16_t)Math::clamp((src[1] / 32767.0f * .5f + .5f) * 65535, 0, 65535);
 						}
 						src_offset += sizeof(uint16_t) * 2;
 					}
@@ -1164,8 +1164,8 @@ void _fix_array_compatibility(const Vector<uint8_t> &p_src, uint64_t p_old_forma
 							Vector2 res = original_tangent.octahedron_tangent_encode(src[3]);
 
 							uint16_t *dst = (uint16_t *)&dst_vertex_ptr[i * dst_normal_tangent_stride + dst_offsets[Mesh::ARRAY_NORMAL]];
-							dst[0] = (uint16_t)CLAMP(res.x * 65535, 0, 65535);
-							dst[1] = (uint16_t)CLAMP(res.y * 65535, 0, 65535);
+							dst[0] = (uint16_t)Math::clamp(res.x * 65535, 0, 65535);
+							dst[1] = (uint16_t)Math::clamp(res.y * 65535, 0, 65535);
 							if (dst[0] == 0 && dst[1] == 65535) {
 								// (1, 1) and (0, 1) decode to the same value, but (0, 1) messes with our compression detection.
 								// So we sanitize here.
@@ -1180,8 +1180,8 @@ void _fix_array_compatibility(const Vector<uint8_t> &p_src, uint64_t p_old_forma
 							Vector2 res = original_tangent.octahedron_tangent_encode(src[3]);
 
 							uint16_t *dst = (uint16_t *)&dst_vertex_ptr[i * dst_normal_tangent_stride + dst_offsets[Mesh::ARRAY_NORMAL]];
-							dst[0] = (uint16_t)CLAMP(res.x * 65535, 0, 65535);
-							dst[1] = (uint16_t)CLAMP(res.y * 65535, 0, 65535);
+							dst[0] = (uint16_t)Math::clamp(res.x * 65535, 0, 65535);
+							dst[1] = (uint16_t)Math::clamp(res.y * 65535, 0, 65535);
 							if (dst[0] == 0 && dst[1] == 65535) {
 								// (1, 1) and (0, 1) decode to the same value, but (0, 1) messes with our compression detection.
 								// So we sanitize here.
@@ -1206,10 +1206,10 @@ void _fix_array_compatibility(const Vector<uint8_t> &p_src, uint64_t p_old_forma
 						const float *src = (const float *)&src_vertex_ptr[i * src_vertex_stride + src_offset];
 						uint8_t *dst = (uint8_t *)&dst_attribute_ptr[i * dst_attribute_stride + dst_offsets[Mesh::ARRAY_COLOR]];
 
-						dst[0] = uint8_t(CLAMP(src[0] * 255.0, 0.0, 255.0));
-						dst[1] = uint8_t(CLAMP(src[1] * 255.0, 0.0, 255.0));
-						dst[2] = uint8_t(CLAMP(src[2] * 255.0, 0.0, 255.0));
-						dst[3] = uint8_t(CLAMP(src[3] * 255.0, 0.0, 255.0));
+						dst[0] = uint8_t(Math::clamp(src[0] * 255.0, 0.0, 255.0));
+						dst[1] = uint8_t(Math::clamp(src[1] * 255.0, 0.0, 255.0));
+						dst[2] = uint8_t(Math::clamp(src[2] * 255.0, 0.0, 255.0));
+						dst[3] = uint8_t(Math::clamp(src[3] * 255.0, 0.0, 255.0));
 					}
 					src_offset += sizeof(float) * 4;
 				}
@@ -1299,10 +1299,10 @@ void _fix_array_compatibility(const Vector<uint8_t> &p_src, uint64_t p_old_forma
 						const float *src = (const float *)&src_vertex_ptr[i * src_vertex_stride + src_offset];
 						uint16_t *dst = (uint16_t *)&dst_skin_ptr[i * dst_skin_stride + dst_offsets[Mesh::ARRAY_WEIGHTS]];
 
-						dst[0] = uint16_t(CLAMP(src[0] * 65535.0, 0, 65535.0));
-						dst[1] = uint16_t(CLAMP(src[1] * 65535.0, 0, 65535.0));
-						dst[2] = uint16_t(CLAMP(src[2] * 65535.0, 0, 65535.0));
-						dst[3] = uint16_t(CLAMP(src[3] * 65535.0, 0, 65535.0));
+						dst[0] = uint16_t(Math::clamp(src[0] * 65535.0, 0, 65535.0));
+						dst[1] = uint16_t(Math::clamp(src[1] * 65535.0, 0, 65535.0));
+						dst[2] = uint16_t(Math::clamp(src[2] * 65535.0, 0, 65535.0));
+						dst[3] = uint16_t(Math::clamp(src[3] * 65535.0, 0, 65535.0));
 					}
 					src_offset += sizeof(float) * 4;
 				}

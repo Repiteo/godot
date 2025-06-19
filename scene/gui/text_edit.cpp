@@ -126,7 +126,7 @@ int TextEdit::Text::get_max_width() const {
 			if (l.hidden) {
 				continue;
 			}
-			new_max_line_width = MAX(new_max_line_width, l.width);
+			new_max_line_width = Math::max(new_max_line_width, l.width);
 		}
 		max_line_width = new_max_line_width;
 	}
@@ -141,7 +141,7 @@ int TextEdit::Text::get_line_height() const {
 			if (l.hidden) {
 				continue;
 			}
-			new_max_line_height = MAX(new_max_line_height, l.height);
+			new_max_line_height = Math::max(new_max_line_height, l.height);
 		}
 		max_line_height = new_max_line_height;
 	}
@@ -208,9 +208,9 @@ float TextEdit::Text::get_indent_offset(int p_line, bool p_rtl) const {
 		Vector<Vector2> sel = TS->shaped_text_get_selection(text_rid, 0, char_count);
 		for (const Vector2 v : sel) {
 			if (p_rtl) {
-				offset = MIN(v.x, MIN(v.y, offset));
+				offset = Math::min(v.x, Math::min(v.y, offset));
 			} else {
-				offset = MAX(v.x, MAX(v.y, offset));
+				offset = Math::max(v.x, Math::max(v.y, offset));
 			}
 		}
 		text_line.indent_ofs = (p_rtl) ? TS->shaped_text_get_size(text_rid).x - offset : offset;
@@ -363,7 +363,7 @@ void TextEdit::Text::invalidate_cache(int p_line, bool p_text_changed) {
 	const int old_height = text_line.height;
 	text_line.height = font_height;
 	for (int i = 0; i < text_line.line_count; i++) {
-		text_line.height = MAX(text_line.height, text_line.data_buf->get_line_size(i).y);
+		text_line.height = Math::max(text_line.height, text_line.data_buf->get_line_size(i).y);
 	}
 
 	// If this line has shrunk, this may no longer be the tallest line.
@@ -371,7 +371,7 @@ void TextEdit::Text::invalidate_cache(int p_line, bool p_text_changed) {
 		if (old_height == max_line_height && text_line.height < old_height) {
 			max_line_height_dirty = true;
 		} else {
-			max_line_height = MAX(text_line.height, max_line_height);
+			max_line_height = Math::max(text_line.height, max_line_height);
 		}
 	}
 
@@ -384,7 +384,7 @@ void TextEdit::Text::invalidate_cache(int p_line, bool p_text_changed) {
 		if (old_width == max_line_width && text_line.width < old_width) {
 			max_line_width_dirty = true;
 		} else {
-			max_line_width = MAX(text_line.width, max_line_width);
+			max_line_width = Math::max(text_line.width, max_line_width);
 		}
 	}
 }
@@ -492,8 +492,8 @@ void TextEdit::Text::set_hidden(int p_line, bool p_hidden) {
 		}
 	} else {
 		total_visible_line_count += text_line.line_count;
-		max_line_width = MAX(text_line.width, max_line_width);
-		max_line_height = MAX(text_line.height, max_line_height);
+		max_line_width = Math::max(text_line.width, max_line_width);
+		max_line_height = Math::max(text_line.height, max_line_height);
 	}
 }
 
@@ -763,7 +763,7 @@ void TextEdit::_notification(int p_what) {
 				if (text.is_indent_wrapped_lines()) {
 					_get_wrapped_indent_level(i, first_indent_line);
 				}
-				float indent_ofs = MIN(text.get_indent_offset(i, rtl), wrap_at_column * 0.6);
+				float indent_ofs = Math::min(text.get_indent_offset(i, rtl), wrap_at_column * 0.6);
 				for (int j = 0; j < text_aes.size(); j++) {
 					float text_off_x = 0.0;
 					float text_off_y = 0.0;
@@ -875,7 +875,7 @@ void TextEdit::_notification(int p_what) {
 
 				// Prevent small velocities from blocking scrolling.
 				if (Math::abs(vel) < v_scroll->get_step()) {
-					vel = v_scroll->get_step() * SIGN(vel);
+					vel = v_scroll->get_step() * Math::sign(vel);
 				}
 
 				if (Math::abs(vel) >= dist) {
@@ -1182,7 +1182,7 @@ void TextEdit::_notification(int p_what) {
 					float wrap_indent_line = 0.0;
 					if (text.is_indent_wrapped_lines()) {
 						wrap_indent_line = _get_wrapped_indent_level(minimap_line, first_indent_line);
-						wrap_indent_line = MIN(wrap_indent_line, (minimap_width / minimap_char_size.x) * 0.6);
+						wrap_indent_line = Math::min(wrap_indent_line, (minimap_width / minimap_char_size.x) * 0.6);
 					}
 					for (int line_wrap_index = 0; line_wrap_index < line_wrap_amount + 1; line_wrap_index++) {
 						if (line_wrap_index != 0) {
@@ -1345,7 +1345,7 @@ void TextEdit::_notification(int p_what) {
 				if (text.is_indent_wrapped_lines()) {
 					_get_wrapped_indent_level(line, first_indent_line);
 				}
-				float indent_ofs = MIN(text.get_indent_offset(line, rtl), wrap_at_column * 0.6);
+				float indent_ofs = Math::min(text.get_indent_offset(line, rtl), wrap_at_column * 0.6);
 				for (int line_wrap_index = 0; line_wrap_index <= line_wrap_amount; line_wrap_index++) {
 					if (line_wrap_index != 0) {
 						i++;
@@ -1606,7 +1606,7 @@ void TextEdit::_notification(int p_what) {
 										rect.size.x = xmargin_end - rect.position.x;
 									}
 									rect.position.y += std::ceil(TS->shaped_text_get_ascent(rid)) + std::ceil(theme_cache.font->get_underline_position(theme_cache.font_size));
-									rect.size.y = MAX(1, theme_cache.font->get_underline_thickness(theme_cache.font_size));
+									rect.size.y = Math::max(1, theme_cache.font->get_underline_thickness(theme_cache.font_size));
 									RS::get_singleton()->canvas_item_add_rect(ci, rect, highlight_underline_color);
 								}
 
@@ -1686,7 +1686,7 @@ void TextEdit::_notification(int p_what) {
 										if (brace_match.open_mismatch) {
 											gl_color = _get_brace_mismatch_color();
 										}
-										Rect2 rect = Rect2(char_pos, ofs_y + theme_cache.font->get_underline_position(theme_cache.font_size), glyphs[j].advance * glyphs[j].repeat, MAX(theme_cache.font->get_underline_thickness(theme_cache.font_size) * theme_cache.base_scale, 1));
+										Rect2 rect = Rect2(char_pos, ofs_y + theme_cache.font->get_underline_position(theme_cache.font_size), glyphs[j].advance * glyphs[j].repeat, Math::max(theme_cache.font->get_underline_thickness(theme_cache.font_size) * theme_cache.base_scale, 1));
 										RS::get_singleton()->canvas_item_add_rect(ci, rect, gl_color);
 									}
 
@@ -1695,7 +1695,7 @@ void TextEdit::_notification(int p_what) {
 										if (brace_match.close_mismatch) {
 											gl_color = _get_brace_mismatch_color();
 										}
-										Rect2 rect = Rect2(char_pos, ofs_y + theme_cache.font->get_underline_position(theme_cache.font_size), glyphs[j].advance * glyphs[j].repeat, MAX(theme_cache.font->get_underline_thickness(theme_cache.font_size) * theme_cache.base_scale, 1));
+										Rect2 rect = Rect2(char_pos, ofs_y + theme_cache.font->get_underline_position(theme_cache.font_size), glyphs[j].advance * glyphs[j].repeat, Math::max(theme_cache.font->get_underline_thickness(theme_cache.font_size) * theme_cache.base_scale, 1));
 										RS::get_singleton()->canvas_item_add_rect(ci, rect, gl_color);
 									}
 								}
@@ -1755,7 +1755,7 @@ void TextEdit::_notification(int p_what) {
 
 					// Carets.
 					// Prevent carets from disappearing at theme scales below 1.0 (if the caret width is 1).
-					const int caret_width = theme_cache.caret_width * MAX(1, theme_cache.base_scale);
+					const int caret_width = theme_cache.caret_width * Math::max(1, theme_cache.base_scale);
 
 					for (int c = 0; c < carets.size(); c++) {
 						if (!clipped && get_caret_line(c) == line && carets_wrap_index[c] == line_wrap_index) {
@@ -2383,7 +2383,7 @@ void TextEdit::gui_input(const Ref<InputEvent> &p_gui_input) {
 					if (text.is_indent_wrapped_lines()) {
 						_get_wrapped_indent_level(pos.y, first_indent_line);
 					}
-					float wrap_indent = wrap_i > first_indent_line ? MIN(text.get_indent_offset(pos.y, is_layout_rtl()), wrap_at_column * 0.6) : 0.0;
+					float wrap_indent = wrap_i > first_indent_line ? Math::min(text.get_indent_offset(pos.y, is_layout_rtl()), wrap_at_column * 0.6) : 0.0;
 
 					Ref<TextParagraph> ldata = text.get_line_data(line);
 					for (Variant k : ldata->get_line_objects(wrap_i)) {
@@ -2925,7 +2925,7 @@ void TextEdit::_move_caret_left(bool p_select, bool p_move_by_word) {
 			// If the caret is at the start of the line, and not on the first line, move it up to the end of the previous line.
 			if (get_caret_column(i) == 0) {
 				if (get_caret_line(i) > 0) {
-					int new_caret_line = get_caret_line(i) - get_next_visible_line_offset_from(CLAMP(get_caret_line(i) - 1, 0, text.size() - 1), -1);
+					int new_caret_line = get_caret_line(i) - get_next_visible_line_offset_from(Math::clamp(get_caret_line(i) - 1, 0, text.size() - 1), -1);
 					set_caret_line(new_caret_line, false, true, -1, i);
 					set_caret_column(text[get_caret_line(i)].length(), i == 0, i);
 				}
@@ -2982,7 +2982,7 @@ void TextEdit::_move_caret_right(bool p_select, bool p_move_by_word) {
 			// If we are at the end of the line, move the caret to the next line down.
 			if (get_caret_column(i) == text[get_caret_line(i)].length()) {
 				if (get_caret_line(i) < text.size() - 1) {
-					int new_caret_line = get_caret_line(i) + get_next_visible_line_offset_from(CLAMP(get_caret_line(i) + 1, 0, text.size() - 1), 1);
+					int new_caret_line = get_caret_line(i) + get_next_visible_line_offset_from(Math::clamp(get_caret_line(i) + 1, 0, text.size() - 1), 1);
 					set_caret_line(new_caret_line, false, false, -1, i);
 					set_caret_column(0, i == 0, i);
 				}
@@ -3039,7 +3039,7 @@ void TextEdit::_move_caret_down(bool p_select) {
 		} else if (get_caret_line(i) == get_last_unhidden_line()) {
 			set_caret_column(text[get_caret_line(i)].length());
 		} else {
-			int new_line = get_caret_line(i) + get_next_visible_line_offset_from(CLAMP(get_caret_line(i) + 1, 0, text.size() - 1), 1);
+			int new_line = get_caret_line(i) + get_next_visible_line_offset_from(Math::clamp(get_caret_line(i) + 1, 0, text.size() - 1), 1);
 			set_caret_line(new_line, i == 0, false, 0, i);
 		}
 	}
@@ -3356,7 +3356,7 @@ void TextEdit::_update_placeholder() {
 	const int wrap_amount = placeholder_data_buf->get_line_count() - 1;
 	placeholder_line_height = theme_cache.font->get_height(theme_cache.font_size);
 	for (int i = 0; i <= wrap_amount; i++) {
-		placeholder_line_height = MAX(placeholder_line_height, placeholder_data_buf->get_line_size(i).y);
+		placeholder_line_height = Math::max(placeholder_line_height, placeholder_data_buf->get_line_size(i).y);
 	}
 
 	// Update width.
@@ -3610,7 +3610,7 @@ Control::CursorShape TextEdit::get_cursor_shape(const Point2 &p_pos) const {
 		if (text.is_indent_wrapped_lines()) {
 			_get_wrapped_indent_level(pos.y, first_indent_line);
 		}
-		float wrap_indent = wrap_i > first_indent_line ? MIN(text.get_indent_offset(pos.y, is_layout_rtl()), wrap_at_column * 0.6) : 0.0;
+		float wrap_indent = wrap_i > first_indent_line ? Math::min(text.get_indent_offset(pos.y, is_layout_rtl()), wrap_at_column * 0.6) : 0.0;
 
 		Ref<TextParagraph> ldata = text.get_line_data(pos.y);
 		for (Variant k : ldata->get_line_objects(wrap_i)) {
@@ -3936,7 +3936,7 @@ void TextEdit::_clear() {
 		_move_caret_document_start(false);
 		begin_complex_operation();
 
-		_remove_text(0, 0, MAX(0, get_line_count() - 1), MAX(get_line(MAX(get_line_count() - 1, 0)).size() - 1, 0));
+		_remove_text(0, 0, Math::max(0, get_line_count() - 1), Math::max(get_line(Math::max(get_line_count() - 1, 0)).size() - 1, 0));
 		insert_text_at_caret("");
 		text.clear();
 
@@ -3974,7 +3974,7 @@ void TextEdit::set_text(const String &p_text) {
 
 		begin_complex_operation();
 		deselect();
-		_remove_text(0, 0, MAX(0, get_line_count() - 1), MAX(get_line(MAX(get_line_count() - 1, 0)).size() - 1, 0));
+		_remove_text(0, 0, Math::max(0, get_line_count() - 1), Math::max(get_line(Math::max(get_line_count() - 1, 0)).size() - 1, 0));
 		insert_text_at_caret(p_text);
 		end_complex_operation();
 	}
@@ -4078,7 +4078,7 @@ int TextEdit::get_line_width(int p_line, int p_wrap_index) const {
 }
 
 int TextEdit::get_line_height() const {
-	return MAX(text.get_line_height() + theme_cache.line_spacing, 1);
+	return Math::max(text.get_line_height() + theme_cache.line_spacing, 1);
 }
 
 int TextEdit::_get_wrapped_indent_level(int p_line, int &r_first_wrap) const {
@@ -4396,7 +4396,7 @@ Point2i TextEdit::get_next_visible_line_index_offset_from(int p_line_from, int p
 				break;
 			}
 		}
-		wrap_index = get_line_wrap_count(MIN(i, text.size() - 1)) - MAX(0, num_visible - p_visible_amount);
+		wrap_index = get_line_wrap_count(Math::min(i, text.size() - 1)) - Math::max(0, num_visible - p_visible_amount);
 
 		// If we are a hidden line, then we are the last line as we cannot reach "p_visible_amount".
 		// This means we need to backtrack to get last visible line.
@@ -4421,9 +4421,9 @@ Point2i TextEdit::get_next_visible_line_index_offset_from(int p_line_from, int p
 				break;
 			}
 		}
-		wrap_index = MAX(0, num_visible - p_visible_amount);
+		wrap_index = Math::max(0, num_visible - p_visible_amount);
 	}
-	wrap_index = MAX(wrap_index, 0);
+	wrap_index = Math::max(wrap_index, 0);
 	return Point2i(num_total, wrap_index);
 }
 
@@ -4658,7 +4658,7 @@ void TextEdit::end_complex_operation() {
 
 	queue_accessibility_update();
 
-	complex_operation_count = MAX(complex_operation_count - 1, 0);
+	complex_operation_count = Math::max(complex_operation_count - 1, 0);
 	if (complex_operation_count > 0) {
 		return;
 	}
@@ -4965,7 +4965,7 @@ Point2i TextEdit::get_line_column_at_pos(const Point2i &p_pos, bool p_clamp_line
 	int wrap_index = 0;
 
 	if (get_line_wrapping_mode() != LineWrappingMode::LINE_WRAPPING_NONE || _is_hiding_enabled()) {
-		Point2i f_ofs = get_next_visible_line_index_offset_from(first_vis_line, first_visible_line_wrap_ofs, rows + (1 * SIGN(rows)));
+		Point2i f_ofs = get_next_visible_line_index_offset_from(first_vis_line, first_visible_line_wrap_ofs, rows + (1 * Math::sign(rows)));
 		wrap_index = f_ofs.y;
 
 		if (rows < 0) {
@@ -4975,7 +4975,7 @@ Point2i TextEdit::get_line_column_at_pos(const Point2i &p_pos, bool p_clamp_line
 		}
 	}
 
-	row = CLAMP(row, 0, text.size() - 1);
+	row = Math::clamp(row, 0, text.size() - 1);
 
 	int visible_lines = get_visible_line_count_in_range(first_vis_line, row);
 	if (rows > visible_lines) {
@@ -4999,7 +4999,7 @@ Point2i TextEdit::get_line_column_at_pos(const Point2i &p_pos, bool p_clamp_line
 	if (text.is_indent_wrapped_lines()) {
 		_get_wrapped_indent_level(row, first_indent_line);
 	}
-	float wrap_indent = wrap_index > first_indent_line ? MIN(text.get_indent_offset(row, rtl), wrap_at_column * 0.6) : 0.0;
+	float wrap_indent = wrap_index > first_indent_line ? Math::min(text.get_indent_offset(row, rtl), wrap_at_column * 0.6) : 0.0;
 	if (rtl) {
 		colx = TS->shaped_text_get_size(text_rid).x - colx + wrap_indent;
 	} else {
@@ -5099,7 +5099,7 @@ int TextEdit::get_minimap_line_at_pos(const Point2i &p_pos) const {
 
 	int row = minimap_line + Math::floor(rows);
 	if (get_line_wrapping_mode() != LineWrappingMode::LINE_WRAPPING_NONE || _is_hiding_enabled()) {
-		int f_ofs = get_next_visible_line_index_offset_from(minimap_line, first_visible_line_wrap_ofs, rows + (1 * SIGN(rows))).x - 1;
+		int f_ofs = get_next_visible_line_index_offset_from(minimap_line, first_visible_line_wrap_ofs, rows + (1 * Math::sign(rows))).x - 1;
 		if (rows < 0) {
 			row = minimap_line - f_ofs;
 		} else {
@@ -5107,7 +5107,7 @@ int TextEdit::get_minimap_line_at_pos(const Point2i &p_pos) const {
 		}
 	}
 
-	row = CLAMP(row, 0, text.size() - 1);
+	row = Math::clamp(row, 0, text.size() - 1);
 
 	return row;
 }
@@ -5219,8 +5219,8 @@ int TextEdit::add_caret(int p_line, int p_column) {
 	}
 	_cancel_drag_and_drop_text();
 
-	p_line = CLAMP(p_line, 0, text.size() - 1);
-	p_column = CLAMP(p_column, 0, get_line(p_line).length());
+	p_line = Math::clamp(p_line, 0, text.size() - 1);
+	p_column = Math::clamp(p_column, 0, get_line(p_line).length());
 
 	if (!is_in_mulitcaret_edit()) {
 		// Carets cannot overlap.
@@ -5364,7 +5364,7 @@ void TextEdit::add_caret_at_carets(bool p_below) {
 			if (caret_wrap_index < get_line_wrap_count(caret_line)) {
 				set_caret_line(caret_line, false, false, caret_wrap_index + 1, new_caret_index);
 			} else {
-				int new_line = caret_line + get_next_visible_line_offset_from(CLAMP(caret_line + 1, 0, text.size() - 1), 1);
+				int new_line = caret_line + get_next_visible_line_offset_from(Math::clamp(caret_line + 1, 0, text.size() - 1), 1);
 				set_caret_line(new_line, false, false, 0, new_caret_index);
 			}
 			// Move selection origin down.
@@ -5372,7 +5372,7 @@ void TextEdit::add_caret_at_carets(bool p_below) {
 				if (selection_origin_wrap_index < get_line_wrap_count(selection_origin_line)) {
 					set_selection_origin_line(selection_origin_line, false, selection_origin_wrap_index + 1, new_caret_index);
 				} else {
-					int new_line = selection_origin_line + get_next_visible_line_offset_from(CLAMP(selection_origin_line + 1, 0, text.size() - 1), 1);
+					int new_line = selection_origin_line + get_next_visible_line_offset_from(Math::clamp(selection_origin_line + 1, 0, text.size() - 1), 1);
 					set_selection_origin_line(new_line, false, 0, new_caret_index);
 				}
 			}
@@ -5440,8 +5440,8 @@ void TextEdit::collapse_carets(int p_from_line, int p_from_column, int p_to_line
 	// Collapse carets in the selected range to the from position.
 
 	// Clamp the collapse target position.
-	int collapse_line = CLAMP(p_from_line, 0, text.size() - 1);
-	int collapse_column = CLAMP(p_from_column, 0, text[collapse_line].length());
+	int collapse_line = Math::clamp(p_from_line, 0, text.size() - 1);
+	int collapse_column = Math::clamp(p_from_column, 0, text[collapse_line].length());
 
 	// Swap the lines if they are in the wrong order.
 	if (p_from_line > p_to_line) {
@@ -5544,8 +5544,8 @@ void TextEdit::merge_overlapping_carets() {
 
 		if (get_selection_from_line(caret_to_save) != get_selection_from_line(caret_to_remove) || get_selection_to_line(caret_to_save) != get_selection_to_line(caret_to_remove) || get_selection_from_column(caret_to_save) != get_selection_from_column(caret_to_remove) || get_selection_to_column(caret_to_save) != get_selection_to_column(caret_to_remove)) {
 			// Selections are not the same, merge them into one bigger selection.
-			int new_from_line = MIN(get_selection_from_line(caret_to_remove), get_selection_from_line(caret_to_save));
-			int new_to_line = MAX(get_selection_to_line(caret_to_remove), get_selection_to_line(caret_to_save));
+			int new_from_line = Math::min(get_selection_from_line(caret_to_remove), get_selection_from_line(caret_to_save));
+			int new_to_line = Math::max(get_selection_to_line(caret_to_remove), get_selection_to_line(caret_to_save));
 			int new_from_col;
 			int new_to_col;
 			if (get_selection_from_line(caret_to_remove) < get_selection_from_line(caret_to_save)) {
@@ -5553,14 +5553,14 @@ void TextEdit::merge_overlapping_carets() {
 			} else if (get_selection_from_line(caret_to_remove) > get_selection_from_line(caret_to_save)) {
 				new_from_col = get_selection_from_column(caret_to_save);
 			} else {
-				new_from_col = MIN(get_selection_from_column(caret_to_remove), get_selection_from_column(caret_to_save));
+				new_from_col = Math::min(get_selection_from_column(caret_to_remove), get_selection_from_column(caret_to_save));
 			}
 			if (get_selection_to_line(caret_to_remove) < get_selection_to_line(caret_to_save)) {
 				new_to_col = get_selection_to_column(caret_to_save);
 			} else if (get_selection_to_line(caret_to_remove) > get_selection_to_line(caret_to_save)) {
 				new_to_col = get_selection_to_column(caret_to_remove);
 			} else {
-				new_to_col = MAX(get_selection_to_column(caret_to_remove), get_selection_to_column(caret_to_save));
+				new_to_col = Math::max(get_selection_to_column(caret_to_remove), get_selection_to_column(caret_to_save));
 			}
 
 			// Use the direction from the last caret or the saved one.
@@ -5649,7 +5649,7 @@ void TextEdit::set_caret_line(int p_line, bool p_adjust_viewport, bool p_can_be_
 	}
 
 	setting_caret_line = true;
-	p_line = CLAMP(p_line, 0, text.size() - 1);
+	p_line = Math::clamp(p_line, 0, text.size() - 1);
 
 	if (!p_can_be_hidden) {
 		if (_is_line_hidden(p_line)) {
@@ -5681,7 +5681,7 @@ void TextEdit::set_caret_line(int p_line, bool p_adjust_viewport, bool p_can_be_
 		}
 	} else {
 		// Clamp the column.
-		n_col = MIN(get_caret_column(p_caret), get_line(p_line).length());
+		n_col = Math::min(get_caret_column(p_caret), get_line(p_line).length());
 	}
 	caret_moved = (caret_moved || get_caret_column(p_caret) != n_col);
 	carets.write[p_caret].column = n_col;
@@ -5711,7 +5711,7 @@ int TextEdit::get_caret_line(int p_caret) const {
 void TextEdit::set_caret_column(int p_column, bool p_adjust_viewport, int p_caret) {
 	ERR_FAIL_INDEX(p_caret, carets.size());
 
-	p_column = CLAMP(p_column, 0, get_line(get_caret_line(p_caret)).length());
+	p_column = Math::clamp(p_column, 0, get_line(get_caret_line(p_caret)).length());
 
 	bool caret_moved = get_caret_column(p_caret) != p_column;
 	carets.write[p_caret].column = p_column;
@@ -5978,8 +5978,8 @@ void TextEdit::skip_selection_for_next_occurrence() {
 void TextEdit::select(int p_origin_line, int p_origin_column, int p_caret_line, int p_caret_column, int p_caret) {
 	ERR_FAIL_INDEX(p_caret, get_caret_count());
 
-	p_caret_line = CLAMP(p_caret_line, 0, text.size() - 1);
-	p_caret_column = CLAMP(p_caret_column, 0, text[p_caret_line].length());
+	p_caret_line = Math::clamp(p_caret_line, 0, text.size() - 1);
+	p_caret_column = Math::clamp(p_caret_column, 0, text[p_caret_line].length());
 	set_caret_line(p_caret_line, false, true, -1, p_caret);
 	set_caret_column(p_caret_column, false, p_caret);
 
@@ -5987,8 +5987,8 @@ void TextEdit::select(int p_origin_line, int p_origin_column, int p_caret_line, 
 		return;
 	}
 
-	p_origin_line = CLAMP(p_origin_line, 0, text.size() - 1);
-	p_origin_column = CLAMP(p_origin_column, 0, text[p_origin_line].length());
+	p_origin_line = Math::clamp(p_origin_line, 0, text.size() - 1);
+	p_origin_column = Math::clamp(p_origin_column, 0, text[p_origin_line].length());
 	set_selection_origin_line(p_origin_line, true, -1, p_caret);
 	set_selection_origin_column(p_origin_column, p_caret);
 
@@ -6096,7 +6096,7 @@ void TextEdit::set_selection_origin_line(int p_line, bool p_can_be_hidden, int p
 		return;
 	}
 	ERR_FAIL_INDEX(p_caret, carets.size());
-	p_line = CLAMP(p_line, 0, text.size() - 1);
+	p_line = Math::clamp(p_line, 0, text.size() - 1);
 
 	if (!p_can_be_hidden) {
 		if (_is_line_hidden(p_line)) {
@@ -6129,7 +6129,7 @@ void TextEdit::set_selection_origin_line(int p_line, bool p_can_be_hidden, int p
 		}
 	} else {
 		// Clamp the column.
-		n_col = MIN(get_selection_origin_column(p_caret), get_line(p_line).length());
+		n_col = Math::min(get_selection_origin_column(p_caret), get_line(p_line).length());
 	}
 	selection_moved = (selection_moved || get_selection_origin_column(p_caret) != n_col);
 	carets.write[p_caret].selection.origin_column = n_col;
@@ -6150,7 +6150,7 @@ void TextEdit::set_selection_origin_column(int p_column, int p_caret) {
 	}
 	ERR_FAIL_INDEX(p_caret, carets.size());
 
-	p_column = CLAMP(p_column, 0, get_line(get_selection_origin_line(p_caret)).length());
+	p_column = Math::clamp(p_column, 0, get_line(get_selection_origin_line(p_caret)).length());
 
 	bool selection_moved = get_selection_origin_column(p_caret) != p_column;
 
@@ -6203,7 +6203,7 @@ int TextEdit::get_selection_from_line(int p_caret) const {
 	if (!has_selection(p_caret)) {
 		return carets[p_caret].line;
 	}
-	return MIN(carets[p_caret].selection.origin_line, carets[p_caret].line);
+	return Math::min(carets[p_caret].selection.origin_line, carets[p_caret].line);
 }
 
 int TextEdit::get_selection_from_column(int p_caret) const {
@@ -6216,7 +6216,7 @@ int TextEdit::get_selection_from_column(int p_caret) const {
 	} else if (carets[p_caret].selection.origin_line > carets[p_caret].line) {
 		return carets[p_caret].column;
 	} else {
-		return MIN(carets[p_caret].selection.origin_column, carets[p_caret].column);
+		return Math::min(carets[p_caret].selection.origin_column, carets[p_caret].column);
 	}
 }
 
@@ -6225,7 +6225,7 @@ int TextEdit::get_selection_to_line(int p_caret) const {
 	if (!has_selection(p_caret)) {
 		return carets[p_caret].line;
 	}
-	return MAX(carets[p_caret].selection.origin_line, carets[p_caret].line);
+	return Math::max(carets[p_caret].selection.origin_line, carets[p_caret].line);
 }
 
 int TextEdit::get_selection_to_column(int p_caret) const {
@@ -6238,7 +6238,7 @@ int TextEdit::get_selection_to_column(int p_caret) const {
 	} else if (carets[p_caret].selection.origin_line > carets[p_caret].line) {
 		return carets[p_caret].selection.origin_column;
 	} else {
-		return MAX(carets[p_caret].selection.origin_column, carets[p_caret].column);
+		return Math::max(carets[p_caret].selection.origin_column, carets[p_caret].column);
 	}
 }
 
@@ -6496,7 +6496,7 @@ double TextEdit::get_scroll_pos_for_line(int p_line, int p_wrap_index) const {
 
 	double new_line_scroll_pos = 0.0;
 	if (p_line > 0) {
-		new_line_scroll_pos = get_visible_line_count_in_range(0, MIN(p_line - 1, text.size() - 1));
+		new_line_scroll_pos = get_visible_line_count_in_range(0, Math::min(p_line - 1, text.size() - 1));
 	}
 	new_line_scroll_pos += p_wrap_index;
 	return new_line_scroll_pos;
@@ -6514,7 +6514,7 @@ void TextEdit::set_line_as_first_visible(int p_line, int p_wrap_index) {
 }
 
 int TextEdit::get_first_visible_line() const {
-	return CLAMP(first_visible_line, 0, text.size() - 1);
+	return Math::clamp(first_visible_line, 0, text.size() - 1);
 }
 
 void TextEdit::set_line_as_center_visible(int p_line, int p_wrap_index) {
@@ -6560,7 +6560,7 @@ int TextEdit::get_last_full_visible_line() const {
 	int first_vis_line = get_first_visible_line();
 	int last_vis_line = 0;
 	last_vis_line = first_vis_line + get_next_visible_line_index_offset_from(first_vis_line, first_visible_line_wrap_ofs, get_visible_line_count()).x - 1;
-	last_vis_line = CLAMP(last_vis_line, 0, text.size() - 1);
+	last_vis_line = Math::clamp(last_vis_line, 0, text.size() - 1);
 	return last_vis_line;
 }
 
@@ -8161,14 +8161,14 @@ int TextEdit::_get_column_pos_of_word(const String &p_key, const String &p_searc
 /* Mouse */
 int TextEdit::_get_char_pos_for_line(int p_px, int p_line, int p_wrap_index) const {
 	ERR_FAIL_INDEX_V(p_line, text.size(), 0);
-	p_wrap_index = MIN(p_wrap_index, text.get_line_data(p_line)->get_line_count() - 1);
+	p_wrap_index = Math::min(p_wrap_index, text.get_line_data(p_line)->get_line_count() - 1);
 
 	RID text_rid = text.get_line_data(p_line)->get_line_rid(p_wrap_index);
 	int first_indent_line = 0;
 	if (text.is_indent_wrapped_lines()) {
 		_get_wrapped_indent_level(p_line, first_indent_line);
 	}
-	float wrap_indent = p_wrap_index > first_indent_line ? MIN(text.get_indent_offset(p_line, is_layout_rtl()), wrap_at_column * 0.6) : 0.0;
+	float wrap_indent = p_wrap_index > first_indent_line ? Math::min(text.get_indent_offset(p_line, is_layout_rtl()), wrap_at_column * 0.6) : 0.0;
 	if (is_layout_rtl()) {
 		p_px = TS->shaped_text_get_size(text_rid).x - p_px + wrap_indent;
 	} else {
@@ -8242,7 +8242,7 @@ int TextEdit::_get_column_x_offset_for_line(int p_char, int p_line, int p_column
 	if (text.is_indent_wrapped_lines()) {
 		_get_wrapped_indent_level(p_line, first_indent_line);
 	}
-	float wrap_indent = row > first_indent_line ? MIN(text.get_indent_offset(p_line, rtl), wrap_at_column * 0.6) : 0.0;
+	float wrap_indent = row > first_indent_line ? Math::min(text.get_indent_offset(p_line, rtl), wrap_at_column * 0.6) : 0.0;
 	CaretInfo ts_caret = TS->shaped_text_get_carets(text_rid, p_column);
 	if ((ts_caret.l_caret != Rect2() && (ts_caret.l_dir == TextServer::DIRECTION_AUTO || ts_caret.l_dir == (TextServer::Direction)input_direction)) || (ts_caret.t_caret == Rect2())) {
 		return ts_caret.l_caret.position.x + (rtl ? -wrap_indent : wrap_indent);
@@ -8398,7 +8398,7 @@ void TextEdit::_update_selection_mode_word(bool p_initial) {
 	int column = pos.x;
 	int caret_index = get_caret_count() - 1;
 
-	int caret_pos = CLAMP(column, 0, text[line].length());
+	int caret_pos = Math::clamp(column, 0, text[line].length());
 	int beg = caret_pos;
 	int end = beg;
 	PackedInt32Array words = TS->shaped_text_get_word_breaks(text.get_line_data(line)->get_rid());
@@ -8535,7 +8535,7 @@ void TextEdit::_update_wrap_at_column(bool p_force) {
 	// Update viewport.
 	int first_vis_line = get_first_visible_line();
 	if (is_line_wrapped(first_vis_line)) {
-		first_visible_line_wrap_ofs = MIN(first_visible_line_wrap_ofs, get_line_wrap_count(first_vis_line));
+		first_visible_line_wrap_ofs = Math::min(first_visible_line_wrap_ofs, get_line_wrap_count(first_vis_line));
 	} else {
 		first_visible_line_wrap_ofs = 0;
 	}
@@ -8570,7 +8570,7 @@ void TextEdit::_update_scrollbars() {
 		total_width += minimap_width;
 	}
 
-	content_size_cache = Vector2i(total_width + 10, MAX(total_rows, 1) * get_line_height());
+	content_size_cache = Vector2i(total_width + 10, Math::max(total_rows, 1) * get_line_height());
 	if (fit_content_height || fit_content_width) {
 		update_minimum_size();
 	}
@@ -8649,10 +8649,10 @@ void TextEdit::_scroll_moved(double p_to_val) {
 				}
 			}
 		}
-		n_line = MIN(n_line, text.size() - 1);
+		n_line = Math::min(n_line, text.size() - 1);
 		int line_wrap_amount = draw_placeholder ? placeholder_wrapped_rows.size() - 1 : get_line_wrap_count(n_line);
 		int wi = line_wrap_amount - (sc - v_scroll_i - 1);
-		wi = CLAMP(wi, 0, line_wrap_amount);
+		wi = Math::clamp(wi, 0, line_wrap_amount);
 
 		first_visible_line = n_line;
 		first_visible_line_wrap_ofs = wi;
@@ -8665,17 +8665,17 @@ double TextEdit::_get_visible_lines_offset() const {
 	double total = _get_control_height();
 	total /= (double)get_line_height();
 	total = total - std::floor(total);
-	total = -CLAMP(total, 0.001, 1) + 1;
+	total = -Math::clamp(total, 0.001, 1) + 1;
 	return total;
 }
 
 double TextEdit::_get_v_scroll_offset() const {
 	double val = get_v_scroll() - std::floor(get_v_scroll());
-	return CLAMP(val, 0, 1);
+	return Math::clamp(val, 0, 1);
 }
 
 void TextEdit::_scroll_up(real_t p_delta, bool p_animate) {
-	if (scrolling && smooth_scroll_enabled && SIGN(target_v_scroll - v_scroll->get_value()) != SIGN(-p_delta)) {
+	if (scrolling && smooth_scroll_enabled && Math::sign(target_v_scroll - v_scroll->get_value()) != Math::sign(-p_delta)) {
 		scrolling = false;
 		minimap_clicked = false;
 	}
@@ -8703,7 +8703,7 @@ void TextEdit::_scroll_up(real_t p_delta, bool p_animate) {
 }
 
 void TextEdit::_scroll_down(real_t p_delta, bool p_animate) {
-	if (scrolling && smooth_scroll_enabled && SIGN(target_v_scroll - v_scroll->get_value()) != SIGN(p_delta)) {
+	if (scrolling && smooth_scroll_enabled && Math::sign(target_v_scroll - v_scroll->get_value()) != Math::sign(p_delta)) {
 		scrolling = false;
 		minimap_clicked = false;
 	}
@@ -8889,7 +8889,7 @@ void TextEdit::_update_minimap_click() {
 	}
 
 	Point2i next_line = get_next_visible_line_index_offset_from(row, 0, -get_visible_line_count() / 2);
-	int first_line = MAX(0, row - next_line.x + 1);
+	int first_line = Math::max(0, row - next_line.x + 1);
 	double delta = get_scroll_pos_for_line(first_line, next_line.y) - get_v_scroll();
 	if (delta < 0) {
 		_scroll_up(-delta, true);

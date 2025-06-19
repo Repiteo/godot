@@ -433,7 +433,7 @@ void PathFollow2D::set_progress(real_t p_progress) {
 					progress = path_length;
 				}
 			} else {
-				progress = CLAMP(progress, 0, path_length);
+				progress = Math::clamp(progress, 0, path_length);
 			}
 		}
 

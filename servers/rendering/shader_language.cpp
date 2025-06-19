@@ -2322,7 +2322,7 @@ Vector<ShaderLanguage::Scalar> ShaderLanguage::_eval_vector(const Vector<Scalar>
 
 	Scalar *w = value.ptrw();
 	for (uint32_t i = 0U; i < ret_size; i++) {
-		w[i] = _eval_scalar(p_va[MIN(i, left_size - 1)], p_vb[MIN(i, right_size - 1)], p_op, p_ret_type, r_is_valid);
+		w[i] = _eval_scalar(p_va[Math::min(i, left_size - 1)], p_vb[Math::min(i, right_size - 1)], p_op, p_ret_type, r_is_valid);
 		if (!r_is_valid) {
 			return value;
 		}

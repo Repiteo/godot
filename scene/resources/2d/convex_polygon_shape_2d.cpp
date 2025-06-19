@@ -133,7 +133,7 @@ Rect2 ConvexPolygonShape2D::get_rect() const {
 real_t ConvexPolygonShape2D::get_enclosing_radius() const {
 	real_t r = 0.0;
 	for (int i(0); i < get_points().size(); i++) {
-		r = MAX(get_points()[i].length_squared(), r);
+		r = Math::max(get_points()[i].length_squared(), r);
 	}
 	return Math::sqrt(r);
 }

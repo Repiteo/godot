@@ -2769,7 +2769,7 @@ Vector3 BaseMaterial3D::get_uv1_offset() const {
 
 void BaseMaterial3D::set_uv1_triplanar_blend_sharpness(float p_sharpness) {
 	// Negative values or values higher than 150 can result in NaNs, leading to broken rendering.
-	uv1_triplanar_sharpness = CLAMP(p_sharpness, 0.0, 150.0);
+	uv1_triplanar_sharpness = Math::clamp(p_sharpness, 0.0, 150.0);
 	_material_set_param(shader_names->uv1_blend_sharpness, uv1_triplanar_sharpness);
 }
 
@@ -2797,7 +2797,7 @@ Vector3 BaseMaterial3D::get_uv2_offset() const {
 
 void BaseMaterial3D::set_uv2_triplanar_blend_sharpness(float p_sharpness) {
 	// Negative values or values higher than 150 can result in NaNs, leading to broken rendering.
-	uv2_triplanar_sharpness = CLAMP(p_sharpness, 0.0, 150.0);
+	uv2_triplanar_sharpness = Math::clamp(p_sharpness, 0.0, 150.0);
 	_material_set_param(shader_names->uv2_blend_sharpness, uv2_triplanar_sharpness);
 }
 
@@ -3068,7 +3068,7 @@ bool BaseMaterial3D::is_proximity_fade_enabled() const {
 }
 
 void BaseMaterial3D::set_proximity_fade_distance(float p_distance) {
-	proximity_fade_distance = MAX(p_distance, 0.01);
+	proximity_fade_distance = Math::max(p_distance, 0.01);
 	_material_set_param(shader_names->proximity_fade_distance, proximity_fade_distance);
 }
 

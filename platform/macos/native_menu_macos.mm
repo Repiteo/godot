@@ -371,7 +371,7 @@ int NativeMenuMacOS::add_submenu_item(const RID &p_rid, const String &p_label, c
 		p_index = item_start + item_count;
 	} else {
 		p_index += item_start;
-		p_index = CLAMP(p_index, item_start, item_start + item_count);
+		p_index = Math::clamp(p_index, item_start, item_start + item_count);
 	}
 	menu_item = [md->menu insertItemWithTitle:[NSString stringWithUTF8String:p_label.utf8().get_data()] action:nil keyEquivalent:@"" atIndex:p_index];
 
@@ -395,7 +395,7 @@ NSMenuItem *NativeMenuMacOS::_menu_add_item(NSMenu *p_menu, const String &p_labe
 			p_index = item_start + item_count;
 		} else {
 			p_index += item_start;
-			p_index = CLAMP(p_index, item_start, item_start + item_count);
+			p_index = Math::clamp(p_index, item_start, item_start + item_count);
 		}
 		menu_item = [p_menu insertItemWithTitle:[NSString stringWithUTF8String:p_label.utf8().get_data()] action:@selector(globalMenuCallback:) keyEquivalent:[NSString stringWithUTF8String:keycode.utf8().get_data()] atIndex:p_index];
 		*r_out = p_index - item_start;
@@ -582,7 +582,7 @@ int NativeMenuMacOS::add_separator(const RID &p_rid, int p_index) {
 		p_index = item_start + item_count;
 	} else {
 		p_index += item_start;
-		p_index = CLAMP(p_index, item_start, item_start + item_count);
+		p_index = Math::clamp(p_index, item_start, item_start + item_count);
 	}
 	[md->menu insertItem:[NSMenuItem separatorItem] atIndex:p_index];
 	return p_index - item_start;

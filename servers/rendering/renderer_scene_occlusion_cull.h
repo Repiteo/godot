@@ -84,7 +84,7 @@ public:
 
 				Plane vp = Plane(view, 1.0);
 				Plane projected = p_cam_projection.xform4(vp);
-				min_depth = MIN(min_depth, -view.z);
+				min_depth = Math::min(min_depth, -view.z);
 
 				float w = projected.d;
 				if (w < 1.0) {
@@ -104,9 +104,9 @@ public:
 			int mip_count = mips.size();
 
 			Vector2 screen_diagonal = (rect_max - rect_min) * sizes[0];
-			float size = MAX(screen_diagonal.x, screen_diagonal.y);
+			float size = Math::max(screen_diagonal.x, screen_diagonal.y);
 			float l = Math::ceil(Math::log2(size));
-			int lod = CLAMP(l, 0, mip_count - 1);
+			int lod = Math::clamp(l, 0, mip_count - 1);
 
 			const int max_samples = 512;
 			int sample_count = 0;
@@ -116,11 +116,11 @@ public:
 				int w = sizes[lod].x;
 				int h = sizes[lod].y;
 
-				int minx = CLAMP(rect_min.x * w - 1, 0, w - 1);
-				int maxx = CLAMP(rect_max.x * w + 1, 0, w - 1);
+				int minx = Math::clamp(rect_min.x * w - 1, 0, w - 1);
+				int maxx = Math::clamp(rect_max.x * w + 1, 0, w - 1);
 
-				int miny = CLAMP(rect_min.y * h - 1, 0, h - 1);
-				int maxy = CLAMP(rect_max.y * h + 1, 0, h - 1);
+				int miny = Math::clamp(rect_min.y * h - 1, 0, h - 1);
+				int maxy = Math::clamp(rect_max.y * h + 1, 0, h - 1);
 
 				sample_count += (maxx - minx + 1) * (maxy - miny + 1);
 

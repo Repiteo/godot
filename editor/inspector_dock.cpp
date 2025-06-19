@@ -320,7 +320,7 @@ void InspectorDock::_prepare_history() {
 	EditorSelectionHistory *editor_history = EditorNode::get_singleton()->get_editor_selection_history();
 	editor_history->cleanup_history();
 
-	int history_to = MAX(0, editor_history->get_history_len() - 25);
+	int history_to = Math::max(0, editor_history->get_history_len() - 25);
 
 	history_menu->get_popup()->clear();
 

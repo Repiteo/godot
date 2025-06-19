@@ -260,7 +260,7 @@ void JointGizmosDrawer::draw_cone(const Transform3D &p_offset, const Basis &p_ba
 
 	/// Twist
 	float ts = Math::rad_to_deg(p_twist);
-	ts = MIN(ts, 720);
+	ts = Math::min(ts, 720);
 
 	for (int i = 0; i < int(ts); i += 5) {
 		float ra = Math::deg_to_rad((float)i);

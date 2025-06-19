@@ -329,8 +329,8 @@ void Image::_get_mipmap_offset_and_size(int p_mipmap, int64_t &r_offset, int &r_
 		s *= pixel_size;
 		s >>= pixel_rshift;
 		ofs += s;
-		w = MAX(minw, w >> 1);
-		h = MAX(minh, h >> 1);
+		w = Math::max(minw, w >> 1);
+		h = Math::max(minh, h >> 1);
 	}
 
 	r_offset = ofs;
@@ -404,9 +404,9 @@ Image::Image3DValidateError Image::validate_3d_image(Image::Format p_format, int
 			break;
 		}
 
-		w = MAX(1, w >> 1);
-		h = MAX(1, h >> 1);
-		d = MAX(1, d >> 1);
+		w = Math::max(1, w >> 1);
+		h = Math::max(1, h >> 1);
+		d = Math::max(1, d >> 1);
 	}
 
 	if (arr_ofs != p_images.size()) {
@@ -470,7 +470,7 @@ int Image::get_mipmap_count() const {
 // Using template generates perfectly optimized code due to constant expression reduction and unused variable removal present in all compilers.
 template <uint32_t read_bytes, bool read_alpha, uint32_t write_bytes, bool write_alpha, bool read_gray, bool write_gray>
 static void _convert(int p_width, int p_height, const uint8_t *p_src, uint8_t *p_dst) {
-	constexpr uint32_t max_bytes = MAX(read_bytes, write_bytes);
+	constexpr uint32_t max_bytes = Math::max(read_bytes, write_bytes);
 
 	for (int y = 0; y < p_height; y++) {
 		for (int x = 0; x < p_width; x++) {
@@ -518,7 +518,7 @@ static void _convert_fast(int p_width, int p_height, const T *p_src, T *p_dst) {
 	const int resolution = p_width * p_height;
 
 	for (int i = 0; i < resolution; i++) {
-		memcpy(p_dst + dst_count, p_src + src_count, MIN(read_channels, write_channels) * sizeof(T));
+		memcpy(p_dst + dst_count, p_src + src_count, Math::min(read_channels, write_channels) * sizeof(T));
 
 		if constexpr (write_channels > read_channels) {
 			const T def_value[4] = { def_zero, def_zero, def_zero, def_one };
@@ -859,7 +859,7 @@ static void _scale_cubic(const uint8_t *__restrict p_src, uint8_t *__restrict p_
 
 			for (int i = 0; i < CC; i++) {
 				if constexpr (sizeof(T) == 1) { //byte
-					dst[i] = CLAMP(Math::fast_ftoi(color[i]), 0, 255);
+					dst[i] = Math::clamp(Math::fast_ftoi(color[i]), 0, 255);
 				} else if constexpr (sizeof(T) == 2) { //half float
 					dst[i] = Math::make_half_float(color[i]);
 				} else {
@@ -999,7 +999,7 @@ static void _scale_lanczos(const uint8_t *__restrict p_src, uint8_t *__restrict 
 
 		float x_scale = float(src_width) / float(dst_width);
 
-		float scale_factor = MAX(x_scale, 1); // A larger kernel is required only when downscaling
+		float scale_factor = Math::max(x_scale, 1); // A larger kernel is required only when downscaling
 		int32_t half_kernel = LANCZOS_TYPE * scale_factor;
 
 		float *kernel = memnew_arr(float, half_kernel * 2);
@@ -1007,8 +1007,8 @@ static void _scale_lanczos(const uint8_t *__restrict p_src, uint8_t *__restrict 
 		for (int32_t buffer_x = 0; buffer_x < dst_width; buffer_x++) {
 			// The corresponding point on the source image
 			float src_x = (buffer_x + 0.5f) * x_scale; // Offset by 0.5 so it uses the pixel's center
-			int32_t start_x = MAX(0, int32_t(src_x) - half_kernel + 1);
-			int32_t end_x = MIN(src_width - 1, int32_t(src_x) + half_kernel);
+			int32_t start_x = Math::max(0, int32_t(src_x) - half_kernel + 1);
+			int32_t end_x = Math::min(src_width - 1, int32_t(src_x) + half_kernel);
 
 			// Create the kernel used by all the pixels of the column
 			for (int32_t target_x = start_x; target_x <= end_x; target_x++) {
@@ -1049,15 +1049,15 @@ static void _scale_lanczos(const uint8_t *__restrict p_src, uint8_t *__restrict 
 
 		float y_scale = float(src_height) / float(dst_height);
 
-		float scale_factor = MAX(y_scale, 1);
+		float scale_factor = Math::max(y_scale, 1);
 		int32_t half_kernel = LANCZOS_TYPE * scale_factor;
 
 		float *kernel = memnew_arr(float, half_kernel * 2);
 
 		for (int32_t dst_y = 0; dst_y < dst_height; dst_y++) {
 			float buffer_y = (dst_y + 0.5f) * y_scale;
-			int32_t start_y = MAX(0, int32_t(buffer_y) - half_kernel + 1);
-			int32_t end_y = MIN(src_height - 1, int32_t(buffer_y) + half_kernel);
+			int32_t start_y = Math::max(0, int32_t(buffer_y) - half_kernel + 1);
+			int32_t end_y = Math::min(src_height - 1, int32_t(buffer_y) + half_kernel);
 
 			for (int32_t target_y = start_y; target_y <= end_y; target_y++) {
 				kernel[target_y - start_y] = _lanczos((target_y + 0.5f - buffer_y) / scale_factor);
@@ -1084,7 +1084,7 @@ static void _scale_lanczos(const uint8_t *__restrict p_src, uint8_t *__restrict 
 					pixel[i] /= weight;
 
 					if constexpr (sizeof(T) == 1) { //byte
-						dst_data[i] = CLAMP(Math::fast_ftoi(pixel[i]), 0, 255);
+						dst_data[i] = Math::clamp(Math::fast_ftoi(pixel[i]), 0, 255);
 					} else if constexpr (sizeof(T) == 2) { //half float
 						dst_data[i] = Math::make_half_float(pixel[i]);
 					} else { // float
@@ -1101,7 +1101,7 @@ static void _scale_lanczos(const uint8_t *__restrict p_src, uint8_t *__restrict 
 }
 
 static void _overlay(const uint8_t *__restrict p_src, uint8_t *__restrict p_dst, float p_alpha, uint32_t p_width, uint32_t p_height, uint32_t p_pixel_size) {
-	uint16_t alpha = MIN((uint16_t)(p_alpha * 256.0f), 256);
+	uint16_t alpha = Math::min((uint16_t)(p_alpha * 256.0f), 256);
 
 	for (uint32_t i = 0; i < p_width * p_height * p_pixel_size; i++) {
 		p_dst[i] = (p_dst[i] * (256 - alpha) + p_src[i] * alpha) >> 8;
@@ -1118,7 +1118,7 @@ void Image::resize_to_po2(bool p_square, Interpolation p_interpolation) {
 	int w = next_power_of_2((uint32_t)width);
 	int h = next_power_of_2((uint32_t)height);
 	if (p_square) {
-		w = h = MAX(w, h);
+		w = h = Math::max(w, h);
 	}
 
 	if (w == width && h == height) {
@@ -1159,8 +1159,8 @@ void Image::resize(int p_width, int p_height, Interpolation p_interpolation) {
 			mipmap_aware = false;
 		} else {
 			float level = Math::log(1.0f / avg_scale) / Math::log(2.0f);
-			mip1 = CLAMP((int)Math::floor(level), 0, get_mipmap_count());
-			mip2 = CLAMP((int)Math::ceil(level), 0, get_mipmap_count());
+			mip1 = Math::clamp((int)Math::floor(level), 0, get_mipmap_count());
+			mip2 = Math::clamp((int)Math::ceil(level), 0, get_mipmap_count());
 			mip1_weight = 1.0f - (level - mip1);
 		}
 	}
@@ -1732,14 +1732,14 @@ int64_t Image::_get_dst_image_size(int p_width, int p_height, Format p_format, i
 		size += s;
 
 		if (p_mipmaps >= 0) {
-			w = MAX(minw, w >> 1);
-			h = MAX(minh, h >> 1);
+			w = Math::max(minw, w >> 1);
+			h = Math::max(minh, h >> 1);
 		} else {
 			if (w == minw && h == minh) {
 				break;
 			}
-			w = MAX(minw, w >> 1);
-			h = MAX(minh, h >> 1);
+			w = Math::max(minw, w >> 1);
+			h = Math::max(minh, h >> 1);
 		}
 
 		// Set mipmap size.
@@ -1767,8 +1767,8 @@ template <typename Component, int CC, bool renormalize,
 		void (*renormalize_func)(Component *)>
 static void _generate_po2_mipmap(const Component *p_src, Component *p_dst, uint32_t p_width, uint32_t p_height) {
 	// Fast power of 2 mipmap generation.
-	uint32_t dst_w = MAX(p_width >> 1, 1u);
-	uint32_t dst_h = MAX(p_height >> 1, 1u);
+	uint32_t dst_w = Math::max(p_width >> 1, 1u);
+	uint32_t dst_h = Math::max(p_height >> 1, 1u);
 
 	int right_step = (p_width == 1) ? 0 : CC;
 	int down_step = (p_height == 1) ? 0 : (p_width * CC);
@@ -1903,8 +1903,8 @@ void Image::shrink_x2() {
 		_generate_mipmap_from_format(format, data.ptr(), new_data.ptrw(), width, height, false);
 	}
 
-	width = MAX(width / 2, 1);
-	height = MAX(height / 2, 1);
+	width = Math::max(width / 2, 1);
+	height = Math::max(height / 2, 1);
 	data = new_data;
 }
 
@@ -1988,7 +1988,7 @@ Error Image::generate_mipmap_roughness(RoughnessChannel p_roughness_channel, con
 			Color color = nm->get_pixel(x, y);
 			normal[0] = color.r * 2.0 - 1.0;
 			normal[1] = color.g * 2.0 - 1.0;
-			normal[2] = Math::sqrt(MAX(0.0, 1.0 - (normal[0] * normal[0] + normal[1] * normal[1]))); //reconstruct if missing
+			normal[2] = Math::sqrt(Math::max(0.0, 1.0 - (normal[0] * normal[0] + normal[1] * normal[1]))); //reconstruct if missing
 
 			line_sum[0] += normal[0];
 			line_sum[1] += normal[1];
@@ -2027,8 +2027,8 @@ Error Image::generate_mipmap_roughness(RoughnessChannel p_roughness_channel, con
 				int from_y = y * normal_h / h;
 				int to_x = (x + 1) * normal_w / w;
 				int to_y = (y + 1) * normal_h / h;
-				to_x = MIN(to_x - 1, normal_w);
-				to_y = MIN(to_y - 1, normal_h);
+				to_x = Math::min(to_x - 1, normal_w);
+				to_y = Math::min(to_y - 1, normal_h);
 
 				int size_x = (to_x - from_x) + 1;
 				int size_y = (to_y - from_y) + 1;
@@ -2101,7 +2101,7 @@ Error Image::generate_mipmap_roughness(RoughnessChannel p_roughness_channel, con
 				}
 
 				float threshold = 0.4;
-				roughness = Math::sqrt(roughness * roughness + MIN(3.0f * variance, threshold * threshold));
+				roughness = Math::sqrt(roughness * roughness + Math::min(3.0f * variance, threshold * threshold));
 
 				switch (p_roughness_channel) {
 					case ROUGHNESS_CHANNEL_R: {
@@ -2370,7 +2370,7 @@ void Image::initialize_data(const char **p_xpm) {
 					ERR_FAIL_NULL(colorptr);
 					uint8_t pixel[4];
 					for (uint32_t i = 0; i < pixel_size; i++) {
-						pixel[i] = CLAMP((*colorptr)[i] * 255, 0, 255);
+						pixel[i] = Math::clamp((*colorptr)[i] * 255, 0, 255);
 					}
 					_put_pixelb(x, y, pixel_size, data_write, pixel);
 				}
@@ -2874,8 +2874,8 @@ void Image::_get_clipped_src_and_dest_rects(const Ref<Image> &p_src, const Rect2
 		r_clipped_dest_rect.position.y = 0;
 	}
 
-	r_clipped_src_rect.size.x = MAX(0, MIN(r_clipped_src_rect.size.x, MIN(p_src->width - r_clipped_src_rect.position.x, width - r_clipped_dest_rect.position.x)));
-	r_clipped_src_rect.size.y = MAX(0, MIN(r_clipped_src_rect.size.y, MIN(p_src->height - r_clipped_src_rect.position.y, height - r_clipped_dest_rect.position.y)));
+	r_clipped_src_rect.size.x = Math::max(0, Math::min(r_clipped_src_rect.size.x, Math::min(p_src->width - r_clipped_src_rect.position.x, width - r_clipped_dest_rect.position.x)));
+	r_clipped_src_rect.size.y = Math::max(0, Math::min(r_clipped_src_rect.size.y, Math::min(p_src->height - r_clipped_src_rect.position.y, height - r_clipped_dest_rect.position.y)));
 
 	r_clipped_dest_rect.size.x = r_clipped_src_rect.size.x;
 	r_clipped_dest_rect.size.y = r_clipped_src_rect.size.y;
@@ -3265,46 +3265,46 @@ Color Image::_get_color_at_ofs(const uint8_t *ptr, uint32_t ofs) const {
 void Image::_set_color_at_ofs(uint8_t *ptr, uint32_t ofs, const Color &p_color) {
 	switch (format) {
 		case FORMAT_L8: {
-			ptr[ofs] = uint8_t(CLAMP(p_color.get_v() * 255.0, 0, 255));
+			ptr[ofs] = uint8_t(Math::clamp(p_color.get_v() * 255.0, 0, 255));
 		} break;
 		case FORMAT_LA8: {
-			ptr[ofs * 2 + 0] = uint8_t(CLAMP(p_color.get_v() * 255.0, 0, 255));
-			ptr[ofs * 2 + 1] = uint8_t(CLAMP(p_color.a * 255.0, 0, 255));
+			ptr[ofs * 2 + 0] = uint8_t(Math::clamp(p_color.get_v() * 255.0, 0, 255));
+			ptr[ofs * 2 + 1] = uint8_t(Math::clamp(p_color.a * 255.0, 0, 255));
 		} break;
 		case FORMAT_R8: {
-			ptr[ofs] = uint8_t(CLAMP(p_color.r * 255.0, 0, 255));
+			ptr[ofs] = uint8_t(Math::clamp(p_color.r * 255.0, 0, 255));
 		} break;
 		case FORMAT_RG8: {
-			ptr[ofs * 2 + 0] = uint8_t(CLAMP(p_color.r * 255.0, 0, 255));
-			ptr[ofs * 2 + 1] = uint8_t(CLAMP(p_color.g * 255.0, 0, 255));
+			ptr[ofs * 2 + 0] = uint8_t(Math::clamp(p_color.r * 255.0, 0, 255));
+			ptr[ofs * 2 + 1] = uint8_t(Math::clamp(p_color.g * 255.0, 0, 255));
 		} break;
 		case FORMAT_RGB8: {
-			ptr[ofs * 3 + 0] = uint8_t(CLAMP(p_color.r * 255.0, 0, 255));
-			ptr[ofs * 3 + 1] = uint8_t(CLAMP(p_color.g * 255.0, 0, 255));
-			ptr[ofs * 3 + 2] = uint8_t(CLAMP(p_color.b * 255.0, 0, 255));
+			ptr[ofs * 3 + 0] = uint8_t(Math::clamp(p_color.r * 255.0, 0, 255));
+			ptr[ofs * 3 + 1] = uint8_t(Math::clamp(p_color.g * 255.0, 0, 255));
+			ptr[ofs * 3 + 2] = uint8_t(Math::clamp(p_color.b * 255.0, 0, 255));
 		} break;
 		case FORMAT_RGBA8: {
-			ptr[ofs * 4 + 0] = uint8_t(CLAMP(p_color.r * 255.0, 0, 255));
-			ptr[ofs * 4 + 1] = uint8_t(CLAMP(p_color.g * 255.0, 0, 255));
-			ptr[ofs * 4 + 2] = uint8_t(CLAMP(p_color.b * 255.0, 0, 255));
-			ptr[ofs * 4 + 3] = uint8_t(CLAMP(p_color.a * 255.0, 0, 255));
+			ptr[ofs * 4 + 0] = uint8_t(Math::clamp(p_color.r * 255.0, 0, 255));
+			ptr[ofs * 4 + 1] = uint8_t(Math::clamp(p_color.g * 255.0, 0, 255));
+			ptr[ofs * 4 + 2] = uint8_t(Math::clamp(p_color.b * 255.0, 0, 255));
+			ptr[ofs * 4 + 3] = uint8_t(Math::clamp(p_color.a * 255.0, 0, 255));
 		} break;
 		case FORMAT_RGBA4444: {
 			uint16_t rgba = 0;
 
-			rgba = uint16_t(CLAMP(p_color.r * 15.0, 0, 15)) << 12;
-			rgba |= uint16_t(CLAMP(p_color.g * 15.0, 0, 15)) << 8;
-			rgba |= uint16_t(CLAMP(p_color.b * 15.0, 0, 15)) << 4;
-			rgba |= uint16_t(CLAMP(p_color.a * 15.0, 0, 15));
+			rgba = uint16_t(Math::clamp(p_color.r * 15.0, 0, 15)) << 12;
+			rgba |= uint16_t(Math::clamp(p_color.g * 15.0, 0, 15)) << 8;
+			rgba |= uint16_t(Math::clamp(p_color.b * 15.0, 0, 15)) << 4;
+			rgba |= uint16_t(Math::clamp(p_color.a * 15.0, 0, 15));
 
 			((uint16_t *)ptr)[ofs] = rgba;
 		} break;
 		case FORMAT_RGB565: {
 			uint16_t rgba = 0;
 
-			rgba = uint16_t(CLAMP(p_color.r * 31.0, 0, 31));
-			rgba |= uint16_t(CLAMP(p_color.g * 63.0, 0, 63)) << 5;
-			rgba |= uint16_t(CLAMP(p_color.b * 31.0, 0, 31)) << 11;
+			rgba = uint16_t(Math::clamp(p_color.r * 31.0, 0, 31));
+			rgba |= uint16_t(Math::clamp(p_color.g * 63.0, 0, 63)) << 5;
+			rgba |= uint16_t(Math::clamp(p_color.b * 31.0, 0, 31)) << 11;
 
 			((uint16_t *)ptr)[ofs] = rgba;
 		} break;
@@ -3947,10 +3947,10 @@ void Image::fix_alpha_edges() {
 			int closest_dist = max_dist;
 			uint8_t closest_color[3] = { 0 };
 
-			int from_x = MAX(0, j - max_radius);
-			int to_x = MIN(width - 1, j + max_radius);
-			int from_y = MAX(0, i - max_radius);
-			int to_y = MIN(height - 1, i + max_radius);
+			int from_x = Math::max(0, j - max_radius);
+			int to_x = Math::min(width - 1, j + max_radius);
+			int from_y = Math::max(0, i - max_radius);
+			int to_y = Math::min(height - 1, i + max_radius);
 
 			for (int k = from_y; k <= to_y; k++) {
 				for (int l = from_x; l <= to_x; l++) {
@@ -4224,9 +4224,9 @@ void Image::renormalize_uint8(uint8_t *p_rgb) {
 	n += Vector3(1, 1, 1);
 	n *= 0.5;
 	n *= 255;
-	p_rgb[0] = CLAMP(int(n.x), 0, 255);
-	p_rgb[1] = CLAMP(int(n.y), 0, 255);
-	p_rgb[2] = CLAMP(int(n.z), 0, 255);
+	p_rgb[0] = Math::clamp(int(n.x), 0, 255);
+	p_rgb[1] = Math::clamp(int(n.y), 0, 255);
+	p_rgb[2] = Math::clamp(int(n.z), 0, 255);
 }
 
 void Image::renormalize_float(float *p_rgb) {
@@ -4334,8 +4334,8 @@ Dictionary Image::compute_image_metrics(const Ref<Image> p_compared_image, bool 
 	double image_metric_max, image_metric_mean, image_metric_mean_squared, image_metric_root_mean_squared, image_metric_peak_snr = 0.0;
 	const bool average_component_error = true;
 
-	const uint32_t w = MIN(compared_image->get_width(), source_image->get_width());
-	const uint32_t h = MIN(compared_image->get_height(), source_image->get_height());
+	const uint32_t w = Math::min(compared_image->get_width(), source_image->get_width());
+	const uint32_t h = Math::min(compared_image->get_height(), source_image->get_height());
 
 	// Histogram approach originally due to Charles Bloom.
 	double hist[256];
@@ -4393,15 +4393,15 @@ Dictionary Image::compute_image_metrics(const Ref<Image> p_compared_image, bool 
 		total_values *= 4;
 	}
 
-	image_metric_mean = CLAMP(sum / total_values, 0.0f, 255.0f);
-	image_metric_mean_squared = CLAMP(sum2 / total_values, 0.0f, 255.0f * 255.0f);
+	image_metric_mean = Math::clamp(sum / total_values, 0.0f, 255.0f);
+	image_metric_mean_squared = Math::clamp(sum2 / total_values, 0.0f, 255.0f * 255.0f);
 
 	image_metric_root_mean_squared = std::sqrt(image_metric_mean_squared);
 
 	if (!image_metric_root_mean_squared) {
 		image_metric_peak_snr = 1e+10f;
 	} else {
-		image_metric_peak_snr = CLAMP(std::log10(255.0f / image_metric_root_mean_squared) * 20.0f, 0.0f, 500.0f);
+		image_metric_peak_snr = Math::clamp(std::log10(255.0f / image_metric_root_mean_squared) * 20.0f, 0.0f, 500.0f);
 	}
 	result["max"] = image_metric_max;
 	result["mean"] = image_metric_mean;

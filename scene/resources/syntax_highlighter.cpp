@@ -56,7 +56,7 @@ void SyntaxHighlighter::_lines_edited_from(int p_from_line, int p_to_line) {
 	}
 
 	int cache_size = highlighting_cache.back()->key();
-	for (int i = MIN(p_from_line, p_to_line) - 1; i <= cache_size; i++) {
+	for (int i = Math::min(p_from_line, p_to_line) - 1; i <= cache_size; i++) {
 		if (highlighting_cache.has(i)) {
 			highlighting_cache.erase(i);
 		}

@@ -422,7 +422,7 @@ void JoypadLinux::open_joypad(const char *p_path) {
 			input->joy_connection_changed(joy_num, true, name, uid, joypad_info);
 		} else {
 			String uidname = uid;
-			int uidlen = MIN(name.length(), 11);
+			int uidlen = Math::min(name.length(), 11);
 			for (int i = 0; i < uidlen; i++) {
 				uidname = uidname + _hex_str(name[i]);
 			}

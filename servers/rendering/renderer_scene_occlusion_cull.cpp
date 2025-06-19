@@ -87,8 +87,8 @@ void RendererSceneOcclusionCull::HZBuffer::resize(const Size2i &p_size) {
 	while (true) {
 		data_size += h * w;
 
-		w = MAX(1, w >> 1);
-		h = MAX(1, h >> 1);
+		w = Math::max(1, w >> 1);
+		h = Math::max(1, h >> 1);
 
 		mip_count++;
 
@@ -112,8 +112,8 @@ void RendererSceneOcclusionCull::HZBuffer::resize(const Size2i &p_size) {
 		mips[i] = ptr;
 
 		ptr = &ptr[w * h];
-		w = MAX(1, w >> 1);
-		h = MAX(1, h >> 1);
+		w = Math::max(1, w >> 1);
+		h = Math::max(1, h >> 1);
 	}
 
 	for (int i = 0; i < data_size; i++) {
@@ -147,7 +147,7 @@ void RendererSceneOcclusionCull::HZBuffer::update_mips() {
 				bool odd_w = (prev_w % 2) != 0;
 				bool odd_h = (prev_h % 2) != 0;
 
-#define CHECK_OFFSET(xx, yy) max_depth = MAX(max_depth, mips[mip - 1][MIN(prev_h - 1, prev_y + (yy)) * prev_w + MIN(prev_w - 1, prev_x + (xx))])
+#define CHECK_OFFSET(xx, yy) max_depth = Math::max(max_depth, mips[mip - 1][Math::min(prev_h - 1, prev_y + (yy)) * prev_w + Math::min(prev_w - 1, prev_x + (xx))])
 
 				float max_depth = mips[mip - 1][prev_y * sizes[mip - 1].x + prev_x];
 				CHECK_OFFSET(0, 1);
@@ -186,7 +186,7 @@ RID RendererSceneOcclusionCull::HZBuffer::get_debug_texture() {
 
 	unsigned char *ptrw = debug_data.ptrw();
 	for (int i = 0; i < debug_data.size(); i++) {
-		ptrw[i] = MIN(Math::log(1.0 + mips[0][i]) / Math::log(1.0 + debug_tex_range), 1.0) * 255;
+		ptrw[i] = Math::min(Math::log(1.0 + mips[0][i]) / Math::log(1.0 + debug_tex_range), 1.0) * 255;
 	}
 
 	debug_image->set_data(sizes[0].x, sizes[0].y, false, Image::FORMAT_L8, debug_data);

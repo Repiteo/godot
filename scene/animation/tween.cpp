@@ -172,7 +172,7 @@ void Tween::append(Ref<Tweener> p_tweener) {
 	p_tweener->set_tween(this);
 
 	if (parallel_enabled) {
-		current_step = MAX(current_step, 0);
+		current_step = Math::max(current_step, 0);
 	} else {
 		current_step++;
 	}
@@ -366,7 +366,7 @@ bool Tween::step(double p_delta) {
 			double temp_delta = rem_delta;
 			// Turns to true if any Tweener returns true (i.e. is still not finished).
 			step_active = tweener->step(temp_delta) || step_active;
-			step_delta = MIN(temp_delta, step_delta);
+			step_delta = Math::min(temp_delta, step_delta);
 		}
 
 		rem_delta = step_delta;
@@ -635,7 +635,7 @@ bool PropertyTweener::step(double &r_delta) {
 
 	Ref<Tween> tween = _get_tween();
 
-	double time = MIN(elapsed_time - delay, duration);
+	double time = Math::min(elapsed_time - delay, duration);
 	if (time < duration) {
 		if (custom_method.is_valid()) {
 			const Variant t = tween->interpolate_variant(0.0, 1.0, time, duration, trans_type, ease_type);
@@ -806,7 +806,7 @@ bool MethodTweener::step(double &r_delta) {
 	Ref<Tween> tween = _get_tween();
 
 	Variant current_val;
-	double time = MIN(elapsed_time - delay, duration);
+	double time = Math::min(elapsed_time - delay, duration);
 	if (time < duration) {
 		current_val = tween->interpolate_variant(initial_val, delta_val, time, duration, trans_type, ease_type);
 	} else {

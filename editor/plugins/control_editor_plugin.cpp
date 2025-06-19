@@ -506,7 +506,7 @@ Size2 ControlEditorPopupButton::get_minimum_size() const {
 
 	Vector2 final_size;
 	final_size.x = base_size.x + arrow_icon->get_width();
-	final_size.y = MAX(base_size.y, arrow_icon->get_height());
+	final_size.y = Math::max(base_size.y, arrow_icon->get_height());
 
 	return final_size;
 }

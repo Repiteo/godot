@@ -1122,7 +1122,7 @@ void EditorFileSystem::scan() {
 
 void EditorFileSystem::ScanProgress::increment() {
 	current++;
-	float ratio = current / MAX(hi, 1.0f);
+	float ratio = current / Math::max(hi, 1.0f);
 	if (progress) {
 		progress->step(ratio * 1000.0f);
 	}
@@ -1599,7 +1599,7 @@ void EditorFileSystem::_scan_fs_changes(EditorFileSystemDirectory *p_dir, ScanPr
 		}
 	}
 
-	nb_files_total = MAX(nb_files_total + diff_nb_files, 0);
+	nb_files_total = Math::max(nb_files_total + diff_nb_files, 0);
 }
 
 void EditorFileSystem::_delete_internal_files(const String &p_file) {

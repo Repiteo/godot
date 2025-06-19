@@ -161,7 +161,7 @@ void JoltJobSystem::_reclaim_jobs() {
 
 JoltJobSystem::JoltJobSystem() :
 		JPH::JobSystemWithBarrier(JPH::cMaxPhysicsBarriers),
-		thread_count(MAX(1, WorkerThreadPool::get_singleton()->get_thread_count())) {
+		thread_count(Math::max(1, WorkerThreadPool::get_singleton()->get_thread_count())) {
 	jobs.Init(JPH::cMaxPhysicsJobs, JPH::cMaxPhysicsJobs);
 }
 

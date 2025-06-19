@@ -39,6 +39,31 @@
 
 namespace Math {
 
+template <typename T>
+constexpr T abs(T p_value) {
+	return std::abs(p_value);
+}
+
+template <typename T>
+constexpr int32_t sign(T p_value) {
+	return p_value > static_cast<T>(0) ? 1 : (p_value < static_cast<T>(0) ? -1 : 0);
+}
+
+template <typename T1, typename T2>
+constexpr std::common_type_t<T1, T2> min(T1 p_lhs, T2 p_rhs) {
+	return p_lhs < p_rhs ? p_lhs : p_rhs;
+}
+
+template <typename T1, typename T2>
+constexpr std::common_type_t<T1, T2> max(T1 p_lhs, T2 p_rhs) {
+	return p_lhs > p_rhs ? p_lhs : p_rhs;
+}
+
+template <typename T1, typename T2, typename T3>
+constexpr std::common_type_t<T1, T2, T3> clamp(T1 p_value, T2 p_min, T3 p_max) {
+	return p_value < p_min ? p_min : (p_value > p_max ? p_max : p_value);
+}
+
 _ALWAYS_INLINE_ double sin(double p_x) {
 	return std::sin(p_x);
 }
@@ -255,25 +280,6 @@ _ALWAYS_INLINE_ bool is_finite(double p_val) {
 }
 _ALWAYS_INLINE_ bool is_finite(float p_val) {
 	return std::isfinite(p_val);
-}
-
-_ALWAYS_INLINE_ double abs(double p_value) {
-	return std::abs(p_value);
-}
-_ALWAYS_INLINE_ float abs(float p_value) {
-	return std::abs(p_value);
-}
-_ALWAYS_INLINE_ int8_t abs(int8_t p_value) {
-	return p_value > 0 ? p_value : -p_value;
-}
-_ALWAYS_INLINE_ int16_t abs(int16_t p_value) {
-	return p_value > 0 ? p_value : -p_value;
-}
-_ALWAYS_INLINE_ int32_t abs(int32_t p_value) {
-	return std::abs(p_value);
-}
-_ALWAYS_INLINE_ int64_t abs(int64_t p_value) {
-	return std::abs(p_value);
 }
 
 _ALWAYS_INLINE_ double fposmod(double p_x, double p_y) {
@@ -573,7 +579,7 @@ _ALWAYS_INLINE_ double smoothstep(double p_from, double p_to, double p_s) {
 			return p_s <= p_to ? 1.0 : 0.0;
 		}
 	}
-	double s = CLAMP((p_s - p_from) / (p_to - p_from), 0.0, 1.0);
+	double s = clamp((p_s - p_from) / (p_to - p_from), 0.0, 1.0);
 	return s * s * (3.0 - 2.0 * s);
 }
 _ALWAYS_INLINE_ float smoothstep(float p_from, float p_to, float p_s) {
@@ -584,28 +590,28 @@ _ALWAYS_INLINE_ float smoothstep(float p_from, float p_to, float p_s) {
 			return p_s <= p_to ? 1.0f : 0.0f;
 		}
 	}
-	float s = CLAMP((p_s - p_from) / (p_to - p_from), 0.0f, 1.0f);
+	float s = clamp((p_s - p_from) / (p_to - p_from), 0.0f, 1.0f);
 	return s * s * (3.0f - 2.0f * s);
 }
 
 _ALWAYS_INLINE_ double move_toward(double p_from, double p_to, double p_delta) {
-	return abs(p_to - p_from) <= p_delta ? p_to : p_from + SIGN(p_to - p_from) * p_delta;
+	return abs(p_to - p_from) <= p_delta ? p_to : p_from + sign(p_to - p_from) * p_delta;
 }
 _ALWAYS_INLINE_ float move_toward(float p_from, float p_to, float p_delta) {
-	return abs(p_to - p_from) <= p_delta ? p_to : p_from + SIGN(p_to - p_from) * p_delta;
+	return abs(p_to - p_from) <= p_delta ? p_to : p_from + sign(p_to - p_from) * p_delta;
 }
 
 _ALWAYS_INLINE_ double rotate_toward(double p_from, double p_to, double p_delta) {
 	double difference = angle_difference(p_from, p_to);
 	double abs_difference = abs(difference);
 	// When `p_delta < 0` move no further than to PI radians away from `p_to` (as PI is the max possible angle distance).
-	return p_from + CLAMP(p_delta, abs_difference - PI, abs_difference) * (difference >= 0.0 ? 1.0 : -1.0);
+	return p_from + clamp(p_delta, abs_difference - PI, abs_difference) * (difference >= 0.0 ? 1.0 : -1.0);
 }
 _ALWAYS_INLINE_ float rotate_toward(float p_from, float p_to, float p_delta) {
 	float difference = angle_difference(p_from, p_to);
 	float abs_difference = abs(difference);
 	// When `p_delta < 0` move no further than to PI radians away from `p_to` (as PI is the max possible angle distance).
-	return p_from + CLAMP(p_delta, abs_difference - (float)PI, abs_difference) * (difference >= 0.0f ? 1.0f : -1.0f);
+	return p_from + clamp(p_delta, abs_difference - (float)PI, abs_difference) * (difference >= 0.0f ? 1.0f : -1.0f);
 }
 
 _ALWAYS_INLINE_ double linear_to_db(double p_linear) {

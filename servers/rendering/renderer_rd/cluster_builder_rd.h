@@ -300,8 +300,8 @@ public:
 #define CONE_MINMAX(m_x, m_y)                                             \
 	{                                                                     \
 		float d = -xform.xform(Vector3(len * m_x, len * m_y, -radius)).z; \
-		min_d = MIN(d, min_d);                                            \
-		max_d = MAX(d, max_d);                                            \
+		min_d = Math::min(d, min_d);                                      \
+		max_d = Math::max(d, max_d);                                      \
 	}
 
 			CONE_MINMAX(1, 1);

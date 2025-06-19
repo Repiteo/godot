@@ -142,7 +142,7 @@ void RendererCanvasCull::_collect_ysort_children(RendererCanvasCull::Item *p_can
 			// Y sorted canvas items are flattened into r_items. Calculate their absolute z index to use when rendering r_items.
 			int abs_z = 0;
 			if (child_items[i]->z_relative) {
-				abs_z = CLAMP(p_z + child_items[i]->z_index, RS::CANVAS_ITEM_Z_MIN, RS::CANVAS_ITEM_Z_MAX);
+				abs_z = Math::clamp(p_z + child_items[i]->z_index, RS::CANVAS_ITEM_Z_MIN, RS::CANVAS_ITEM_Z_MAX);
 			} else {
 				abs_z = child_items[i]->z_index;
 			}
@@ -419,7 +419,7 @@ void RendererCanvasCull::_cull_canvas_item(Item *p_canvas_item, const Transform2
 
 	int parent_z = p_z;
 	if (ci->z_relative) {
-		p_z = CLAMP(p_z + ci->z_index, RS::CANVAS_ITEM_Z_MIN, RS::CANVAS_ITEM_Z_MAX);
+		p_z = Math::clamp(p_z + ci->z_index, RS::CANVAS_ITEM_Z_MIN, RS::CANVAS_ITEM_Z_MAX);
 	} else {
 		p_z = ci->z_index;
 	}
@@ -930,7 +930,7 @@ static Vector2 compute_polyline_edge_offset_clamped(const Vector2 &p_segment_dir
 
 	if (!Math::is_zero_approx(sin_angle) && !p_segment_dir.is_equal_approx(p_prev_segment_dir)) {
 		length = 1.0f / sin_angle;
-		length = CLAMP(length, -3.0f, 3.0f);
+		length = Math::clamp(length, -3.0f, 3.0f);
 	} else {
 		bisector = p_segment_dir.orthogonal();
 	}
@@ -1268,7 +1268,7 @@ void RendererCanvasCull::canvas_item_add_rect(RID p_item, const Rect2 &p_rect, c
 	if (p_antialiased) {
 		float border_size = FEATHER_SIZE;
 
-		const real_t size = MIN(p_rect.size.width, p_rect.size.height);
+		const real_t size = Math::min(p_rect.size.width, p_rect.size.height);
 		if (0.0f <= size && size < 1.0f) {
 			border_size *= size;
 		}

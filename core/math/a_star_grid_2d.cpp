@@ -55,7 +55,7 @@ static real_t heuristic_octile(const Vector2i &p_from, const Vector2i &p_to) {
 static real_t heuristic_chebyshev(const Vector2i &p_from, const Vector2i &p_to) {
 	real_t dx = (real_t)Math::abs(p_to.x - p_from.x);
 	real_t dy = (real_t)Math::abs(p_to.y - p_from.y);
-	return MAX(dx, dy);
+	return Math::max(dx, dy);
 }
 
 static real_t (*heuristics[AStarGrid2D::HEURISTIC_MAX])(const Vector2i &, const Vector2i &) = { heuristic_euclidean, heuristic_manhattan, heuristic_octile, heuristic_chebyshev };

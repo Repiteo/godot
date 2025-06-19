@@ -1017,7 +1017,7 @@ void EditorHelpSearch::Runner::_match_item(TreeItem *p_item, const String &p_tex
 	// Favor types where search term is a substring close to the start of the type.
 	float w = 0.5f;
 	int pos = p_text.findn(term);
-	float score = (pos > -1) ? 1.0f - w * MIN(1, 3 * pos * inverse_length) : MAX(0.0f, 0.9f - w);
+	float score = (pos > -1) ? 1.0f - w * Math::min(1, 3 * pos * inverse_length) : Math::max(0.0f, 0.9f - w);
 
 	// Favor shorter items: they resemble the search term more.
 	w = 0.1f;

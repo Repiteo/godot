@@ -111,7 +111,7 @@ uint64_t Color::to_rgba64() const {
 
 void _append_hex(float p_val, char32_t *string) {
 	int v = Math::round(p_val * 255.0f);
-	v = CLAMP(v, 0, 255);
+	v = Math::clamp(v, 0, 255);
 
 	string[0] = hex_char_table_lower[(v >> 4) & 0xF];
 	string[1] = hex_char_table_lower[v & 0xF];
@@ -134,10 +134,10 @@ String Color::to_html(bool p_alpha) const {
 }
 
 float Color::get_h() const {
-	float min = MIN(r, g);
-	min = MIN(min, b);
-	float max = MAX(r, g);
-	max = MAX(max, b);
+	float min = Math::min(r, g);
+	min = Math::min(min, b);
+	float max = Math::max(r, g);
+	max = Math::max(max, b);
 
 	float delta = max - min;
 
@@ -163,10 +163,10 @@ float Color::get_h() const {
 }
 
 float Color::get_s() const {
-	float min = MIN(r, g);
-	min = MIN(min, b);
-	float max = MAX(r, g);
-	max = MAX(max, b);
+	float min = Math::min(r, g);
+	min = Math::min(min, b);
+	float max = Math::max(r, g);
+	max = Math::max(max, b);
 
 	float delta = max - min;
 
@@ -174,8 +174,8 @@ float Color::get_s() const {
 }
 
 float Color::get_v() const {
-	float max = MAX(r, g);
-	max = MAX(max, b);
+	float max = Math::max(r, g);
+	max = Math::max(max, b);
 	return max;
 }
 
@@ -269,10 +269,10 @@ bool Color::is_same(const Color &p_color) const {
 
 Color Color::clamp(const Color &p_min, const Color &p_max) const {
 	return Color(
-			CLAMP(r, p_min.r, p_max.r),
-			CLAMP(g, p_min.g, p_max.g),
-			CLAMP(b, p_min.b, p_max.b),
-			CLAMP(a, p_min.a, p_max.a));
+			Math::clamp(r, p_min.r, p_max.r),
+			Math::clamp(g, p_min.g, p_max.g),
+			Math::clamp(b, p_min.b, p_max.b),
+			Math::clamp(a, p_min.a, p_max.a));
 }
 
 void Color::invert() {
@@ -504,7 +504,7 @@ float Color::get_ok_hsl_h() const {
 	if (Math::is_nan(ok_hsl.h)) {
 		return 0.0f;
 	}
-	return CLAMP(ok_hsl.h, 0.0f, 1.0f);
+	return Math::clamp(ok_hsl.h, 0.0f, 1.0f);
 }
 
 float Color::get_ok_hsl_s() const {
@@ -516,7 +516,7 @@ float Color::get_ok_hsl_s() const {
 	if (Math::is_nan(ok_hsl.s)) {
 		return 0.0f;
 	}
-	return CLAMP(ok_hsl.s, 0.0f, 1.0f);
+	return Math::clamp(ok_hsl.s, 0.0f, 1.0f);
 }
 
 float Color::get_ok_hsl_l() const {
@@ -528,5 +528,5 @@ float Color::get_ok_hsl_l() const {
 	if (Math::is_nan(ok_hsl.l)) {
 		return 0.0f;
 	}
-	return CLAMP(ok_hsl.l, 0.0f, 1.0f);
+	return Math::clamp(ok_hsl.l, 0.0f, 1.0f);
 }

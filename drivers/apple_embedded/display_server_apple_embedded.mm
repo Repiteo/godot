@@ -694,7 +694,7 @@ bool DisplayServerAppleEmbedded::is_touchscreen_available() const {
 
 _FORCE_INLINE_ int _convert_utf32_offset_to_utf16(const String &p_existing_text, int p_pos) {
 	int limit = p_pos;
-	for (int i = 0; i < MIN(p_existing_text.length(), p_pos); i++) {
+	for (int i = 0; i < Math::min(p_existing_text.length(), p_pos); i++) {
 		if (p_existing_text[i] > 0xffff) {
 			limit++;
 		}

@@ -89,7 +89,7 @@ private:
 
 	Ref<StyleBox> _get_title_style() const;
 	Ref<Texture2D> _get_title_icon() const;
-	int _get_h_separation() const { return MAX(theme_cache.h_separation, 0); }
+	int _get_h_separation() const { return Math::max(theme_cache.h_separation, 0); }
 	real_t _get_title_controls_width() const;
 
 	void _update_title_min_size() const;

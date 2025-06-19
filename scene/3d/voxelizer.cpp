@@ -152,8 +152,8 @@ void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, co
 					lnormal = normal;
 				}
 
-				int uv_x = CLAMP(int(Math::fposmod(uv.x, (real_t)1.0) * bake_texture_size), 0, bake_texture_size - 1);
-				int uv_y = CLAMP(int(Math::fposmod(uv.y, (real_t)1.0) * bake_texture_size), 0, bake_texture_size - 1);
+				int uv_x = Math::clamp(int(Math::fposmod(uv.x, (real_t)1.0) * bake_texture_size), 0, bake_texture_size - 1);
+				int uv_y = Math::clamp(int(Math::fposmod(uv.y, (real_t)1.0) * bake_texture_size), 0, bake_texture_size - 1);
 
 				int ofs = uv_y * bake_texture_size + uv_x;
 				albedo_accum.r += p_material.albedo[ofs].r;
@@ -184,8 +184,8 @@ void Voxelizer::_plot_face(int p_idx, int p_level, int p_x, int p_y, int p_z, co
 				lnormal = normal;
 			}
 
-			int uv_x = CLAMP(Math::fposmod(uv.x, (real_t)1.0) * bake_texture_size, 0, bake_texture_size - 1);
-			int uv_y = CLAMP(Math::fposmod(uv.y, (real_t)1.0) * bake_texture_size, 0, bake_texture_size - 1);
+			int uv_x = Math::clamp(Math::fposmod(uv.x, (real_t)1.0) * bake_texture_size, 0, bake_texture_size - 1);
+			int uv_y = Math::clamp(Math::fposmod(uv.y, (real_t)1.0) * bake_texture_size, 0, bake_texture_size - 1);
 
 			int ofs = uv_y * bake_texture_size + uv_x;
 
@@ -763,10 +763,10 @@ Vector<uint8_t> Voxelizer::get_voxel_gi_data_cells() const {
 			}
 
 			{ //albedo + alpha
-				uint32_t rgba = uint32_t(CLAMP(cells[i].alpha * 255.0, 0, 255)) << 24; //a
-				rgba |= uint32_t(CLAMP(cells[i].albedo[2] * 255.0, 0, 255)) << 16; //b
-				rgba |= uint32_t(CLAMP(cells[i].albedo[1] * 255.0, 0, 255)) << 8; //g
-				rgba |= uint32_t(CLAMP(cells[i].albedo[0] * 255.0, 0, 255)); //r
+				uint32_t rgba = uint32_t(Math::clamp(cells[i].alpha * 255.0, 0, 255)) << 24; //a
+				rgba |= uint32_t(Math::clamp(cells[i].albedo[2] * 255.0, 0, 255)) << 16; //b
+				rgba |= uint32_t(Math::clamp(cells[i].albedo[1] * 255.0, 0, 255)) << 8; //g
+				rgba |= uint32_t(Math::clamp(cells[i].albedo[0] * 255.0, 0, 255)); //r
 
 				dataptr[i * 4 + 1] = rgba;
 			}
@@ -781,9 +781,9 @@ Vector<uint8_t> Voxelizer::get_voxel_gi_data_cells() const {
 				Vector3 n(bake_cells[i].normal[0], bake_cells[i].normal[1], bake_cells[i].normal[2]);
 				n.normalize();
 
-				uint32_t normal = uint32_t(uint8_t(int8_t(CLAMP(n.x * 127.0, -128, 127))));
-				normal |= uint32_t(uint8_t(int8_t(CLAMP(n.y * 127.0, -128, 127)))) << 8;
-				normal |= uint32_t(uint8_t(int8_t(CLAMP(n.z * 127.0, -128, 127)))) << 16;
+				uint32_t normal = uint32_t(uint8_t(int8_t(Math::clamp(n.x * 127.0, -128, 127))));
+				normal |= uint32_t(uint8_t(int8_t(Math::clamp(n.y * 127.0, -128, 127)))) << 8;
+				normal |= uint32_t(uint8_t(int8_t(Math::clamp(n.z * 127.0, -128, 127)))) << 16;
 
 				dataptr[i * 4 + 3] = normal;
 			}
@@ -935,7 +935,7 @@ Voxelizer::BakeResult Voxelizer::get_sdf_3d_image(Vector<uint8_t> &r_image, Bake
 			if (d == 0) {
 				w[i] = 0;
 			} else {
-				w[i] = MIN(d, 254u) + 1;
+				w[i] = Math::min(d, 254u) + 1;
 			}
 		}
 	}

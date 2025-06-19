@@ -129,7 +129,7 @@ uint64_t FileAccessMemory::get_buffer(uint8_t *p_dst, uint64_t p_length) const {
 	ERR_FAIL_NULL_V(data, -1);
 
 	uint64_t left = length - pos;
-	uint64_t read = MIN(p_length, left);
+	uint64_t read = Math::min(p_length, left);
 
 	if (read < p_length) {
 		WARN_PRINT("Reading less data than requested");
@@ -157,7 +157,7 @@ bool FileAccessMemory::store_buffer(const uint8_t *p_src, uint64_t p_length) {
 	ERR_FAIL_NULL_V(p_src, false);
 
 	uint64_t left = length - pos;
-	uint64_t write = MIN(p_length, left);
+	uint64_t write = Math::min(p_length, left);
 
 	memcpy(&data[pos], p_src, write);
 	pos += write;
