@@ -917,92 +917,94 @@ elif env.msvc:
 # Configure compiler warnings
 env.AppendUnique(CCFLAGS=["$WARNLEVEL"])
 if env.msvc and not methods.using_clang(env):  # MSVC
-    # Disable warnings which we don't plan to fix.
-    disabled_warnings = [
-        "/wd4100",  # C4100 (unreferenced formal parameter): Doesn't play nice with polymorphism.
-        "/wd4127",  # C4127 (conditional expression is constant)
-        "/wd4201",  # C4201 (non-standard nameless struct/union): Only relevant for C89.
-        "/wd4244",  # C4244 C4245 C4267 (narrowing conversions): Unavoidable at this scale.
-        "/wd4245",
-        "/wd4267",
-        "/wd4305",  # C4305 (truncation): double to float or real_t, too hard to avoid.
-        "/wd4324",  # C4820 (structure was padded due to alignment specifier)
-        "/wd4514",  # C4514 (unreferenced inline function has been removed)
-        "/wd4714",  # C4714 (function marked as __forceinline not inlined)
-        "/wd4820",  # C4820 (padding added after construct)
-    ]
+    # # Disable warnings which we don't plan to fix.
+    # disabled_warnings = [
+    #     "/wd4100",  # C4100 (unreferenced formal parameter): Doesn't play nice with polymorphism.
+    #     "/wd4127",  # C4127 (conditional expression is constant)
+    #     "/wd4201",  # C4201 (non-standard nameless struct/union): Only relevant for C89.
+    #     "/wd4244",  # C4244 C4245 C4267 (narrowing conversions): Unavoidable at this scale.
+    #     "/wd4245",
+    #     "/wd4267",
+    #     "/wd4305",  # C4305 (truncation): double to float or real_t, too hard to avoid.
+    #     "/wd4324",  # C4820 (structure was padded due to alignment specifier)
+    #     "/wd4514",  # C4514 (unreferenced inline function has been removed)
+    #     "/wd4714",  # C4714 (function marked as __forceinline not inlined)
+    #     "/wd4820",  # C4820 (padding added after construct)
+    # ]
 
-    if env["warnings"] == "extra":
-        env["WARNLEVEL"] = "/W4"
-        env.AppendUnique(CCFLAGS=disabled_warnings)
-    elif env["warnings"] == "all":
-        env["WARNLEVEL"] = "/W3"
-        # C4458 is like -Wshadow. Part of /W4 but let's apply it for the default /W3 too.
-        env.AppendUnique(CCFLAGS=["/w34458"] + disabled_warnings)
-    elif env["warnings"] == "moderate":
-        env["WARNLEVEL"] = "/W2"
-        env.AppendUnique(CCFLAGS=disabled_warnings)
-    else:  # 'no'
-        env["WARNLEVEL"] = "/w"
-        # C4267 is particularly finicky & needs to be explicitly disabled.
-        env.AppendUnique(CCFLAGS=["/wd4267"])
+    # if env["warnings"] == "extra":
+    #     env["WARNLEVEL"] = "/W4"
+    #     env.AppendUnique(CCFLAGS=disabled_warnings)
+    # elif env["warnings"] == "all":
+    #     env["WARNLEVEL"] = "/W3"
+    #     # C4458 is like -Wshadow. Part of /W4 but let's apply it for the default /W3 too.
+    #     env.AppendUnique(CCFLAGS=["/w34458"] + disabled_warnings)
+    # elif env["warnings"] == "moderate":
+    #     env["WARNLEVEL"] = "/W2"
+    #     env.AppendUnique(CCFLAGS=disabled_warnings)
+    # else:  # 'no'
+    #     env["WARNLEVEL"] = "/w"
+    #     # C4267 is particularly finicky & needs to be explicitly disabled.
+    #     env.AppendUnique(CCFLAGS=["/wd4267"])
 
+    env["WARNLEVEL"] = "/Wall"
     if env["werror"]:
         env.AppendUnique(CCFLAGS=["/WX"])
         env.AppendUnique(LINKFLAGS=["/WX"])
 
 else:  # GCC, Clang
-    common_warnings = []
-    if methods.using_gcc(env):
-        common_warnings += ["-Wshadow", "-Wno-misleading-indentation"]
-        if cc_version_major < 11:
-            # Regression in GCC 9/10, spams so much in our variadic templates
-            # that we need to outright disable it.
-            common_warnings += ["-Wno-type-limits"]
-        if cc_version_major == 12:
-            # Regression in GCC 12, false positives in our error macros, see GH-58747.
-            common_warnings += ["-Wno-return-type"]
-        if cc_version_major >= 11:
-            common_warnings += ["-Wenum-conversion"]
-    elif methods.using_clang(env) or methods.using_emcc(env):
-        common_warnings += ["-Wshadow-field-in-constructor", "-Wshadow-uncaptured-local"]
-        # We often implement `operator<` for structs of pointers as a requirement
-        # for putting them in `Set` or `Map`. We don't mind about unreliable ordering.
-        common_warnings += ["-Wno-ordered-compare-function-pointers"]
-        common_warnings += ["-Wenum-conversion"]
+    # common_warnings = []
+    # if methods.using_gcc(env):
+    #     common_warnings += ["-Wshadow", "-Wno-misleading-indentation"]
+    #     if cc_version_major < 11:
+    #         # Regression in GCC 9/10, spams so much in our variadic templates
+    #         # that we need to outright disable it.
+    #         common_warnings += ["-Wno-type-limits"]
+    #     if cc_version_major == 12:
+    #         # Regression in GCC 12, false positives in our error macros, see GH-58747.
+    #         common_warnings += ["-Wno-return-type"]
+    #     if cc_version_major >= 11:
+    #         common_warnings += ["-Wenum-conversion"]
+    # elif methods.using_clang(env) or methods.using_emcc(env):
+    #     common_warnings += ["-Wshadow-field-in-constructor", "-Wshadow-uncaptured-local"]
+    #     # We often implement `operator<` for structs of pointers as a requirement
+    #     # for putting them in `Set` or `Map`. We don't mind about unreliable ordering.
+    #     common_warnings += ["-Wno-ordered-compare-function-pointers"]
+    #     common_warnings += ["-Wenum-conversion"]
 
-    # clang-cl will interpret `-Wall` as `-Weverything`, workaround with compatibility cast.
-    env["WARNLEVEL"] = "-Wall" if not env.msvc else "-W3"
+    # # clang-cl will interpret `-Wall` as `-Weverything`, workaround with compatibility cast.
+    # env["WARNLEVEL"] = "-Wall" if not env.msvc else "-W3"
 
-    if env["warnings"] == "extra":
-        env.AppendUnique(CCFLAGS=["-Wextra", "-Wwrite-strings", "-Wno-unused-parameter"] + common_warnings)
-        env.AppendUnique(CXXFLAGS=["-Wctor-dtor-privacy", "-Wnon-virtual-dtor"])
-        if methods.using_gcc(env):
-            env.AppendUnique(
-                CCFLAGS=[
-                    "-Walloc-zero",
-                    "-Wduplicated-branches",
-                    "-Wduplicated-cond",
-                    "-Wstringop-overflow=4",
-                ]
-            )
-            env.AppendUnique(CXXFLAGS=["-Wplacement-new=1", "-Wvirtual-inheritance"])
-            # Need to fix a warning with AudioServer lambdas before enabling.
-            # if cc_version_major != 9:  # GCC 9 had a regression (GH-36325).
-            #    env.Append(CXXFLAGS=["-Wnoexcept"])
-            if cc_version_major >= 9:
-                env.AppendUnique(CCFLAGS=["-Wattribute-alias=2"])
-            if cc_version_major >= 11:  # Broke on MethodBind templates before GCC 11.
-                env.AppendUnique(CCFLAGS=["-Wlogical-op"])
-        elif methods.using_clang(env) or methods.using_emcc(env):
-            env.AppendUnique(CCFLAGS=["-Wimplicit-fallthrough"])
-    elif env["warnings"] == "all":
-        env.AppendUnique(CCFLAGS=common_warnings)
-    elif env["warnings"] == "moderate":
-        env.AppendUnique(CCFLAGS=["-Wno-unused"] + common_warnings)
-    else:  # 'no'
-        env["WARNLEVEL"] = "-w"
+    # if env["warnings"] == "extra":
+    #     env.AppendUnique(CCFLAGS=["-Wextra", "-Wwrite-strings", "-Wno-unused-parameter"] + common_warnings)
+    #     env.AppendUnique(CXXFLAGS=["-Wctor-dtor-privacy", "-Wnon-virtual-dtor"])
+    #     if methods.using_gcc(env):
+    #         env.AppendUnique(
+    #             CCFLAGS=[
+    #                 "-Walloc-zero",
+    #                 "-Wduplicated-branches",
+    #                 "-Wduplicated-cond",
+    #                 "-Wstringop-overflow=4",
+    #             ]
+    #         )
+    #         env.AppendUnique(CXXFLAGS=["-Wplacement-new=1", "-Wvirtual-inheritance"])
+    #         # Need to fix a warning with AudioServer lambdas before enabling.
+    #         # if cc_version_major != 9:  # GCC 9 had a regression (GH-36325).
+    #         #    env.Append(CXXFLAGS=["-Wnoexcept"])
+    #         if cc_version_major >= 9:
+    #             env.AppendUnique(CCFLAGS=["-Wattribute-alias=2"])
+    #         if cc_version_major >= 11:  # Broke on MethodBind templates before GCC 11.
+    #             env.AppendUnique(CCFLAGS=["-Wlogical-op"])
+    #     elif methods.using_clang(env) or methods.using_emcc(env):
+    #         env.AppendUnique(CCFLAGS=["-Wimplicit-fallthrough"])
+    # elif env["warnings"] == "all":
+    #     env.AppendUnique(CCFLAGS=common_warnings)
+    # elif env["warnings"] == "moderate":
+    #     env.AppendUnique(CCFLAGS=["-Wno-unused"] + common_warnings)
+    # else:  # 'no'
+    #     env["WARNLEVEL"] = "-w"
 
+    env["WARNLEVEL"] = ["-Wextra", "-Wpedantic"] if methods.using_gcc(env) else "-Weverything"
     if env["werror"]:
         env.AppendUnique(CCFLAGS=["-Werror"])
 
