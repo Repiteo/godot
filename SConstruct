@@ -1142,7 +1142,7 @@ GLSL_BUILDERS = {
 }
 env.Append(BUILDERS=GLSL_BUILDERS)
 
-if env["compiledb"]:
+if True:
     env.Tool("compilation_db")
     env.Alias("compiledb", env.CompilationDatabase())
     env.NoCache(env.CompilationDatabase())
@@ -1166,10 +1166,15 @@ if env["threads"]:
 # Ensure build objects are put in their own folder if `redirect_build_objects` is enabled.
 env.Prepend(LIBEMITTER=[methods.redirect_emitter])
 env.Prepend(SHLIBEMITTER=[methods.redirect_emitter])
+print("Static emitters:")
 for key in (emitters := env.StaticObject.builder.emitter):
     emitters[key] = ListEmitter([methods.redirect_emitter] + env.Flatten(emitters[key]))
+    print(f"- {key}: {' '.join(str(x) for x in emitters[key])}")
+print("--------------------------------------------------------------------------------")
+print("Shared emitters:")
 for key in (emitters := env.SharedObject.builder.emitter):
     emitters[key] = ListEmitter([methods.redirect_emitter] + env.Flatten(emitters[key]))
+    print(f"- {key}: {' '.join(str(x) for x in emitters[key])}")
 
 # Prepend compiler launchers
 if "c_compiler_launcher" in env:
@@ -1195,6 +1200,17 @@ if env["tests"]:
 SConscript("main/SCsub")
 
 SConscript("platform/" + env["platform"] + "/SCsub")  # Build selected platform.
+
+print("================================================================================")
+print("Static emitters:")
+for key in (emitters := env.StaticObject.builder.emitter):
+    print(f"- {key}: {' '.join(str(x) for x in emitters[key])}")
+print("Shared emitters:")
+print("--------------------------------------------------------------------------------")
+for key in (emitters := env.SharedObject.builder.emitter):
+    print(f"- {key}: {' '.join(str(x) for x in emitters[key])}")
+
+env.Exit(123)
 
 # Microsoft Visual Studio Project Generation
 if env["vsproj"]:
