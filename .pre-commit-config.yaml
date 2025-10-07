@@ -181,6 +181,11 @@ repos:
         language: python
         entry: python misc/scripts/dotnet_format.py
         types_or: [c#]
+
+      - id: detect-executable
+        name: detect-executable
+        language: python
+        entry: python misc/scripts/detect_executable.py
 #
 # End of upstream Godot pre-commit hooks.
 #
