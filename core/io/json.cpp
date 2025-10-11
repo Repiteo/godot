@@ -76,6 +76,16 @@ void JSON::_stringify(String &r_result, const Variant &p_var, const String &p_in
 		case Variant::FLOAT: {
 			const double num = p_var;
 
+			// TODO: This strictly adheres to the JSON specification as defined by RFC 8259, being
+			//  the path of least resistance. However, in practice, there are many interpreters
+			//  that accept non-compliant values in order to represent INF/NAN constants.
+			//  Supporting these values explicitly warrants further investigation.
+			if (!Math::is_finite(num)) {
+				WARN_PRINT_ONCE("The JSON specification only permits finite numbers. Non-compliant values will be converted to `null`.");
+				r_result += "null";
+				return;
+			}
+
 			// Only for exactly 0. If we have approximately 0 let the user decide how much
 			// precision they want.
 			if (num == double(0.0)) {
@@ -371,9 +381,14 @@ Error JSON::_get_token(const char32_t *p_str, int &index, int p_len, Token &r_to
 				}
 
 				if (p_str[index] == '-' || is_digit(p_str[index])) {
-					//a number
+					// A number.
 					const char32_t *rptr;
 					double number = String::to_float(&p_str[index], &rptr);
+					if (rptr == p_str) {
+						// `r_end` doubles as an error handler when matching `p_str`.
+						r_err_str = vformat("Invalid number");
+						return ERR_PARSE_ERROR;
+					}
 					index += (rptr - &p_str[index]);
 					r_token.type = TK_NUMBER;
 					r_token.value = number;
@@ -1056,6 +1071,15 @@ Variant JSON::_to_native(const Variant &p_json, bool p_allow_objects, int p_dept
 			if (s.begins_with("i:")) {
 				return s.substr(2).to_int();
 			} else if (s.begins_with("f:")) {
+				const String sub = s.substr(2);
+				if (sub == "inf") {
+					return Math::INF;
+				} else if (sub == "-inf") {
+					return -Math::INF;
+				} else if (sub == "nan") {
+					return Math::NaN;
+				}
+				return sub.to_float();
 				return s.substr(2).to_float();
 			} else if (s.begins_with("s:")) {
 				return s.substr(2);
