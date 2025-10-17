@@ -769,6 +769,10 @@ elif methods.using_clang(env) or methods.using_emcc(env):
     if sys.platform == "win32":
         env.AppendUnique(CCFLAGS=["-fansi-escape-codes"])
 
+# Reduce transitive includes.
+if (methods.using_clang(env) and not env.msvc) or methods.using_emcc(env) or "-stdlib=libc++" in env["CXXFLAGS"]:
+    env.AppendUnique(CPPDEFINES=["_LIBCPP_REMOVE_TRANSITIVE_INCLUDES"])
+
 # Set optimize and debug_symbols flags.
 # "custom" means do nothing and let users set their own optimization flags.
 # Needs to happen after configure to have `env.msvc` defined.

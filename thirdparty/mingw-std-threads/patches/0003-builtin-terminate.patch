@@ -1,0 +1,105 @@
+diff --git a/thirdparty/mingw-std-threads/mingw.condition_variable.h b/thirdparty/mingw-std-threads/mingw.condition_variable.h
+index d099fad2ec..032b248a60 100644
+--- a/thirdparty/mingw-std-threads/mingw.condition_variable.h
++++ b/thirdparty/mingw-std-threads/mingw.condition_variable.h
+@@ -29,7 +29,6 @@
+ 
+ #include <cassert>
+ #include <chrono>
+-#include <system_error>
+ 
+ #include <sdkddkver.h>  //  Detect Windows version.
+ #if (WINVER < _WIN32_WINNT_VISTA)
+@@ -161,7 +160,7 @@ public:
+         {
+             auto ret = WaitForSingleObject(mWakeEvent, 1000);
+             if (ret == WAIT_FAILED || ret == WAIT_ABANDONED)
+-                std::terminate();
++                __builtin_trap();
+         }
+         assert(mNumWaiters == 0);
+ //in case some of the waiters timed out just after we released the
+@@ -182,7 +181,7 @@ public:
+         {
+             auto ret = WaitForSingleObject(mWakeEvent, 1000);
+             if (ret == WAIT_FAILED || ret == WAIT_ABANDONED)
+-                std::terminate();
++                __builtin_trap();
+         }
+         assert(mNumWaiters == targetWaiters);
+     }
+diff --git a/thirdparty/mingw-std-threads/mingw.mutex.h b/thirdparty/mingw-std-threads/mingw.mutex.h
+index 1e881e6c7d..f7288e8c4a 100644
+--- a/thirdparty/mingw-std-threads/mingw.mutex.h
++++ b/thirdparty/mingw-std-threads/mingw.mutex.h
+@@ -35,7 +35,6 @@
+ #endif
+ 
+ #include <chrono>
+-#include <system_error>
+ #include <atomic>
+ #include <mutex> //need for call_once()
+ 
+@@ -324,7 +323,7 @@ class recursive_timed_mutex
+         {
+             using namespace std;
+             fprintf(stderr, "FATAL: Thread terminated while holding a mutex.");
+-            terminate();
++            __builtin_trap();
+         }
+ #endif
+         return (ret == kWaitObject0) || (ret == kWaitAbandoned);
+@@ -359,7 +358,7 @@ public:
+         {
+             using namespace std;
+             fprintf(stderr, "FATAL: Thread terminated while holding a mutex.");
+-            terminate();
++            __builtin_trap();
+         }
+ #endif
+         if ((ret != kWaitObject0) && (ret != kWaitAbandoned))
+diff --git a/thirdparty/mingw-std-threads/mingw.shared_mutex.h b/thirdparty/mingw-std-threads/mingw.shared_mutex.h
+index ddc46bb826..6e61ffc475 100644
+--- a/thirdparty/mingw-std-threads/mingw.shared_mutex.h
++++ b/thirdparty/mingw-std-threads/mingw.shared_mutex.h
+@@ -32,8 +32,6 @@
+ #endif
+ 
+ #include <cassert>
+-//  For descriptive errors.
+-#include <system_error>
+ //    Implementing a shared_mutex without OS support will require atomic read-
+ //  modify-write capacity.
+ #include <atomic>
+diff --git a/thirdparty/mingw-std-threads/mingw.thread.h b/thirdparty/mingw-std-threads/mingw.thread.h
+index 60d2200db2..d77957deaa 100644
+--- a/thirdparty/mingw-std-threads/mingw.thread.h
++++ b/thirdparty/mingw-std-threads/mingw.thread.h
+@@ -28,9 +28,6 @@
+ #include <thread>
+ 
+ #include <cstddef>      //  For std::size_t
+-#include <cerrno>       //  Detect error type.
+-#include <exception>    //  For std::terminate
+-#include <system_error> //  For std::system_error
+ #include <functional>   //  For std::hash
+ #include <tuple>        //  For std::tuple
+ #include <chrono>       //  For sleep timing.
+@@ -231,7 +228,7 @@ public:
+             std::printf("Error: Must join() or detach() a thread before \
+ destroying it.\n");
+ #endif
+-            std::terminate();
++            __builtin_trap();
+         }
+     }
+     thread& operator=(const thread&) = delete;
+@@ -243,7 +240,7 @@ destroying it.\n");
+             std::printf("Error: Must join() or detach() a thread before \
+ moving another thread to it.\n");
+ #endif
+-            std::terminate();
++            __builtin_trap();
+         }
+         swap(std::forward<thread>(other));
+         return *this;

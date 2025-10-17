@@ -35,7 +35,6 @@
 #endif
 
 #include <chrono>
-#include <system_error>
 #include <atomic>
 #include <mutex> //need for call_once()
 
@@ -324,7 +323,7 @@ class recursive_timed_mutex
         {
             using namespace std;
             fprintf(stderr, "FATAL: Thread terminated while holding a mutex.");
-            terminate();
+            __builtin_trap();
         }
 #endif
         return (ret == kWaitObject0) || (ret == kWaitAbandoned);
@@ -359,7 +358,7 @@ public:
         {
             using namespace std;
             fprintf(stderr, "FATAL: Thread terminated while holding a mutex.");
-            terminate();
+            __builtin_trap();
         }
 #endif
         if ((ret != kWaitObject0) && (ret != kWaitAbandoned))

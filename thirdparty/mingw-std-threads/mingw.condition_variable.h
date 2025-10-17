@@ -29,7 +29,6 @@
 
 #include <cassert>
 #include <chrono>
-#include <system_error>
 
 #include <sdkddkver.h>  //  Detect Windows version.
 #if (WINVER < _WIN32_WINNT_VISTA)
@@ -161,7 +160,7 @@ public:
         {
             auto ret = WaitForSingleObject(mWakeEvent, 1000);
             if (ret == WAIT_FAILED || ret == WAIT_ABANDONED)
-                std::terminate();
+                __builtin_trap();
         }
         assert(mNumWaiters == 0);
 //in case some of the waiters timed out just after we released the
@@ -182,7 +181,7 @@ public:
         {
             auto ret = WaitForSingleObject(mWakeEvent, 1000);
             if (ret == WAIT_FAILED || ret == WAIT_ABANDONED)
-                std::terminate();
+                __builtin_trap();
         }
         assert(mNumWaiters == targetWaiters);
     }

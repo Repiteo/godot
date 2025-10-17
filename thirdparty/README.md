@@ -707,6 +707,7 @@ Patches:
 
 - `0001-disable-exceptions.patch` (GH-85039)
 - `0002-clang-std-replacements-leak.patch` (GH-85208)
+- `0003-builtin-terminate.patch` (GH-111557)
 
 
 ## minimp3

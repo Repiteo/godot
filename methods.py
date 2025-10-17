@@ -116,6 +116,8 @@ def disable_warnings(self):
         self["WARNLEVEL"] = "/w"
     else:
         self["WARNLEVEL"] = "-w"
+    if "_LIBCPP_REMOVE_TRANSITIVE_INCLUDES" in self["CPPDEFINES"]:
+        self["CPPDEFINES"] = [x for x in self["CPPDEFINES"] if x != "_LIBCPP_REMOVE_TRANSITIVE_INCLUDES"]
 
 
 def force_optimization_on_debug(self):

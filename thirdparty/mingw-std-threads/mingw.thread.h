@@ -28,9 +28,6 @@
 #include <thread>
 
 #include <cstddef>      //  For std::size_t
-#include <cerrno>       //  Detect error type.
-#include <exception>    //  For std::terminate
-#include <system_error> //  For std::system_error
 #include <functional>   //  For std::hash
 #include <tuple>        //  For std::tuple
 #include <chrono>       //  For sleep timing.
@@ -231,7 +228,7 @@ public:
             std::printf("Error: Must join() or detach() a thread before \
 destroying it.\n");
 #endif
-            std::terminate();
+            __builtin_trap();
         }
     }
     thread& operator=(const thread&) = delete;
@@ -243,7 +240,7 @@ destroying it.\n");
             std::printf("Error: Must join() or detach() a thread before \
 moving another thread to it.\n");
 #endif
-            std::terminate();
+            __builtin_trap();
         }
         swap(std::forward<thread>(other));
         return *this;

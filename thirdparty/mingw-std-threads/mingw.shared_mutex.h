@@ -32,8 +32,6 @@
 #endif
 
 #include <cassert>
-//  For descriptive errors.
-#include <system_error>
 //    Implementing a shared_mutex without OS support will require atomic read-
 //  modify-write capacity.
 #include <atomic>
