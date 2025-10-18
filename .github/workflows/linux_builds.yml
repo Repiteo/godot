@@ -1,6 +1,11 @@
 name: 🐧 Linux Builds
 on:
   workflow_call:
+    inputs:
+      event:
+        description: Name of the caller's `github.event_name`.
+        required: true
+        type: string
 
 # Global Settings
 env:
@@ -22,6 +27,7 @@ jobs:
     runs-on: ubuntu-22.04
     name: ${{ matrix.name }}
     timeout-minutes: 120
+    if: ${{ inputs.event == 'push' }}
     strategy:
       fail-fast: false
       matrix:
