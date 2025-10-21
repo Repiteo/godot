@@ -585,18 +585,24 @@ def precious_program(env, program, sources, **args):
 
 
 def add_shared_library(env, name, sources, **args):
+    if env["syntax_only"]:
+        return []
     library = env.SharedLibrary(name, sources, **args)
     env.NoCache(library)
     return library
 
 
 def add_library(env, name, sources, **args):
+    if env["syntax_only"]:
+        return []
     library = env.Library(name, sources, **args)
     env.NoCache(library)
     return library
 
 
 def add_program(env, name, sources, **args):
+    if env["syntax_only"]:
+        return []
     program = env.Program(name, sources, **args)
     env.NoCache(program)
     return program
@@ -919,6 +925,9 @@ def clean_cache(cache_path: str, cache_limit: int, verbose: bool) -> None:
 
 
 def prepare_cache(env) -> None:
+    if env["syntax_only"]:
+        return
+
     cache_path = ""
     if env["cache_path"]:
         cache_path = cast(str, env["cache_path"])

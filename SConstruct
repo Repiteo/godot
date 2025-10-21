@@ -211,6 +211,7 @@ opts.Add(
 )
 opts.Add(BoolVariable("tests", "Build the unit tests", False))
 opts.Add(BoolVariable("fast_unsafe", "Enable unsafe options for faster incremental builds", False))
+opts.Add(BoolVariable("syntax_only", "Enable syntax-only compilation for fast validation", True))
 opts.Add(BoolVariable("ninja", "Use the ninja backend for faster rebuilds", False))
 opts.Add(BoolVariable("ninja_auto_run", "Run ninja automatically after generating the ninja file", True))
 opts.Add("ninja_file", "Path to the generated ninja file", "build.ninja")
@@ -1158,6 +1159,13 @@ for key in (emitters := env.StaticObject.builder.emitter):
     emitters[key] = ListEmitter([methods.redirect_emitter] + env.Flatten(emitters[key]))
 for key in (emitters := env.SharedObject.builder.emitter):
     emitters[key] = ListEmitter([methods.redirect_emitter] + env.Flatten(emitters[key]))
+
+# Syntax-only compilation.
+if env["syntax_only"]:
+    if env.msvc:
+        env.AppendUnique(CCFLAGS=["/Zs"])
+    else:
+        env.AppendUnique(CCFLAGS=["-fsyntax-only"])
 
 # Prepend compiler launchers
 if "c_compiler_launcher" in env:
