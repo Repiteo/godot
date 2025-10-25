@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*  test_validate_testing.h                                               */
+/*  test_validate_testing.cpp                                             */
 /**************************************************************************/
 /*                         This file is part of:                          */
 /*                             GODOT ENGINE                               */
@@ -28,13 +28,13 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#pragma once
-
 #include "core/core_globals.h"
 #include "core/os/os.h"
 
 #include "tests/test_macros.h"
 #include "tests/test_tools.h"
+
+TEST_FORCE_LINK(test_validate_testing)
 
 TEST_SUITE("Validate tests") {
 	TEST_CASE("Always pass") {

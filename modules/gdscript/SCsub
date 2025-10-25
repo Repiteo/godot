@@ -22,8 +22,3 @@ if env.editor_build:
         env_gdscript.Append(CPPDEFINES=["GDSCRIPT_NO_LSP"])
         # Also needed in main env to unexpose --lsp-port option.
         env.Append(CPPDEFINES=["GDSCRIPT_NO_LSP"])
-
-
-if env["tests"]:
-    env_gdscript.Append(CPPDEFINES=["TESTS_ENABLED"])
-    env_gdscript.add_source_files(env.modules_sources, "./tests/*.cpp")
