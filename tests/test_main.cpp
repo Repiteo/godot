@@ -105,6 +105,7 @@
 #include "tests/core/templates/test_list.h"
 #include "tests/core/templates/test_local_vector.h"
 #include "tests/core/templates/test_lru.h"
+#include "tests/core/templates/test_name_of.h"
 #include "tests/core/templates/test_paged_array.h"
 #include "tests/core/templates/test_rid.h"
 #include "tests/core/templates/test_self_list.h"

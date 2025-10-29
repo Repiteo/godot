@@ -52,10 +52,10 @@ public:
 
 	_FORCE_INLINE_ constexpr Span() = default;
 
-	_FORCE_INLINE_ Span(const T *p_ptr, uint64_t p_len) :
+	_FORCE_INLINE_ constexpr Span(const T *p_ptr, uint64_t p_len) :
 			_ptr(p_ptr), _len(p_len) {
 #ifdef DEBUG_ENABLED
-		// TODO In c++20, make this check run only in non-consteval, and make this constructor constexpr.
+		// TODO: In C++20, wrap this check in `if (std::is_constant_evaluated()) { ... }`.
 		if (_ptr == nullptr && _len > 0) {
 			ERR_PRINT("Internal bug, please report: Span was created from nullptr with size > 0. Recovering by using size = 0.");
 			_len = 0;
@@ -107,10 +107,18 @@ public:
 	/// Find the index of the given value using binary search.
 	/// Note: Assumes that elements in the span are sorted. Otherwise, use find() instead.
 	template <typename Comparator = Comparator<T>>
-	constexpr uint64_t bisect(const T &p_value, bool p_before, Comparator compare = Comparator()) const;
+	constexpr uint64_t bisect(const T &p_value, bool p_before, Comparator p_compare = Comparator()) const;
 
 	/// The caller is responsible to ensure size() > 0.
 	constexpr T max() const;
+
+	constexpr int8_t compare(const Span<T> &p_other) const;
+	_FORCE_INLINE_ constexpr bool operator==(const Span<T> &p_other) const { return compare(p_other) == 0; }
+	_FORCE_INLINE_ constexpr bool operator!=(const Span<T> &p_other) const { return compare(p_other) != 0; }
+	_FORCE_INLINE_ constexpr bool operator<(const Span<T> &p_other) const { return compare(p_other) < 0; }
+	_FORCE_INLINE_ constexpr bool operator<=(const Span<T> &p_other) const { return compare(p_other) <= 0; }
+	_FORCE_INLINE_ constexpr bool operator>(const Span<T> &p_other) const { return compare(p_other) > 0; }
+	_FORCE_INLINE_ constexpr bool operator>=(const Span<T> &p_other) const { return compare(p_other) >= 0; }
 };
 
 template <typename T>
@@ -182,13 +190,13 @@ constexpr uint64_t Span<T>::count(const T &p_val) const {
 
 template <typename T>
 template <typename Comparator>
-constexpr uint64_t Span<T>::bisect(const T &p_value, bool p_before, Comparator compare) const {
+constexpr uint64_t Span<T>::bisect(const T &p_value, bool p_before, Comparator p_compare) const {
 	uint64_t lo = 0;
 	uint64_t hi = size();
 	if (p_before) {
 		while (lo < hi) {
 			const uint64_t mid = (lo + hi) / 2;
-			if (compare(ptr()[mid], p_value)) {
+			if (p_compare(ptr()[mid], p_value)) {
 				lo = mid + 1;
 			} else {
 				hi = mid;
@@ -197,7 +205,7 @@ constexpr uint64_t Span<T>::bisect(const T &p_value, bool p_before, Comparator c
 	} else {
 		while (lo < hi) {
 			const uint64_t mid = (lo + hi) / 2;
-			if (compare(p_value, ptr()[mid])) {
+			if (p_compare(p_value, ptr()[mid])) {
 				hi = mid;
 			} else {
 				lo = mid + 1;
@@ -217,6 +225,27 @@ constexpr T Span<T>::max() const {
 		}
 	}
 	return max_val;
+}
+
+template <typename T>
+constexpr int8_t Span<T>::compare(const Span<T> &p_other) const {
+	if (size() == p_other.size()) {
+		return 0;
+	} else if (is_empty()) {
+		return -1;
+	} else if (p_other.is_empty()) {
+		return 1;
+	}
+
+	for (uint64_t i = 0; i < size(); i++) {
+		if (ptr()[i] < p_other.ptr()[i]) {
+			return -1;
+		} else if (ptr()[i] > p_other.ptr()[i]) {
+			return 1;
+		}
+	}
+
+	return 0;
 }
 
 // Zero-constructing Span initializes _ptr and _len to 0 (and thus empty).

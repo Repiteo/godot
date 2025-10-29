@@ -1765,44 +1765,44 @@ private:
 	void _compute_list_set_push_constant(ComputeListID p_list, const Vector<uint8_t> &p_data, uint32_t p_data_size);
 };
 
-VARIANT_ENUM_CAST(RenderingDevice::DeviceType)
-VARIANT_ENUM_CAST(RenderingDevice::DriverResource)
-VARIANT_ENUM_CAST(RenderingDevice::ShaderStage)
-VARIANT_ENUM_CAST(RenderingDevice::ShaderLanguage)
-VARIANT_ENUM_CAST(RenderingDevice::CompareOperator)
-VARIANT_ENUM_CAST(RenderingDevice::DataFormat)
-VARIANT_ENUM_CAST(RenderingDevice::TextureType)
-VARIANT_ENUM_CAST(RenderingDevice::TextureSamples)
-VARIANT_BITFIELD_CAST(RenderingDevice::TextureUsageBits)
-VARIANT_ENUM_CAST(RenderingDevice::TextureSwizzle)
-VARIANT_ENUM_CAST(RenderingDevice::TextureSliceType)
-VARIANT_ENUM_CAST(RenderingDevice::SamplerFilter)
-VARIANT_ENUM_CAST(RenderingDevice::SamplerRepeatMode)
-VARIANT_ENUM_CAST(RenderingDevice::SamplerBorderColor)
-VARIANT_ENUM_CAST(RenderingDevice::VertexFrequency)
-VARIANT_ENUM_CAST(RenderingDevice::IndexBufferFormat)
-VARIANT_BITFIELD_CAST(RenderingDevice::StorageBufferUsage)
-VARIANT_BITFIELD_CAST(RenderingDevice::BufferCreationBits)
-VARIANT_ENUM_CAST(RenderingDevice::UniformType)
-VARIANT_ENUM_CAST(RenderingDevice::RenderPrimitive)
-VARIANT_ENUM_CAST(RenderingDevice::PolygonCullMode)
-VARIANT_ENUM_CAST(RenderingDevice::PolygonFrontFace)
-VARIANT_ENUM_CAST(RenderingDevice::StencilOperation)
-VARIANT_ENUM_CAST(RenderingDevice::LogicOperation)
-VARIANT_ENUM_CAST(RenderingDevice::BlendFactor)
-VARIANT_ENUM_CAST(RenderingDevice::BlendOperation)
-VARIANT_BITFIELD_CAST(RenderingDevice::PipelineDynamicStateFlags)
-VARIANT_ENUM_CAST(RenderingDevice::PipelineSpecializationConstantType)
-VARIANT_ENUM_CAST(RenderingDevice::Limit)
-VARIANT_ENUM_CAST(RenderingDevice::MemoryType)
-VARIANT_ENUM_CAST(RenderingDevice::Features)
-VARIANT_ENUM_CAST(RenderingDevice::BreadcrumbMarker)
-VARIANT_BITFIELD_CAST(RenderingDevice::DrawFlags);
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::DeviceType, "RenderingDevice.DeviceType");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::DriverResource, "RenderingDevice.DriverResource");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::ShaderStage, "RenderingDevice.ShaderStage");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::ShaderLanguage, "RenderingDevice.ShaderLanguage");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::CompareOperator, "RenderingDevice.CompareOperator");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::DataFormat, "RenderingDevice.DataFormat");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::TextureType, "RenderingDevice.TextureType");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::TextureSamples, "RenderingDevice.TextureSamples");
+OVERRIDE_QUALIFIED_NAME_BITFIELD(RenderingDevice::TextureUsageBits, "RenderingDevice.TextureUsageBits");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::TextureSwizzle, "RenderingDevice.TextureSwizzle");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::TextureSliceType, "RenderingDevice.TextureSliceType");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::SamplerFilter, "RenderingDevice.SamplerFilter");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::SamplerRepeatMode, "RenderingDevice.SamplerRepeatMode");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::SamplerBorderColor, "RenderingDevice.SamplerBorderColor");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::VertexFrequency, "RenderingDevice.VertexFrequency");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::IndexBufferFormat, "RenderingDevice.IndexBufferFormat");
+OVERRIDE_QUALIFIED_NAME_BITFIELD(RenderingDevice::StorageBufferUsage, "RenderingDevice.StorageBufferUsage");
+OVERRIDE_QUALIFIED_NAME_BITFIELD(RenderingDevice::BufferCreationBits, "RenderingDevice.BufferCreationBits");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::UniformType, "RenderingDevice.UniformType");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::RenderPrimitive, "RenderingDevice.RenderPrimitive");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::PolygonCullMode, "RenderingDevice.PolygonCullMode");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::PolygonFrontFace, "RenderingDevice.PolygonFrontFace");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::StencilOperation, "RenderingDevice.StencilOperation");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::LogicOperation, "RenderingDevice.LogicOperation");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::BlendFactor, "RenderingDevice.BlendFactor");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::BlendOperation, "RenderingDevice.BlendOperation");
+OVERRIDE_QUALIFIED_NAME_BITFIELD(RenderingDevice::PipelineDynamicStateFlags, "RenderingDevice.PipelineDynamicStateFlags");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::PipelineSpecializationConstantType, "RenderingDevice.PipelineSpecializationConstantType");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::Limit, "RenderingDevice.Limit");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::MemoryType, "RenderingDevice.MemoryType");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::Features, "RenderingDevice.Features");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::BreadcrumbMarker, "RenderingDevice.BreadcrumbMarker");
+OVERRIDE_QUALIFIED_NAME_BITFIELD(RenderingDevice::DrawFlags, "RenderingDevice.DrawFlags");
 
 #ifndef DISABLE_DEPRECATED
-VARIANT_BITFIELD_CAST(RenderingDevice::BarrierMask);
-VARIANT_ENUM_CAST(RenderingDevice::InitialAction)
-VARIANT_ENUM_CAST(RenderingDevice::FinalAction)
+OVERRIDE_QUALIFIED_NAME_BITFIELD(RenderingDevice::BarrierMask, "RenderingDevice.BarrierMask");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::InitialAction, "RenderingDevice.InitialAction");
+OVERRIDE_QUALIFIED_NAME_ENUM(RenderingDevice::FinalAction, "RenderingDevice.FinalAction");
 #endif
 
 typedef RenderingDevice RD;

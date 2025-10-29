@@ -34,6 +34,7 @@
 #include "core/os/memory.h"
 #include "core/os/spin_lock.h"
 #include "core/string/ustring.h"
+#include "core/templates/name_of.h"
 #include "core/typedefs.h"
 
 #include <type_traits>
@@ -166,7 +167,7 @@ public:
 		bool leaked = allocs_available < pages_allocated * page_size;
 		if (leaked) {
 			if (CoreGlobals::leak_reporting_enabled) {
-				ERR_PRINT(String("Pages in use exist at exit in PagedAllocator: ") + String(typeid(T).name()));
+				ERR_PRINT("Pages in use exist at exit in PagedAllocator: '" + String::utf8(name_of_type_v<T>) + "'.");
 			}
 		} else {
 			_reset(false);

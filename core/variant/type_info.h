@@ -31,6 +31,7 @@
 #pragma once
 
 #include "core/object/object.h"
+#include "core/templates/name_of.h"
 #include "core/templates/simple_type.h"
 #include "core/typedefs.h"
 #include "core/variant/variant.h"
@@ -195,47 +196,55 @@ inline String enum_qualified_name_to_class_info_name(const String &p_qualified_n
 } // namespace Internal
 } // namespace GodotTypeInfo
 
-#define MAKE_ENUM_TYPE_INFO(m_enum)                                                                                                          \
-	template <>                                                                                                                              \
-	struct GetTypeInfo<m_enum> {                                                                                                             \
-		static const Variant::Type VARIANT_TYPE = Variant::INT;                                                                              \
-		static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;                                                        \
-		static inline PropertyInfo get_class_info() {                                                                                        \
-			return PropertyInfo(Variant::INT, String(), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CLASS_IS_ENUM, \
-					GodotTypeInfo::Internal::enum_qualified_name_to_class_info_name(String(#m_enum)));                                       \
-		}                                                                                                                                    \
-	};
+template <typename T>
+struct GetTypeInfo<T, std::enable_if_t<std::is_enum_v<T>>> {
+	static const Variant::Type VARIANT_TYPE = Variant::INT;
+	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;
+	static inline PropertyInfo get_class_info() {
+		return PropertyInfo(Variant::INT, String(), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CLASS_IS_ENUM,
+				GodotTypeInfo::Internal::enum_qualified_name_to_class_info_name(String::utf8(name_of_type_v<T>)));
+	}
+};
+
+#define OVERRIDE_QUALIFIED_NAME_ENUM(m_enum, m_name)                                                                                                  \
+	template <>                                                                                                                                       \
+	struct GetTypeInfo<m_enum> {                                                                                                                      \
+		static const Variant::Type VARIANT_TYPE = Variant::INT;                                                                                       \
+		static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;                                                                 \
+		static inline PropertyInfo get_class_info() {                                                                                                 \
+			return PropertyInfo(Variant::INT, String(), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CLASS_IS_ENUM, m_name); \
+		}                                                                                                                                             \
+	}
 
 template <typename T>
 inline StringName __constant_get_enum_name(T param) {
 	return GetTypeInfo<T>::get_class_info().class_name;
 }
 
-#define MAKE_BITFIELD_TYPE_INFO(m_enum)                                                                                                          \
-	template <>                                                                                                                                  \
-	struct GetTypeInfo<m_enum> {                                                                                                                 \
-		static const Variant::Type VARIANT_TYPE = Variant::INT;                                                                                  \
-		static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;                                                            \
-		static inline PropertyInfo get_class_info() {                                                                                            \
-			return PropertyInfo(Variant::INT, String(), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CLASS_IS_BITFIELD, \
-					GodotTypeInfo::Internal::enum_qualified_name_to_class_info_name(String(#m_enum)));                                           \
-		}                                                                                                                                        \
-	};                                                                                                                                           \
-	template <>                                                                                                                                  \
-	struct GetTypeInfo<BitField<m_enum>> {                                                                                                       \
-		static const Variant::Type VARIANT_TYPE = Variant::INT;                                                                                  \
-		static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;                                                            \
-		static inline PropertyInfo get_class_info() {                                                                                            \
-			return PropertyInfo(Variant::INT, String(), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CLASS_IS_BITFIELD, \
-					GodotTypeInfo::Internal::enum_qualified_name_to_class_info_name(String(#m_enum)));                                           \
-		}                                                                                                                                        \
-	};
+template <typename T>
+struct GetTypeInfo<BitField<T>, std::enable_if_t<std::is_enum_v<T>>> {
+	static const Variant::Type VARIANT_TYPE = Variant::INT;
+	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;
+	static inline PropertyInfo get_class_info() {
+		return PropertyInfo(Variant::INT, String(), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CLASS_IS_BITFIELD,
+				GodotTypeInfo::Internal::enum_qualified_name_to_class_info_name(String::utf8(name_of_type_v<T>)));
+	}
+};
+
+#define OVERRIDE_QUALIFIED_NAME_BITFIELD(m_enum, m_name)                                                                                                  \
+	template <>                                                                                                                                           \
+	struct GetTypeInfo<BitField<m_enum>> {                                                                                                                \
+		static const Variant::Type VARIANT_TYPE = Variant::INT;                                                                                           \
+		static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;                                                                     \
+		static inline PropertyInfo get_class_info() {                                                                                                     \
+			return PropertyInfo(Variant::INT, String(), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CLASS_IS_BITFIELD, m_name); \
+		}                                                                                                                                                 \
+	}
 
 template <typename T>
 inline StringName __constant_get_bitfield_name(T param) {
 	return GetTypeInfo<BitField<T>>::get_class_info().class_name;
 }
-#define CLASS_INFO(m_type) (GetTypeInfo<m_type *>::get_class_info())
 
 // No initialization by default, except for scalar types.
 template <typename T>

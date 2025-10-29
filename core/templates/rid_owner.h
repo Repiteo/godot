@@ -34,6 +34,7 @@
 #include "core/os/mutex.h"
 #include "core/string/print_string.h"
 #include "core/templates/local_vector.h"
+#include "core/templates/name_of.h"
 #include "core/templates/safe_refcount.h"
 #include "core/variant/variant.h"
 
@@ -438,7 +439,7 @@ public:
 
 		if (alloc_count) {
 			print_error(vformat("ERROR: %d RID allocations of type '%s' were leaked at exit.",
-					alloc_count, description ? description : typeid(T).name()));
+					alloc_count, description ? description : String::utf8(name_of_type_v<T>)));
 
 			for (size_t i = 0; i < max_alloc; i++) {
 				uint32_t validator = chunks[i / elements_in_chunk][i % elements_in_chunk].validator;
