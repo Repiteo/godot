@@ -840,15 +840,13 @@ else:
 if env["lto"] != "none":
     print("Using LTO: " + env["lto"])
 
-# Set our C and C++ standard requirements.
+# Set our C and C++ standard requirements: C++17 and C17.
 # C++17 is required as we need guaranteed copy elision as per GH-36436.
 # Prepending to make it possible to override.
 # This needs to come after `configure`, otherwise we don't have env.msvc.
 if not env.msvc:
-    # Specifying GNU extensions support explicitly, which are supported by
-    # both GCC and Clang. Both currently default to gnu17 and gnu++17.
-    env.Prepend(CFLAGS=["-std=gnu17"])
-    env.Prepend(CXXFLAGS=["-std=gnu++17"])
+    env.Prepend(CFLAGS=["-std=c17"])
+    env.Prepend(CXXFLAGS=["-std=c++17"])
 else:
     # MSVC started offering C standard support with Visual Studio 2019 16.8, which covers all
     # of our supported VS2019 & VS2022 versions; VS2017 will only pass the C++ standard.
