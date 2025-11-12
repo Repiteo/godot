@@ -33,3 +33,20 @@ runs:
     - name: Setup problem matchers
       shell: bash
       run: echo ::add-matcher::misc/utility/problem-matchers.json
+
+    - name: Setup sanitizer options
+      shell: bash
+      run: |
+        SANITIZERS=("asan" "lsan" "tsan" "ubsan")
+        SANITIZER_OPTIONS=(
+          "color=always"         # Colorized output even in CI.
+          "print_suppressions=1" # Should always be tracked.
+          "print_summary=0"      # Decreases output bloat.
+          'suppressions="${{ github.workspace }}/misc/error_suppressions/{san}.txt"'
+        )
+        SANITIZER_STRING="{SAN}_OPTIONS=$(IFS=:; echo "${SANITIZER_OPTIONS[*]}")"
+
+        for sanitizer in "${SANITIZERS[@]}"; do
+          sanitizer_upper=$(echo $sanitizer | tr '[:lower:]' '[:upper:]')
+          echo "$SANITIZER_STRING" | sed "s@{SAN}@$sanitizer_upper@g" | sed "s@{san}@$sanitizer@g" >> $GITHUB_ENV
+        done
