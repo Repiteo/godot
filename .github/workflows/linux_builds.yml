@@ -221,6 +221,7 @@ jobs:
         run: |
           ${{ matrix.bin }} --version
           ${{ matrix.bin }} --help
+          ${{ matrix.bin }} --headless --import
           ${{ matrix.bin }} --headless --test --force-colors
 
       - name: .NET source generators tests
