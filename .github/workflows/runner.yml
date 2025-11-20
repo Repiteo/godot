@@ -12,6 +12,8 @@ jobs:
     if: ${{ !vars.DISABLE_GODOT_CI || github.run_attempt > 1 || github.event_name == 'workflow_dispatch' }}
     name: 📊 Static checks
     uses: ./.github/workflows/static_checks.yml
+    with:
+      caller_event_name: ${{ github.event_name }}
 
   # Second stage: Run all the builds and some of the tests.
 
@@ -19,28 +21,40 @@ jobs:
     name: 🤖 Android
     needs: static-checks
     uses: ./.github/workflows/android_builds.yml
+    with:
+      caller_event_name: ${{ github.event_name }}
 
   ios-build:
     name: 🍏 iOS
     needs: static-checks
     uses: ./.github/workflows/ios_builds.yml
+    with:
+      caller_event_name: ${{ github.event_name }}
 
   linux-build:
     name: 🐧 Linux
     needs: static-checks
     uses: ./.github/workflows/linux_builds.yml
+    with:
+      caller_event_name: ${{ github.event_name }}
 
   macos-build:
     name: 🍎 macOS
     needs: static-checks
     uses: ./.github/workflows/macos_builds.yml
+    with:
+      caller_event_name: ${{ github.event_name }}
 
   windows-build:
     name: 🏁 Windows
     needs: static-checks
     uses: ./.github/workflows/windows_builds.yml
+    with:
+      caller_event_name: ${{ github.event_name }}
 
   web-build:
     name: 🌐 Web
     needs: static-checks
     uses: ./.github/workflows/web_builds.yml
+    with:
+      caller_event_name: ${{ github.event_name }}

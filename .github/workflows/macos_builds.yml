@@ -1,10 +1,17 @@
 name: 🍎 macOS Builds
 on:
   workflow_call:
+    inputs:
+      caller_event_name:
+        description: "The name of the called workflow's `github.event_name`."
+        required: true
+        type: string
   workflow_dispatch:
 
 # Global Settings
 env:
+  GITHUB_EVENT_NAME: ${{ github.event_name == 'workflow_call' && inputs.caller_event_name || github.event_name }}
+  GITHUB_EVENT_NAME_BASE: ${{ github.event_name }}
   SCONS_FLAGS: >-
     dev_mode=yes
     module_text_server_fb_enabled=yes
