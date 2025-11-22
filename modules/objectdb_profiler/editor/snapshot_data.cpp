@@ -329,7 +329,7 @@ Ref<GameStateSnapshotRef> GameStateSnapshot::create_ref(const String &p_snapshot
 
 	Vector<uint8_t> snapshot_buffer_decompressed;
 	int success = Compression::decompress_dynamic(&snapshot_buffer_decompressed, -1, p_snapshot_buffer.ptr(), p_snapshot_buffer.size(), Compression::MODE_DEFLATE);
-	ERR_FAIL_COND_V_MSG(success != Z_OK, nullptr, "ObjectDB Snapshot could not be parsed. Failed to decompress snapshot.");
+	ERR_FAIL_COND_V_MSG(!success, nullptr, "ObjectDB Snapshot could not be parsed. Failed to decompress snapshot.");
 	CoreBind::Marshalls *m = CoreBind::Marshalls::get_singleton();
 	Array snapshot_data = m->base64_to_variant(m->raw_to_base64(snapshot_buffer_decompressed));
 	ERR_FAIL_COND_V_MSG(snapshot_data.is_empty(), nullptr, "ObjectDB Snapshot could not be parsed. Variant array is empty.");
