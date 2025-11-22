@@ -40,7 +40,7 @@ if env["profiler_path"]:
     env["profiler"] = profiler_name
 
     if profiler_name == "tracy":
-        env.Prepend(CPPPATH=[str(profiler_path.absolute())])
+        # env.Prepend(CPPPATH=[str(profiler_path.absolute())])
 
         env_tracy = env.Clone()
         env_tracy.Append(CPPDEFINES=["TRACY_ENABLE"])
@@ -55,7 +55,7 @@ if env["profiler_path"]:
         env_tracy.disable_warnings()
         env_tracy.add_source_files(env.core_sources, str((profiler_path / "TracyClient.cpp").absolute()))
     elif profiler_name == "perfetto":
-        env.Prepend(CPPPATH=[str(profiler_path.absolute())])
+        # env.Prepend(CPPPATH=[str(profiler_path.absolute())])
 
         env_perfetto = env.Clone()
         if env["profiler_sample_callstack"]:

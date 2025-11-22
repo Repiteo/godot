@@ -418,7 +418,7 @@ def configure(env: "SConsEnvironment"):
 
     env.Prepend(CPPPATH=["#platform/linuxbsd"])
     if env["use_sowrap"]:
-        env.Prepend(CPPPATH=["#thirdparty/linuxbsd_headers"])
+        pass  # env.Prepend(CPPPATH=["#thirdparty/linuxbsd_headers"])
 
     env.Append(
         CPPDEFINES=[
@@ -480,9 +480,9 @@ def configure(env: "SConsEnvironment"):
                 sys.exit(255)
             env.ParseConfig("pkg-config wayland-egl --cflags --libs")
         else:
-            env.Prepend(CPPPATH=["#thirdparty/linuxbsd_headers/wayland/"])
+            # env.Prepend(CPPPATH=["#thirdparty/linuxbsd_headers/wayland/"])
             if env["libdecor"]:
-                env.Prepend(CPPPATH=["#thirdparty/linuxbsd_headers/libdecor-0/"])
+                pass  # env.Prepend(CPPPATH=["#thirdparty/linuxbsd_headers/libdecor-0/"])
 
         if env["libdecor"]:
             env.Append(CPPDEFINES=["LIBDECOR_ENABLED"])
@@ -492,7 +492,7 @@ def configure(env: "SConsEnvironment"):
 
     if env["accesskit"]:
         if env["accesskit_sdk_path"] != "":
-            env.Prepend(CPPPATH=[env["accesskit_sdk_path"] + "/include"])
+            # env.Prepend(CPPPATH=[env["accesskit_sdk_path"] + "/include"])
             if env["arch"] == "arm64":
                 env.Append(LIBPATH=[env["accesskit_sdk_path"] + "/lib/linux/arm64/static/"])
             elif env["arch"] == "arm32":

@@ -32,7 +32,7 @@ if env["builtin_libpng"]:
 
     env_png.Prepend(CPPPATH=[thirdparty_dir])
     # Needed for drivers includes and in platform/web.
-    env.Prepend(CPPPATH=[thirdparty_dir])
+    # env.Prepend(CPPPATH=[thirdparty_dir])
 
     env_thirdparty = env_png.Clone()
     env_thirdparty.disable_warnings()

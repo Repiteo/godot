@@ -52,7 +52,7 @@ if env["brotli"] and env["builtin_brotli"]:
     thirdparty_brotli_sources = [thirdparty_brotli_dir + file for file in thirdparty_brotli_sources]
 
     env_thirdparty.Prepend(CPPPATH=[thirdparty_brotli_dir + "include"])
-    env.Prepend(CPPPATH=[thirdparty_brotli_dir + "include"])
+    # env.Prepend(CPPPATH=[thirdparty_brotli_dir + "include"])
 
     if env.get("use_ubsan") or env.get("use_asan") or env.get("use_tsan") or env.get("use_lsan") or env.get("use_msan"):
         env_thirdparty.Append(CPPDEFINES=["BROTLI_BUILD_PORTABLE"])
@@ -70,7 +70,7 @@ if env["builtin_clipper2"]:
     thirdparty_clipper_sources = [thirdparty_clipper_dir + file for file in thirdparty_clipper_sources]
 
     env_thirdparty.Prepend(CPPPATH=[thirdparty_clipper_dir + "include"])
-    env.Prepend(CPPPATH=[thirdparty_clipper_dir + "include"])
+    # env.Prepend(CPPPATH=[thirdparty_clipper_dir + "include"])
 
     env_thirdparty.Append(CPPDEFINES=["CLIPPER2_ENABLED"])
     env.Append(CPPDEFINES=["CLIPPER2_ENABLED"])
@@ -96,7 +96,7 @@ if env["builtin_zlib"]:
 
     env_thirdparty.Prepend(CPPPATH=[thirdparty_zlib_dir])
     # Needs to be available in main env too
-    env.Prepend(CPPPATH=[thirdparty_zlib_dir])
+    # env.Prepend(CPPPATH=[thirdparty_zlib_dir])
     if env.dev_build:
         env_thirdparty.Append(CPPDEFINES=["ZLIB_DEBUG"])
         # Affects headers so it should also be defined for Godot code
@@ -153,7 +153,7 @@ if env["builtin_zstd"]:
 
     env_thirdparty.Prepend(CPPPATH=[thirdparty_zstd_dir, thirdparty_zstd_dir + "common"])
     env_thirdparty.Append(CPPDEFINES=["ZSTD_STATIC_LINKING_ONLY"])
-    env.Prepend(CPPPATH=thirdparty_zstd_dir)
+    # env.Prepend(CPPPATH=thirdparty_zstd_dir)
     # Also needed in main env includes will trigger warnings
     env.Append(CPPDEFINES=["ZSTD_STATIC_LINKING_ONLY"])
 
