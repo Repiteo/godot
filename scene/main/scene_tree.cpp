@@ -37,6 +37,7 @@
 #include "core/object/message_queue.h"
 #include "core/object/worker_thread_pool.h"
 #include "core/os/os.h"
+#include "core/profiling/performance.h"
 #include "core/profiling/profiling.h"
 #include "node.h"
 #include "scene/animation/tween.h"
@@ -572,11 +573,30 @@ void SceneTree::set_group(const StringName &p_group, const String &p_name, const
 	set_group_flags(GROUP_CALL_DEFAULT, p_group, p_name, p_value);
 }
 
+static int _get_node_count() {
+	SceneTree *scene_tree = Object::cast_to<SceneTree>(OS::get_singleton()->get_main_loop());
+	return scene_tree ? scene_tree->get_node_count() : 0;
+}
+
+static double scene_tree_monitor_callback(Performance::Monitor p_monitor) {
+	switch (p_monitor) {
+		case Performance::Monitor::OBJECT_NODE_COUNT:
+			return _get_node_count();
+#ifdef DEBUG_ENABLED
+		case Performance::Monitor::OBJECT_ORPHAN_NODE_COUNT:
+			return Node::total_node_count.get() - _get_node_count();
+#endif // DEBUG_ENABLED
+		default:
+			return 0;
+	}
+}
+
 void SceneTree::initialize() {
 	GodotProfileZone("SceneTree::initialize");
 	ERR_FAIL_NULL(root);
 	MainLoop::initialize();
 	root->_set_tree(this);
+	Performance::get_singleton()->_scene_tree_monitor_callback = scene_tree_monitor_callback;
 }
 
 void SceneTree::set_physics_interpolation_enabled(bool p_enabled) {

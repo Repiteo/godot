@@ -36,6 +36,7 @@
 #include "core/io/resource_loader.h"
 #include "core/math/audio_frame.h"
 #include "core/os/os.h"
+#include "core/profiling/performance.h"
 #include "core/string/string_name.h"
 #include "core/templates/pair.h"
 #include "scene/scene_string_names.h"
@@ -1509,6 +1510,15 @@ void AudioServer::init_channels_and_buffers() {
 	}
 }
 
+static double audio_server_monitor_callback(Performance::Monitor p_monitor) {
+	switch (p_monitor) {
+		case Performance::Monitor::AUDIO_OUTPUT_LATENCY:
+			return AudioServer::get_singleton()->get_output_latency();
+		default:
+			return 0; // Unreachable.
+	}
+}
+
 void AudioServer::init() {
 	channel_disable_threshold_db = GLOBAL_DEF_RST(PropertyInfo(Variant::FLOAT, "audio/buses/channel_disable_threshold_db", PROPERTY_HINT_RANGE, "-80,0,0.1,suffix:dB"), -60.0);
 	channel_disable_frames = float(GLOBAL_DEF_RST(PropertyInfo(Variant::FLOAT, "audio/buses/channel_disable_time", PROPERTY_HINT_RANGE, "0,5,0.01,or_greater"), 2.0)) * get_mix_rate();
@@ -1532,6 +1542,8 @@ void AudioServer::init() {
 #endif
 
 	GLOBAL_DEF_RST(PropertyInfo(Variant::INT, "audio/video/video_delay_compensation_ms", PROPERTY_HINT_RANGE, "-1000,1000,1,suffix:ms"), 0);
+
+	Performance::get_singleton()->_audio_server_monitor_callback = audio_server_monitor_callback;
 }
 
 void AudioServer::update() {

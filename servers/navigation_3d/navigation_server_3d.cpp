@@ -32,6 +32,7 @@
 #include "navigation_server_3d.compat.inc"
 
 #include "core/config/project_settings.h"
+#include "core/profiling/performance.h"
 #include "scene/main/node.h"
 #include "servers/navigation_3d/navigation_server_3d_dummy.h"
 
@@ -1144,7 +1145,45 @@ NavigationServer3D *NavigationServer3DManager::create_dummy_server_callback() {
 	return memnew(NavigationServer3DDummy);
 }
 
+static double navigation_server_3d_monitor_callback(Performance::Monitor p_monitor) {
+	switch (p_monitor) {
+		case Performance::Monitor::NAVIGATION_ACTIVE_MAPS:
+		case Performance::Monitor::NAVIGATION_3D_ACTIVE_MAPS:
+			return NavigationServer3D::get_singleton()->get_process_info(NavigationServer3D::ProcessInfo::INFO_ACTIVE_MAPS);
+		case Performance::Monitor::NAVIGATION_REGION_COUNT:
+		case Performance::Monitor::NAVIGATION_3D_REGION_COUNT:
+			return NavigationServer3D::get_singleton()->get_process_info(NavigationServer3D::ProcessInfo::INFO_REGION_COUNT);
+		case Performance::Monitor::NAVIGATION_AGENT_COUNT:
+		case Performance::Monitor::NAVIGATION_3D_AGENT_COUNT:
+			return NavigationServer3D::get_singleton()->get_process_info(NavigationServer3D::ProcessInfo::INFO_AGENT_COUNT);
+		case Performance::Monitor::NAVIGATION_LINK_COUNT:
+		case Performance::Monitor::NAVIGATION_3D_LINK_COUNT:
+			return NavigationServer3D::get_singleton()->get_process_info(NavigationServer3D::ProcessInfo::INFO_LINK_COUNT);
+		case Performance::Monitor::NAVIGATION_POLYGON_COUNT:
+		case Performance::Monitor::NAVIGATION_3D_POLYGON_COUNT:
+			return NavigationServer3D::get_singleton()->get_process_info(NavigationServer3D::ProcessInfo::INFO_POLYGON_COUNT);
+		case Performance::Monitor::NAVIGATION_EDGE_COUNT:
+		case Performance::Monitor::NAVIGATION_3D_EDGE_COUNT:
+			return NavigationServer3D::get_singleton()->get_process_info(NavigationServer3D::ProcessInfo::INFO_EDGE_COUNT);
+		case Performance::Monitor::NAVIGATION_EDGE_MERGE_COUNT:
+		case Performance::Monitor::NAVIGATION_3D_EDGE_MERGE_COUNT:
+			return NavigationServer3D::get_singleton()->get_process_info(NavigationServer3D::ProcessInfo::INFO_EDGE_MERGE_COUNT);
+		case Performance::Monitor::NAVIGATION_EDGE_CONNECTION_COUNT:
+		case Performance::Monitor::NAVIGATION_3D_EDGE_CONNECTION_COUNT:
+			return NavigationServer3D::get_singleton()->get_process_info(NavigationServer3D::ProcessInfo::INFO_EDGE_CONNECTION_COUNT);
+		case Performance::Monitor::NAVIGATION_EDGE_FREE_COUNT:
+		case Performance::Monitor::NAVIGATION_3D_EDGE_FREE_COUNT:
+			return NavigationServer3D::get_singleton()->get_process_info(NavigationServer3D::ProcessInfo::INFO_EDGE_FREE_COUNT);
+		case Performance::Monitor::NAVIGATION_OBSTACLE_COUNT:
+		case Performance::Monitor::NAVIGATION_3D_OBSTACLE_COUNT:
+			return NavigationServer3D::get_singleton()->get_process_info(NavigationServer3D::ProcessInfo::INFO_OBSTACLE_COUNT);
+		default:
+			return 0; // Unreachable.
+	}
+}
+
 NavigationServer3DManager::NavigationServer3DManager() {
+	Performance::get_singleton()->_navigation_server_2d_monitor_callback = navigation_server_3d_monitor_callback;
 }
 
 NavigationServer3DManager::~NavigationServer3DManager() {
