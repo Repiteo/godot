@@ -125,10 +125,21 @@ jobs:
           Remove-Item bin/* -Include *.exp,*.lib,*.pdb -Force
 
       - name: Upload artifact
-        if: matrix.compiler == 'msvc'
         uses: ./.github/actions/upload-artifact
         with:
           name: ${{ matrix.cache-name }}
+
+      - name: Upload artifact (compression=0)
+        uses: ./.github/actions/upload-artifact
+        with:
+          name: ${{ matrix.cache-name }}-c0
+          compression: 0
+
+      - name: Upload artifact (compression=9)
+        uses: ./.github/actions/upload-artifact
+        with:
+          name: ${{ matrix.cache-name }}-c9
+          compression: 9
 
       - name: Unit tests
         run: |

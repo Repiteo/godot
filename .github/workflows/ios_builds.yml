@@ -48,3 +48,17 @@ jobs:
 
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
+        with:
+          name: ios-template
+
+      - name: Upload artifact (compression=0)
+        uses: ./.github/actions/upload-artifact
+        with:
+          name: ios-template-c0
+          compression: 0
+
+      - name: Upload artifact (compression=9)
+        uses: ./.github/actions/upload-artifact
+        with:
+          name: ios-template-c9
+          compression: 9
