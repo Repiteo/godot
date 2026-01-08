@@ -111,12 +111,7 @@ for x in sorted(glob.glob("platform/*")):
 # We let SCons build its default ENV as it includes OS-specific things which we don't
 # want to have to pull in manually. However we enforce no "tools", which we register
 # further down after parsing our platform-specific configuration.
-# Then we prepend PATH to make it take precedence, while preserving SCons' own entries.
 env = Environment(tools=[])
-env.PrependENVPath("PATH", os.getenv("PATH"))
-env.PrependENVPath("PKG_CONFIG_PATH", os.getenv("PKG_CONFIG_PATH"))
-if "TERM" in os.environ:  # Used for colored output.
-    env["ENV"]["TERM"] = os.environ["TERM"]
 
 env.disabled_modules = set()
 env.module_version_string = ""
