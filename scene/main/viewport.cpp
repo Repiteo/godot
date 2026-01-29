@@ -4160,8 +4160,8 @@ bool Viewport::is_embedding_subwindows() const {
 	return gui.embed_subwindows_hint;
 }
 
-TypedArray<Window> Viewport::get_embedded_subwindows() const {
-	TypedArray<Window> windows;
+TypedArray<Window *> Viewport::get_embedded_subwindows() const {
+	TypedArray<Window *> windows;
 	for (int i = 0; i < gui.sub_windows.size(); i++) {
 		windows.append(gui.sub_windows[i].window);
 	}

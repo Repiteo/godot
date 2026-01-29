@@ -635,8 +635,8 @@ void FoldableGroup::get_containers(List<FoldableContainer *> *r_containers) cons
 	}
 }
 
-TypedArray<FoldableContainer> FoldableGroup::_get_containers() const {
-	TypedArray<FoldableContainer> foldable_containers;
+TypedArray<FoldableContainer *> FoldableGroup::_get_containers() const {
+	TypedArray<FoldableContainer *> foldable_containers;
 	for (const FoldableContainer *container : containers) {
 		foldable_containers.push_back(container);
 	}

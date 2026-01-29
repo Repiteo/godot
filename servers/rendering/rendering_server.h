@@ -1530,7 +1530,7 @@ public:
 		BAKE_CHANNEL_EMISSION
 	};
 
-	virtual TypedArray<Image> bake_render_uv2(RID p_base, const TypedArray<RID> &p_material_overrides, const Size2i &p_image_size) = 0;
+	virtual TypedArray<Ref<Image>> bake_render_uv2(RID p_base, const TypedArray<RID> &p_material_overrides, const Size2i &p_image_size) = 0;
 
 	/* CANVAS (2D) */
 
@@ -1925,17 +1925,17 @@ public:
 
 private:
 	// Binder helpers
-	RID _texture_2d_layered_create(const TypedArray<Image> &p_layers, TextureLayeredType p_layered_type);
-	RID _texture_3d_create(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const TypedArray<Image> &p_data);
-	void _texture_3d_update(RID p_texture, const TypedArray<Image> &p_data);
-	TypedArray<Image> _texture_3d_get(RID p_texture) const;
+	RID _texture_2d_layered_create(const TypedArray<Ref<Image>> &p_layers, TextureLayeredType p_layered_type);
+	RID _texture_3d_create(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const TypedArray<Ref<Image>> &p_data);
+	void _texture_3d_update(RID p_texture, const TypedArray<Ref<Image>> &p_data);
+	TypedArray<Ref<Image>> _texture_3d_get(RID p_texture) const;
 	TypedArray<Dictionary> _shader_get_shader_parameter_list(RID p_shader) const;
 	RID _mesh_create_from_surfaces(const TypedArray<Dictionary> &p_surfaces, int p_blend_shape_count);
 	void _mesh_add_surface(RID p_mesh, const Dictionary &p_surface);
 	Dictionary _mesh_get_surface(RID p_mesh, int p_idx);
 	TypedArray<Dictionary> _instance_geometry_get_shader_parameter_list(RID p_instance) const;
 	TypedArray<Dictionary> _canvas_item_get_instance_shader_parameter_list(RID p_item) const;
-	TypedArray<Image> _bake_render_uv2(RID p_base, const TypedArray<RID> &p_material_overrides, const Size2i &p_image_size);
+	TypedArray<Ref<Image>> _bake_render_uv2(RID p_base, const TypedArray<RID> &p_material_overrides, const Size2i &p_image_size);
 	void _particles_set_trail_bind_poses(RID p_particles, const TypedArray<Transform3D> &p_bind_poses);
 #ifdef TOOLS_ENABLED
 	SurfaceUpgradeCallback surface_upgrade_callback = nullptr;

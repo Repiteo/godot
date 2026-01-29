@@ -474,7 +474,7 @@ class ScriptEditor : public PanelContainer {
 	Array _get_cached_breakpoints_for_script(const String &p_path) const;
 
 	ScriptEditorBase *_get_current_editor() const;
-	TypedArray<ScriptEditorBase> _get_open_script_editors() const;
+	TypedArray<ScriptEditorBase *> _get_open_script_editors() const;
 
 	Ref<ConfigFile> script_editor_cache;
 	void _save_editor_state(ScriptEditorBase *p_editor);
@@ -548,7 +548,7 @@ class ScriptEditor : public PanelContainer {
 	void _file_dialog_action(const String &p_file);
 
 	Ref<Script> _get_current_script();
-	TypedArray<Script> _get_open_scripts() const;
+	TypedArray<Ref<Script>> _get_open_scripts() const;
 
 	HashSet<String> textfile_extensions;
 	Ref<TextFile> _load_text_file(const String &p_path, Error *r_error) const;

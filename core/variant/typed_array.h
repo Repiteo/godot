@@ -40,8 +40,8 @@ public:
 		Array::operator=(p_array);
 	}
 
-	_FORCE_INLINE_ TypedArray(const Array &p_array) {
-		set_typed(GodotTypeInfo::Internal::get_variant_type<T>(), GodotTypeInfo::Internal::get_object_class_name_or_empty<T>(), Variant());
+	_FORCE_INLINE_ TypedArray(const Array &p_array) :
+			TypedArray() {
 		if (is_same_typed(p_array)) {
 			Array::operator=(p_array);
 		} else {
@@ -53,6 +53,6 @@ public:
 			TypedArray(Array(p_init)) {}
 
 	_FORCE_INLINE_ TypedArray() {
-		set_typed(GodotTypeInfo::Internal::get_variant_type<T>(), GodotTypeInfo::Internal::get_object_class_name_or_empty<T>(), Variant());
+		set_typed(GetTypeInfo<T>::VARIANT_TYPE, GetTypeInfo<T>::get_class_info().class_name, Variant());
 	}
 };

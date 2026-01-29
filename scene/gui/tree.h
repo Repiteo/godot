@@ -433,7 +433,7 @@ public:
 	TreeItem *get_child(int p_index);
 	int get_visible_child_count();
 	int get_child_count();
-	TypedArray<TreeItem> get_children();
+	TypedArray<TreeItem *> get_children();
 	void clear_children();
 	int get_index();
 

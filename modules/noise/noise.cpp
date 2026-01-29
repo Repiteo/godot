@@ -58,10 +58,10 @@ Ref<Image> Noise::get_seamless_image(int p_width, int p_height, bool p_invert, b
 	return images[0];
 }
 
-TypedArray<Image> Noise::get_seamless_image_3d(int p_width, int p_height, int p_depth, bool p_invert, real_t p_blend_skirt, bool p_normalize) const {
+TypedArray<Ref<Image>> Noise::get_seamless_image_3d(int p_width, int p_height, int p_depth, bool p_invert, real_t p_blend_skirt, bool p_normalize) const {
 	Vector<Ref<Image>> images = _get_seamless_image(p_width, p_height, p_depth, p_invert, true, p_blend_skirt, p_normalize);
 
-	TypedArray<Image> ret;
+	TypedArray<Ref<Image>> ret;
 	ret.resize(images.size());
 	for (int i = 0; i < images.size(); i++) {
 		ret[i] = images[i];
@@ -170,10 +170,10 @@ Ref<Image> Noise::get_image(int p_width, int p_height, bool p_invert, bool p_in_
 	return images[0];
 }
 
-TypedArray<Image> Noise::get_image_3d(int p_width, int p_height, int p_depth, bool p_invert, bool p_normalize) const {
+TypedArray<Ref<Image>> Noise::get_image_3d(int p_width, int p_height, int p_depth, bool p_invert, bool p_normalize) const {
 	Vector<Ref<Image>> images = _get_image(p_width, p_height, p_depth, p_invert, true, p_normalize);
 
-	TypedArray<Image> ret;
+	TypedArray<Ref<Image>> ret;
 	ret.resize(images.size());
 	for (int i = 0; i < images.size(); i++) {
 		ret[i] = images[i];

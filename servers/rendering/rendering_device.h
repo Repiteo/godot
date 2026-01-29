@@ -1876,14 +1876,14 @@ private:
 	RID _texture_create_shared_from_slice(const Ref<RDTextureView> &p_view, RID p_with_texture, uint32_t p_layer, uint32_t p_mipmap, uint32_t p_mipmaps = 1, TextureSliceType p_slice_type = TEXTURE_SLICE_2D);
 	Ref<RDTextureFormat> _texture_get_format(RID p_rd_texture);
 
-	FramebufferFormatID _framebuffer_format_create(const TypedArray<RDAttachmentFormat> &p_attachments, uint32_t p_view_count);
-	FramebufferFormatID _framebuffer_format_create_multipass(const TypedArray<RDAttachmentFormat> &p_attachments, const TypedArray<RDFramebufferPass> &p_passes, uint32_t p_view_count);
+	FramebufferFormatID _framebuffer_format_create(const TypedArray<Ref<RDAttachmentFormat>> &p_attachments, uint32_t p_view_count);
+	FramebufferFormatID _framebuffer_format_create_multipass(const TypedArray<Ref<RDAttachmentFormat>> &p_attachments, const TypedArray<Ref<RDFramebufferPass>> &p_passes, uint32_t p_view_count);
 	RID _framebuffer_create(const TypedArray<RID> &p_textures, FramebufferFormatID p_format_check = INVALID_ID, uint32_t p_view_count = 1);
-	RID _framebuffer_create_multipass(const TypedArray<RID> &p_textures, const TypedArray<RDFramebufferPass> &p_passes, FramebufferFormatID p_format_check = INVALID_ID, uint32_t p_view_count = 1);
+	RID _framebuffer_create_multipass(const TypedArray<RID> &p_textures, const TypedArray<Ref<RDFramebufferPass>> &p_passes, FramebufferFormatID p_format_check = INVALID_ID, uint32_t p_view_count = 1);
 
 	RID _sampler_create(const Ref<RDSamplerState> &p_state);
 
-	VertexFormatID _vertex_format_create(const TypedArray<RDVertexAttribute> &p_vertex_formats);
+	VertexFormatID _vertex_format_create(const TypedArray<Ref<RDVertexAttribute>> &p_vertex_formats);
 	RID _vertex_array_create(uint32_t p_vertex_count, VertexFormatID p_vertex_format, const TypedArray<RID> &p_src_buffers, const Vector<int64_t> &p_offsets = Vector<int64_t>());
 	void _draw_list_bind_vertex_buffers_format(DrawListID p_list, VertexFormatID p_vertex_format, uint32_t p_vertex_count, const TypedArray<RID> &p_vertex_buffers, const Vector<int64_t> &p_offsets = Vector<int64_t>());
 
@@ -1891,15 +1891,15 @@ private:
 	Vector<uint8_t> _shader_compile_binary_from_spirv(const Ref<RDShaderSPIRV> &p_bytecode, const String &p_shader_name = "");
 	RID _shader_create_from_spirv(const Ref<RDShaderSPIRV> &p_spirv, const String &p_shader_name = "");
 
-	RID _uniform_set_create(const TypedArray<RDUniform> &p_uniforms, RID p_shader, uint32_t p_shader_set);
+	RID _uniform_set_create(const TypedArray<Ref<RDUniform>> &p_uniforms, RID p_shader, uint32_t p_shader_set);
 
 	Error _buffer_update_bind(RID p_buffer, uint32_t p_offset, uint32_t p_size, const Vector<uint8_t> &p_data);
 
 	void _tlas_instances_buffer_fill(RID p_buffer, const TypedArray<RID> &p_blases, const TypedArray<Transform3D> &p_transforms);
 
-	RID _render_pipeline_create(RID p_shader, FramebufferFormatID p_framebuffer_format, VertexFormatID p_vertex_format, RenderPrimitive p_render_primitive, const Ref<RDPipelineRasterizationState> &p_rasterization_state, const Ref<RDPipelineMultisampleState> &p_multisample_state, const Ref<RDPipelineDepthStencilState> &p_depth_stencil_state, const Ref<RDPipelineColorBlendState> &p_blend_state, BitField<PipelineDynamicStateFlags> p_dynamic_state_flags, uint32_t p_for_render_pass, const TypedArray<RDPipelineSpecializationConstant> &p_specialization_constants);
-	RID _compute_pipeline_create(RID p_shader, const TypedArray<RDPipelineSpecializationConstant> &p_specialization_constants);
-	RID _raytracing_pipeline_create(RID p_shader, const TypedArray<RDPipelineSpecializationConstant> &p_specialization_constants);
+	RID _render_pipeline_create(RID p_shader, FramebufferFormatID p_framebuffer_format, VertexFormatID p_vertex_format, RenderPrimitive p_render_primitive, const Ref<RDPipelineRasterizationState> &p_rasterization_state, const Ref<RDPipelineMultisampleState> &p_multisample_state, const Ref<RDPipelineDepthStencilState> &p_depth_stencil_state, const Ref<RDPipelineColorBlendState> &p_blend_state, BitField<PipelineDynamicStateFlags> p_dynamic_state_flags, uint32_t p_for_render_pass, const TypedArray<Ref<RDPipelineSpecializationConstant>> &p_specialization_constants);
+	RID _compute_pipeline_create(RID p_shader, const TypedArray<Ref<RDPipelineSpecializationConstant>> &p_specialization_constants);
+	RID _raytracing_pipeline_create(RID p_shader, const TypedArray<Ref<RDPipelineSpecializationConstant>> &p_specialization_constants);
 
 	void _draw_list_set_push_constant(DrawListID p_list, const Vector<uint8_t> &p_data, uint32_t p_data_size);
 	void _compute_list_set_push_constant(ComputeListID p_list, const Vector<uint8_t> &p_data, uint32_t p_data_size);

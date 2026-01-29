@@ -256,7 +256,7 @@ ImageTextureLayered::LayeredType ImageTextureLayered::get_layered_type() const {
 	return layered_type;
 }
 
-Error ImageTextureLayered::_create_from_images(const TypedArray<Image> &p_images) {
+Error ImageTextureLayered::_create_from_images(const TypedArray<Ref<Image>> &p_images) {
 	Vector<Ref<Image>> images;
 	for (int i = 0; i < p_images.size(); i++) {
 		Ref<Image> img = p_images[i];
@@ -267,15 +267,15 @@ Error ImageTextureLayered::_create_from_images(const TypedArray<Image> &p_images
 	return create_from_images(images);
 }
 
-TypedArray<Image> ImageTextureLayered::_get_images() const {
-	TypedArray<Image> images;
+TypedArray<Ref<Image>> ImageTextureLayered::_get_images() const {
+	TypedArray<Ref<Image>> images;
 	for (int i = 0; i < layers; i++) {
 		images.push_back(get_layer_data(i));
 	}
 	return images;
 }
 
-void ImageTextureLayered::_set_images(const TypedArray<Image> &p_images) {
+void ImageTextureLayered::_set_images(const TypedArray<Ref<Image>> &p_images) {
 	ERR_FAIL_COND(_create_from_images(p_images) != OK);
 }
 
@@ -390,7 +390,7 @@ bool ImageTexture3D::has_mipmaps() const {
 	return mipmaps;
 }
 
-Error ImageTexture3D::_create(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const TypedArray<Image> &p_data) {
+Error ImageTexture3D::_create(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const TypedArray<Ref<Image>> &p_data) {
 	Vector<Ref<Image>> images;
 	images.resize(p_data.size());
 	for (int i = 0; i < images.size(); i++) {
@@ -399,7 +399,7 @@ Error ImageTexture3D::_create(Image::Format p_format, int p_width, int p_height,
 	return create(p_format, p_width, p_height, p_depth, p_mipmaps, images);
 }
 
-void ImageTexture3D::_update(const TypedArray<Image> &p_data) {
+void ImageTexture3D::_update(const TypedArray<Ref<Image>> &p_data) {
 	Vector<Ref<Image>> images;
 	images.resize(p_data.size());
 	for (int i = 0; i < images.size(); i++) {
@@ -451,11 +451,11 @@ void ImageTexture3D::set_path(const String &p_path, bool p_take_over) {
 	Resource::set_path(p_path, p_take_over);
 }
 
-TypedArray<Image> ImageTexture3D::_get_images() const {
-	TypedArray<Image> images;
+TypedArray<Ref<Image>> ImageTexture3D::_get_images() const {
+	TypedArray<Ref<Image>> images;
 	if (texture.is_valid()) {
 		Vector<Ref<Image>> raw_images = get_data();
-		ERR_FAIL_COND_V(raw_images.is_empty(), TypedArray<Image>());
+		ERR_FAIL_COND_V(raw_images.is_empty(), TypedArray<Ref<Image>>());
 
 		for (int i = 0; i < raw_images.size(); i++) {
 			images.push_back(raw_images[i]);
@@ -464,7 +464,7 @@ TypedArray<Image> ImageTexture3D::_get_images() const {
 	return images;
 }
 
-void ImageTexture3D::_set_images(const TypedArray<Image> &p_images) {
+void ImageTexture3D::_set_images(const TypedArray<Ref<Image>> &p_images) {
 	if (p_images.size() == 0) {
 		if (images_stored) {
 			ERR_PRINT("Invalid images");

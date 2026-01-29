@@ -1210,8 +1210,8 @@ bool SplitContainer::is_show_drag_area_enabled() const {
 	return show_drag_area;
 }
 
-TypedArray<Control> SplitContainer::get_drag_area_controls() {
-	TypedArray<Control> controls;
+TypedArray<Control *> SplitContainer::get_drag_area_controls() {
+	TypedArray<Control *> controls;
 	controls.resize((int)dragging_area_controls.size());
 	for (int i = 0; i < (int)dragging_area_controls.size(); i++) {
 		controls[i] = dragging_area_controls[i];

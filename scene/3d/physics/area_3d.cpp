@@ -509,8 +509,8 @@ bool Area3D::is_monitoring() const {
 	return monitoring;
 }
 
-TypedArray<Node3D> Area3D::get_overlapping_bodies() const {
-	TypedArray<Node3D> ret;
+TypedArray<Node3D *> Area3D::get_overlapping_bodies() const {
+	TypedArray<Node3D *> ret;
 	ERR_FAIL_COND_V_MSG(!monitoring, ret, "Can't find overlapping bodies when monitoring is off.");
 	ret.resize(body_map.size());
 	int idx = 0;
@@ -547,8 +547,8 @@ bool Area3D::is_monitorable() const {
 	return monitorable;
 }
 
-TypedArray<Area3D> Area3D::get_overlapping_areas() const {
-	TypedArray<Area3D> ret;
+TypedArray<Area3D *> Area3D::get_overlapping_areas() const {
+	TypedArray<Area3D *> ret;
 	ERR_FAIL_COND_V_MSG(!monitoring, ret, "Can't find overlapping areas when monitoring is off.");
 	ret.resize(area_map.size());
 	int idx = 0;

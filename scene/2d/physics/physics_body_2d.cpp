@@ -143,7 +143,7 @@ Vector2 PhysicsBody2D::get_gravity() const {
 	return state->get_total_gravity();
 }
 
-TypedArray<PhysicsBody2D> PhysicsBody2D::get_collision_exceptions() {
+TypedArray<PhysicsBody2D *> PhysicsBody2D::get_collision_exceptions() {
 	List<RID> exceptions;
 	PhysicsServer2D::get_singleton()->body_get_collision_exceptions(get_rid(), &exceptions);
 	Array ret;

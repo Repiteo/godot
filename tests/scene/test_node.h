@@ -334,7 +334,7 @@ TEST_CASE("[SceneTree][Node] Testing node operations with a more complex simple 
 		Node *child = SceneTree::get_singleton()->get_root()->find_child("NestedNode", true, false);
 		CHECK_EQ(child, nullptr);
 
-		TypedArray<Node> children = SceneTree::get_singleton()->get_root()->find_children("NestedNode", "", true, false);
+		TypedArray<Node *> children = SceneTree::get_singleton()->get_root()->find_children("NestedNode", "", true, false);
 		CHECK_EQ(children.size(), 0);
 
 		node1->set_name("Node1");

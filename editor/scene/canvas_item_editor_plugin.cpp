@@ -1023,7 +1023,7 @@ void CanvasItemEditor::_add_node_pressed(int p_result) {
 		} break;
 		default: {
 			if (p_result >= EditorContextMenuPlugin::BASE_ID) {
-				TypedArray<Node> nodes;
+				TypedArray<Node *> nodes;
 				nodes.resize(selection_results.size());
 
 				int i = 0;

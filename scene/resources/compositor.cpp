@@ -222,7 +222,7 @@ Compositor::~Compositor() {
 }
 
 // Compositor effects
-void Compositor::set_compositor_effects(const TypedArray<CompositorEffect> &p_compositor_effects) {
+void Compositor::set_compositor_effects(const TypedArray<Ref<CompositorEffect>> &p_compositor_effects) {
 	Array effect_rids;
 	effects.clear();
 
@@ -243,8 +243,8 @@ void Compositor::set_compositor_effects(const TypedArray<CompositorEffect> &p_co
 	RenderingServer::get_singleton()->compositor_set_compositor_effects(compositor, effect_rids);
 }
 
-TypedArray<CompositorEffect> Compositor::get_compositor_effects() const {
-	TypedArray<CompositorEffect> arr;
+TypedArray<Ref<CompositorEffect>> Compositor::get_compositor_effects() const {
+	TypedArray<Ref<CompositorEffect>> arr;
 
 	for (uint32_t i = 0; i < effects.size(); i++) {
 		arr.push_back(effects[i]);

@@ -1957,7 +1957,7 @@ RenderingDevice *RenderingServer::create_local_rendering_device() const {
 	return device->create_local_device();
 }
 
-static Vector<Ref<Image>> _get_imgvec(const TypedArray<Image> &p_layers) {
+static Vector<Ref<Image>> _get_imgvec(const TypedArray<Ref<Image>> &p_layers) {
 	Vector<Ref<Image>> images;
 	images.resize(p_layers.size());
 	for (int i = 0; i < p_layers.size(); i++) {
@@ -1965,20 +1965,20 @@ static Vector<Ref<Image>> _get_imgvec(const TypedArray<Image> &p_layers) {
 	}
 	return images;
 }
-RID RenderingServer::_texture_2d_layered_create(const TypedArray<Image> &p_layers, TextureLayeredType p_layered_type) {
+RID RenderingServer::_texture_2d_layered_create(const TypedArray<Ref<Image>> &p_layers, TextureLayeredType p_layered_type) {
 	return texture_2d_layered_create(_get_imgvec(p_layers), p_layered_type);
 }
-RID RenderingServer::_texture_3d_create(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const TypedArray<Image> &p_data) {
+RID RenderingServer::_texture_3d_create(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const TypedArray<Ref<Image>> &p_data) {
 	return texture_3d_create(p_format, p_width, p_height, p_depth, p_mipmaps, _get_imgvec(p_data));
 }
 
-void RenderingServer::_texture_3d_update(RID p_texture, const TypedArray<Image> &p_data) {
+void RenderingServer::_texture_3d_update(RID p_texture, const TypedArray<Ref<Image>> &p_data) {
 	texture_3d_update(p_texture, _get_imgvec(p_data));
 }
 
-TypedArray<Image> RenderingServer::_texture_3d_get(RID p_texture) const {
+TypedArray<Ref<Image>> RenderingServer::_texture_3d_get(RID p_texture) const {
 	Vector<Ref<Image>> images = texture_3d_get(p_texture);
-	TypedArray<Image> ret;
+	TypedArray<Ref<Image>> ret;
 	ret.resize(images.size());
 	for (int i = 0; i < images.size(); i++) {
 		ret[i] = images[i];
@@ -2127,7 +2127,7 @@ TypedArray<Dictionary> RenderingServer::_canvas_item_get_instance_shader_paramet
 	return convert_property_list(&params);
 }
 
-TypedArray<Image> RenderingServer::_bake_render_uv2(RID p_base, const TypedArray<RID> &p_material_overrides, const Size2i &p_image_size) {
+TypedArray<Ref<Image>> RenderingServer::_bake_render_uv2(RID p_base, const TypedArray<RID> &p_material_overrides, const Size2i &p_image_size) {
 	TypedArray<RID> mat_overrides;
 	for (int i = 0; i < p_material_overrides.size(); i++) {
 		mat_overrides.push_back(p_material_overrides[i]);

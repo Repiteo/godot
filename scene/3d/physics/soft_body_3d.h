@@ -176,7 +176,7 @@ public:
 	void set_drag_coefficient(real_t p_drag_coefficient);
 	real_t get_drag_coefficient();
 
-	TypedArray<PhysicsBody3D> get_collision_exceptions();
+	TypedArray<PhysicsBody3D *> get_collision_exceptions();
 	void add_collision_exception_with(RequiredParam<Node> rp_node);
 	void remove_collision_exception_with(RequiredParam<Node> rp_node);
 

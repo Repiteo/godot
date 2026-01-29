@@ -151,7 +151,7 @@ TEST_CASE("[JSON][Native] Conversion between native and JSON formats") {
 	CHECK(decode(dict2_repr).get_construct_string() == "{\n\"x\": null\n}");
 	ERR_PRINT_ON;
 
-	TypedDictionary<String, Resource> res_dict;
+	TypedDictionary<String, Ref<Resource>> res_dict;
 	res_dict["x"] = res;
 
 	const String res_dict_repr = vformat(R"({"type":"Dictionary","key_type":"String","value_type":"Resource","args":["s:x",%s]})", res_repr);
@@ -179,7 +179,7 @@ TEST_CASE("[JSON][Native] Conversion between native and JSON formats") {
 	CHECK(decode(arr2_repr).get_construct_string() == "[1, null, 9]");
 	ERR_PRINT_ON;
 
-	TypedArray<Resource> res_arr = { res };
+	TypedArray<Ref<Resource>> res_arr = { res };
 	const String res_arr_repr = vformat(R"({"type":"Array","elem_type":"Resource","args":[%s]})", res_repr);
 
 	test(res_arr, res_arr_repr, true);

@@ -367,7 +367,7 @@ void EditorDebuggerTree::update_scene_tree(const SceneDebuggerTree *p_tree, int 
 		// Move all children to the ancestor that matches the filter, if picked.
 		if (move_from_to.first) {
 			TreeItem *from = move_from_to.first;
-			TypedArray<TreeItem> children = from->get_children();
+			TypedArray<TreeItem *> children = from->get_children();
 			if (!children.is_empty()) {
 				for (Variant &c : children) {
 					TreeItem *ti = Object::cast_to<TreeItem>(c);

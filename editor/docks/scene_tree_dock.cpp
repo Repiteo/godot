@@ -3610,7 +3610,7 @@ void SceneTreeDock::_normalize_drop(Node *&to_node, int &to_pos, int p_type) {
 
 Array SceneTreeDock::_get_selection_array() {
 	const List<Node *> selection = editor_selection->get_top_selected_node_list();
-	TypedArray<Node> array;
+	TypedArray<Node *> array;
 	array.resize(selection.size());
 
 	int i = 0;

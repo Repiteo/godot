@@ -80,7 +80,7 @@ class EditorInterface : public Object {
 
 	// Editor tools.
 
-	TypedArray<Texture2D> _make_mesh_previews(const TypedArray<Mesh> &p_meshes, int p_preview_size);
+	TypedArray<Ref<Texture2D>> _make_mesh_previews(const TypedArray<Ref<Mesh>> &p_meshes, int p_preview_size);
 	AABB _calculate_aabb_for_scene(Node *p_node, AABB &p_scene_aabb);
 
 protected:
@@ -179,7 +179,7 @@ public:
 	bool is_object_edited(Object *p_object) const;
 
 	PackedStringArray get_open_scenes() const;
-	TypedArray<Node> get_open_scene_roots() const;
+	TypedArray<Node *> get_open_scene_roots() const;
 	Node *get_edited_scene_root() const;
 
 	void add_root_node(Node *p_node);

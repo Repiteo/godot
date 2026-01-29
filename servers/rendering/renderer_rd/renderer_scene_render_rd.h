@@ -327,7 +327,7 @@ public:
 	int get_roughness_layers() const;
 	bool is_using_radiance_octmap_array() const;
 
-	virtual TypedArray<Image> bake_render_uv2(RID p_base, const TypedArray<RID> &p_material_overrides, const Size2i &p_image_size) override;
+	virtual TypedArray<Ref<Image>> bake_render_uv2(RID p_base, const TypedArray<RID> &p_material_overrides, const Size2i &p_image_size) override;
 
 	virtual bool free(RID p_rid) override;
 

@@ -106,7 +106,7 @@ public:
 	// Get our feeds.
 	Ref<CameraFeed> get_feed(int p_index);
 	int get_feed_count();
-	TypedArray<CameraFeed> get_feeds();
+	TypedArray<Ref<CameraFeed>> get_feeds();
 
 	// Intended for use with custom CameraServer implementation.
 	RID feed_texture(int p_id, FeedImage p_texture);

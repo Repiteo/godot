@@ -95,7 +95,7 @@ void NoiseTexture3D::_validate_property(PropertyInfo &p_property) const {
 	}
 }
 
-void NoiseTexture3D::_set_texture_data(const TypedArray<Image> &p_data) {
+void NoiseTexture3D::_set_texture_data(const TypedArray<Ref<Image>> &p_data) {
 	if (!p_data.is_empty()) {
 		Vector<Ref<Image>> data;
 
@@ -116,7 +116,7 @@ void NoiseTexture3D::_set_texture_data(const TypedArray<Image> &p_data) {
 	emit_changed();
 }
 
-void NoiseTexture3D::_thread_done(const TypedArray<Image> &p_data) {
+void NoiseTexture3D::_thread_done(const TypedArray<Ref<Image>> &p_data) {
 	_set_texture_data(p_data);
 	noise_thread.wait_to_finish();
 	if (regen_queued) {
@@ -139,15 +139,15 @@ void NoiseTexture3D::_queue_update() {
 	callable_mp(this, &NoiseTexture3D::_update_texture).call_deferred();
 }
 
-TypedArray<Image> NoiseTexture3D::_generate_texture() {
+TypedArray<Ref<Image>> NoiseTexture3D::_generate_texture() {
 	// Prevent memdelete due to unref() on other thread.
 	Ref<Noise> ref_noise = noise;
 
 	if (ref_noise.is_null()) {
-		return TypedArray<Image>();
+		return TypedArray<Ref<Image>>();
 	}
 
-	ERR_FAIL_COND_V_MSG((int64_t)width * height * depth > Image::MAX_PIXELS, TypedArray<Image>(), "The NoiseTexture3D is too big, consider lowering its width, height, or depth.");
+	ERR_FAIL_COND_V_MSG((int64_t)width * height * depth > Image::MAX_PIXELS, TypedArray<Ref<Image>>(), "The NoiseTexture3D is too big, consider lowering its width, height, or depth.");
 
 	Vector<Ref<Image>> images;
 
@@ -163,7 +163,7 @@ TypedArray<Image> NoiseTexture3D::_generate_texture() {
 		}
 	}
 
-	TypedArray<Image> new_data;
+	TypedArray<Ref<Image>> new_data;
 	new_data.resize(images.size());
 
 	for (int i = 0; i < new_data.size(); i++) {
@@ -208,7 +208,7 @@ void NoiseTexture3D::_update_texture() {
 		}
 
 	} else {
-		TypedArray<Image> new_data = _generate_texture();
+		TypedArray<Ref<Image>> new_data = _generate_texture();
 		_set_texture_data(new_data);
 	}
 	update_queued = false;

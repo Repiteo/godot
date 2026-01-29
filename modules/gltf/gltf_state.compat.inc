@@ -59,7 +59,7 @@ bool GLTFState::_get_discard_meshes_and_materials_bind_compat_113172() {
 	return get_discard_meshes_and_materials();
 }
 
-TypedArray<GLTFNode> GLTFState::_get_nodes_bind_compat_113172() {
+TypedArray<Ref<GLTFNode>> GLTFState::_get_nodes_bind_compat_113172() {
 	return get_nodes_bind();
 }
 
@@ -67,19 +67,19 @@ TypedArray<PackedByteArray> GLTFState::_get_buffers_bind_compat_113172() {
 	return get_buffers_bind();
 }
 
-TypedArray<GLTFBufferView> GLTFState::_get_buffer_views_bind_compat_113172() {
+TypedArray<Ref<GLTFBufferView>> GLTFState::_get_buffer_views_bind_compat_113172() {
 	return get_buffer_views_bind();
 }
 
-TypedArray<GLTFAccessor> GLTFState::_get_accessors_bind_compat_113172() {
+TypedArray<Ref<GLTFAccessor>> GLTFState::_get_accessors_bind_compat_113172() {
 	return get_accessors_bind();
 }
 
-TypedArray<GLTFMesh> GLTFState::_get_meshes_bind_compat_113172() {
+TypedArray<Ref<GLTFMesh>> GLTFState::_get_meshes_bind_compat_113172() {
 	return get_meshes_bind();
 }
 
-TypedArray<Material> GLTFState::_get_materials_bind_compat_113172() {
+TypedArray<Ref<Material>> GLTFState::_get_materials_bind_compat_113172() {
 	return get_materials_bind();
 }
 
@@ -103,27 +103,27 @@ PackedInt32Array GLTFState::_get_root_nodes_bind_compat_113172() {
 	return get_root_nodes();
 }
 
-TypedArray<GLTFTexture> GLTFState::_get_textures_bind_compat_113172() {
+TypedArray<Ref<GLTFTexture>> GLTFState::_get_textures_bind_compat_113172() {
 	return get_textures_bind();
 }
 
-TypedArray<GLTFTextureSampler> GLTFState::_get_texture_samplers_bind_compat_113172() {
+TypedArray<Ref<GLTFTextureSampler>> GLTFState::_get_texture_samplers_bind_compat_113172() {
 	return get_texture_samplers_bind();
 }
 
-TypedArray<Texture2D> GLTFState::_get_images_bind_compat_113172() {
+TypedArray<Ref<Texture2D>> GLTFState::_get_images_bind_compat_113172() {
 	return get_images_bind();
 }
 
-TypedArray<GLTFSkin> GLTFState::_get_skins_bind_compat_113172() {
+TypedArray<Ref<GLTFSkin>> GLTFState::_get_skins_bind_compat_113172() {
 	return get_skins_bind();
 }
 
-TypedArray<GLTFCamera> GLTFState::_get_cameras_bind_compat_113172() {
+TypedArray<Ref<GLTFCamera>> GLTFState::_get_cameras_bind_compat_113172() {
 	return get_cameras_bind();
 }
 
-TypedArray<GLTFLight> GLTFState::_get_lights_bind_compat_113172() {
+TypedArray<Ref<GLTFLight>> GLTFState::_get_lights_bind_compat_113172() {
 	return get_lights_bind();
 }
 
@@ -135,7 +135,7 @@ TypedArray<String> GLTFState::_get_unique_animation_names_bind_compat_113172() {
 	return get_unique_animation_names_bind();
 }
 
-TypedArray<GLTFSkeleton> GLTFState::_get_skeletons_bind_compat_113172() {
+TypedArray<Ref<GLTFSkeleton>> GLTFState::_get_skeletons_bind_compat_113172() {
 	return get_skeletons_bind();
 }
 
@@ -147,7 +147,7 @@ bool GLTFState::_get_import_as_skeleton_bones_bind_compat_113172() {
 	return get_import_as_skeleton_bones();
 }
 
-TypedArray<GLTFAnimation> GLTFState::_get_animations_bind_compat_113172() {
+TypedArray<Ref<GLTFAnimation>> GLTFState::_get_animations_bind_compat_113172() {
 	return get_animations_bind();
 }
 

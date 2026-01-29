@@ -133,11 +133,11 @@ public:
 
 protected:
 	GDVIRTUAL2(_log_message, String, bool);
-	GDVIRTUAL8(_log_error, String, String, int, String, String, bool, int, TypedArray<ScriptBacktrace>);
+	GDVIRTUAL8(_log_error, String, String, int, String, String, bool, int, TypedArray<Ref<ScriptBacktrace>>);
 	static void _bind_methods();
 
 public:
-	virtual void log_error(const char *p_function, const char *p_file, int p_line, const char *p_code, const char *p_rationale, bool p_editor_notify = false, ErrorType p_type = ERROR_TYPE_ERROR, const TypedArray<ScriptBacktrace> &p_script_backtraces = {});
+	virtual void log_error(const char *p_function, const char *p_file, int p_line, const char *p_code, const char *p_rationale, bool p_editor_notify = false, ErrorType p_type = ERROR_TYPE_ERROR, const TypedArray<Ref<ScriptBacktrace>> &p_script_backtraces = {});
 	virtual void log_message(const String &p_text, bool p_error);
 };
 
@@ -617,7 +617,7 @@ public:
 	Error unregister_script_language(const ScriptLanguage *p_language);
 	int get_script_language_count();
 	ScriptLanguage *get_script_language(int p_index) const;
-	TypedArray<ScriptBacktrace> capture_script_backtraces(bool p_include_variables = false) const;
+	TypedArray<Ref<ScriptBacktrace>> capture_script_backtraces(bool p_include_variables = false) const;
 
 	void set_editor_hint(bool p_enabled);
 	bool is_editor_hint() const;

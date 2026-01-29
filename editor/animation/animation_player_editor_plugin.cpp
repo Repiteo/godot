@@ -67,7 +67,7 @@ void AnimationPlayerEditor::_find_player() {
 		return;
 	}
 
-	TypedArray<Node> players = edited_scene->find_children("", "AnimationPlayer");
+	TypedArray<Node *> players = edited_scene->find_children("", "AnimationPlayer");
 
 	if (players.size() == 1) {
 		// Replicating EditorNode::_plugin_over_edit to ensure an identical setup as when selecting manually.

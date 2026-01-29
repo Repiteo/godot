@@ -155,9 +155,9 @@ int CameraServer::get_feed_count() {
 	return feeds.size();
 }
 
-TypedArray<CameraFeed> CameraServer::get_feeds() {
+TypedArray<Ref<CameraFeed>> CameraServer::get_feeds() {
 	ERR_FAIL_COND_V_MSG(!monitoring_feeds, {}, "CameraServer is not actively monitoring feeds; call set_monitoring_feeds(true) first.");
-	TypedArray<CameraFeed> return_feeds;
+	TypedArray<Ref<CameraFeed>> return_feeds;
 	int cc = get_feed_count();
 	return_feeds.resize(cc);
 

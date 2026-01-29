@@ -117,8 +117,8 @@ public:
 #endif
 
 	bool has_translation(const Ref<Translation> &p_translation) const;
-	TypedArray<Translation> get_translations() const;
-	TypedArray<Translation> find_translations(const String &p_locale, bool p_exact) const;
+	TypedArray<Ref<Translation>> get_translations() const;
+	TypedArray<Ref<Translation>> find_translations(const String &p_locale, bool p_exact) const;
 	bool has_translation_for_locale(const String &p_locale, bool p_exact) const;
 
 	Vector<String> get_all_languages() const;

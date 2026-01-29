@@ -717,18 +717,18 @@ class RDPipelineColorBlendState : public RefCounted {
 	friend class RenderingDevice;
 	RD::PipelineColorBlendState base;
 
-	TypedArray<RDPipelineColorBlendStateAttachment> attachments;
+	TypedArray<Ref<RDPipelineColorBlendStateAttachment>> attachments;
 
 public:
 	RD_SETGET(bool, enable_logic_op)
 	RD_SETGET(RD::LogicOperation, logic_op)
 	RD_SETGET(Color, blend_constant)
 
-	void set_attachments(const TypedArray<RDPipelineColorBlendStateAttachment> &p_attachments) {
+	void set_attachments(const TypedArray<Ref<RDPipelineColorBlendStateAttachment>> &p_attachments) {
 		attachments = p_attachments;
 	}
 
-	TypedArray<RDPipelineColorBlendStateAttachment> get_attachments() const {
+	TypedArray<Ref<RDPipelineColorBlendStateAttachment>> get_attachments() const {
 		return attachments;
 	}
 

@@ -2150,7 +2150,7 @@ Ref<Shortcut> ED_SHORTCUT_ARRAY(const String &p_path, const String &p_name, cons
 	return sc;
 }
 
-void EditorSettings::set_builtin_action_override(const String &p_name, const TypedArray<InputEvent> &p_events) {
+void EditorSettings::set_builtin_action_override(const String &p_name, const TypedArray<Ref<InputEvent>> &p_events) {
 	List<Ref<InputEvent>> event_list;
 
 	// Override the whole list, since events may have their order changed or be added, removed or edited.

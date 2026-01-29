@@ -126,7 +126,7 @@ AABB EditorInterface::_calculate_aabb_for_scene(Node *p_node, AABB &p_scene_aabb
 	return p_scene_aabb;
 }
 
-TypedArray<Texture2D> EditorInterface::_make_mesh_previews(const TypedArray<Mesh> &p_meshes, int p_preview_size) {
+TypedArray<Ref<Texture2D>> EditorInterface::_make_mesh_previews(const TypedArray<Ref<Mesh>> &p_meshes, int p_preview_size) {
 	Vector<Ref<Mesh>> meshes;
 
 	for (int i = 0; i < p_meshes.size(); i++) {
@@ -134,7 +134,7 @@ TypedArray<Texture2D> EditorInterface::_make_mesh_previews(const TypedArray<Mesh
 	}
 
 	Vector<Ref<Texture2D>> textures = make_mesh_previews(meshes, nullptr, p_preview_size);
-	TypedArray<Texture2D> ret;
+	TypedArray<Ref<Texture2D>> ret;
 	for (int i = 0; i < textures.size(); i++) {
 		ret.push_back(textures[i]);
 	}
@@ -732,8 +732,8 @@ PackedStringArray EditorInterface::get_open_scenes() const {
 	return ret;
 }
 
-TypedArray<Node> EditorInterface::get_open_scene_roots() const {
-	TypedArray<Node> ret;
+TypedArray<Node *> EditorInterface::get_open_scene_roots() const {
+	TypedArray<Node *> ret;
 	Vector<EditorData::EditedScene> scenes = EditorNode::get_editor_data().get_edited_scenes();
 
 	for (EditorData::EditedScene &edited_scene : scenes) {

@@ -288,7 +288,7 @@ public:
 		return _allocate_from_data(p_views, h, table_idx, p_textures, p_passes);
 	}
 
-	static RID get_cache_multipass_array(const TypedArray<RID> &p_textures, const TypedArray<RDFramebufferPass> &p_passes, uint32_t p_views = 1);
+	static RID get_cache_multipass_array(const TypedArray<RID> &p_textures, const TypedArray<Ref<RDFramebufferPass>> &p_passes, uint32_t p_views = 1);
 
 	static FramebufferCacheRD *get_singleton() { return singleton; }
 

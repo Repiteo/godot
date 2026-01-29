@@ -270,11 +270,11 @@ Ref<RegExMatch> RegEx::search(const String &p_subject, int p_offset, int p_end) 
 	return result;
 }
 
-TypedArray<RegExMatch> RegEx::search_all(const String &p_subject, int p_offset, int p_end) const {
-	ERR_FAIL_COND_V_MSG(p_offset < 0, TypedArray<RegExMatch>(), "RegEx search offset must be >= 0");
+TypedArray<Ref<RegExMatch>> RegEx::search_all(const String &p_subject, int p_offset, int p_end) const {
+	ERR_FAIL_COND_V_MSG(p_offset < 0, TypedArray<Ref<RegExMatch>>(), "RegEx search offset must be >= 0");
 
 	int last_end = 0;
-	TypedArray<RegExMatch> result;
+	TypedArray<Ref<RegExMatch>> result;
 	Ref<RegExMatch> match = search(p_subject, p_offset, p_end);
 
 	while (match.is_valid()) {

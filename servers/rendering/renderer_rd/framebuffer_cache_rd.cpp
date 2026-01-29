@@ -56,7 +56,7 @@ void FramebufferCacheRD::_framebuffer_invalidation_callback(void *p_userdata) {
 	singleton->_invalidate(reinterpret_cast<Cache *>(p_userdata));
 }
 
-RID FramebufferCacheRD::get_cache_multipass_array(const TypedArray<RID> &p_textures, const TypedArray<RDFramebufferPass> &p_passes, uint32_t p_views) {
+RID FramebufferCacheRD::get_cache_multipass_array(const TypedArray<RID> &p_textures, const TypedArray<Ref<RDFramebufferPass>> &p_passes, uint32_t p_views) {
 	Vector<RID> textures;
 	Vector<RD::FramebufferPass> passes;
 

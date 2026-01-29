@@ -53,7 +53,7 @@ public:
 	bool test_move(const Transform2D &p_from, const Vector2 &p_motion, const Ref<KinematicCollision2D> &r_collision = Ref<KinematicCollision2D>(), real_t p_margin = 0.08, bool p_recovery_as_collision = false);
 	Vector2 get_gravity() const;
 
-	TypedArray<PhysicsBody2D> get_collision_exceptions();
+	TypedArray<PhysicsBody2D *> get_collision_exceptions();
 	void add_collision_exception_with(RequiredParam<Node> rp_node); //must be physicsbody
 	void remove_collision_exception_with(RequiredParam<Node> rp_node);
 };

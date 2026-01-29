@@ -92,10 +92,10 @@ class ImageTextureLayered : public TextureLayered {
 	int layers = 0;
 	bool mipmaps = false;
 
-	Error _create_from_images(const TypedArray<Image> &p_images);
+	Error _create_from_images(const TypedArray<Ref<Image>> &p_images);
 
-	TypedArray<Image> _get_images() const;
-	void _set_images(const TypedArray<Image> &p_images);
+	TypedArray<Ref<Image>> _get_images() const;
+	void _set_images(const TypedArray<Ref<Image>> &p_images);
 
 protected:
 	static void _bind_methods();
@@ -131,14 +131,14 @@ class ImageTexture3D : public Texture3D {
 	bool mipmaps = false;
 	bool images_stored = false;
 
-	TypedArray<Image> _get_images() const;
-	void _set_images(const TypedArray<Image> &p_images);
+	TypedArray<Ref<Image>> _get_images() const;
+	void _set_images(const TypedArray<Ref<Image>> &p_images);
 
 protected:
 	static void _bind_methods();
 
-	Error _create(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const TypedArray<Image> &p_data);
-	void _update(const TypedArray<Image> &p_data);
+	Error _create(Image::Format p_format, int p_width, int p_height, int p_depth, bool p_mipmaps, const TypedArray<Ref<Image>> &p_data);
+	void _update(const TypedArray<Ref<Image>> &p_data);
 
 public:
 	virtual Image::Format get_format() const override;

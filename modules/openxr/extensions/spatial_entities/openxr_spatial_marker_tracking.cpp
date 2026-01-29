@@ -574,7 +574,7 @@ Ref<OpenXRFutureResult> OpenXRSpatialMarkerTrackingCapability::_create_spatial_c
 	OpenXRSpatialEntityExtension *se_extension = OpenXRSpatialEntityExtension::get_singleton();
 	ERR_FAIL_NULL_V(se_extension, nullptr);
 
-	TypedArray<OpenXRSpatialCapabilityConfigurationBaseHeader> capability_configurations;
+	TypedArray<Ref<OpenXRSpatialCapabilityConfigurationBaseHeader>> capability_configurations;
 
 	// Create our configuration objects.
 	// For now we enable all supported markers, will need to give some more user control over this.
@@ -664,7 +664,7 @@ void OpenXRSpatialMarkerTrackingCapability::_process_snapshot(RID p_snapshot, bo
 	}
 
 	// Build our component data.
-	TypedArray<OpenXRSpatialComponentData> component_data;
+	TypedArray<Ref<OpenXRSpatialComponentData>> component_data;
 
 	// We always need a query result data object.
 	Ref<OpenXRSpatialQueryResultData> query_result_data;

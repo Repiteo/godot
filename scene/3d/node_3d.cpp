@@ -947,9 +947,9 @@ void Node3D::clear_gizmos() {
 #endif
 }
 
-TypedArray<Node3DGizmo> Node3D::get_gizmos_bind() const {
-	ERR_THREAD_GUARD_V(TypedArray<Node3DGizmo>());
-	TypedArray<Node3DGizmo> ret;
+TypedArray<Ref<Node3DGizmo>> Node3D::get_gizmos_bind() const {
+	ERR_THREAD_GUARD_V(TypedArray<Ref<Node3DGizmo>>());
+	TypedArray<Ref<Node3DGizmo>> ret;
 
 #ifdef TOOLS_ENABLED
 	for (int i = 0; i < data.gizmos.size(); i++) {

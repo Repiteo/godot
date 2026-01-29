@@ -205,7 +205,7 @@ public:
 		return _allocate_from_uniforms(p_shader, p_set, h, table_idx, p_uniforms);
 	}
 
-	static RID get_cache_array(RID p_shader, uint32_t p_set, const TypedArray<RDUniform> &p_uniforms);
+	static RID get_cache_array(RID p_shader, uint32_t p_set, const TypedArray<Ref<RDUniform>> &p_uniforms);
 
 	static UniformSetCacheRD *get_singleton() { return singleton; }
 

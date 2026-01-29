@@ -226,7 +226,7 @@ void Logger::_bind_methods() {
 	BIND_ENUM_CONSTANT(ERROR_TYPE_SHADER);
 }
 
-void Logger::log_error(const char *p_function, const char *p_file, int p_line, const char *p_code, const char *p_rationale, bool p_editor_notify, ErrorType p_type, const TypedArray<ScriptBacktrace> &p_script_backtraces) {
+void Logger::log_error(const char *p_function, const char *p_file, int p_line, const char *p_code, const char *p_rationale, bool p_editor_notify, ErrorType p_type, const TypedArray<Ref<ScriptBacktrace>> &p_script_backtraces) {
 	GDVIRTUAL_CALL(_log_error, String::utf8(p_function), String::utf8(p_file), p_line, String::utf8(p_code), String::utf8(p_rationale), p_editor_notify, p_type, p_script_backtraces);
 }
 
@@ -269,7 +269,7 @@ void OS::LoggerBind::log_error(const char *p_function, const char *p_file, int p
 		return;
 	}
 
-	TypedArray<ScriptBacktrace> backtraces;
+	TypedArray<Ref<ScriptBacktrace>> backtraces;
 	backtraces.resize(p_script_backtraces.size());
 	for (int i = 0; i < p_script_backtraces.size(); i++) {
 		backtraces[i] = p_script_backtraces[i];
@@ -2028,9 +2028,9 @@ ScriptLanguage *Engine::get_script_language(int p_index) const {
 	return ScriptServer::get_language(p_index);
 }
 
-TypedArray<ScriptBacktrace> Engine::capture_script_backtraces(bool p_include_variables) const {
+TypedArray<Ref<ScriptBacktrace>> Engine::capture_script_backtraces(bool p_include_variables) const {
 	Vector<Ref<ScriptBacktrace>> backtraces = ScriptServer::capture_script_backtraces(p_include_variables);
-	TypedArray<ScriptBacktrace> result;
+	TypedArray<Ref<ScriptBacktrace>> result;
 	result.resize(backtraces.size());
 	for (int i = 0; i < backtraces.size(); i++) {
 		result[i] = backtraces[i];

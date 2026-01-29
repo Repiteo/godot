@@ -1433,7 +1433,7 @@ Error GLTFDocument::_parse_meshes(Ref<GLTFState> p_state) {
 		}
 		import_mesh->set_name(_gen_unique_name(p_state, vformat("%s_%s", p_state->scene_name, mesh_name)));
 		mesh->set_name(import_mesh->get_name());
-		TypedArray<Material> instance_materials;
+		TypedArray<Ref<Material>> instance_materials;
 
 		for (int j = 0; j < primitives.size(); j++) {
 			uint64_t flags = RS::ARRAY_FLAG_COMPRESS_ATTRIBUTES;
@@ -4023,7 +4023,7 @@ GLTFMeshIndex GLTFDocument::_convert_mesh_to_gltf(Ref<GLTFState> p_state, MeshIn
 	ERR_FAIL_COND_V_MSG(p_mesh_instance->get_mesh().is_null(), -1, "glTF: Tried to export a MeshInstance3D node named " + p_mesh_instance->get_name() + ", but it has no mesh. This node will be exported without a mesh.");
 	Ref<Mesh> mesh_resource = p_mesh_instance->get_mesh();
 	ERR_FAIL_COND_V_MSG(mesh_resource->get_surface_count() == 0, -1, "glTF: Tried to export a MeshInstance3D node named " + p_mesh_instance->get_name() + ", but its mesh has no surfaces. This node will be exported without a mesh.");
-	TypedArray<Material> instance_materials;
+	TypedArray<Ref<Material>> instance_materials;
 	for (int32_t surface_i = 0; surface_i < mesh_resource->get_surface_count(); surface_i++) {
 		Ref<Material> mat = p_mesh_instance->get_active_material(surface_i);
 		instance_materials.append(mat);
@@ -4990,7 +4990,7 @@ T GLTFDocument::_interpolate_track(const Vector<double> &p_times, const Vector<T
 NodePath GLTFDocument::_find_material_node_path(Ref<GLTFState> p_state, const Ref<Material> &p_material) {
 	int mesh_index = 0;
 	for (Ref<GLTFMesh> gltf_mesh : p_state->meshes) {
-		TypedArray<Material> materials = gltf_mesh->get_instance_materials();
+		TypedArray<Ref<Material>> materials = gltf_mesh->get_instance_materials();
 		for (int mat_index = 0; mat_index < materials.size(); mat_index++) {
 			if (materials[mat_index] == p_material) {
 				for (Ref<GLTFNode> gltf_node : p_state->nodes) {

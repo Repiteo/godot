@@ -198,8 +198,8 @@ public:
 	void set_monitorable(bool p_enable);
 	bool is_monitorable() const;
 
-	TypedArray<Node3D> get_overlapping_bodies() const;
-	TypedArray<Area3D> get_overlapping_areas() const; //function for script
+	TypedArray<Node3D *> get_overlapping_bodies() const;
+	TypedArray<Area3D *> get_overlapping_areas() const; //function for script
 
 	bool has_overlapping_bodies() const;
 	bool has_overlapping_areas() const;

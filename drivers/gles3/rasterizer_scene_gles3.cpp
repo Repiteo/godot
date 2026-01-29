@@ -4159,10 +4159,10 @@ void RasterizerSceneGLES3::sub_surface_scattering_set_quality(RS::SubSurfaceScat
 void RasterizerSceneGLES3::sub_surface_scattering_set_scale(float p_scale, float p_depth_scale) {
 }
 
-TypedArray<Image> RasterizerSceneGLES3::bake_render_uv2(RID p_base, const TypedArray<RID> &p_material_overrides, const Size2i &p_image_size) {
+TypedArray<Ref<Image>> RasterizerSceneGLES3::bake_render_uv2(RID p_base, const TypedArray<RID> &p_material_overrides, const Size2i &p_image_size) {
 	GLES3::Config *config = GLES3::Config::get_singleton();
-	ERR_FAIL_COND_V_MSG(p_image_size.width <= 0, TypedArray<Image>(), "Image width must be greater than 0.");
-	ERR_FAIL_COND_V_MSG(p_image_size.height <= 0, TypedArray<Image>(), "Image height must be greater than 0.");
+	ERR_FAIL_COND_V_MSG(p_image_size.width <= 0, TypedArray<Ref<Image>>(), "Image width must be greater than 0.");
+	ERR_FAIL_COND_V_MSG(p_image_size.height <= 0, TypedArray<Ref<Image>>(), "Image height must be greater than 0.");
 
 	GLuint albedo_alpha_tex = 0;
 	GLuint normal_tex = 0;
@@ -4222,11 +4222,11 @@ TypedArray<Image> RasterizerSceneGLES3::bake_render_uv2(RID p_base, const TypedA
 		GLES3::Utilities::get_singleton()->texture_free_data(depth_tex);
 
 		WARN_PRINT("Could not create render target, status: " + GLES3::TextureStorage::get_singleton()->get_framebuffer_error(status));
-		return TypedArray<Image>();
+		return TypedArray<Ref<Image>>();
 	}
 
 	RenderGeometryInstance *gi_inst = geometry_instance_create(p_base);
-	ERR_FAIL_NULL_V(gi_inst, TypedArray<Image>());
+	ERR_FAIL_NULL_V(gi_inst, TypedArray<Ref<Image>>());
 
 	uint32_t sc = RSG::mesh_storage->mesh_get_surface_count(p_base);
 	Vector<RID> materials;
@@ -4248,7 +4248,7 @@ TypedArray<Image> RasterizerSceneGLES3::bake_render_uv2(RID p_base, const TypedA
 
 	geometry_instance_free(gi_inst);
 
-	TypedArray<Image> ret;
+	TypedArray<Ref<Image>> ret;
 
 	// Create a dummy texture so we can use texture_2d_get.
 	RID tex_rid = GLES3::TextureStorage::get_singleton()->texture_allocate();

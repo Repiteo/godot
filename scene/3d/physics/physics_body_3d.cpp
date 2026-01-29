@@ -57,7 +57,7 @@ PhysicsBody3D::PhysicsBody3D(PhysicsServer3D::BodyMode p_mode) :
 	set_body_mode(p_mode);
 }
 
-TypedArray<PhysicsBody3D> PhysicsBody3D::get_collision_exceptions() {
+TypedArray<PhysicsBody3D *> PhysicsBody3D::get_collision_exceptions() {
 	List<RID> exceptions;
 	PhysicsServer3D::get_singleton()->body_get_collision_exceptions(get_rid(), &exceptions);
 	Array ret;

@@ -66,12 +66,12 @@ void GLTFMesh::set_mesh(const Ref<ImporterMesh> &p_mesh) {
 	mesh = p_mesh;
 }
 
-TypedArray<Material> GLTFMesh::get_instance_materials() {
-	return TypedArray<Material>(instance_materials);
+TypedArray<Ref<Material>> GLTFMesh::get_instance_materials() {
+	return TypedArray<Ref<Material>>(instance_materials);
 }
 
-void GLTFMesh::set_instance_materials(const TypedArray<Material> &p_instance_materials) {
-	instance_materials = TypedArray<Material>(p_instance_materials);
+void GLTFMesh::set_instance_materials(const TypedArray<Ref<Material>> &p_instance_materials) {
+	instance_materials = TypedArray<Ref<Material>>(p_instance_materials);
 }
 
 Vector<float> GLTFMesh::get_blend_weights() {

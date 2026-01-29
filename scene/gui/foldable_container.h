@@ -164,7 +164,7 @@ public:
 	FoldableContainer *get_expanded_container() const;
 
 	void get_containers(List<FoldableContainer *> *r_containers) const;
-	TypedArray<FoldableContainer> _get_containers() const;
+	TypedArray<FoldableContainer *> _get_containers() const;
 
 	void set_allow_folding_all(bool p_enabled);
 	bool is_allow_folding_all() const;

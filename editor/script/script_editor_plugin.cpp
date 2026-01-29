@@ -1354,8 +1354,8 @@ Ref<Script> ScriptEditor::_get_current_script() {
 	}
 }
 
-TypedArray<Script> ScriptEditor::_get_open_scripts() const {
-	TypedArray<Script> ret;
+TypedArray<Ref<Script>> ScriptEditor::_get_open_scripts() const {
+	TypedArray<Ref<Script>> ret;
 	Vector<Ref<Script>> scripts = get_open_scripts();
 	int scripts_amount = scripts.size();
 	for (int idx_script = 0; idx_script < scripts_amount; idx_script++) {
@@ -3942,8 +3942,8 @@ Vector<Ref<Script>> ScriptEditor::get_open_scripts() const {
 	return out_scripts;
 }
 
-TypedArray<ScriptEditorBase> ScriptEditor::_get_open_script_editors() const {
-	TypedArray<ScriptEditorBase> script_editors;
+TypedArray<ScriptEditorBase *> ScriptEditor::_get_open_script_editors() const {
+	TypedArray<ScriptEditorBase *> script_editors;
 	for (int i = 0; i < tab_container->get_tab_count(); i++) {
 		ScriptEditorBase *se = Object::cast_to<ScriptEditorBase>(tab_container->get_tab_control(i));
 		if (!se) {

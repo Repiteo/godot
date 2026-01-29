@@ -533,11 +533,11 @@ Ref<Translation> TranslationServer::get_translation_object(const String &p_local
 }
 #endif
 
-TypedArray<Translation> TranslationServer::get_translations() const {
+TypedArray<Ref<Translation>> TranslationServer::get_translations() const {
 	return main_domain->get_translations_bind();
 }
 
-TypedArray<Translation> TranslationServer::find_translations(const String &p_locale, bool p_exact) const {
+TypedArray<Ref<Translation>> TranslationServer::find_translations(const String &p_locale, bool p_exact) const {
 	return main_domain->find_translations_bind(p_locale, p_exact);
 }
 

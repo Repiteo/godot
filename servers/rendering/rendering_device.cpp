@@ -8344,13 +8344,13 @@ void RenderingDevice::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("buffer_get_data_async", "buffer", "callback", "offset_bytes", "size_bytes"), &RenderingDevice::buffer_get_data_async, DEFVAL(0), DEFVAL(0));
 	ClassDB::bind_method(D_METHOD("buffer_get_device_address", "buffer"), &RenderingDevice::buffer_get_device_address);
 
-	ClassDB::bind_method(D_METHOD("render_pipeline_create", "shader", "framebuffer_format", "vertex_format", "primitive", "rasterization_state", "multisample_state", "stencil_state", "color_blend_state", "dynamic_state_flags", "for_render_pass", "specialization_constants"), &RenderingDevice::_render_pipeline_create, DEFVAL(0), DEFVAL(0), DEFVAL(TypedArray<RDPipelineSpecializationConstant>()));
+	ClassDB::bind_method(D_METHOD("render_pipeline_create", "shader", "framebuffer_format", "vertex_format", "primitive", "rasterization_state", "multisample_state", "stencil_state", "color_blend_state", "dynamic_state_flags", "for_render_pass", "specialization_constants"), &RenderingDevice::_render_pipeline_create, DEFVAL(0), DEFVAL(0), DEFVAL(TypedArray<Ref<RDPipelineSpecializationConstant>>()));
 	ClassDB::bind_method(D_METHOD("render_pipeline_is_valid", "render_pipeline"), &RenderingDevice::render_pipeline_is_valid);
 
-	ClassDB::bind_method(D_METHOD("compute_pipeline_create", "shader", "specialization_constants"), &RenderingDevice::_compute_pipeline_create, DEFVAL(TypedArray<RDPipelineSpecializationConstant>()));
+	ClassDB::bind_method(D_METHOD("compute_pipeline_create", "shader", "specialization_constants"), &RenderingDevice::_compute_pipeline_create, DEFVAL(TypedArray<Ref<RDPipelineSpecializationConstant>>()));
 	ClassDB::bind_method(D_METHOD("compute_pipeline_is_valid", "compute_pipeline"), &RenderingDevice::compute_pipeline_is_valid);
 
-	ClassDB::bind_method(D_METHOD("raytracing_pipeline_create", "shader", "specialization_constants"), &RenderingDevice::_raytracing_pipeline_create, DEFVAL(TypedArray<RDPipelineSpecializationConstant>()));
+	ClassDB::bind_method(D_METHOD("raytracing_pipeline_create", "shader", "specialization_constants"), &RenderingDevice::_raytracing_pipeline_create, DEFVAL(TypedArray<Ref<RDPipelineSpecializationConstant>>()));
 	ClassDB::bind_method(D_METHOD("raytracing_pipeline_is_valid", "raytracing_pipeline"), &RenderingDevice::raytracing_pipeline_is_valid);
 
 	ClassDB::bind_method(D_METHOD("blas_create", "vertex_array", "index_array", "geometry_bits", "position_attribute_location"), &RenderingDevice::blas_create, DEFVAL(0), DEFVAL(0));
@@ -9125,7 +9125,7 @@ Ref<RDTextureFormat> RenderingDevice::_texture_get_format(RID p_rd_texture) {
 	return rtf;
 }
 
-RenderingDevice::FramebufferFormatID RenderingDevice::_framebuffer_format_create(const TypedArray<RDAttachmentFormat> &p_attachments, uint32_t p_view_count) {
+RenderingDevice::FramebufferFormatID RenderingDevice::_framebuffer_format_create(const TypedArray<Ref<RDAttachmentFormat>> &p_attachments, uint32_t p_view_count) {
 	Vector<AttachmentFormat> attachments;
 	attachments.resize(p_attachments.size());
 
@@ -9137,7 +9137,7 @@ RenderingDevice::FramebufferFormatID RenderingDevice::_framebuffer_format_create
 	return framebuffer_format_create(attachments, p_view_count);
 }
 
-RenderingDevice::FramebufferFormatID RenderingDevice::_framebuffer_format_create_multipass(const TypedArray<RDAttachmentFormat> &p_attachments, const TypedArray<RDFramebufferPass> &p_passes, uint32_t p_view_count) {
+RenderingDevice::FramebufferFormatID RenderingDevice::_framebuffer_format_create_multipass(const TypedArray<Ref<RDAttachmentFormat>> &p_attachments, const TypedArray<Ref<RDFramebufferPass>> &p_passes, uint32_t p_view_count) {
 	Vector<AttachmentFormat> attachments;
 	attachments.resize(p_attachments.size());
 
@@ -9162,7 +9162,7 @@ RID RenderingDevice::_framebuffer_create(const TypedArray<RID> &p_textures, Fram
 	return framebuffer_create(textures, p_format_check, p_view_count);
 }
 
-RID RenderingDevice::_framebuffer_create_multipass(const TypedArray<RID> &p_textures, const TypedArray<RDFramebufferPass> &p_passes, FramebufferFormatID p_format_check, uint32_t p_view_count) {
+RID RenderingDevice::_framebuffer_create_multipass(const TypedArray<RID> &p_textures, const TypedArray<Ref<RDFramebufferPass>> &p_passes, FramebufferFormatID p_format_check, uint32_t p_view_count) {
 	Vector<RID> textures = Variant(p_textures);
 	Vector<FramebufferPass> passes;
 	for (int i = 0; i < p_passes.size(); i++) {
@@ -9179,7 +9179,7 @@ RID RenderingDevice::_sampler_create(const Ref<RDSamplerState> &p_state) {
 	return sampler_create(p_state->base);
 }
 
-RenderingDevice::VertexFormatID RenderingDevice::_vertex_format_create(const TypedArray<RDVertexAttribute> &p_vertex_formats) {
+RenderingDevice::VertexFormatID RenderingDevice::_vertex_format_create(const TypedArray<Ref<RDVertexAttribute>> &p_vertex_formats) {
 	Vector<VertexAttribute> descriptions;
 	descriptions.resize(p_vertex_formats.size());
 
@@ -9274,7 +9274,7 @@ RID RenderingDevice::_shader_create_from_spirv(const Ref<RDShaderSPIRV> &p_spirv
 	return shader_create_from_spirv(stage_data);
 }
 
-RID RenderingDevice::_uniform_set_create(const TypedArray<RDUniform> &p_uniforms, RID p_shader, uint32_t p_shader_set) {
+RID RenderingDevice::_uniform_set_create(const TypedArray<Ref<RDUniform>> &p_uniforms, RID p_shader, uint32_t p_shader_set) {
 	LocalVector<Uniform> uniforms;
 	uniforms.resize(p_uniforms.size());
 	for (int i = 0; i < p_uniforms.size(); i++) {
@@ -9299,7 +9299,7 @@ void RenderingDevice::_tlas_instances_buffer_fill(RID p_instances_buffer, const 
 	tlas_instances_buffer_fill(p_instances_buffer, blases, transforms);
 }
 
-static Vector<RenderingDevice::PipelineSpecializationConstant> _get_spec_constants(const TypedArray<RDPipelineSpecializationConstant> &p_constants) {
+static Vector<RenderingDevice::PipelineSpecializationConstant> _get_spec_constants(const TypedArray<Ref<RDPipelineSpecializationConstant>> &p_constants) {
 	Vector<RenderingDevice::PipelineSpecializationConstant> ret;
 	ret.resize(p_constants.size());
 	for (int i = 0; i < p_constants.size(); i++) {
@@ -9329,7 +9329,7 @@ static Vector<RenderingDevice::PipelineSpecializationConstant> _get_spec_constan
 	return ret;
 }
 
-RID RenderingDevice::_render_pipeline_create(RID p_shader, FramebufferFormatID p_framebuffer_format, VertexFormatID p_vertex_format, RenderPrimitive p_render_primitive, const Ref<RDPipelineRasterizationState> &p_rasterization_state, const Ref<RDPipelineMultisampleState> &p_multisample_state, const Ref<RDPipelineDepthStencilState> &p_depth_stencil_state, const Ref<RDPipelineColorBlendState> &p_blend_state, BitField<PipelineDynamicStateFlags> p_dynamic_state_flags, uint32_t p_for_render_pass, const TypedArray<RDPipelineSpecializationConstant> &p_specialization_constants) {
+RID RenderingDevice::_render_pipeline_create(RID p_shader, FramebufferFormatID p_framebuffer_format, VertexFormatID p_vertex_format, RenderPrimitive p_render_primitive, const Ref<RDPipelineRasterizationState> &p_rasterization_state, const Ref<RDPipelineMultisampleState> &p_multisample_state, const Ref<RDPipelineDepthStencilState> &p_depth_stencil_state, const Ref<RDPipelineColorBlendState> &p_blend_state, BitField<PipelineDynamicStateFlags> p_dynamic_state_flags, uint32_t p_for_render_pass, const TypedArray<Ref<RDPipelineSpecializationConstant>> &p_specialization_constants) {
 	PipelineRasterizationState rasterization_state;
 	if (p_rasterization_state.is_valid()) {
 		rasterization_state = p_rasterization_state->base;
@@ -9363,11 +9363,11 @@ RID RenderingDevice::_render_pipeline_create(RID p_shader, FramebufferFormatID p
 	return render_pipeline_create(p_shader, p_framebuffer_format, p_vertex_format, p_render_primitive, rasterization_state, multisample_state, depth_stencil_state, color_blend_state, p_dynamic_state_flags, p_for_render_pass, _get_spec_constants(p_specialization_constants));
 }
 
-RID RenderingDevice::_compute_pipeline_create(RID p_shader, const TypedArray<RDPipelineSpecializationConstant> &p_specialization_constants = TypedArray<RDPipelineSpecializationConstant>()) {
+RID RenderingDevice::_compute_pipeline_create(RID p_shader, const TypedArray<Ref<RDPipelineSpecializationConstant>> &p_specialization_constants = TypedArray<Ref<RDPipelineSpecializationConstant>>()) {
 	return compute_pipeline_create(p_shader, _get_spec_constants(p_specialization_constants));
 }
 
-RID RenderingDevice::_raytracing_pipeline_create(RID p_shader, const TypedArray<RDPipelineSpecializationConstant> &p_specialization_constants = TypedArray<RDPipelineSpecializationConstant>()) {
+RID RenderingDevice::_raytracing_pipeline_create(RID p_shader, const TypedArray<Ref<RDPipelineSpecializationConstant>> &p_specialization_constants = TypedArray<Ref<RDPipelineSpecializationConstant>>()) {
 	return raytracing_pipeline_create(p_shader, _get_spec_constants(p_specialization_constants));
 }
 

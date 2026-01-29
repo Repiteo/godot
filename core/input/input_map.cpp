@@ -236,8 +236,8 @@ void InputMap::action_erase_events(const StringName &p_action) {
 	input_map[p_action].inputs.clear();
 }
 
-TypedArray<InputEvent> InputMap::_action_get_events(const StringName &p_action) {
-	TypedArray<InputEvent> ret;
+TypedArray<Ref<InputEvent>> InputMap::_action_get_events(const StringName &p_action) {
+	TypedArray<Ref<InputEvent>> ret;
 	const List<Ref<InputEvent>> *al = action_get_events(p_action);
 	if (al) {
 		for (const List<Ref<InputEvent>>::Element *E = al->front(); E; E = E->next()) {

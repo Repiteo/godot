@@ -1502,7 +1502,7 @@ Vector<String> ProjectConverter3To4::check_for_rename_colors(Vector<String> &lin
 		if (uint64_t(line.length()) <= maximum_line_length) {
 			if (line.contains("Color.")) {
 				for (unsigned int current_index = 0; RenamesMap3To4::color_renames[current_index][0]; current_index++) {
-					TypedArray<RegExMatch> reg_match = reg_container.color_regexes[current_index]->search_all(line);
+					TypedArray<Ref<RegExMatch>> reg_match = reg_container.color_regexes[current_index]->search_all(line);
 					if (reg_match.size() > 0) {
 						found_renames.append(line_formatter(current_line, RenamesMap3To4::color_renames[current_index][0], RenamesMap3To4::color_renames[current_index][1], line));
 					}
@@ -1594,7 +1594,7 @@ Vector<String> ProjectConverter3To4::check_for_rename_classes(Vector<String> &li
 					}
 
 					// Causal renaming Spatial -> Node3D.
-					TypedArray<RegExMatch> reg_match = reg_container.class_regexes[current_index]->search_all(line);
+					TypedArray<Ref<RegExMatch>> reg_match = reg_container.class_regexes[current_index]->search_all(line);
 					if (reg_match.size() > 0) {
 						found_renames.append(line_formatter(current_line, RenamesMap3To4::class_renames[current_index][0], RenamesMap3To4::class_renames[current_index][1], old_line));
 					}
@@ -2710,7 +2710,7 @@ void ProjectConverter3To4::rename_input_map_scancode(Vector<SourceLine> &source_
 
 		String &line = source_line.line;
 		if (uint64_t(line.length()) <= maximum_line_length) {
-			TypedArray<RegExMatch> reg_match = reg_container.input_map_keycode.search_all(line);
+			TypedArray<Ref<RegExMatch>> reg_match = reg_container.input_map_keycode.search_all(line);
 
 			for (int i = 0; i < reg_match.size(); ++i) {
 				Ref<RegExMatch> match = reg_match[i];
@@ -2736,7 +2736,7 @@ void ProjectConverter3To4::rename_joypad_buttons_and_axes(Vector<SourceLine> &so
 		String &line = source_line.line;
 		if (uint64_t(line.length()) <= maximum_line_length) {
 			// Remap button indexes.
-			TypedArray<RegExMatch> reg_match = reg_container.joypad_button_index.search_all(line);
+			TypedArray<Ref<RegExMatch>> reg_match = reg_container.joypad_button_index.search_all(line);
 			for (int i = 0; i < reg_match.size(); ++i) {
 				Ref<RegExMatch> match = reg_match[i];
 				PackedStringArray strings = match->get_strings();
@@ -2776,7 +2776,7 @@ Vector<String> ProjectConverter3To4::check_for_rename_joypad_buttons_and_axes(Ve
 	for (String &line : lines) {
 		if (uint64_t(line.length()) <= maximum_line_length) {
 			// Remap button indexes.
-			TypedArray<RegExMatch> reg_match = reg_container.joypad_button_index.search_all(line);
+			TypedArray<Ref<RegExMatch>> reg_match = reg_container.joypad_button_index.search_all(line);
 			for (int i = 0; i < reg_match.size(); ++i) {
 				Ref<RegExMatch> match = reg_match[i];
 				PackedStringArray strings = match->get_strings();
@@ -2820,7 +2820,7 @@ Vector<String> ProjectConverter3To4::check_for_rename_input_map_scancode(Vector<
 	int current_line = 1;
 	for (String &line : lines) {
 		if (uint64_t(line.length()) <= maximum_line_length) {
-			TypedArray<RegExMatch> reg_match = reg_container.input_map_keycode.search_all(line);
+			TypedArray<Ref<RegExMatch>> reg_match = reg_container.input_map_keycode.search_all(line);
 
 			for (int i = 0; i < reg_match.size(); ++i) {
 				Ref<RegExMatch> match = reg_match[i];
@@ -2847,7 +2847,7 @@ void ProjectConverter3To4::rename_animation_suffixes(Vector<SourceLine> &source_
 		}
 		String &line = source_line.line;
 		if (uint64_t(line.length()) <= maximum_line_length) {
-			TypedArray<RegExMatch> reg_match = reg_container.animation_suffix.search_all(line);
+			TypedArray<Ref<RegExMatch>> reg_match = reg_container.animation_suffix.search_all(line);
 			for (int i = 0; i < reg_match.size(); ++i) {
 				Ref<RegExMatch> match = reg_match[i];
 				PackedStringArray strings = match->get_strings();
@@ -2864,7 +2864,7 @@ Vector<String> ProjectConverter3To4::check_for_rename_animation_suffixes(Vector<
 
 	for (String &line : lines) {
 		if (uint64_t(line.length()) <= maximum_line_length) {
-			TypedArray<RegExMatch> reg_match = reg_container.animation_suffix.search_all(line);
+			TypedArray<Ref<RegExMatch>> reg_match = reg_container.animation_suffix.search_all(line);
 			for (int i = 0; i < reg_match.size(); ++i) {
 				Ref<RegExMatch> match = reg_match[i];
 				PackedStringArray strings = match->get_strings();
@@ -2901,7 +2901,7 @@ Vector<String> ProjectConverter3To4::check_for_custom_rename(Vector<String> &lin
 	int current_line = 1;
 	for (String &line : lines) {
 		if (uint64_t(line.length()) <= maximum_line_length) {
-			TypedArray<RegExMatch> reg_match = reg.search_all(line);
+			TypedArray<Ref<RegExMatch>> reg_match = reg.search_all(line);
 			if (reg_match.size() > 0) {
 				found_renames.append(line_formatter(current_line, from.replace("\\.", "."), to, line)); // Without replacing it will print "\.shader" instead ".shader".
 			}
@@ -2937,7 +2937,7 @@ Vector<String> ProjectConverter3To4::check_for_rename_common(const char *array[]
 		if (uint64_t(line.length()) <= maximum_line_length) {
 			for (unsigned int current_index = 0; current_index < cached_regexes.size(); current_index++) {
 				if (line.contains(array[current_index][0])) {
-					TypedArray<RegExMatch> reg_match = cached_regexes[current_index]->search_all(line);
+					TypedArray<Ref<RegExMatch>> reg_match = cached_regexes[current_index]->search_all(line);
 					if (reg_match.size() > 0) {
 						found_renames.append(line_formatter(current_line, array[current_index][0], array[current_index][1], line));
 					}

@@ -572,10 +572,10 @@ RigidBody2D::CCDMode RigidBody2D::get_continuous_collision_detection_mode() cons
 	return ccd_mode;
 }
 
-TypedArray<Node2D> RigidBody2D::get_colliding_bodies() const {
-	ERR_FAIL_NULL_V(contact_monitor, TypedArray<Node2D>());
+TypedArray<Node2D *> RigidBody2D::get_colliding_bodies() const {
+	ERR_FAIL_NULL_V(contact_monitor, TypedArray<Node2D *>());
 
-	TypedArray<Node2D> ret;
+	TypedArray<Node2D *> ret;
 	ret.resize(contact_monitor->body_map.size());
 	int idx = 0;
 	for (const KeyValue<ObjectID, BodyState> &E : contact_monitor->body_map) {

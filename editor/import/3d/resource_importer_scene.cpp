@@ -337,7 +337,7 @@ String ResourceImporterScene::get_preset_name(int p_idx) const {
 
 void ResourceImporterScene::_pre_fix_global(Node *p_scene, const HashMap<StringName, Variant> &p_options) const {
 	if (p_options.has("animation/import_rest_as_RESET") && (bool)p_options["animation/import_rest_as_RESET"]) {
-		TypedArray<Node> anim_players = p_scene->find_children("*", "AnimationPlayer");
+		TypedArray<Node *> anim_players = p_scene->find_children("*", "AnimationPlayer");
 		if (anim_players.is_empty()) {
 			AnimationPlayer *anim_player = memnew(AnimationPlayer);
 			anim_player->set_name("AnimationPlayer");
@@ -365,7 +365,7 @@ void ResourceImporterScene::_pre_fix_global(Node *p_scene, const HashMap<StringN
 			}
 			anim_library->add_animation(SceneStringName(RESET), reset_anim);
 		}
-		TypedArray<Node> skeletons = p_scene->find_children("*", "Skeleton3D");
+		TypedArray<Node *> skeletons = p_scene->find_children("*", "Skeleton3D");
 		for (int i = 0; i < skeletons.size(); i++) {
 			Skeleton3D *skeleton = cast_to<Skeleton3D>(skeletons[i]);
 			NodePath skeleton_path = p_scene->get_path_to(skeleton);
@@ -1499,7 +1499,7 @@ Node *ResourceImporterScene::_post_fix_node(Node *p_node, Node *p_root, HashMap<
 		if (skeleton != nullptr && int(node_settings.get("rest_pose/load_pose", 0)) != 0) {
 			String selected_animation_name = node_settings.get("rest_pose/selected_animation", String());
 			if (int(node_settings["rest_pose/load_pose"]) == 1) {
-				TypedArray<Node> children = p_root->find_children("*", "AnimationPlayer", true, false);
+				TypedArray<Node *> children = p_root->find_children("*", "AnimationPlayer", true, false);
 				for (int node_i = 0; node_i < children.size(); node_i++) {
 					AnimationPlayer *anim_player = cast_to<AnimationPlayer>(children[node_i]);
 					ERR_CONTINUE(anim_player == nullptr);
@@ -3430,7 +3430,7 @@ Node *EditorSceneFormatImporterESCN::import_scene(const String &p_path, uint32_t
 	Ref<PackedScene> ps = ResourceFormatLoaderText::singleton->load(p_path, p_path, &error);
 	ERR_FAIL_COND_V_MSG(ps.is_null(), nullptr, "Cannot load scene as text resource from path '" + p_path + "'.");
 	Node *scene = ps->instantiate();
-	TypedArray<Node> nodes = scene->find_children("*", "MeshInstance3D");
+	TypedArray<Node *> nodes = scene->find_children("*", "MeshInstance3D");
 	for (int32_t node_i = 0; node_i < nodes.size(); node_i++) {
 		MeshInstance3D *mesh_3d = cast_to<MeshInstance3D>(nodes[node_i]);
 		Ref<ImporterMesh> mesh;

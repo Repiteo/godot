@@ -82,7 +82,7 @@ public:
 	bool supports_component_type(XrSpatialCapabilityEXT p_capability, XrSpatialComponentTypeEXT p_component_type);
 
 	// Spatial contexts
-	Ref<OpenXRFutureResult> create_spatial_context(const TypedArray<OpenXRSpatialCapabilityConfigurationBaseHeader> &p_capability_configurations, Ref<OpenXRStructureBase> p_next, const Callable &p_user_callback);
+	Ref<OpenXRFutureResult> create_spatial_context(const TypedArray<Ref<OpenXRSpatialCapabilityConfigurationBaseHeader>> &p_capability_configurations, Ref<OpenXRStructureBase> p_next, const Callable &p_user_callback);
 	bool get_spatial_context_ready(RID p_spatial_context) const;
 	void free_spatial_context(RID p_spatial_context);
 	XrSpatialContextEXT get_spatial_context_handle(RID p_spatial_context) const;
@@ -98,7 +98,7 @@ public:
 	XrSpatialSnapshotEXT get_spatial_snapshot_handle(RID p_spatial_snapshot) const;
 	RID get_spatial_snapshot_context(RID p_spatial_snapshot) const;
 
-	bool query_snapshot(RID p_spatial_snapshot, const TypedArray<OpenXRSpatialComponentData> &p_component_data, Ref<OpenXRStructureBase> p_next);
+	bool query_snapshot(RID p_spatial_snapshot, const TypedArray<Ref<OpenXRSpatialComponentData>> &p_component_data, Ref<OpenXRStructureBase> p_next);
 
 	// Buffers from snapshot
 	String get_string(RID p_spatial_snapshot, XrSpatialBufferIdEXT p_buffer_id) const;

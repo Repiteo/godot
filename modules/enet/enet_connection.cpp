@@ -264,9 +264,9 @@ void ENetConnection::get_peers(List<Ref<ENetPacketPeer>> &r_peers) {
 	}
 }
 
-TypedArray<ENetPacketPeer> ENetConnection::_get_peers() {
-	ERR_FAIL_NULL_V_MSG(host, TypedArray<ENetPacketPeer>(), "The ENetConnection instance isn't currently active.");
-	TypedArray<ENetPacketPeer> out;
+TypedArray<Ref<ENetPacketPeer>> ENetConnection::_get_peers() {
+	ERR_FAIL_NULL_V_MSG(host, TypedArray<Ref<ENetPacketPeer>>(), "The ENetConnection instance isn't currently active.");
+	TypedArray<Ref<ENetPacketPeer>> out;
 	for (const Ref<ENetPacketPeer> &I : peers) {
 		out.push_back(I);
 	}

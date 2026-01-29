@@ -328,8 +328,8 @@ bool TranslationDomain::has_translation_for_locale(const String &p_locale, bool 
 	return false;
 }
 
-TypedArray<Translation> TranslationDomain::get_translations_bind() const {
-	TypedArray<Translation> res;
+TypedArray<Ref<Translation>> TranslationDomain::get_translations_bind() const {
+	TypedArray<Ref<Translation>> res;
 	res.reserve(translations.size());
 	for (const Ref<Translation> &E : translations) {
 		res.push_back(E);
@@ -337,10 +337,10 @@ TypedArray<Translation> TranslationDomain::get_translations_bind() const {
 	return res;
 }
 
-TypedArray<Translation> TranslationDomain::find_translations_bind(const String &p_locale, bool p_exact) const {
+TypedArray<Ref<Translation>> TranslationDomain::find_translations_bind(const String &p_locale, bool p_exact) const {
 	const HashSet<Ref<Translation>> &found = find_translations(p_locale, p_exact);
 
-	TypedArray<Translation> res;
+	TypedArray<Ref<Translation>> res;
 	res.reserve(found.size());
 	for (const Ref<Translation> &E : found) {
 		res.push_back(E);

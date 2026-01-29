@@ -100,7 +100,7 @@ Array LightmapGIData::_get_user_data() const {
 	return ret;
 }
 
-void LightmapGIData::set_lightmap_textures(const TypedArray<TextureLayered> &p_data) {
+void LightmapGIData::set_lightmap_textures(const TypedArray<Ref<TextureLayered>> &p_data) {
 	storage_light_textures = p_data;
 	if (p_data.is_empty()) {
 		combined_light_texture = Ref<TextureLayered>();
@@ -129,11 +129,11 @@ void LightmapGIData::set_lightmap_textures(const TypedArray<TextureLayered> &p_d
 	_reset_lightmap_textures();
 }
 
-TypedArray<TextureLayered> LightmapGIData::get_lightmap_textures() const {
+TypedArray<Ref<TextureLayered>> LightmapGIData::get_lightmap_textures() const {
 	return storage_light_textures;
 }
 
-void LightmapGIData::set_shadowmask_textures(const TypedArray<TextureLayered> &p_data) {
+void LightmapGIData::set_shadowmask_textures(const TypedArray<Ref<TextureLayered>> &p_data) {
 	storage_shadowmask_textures = p_data;
 
 	if (p_data.is_empty()) {
@@ -165,7 +165,7 @@ void LightmapGIData::set_shadowmask_textures(const TypedArray<TextureLayered> &p
 	_reset_shadowmask_textures();
 }
 
-TypedArray<TextureLayered> LightmapGIData::get_shadowmask_textures() const {
+TypedArray<Ref<TextureLayered>> LightmapGIData::get_shadowmask_textures() const {
 	return storage_shadowmask_textures;
 }
 
@@ -304,7 +304,7 @@ Dictionary LightmapGIData::_get_probe_data() const {
 
 #ifndef DISABLE_DEPRECATED
 void LightmapGIData::set_light_texture(const Ref<TextureLayered> &p_light_texture) {
-	TypedArray<TextureLayered> arr = { p_light_texture };
+	TypedArray<Ref<TextureLayered>> arr = { p_light_texture };
 	set_lightmap_textures(arr);
 }
 
@@ -817,7 +817,7 @@ void LightmapGI::_gen_new_positions_from_octree(const GenProbesOctree *p_cell, f
 	}
 }
 
-LightmapGI::BakeError LightmapGI::_save_and_reimport_atlas_textures(const Ref<Lightmapper> p_lightmapper, const String &p_base_name, TypedArray<TextureLayered> &r_textures, bool p_is_shadowmask) const {
+LightmapGI::BakeError LightmapGI::_save_and_reimport_atlas_textures(const Ref<Lightmapper> p_lightmapper, const String &p_base_name, TypedArray<Ref<TextureLayered>> &r_textures, bool p_is_shadowmask) const {
 	Vector<Ref<Image>> images;
 	images.resize(p_is_shadowmask ? p_lightmapper->get_shadowmask_texture_count() : p_lightmapper->get_bake_texture_count());
 
@@ -958,7 +958,7 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 					overrides[i] = mf.overrides[i]->get_rid();
 				}
 			}
-			TypedArray<Image> images = RS::get_singleton()->bake_render_uv2(mf.mesh->get_rid(), overrides, lightmap_size);
+			TypedArray<Ref<Image>> images = RS::get_singleton()->bake_render_uv2(mf.mesh->get_rid(), overrides, lightmap_size);
 
 			ERR_FAIL_COND_V(images.is_empty(), BAKE_ERROR_CANT_CREATE_IMAGE);
 
@@ -1291,8 +1291,8 @@ LightmapGI::BakeError LightmapGI::bake(Node *p_from_node, String p_image_data_pa
 	}
 
 	// POSTBAKE: Save Textures.
-	TypedArray<TextureLayered> lightmap_textures;
-	TypedArray<TextureLayered> shadowmask_textures;
+	TypedArray<Ref<TextureLayered>> lightmap_textures;
+	TypedArray<Ref<TextureLayered>> shadowmask_textures;
 
 	const String texture_filename = p_image_data_path.get_basename();
 	const int shadowmask_texture_count = lightmapper->get_shadowmask_texture_count();

@@ -130,29 +130,29 @@ protected:
 	Vector<uint8_t> _get_glb_data_bind_compat_113172();
 	bool _get_use_named_skin_binds_bind_compat_113172();
 	bool _get_discard_meshes_and_materials_bind_compat_113172();
-	TypedArray<GLTFNode> _get_nodes_bind_compat_113172();
+	TypedArray<Ref<GLTFNode>> _get_nodes_bind_compat_113172();
 	TypedArray<PackedByteArray> _get_buffers_bind_compat_113172();
-	TypedArray<GLTFBufferView> _get_buffer_views_bind_compat_113172();
-	TypedArray<GLTFAccessor> _get_accessors_bind_compat_113172();
-	TypedArray<GLTFMesh> _get_meshes_bind_compat_113172();
-	TypedArray<Material> _get_materials_bind_compat_113172();
+	TypedArray<Ref<GLTFBufferView>> _get_buffer_views_bind_compat_113172();
+	TypedArray<Ref<GLTFAccessor>> _get_accessors_bind_compat_113172();
+	TypedArray<Ref<GLTFMesh>> _get_meshes_bind_compat_113172();
+	TypedArray<Ref<Material>> _get_materials_bind_compat_113172();
 	String _get_scene_name_bind_compat_113172();
 	String _get_base_path_bind_compat_113172();
 	String _get_extract_path_bind_compat_113172();
 	String _get_extract_prefix_bind_compat_113172();
 	PackedInt32Array _get_root_nodes_bind_compat_113172();
-	TypedArray<GLTFTexture> _get_textures_bind_compat_113172();
-	TypedArray<GLTFTextureSampler> _get_texture_samplers_bind_compat_113172();
-	TypedArray<Texture2D> _get_images_bind_compat_113172();
-	TypedArray<GLTFSkin> _get_skins_bind_compat_113172();
-	TypedArray<GLTFCamera> _get_cameras_bind_compat_113172();
-	TypedArray<GLTFLight> _get_lights_bind_compat_113172();
+	TypedArray<Ref<GLTFTexture>> _get_textures_bind_compat_113172();
+	TypedArray<Ref<GLTFTextureSampler>> _get_texture_samplers_bind_compat_113172();
+	TypedArray<Ref<Texture2D>> _get_images_bind_compat_113172();
+	TypedArray<Ref<GLTFSkin>> _get_skins_bind_compat_113172();
+	TypedArray<Ref<GLTFCamera>> _get_cameras_bind_compat_113172();
+	TypedArray<Ref<GLTFLight>> _get_lights_bind_compat_113172();
 	TypedArray<String> _get_unique_names_bind_compat_113172();
 	TypedArray<String> _get_unique_animation_names_bind_compat_113172();
-	TypedArray<GLTFSkeleton> _get_skeletons_bind_compat_113172();
+	TypedArray<Ref<GLTFSkeleton>> _get_skeletons_bind_compat_113172();
 	bool _get_create_animations_bind_compat_113172();
 	bool _get_import_as_skeleton_bones_bind_compat_113172();
-	TypedArray<GLTFAnimation> _get_animations_bind_compat_113172();
+	TypedArray<Ref<GLTFAnimation>> _get_animations_bind_compat_113172();
 	Node *_get_scene_node_bind_compat_113172(GLTFNodeIndex p_gltf_node_index);
 	GLTFNodeIndex _get_node_index_bind_compat_113172(Node *p_node);
 	int _get_animation_players_count_bind_compat_113172(int p_anim_player_index);
@@ -213,8 +213,8 @@ public:
 
 	const Vector<Ref<GLTFNode>> &get_nodes() const { return nodes; }
 	void set_nodes(const Vector<Ref<GLTFNode>> &p_nodes) { nodes = p_nodes; }
-	TypedArray<GLTFNode> get_nodes_bind() const;
-	void set_nodes_bind(const TypedArray<GLTFNode> &p_nodes);
+	TypedArray<Ref<GLTFNode>> get_nodes_bind() const;
+	void set_nodes_bind(const TypedArray<Ref<GLTFNode>> &p_nodes);
 
 	const Vector<PackedByteArray> &get_buffers() const { return buffers; }
 	void set_buffers(const Vector<PackedByteArray> &p_buffers) { buffers = p_buffers; }
@@ -223,23 +223,23 @@ public:
 
 	const Vector<Ref<GLTFBufferView>> &get_buffer_views() const { return buffer_views; }
 	void set_buffer_views(const Vector<Ref<GLTFBufferView>> &p_buffer_views) { buffer_views = p_buffer_views; }
-	TypedArray<GLTFBufferView> get_buffer_views_bind() const;
-	void set_buffer_views_bind(const TypedArray<GLTFBufferView> &p_buffer_views);
+	TypedArray<Ref<GLTFBufferView>> get_buffer_views_bind() const;
+	void set_buffer_views_bind(const TypedArray<Ref<GLTFBufferView>> &p_buffer_views);
 
 	const Vector<Ref<GLTFAccessor>> &get_accessors() const { return accessors; }
 	void set_accessors(const Vector<Ref<GLTFAccessor>> &p_accessors) { accessors = p_accessors; }
-	TypedArray<GLTFAccessor> get_accessors_bind() const;
-	void set_accessors_bind(const TypedArray<GLTFAccessor> &p_accessors);
+	TypedArray<Ref<GLTFAccessor>> get_accessors_bind() const;
+	void set_accessors_bind(const TypedArray<Ref<GLTFAccessor>> &p_accessors);
 
 	const Vector<Ref<GLTFMesh>> &get_meshes() const { return meshes; }
 	void set_meshes(const Vector<Ref<GLTFMesh>> &p_meshes) { meshes = p_meshes; }
-	TypedArray<GLTFMesh> get_meshes_bind() const;
-	void set_meshes_bind(const TypedArray<GLTFMesh> &p_meshes);
+	TypedArray<Ref<GLTFMesh>> get_meshes_bind() const;
+	void set_meshes_bind(const TypedArray<Ref<GLTFMesh>> &p_meshes);
 
 	const Vector<Ref<Material>> &get_materials() const { return materials; }
 	void set_materials(const Vector<Ref<Material>> &p_materials) { materials = p_materials; }
-	TypedArray<Material> get_materials_bind() const;
-	void set_materials_bind(const TypedArray<Material> &p_materials);
+	TypedArray<Ref<Material>> get_materials_bind() const;
+	void set_materials_bind(const TypedArray<Ref<Material>> &p_materials);
 
 	String get_scene_name() const;
 	void set_scene_name(const String &p_scene_name);
@@ -261,33 +261,33 @@ public:
 
 	const Vector<Ref<GLTFTexture>> &get_textures() const { return textures; }
 	void set_textures(const Vector<Ref<GLTFTexture>> &p_textures) { textures = p_textures; }
-	TypedArray<GLTFTexture> get_textures_bind() const;
-	void set_textures_bind(const TypedArray<GLTFTexture> &p_textures);
+	TypedArray<Ref<GLTFTexture>> get_textures_bind() const;
+	void set_textures_bind(const TypedArray<Ref<GLTFTexture>> &p_textures);
 
 	const Vector<Ref<GLTFTextureSampler>> &get_texture_samplers() const { return texture_samplers; }
 	void set_texture_samplers(const Vector<Ref<GLTFTextureSampler>> &p_texture_samplers) { texture_samplers = p_texture_samplers; }
-	TypedArray<GLTFTextureSampler> get_texture_samplers_bind() const;
-	void set_texture_samplers_bind(const TypedArray<GLTFTextureSampler> &p_texture_samplers);
+	TypedArray<Ref<GLTFTextureSampler>> get_texture_samplers_bind() const;
+	void set_texture_samplers_bind(const TypedArray<Ref<GLTFTextureSampler>> &p_texture_samplers);
 
 	const Vector<Ref<Texture2D>> &get_images() const { return images; }
 	void set_images(const Vector<Ref<Texture2D>> &p_images) { images = p_images; }
-	TypedArray<Texture2D> get_images_bind() const;
-	void set_images_bind(const TypedArray<Texture2D> &p_images);
+	TypedArray<Ref<Texture2D>> get_images_bind() const;
+	void set_images_bind(const TypedArray<Ref<Texture2D>> &p_images);
 
 	const Vector<Ref<GLTFSkin>> &get_skins() const { return skins; }
 	void set_skins(const Vector<Ref<GLTFSkin>> &p_skins) { skins = p_skins; }
-	TypedArray<GLTFSkin> get_skins_bind() const;
-	void set_skins_bind(const TypedArray<GLTFSkin> &p_skins);
+	TypedArray<Ref<GLTFSkin>> get_skins_bind() const;
+	void set_skins_bind(const TypedArray<Ref<GLTFSkin>> &p_skins);
 
 	const Vector<Ref<GLTFCamera>> &get_cameras() const { return cameras; }
 	void set_cameras(const Vector<Ref<GLTFCamera>> &p_cameras) { cameras = p_cameras; }
-	TypedArray<GLTFCamera> get_cameras_bind() const;
-	void set_cameras_bind(const TypedArray<GLTFCamera> &p_cameras);
+	TypedArray<Ref<GLTFCamera>> get_cameras_bind() const;
+	void set_cameras_bind(const TypedArray<Ref<GLTFCamera>> &p_cameras);
 
 	const Vector<Ref<GLTFLight>> &get_lights() const { return lights; }
 	void set_lights(const Vector<Ref<GLTFLight>> &p_lights) { lights = p_lights; }
-	TypedArray<GLTFLight> get_lights_bind() const;
-	void set_lights_bind(const TypedArray<GLTFLight> &p_lights);
+	TypedArray<Ref<GLTFLight>> get_lights_bind() const;
+	void set_lights_bind(const TypedArray<Ref<GLTFLight>> &p_lights);
 
 	const HashSet<String> &get_unique_names() const { return unique_names; }
 	void set_unique_names(const HashSet<String> &p_unique_names) { unique_names = p_unique_names; }
@@ -301,8 +301,8 @@ public:
 
 	const Vector<Ref<GLTFSkeleton>> &get_skeletons() const { return skeletons; }
 	void set_skeletons(const Vector<Ref<GLTFSkeleton>> &p_skeletons) { skeletons = p_skeletons; }
-	TypedArray<GLTFSkeleton> get_skeletons_bind() const;
-	void set_skeletons_bind(const TypedArray<GLTFSkeleton> &p_skeletons);
+	TypedArray<Ref<GLTFSkeleton>> get_skeletons_bind() const;
+	void set_skeletons_bind(const TypedArray<Ref<GLTFSkeleton>> &p_skeletons);
 
 	bool get_create_animations() const;
 	void set_create_animations(bool p_create_animations);
@@ -312,8 +312,8 @@ public:
 
 	const Vector<Ref<GLTFAnimation>> &get_animations() const { return animations; }
 	void set_animations(const Vector<Ref<GLTFAnimation>> &p_animations) { animations = p_animations; }
-	TypedArray<GLTFAnimation> get_animations_bind() const;
-	void set_animations_bind(const TypedArray<GLTFAnimation> &p_animations);
+	TypedArray<Ref<GLTFAnimation>> get_animations_bind() const;
+	void set_animations_bind(const TypedArray<Ref<GLTFAnimation>> &p_animations);
 
 	Node *get_scene_node(GLTFNodeIndex p_gltf_node_index) const;
 	GLTFNodeIndex get_node_index(Node *p_node) const;

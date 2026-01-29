@@ -365,7 +365,7 @@ bool OpenXRSpatialEntityExtension::on_event_polled(const XrEventDataBuffer &even
 ////////////////////////////////////////////////////////////////////////////
 // Spatial contexts
 
-Ref<OpenXRFutureResult> OpenXRSpatialEntityExtension::create_spatial_context(const TypedArray<OpenXRSpatialCapabilityConfigurationBaseHeader> &p_capability_configurations, Ref<OpenXRStructureBase> p_next, const Callable &p_user_callback) {
+Ref<OpenXRFutureResult> OpenXRSpatialEntityExtension::create_spatial_context(const TypedArray<Ref<OpenXRSpatialCapabilityConfigurationBaseHeader>> &p_capability_configurations, Ref<OpenXRStructureBase> p_next, const Callable &p_user_callback) {
 	if (!get_active()) {
 		return nullptr;
 	}
@@ -707,7 +707,7 @@ uint64_t OpenXRSpatialEntityExtension::_get_spatial_snapshot_handle(RID p_spatia
 	return (uint64_t)get_spatial_snapshot_handle(p_spatial_snapshot);
 }
 
-bool OpenXRSpatialEntityExtension::query_snapshot(RID p_spatial_snapshot, const TypedArray<OpenXRSpatialComponentData> &p_component_data, Ref<OpenXRStructureBase> p_next) {
+bool OpenXRSpatialEntityExtension::query_snapshot(RID p_spatial_snapshot, const TypedArray<Ref<OpenXRSpatialComponentData>> &p_component_data, Ref<OpenXRStructureBase> p_next) {
 	SpatialSnapshotData *snapshot_data = spatial_snapshot_owner.get_or_null(p_spatial_snapshot);
 	ERR_FAIL_NULL_V(snapshot_data, false);
 

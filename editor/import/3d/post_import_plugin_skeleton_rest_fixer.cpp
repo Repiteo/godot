@@ -164,7 +164,7 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 			// Fix animation by changing node transform.
 			bones_to_process = src_skeleton->get_parentless_bones();
 			{
-				TypedArray<Node> nodes = p_base_scene->find_children("*", "AnimationPlayer");
+				TypedArray<Node *> nodes = p_base_scene->find_children("*", "AnimationPlayer");
 				while (nodes.size()) {
 					AnimationPlayer *ap = Object::cast_to<AnimationPlayer>(nodes.pop_back());
 					List<StringName> anims;
@@ -232,7 +232,7 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 
 		// Complement Rotation track for compatibility between different rests.
 		{
-			TypedArray<Node> nodes = p_base_scene->find_children("*", "AnimationPlayer");
+			TypedArray<Node *> nodes = p_base_scene->find_children("*", "AnimationPlayer");
 			while (nodes.size()) {
 				AnimationPlayer *ap = Object::cast_to<AnimationPlayer>(nodes.pop_back());
 				List<StringName> anims;
@@ -404,7 +404,7 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 					Transform3D src_rest = src_skeleton->get_bone_rest(src_bone_idx);
 					src_skeleton->set_bone_rest(src_bone_idx, Transform3D(src_rest.basis, src_rest.origin + up_vector));
 
-					TypedArray<Node> nodes = p_base_scene->find_children("*", "AnimationPlayer");
+					TypedArray<Node *> nodes = p_base_scene->find_children("*", "AnimationPlayer");
 					while (nodes.size()) {
 						AnimationPlayer *ap = Object::cast_to<AnimationPlayer>(nodes.pop_back());
 						List<StringName> anims;
@@ -575,7 +575,7 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 				// Mapped skeleton is animated by %GenerarSkeleton:RenamedBoneName.
 				// Unmapped skeleton is animated by %OriginalSkeleton:OriginalBoneName.
 				if (is_using_modifier) {
-					TypedArray<Node> nodes = p_base_scene->find_children("*", "AnimationPlayer");
+					TypedArray<Node *> nodes = p_base_scene->find_children("*", "AnimationPlayer");
 					String general_skeleton_pathname = UNIQUE_NODE_PREFIX + profile_skeleton->get_name();
 					while (nodes.size()) {
 						AnimationPlayer *ap = Object::cast_to<AnimationPlayer>(nodes.pop_back());
@@ -711,7 +711,7 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 			// Fix animation by changing rest.
 			bool warning_detected = false;
 			{
-				TypedArray<Node> nodes = p_base_scene->find_children("*", "AnimationPlayer");
+				TypedArray<Node *> nodes = p_base_scene->find_children("*", "AnimationPlayer");
 				while (nodes.size()) {
 					AnimationPlayer *ap = Object::cast_to<AnimationPlayer>(nodes.pop_back());
 					ERR_CONTINUE(!ap);
@@ -843,7 +843,7 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 
 		// Scale position tracks by motion scale if normalize position tracks.
 		if (bool(p_options["retarget/rest_fixer/normalize_position_tracks"])) {
-			TypedArray<Node> nodes = p_base_scene->find_children("*", "AnimationPlayer");
+			TypedArray<Node *> nodes = p_base_scene->find_children("*", "AnimationPlayer");
 			while (nodes.size()) {
 				AnimationPlayer *ap = Object::cast_to<AnimationPlayer>(nodes.pop_back());
 				List<StringName> anims;
@@ -886,7 +886,7 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 			// Fix skin.
 			{
 				HashSet<Ref<Skin>> mutated_skins;
-				TypedArray<Node> nodes = p_base_scene->find_children("*", "ImporterMeshInstance3D");
+				TypedArray<Node *> nodes = p_base_scene->find_children("*", "ImporterMeshInstance3D");
 				while (nodes.size()) {
 					ImporterMeshInstance3D *mi = Object::cast_to<ImporterMeshInstance3D>(nodes.pop_back());
 					ERR_CONTINUE(!mi);
@@ -933,7 +933,7 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 					Transform3D adjust_transform = src_skeleton->get_bone_global_rest(bone_idx).affine_inverse() * silhouette_diff[bone_idx].affine_inverse() * pre_silhouette_skeleton_global_rest[bone_idx];
 					adjust_transform.scale(global_transform.basis.get_scale_global());
 
-					TypedArray<Node> child_nodes = attachment->get_children();
+					TypedArray<Node *> child_nodes = attachment->get_children();
 					while (child_nodes.size()) {
 						Node3D *child = Object::cast_to<Node3D>(child_nodes.pop_back());
 						if (child == nullptr) {

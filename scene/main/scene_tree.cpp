@@ -1526,9 +1526,9 @@ int64_t SceneTree::get_frame() const {
 	return current_frame;
 }
 
-TypedArray<Node> SceneTree::_get_nodes_in_group(const StringName &p_group) {
+TypedArray<Node *> SceneTree::_get_nodes_in_group(const StringName &p_group) {
 	_THREAD_SAFE_METHOD_
-	TypedArray<Node> ret;
+	TypedArray<Node *> ret;
 	HashMap<StringName, Group>::Iterator E = group_map.find(p_group);
 	if (!E) {
 		return ret;
@@ -1769,9 +1769,9 @@ void SceneTree::remove_tween(const Ref<Tween> &p_tween) {
 	}
 }
 
-TypedArray<Tween> SceneTree::get_processed_tweens() {
+TypedArray<Ref<Tween>> SceneTree::get_processed_tweens() {
 	_THREAD_SAFE_METHOD_
-	TypedArray<Tween> ret;
+	TypedArray<Ref<Tween>> ret;
 	ret.resize(tweens.size());
 
 	int i = 0;

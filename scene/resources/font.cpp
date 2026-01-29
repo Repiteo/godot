@@ -108,7 +108,7 @@ void Font::_update_rids_fb(const Font *p_f, int p_depth) const {
 		if (rid.is_valid()) {
 			rids.push_back(rid);
 		}
-		const TypedArray<Font> &_fallbacks = p_f->get_fallbacks();
+		const TypedArray<Ref<Font>> &_fallbacks = p_f->get_fallbacks();
 		for (int i = 0; i < _fallbacks.size(); i++) {
 			Ref<Font> fb_font = _fallbacks[i];
 			_update_rids_fb(fb_font.ptr(), p_depth + 1);
@@ -173,7 +173,7 @@ void Font::reset_state() {
 }
 
 // Fallbacks.
-void Font::set_fallbacks(const TypedArray<Font> &p_fallbacks) {
+void Font::set_fallbacks(const TypedArray<Ref<Font>> &p_fallbacks) {
 	for (int i = 0; i < p_fallbacks.size(); i++) {
 		const Ref<Font> &f = p_fallbacks[i];
 		ERR_FAIL_COND_MSG(_is_cyclic(f, 0), "Cyclic font fallback.");
@@ -194,7 +194,7 @@ void Font::set_fallbacks(const TypedArray<Font> &p_fallbacks) {
 	_invalidate_rids();
 }
 
-TypedArray<Font> Font::get_fallbacks() const {
+TypedArray<Ref<Font>> Font::get_fallbacks() const {
 	return fallbacks;
 }
 
@@ -2933,7 +2933,7 @@ void FontVariation::_update_rids() const {
 			rids.push_back(rid);
 		}
 
-		const TypedArray<Font> &base_fallbacks = f->get_fallbacks();
+		const TypedArray<Ref<Font>> &base_fallbacks = f->get_fallbacks();
 		for (int i = 0; i < base_fallbacks.size(); i++) {
 			Ref<Font> fb_font = base_fallbacks[i];
 			_update_rids_fb(fb_font.ptr(), 0);
@@ -3223,7 +3223,7 @@ void SystemFont::_update_rids() const {
 			rids.push_back(rid);
 		}
 
-		const TypedArray<Font> &base_fallbacks = f->get_fallbacks();
+		const TypedArray<Ref<Font>> &base_fallbacks = f->get_fallbacks();
 		for (int i = 0; i < base_fallbacks.size(); i++) {
 			Ref<Font> fb_font = base_fallbacks[i];
 			_update_rids_fb(fb_font.ptr(), 0);

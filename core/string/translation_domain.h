@@ -74,8 +74,8 @@ public:
 
 public:
 	// These two methods are public for easier TranslationServer bindings.
-	TypedArray<Translation> get_translations_bind() const;
-	TypedArray<Translation> find_translations_bind(const String &p_locale, bool p_exact) const;
+	TypedArray<Ref<Translation>> get_translations_bind() const;
+	TypedArray<Ref<Translation>> find_translations_bind(const String &p_locale, bool p_exact) const;
 
 #ifndef DISABLE_DEPRECATED
 	Ref<Translation> get_translation_object(const String &p_locale) const;

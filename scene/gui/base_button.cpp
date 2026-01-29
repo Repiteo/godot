@@ -605,8 +605,8 @@ void ButtonGroup::get_buttons(List<BaseButton *> *r_buttons) {
 	}
 }
 
-TypedArray<BaseButton> ButtonGroup::_get_buttons() {
-	TypedArray<BaseButton> btns;
+TypedArray<BaseButton *> ButtonGroup::_get_buttons() {
+	TypedArray<BaseButton *> btns;
 	for (const BaseButton *E : buttons) {
 		btns.push_back(E);
 	}

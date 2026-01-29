@@ -121,10 +121,10 @@ void Texture2D::_bind_methods() {
 Texture2D::Texture2D() {
 }
 
-TypedArray<Image> Texture3D::_get_datai() const {
+TypedArray<Ref<Image>> Texture3D::_get_datai() const {
 	Vector<Ref<Image>> data = get_data();
 
-	TypedArray<Image> ret;
+	TypedArray<Ref<Image>> ret;
 	ret.resize(data.size());
 	for (int i = 0; i < data.size(); i++) {
 		ret[i] = data[i];
@@ -163,7 +163,7 @@ bool Texture3D::has_mipmaps() const {
 }
 
 Vector<Ref<Image>> Texture3D::get_data() const {
-	TypedArray<Image> ret;
+	TypedArray<Ref<Image>> ret;
 	GDVIRTUAL_CALL(_get_data, ret);
 	Vector<Ref<Image>> data;
 	data.resize(ret.size());

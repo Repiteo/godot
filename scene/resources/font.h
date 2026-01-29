@@ -91,7 +91,7 @@ protected:
 
 	// Fallbacks.
 	static constexpr int MAX_FALLBACK_DEPTH = 64;
-	TypedArray<Font> fallbacks;
+	TypedArray<Ref<Font>> fallbacks;
 
 	static void _bind_methods();
 
@@ -119,8 +119,8 @@ public:
 	static constexpr int DEFAULT_FONT_SIZE = 16;
 
 	// Fallbacks.
-	virtual void set_fallbacks(const TypedArray<Font> &p_fallbacks);
-	virtual TypedArray<Font> get_fallbacks() const;
+	virtual void set_fallbacks(const TypedArray<Ref<Font>> &p_fallbacks);
+	virtual TypedArray<Ref<Font>> get_fallbacks() const;
 
 	// Output.
 	virtual RID find_variation(const Dictionary &p_variation_coordinates, int p_face_index = 0, float p_strength = 0.0, Transform2D p_transform = Transform2D(), int p_spacing_top = 0, int p_spacing_bottom = 0, int p_spacing_space = 0, int p_spacing_glyph = 0, float p_baseline_offset = 0.0) const { return RID(); }

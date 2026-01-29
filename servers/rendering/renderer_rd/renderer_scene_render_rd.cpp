@@ -1542,9 +1542,9 @@ float RendererSceneRenderRD::screen_space_roughness_limiter_get_limit() const {
 	return screen_space_roughness_limiter_limit;
 }
 
-TypedArray<Image> RendererSceneRenderRD::bake_render_uv2(RID p_base, const TypedArray<RID> &p_material_overrides, const Size2i &p_image_size) {
-	ERR_FAIL_COND_V_MSG(p_image_size.width <= 0, TypedArray<Image>(), "Image width must be greater than 0.");
-	ERR_FAIL_COND_V_MSG(p_image_size.height <= 0, TypedArray<Image>(), "Image height must be greater than 0.");
+TypedArray<Ref<Image>> RendererSceneRenderRD::bake_render_uv2(RID p_base, const TypedArray<RID> &p_material_overrides, const Size2i &p_image_size) {
+	ERR_FAIL_COND_V_MSG(p_image_size.width <= 0, TypedArray<Ref<Image>>(), "Image width must be greater than 0.");
+	ERR_FAIL_COND_V_MSG(p_image_size.height <= 0, TypedArray<Ref<Image>>(), "Image height must be greater than 0.");
 	RD::TextureFormat tf;
 	tf.format = RD::DATA_FORMAT_R8G8B8A8_UNORM;
 	tf.width = p_image_size.width; // Always 64x64
@@ -1578,7 +1578,7 @@ TypedArray<Image> RendererSceneRenderRD::bake_render_uv2(RID p_base, const Typed
 	//RID sampled_light;
 
 	RenderGeometryInstance *gi_inst = geometry_instance_create(p_base);
-	ERR_FAIL_NULL_V(gi_inst, TypedArray<Image>());
+	ERR_FAIL_NULL_V(gi_inst, TypedArray<Ref<Image>>());
 
 	uint32_t sc = RSG::mesh_storage->mesh_get_surface_count(p_base);
 	Vector<RID> materials;
@@ -1600,7 +1600,7 @@ TypedArray<Image> RendererSceneRenderRD::bake_render_uv2(RID p_base, const Typed
 
 	geometry_instance_free(gi_inst);
 
-	TypedArray<Image> ret;
+	TypedArray<Ref<Image>> ret;
 
 	{
 		PackedByteArray data = RD::get_singleton()->texture_get_data(albedo_alpha_tex, 0);

@@ -212,11 +212,11 @@ void GLTFState::set_use_named_skin_binds(bool p_use_named_skin_binds) {
 	use_named_skin_binds = p_use_named_skin_binds;
 }
 
-TypedArray<GLTFNode> GLTFState::get_nodes_bind() const {
+TypedArray<Ref<GLTFNode>> GLTFState::get_nodes_bind() const {
 	return GLTFTemplateConvert::to_array(nodes);
 }
 
-void GLTFState::set_nodes_bind(const TypedArray<GLTFNode> &p_nodes) {
+void GLTFState::set_nodes_bind(const TypedArray<Ref<GLTFNode>> &p_nodes) {
 	GLTFTemplateConvert::set_from_array(nodes, p_nodes);
 }
 
@@ -228,35 +228,35 @@ void GLTFState::set_buffers_bind(const TypedArray<PackedByteArray> &p_buffers) {
 	GLTFTemplateConvert::set_from_array(buffers, p_buffers);
 }
 
-TypedArray<GLTFBufferView> GLTFState::get_buffer_views_bind() const {
+TypedArray<Ref<GLTFBufferView>> GLTFState::get_buffer_views_bind() const {
 	return GLTFTemplateConvert::to_array(buffer_views);
 }
 
-void GLTFState::set_buffer_views_bind(const TypedArray<GLTFBufferView> &p_buffer_views) {
+void GLTFState::set_buffer_views_bind(const TypedArray<Ref<GLTFBufferView>> &p_buffer_views) {
 	GLTFTemplateConvert::set_from_array(buffer_views, p_buffer_views);
 }
 
-TypedArray<GLTFAccessor> GLTFState::get_accessors_bind() const {
+TypedArray<Ref<GLTFAccessor>> GLTFState::get_accessors_bind() const {
 	return GLTFTemplateConvert::to_array(accessors);
 }
 
-void GLTFState::set_accessors_bind(const TypedArray<GLTFAccessor> &p_accessors) {
+void GLTFState::set_accessors_bind(const TypedArray<Ref<GLTFAccessor>> &p_accessors) {
 	GLTFTemplateConvert::set_from_array(accessors, p_accessors);
 }
 
-TypedArray<GLTFMesh> GLTFState::get_meshes_bind() const {
+TypedArray<Ref<GLTFMesh>> GLTFState::get_meshes_bind() const {
 	return GLTFTemplateConvert::to_array(meshes);
 }
 
-void GLTFState::set_meshes_bind(const TypedArray<GLTFMesh> &p_meshes) {
+void GLTFState::set_meshes_bind(const TypedArray<Ref<GLTFMesh>> &p_meshes) {
 	GLTFTemplateConvert::set_from_array(meshes, p_meshes);
 }
 
-TypedArray<Material> GLTFState::get_materials_bind() const {
+TypedArray<Ref<Material>> GLTFState::get_materials_bind() const {
 	return GLTFTemplateConvert::to_array(materials);
 }
 
-void GLTFState::set_materials_bind(const TypedArray<Material> &p_materials) {
+void GLTFState::set_materials_bind(const TypedArray<Ref<Material>> &p_materials) {
 	GLTFTemplateConvert::set_from_array(materials, p_materials);
 }
 
@@ -276,51 +276,51 @@ void GLTFState::set_root_nodes(const PackedInt32Array &p_root_nodes) {
 	root_nodes = PackedInt32Array(p_root_nodes);
 }
 
-TypedArray<GLTFTexture> GLTFState::get_textures_bind() const {
+TypedArray<Ref<GLTFTexture>> GLTFState::get_textures_bind() const {
 	return GLTFTemplateConvert::to_array(textures);
 }
 
-void GLTFState::set_textures_bind(const TypedArray<GLTFTexture> &p_textures) {
+void GLTFState::set_textures_bind(const TypedArray<Ref<GLTFTexture>> &p_textures) {
 	GLTFTemplateConvert::set_from_array(textures, p_textures);
 }
 
-TypedArray<GLTFTextureSampler> GLTFState::get_texture_samplers_bind() const {
+TypedArray<Ref<GLTFTextureSampler>> GLTFState::get_texture_samplers_bind() const {
 	return GLTFTemplateConvert::to_array(texture_samplers);
 }
 
-void GLTFState::set_texture_samplers_bind(const TypedArray<GLTFTextureSampler> &p_texture_samplers) {
+void GLTFState::set_texture_samplers_bind(const TypedArray<Ref<GLTFTextureSampler>> &p_texture_samplers) {
 	GLTFTemplateConvert::set_from_array(texture_samplers, p_texture_samplers);
 }
 
-TypedArray<Texture2D> GLTFState::get_images_bind() const {
+TypedArray<Ref<Texture2D>> GLTFState::get_images_bind() const {
 	return GLTFTemplateConvert::to_array(images);
 }
 
-void GLTFState::set_images_bind(const TypedArray<Texture2D> &p_images) {
+void GLTFState::set_images_bind(const TypedArray<Ref<Texture2D>> &p_images) {
 	GLTFTemplateConvert::set_from_array(images, p_images);
 }
 
-TypedArray<GLTFSkin> GLTFState::get_skins_bind() const {
+TypedArray<Ref<GLTFSkin>> GLTFState::get_skins_bind() const {
 	return GLTFTemplateConvert::to_array(skins);
 }
 
-void GLTFState::set_skins_bind(const TypedArray<GLTFSkin> &p_skins) {
+void GLTFState::set_skins_bind(const TypedArray<Ref<GLTFSkin>> &p_skins) {
 	GLTFTemplateConvert::set_from_array(skins, p_skins);
 }
 
-TypedArray<GLTFCamera> GLTFState::get_cameras_bind() const {
+TypedArray<Ref<GLTFCamera>> GLTFState::get_cameras_bind() const {
 	return GLTFTemplateConvert::to_array(cameras);
 }
 
-void GLTFState::set_cameras_bind(const TypedArray<GLTFCamera> &p_cameras) {
+void GLTFState::set_cameras_bind(const TypedArray<Ref<GLTFCamera>> &p_cameras) {
 	GLTFTemplateConvert::set_from_array(cameras, p_cameras);
 }
 
-TypedArray<GLTFLight> GLTFState::get_lights_bind() const {
+TypedArray<Ref<GLTFLight>> GLTFState::get_lights_bind() const {
 	return GLTFTemplateConvert::to_array(lights);
 }
 
-void GLTFState::set_lights_bind(const TypedArray<GLTFLight> &p_lights) {
+void GLTFState::set_lights_bind(const TypedArray<Ref<GLTFLight>> &p_lights) {
 	GLTFTemplateConvert::set_from_array(lights, p_lights);
 }
 
@@ -340,11 +340,11 @@ void GLTFState::set_unique_animation_names_bind(const TypedArray<String> &p_uniq
 	GLTFTemplateConvert::set_from_array(unique_animation_names, p_unique_animation_names);
 }
 
-TypedArray<GLTFSkeleton> GLTFState::get_skeletons_bind() const {
+TypedArray<Ref<GLTFSkeleton>> GLTFState::get_skeletons_bind() const {
 	return GLTFTemplateConvert::to_array(skeletons);
 }
 
-void GLTFState::set_skeletons_bind(const TypedArray<GLTFSkeleton> &p_skeletons) {
+void GLTFState::set_skeletons_bind(const TypedArray<Ref<GLTFSkeleton>> &p_skeletons) {
 	GLTFTemplateConvert::set_from_array(skeletons, p_skeletons);
 }
 
@@ -364,11 +364,11 @@ void GLTFState::set_import_as_skeleton_bones(bool p_import_as_skeleton_bones) {
 	import_as_skeleton_bones = p_import_as_skeleton_bones;
 }
 
-TypedArray<GLTFAnimation> GLTFState::get_animations_bind() const {
+TypedArray<Ref<GLTFAnimation>> GLTFState::get_animations_bind() const {
 	return GLTFTemplateConvert::to_array(animations);
 }
 
-void GLTFState::set_animations_bind(const TypedArray<GLTFAnimation> &p_animations) {
+void GLTFState::set_animations_bind(const TypedArray<Ref<GLTFAnimation>> &p_animations) {
 	GLTFTemplateConvert::set_from_array(animations, p_animations);
 }
 

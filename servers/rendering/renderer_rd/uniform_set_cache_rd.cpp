@@ -36,7 +36,7 @@ void UniformSetCacheRD::_bind_methods() {
 	ClassDB::bind_static_method("UniformSetCacheRD", D_METHOD("get_cache", "shader", "set", "uniforms"), &UniformSetCacheRD::get_cache_array);
 }
 
-RID UniformSetCacheRD::get_cache_array(RID p_shader, uint32_t p_set, const TypedArray<RDUniform> &p_uniforms) {
+RID UniformSetCacheRD::get_cache_array(RID p_shader, uint32_t p_set, const TypedArray<Ref<RDUniform>> &p_uniforms) {
 	thread_local LocalVector<RD::Uniform> uniforms;
 	uniforms.clear();
 

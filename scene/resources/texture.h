@@ -113,14 +113,14 @@ class Texture3D : public Texture {
 protected:
 	static void _bind_methods();
 
-	TypedArray<Image> _get_datai() const;
+	TypedArray<Ref<Image>> _get_datai() const;
 
 	GDVIRTUAL0RC_REQUIRED(Image::Format, _get_format)
 	GDVIRTUAL0RC_REQUIRED(int, _get_width)
 	GDVIRTUAL0RC_REQUIRED(int, _get_height)
 	GDVIRTUAL0RC_REQUIRED(int, _get_depth)
 	GDVIRTUAL0RC_REQUIRED(bool, _has_mipmaps)
-	GDVIRTUAL0RC_REQUIRED(TypedArray<Image>, _get_data)
+	GDVIRTUAL0RC_REQUIRED(TypedArray<Ref<Image>>, _get_data)
 public:
 	virtual Image::Format get_format() const;
 	virtual int get_width() const;

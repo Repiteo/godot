@@ -1852,11 +1852,11 @@ Node *Node::get_child(int p_index, bool p_include_internal) const {
 	}
 }
 
-TypedArray<Node> Node::get_children(bool p_include_internal) const {
-	ERR_THREAD_GUARD_V(TypedArray<Node>());
+TypedArray<Node *> Node::get_children(bool p_include_internal) const {
+	ERR_THREAD_GUARD_V(TypedArray<Node *>());
 	_update_children_cache();
 
-	TypedArray<Node> children;
+	TypedArray<Node *> children;
 
 	if (p_include_internal) {
 		children.resize(data.children_cache.size());
@@ -2003,9 +2003,9 @@ Node *Node::find_child(const String &p_pattern, bool p_recursive, bool p_owned) 
 // Finds child nodes based on their name using pattern matching, or class name,
 // or both (either pattern or type can be left empty).
 // Can be recursive or not, and limited to owned nodes.
-TypedArray<Node> Node::find_children(const String &p_pattern, const String &p_type, bool p_recursive, bool p_owned) const {
-	ERR_THREAD_GUARD_V(TypedArray<Node>());
-	TypedArray<Node> ret;
+TypedArray<Node *> Node::find_children(const String &p_pattern, const String &p_type, bool p_recursive, bool p_owned) const {
+	ERR_THREAD_GUARD_V(TypedArray<Node *>());
+	TypedArray<Node *> ret;
 	ERR_FAIL_COND_V(p_pattern.is_empty() && p_type.is_empty(), ret);
 	_update_children_cache();
 	Node *const *cptr = data.children_cache.ptr();

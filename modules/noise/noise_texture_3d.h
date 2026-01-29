@@ -62,13 +62,13 @@ private:
 
 	Image::Format format = Image::FORMAT_L8;
 
-	void _thread_done(const TypedArray<Image> &p_data);
+	void _thread_done(const TypedArray<Ref<Image>> &p_data);
 	static void _thread_function(void *p_ud);
 
 	void _queue_update();
-	TypedArray<Image> _generate_texture();
+	TypedArray<Ref<Image>> _generate_texture();
 	void _update_texture();
-	void _set_texture_data(const TypedArray<Image> &p_data);
+	void _set_texture_data(const TypedArray<Ref<Image>> &p_data);
 
 	Ref<Image> _modulate_with_gradient(Ref<Image> p_image, Ref<Gradient> p_gradient);
 

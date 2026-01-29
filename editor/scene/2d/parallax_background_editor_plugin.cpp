@@ -64,7 +64,7 @@ void ParallaxBackgroundEditorPlugin::_menu_callback(int p_idx) {
 
 void ParallaxBackgroundEditorPlugin::convert_to_parallax2d() {
 	ParallaxBackground *parallax_bg = parallax_background;
-	TypedArray<Node> children = parallax_bg->get_children();
+	TypedArray<Node *> children = parallax_bg->get_children();
 
 	EditorUndoRedoManager *ur = EditorUndoRedoManager::get_singleton();
 	ur->create_action(TTR("Convert to Parallax2D"), UndoRedo::MERGE_DISABLE, parallax_bg);

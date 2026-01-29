@@ -601,10 +601,10 @@ Vector<SoftBody3D::PinnedPoint> SoftBody3D::get_pinned_points_indices() {
 	return pinned_points;
 }
 
-TypedArray<PhysicsBody3D> SoftBody3D::get_collision_exceptions() {
+TypedArray<PhysicsBody3D *> SoftBody3D::get_collision_exceptions() {
 	List<RID> exceptions;
 	PhysicsServer3D::get_singleton()->soft_body_get_collision_exceptions(physics_rid, &exceptions);
-	TypedArray<PhysicsBody3D> ret;
+	TypedArray<PhysicsBody3D *> ret;
 	for (const RID &body : exceptions) {
 		ObjectID instance_id = PhysicsServer3D::get_singleton()->body_get_object_instance_id(body);
 		Object *obj = ObjectDB::get_instance(instance_id);
