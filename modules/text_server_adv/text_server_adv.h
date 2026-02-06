@@ -42,8 +42,8 @@
 
 #include <godot_cpp/godot.hpp>
 
+#include <godot_cpp/core/ext_wrappers.gen.h>
 #include <godot_cpp/core/class_db.hpp>
-#include <godot_cpp/core/ext_wrappers.gen.inc>
 #include <godot_cpp/core/mutex_lock.hpp>
 
 #include <godot_cpp/variant/array.hpp>
@@ -81,7 +81,7 @@ using namespace godot;
 #elif defined(GODOT_MODULE)
 // Headers for building as built-in module.
 
-#include "core/extension/ext_wrappers.gen.inc"
+#include "core/extension/ext_wrappers.gen.h"
 #include "core/templates/hash_map.h"
 #include "core/templates/rid_owner.h"
 #include "core/templates/safe_refcount.h"
