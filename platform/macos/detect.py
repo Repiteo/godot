@@ -2,8 +2,14 @@ import os
 import sys
 from typing import TYPE_CHECKING
 
-from methods import detect_darwin_sdk_path, get_compiler_version, is_apple_clang, print_error, print_warning
-from platform_methods import detect_arch, detect_mvk, validate_arch
+from misc.utility.methods import (
+    detect_darwin_sdk_path,
+    get_compiler_version,
+    is_apple_clang,
+    print_error,
+    print_warning,
+)
+from misc.utility.platform_methods import detect_arch, detect_mvk, validate_arch
 
 if TYPE_CHECKING:
     from SCons.Script.SConscript import SConsEnvironment

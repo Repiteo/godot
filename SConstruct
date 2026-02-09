@@ -4,66 +4,21 @@ from misc.utility.scons_hints import *
 EnsureSConsVersion(4, 0)
 EnsurePythonVersion(3, 8)
 
-# System
 import glob
 import os
 import pickle
 import sys
 from collections import OrderedDict
-from importlib.util import module_from_spec, spec_from_file_location
-from types import ModuleType
 
 from SCons import __version__ as scons_raw_version
 from SCons.Builder import ListEmitter
 
-# Explicitly resolve the helper modules, this is done to avoid clash with
-# modules of the same name that might be randomly added (e.g. someone adding
-# an `editor.py` file at the root of the module creates a clash with the editor
-# folder when doing `import editor.template_builder`)
-
-
-def _helper_module(name, path):
-    spec = spec_from_file_location(name, path)
-    module = module_from_spec(spec)
-    spec.loader.exec_module(module)
-    sys.modules[name] = module
-    # Ensure the module's parents are in loaded to avoid loading the wrong parent
-    # when doing "import foo.bar" while only "foo.bar" as declared as helper module
-    child_module = module
-    parent_name = name
-    while True:
-        try:
-            parent_name, child_name = parent_name.rsplit(".", 1)
-        except ValueError:
-            break
-        try:
-            parent_module = sys.modules[parent_name]
-        except KeyError:
-            parent_module = ModuleType(parent_name)
-            sys.modules[parent_name] = parent_module
-        setattr(parent_module, child_name, child_module)
-
-
-_helper_module("gles3_builders", "gles3_builders.py")
-_helper_module("glsl_builders", "glsl_builders.py")
-_helper_module("methods", "methods.py")
-_helper_module("platform_methods", "platform_methods.py")
-_helper_module("version", "version.py")
-_helper_module("core.core_builders", "core/core_builders.py")
-_helper_module("main.main_builders", "main/main_builders.py")
-_helper_module("misc.utility.color", "misc/utility/color.py")
-
-# Local
-import gles3_builders
-import glsl_builders
-import methods
-import scu_builders
+import misc.utility.methods as methods
 from misc.utility.color import is_stderr_color, print_error, print_info, print_warning
-from platform_methods import architecture_aliases, architectures, compatibility_platform_aliases
-
-if ARGUMENTS.get("target", "editor") == "editor":
-    _helper_module("editor.editor_builders", "editor/editor_builders.py")
-    _helper_module("editor.template_builders", "editor/template_builders.py")
+from misc.utility.gles3_builders import build_gles3_headers
+from misc.utility.glsl_builders import build_raw_headers, build_rd_headers
+from misc.utility.platform_methods import architecture_aliases, architectures, compatibility_platform_aliases
+from misc.utility.scu_builders import generate_scu_files
 
 # Scan possible build platforms
 
@@ -687,7 +642,7 @@ if env["scu_build"]:
     if read_scu_limit != 0:
         max_includes_per_scu = read_scu_limit
 
-    methods.set_scu_folders(scu_builders.generate_scu_files(max_includes_per_scu))
+    methods.set_scu_folders(generate_scu_files(max_includes_per_scu))
 
 # Must happen after the flags' definition, as configure is when most flags
 # are actually handled to change compile options, etc.
@@ -1154,17 +1109,17 @@ env["SHOBJPREFIX"] = env["object_prefix"]
 
 GLSL_BUILDERS = {
     "RD_GLSL": env.Builder(
-        action=env.Run(glsl_builders.build_rd_headers),
+        action=env.Run(build_rd_headers),
         suffix="glsl.gen.h",
         src_suffix=".glsl",
     ),
     "GLSL_HEADER": env.Builder(
-        action=env.Run(glsl_builders.build_raw_headers),
+        action=env.Run(build_raw_headers),
         suffix="glsl.gen.h",
         src_suffix=".glsl",
     ),
     "GLES3_GLSL": env.Builder(
-        action=env.Run(gles3_builders.build_gles3_headers),
+        action=env.Run(build_gles3_headers),
         suffix="glsl.gen.h",
         src_suffix=".glsl",
     ),

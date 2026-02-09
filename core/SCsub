@@ -5,7 +5,7 @@ import os
 
 import core_builders
 
-import methods
+import misc.utility.methods as methods
 
 Import("env")
 

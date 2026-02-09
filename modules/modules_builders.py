@@ -2,7 +2,7 @@
 
 import os
 
-import methods
+import misc.utility.methods as methods
 
 
 def modules_enabled_builder(target, source, env):

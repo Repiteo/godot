@@ -6,8 +6,8 @@ import re
 import sys
 from pathlib import Path
 
-import methods
-from methods import print_error
+import misc.utility.methods as methods
+from misc.utility.methods import print_error
 
 # Sync with `misc/scripts/install_d3d12_sdk_windows.py` when updating Mesa.
 # Check for latest version: https://github.com/godotengine/godot-nir-static/releases/latest

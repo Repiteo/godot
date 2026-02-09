@@ -4,7 +4,7 @@ import shutil
 import subprocess
 import sys
 
-import methods
+import misc.utility.methods as methods
 
 # NOTE: The multiprocessing module is not compatible with SCons due to conflict on cPickle
 

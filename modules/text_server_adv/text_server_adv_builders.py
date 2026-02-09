@@ -1,6 +1,6 @@
 """Functions used to generate source files during build time"""
 
-import methods
+import misc.utility.methods as methods
 
 
 def make_icu_data(target, source, env):

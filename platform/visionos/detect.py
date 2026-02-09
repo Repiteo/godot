@@ -2,8 +2,8 @@ import os
 import sys
 from typing import TYPE_CHECKING
 
-from methods import detect_darwin_sdk_path, detect_darwin_toolchain_path, print_warning
-from platform_methods import validate_arch
+from misc.utility.methods import detect_darwin_sdk_path, detect_darwin_toolchain_path, print_warning
+from misc.utility.platform_methods import validate_arch
 
 if TYPE_CHECKING:
     from SCons.Script.SConscript import SConsEnvironment

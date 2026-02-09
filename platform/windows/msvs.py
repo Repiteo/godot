@@ -1,4 +1,4 @@
-import methods
+import misc.utility.methods as methods
 
 
 # Tuples with the name of the arch that will be used in VS, mapped to our internal arch names.

@@ -16,10 +16,10 @@ from pathlib import Path
 from typing import Generator, TextIO, cast
 
 from misc.utility.color import print_error, print_info, print_warning
-from platform_methods import detect_arch
+from misc.utility.platform_methods import detect_arch
 
 # Get the "Godot" folder name ahead of time
-base_folder = Path(__file__).resolve().parent
+base_folder = Path(__file__).resolve().parent.parent.parent
 
 compiler_version_cache = None
 

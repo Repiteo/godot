@@ -1,6 +1,6 @@
 """Functions used to generate source files during build time"""
 
-import methods
+import misc.utility.methods as methods
 
 
 def profiler_gen_builder(target, source, env):

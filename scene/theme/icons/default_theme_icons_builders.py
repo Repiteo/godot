@@ -2,7 +2,7 @@
 
 import os
 
-import methods
+import misc.utility.methods as methods
 
 
 # See also `editor/icons/editor_icons_builders.py`.

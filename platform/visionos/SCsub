@@ -3,7 +3,7 @@ from misc.utility.scons_hints import *
 
 from platform_visionos_builders import generate_bundle
 
-from platform_methods import combine_libs_apple_embedded
+from misc.utility.platform_methods import combine_libs_apple_embedded
 
 Import("env")
 

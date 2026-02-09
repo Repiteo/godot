@@ -3,7 +3,7 @@ import os
 
 from SCons.Util import WhereIs
 
-from platform_methods import get_build_version
+from misc.utility.platform_methods import get_build_version
 
 
 def run_closure_compiler(target, source, env, for_signature):

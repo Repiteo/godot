@@ -8,7 +8,7 @@ from pathlib import Path
 
 import platform_windows_builders
 
-from methods import redirect_emitter
+from misc.utility.methods import redirect_emitter
 
 sources = []
 

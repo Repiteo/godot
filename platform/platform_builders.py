@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-import methods
+import misc.utility.methods as methods
 
 
 def export_icon_builder(target, source, env):

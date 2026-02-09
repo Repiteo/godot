@@ -2,7 +2,7 @@
 
 import os.path
 
-from methods import generated_wrapper, print_error, to_raw_cstring
+from misc.utility.methods import generated_wrapper, print_error, to_raw_cstring
 
 
 class RDHeaderStruct:

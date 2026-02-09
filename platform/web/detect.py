@@ -15,8 +15,8 @@ from emscripten_helpers import (
 )
 from SCons.Util import WhereIs
 
-from methods import get_compiler_version, print_error, print_info, print_warning
-from platform_methods import validate_arch
+from misc.utility.methods import get_compiler_version, print_error, print_info, print_warning
+from misc.utility.platform_methods import validate_arch
 
 if TYPE_CHECKING:
     from SCons.Script.SConscript import SConsEnvironment

@@ -2,7 +2,7 @@
 
 from collections import OrderedDict
 
-import methods
+import misc.utility.methods as methods
 
 
 def make_default_controller_mappings(target, source, env):

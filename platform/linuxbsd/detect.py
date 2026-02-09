@@ -3,8 +3,8 @@ import platform
 import sys
 from typing import TYPE_CHECKING
 
-from methods import get_compiler_version, print_error, print_info, print_warning, using_gcc
-from platform_methods import detect_arch, validate_arch
+from misc.utility.methods import get_compiler_version, print_error, print_info, print_warning, using_gcc
+from misc.utility.platform_methods import detect_arch, validate_arch
 
 if TYPE_CHECKING:
     from SCons.Script.SConscript import SConsEnvironment

@@ -268,7 +268,7 @@ def generate_sdk_package_versions():
     root_path = dirname(dirname(dirname(script_path)))
 
     sys.path.insert(0, root_path)
-    from methods import get_version_info
+    from misc.utility.methods import get_version_info
 
     version_info = get_version_info("")
     sys.path.remove(root_path)

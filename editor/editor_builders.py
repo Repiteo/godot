@@ -6,7 +6,7 @@ import subprocess
 import tempfile
 import uuid
 
-import methods
+import misc.utility.methods as methods
 
 
 def doc_data_class_path_builder(target, source, env):

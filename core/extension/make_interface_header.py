@@ -2,7 +2,7 @@ import difflib
 import json
 from collections import OrderedDict
 
-import methods
+import misc.utility.methods as methods
 
 BASE_TYPES = [
     "void",

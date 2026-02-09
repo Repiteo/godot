@@ -5,7 +5,7 @@ import math
 import os
 from pathlib import Path
 
-from methods import print_error
+from misc.utility.methods import print_error
 
 base_folder_path = str(Path(__file__).parent) + "/"
 base_folder_only = os.path.basename(os.path.normpath(base_folder_path))

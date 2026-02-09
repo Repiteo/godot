@@ -3,7 +3,7 @@ from misc.utility.scons_hints import *
 
 from SCons.Script import Glob
 
-from platform_methods import setup_swift_builder
+from misc.utility.platform_methods import setup_swift_builder
 
 Import("env")
 

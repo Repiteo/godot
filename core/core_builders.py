@@ -3,7 +3,7 @@
 from collections import OrderedDict
 from io import TextIOWrapper
 
-import methods
+import misc.utility.methods as methods
 
 
 # Generate disabled classes

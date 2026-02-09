@@ -11,8 +11,8 @@ from typing import Any, Callable
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../"))
 
-from gles3_builders import build_gles3_header
-from glsl_builders import build_raw_header, build_rd_header
+from misc.utility.gles3_builders import build_gles3_header
+from misc.utility.glsl_builders import build_raw_header, build_rd_header
 
 FUNC_PATH_KWARGS: list[tuple[Callable[..., None], str, dict[str, Any]]] = [
     (

@@ -6,7 +6,7 @@ import sys
 
 import platform_android_builders
 
-from methods import print_warning
+from misc.utility.methods import print_warning
 
 Import("env")
 

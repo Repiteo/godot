@@ -2,7 +2,7 @@
 
 import os
 
-import methods
+import misc.utility.methods as methods
 
 
 # See also `scene/theme/icons/default_theme_icons_builders.py`.
