@@ -32,10 +32,6 @@
 
 TEST_FORCE_LINK(test_navigation_region_2d)
 
-#include "modules/modules_enabled.gen.h" // For navigation 2D.
-
-#ifdef MODULE_NAVIGATION_2D_ENABLED
-
 #include "scene/2d/navigation/navigation_region_2d.h"
 #include "scene/main/window.h"
 
@@ -50,5 +46,3 @@ TEST_SUITE("[Navigation2D]") {
 }
 
 } // namespace TestNavigationRegion2D
-
-#endif // MODULE_NAVIGATION_2D_ENABLED

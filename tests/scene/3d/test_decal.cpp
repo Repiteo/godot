@@ -32,8 +32,6 @@
 
 TEST_FORCE_LINK(test_decal)
 
-#ifndef _3D_DISABLED
-
 #include "scene/3d/decal.h"
 
 namespace TestDecal {
@@ -134,5 +132,3 @@ TEST_CASE("[SceneTree][Decal] Getters/Setters") {
 }
 
 } // namespace TestDecal
-
-#endif // _3D_DISABLED

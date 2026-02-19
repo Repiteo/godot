@@ -32,8 +32,6 @@
 
 TEST_FORCE_LINK(test_skeleton_3d)
 
-#ifndef _3D_DISABLED
-
 #include "scene/3d/skeleton_3d.h"
 
 namespace TestSkeleton3D {
@@ -76,5 +74,3 @@ TEST_CASE("[Skeleton3D] Test per-bone meta") {
 }
 
 } // namespace TestSkeleton3D
-
-#endif // _3D_DISABLED

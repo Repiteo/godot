@@ -37,6 +37,18 @@
 #include "core/object/message_queue.h"
 #include "core/variant/variant.h"
 
+#if defined(_MSC_VER) && !defined(DOCTEST_THREAD_LOCAL)
+// NOTE: We must disable the THREAD_LOCAL entirely in doctest to prevent crashes on debugging.
+//  Since we link with /MT, thread_local is always expired when the header is used, so the
+//  debugger crashes the engine and it causes weird errors.
+// See: https://github.com/onqtam/doctest/issues/401
+#define DOCTEST_THREAD_LOCAL
+#endif
+
+#if !__cpp_exceptions && !__EXCEPTIONS && !defined(DOCTEST_CONFIG_NO_EXCEPTIONS_BUT_WITH_ALL_ASSERTS)
+#define DOCTEST_CONFIG_NO_EXCEPTIONS_BUT_WITH_ALL_ASSERTS
+#endif
+
 // See documentation for doctest at:
 // https://github.com/onqtam/doctest/blob/master/doc/markdown/readme.md#reference
 #include "thirdparty/doctest/doctest.h"

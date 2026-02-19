@@ -32,10 +32,6 @@
 
 TEST_FORCE_LINK(test_navigation_agent_2d)
 
-#include "modules/modules_enabled.gen.h" // For navigation 2D.
-
-#ifdef MODULE_NAVIGATION_2D_ENABLED
-
 #include "scene/2d/navigation/navigation_agent_2d.h"
 #include "scene/2d/node_2d.h"
 #include "scene/main/window.h"
@@ -71,5 +67,3 @@ TEST_SUITE("[Navigation2D]") {
 }
 
 } // namespace TestNavigationAgent2D
-
-#endif // MODULE_NAVIGATION_2D_ENABLED

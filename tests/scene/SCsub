@@ -1,0 +1,14 @@
+#!/usr/bin/env python
+from misc.utility.scons_hints import *
+
+Import("env")
+
+env.add_source_files(env.force_link_obj, "*.cpp")
+
+env.SConscript("2d/SCsub")
+if not env["disable_3d"]:
+    env.SConscript("3d/SCsub")
+env.SConscript("animation/SCsub")
+env.SConscript("gui/SCsub")
+env.SConscript("main/SCsub")
+env.SConscript("resources/SCsub")

@@ -390,24 +390,32 @@ def generate_scu_files(max_includes_per_scu):
     process_folder(["servers/navigation_3d"])
     process_folder(["servers/xr"])
 
-    # NOTE: Tests previously compiled as one large unit. We replicate this behavior in SCU builds.
-    process_folder([
-        "tests",
-        "/core",
-        "/core/config",
-        "/core/input",
-        "/core/io",
-        "/core/math",
-        "/core/object",
-        "/core/os",
-        "/core/string",
-        "/core/templates",
-        "/core/threads",
-        "/core/variant",
-        "/scene",
-        "/servers",
-        "/servers/rendering",
-    ])
+    process_folder(["tests"])
+    process_folder(["tests/core"])
+    process_folder(["tests/core/config"])
+    process_folder(["tests/core/crypto"])
+    process_folder(["tests/core/input"])
+    process_folder(["tests/core/io"])
+    process_folder(["tests/core/math"])
+    process_folder(["tests/core/object"])
+    process_folder(["tests/core/os"])
+    process_folder(["tests/core/string"])
+    process_folder(["tests/core/templates"])
+    process_folder(["tests/core/variant"])
+    process_folder(["tests/scene/2d"])
+    process_folder(["tests/scene/2d/navigation"])
+    process_folder(["tests/scene/3d"])
+    process_folder(["tests/scene/3d/navigation"])
+    process_folder(["tests/scene/animation"])
+    process_folder(["tests/scene/gui"])
+    process_folder(["tests/scene/main"])
+    process_folder(["tests/scene/resources"])
+    process_folder(["tests/scene/resources/3d"])
+    process_folder(["tests/servers"])
+    process_folder(["tests/servers/navigation_2d"])
+    process_folder(["tests/servers/navigation_3d"])
+    process_folder(["tests/servers/rendering"])
+    process_folder(["tests/servers/text"])
 
     # Finally change back the path to the calling folder
     os.chdir(curr_folder)

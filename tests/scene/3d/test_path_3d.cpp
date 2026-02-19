@@ -32,8 +32,6 @@
 
 TEST_FORCE_LINK(test_path_3d)
 
-#ifndef _3D_DISABLED
-
 #include "scene/3d/path_3d.h"
 
 namespace TestPath3D {
@@ -81,5 +79,3 @@ TEST_CASE("[Path3D] Curve setter and getter") {
 }
 
 } // namespace TestPath3D
-
-#endif // _3D_DISABLED

@@ -32,8 +32,6 @@
 
 TEST_FORCE_LINK(test_path_follow_3d)
 
-#ifndef _3D_DISABLED
-
 #include "scene/3d/path_3d.h"
 #include "scene/main/window.h"
 
@@ -340,5 +338,3 @@ TEST_CASE("[SceneTree][PathFollow3D] Calculate forward vector with degenerate cu
 }
 
 } // namespace TestPathFollow3D
-
-#endif // _3D_DISABLED

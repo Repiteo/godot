@@ -32,8 +32,6 @@
 
 TEST_FORCE_LINK(test_convert_transform_modifier_3d)
 
-#ifndef _3D_DISABLED
-
 #include "core/math/random_number_generator.h"
 #include "scene/3d/bone_attachment_3d.h"
 #include "scene/3d/convert_transform_modifier_3d.h"
@@ -261,5 +259,3 @@ TEST_CASE("[SceneTree][ConvertTransformModifier3D]") {
 }
 
 } // namespace TestConvertTransformModifier3D
-
-#endif // _3D_DISABLED

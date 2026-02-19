@@ -32,10 +32,6 @@
 
 TEST_FORCE_LINK(test_navigation_obstacle_2d)
 
-#include "modules/modules_enabled.gen.h" // For navigation 2D.
-
-#ifdef MODULE_NAVIGATION_2D_ENABLED
-
 #include "scene/2d/navigation/navigation_obstacle_2d.h"
 #include "scene/main/window.h"
 #include "scene/resources/world_2d.h"
@@ -69,5 +65,3 @@ TEST_SUITE("[Navigation2D]") {
 }
 
 } // namespace TestNavigationObstacle2D
-
-#endif // MODULE_NAVIGATION_2D_ENABLED

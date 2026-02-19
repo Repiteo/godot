@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+from misc.utility.scons_hints import *
+
+Import("env")
+
+env.add_source_files(env.force_link_obj, "*.cpp")
+
+env.SConscript("config/SCsub")
+env.SConscript("crypto/SCsub")
+env.SConscript("input/SCsub")
+env.SConscript("io/SCsub")
+env.SConscript("math/SCsub")
+env.SConscript("object/SCsub")
+env.SConscript("os/SCsub")
+env.SConscript("string/SCsub")
+env.SConscript("templates/SCsub")
+env.SConscript("variant/SCsub")

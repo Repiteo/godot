@@ -32,8 +32,6 @@
 
 TEST_FORCE_LINK(test_primitives)
 
-#ifndef _3D_DISABLED
-
 #include "scene/resources/3d/primitive_meshes.h"
 
 namespace TestPrimitives {
@@ -865,5 +863,3 @@ TEST_CASE("[SceneTree][Primitive][Text] Text Primitive") {
 }
 
 } // namespace TestPrimitives
-
-#endif // _3D_DISABLED

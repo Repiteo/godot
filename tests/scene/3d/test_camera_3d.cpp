@@ -32,8 +32,6 @@
 
 TEST_FORCE_LINK(test_camera_3d)
 
-#ifndef _3D_DISABLED
-
 #include "scene/3d/camera_3d.h"
 #include "scene/main/viewport.h"
 #include "scene/main/window.h"
@@ -372,5 +370,3 @@ TEST_CASE("[SceneTree][Camera3D] Project ray") {
 }
 
 } // namespace TestCamera3D
-
-#endif // _3D_DISABLED
