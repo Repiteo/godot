@@ -77,6 +77,9 @@ public:
 		main_sem.post();
 	}
 
+#ifdef TSAN_ENABLED
+	__attribute__((no_sanitize("thread")))
+#endif
 	void main_wait_for_done() {
 		main_sem.wait();
 		mut.lock();

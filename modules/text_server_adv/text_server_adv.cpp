@@ -378,6 +378,9 @@ int64_t TextServerAdvanced::_get_features() const {
 	return interface_features;
 }
 
+#ifdef TSAN_ENABLED
+__attribute__((no_sanitize("thread")))
+#endif
 void TextServerAdvanced::_free_rid(const RID &p_rid) {
 	_THREAD_SAFE_METHOD_
 	if (font_owner.owns(p_rid)) {

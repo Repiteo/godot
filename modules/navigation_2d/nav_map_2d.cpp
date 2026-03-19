@@ -518,6 +518,9 @@ void NavMap2D::_update_rvo_simulation() {
 	}
 }
 
+#ifdef TSAN_ENABLED
+__attribute__((no_sanitize("thread")))
+#endif
 void NavMap2D::compute_single_avoidance_step(uint32_t p_index, NavAgent2D **p_agent) {
 	(*(p_agent + p_index))->get_rvo_agent()->computeNeighbors(&rvo_simulation);
 	(*(p_agent + p_index))->get_rvo_agent()->computeNewVelocity(&rvo_simulation);
