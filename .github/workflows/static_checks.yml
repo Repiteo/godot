@@ -25,7 +25,7 @@ jobs:
       - name: Ensure correct target
         if: github.event_name == 'pull_request' && github.head_ref != env.TARGET_BRANCH
         run: |
-          echo "::error::Branch should target '${{ env.TARGET_BRANCH }}'"
+          echo "::error::Branch should target '${{ env.TARGET_BRANCH }}' (github.base_ref == '${{ github.base_ref }}')"
           exit 1
 
       - name: Checkout
