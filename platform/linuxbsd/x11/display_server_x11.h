@@ -308,13 +308,18 @@ class DisplayServerX11 : public DisplayServer {
 
 	bool do_mouse_warp = false;
 
+	struct CustomCursor {
+		Ref<Resource> resource;
+		Vector2 hotspot;
+	};
+
 	const char *cursor_theme = nullptr;
 	int cursor_size = 0;
 	XcursorImage *cursor_img[DisplayServerEnums::CURSOR_MAX];
 	Cursor cursors[DisplayServerEnums::CURSOR_MAX];
 	Cursor null_cursor;
 	DisplayServerEnums::CursorShape current_cursor = DisplayServerEnums::CURSOR_ARROW;
-	HashMap<DisplayServerEnums::CursorShape, Vector<Variant>> cursors_cache;
+	HashMap<DisplayServerEnums::CursorShape, CustomCursor> cursors_cache;
 
 	String rendering_driver;
 	void set_wm_fullscreen(bool p_enabled);

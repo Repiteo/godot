@@ -112,7 +112,7 @@ class DisplayServerWayland : public DisplayServer {
 
 	struct CustomCursor {
 		Ref<Resource> resource;
-		Point2i hotspot;
+		Vector2 hotspot;
 	};
 
 	enum class SuspendState {

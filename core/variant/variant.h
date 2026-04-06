@@ -825,6 +825,73 @@ public:
 	uint32_t hash() const;
 	uint32_t recursive_hash(int recursion_count) const;
 
+#if __cplusplus >= 202002L
+	// FIXME: Starting with C++20, the above comparison operators are no longer sufficient for comparison
+	//  with non-Variant types. While this should eventually get a pass to make those ambiguous situations
+	//  use explicit calls, these additional operators serve as a temporary workaround to restore the
+	//  previous behavior.
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(bool p_bool) const { return operator==(Variant(p_bool)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(int64_t p_int64) const { return operator==(Variant(p_int64)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(int32_t p_int32) const { return operator==(Variant(p_int32)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(int16_t p_int16) const { return operator==(Variant(p_int16)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(int8_t p_int8) const { return operator==(Variant(p_int8)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(Math::int_alt_t p_int_alt) const { return operator==(Variant(p_int_alt)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(uint64_t p_uint64) const { return operator==(Variant(p_uint64)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(uint32_t p_uint32) const { return operator==(Variant(p_uint32)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(uint16_t p_uint16) const { return operator==(Variant(p_uint16)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(uint8_t p_uint8) const { return operator==(Variant(p_uint8)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(Math::uint_alt_t p_uint_alt) const { return operator==(Variant(p_uint_alt)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(double p_double) const { return operator==(Variant(p_double)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(float p_float) const { return operator==(Variant(p_float)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const String &p_string) const { return operator==(Variant(p_string)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const char *p_cstring) const { return operator==(Variant(p_cstring)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(char32_t p_char32) const { return operator==(Variant(p_char32)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Vector2 &p_vector2) const { return operator==(Variant(p_vector2)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Vector2i &p_vector2i) const { return operator==(Variant(p_vector2i)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Rect2 &p_rect2) const { return operator==(Variant(p_rect2)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Rect2i &p_rect2i) const { return operator==(Variant(p_rect2i)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Vector3 &p_vector3) const { return operator==(Variant(p_vector3)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Vector3i &p_vector3i) const { return operator==(Variant(p_vector3i)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Transform2D &p_transform_2d) const { return operator==(Variant(p_transform_2d)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Vector4 &p_vector4) const { return operator==(Variant(p_vector4)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Vector4i &p_vector4i) const { return operator==(Variant(p_vector4i)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Plane &p_plane) const { return operator==(Variant(p_plane)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Quaternion &p_quaternion) const { return operator==(Variant(p_quaternion)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const ::AABB &p_aabb) const { return operator==(Variant(p_aabb)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Basis &p_basis) const { return operator==(Variant(p_basis)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Transform3D &p_transform_3d) const { return operator==(Variant(p_transform_3d)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Projection &p_projection) const { return operator==(Variant(p_projection)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Color &p_color) const { return operator==(Variant(p_color)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const StringName &p_string_name) const { return operator==(Variant(p_string_name)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const NodePath &p_node_path) const { return operator==(Variant(p_node_path)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const ::RID &p_rid) const { return operator==(Variant(p_rid)); }
+	template <typename T, std::enable_if_t<std::is_base_of_v<Object, T>, int> = 0>
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const T *p_object) const { return operator==(Variant(p_object)); }
+	template <typename T, std::enable_if_t<std::is_base_of_v<Object, T>, int> = 0>
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Ref<T> &p_ref) const { return operator==(Variant(p_ref)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const ObjectID &p_object_id) const { return operator==(Variant(p_object_id)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Callable &p_callable) const { return operator==(Variant(p_callable)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Signal &p_signal) const { return operator==(Variant(p_signal)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Dictionary &p_dictionary) const { return operator==(Variant(p_dictionary)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Array &p_array) const { return operator==(Variant(p_array)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const PackedByteArray &p_packed_byte_array) const { return operator==(Variant(p_packed_byte_array)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const PackedInt32Array &p_packed_int32_array) const { return operator==(Variant(p_packed_int32_array)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const PackedInt64Array &p_packed_int64_array) const { return operator==(Variant(p_packed_int64_array)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const PackedFloat32Array &p_packed_float32_array) const { return operator==(Variant(p_packed_float32_array)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const PackedFloat64Array &p_packed_float64_array) const { return operator==(Variant(p_packed_float64_array)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const PackedStringArray &p_packed_string_array) const { return operator==(Variant(p_packed_string_array)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const PackedVector2Array &p_packed_vector2_array) const { return operator==(Variant(p_packed_vector2_array)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const PackedVector3Array &p_packed_vector3_array) const { return operator==(Variant(p_packed_vector3_array)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const PackedColorArray &p_packed_color_array) const { return operator==(Variant(p_packed_color_array)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const PackedVector4Array &p_packed_vector4_array) const { return operator==(Variant(p_packed_vector4_array)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Vector<::RID> &p_vector_rid) const { return operator==(Variant(p_vector_rid)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Vector<Plane> &p_vector_plane) const { return operator==(Variant(p_vector_plane)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Vector<Face3> &p_vector_face) const { return operator==(Variant(p_vector_face)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Vector<Variant> &p_vector_variant) const { return operator==(Variant(p_vector_variant)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const Vector<StringName> &p_vector_string_name) const { return operator==(Variant(p_vector_string_name)); }
+	[[nodiscard]] _FORCE_INLINE_ bool operator==(const IPAddress &p_ip_address) const { return operator==(Variant(p_ip_address)); }
+#endif // __cplusplus >= 202002L
+
 	// By default, performs a semantic comparison. Otherwise, numeric/binary comparison (if appropriate).
 	bool hash_compare(const Variant &p_variant, int recursion_count = 0, bool semantic_comparison = true) const;
 	bool identity_compare(const Variant &p_variant) const;
@@ -876,6 +943,13 @@ public:
 		}
 	}
 };
+
+[[nodiscard]] _ALWAYS_INLINE_ bool operator==(const char *p_cstr, const Variant &p_variant) {
+	return p_variant == p_cstr;
+}
+[[nodiscard]] _ALWAYS_INLINE_ bool operator!=(const char *p_cstr, const Variant &p_variant) {
+	return p_variant != p_cstr;
+}
 
 template <typename... VarArgs>
 Vector<Variant> varray(VarArgs... p_args) {

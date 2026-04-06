@@ -3004,10 +3004,10 @@ void DisplayServerMacOS::cursor_set_custom_image(const Ref<Resource> &p_cursor, 
 	ERR_FAIL_INDEX(p_shape, DisplayServerEnums::CURSOR_MAX);
 
 	if (p_cursor.is_valid()) {
-		HashMap<DisplayServerEnums::CursorShape, Vector<Variant>>::Iterator cursor_c = cursors_cache.find(p_shape);
+		HashMap<DisplayServerEnums::CursorShape, CustomCursor>::Iterator cursor_c = cursors_cache.find(p_shape);
 
 		if (cursor_c) {
-			if (cursor_c->value[0] == p_cursor && cursor_c->value[1] == p_hotspot) {
+			if (cursor_c->value.resource == p_cursor && cursor_c->value.hotspot == p_hotspot) {
 				cursor_set_shape(p_shape);
 				return;
 			}
@@ -3055,10 +3055,7 @@ void DisplayServerMacOS::cursor_set_custom_image(const Ref<Resource> &p_cursor, 
 
 		cursors[p_shape] = cursor;
 
-		Vector<Variant> params;
-		params.push_back(p_cursor);
-		params.push_back(p_hotspot);
-		cursors_cache.insert(p_shape, params);
+		cursors_cache.insert(p_shape, { p_cursor, p_hotspot });
 
 		if (p_shape == cursor_shape) {
 			if (mouse_mode == DisplayServerEnums::MOUSE_MODE_VISIBLE || mouse_mode == DisplayServerEnums::MOUSE_MODE_CONFINED) {

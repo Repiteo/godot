@@ -191,8 +191,13 @@ private:
 	mutable bool displays_arrangement_dirty = true;
 	bool is_resizing = false;
 
+	struct CustomCursor {
+		Ref<Resource> resource;
+		Vector2 hotspot;
+	};
+
 	NSCursor *cursors[DisplayServerEnums::CURSOR_MAX];
-	HashMap<DisplayServerEnums::CursorShape, Vector<Variant>> cursors_cache;
+	HashMap<DisplayServerEnums::CursorShape, CustomCursor> cursors_cache;
 
 	HashMap<DisplayServerEnums::WindowID, WindowData> windows;
 
