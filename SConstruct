@@ -318,7 +318,7 @@ opts.Add(
     EnumVariable(
         ["cpp_standard", "cpp_std"],
         "Set the C++ standard (Experimental)",
-        "17",
+        "20",
         ("17", "20", "23"),
         ignorecase=2,
     )
