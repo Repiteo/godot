@@ -1,2 +1,64 @@
 # Supported suppression types are:
 # - leak
+
+# leak:libfontconfig
+# leak:libvulkan
+
+leak:gconv-modules.cache
+# leak:ld-linux-x86-64.so
+# leak:libasan.so
+leak:libbrotlicommon.so
+leak:libbrotlidec.so
+leak:libbsd.so
+leak:libbz2.so
+# leak:libc.so
+leak:libcap.so
+leak:libdbus-1.so
+leak:libdrm.so
+leak:libedit.so
+leak:libexpat.so
+leak:libffi.so
+leak:libfontconfig.so
+leak:libfreetype.so
+leak:libgcc_s.so
+leak:libgcrypt.so
+leak:libgpg-error.so
+leak:libicudata.so
+leak:libicuuc.so
+# leak:libLLVM.so
+leak:liblz4.so
+leak:liblzma.so
+leak:libm.so
+leak:libmd.so
+leak:libpng16.so
+# leak:libstdc++.so
+leak:libsystemd.so
+leak:libtinfo.so
+leak:libubsan.so
+leak:libvulkan_asahi.so
+leak:libvulkan_gfxstream.so
+leak:libvulkan.so
+leak:libwayland-client.so
+leak:libX11-xcb.so
+leak:libX11.so
+leak:libXau.so
+leak:libxcb-dri3.so
+leak:libxcb-present.so
+leak:libxcb-randr.so
+leak:libxcb-shm.so
+leak:libxcb-sync.so
+leak:libxcb-xfixes.so
+leak:libxcb.so
+leak:libXcursor.so
+leak:libXdmcp.so
+leak:libXext.so
+leak:libXfixes.so
+leak:libXi.so
+leak:libXinerama.so
+leak:libxkbcommon.so
+leak:libxml2.so
+leak:libXrandr.so
+leak:libXrender.so
+leak:libxshmfence.so
+leak:libz.so
+leak:libzstd.so
