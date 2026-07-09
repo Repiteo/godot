@@ -32,10 +32,11 @@ jobs:
   linux-build:
     name: 🐧 Linux
     needs: static-checks
-    if: needs.static-checks.outputs.sources-changed == 'true' || github.event_name != 'pull_request'
+    if: needs.static-checks.outputs.sources-changed == 'true' || github.event_name != 'pull_request' || needs.static-checks.outputs.documentation-changed == 'true'
     uses: ./.github/workflows/linux_builds.yml
     with:
       changed-files: ${{ needs.static-checks.outputs.changed-files }}
+      docs-only: ${{ needs.static-checks.outputs.documentation-changed == 'true' && needs.static-checks.outputs.sources-changed == 'false' }}
 
   macos-build:
     name: 🍎 macOS

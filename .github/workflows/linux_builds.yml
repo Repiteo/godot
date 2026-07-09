@@ -6,6 +6,10 @@ on:
         description: A list of changed files, pre-filtered for parsing by clangd-tidy.
         required: true
         type: string
+      docs-only:
+        description: Whether the only changes were to documentation.
+        required: true
+        type: boolean
   workflow_dispatch:
 
 # Global Settings
@@ -26,6 +30,7 @@ jobs:
     # Stay one LTS before latest to increase portability of Linux artifacts.
     runs-on: ubuntu-22.04
     name: ${{ matrix.name }}
+    if: matrix.cache-name == 'linux-editor-mono' || !inputs.docs-only
     timeout-minutes: 120
     strategy:
       fail-fast: false
@@ -198,7 +203,7 @@ jobs:
 
       - name: Compilation (godot-cpp)
         uses: ./.github/actions/godot-cpp-build
-        if: matrix.godot-cpp
+        if: matrix.godot-cpp && !inputs.docs-only
         with:
           bin: ${{ matrix.bin }}
           scons-flags: target=template_debug dev_build=yes verbose=yes
@@ -222,7 +227,7 @@ jobs:
           ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --godot-platform=linuxbsd --werror
 
       - name: Prepare artifact
-        if: matrix.artifact
+        if: matrix.artifact && !inputs.docs-only
         run: |
           rm -rf ./bin/build_deps
           strip bin/godot.*
@@ -230,18 +235,19 @@ jobs:
 
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
-        if: matrix.artifact
+        if: matrix.artifact && !inputs.docs-only
         with:
           name: ${{ matrix.cache-name }}
 
       - name: Unit tests
+        if: "!inputs.docs-only"
         run: |
           ${{ matrix.bin }} --version
           ${{ matrix.bin }} --help
           ${{ matrix.bin }} --headless --test --force-colors
 
       - name: .NET source generators tests
-        if: matrix.build-mono
+        if: matrix.build-mono && !inputs.docs-only
         run: |
           dotnet test modules/mono/editor/Godot.NET.Sdk/Godot.SourceGenerators.Tests
 
@@ -256,13 +262,13 @@ jobs:
 
       # Check API backwards compatibility
       - name: Check for GDExtension compatibility – JSON check
-        if: matrix.api-compat
+        if: matrix.api-compat&& !inputs.docs-only
         run: |
           ./misc/scripts/validate_extension_api.sh "${{ matrix.bin }}"
 
       - name: Test GDExtension compatibility – load methods
         uses: ./.github/actions/godot-compat-test
-        if: matrix.api-compat
+        if: matrix.api-compat && !inputs.docs-only
         with:
           bin: ${{ matrix.bin }}
           reftags: "4.5-stable,4.4-stable"
@@ -270,20 +276,20 @@ jobs:
       # Download and run the test project
       - name: Test Godot project
         uses: ./.github/actions/godot-project-test
-        if: matrix.proj-test
+        if: matrix.proj-test && !inputs.docs-only
         with:
           bin: ${{ matrix.bin }}
 
       # Test project export
       - name: Test project export
         uses: ./.github/actions/godot-project-export
-        if: matrix.proj-export
+        if: matrix.proj-export && !inputs.docs-only
         with:
           bin: ${{ matrix.bin }}
 
       # Test the project converter
       - name: Test project converter
         uses: ./.github/actions/godot-converter-test
-        if: matrix.proj-conv
+        if: matrix.proj-conv && !inputs.docs-only
         with:
           bin: ${{ matrix.bin }}

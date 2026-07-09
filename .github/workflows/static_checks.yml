@@ -8,6 +8,9 @@ on:
       sources-changed:
         description: Determines if any source files were changed.
         value: ${{ jobs.static-checks.outputs.sources-changed }}
+      documentation-changed:
+        description: Determines if any documentation files were changed.
+        value: ${{ jobs.static-checks.outputs.documentation-changed }}
   workflow_dispatch:
 
 jobs:
@@ -18,6 +21,7 @@ jobs:
     outputs:
       changed-files: '"${{ steps.changed-files.outputs.clangd_all_changed_files }}"' # Wrap with quotes to bookend internal quote separators.
       sources-changed: ${{ steps.changed-files.outputs.sources_any_changed }}
+      documentation-changed: ${{ steps.changed-files.outputs.documentation_any_changed }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
