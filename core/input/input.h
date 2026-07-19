@@ -515,5 +515,5 @@ public:
 	~Input();
 };
 
-VARIANT_ENUM_CAST(Input::MouseMode);
-VARIANT_ENUM_CAST(Input::CursorShape);
+VARIANT_ENUM_CAST_EXT(InputClassEnums::MouseMode, Input::MouseMode);
+VARIANT_ENUM_CAST_EXT(InputClassEnums::CursorShape, Input::CursorShape);

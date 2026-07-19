@@ -121,6 +121,9 @@ typedef PS2DT::ShapeRestInfo PhysicsServer2DExtensionShapeRestInfo;
 GDVIRTUAL_NATIVE_PTR(PhysicsServer2DExtensionRayResult)
 GDVIRTUAL_NATIVE_PTR(PhysicsServer2DExtensionShapeResult)
 GDVIRTUAL_NATIVE_PTR(PhysicsServer2DExtensionShapeRestInfo)
+NAME_OF_TYPE_OVERRIDE(PhysicsServer2DExtensionRayResult, PhysicsServer2DExtensionRayResult)
+NAME_OF_TYPE_OVERRIDE(PhysicsServer2DExtensionShapeResult, PhysicsServer2DExtensionShapeResult)
+NAME_OF_TYPE_OVERRIDE(PhysicsServer2DExtensionShapeRestInfo, PhysicsServer2DExtensionShapeRestInfo)
 
 class PhysicsDirectSpaceState2DExtension : public PhysicsDirectSpaceState2D {
 	GDCLASS(PhysicsDirectSpaceState2DExtension, PhysicsDirectSpaceState2D);
@@ -188,6 +191,7 @@ public:
 typedef PS2DT::MotionResult PhysicsServer2DExtensionMotionResult;
 
 GDVIRTUAL_NATIVE_PTR(PhysicsServer2DExtensionMotionResult)
+NAME_OF_TYPE_OVERRIDE(PhysicsServer2DExtensionMotionResult, PhysicsServer2DExtensionMotionResult)
 
 class PhysicsServer2DExtension : public PhysicsServer2D {
 	GDCLASS(PhysicsServer2DExtension, PhysicsServer2D);

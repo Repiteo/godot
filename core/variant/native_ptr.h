@@ -30,38 +30,39 @@
 
 #pragma once
 
+#include "core/templates/name_of.h"
 #include "core/variant/method_ptrcall.h"
 #include "core/variant/type_info.h"
 #include "core/variant/variant_caster.h"
 #include "core/variant/variant_internal.h"
 
-struct AudioFrame;
-
-// Metafunction for pointee name. Specialized in GDVIRTUAL_NATIVE_PTR; takes into account const; falls back to "void".
+// Metafunction for pointee name; takes into account const & pointers.
 template <typename T>
 struct GDExtensionPtrName {
-	static const char *get() { return "void"; }
+	static const String get() { return String::utf8(name_of_type_v<T>); }
 };
 template <typename T>
 struct GDExtensionPtrName<const T> {
-	static const char *get() {
-		static const CharString name = (String("const ") + GDExtensionPtrName<T>::get()).utf8();
-		return name.get_data();
+	static const String get() {
+		return "const " + GDExtensionPtrName<T>::get();
 	}
 };
 template <typename T>
 struct GDExtensionPtrName<T *> {
-	static const char *get() {
-		static const CharString name = (String(GDExtensionPtrName<T>::get()) + " *").utf8();
-		return name.get_data();
+	static const String get() {
+		return GDExtensionPtrName<T>::get() + " *";
 	}
 };
 
+#if false
 #define GDVIRTUAL_NATIVE_PTR(m_type) \
 	template <> \
 	struct GDExtensionPtrName<m_type> { \
 		static const char *get() { return #m_type; } \
 	};
+#else
+#define GDVIRTUAL_NATIVE_PTR(m_type)
+#endif
 
 // Raw pointer passed across the GDExtension boundary. T can be const-qualified to map to `const MyClass*`.
 template <typename T>
@@ -69,7 +70,7 @@ struct GDExtensionPtr {
 	T *data = nullptr;
 	GDExtensionPtr() {}
 	GDExtensionPtr(T *p_assign) { data = p_assign; }
-	static const char *get_name() { return GDExtensionPtrName<T>::get(); }
+	static String get_name() { return GDExtensionPtrName<T>::get(); }
 	operator T *() const { return data; }
 	operator Variant() const { return uint64_t(data); }
 };

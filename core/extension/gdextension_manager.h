@@ -34,6 +34,8 @@
 #include "core/variant/native_ptr.h"
 
 GDVIRTUAL_NATIVE_PTR(GDExtensionInitializationFunction)
+NAME_OF_TYPE_OVERRIDE(GDExtensionInitializationFunction, GDExtensionInitializationFunction)
+static_assert(name_of_type_v<GDExtensionInitializationFunction> == "GDExtensionInitializationFunction");
 
 class GDExtensionManager : public Object {
 	GDCLASS(GDExtensionManager, Object);

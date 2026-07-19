@@ -33,7 +33,7 @@
 			<param index="4" name="collision_mask" type="int" />
 			<param index="5" name="collide_with_bodies" type="bool" />
 			<param index="6" name="collide_with_areas" type="bool" />
-			<param index="7" name="r_results" type="void*" />
+			<param index="7" name="r_results" type="Vector2*" />
 			<param index="8" name="max_results" type="int" />
 			<param index="9" name="r_result_count" type="int32_t*" />
 			<description>

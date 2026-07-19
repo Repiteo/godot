@@ -42,7 +42,7 @@
 		<method name="load_extension_from_function">
 			<return type="int" enum="GDExtensionManager.LoadStatus" />
 			<param index="0" name="path" type="String" />
-			<param index="1" name="init_func" type="const GDExtensionInitializationFunction*" />
+			<param index="1" name="init_func" type="const char(void (__cdecl *(__cdecl *)(const char *))(void),void *,GDExtensionInitialization *) **" />
 			<description>
 				Loads the extension already in address space via the given path and initialization function. The [param path] needs to be unique and start with [code]"libgodot://"[/code]. Returns [constant LOAD_STATUS_OK] if successful.
 			</description>

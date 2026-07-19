@@ -233,6 +233,7 @@ public:
 typedef ScriptLanguage::ProfilingInfo ScriptLanguageExtensionProfilingInfo;
 
 GDVIRTUAL_NATIVE_PTR(ScriptLanguageExtensionProfilingInfo)
+NAME_OF_TYPE_OVERRIDE(ScriptLanguageExtensionProfilingInfo, ScriptLanguageExtensionProfilingInfo)
 
 class ScriptLanguageExtension : public ScriptLanguage {
 	GDCLASS(ScriptLanguageExtension, ScriptLanguage)

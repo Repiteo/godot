@@ -31,6 +31,7 @@
 #pragma once
 
 #include "core/object/object.h"
+#include "core/templates/name_of.h"
 #include "core/typedefs.h"
 #include "core/variant/variant.h"
 
@@ -243,6 +244,26 @@ inline String enum_qualified_name_to_class_info_name(const String &p_qualified_n
 } // namespace Internal
 } // namespace GodotTypeInfo
 
+template <typename T>
+struct GetTypeInfo<T, std::enable_if_t<std::is_enum_v<T>>> {
+	static const Variant::Type VARIANT_TYPE = Variant::INT;
+	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;
+	static inline PropertyInfo get_class_info() {
+		return PropertyInfo(Variant::INT, String(), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CLASS_IS_ENUM,
+				GodotTypeInfo::Internal::enum_qualified_name_to_class_info_name(String::utf8(name_of_type_v<T>)));
+	}
+};
+
+template <typename T>
+struct GetTypeInfo<BitField<T>> {
+	static const Variant::Type VARIANT_TYPE = Variant::INT;
+	static const GodotTypeInfo::Metadata METADATA = GodotTypeInfo::METADATA_NONE;
+	static inline PropertyInfo get_class_info() {
+		return PropertyInfo(Variant::INT, String(), PROPERTY_HINT_NONE, String(), PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_CLASS_IS_BITFIELD,
+				GodotTypeInfo::Internal::enum_qualified_name_to_class_info_name(String::utf8(name_of_type_v<T>)));
+	}
+};
+
 #define MAKE_ENUM_TYPE_INFO(m_enum, m_bound_name) \
 	template <> \
 	struct GetTypeInfo<m_enum> { \
@@ -289,12 +310,19 @@ inline StringName __constant_get_bitfield_name(T p_param) {
 }
 #define CLASS_INFO(m_type) (GetTypeInfo<m_type *>::get_class_info())
 
+#if false
 #define VARIANT_ENUM_CAST(m_enum) MAKE_ENUM_TYPE_INFO(m_enum, m_enum)
 #define VARIANT_BITFIELD_CAST(m_enum) MAKE_BITFIELD_TYPE_INFO(m_enum, m_enum)
 
 // Use only for backwards compatibility when the location of an enum changes.
 #define VARIANT_ENUM_CAST_EXT(m_enum, m_bound_name) MAKE_ENUM_TYPE_INFO(m_enum, m_bound_name)
 #define VARIANT_BITFIELD_CAST_EXT(m_enum, m_bound_name) MAKE_BITFIELD_TYPE_INFO(m_enum, m_bound_name)
+#else
+#define VARIANT_ENUM_CAST(m_enum)
+#define VARIANT_BITFIELD_CAST(m_enum)
+#define VARIANT_ENUM_CAST_EXT(m_enum, m_bound_name) NAME_OF_TYPE_OVERRIDE(m_enum, m_bound_name)
+#define VARIANT_BITFIELD_CAST_EXT(m_enum, m_bound_name) NAME_OF_TYPE_OVERRIDE(m_enum, m_bound_name)
+#endif
 
 // No initialization by default, except for scalar types.
 template <typename T>

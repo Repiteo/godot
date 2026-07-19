@@ -3080,34 +3080,22 @@ int String::find_char(char32_t p_char, int p_from) const {
 }
 
 int String::findmk(const Vector<String> &p_keys, int p_from, int *r_key) const {
-	if (p_from < 0) {
-		return -1;
-	}
-	if (p_keys.is_empty()) {
+	if (p_from < 0 || is_empty() || p_keys.is_empty()) {
 		return -1;
 	}
 
-	//int str_len=p_str.length();
 	const String *keys = &p_keys[0];
-	int key_count = p_keys.size();
-	int len = length();
-
-	if (len == 0) {
-		return -1; // won't find anything!
-	}
-
-	const char32_t *src = get_data();
+	const int key_count = p_keys.size();
+	const int len = length();
 
 	for (int i = p_from; i < len; i++) {
 		for (int k = 0; k < key_count; k++) {
-			const int str_len = keys[k].length();
-
-			if (i + str_len > len) {
+			const int key_len = keys[k].length();
+			if (i + key_len > len) {
 				continue; // Can't find this key here.
 			}
-
-			const char32_t *str = keys[k].get_data();
-			if (are_spans_equal(src + i, str, str_len)) {
+			const Span<char32_t> subspan = span().subspan(i, key_len);
+			if (subspan == keys[k].span()) {
 				if (r_key) {
 					*r_key = k;
 				}
@@ -3196,7 +3184,7 @@ int String::rfind(const char *p_str, int p_from) const {
 
 	if (str_len == 1) {
 		// Optimize with single-char implementation.
-		return span().rfind(p_str[0], p_from);
+		return span().rfind((const unsigned char)p_str[0], p_from);
 	}
 
 	return span().rfind_sequence(Span((const unsigned char *)p_str, str_len), p_from);

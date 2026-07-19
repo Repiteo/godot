@@ -123,6 +123,9 @@ typedef PS3DT::ShapeRestInfo PhysicsServer3DExtensionShapeRestInfo;
 GDVIRTUAL_NATIVE_PTR(PhysicsServer3DExtensionRayResult)
 GDVIRTUAL_NATIVE_PTR(PhysicsServer3DExtensionShapeResult)
 GDVIRTUAL_NATIVE_PTR(PhysicsServer3DExtensionShapeRestInfo)
+NAME_OF_TYPE_OVERRIDE(PhysicsServer3DExtensionRayResult, PhysicsServer3DExtensionRayResult)
+NAME_OF_TYPE_OVERRIDE(PhysicsServer3DExtensionShapeResult, PhysicsServer3DExtensionShapeResult)
+NAME_OF_TYPE_OVERRIDE(PhysicsServer3DExtensionShapeRestInfo, PhysicsServer3DExtensionShapeRestInfo)
 
 class PhysicsDirectSpaceState3DExtension : public PhysicsDirectSpaceState3D {
 	GDCLASS(PhysicsDirectSpaceState3DExtension, PhysicsDirectSpaceState3D);
@@ -199,6 +202,8 @@ typedef PS3DT::MotionResult PhysicsServer3DExtensionMotionResult;
 
 GDVIRTUAL_NATIVE_PTR(PhysicsServer3DExtensionMotionCollision)
 GDVIRTUAL_NATIVE_PTR(PhysicsServer3DExtensionMotionResult)
+NAME_OF_TYPE_OVERRIDE(PhysicsServer3DExtensionMotionCollision, PhysicsServer3DExtensionMotionCollision)
+NAME_OF_TYPE_OVERRIDE(PhysicsServer3DExtensionMotionResult, PhysicsServer3DExtensionMotionResult)
 
 class PhysicsServer3DExtension : public PhysicsServer3D {
 	GDCLASS(PhysicsServer3DExtension, PhysicsServer3D);

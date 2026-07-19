@@ -354,7 +354,7 @@
 			<param index="2" name="shape" type="RID" />
 			<param index="3" name="shape_xform" type="Transform2D" />
 			<param index="4" name="motion" type="Vector2" />
-			<param index="5" name="r_results" type="void*" />
+			<param index="5" name="r_results" type="Vector2*" />
 			<param index="6" name="result_max" type="int" />
 			<param index="7" name="r_result_count" type="int32_t*" />
 			<description>
@@ -972,7 +972,7 @@
 			<param index="3" name="shape_B" type="RID" />
 			<param index="4" name="xform_B" type="Transform2D" />
 			<param index="5" name="motion_B" type="Vector2" />
-			<param index="6" name="r_results" type="void*" />
+			<param index="6" name="r_results" type="Vector2*" />
 			<param index="7" name="result_max" type="int" />
 			<param index="8" name="r_result_count" type="int32_t*" />
 			<description>
