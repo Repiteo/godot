@@ -812,6 +812,8 @@ def configure_mingw(env: "SConsEnvironment"):
 
         env.extra_suffix += ".san"
         san_flags = []
+        if "64" in env["arch"]:
+            san_flags.append("-mcmodel=medium")
         if env["use_asan"]:
             env.Append(CPPDEFINES=["ASAN_ENABLED"])
             san_flags.append("-fsanitize=address")
@@ -820,7 +822,6 @@ def configure_mingw(env: "SConsEnvironment"):
             san_flags.append("-fsanitize=undefined")
             # Disable the vptr check since it gets triggered on any COM interface calls.
             san_flags.append("-fno-sanitize=vptr")
-        env.Append(CFLAGS=san_flags)
         env.Append(CCFLAGS=san_flags)
         env.Append(LINKFLAGS=san_flags)
 

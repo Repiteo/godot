@@ -183,20 +183,26 @@ def configure(env: "SConsEnvironment"):
             env.Append(LINKFLAGS=["-flto"])
 
     # Sanitizers
-    if env["use_ubsan"]:
-        env.Append(CPPDEFINES=["UBSAN_ENABLED"])
-        env.Append(CCFLAGS=["-fsanitize=undefined"])
-        env.Append(LINKFLAGS=["-fsanitize=undefined"])
-    if env["use_asan"]:
-        env.Append(CPPDEFINES=["ASAN_ENABLED"])
-        env.Append(CCFLAGS=["-fsanitize=address"])
-        env.Append(LINKFLAGS=["-fsanitize=address"])
-    if env["use_lsan"]:
-        env.Append(CPPDEFINES=["LSAN_ENABLED"])
-        env.Append(CCFLAGS=["-fsanitize=leak"])
-        env.Append(LINKFLAGS=["-fsanitize=leak"])
-    if env["use_safe_heap"]:
-        env.Append(LINKFLAGS=["-sSAFE_HEAP=1"])
+    if env["use_ubsan"] or env["use_asan"] or env["use_tsan"]:
+        env.extra_suffix += ".san"
+
+        if env["use_ubsan"]:
+            env.Append(CPPDEFINES=["UBSAN_ENABLED"])
+            env.Append(CCFLAGS=["-fsanitize=undefined"])
+            env.Append(LINKFLAGS=["-fsanitize=undefined"])
+
+        if env["use_asan"]:
+            env.Append(CPPDEFINES=["ASAN_ENABLED"])
+            env.Append(CCFLAGS=["-fsanitize=address"])
+            env.Append(LINKFLAGS=["-fsanitize=address"])
+
+        if env["use_lsan"]:
+            env.Append(CPPDEFINES=["LSAN_ENABLED"])
+            env.Append(CCFLAGS=["-fsanitize=leak"])
+            env.Append(LINKFLAGS=["-fsanitize=leak"])
+
+        if env["use_safe_heap"]:
+            env.Append(LINKFLAGS=["-sSAFE_HEAP=1"])
 
     # Closure compiler
     if env["use_closure_compiler"] and cc_semver < (4, 0, 11):
