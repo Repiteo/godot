@@ -6391,7 +6391,11 @@
             "description": [
                 "Appends a wide C string to a String."
             ],
-            "since": "4.1"
+            "since": "4.1",
+            "deprecated": {
+                "since": "4.8",
+                "message": "Implicitly converting wide characters with String is no longer supported."
+            }
         },
         {
             "name": "string_operator_plus_eq_c32str",

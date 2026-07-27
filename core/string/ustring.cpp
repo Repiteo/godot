@@ -244,12 +244,6 @@ String String::operator+(const char *p_str) const {
 	return res;
 }
 
-String String::operator+(const wchar_t *p_str) const {
-	String res = *this;
-	res += p_str;
-	return res;
-}
-
 String String::operator+(const char32_t *p_str) const {
 	String res = *this;
 	res += p_str;
@@ -264,18 +258,6 @@ String String::operator+(char32_t p_char) const {
 
 String operator+(const char *p_chr, const String &p_str) {
 	String tmp = p_chr;
-	tmp += p_str;
-	return tmp;
-}
-
-String operator+(const wchar_t *p_chr, const String &p_str) {
-#ifdef WINDOWS_ENABLED
-	// wchar_t is 16-bit
-	String tmp = String::utf16((const char16_t *)p_chr);
-#else
-	// wchar_t is 32-bit
-	String tmp = (const char32_t *)p_chr;
-#endif
 	tmp += p_str;
 	return tmp;
 }
@@ -298,17 +280,6 @@ String &String::operator+=(const char *p_str) {
 	return *this;
 }
 
-String &String::operator+=(const wchar_t *p_str) {
-#ifdef WINDOWS_ENABLED
-	// wchar_t is 16-bit
-	*this += String::utf16((const char16_t *)p_str);
-#else
-	// wchar_t is 32-bit
-	*this += String((const char32_t *)p_str);
-#endif
-	return *this;
-}
-
 String &String::operator+=(const char32_t *p_str) {
 	append_utf32(Span(p_str, strlen(p_str)));
 	return *this;
@@ -322,16 +293,6 @@ String &String::operator+=(char32_t p_char) {
 bool String::operator==(const char *p_str) const {
 	// Compare Latin-1 encoded c-string.
 	return span() == Span(p_str, strlen(p_str)).reinterpret<uint8_t>();
-}
-
-bool String::operator==(const wchar_t *p_str) const {
-#ifdef WINDOWS_ENABLED
-	// wchar_t is 16-bit, parse as UTF-16
-	return *this == String::utf16((const char16_t *)p_str);
-#else
-	// wchar_t is 32-bit, compare char by char
-	return *this == (const char32_t *)p_str;
-#endif
 }
 
 bool String::operator==(const char32_t *p_str) const {
@@ -351,35 +312,11 @@ bool operator==(const char *p_chr, const String &p_str) {
 	return p_str == p_chr;
 }
 
-bool operator==(const wchar_t *p_chr, const String &p_str) {
-#ifdef WINDOWS_ENABLED
-	// wchar_t is 16-bit
-	return p_str == String::utf16((const char16_t *)p_chr);
-#else
-	// wchar_t is 32-bit
-	return p_str == (const char32_t *)p_chr;
-#endif
-}
-
 bool operator!=(const char *p_chr, const String &p_str) {
 	return !(p_str == p_chr);
 }
 
-bool operator!=(const wchar_t *p_chr, const String &p_str) {
-#ifdef WINDOWS_ENABLED
-	// wchar_t is 16-bit
-	return !(p_str == String::utf16((const char16_t *)p_chr));
-#else
-	// wchar_t is 32-bit
-	return !(p_str == String((const char32_t *)p_chr));
-#endif
-}
-
 bool String::operator!=(const char *p_str) const {
-	return (!(*this == p_str));
-}
-
-bool String::operator!=(const wchar_t *p_str) const {
 	return (!(*this == p_str));
 }
 
@@ -411,23 +348,6 @@ bool String::operator<(const char *p_str) const {
 		return true;
 	}
 	return str_compare(get_data(), p_str) < 0;
-}
-
-bool String::operator<(const wchar_t *p_str) const {
-	if (is_empty() && p_str[0] == 0) {
-		return false;
-	}
-	if (is_empty()) {
-		return true;
-	}
-
-#ifdef WINDOWS_ENABLED
-	// wchar_t is 16-bit
-	return str_compare(get_data(), String::utf16((const char16_t *)p_str).get_data()) < 0;
-#else
-	// wchar_t is 32-bit
-	return str_compare(get_data(), (const char32_t *)p_str) < 0;
-#endif
 }
 
 bool String::operator<(const char32_t *p_str) const {
@@ -2322,19 +2242,6 @@ int64_t String::to_int(const char *p_str, int p_len) {
 	return _to_int<char>(p_str, to);
 }
 
-int64_t String::to_int(const wchar_t *p_str, int p_len) {
-	int to = 0;
-	if (p_len >= 0) {
-		to = p_len;
-	} else {
-		while (p_str[to] != 0 && p_str[to] != '.') {
-			to++;
-		}
-	}
-
-	return _to_int<wchar_t>(p_str, to);
-}
-
 bool String::is_numeric() const {
 	if (length() == 0) {
 		return false;
@@ -2591,10 +2498,6 @@ double String::to_float(const char32_t *p_str, const char32_t **r_end) {
 	return built_in_strtod<char32_t>(p_str, (char32_t **)r_end);
 }
 
-double String::to_float(const wchar_t *p_str, const wchar_t **r_end) {
-	return built_in_strtod<wchar_t>(p_str, (wchar_t **)r_end);
-}
-
 uint32_t String::num_characters(int64_t p_int) {
 	int r = 1;
 	if (p_int < 0) {
@@ -2701,33 +2604,6 @@ uint32_t String::hash(const char *p_cstr, int p_len) {
 	for (int i = 0; i < p_len; i++) {
 		// static_cast: avoid negative values on platforms where char is signed.
 		hashv = ((hashv << 5) + hashv) + static_cast<uint8_t>(p_cstr[i]); /* hash * 33 + c */
-	}
-
-	return hashv;
-}
-
-uint32_t String::hash(const wchar_t *p_cstr, int p_len) {
-	// Avoid negative values on platforms where wchar_t is signed. Account for different sizes.
-	using wide_unsigned = std::conditional<sizeof(wchar_t) == 2, uint16_t, uint32_t>::type;
-
-	uint32_t hashv = 5381;
-	for (int i = 0; i < p_len; i++) {
-		hashv = ((hashv << 5) + hashv) + static_cast<wide_unsigned>(p_cstr[i]); /* hash * 33 + c */
-	}
-
-	return hashv;
-}
-
-uint32_t String::hash(const wchar_t *p_cstr) {
-	// Avoid negative values on platforms where wchar_t is signed. Account for different sizes.
-	using wide_unsigned = std::conditional<sizeof(wchar_t) == 2, uint16_t, uint32_t>::type;
-
-	uint32_t hashv = 5381;
-	uint32_t c = static_cast<wide_unsigned>(*p_cstr++);
-
-	while (c) {
-		hashv = ((hashv << 5) + hashv) + c; /* hash * 33 + c */
-		c = static_cast<wide_unsigned>(*p_cstr++);
 	}
 
 	return hashv;
@@ -5685,11 +5561,11 @@ Vector<uint8_t> String::to_utf32_buffer() const {
 }
 
 Vector<uint8_t> String::to_wchar_buffer() const {
-#ifdef WINDOWS_ENABLED
-	return to_utf16_buffer();
-#else
-	return to_utf32_buffer();
-#endif
+	if constexpr (sizeof(wchar_t) == 2) {
+		return to_utf16_buffer();
+	} else {
+		return to_utf32_buffer();
+	}
 }
 
 Vector<uint8_t> String::to_multibyte_char_buffer(const String &p_encoding) const {

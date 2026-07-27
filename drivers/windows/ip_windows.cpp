@@ -122,7 +122,7 @@ void IPWindows::get_local_interfaces(HashMap<String, Interface_Info> *r_interfac
 	while (adapter != nullptr) {
 		Interface_Info info;
 		info.name = adapter->AdapterName;
-		info.name_friendly = adapter->FriendlyName;
+		info.name_friendly = String::wstring(Span(adapter->FriendlyName, strlen(adapter->FriendlyName)));
 		info.index = String::num_uint64(adapter->IfIndex);
 
 		IP_ADAPTER_UNICAST_ADDRESS *address = adapter->FirstUnicastAddress;

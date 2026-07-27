@@ -771,13 +771,13 @@ Vector<String> OS_Windows::_get_video_adapter_driver_info_wmi(const String &p_na
 			hr = pnpSDriverObject[0]->Get(object_name, 0, &dn, nullptr, nullptr);
 			SysFreeString(object_name);
 			if (hr == S_OK && dn.vt == VT_BSTR) {
-				String d_name = String(V_BSTR(&dn));
+				String d_name = String::wstring(Span(V_BSTR(&dn), strlen(V_BSTR(&dn))));
 				if (d_name.is_empty()) {
 					object_name = SysAllocString(L"DriverProviderName");
 					hr = pnpSDriverObject[0]->Get(object_name, 0, &dn, nullptr, nullptr);
 					SysFreeString(object_name);
 					if (hr == S_OK) {
-						driver_name = String(V_BSTR(&dn));
+						driver_name = String::wstring(Span(V_BSTR(&dn), strlen(V_BSTR(&dn))));
 					}
 				} else {
 					driver_name = d_name;
@@ -787,7 +787,7 @@ Vector<String> OS_Windows::_get_video_adapter_driver_info_wmi(const String &p_na
 				hr = pnpSDriverObject[0]->Get(object_name, 0, &dn, nullptr, nullptr);
 				SysFreeString(object_name);
 				if (hr == S_OK && dn.vt == VT_BSTR) {
-					driver_name = String(V_BSTR(&dn));
+					driver_name = String::wstring(Span(V_BSTR(&dn), strlen(V_BSTR(&dn))));
 				} else {
 					driver_name = "Unknown";
 				}
@@ -799,7 +799,7 @@ Vector<String> OS_Windows::_get_video_adapter_driver_info_wmi(const String &p_na
 			hr = pnpSDriverObject[0]->Get(object_name, 0, &dv, nullptr, nullptr);
 			SysFreeString(object_name);
 			if (hr == S_OK && dv.vt == VT_BSTR) {
-				driver_version = String(V_BSTR(&dv));
+				driver_version = String::wstring(Span(V_BSTR(&dv), strlen(V_BSTR(&dv))));
 			} else {
 				driver_version = "Unknown";
 			}
@@ -943,10 +943,10 @@ OS::TimeZoneInfo OS_Windows::get_time_zone_info() const {
 	// Daylight Bias needs to be added to the bias if DST is in effect, or else it will not properly update.
 	TimeZoneInfo ret;
 	if (is_daylight) {
-		ret.name = info.DaylightName;
+		ret.name = String::wstring(info.DaylightName);
 		ret.bias = info.Bias + info.DaylightBias;
 	} else {
-		ret.name = info.StandardName;
+		ret.name = String::wstring(info.StandardName);
 		ret.bias = info.Bias + info.StandardBias;
 	}
 

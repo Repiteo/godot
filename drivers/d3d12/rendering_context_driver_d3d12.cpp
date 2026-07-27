@@ -178,7 +178,7 @@ Error RenderingContextDriverD3D12::_initialize_devices() {
 		adapters[i]->GetDesc1(&desc);
 
 		Device &device = driver_devices[i];
-		device.name = desc.Description;
+		device.name = String::wstring(desc.Description);
 		device.vendor = desc.VendorId;
 
 		if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) {

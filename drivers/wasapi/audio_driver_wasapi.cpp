@@ -238,7 +238,7 @@ Error AudioDriverWASAPI::audio_device_init(AudioDeviceWASAPI *p_device, bool p_i
 			hr = props->GetValue(PKEY_Device_FriendlyNameGodot, &propvar);
 			ERR_BREAK_MSG(hr != S_OK, "Cannot get value.");
 
-			if (p_device->device_name == String(propvar.pwszVal)) {
+			if (p_device->device_name == String::wstring(Span(propvar.pwszVal, strlen(propvar.pwszVal)))) {
 				hr = tmp_device->GetId(&strId);
 				if (unlikely(hr != S_OK)) {
 					PropVariantClear(&propvar);
@@ -649,7 +649,7 @@ PackedStringArray AudioDriverWASAPI::audio_device_get_list(bool p_input) {
 		hr = props->GetValue(PKEY_Device_FriendlyNameGodot, &propvar);
 		ERR_BREAK(hr != S_OK);
 
-		list.push_back(String(propvar.pwszVal));
+		list.push_back(String::wstring(Span(propvar.pwszVal, strlen(propvar.pwszVal))));
 
 		PropVariantClear(&propvar);
 	}

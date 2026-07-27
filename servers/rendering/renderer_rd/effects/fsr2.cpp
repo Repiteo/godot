@@ -240,7 +240,7 @@ static FfxErrorCode create_resource_rd(FfxFsr2Interface *p_backend_interface, co
 	RID texture = rd->texture_create(texture_format, RD::TextureView(), initial_data);
 	ERR_FAIL_COND_V(texture.is_null(), FFX_ERROR_BACKEND_API_ERROR);
 
-	rd->set_resource_name(texture, String(p_create_resource_description->name));
+	rd->set_resource_name(texture, String::wstring(Span(p_create_resource_description->name, strlen(p_create_resource_description->name))));
 
 	// Add the resource to the storage and use the internal index to reference it.
 	p_out_resource->internalIndex = scratch.resources.add(texture, false, p_create_resource_description->id, res_desc);

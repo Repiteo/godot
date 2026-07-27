@@ -3879,7 +3879,7 @@ static INT_PTR input_text_dialog_cmd_proc(HWND hWnd, UINT code, WPARAM wParam, L
 
 		const Callable *callback = (const Callable *)GetWindowLongPtrW(hWnd, GWLP_USERDATA);
 		if (callback && callback->is_valid()) {
-			Variant v_result = String((const wchar_t *)text.get_data());
+			Variant v_result = String::utf16(text.span());
 			Variant ret;
 			Callable::CallError ce;
 			const Variant *args[1] = { &v_result };
@@ -7682,7 +7682,7 @@ Vector2i _get_device_ids_wmi(const String &p_device_name) {
 			hr = pnpSDriverObject[0]->Get(object_name, 0, &did, nullptr, nullptr);
 			SysFreeString(object_name);
 			if (hr == S_OK) {
-				String device_id = String(V_BSTR(&did));
+				String device_id = String::wstring(Span(V_BSTR(&did), strlen(V_BSTR(&did))));
 				ids.x = device_id.get_slicec('&', 0).lstrip("PCI\\VEN_").hex_to_int();
 				ids.y = device_id.get_slicec('&', 1).lstrip("DEV_").hex_to_int();
 			}

@@ -63,16 +63,15 @@ constexpr size_t strlen(const char32_t *p_str) {
 	return ptr - p_str;
 }
 
-// strlen equivalent function for wchar_t * arguments; depends on the platform.
+// strlen equivalent function for wchar_t * arguments.
+// Treated as `char16_t` if `wchar_t` is 2 bytes long; otherwise treated as `char32_t`.
 constexpr size_t strlen(const wchar_t *p_str) {
-	// Use static_cast twice because reinterpret_cast is not allowed in constexpr
-#ifdef WINDOWS_ENABLED
-	// wchar_t is 16-bit
-	return strlen(static_cast<const char16_t *>(static_cast<const void *>(p_str)));
-#else
-	// wchar_t is 32-bit
-	return strlen(static_cast<const char32_t *>(static_cast<const void *>(p_str)));
-#endif
+	// Use static_cast twice because reinterpret_cast is not allowed in constexpr.
+	if constexpr (sizeof(wchar_t) == 2) {
+		return strlen(static_cast<const char16_t *>(static_cast<const void *>(p_str)));
+	} else {
+		return strlen(static_cast<const char32_t *>(static_cast<const void *>(p_str)));
+	}
 }
 
 // strnlen equivalent function for char16_t * arguments.
@@ -93,16 +92,15 @@ constexpr size_t strnlen(const char32_t *p_str, size_t p_clip_to_len) {
 	return len;
 }
 
-// strnlen equivalent function for wchar_t * arguments; depends on the platform.
+// strlen equivalent function for wchar_t * arguments.
+// Treated as `char16_t` if `wchar_t` is 2 bytes long; otherwise treated as `char32_t`.
 constexpr size_t strnlen(const wchar_t *p_str, size_t p_clip_to_len) {
-	// Use static_cast twice because reinterpret_cast is not allowed in constexpr
-#ifdef WINDOWS_ENABLED
-	// wchar_t is 16-bit
-	return strnlen(static_cast<const char16_t *>(static_cast<const void *>(p_str)), p_clip_to_len);
-#else
-	// wchar_t is 32-bit
-	return strnlen(static_cast<const char32_t *>(static_cast<const void *>(p_str)), p_clip_to_len);
-#endif
+	// Use static_cast twice because reinterpret_cast is not allowed in constexpr.
+	if constexpr (sizeof(wchar_t) == 2) {
+		return strnlen(static_cast<const char16_t *>(static_cast<const void *>(p_str)), p_clip_to_len);
+	} else {
+		return strnlen(static_cast<const char32_t *>(static_cast<const void *>(p_str)), p_clip_to_len);
+	}
 }
 
 template <typename L, typename R>
@@ -289,15 +287,6 @@ class [[nodiscard]] _WARN_UNUSED_ String {
 	void append_utf32(const char32_t *p_cstr) {
 		append_utf32(Span(p_cstr, p_cstr ? strlen(p_cstr) : 0));
 	}
-	void append_wstring(const wchar_t *p_cstr) {
-#ifdef WINDOWS_ENABLED
-		// wchar_t is 16-bit, parse as UTF-16
-		append_utf16((const char16_t *)p_cstr);
-#else
-		// wchar_t is 32-bit, copy directly
-		append_utf32((const char32_t *)p_cstr);
-#endif
-	}
 
 	bool _base_is_subsequence_of(const String &p_string, bool p_case_insensitive) const;
 	int _count(const String &p_string, int p_from, int p_to, bool p_case_insensitive) const;
@@ -354,28 +343,23 @@ public:
 	bool operator!=(const String &p_str) const;
 	String operator+(const String &p_str) const;
 	String operator+(const char *p_char) const;
-	String operator+(const wchar_t *p_char) const;
 	String operator+(const char32_t *p_char) const;
 	String operator+(char32_t p_char) const;
 
 	String &operator+=(const String &);
 	String &operator+=(char32_t p_char);
 	String &operator+=(const char *p_str);
-	String &operator+=(const wchar_t *p_str);
 	String &operator+=(const char32_t *p_str);
 
 	bool operator==(const char *p_str) const;
-	bool operator==(const wchar_t *p_str) const;
 	bool operator==(const char32_t *p_str) const;
 	bool operator==(const Span<char32_t> &p_str_range) const;
 
 	bool operator!=(const char *p_str) const;
-	bool operator!=(const wchar_t *p_str) const;
 	bool operator!=(const char32_t *p_str) const;
 
 	bool operator<(const char32_t *p_str) const;
 	bool operator<(const char *p_str) const;
-	bool operator<(const wchar_t *p_str) const;
 
 	bool operator<(const String &p_str) const;
 	bool operator<=(const String &p_str) const;
@@ -473,11 +457,9 @@ public:
 	int64_t to_int() const;
 
 	static int64_t to_int(const char *p_str, int p_len = -1);
-	static int64_t to_int(const wchar_t *p_str, int p_len = -1);
 	static int64_t to_int(const char32_t *p_str, int p_len = -1, bool p_clamp = false);
 
 	static double to_float(const char *p_str);
-	static double to_float(const wchar_t *p_str, const wchar_t **r_end = nullptr);
 	static double to_float(const char32_t *p_str, const char32_t **r_end = nullptr);
 	static uint32_t num_characters(int64_t p_int);
 
@@ -562,8 +544,8 @@ public:
 
 	Char16String utf16() const;
 	Error append_utf16(const char16_t *p_utf16, int p_len = -1, bool p_default_little_endian = true);
-	Error append_utf16(const Span<char16_t> p_range, bool p_skip_cr = false) {
-		return append_utf16(p_range.ptr(), p_range.size(), p_skip_cr);
+	Error append_utf16(const Span<char16_t> p_range, bool p_default_little_endian = true) {
+		return append_utf16(p_range.ptr(), p_range.size(), p_default_little_endian);
 	}
 	static String utf16(const char16_t *p_utf16, int p_len = -1) {
 		String ret;
@@ -571,22 +553,6 @@ public:
 		return ret;
 	}
 	static String utf16(const Span<char16_t> &p_range) { return utf16(p_range.ptr(), p_range.size()); }
-
-	// wchar_t copy_from depends on the platform.
-	Error append_wstring(const Span<wchar_t> &p_cstr) {
-#ifdef WINDOWS_ENABLED
-		// wchar_t is 16-bit, parse as UTF-16
-		return append_utf16((const char16_t *)p_cstr.ptr(), p_cstr.size());
-#else
-		// wchar_t is 32-bit, copy directly
-		return append_utf32((Span<char32_t> &)p_cstr);
-#endif
-	}
-	static String wstring(const Span<wchar_t> &p_string) {
-		String string;
-		string.append_wstring(p_string);
-		return string;
-	}
 
 	Error append_utf32(const Span<char32_t> &p_cstr);
 	static String utf32(const Span<char32_t> &p_span) {
@@ -604,10 +570,23 @@ public:
 		return string;
 	}
 
+	// Calls `append_utf16` if `wchar_t` is 2 bytes long; otherwise calls `append_utf32`.
+	Error append_wstring(const Span<wchar_t> &p_span) {
+		if constexpr (sizeof(wchar_t) == 2) {
+			return append_utf16((Span<char16_t> &)p_span);
+		} else {
+			return append_utf32((Span<char32_t> &)p_span);
+		}
+	}
+	// Treated as `utf16` if `wchar_t` is 2 bytes long; otherwise treated as `utf32`.
+	static String wstring(const Span<wchar_t> &p_span) {
+		String string;
+		string.append_wstring(p_span);
+		return string;
+	}
+
 	static uint32_t hash(const char32_t *p_cstr, int p_len); /* hash the string */
 	static uint32_t hash(const char32_t *p_cstr); /* hash the string */
-	static uint32_t hash(const wchar_t *p_cstr, int p_len); /* hash the string */
-	static uint32_t hash(const wchar_t *p_cstr); /* hash the string */
 	static uint32_t hash(const char *p_cstr, int p_len); /* hash the string */
 	static uint32_t hash(const char *p_cstr); /* hash the string */
 	uint32_t hash() const; /* hash the string */
@@ -693,9 +672,6 @@ public:
 	String(const char *p_cstr) {
 		append_latin1(p_cstr);
 	}
-	String(const wchar_t *p_cstr) {
-		append_wstring(p_cstr);
-	}
 	String(const char32_t *p_cstr) {
 		append_utf32(p_cstr);
 	}
@@ -704,10 +680,6 @@ public:
 	void operator=(const char *p_cstr) {
 		clear();
 		append_latin1(p_cstr);
-	}
-	void operator=(const wchar_t *p_cstr) {
-		clear();
-		append_wstring(p_cstr);
 	}
 	void operator=(const char32_t *p_cstr) {
 		clear();
@@ -720,12 +692,9 @@ template <>
 struct is_zero_constructible<String> : std::true_type {};
 
 bool operator==(const char *p_chr, const String &p_str);
-bool operator==(const wchar_t *p_chr, const String &p_str);
 bool operator!=(const char *p_chr, const String &p_str);
-bool operator!=(const wchar_t *p_chr, const String &p_str);
 
 String operator+(const char *p_chr, const String &p_str);
-String operator+(const wchar_t *p_chr, const String &p_str);
 String operator+(char32_t p_chr, const String &p_str);
 
 String itos(int64_t p_val);

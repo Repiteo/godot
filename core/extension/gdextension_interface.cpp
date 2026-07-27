@@ -908,13 +908,9 @@ static void gdextension_string_new_with_utf32_chars(GDExtensionUninitializedStri
 
 static void gdextension_string_new_with_wide_chars(GDExtensionUninitializedStringPtr r_dest, const wchar_t *p_contents) {
 	if constexpr (sizeof(wchar_t) == 2) {
-		// wchar_t is 16 bit (UTF-16).
-		String *dest = memnew_placement(r_dest, String);
-		dest->append_utf16((const char16_t *)p_contents);
+		gdextension_string_new_with_utf16_chars(r_dest, (const char16_t *)p_contents);
 	} else {
-		// wchar_t is 32 bit (UTF-32).
-		String *string = memnew_placement(r_dest, String);
-		string->append_utf32(Span((const char32_t *)p_contents, p_contents ? strlen(p_contents) : 0));
+		gdextension_string_new_with_utf32_chars(r_dest, (const char32_t *)p_contents);
 	}
 }
 
@@ -952,14 +948,9 @@ static void gdextension_string_new_with_utf32_chars_and_len(GDExtensionUninitial
 
 static void gdextension_string_new_with_wide_chars_and_len(GDExtensionUninitializedStringPtr r_dest, const wchar_t *p_contents, GDExtensionInt p_char_count) {
 	if constexpr (sizeof(wchar_t) == 2) {
-		// wchar_t is 16 bit (UTF-16).
-		String *dest = memnew_placement(r_dest, String);
-		dest->append_utf16((const char16_t *)p_contents, p_char_count);
+		gdextension_string_new_with_utf16_chars_and_len(r_dest, (const char16_t *)p_contents, p_char_count);
 	} else {
-		// wchar_t is 32 bit (UTF-32).
-		const size_t string_length = p_contents ? (p_char_count < 0 ? strlen(p_contents) : strnlen((const char32_t *)p_contents, p_char_count)) : 0;
-		String *string = memnew_placement(r_dest, String);
-		string->append_utf32(Span((const char32_t *)p_contents, string_length));
+		gdextension_string_new_with_utf32_chars_and_len(r_dest, (const char32_t *)p_contents, p_char_count);
 	}
 }
 
@@ -1011,10 +1002,10 @@ static GDExtensionInt gdextension_string_to_utf32_chars(GDExtensionConstStringPt
 	return len;
 }
 static GDExtensionInt gdextension_string_to_wide_chars(GDExtensionConstStringPtr p_self, wchar_t *r_text, GDExtensionInt p_max_write_length) {
-	if constexpr (sizeof(wchar_t) == 4) {
-		return gdextension_string_to_utf32_chars(p_self, (char32_t *)r_text, p_max_write_length);
-	} else {
+	if constexpr (sizeof(wchar_t) == 2) {
 		return gdextension_string_to_utf16_chars(p_self, (char16_t *)r_text, p_max_write_length);
+	} else {
+		return gdextension_string_to_utf32_chars(p_self, (char32_t *)r_text, p_max_write_length);
 	}
 }
 
@@ -1050,10 +1041,12 @@ static void gdextension_string_operator_plus_eq_cstr(GDExtensionStringPtr p_self
 	*self += p_b;
 }
 
+#ifndef DISABLE_DEPRECATED
 static void gdextension_string_operator_plus_eq_wcstr(GDExtensionStringPtr p_self, const wchar_t *p_b) {
 	String *self = (String *)p_self;
-	*self += p_b;
+	*self += String::wstring(Span(p_b, strlen(p_b)));
 }
+#endif // DISABLE_DEPRECATED
 
 static void gdextension_string_operator_plus_eq_c32str(GDExtensionStringPtr p_self, const char32_t *p_b) {
 	String *self = (String *)p_self;
@@ -1799,7 +1792,9 @@ void gdextension_setup_interface() {
 	REGISTER_INTERFACE_FUNC(string_operator_plus_eq_string);
 	REGISTER_INTERFACE_FUNC(string_operator_plus_eq_char);
 	REGISTER_INTERFACE_FUNC(string_operator_plus_eq_cstr);
+#ifndef DISABLE_DEPRECATED
 	REGISTER_INTERFACE_FUNC(string_operator_plus_eq_wcstr);
+#endif // DISABLE_DEPRECATED
 	REGISTER_INTERFACE_FUNC(string_operator_plus_eq_c32str);
 	REGISTER_INTERFACE_FUNC(string_resize);
 	REGISTER_INTERFACE_FUNC(string_name_new_with_latin1_chars);

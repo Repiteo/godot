@@ -36,6 +36,59 @@ TEST_FORCE_LINK(test_string)
 
 namespace TestString {
 
+#define MULTICHECK_STRING_EQ(m_obj, m_func, m_param1, m_eq) \
+	CHECK(m_obj.m_func(m_param1) == m_eq); \
+	CHECK(m_obj.m_func(U##m_param1) == m_eq); \
+	CHECK(m_obj.m_func(String(m_param1)) == m_eq)
+
+#define MULTICHECK_STRING_INT_EQ(m_obj, m_func, m_param1, m_param2, m_eq) \
+	CHECK(m_obj.m_func(m_param1, m_param2) == m_eq); \
+	CHECK(m_obj.m_func(U##m_param1, m_param2) == m_eq); \
+	CHECK(m_obj.m_func(String(m_param1), m_param2) == m_eq)
+
+#define MULTICHECK_STRING_INT_INT_EQ(m_obj, m_func, m_param1, m_param2, m_param3, m_eq) \
+	CHECK(m_obj.m_func(m_param1, m_param2, m_param3) == m_eq); \
+	CHECK(m_obj.m_func(U##m_param1, m_param2, m_param3) == m_eq); \
+	CHECK(m_obj.m_func(String(m_param1), m_param2, m_param3) == m_eq)
+
+#define MULTICHECK_STRING_STRING_EQ(m_obj, m_func, m_param1, m_param2, m_eq) \
+	CHECK(m_obj.m_func(m_param1, m_param2) == m_eq); \
+	CHECK(m_obj.m_func(U##m_param1, U##m_param2) == m_eq); \
+	CHECK(m_obj.m_func(String(m_param1), String(m_param2)) == m_eq)
+
+#define MULTICHECK_GET_SLICE(m_obj, m_param1, m_slices) \
+	for (int i = 0; i < m_obj.get_slice_count(m_param1); ++i) { \
+		CHECK(m_obj.get_slice(m_param1, i) == m_slices[i]); \
+	} \
+	for (int i = 0; i < m_obj.get_slice_count(U##m_param1); ++i) { \
+		CHECK(m_obj.get_slice(U##m_param1, i) == m_slices[i]); \
+	} \
+	for (int i = 0; i < m_obj.get_slice_count(String(m_param1)); ++i) { \
+		CHECK(m_obj.get_slice(String(m_param1), i) == m_slices[i]); \
+	} \
+	static_assert(true)
+
+#define MULTICHECK_SPLIT(m_obj, m_func, m_param1, m_param2, m_param3, m_slices, m_expected_size) \
+	if constexpr (true) { \
+		Vector<String> string_list; \
+		string_list = m_obj.m_func(m_param1, m_param2, m_param3); \
+		CHECK(m_expected_size == string_list.size()); \
+		for (int i = 0; i < string_list.size(); ++i) { \
+			CHECK(string_list[i] == m_slices[i]); \
+		} \
+		string_list = m_obj.m_func(U##m_param1, m_param2, m_param3); \
+		CHECK(m_expected_size == string_list.size()); \
+		for (int i = 0; i < string_list.size(); ++i) { \
+			CHECK(string_list[i] == m_slices[i]); \
+		} \
+		string_list = m_obj.m_func(String(m_param1), m_param2, m_param3); \
+		CHECK(m_expected_size == string_list.size()); \
+		for (int i = 0; i < string_list.size(); ++i) { \
+			CHECK(string_list[i] == m_slices[i]); \
+		} \
+	} else \
+		static_assert(true)
+
 int u32scmp(const char32_t *l, const char32_t *r) {
 	for (; *l == *r && *l && *r; l++, r++) {
 		// Continue.
@@ -61,16 +114,6 @@ TEST_CASE("[String] Assign from Latin-1 char string (copycon)") {
 
 	String t2 = String::latin1(Span("Sheep", 3));
 	CHECK(u32scmp(t2.get_data(), U"She") == 0);
-}
-
-TEST_CASE("[String] Assign from wchar_t string (operator=)") {
-	String s = L"Give me";
-	CHECK(u32scmp(s.get_data(), U"Give me") == 0);
-}
-
-TEST_CASE("[String] Assign from wchar_t string (copycon)") {
-	String s(L"Wool");
-	CHECK(u32scmp(s.get_data(), U"Wool") == 0);
 }
 
 TEST_CASE("[String] Assign from char32_t string (operator=)") {
@@ -231,6 +274,30 @@ TEST_CASE("[String] Invalid UTF16 (non-standard)") {
 	ERR_PRINT_ON
 }
 
+TEST_CASE("[String] Wide characters") {
+	constexpr const wchar_t wstr[] = L"Good Morning. おはよう. صبح بخیر. 😀";
+	constexpr const char16_t u16str[] = u"Good Morning. おはよう. صبح بخیر. 😀";
+	constexpr const char32_t u32str[] = U"Good Morning. おはよう. صبح بخیر. 😀";
+	static_assert(sizeof(u16str) != sizeof(u32str));
+	if constexpr (sizeof(wchar_t) == 2) {
+		CHECK_EQ(sizeof(wstr), sizeof(u16str));
+		const String expected = String::utf16(u16str);
+		String parsed;
+		const Error err = parsed.append_wstring(wstr);
+		CHECK_EQ(err, OK);
+		CHECK_EQ(expected, parsed);
+		CHECK_EQ(String::wstring(wstr), parsed);
+	} else {
+		CHECK_EQ(sizeof(wstr), sizeof(u32str));
+		const String expected = String::utf32(u32str);
+		String parsed;
+		const Error err = parsed.append_wstring(wstr);
+		CHECK_EQ(err, OK);
+		CHECK_EQ(expected, parsed);
+		CHECK_EQ(String::wstring(wstr), parsed);
+	}
+}
+
 TEST_CASE("[String] ASCII") {
 	String s = U"Primero Leche";
 	String t = s.ascii(false).get_data();
@@ -244,7 +311,6 @@ TEST_CASE("[String] Comparisons (equal)") {
 	String s = "Test Compare";
 	CHECK(s == "Test Compare");
 	CHECK(s == U"Test Compare");
-	CHECK(s == L"Test Compare");
 	CHECK(s == String("Test Compare"));
 
 	CharString empty = "";
@@ -258,7 +324,6 @@ TEST_CASE("[String] Comparisons (not equal)") {
 	String s = "Test Compare";
 	CHECK(s != "Peanut");
 	CHECK(s != U"Coconut");
-	CHECK(s != L"Coconut");
 	CHECK(s != String("Butter"));
 }
 
@@ -266,7 +331,6 @@ TEST_CASE("[String] Comparisons (operator <)") {
 	String s = "Bees";
 	CHECK(s < "Elephant");
 	CHECK(!(s < U"Amber"));
-	CHECK(!(s < L"Amber"));
 	CHECK(!(s < String("Beatrix")));
 }
 
@@ -2252,5 +2316,12 @@ TEST_CASE("[String][URL] Parse URL") {
 
 #undef CHECK_URL
 }
+
+#undef MULTICHECK_GET_SLICE
+#undef MULTICHECK_SPLIT
+#undef MULTICHECK_STRING_EQ
+#undef MULTICHECK_STRING_INT_EQ
+#undef MULTICHECK_STRING_INT_INT_EQ
+#undef MULTICHECK_STRING_STRING_EQ
 
 } // namespace TestString

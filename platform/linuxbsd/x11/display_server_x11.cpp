@@ -4469,7 +4469,7 @@ void DisplayServerX11::_xim_preedit_draw_callback(::XIM xim, ::XPointer client_d
 		if (xim_text != nullptr) {
 			String changed_text;
 			if (xim_text->encoding_is_wchar) {
-				changed_text = String(xim_text->string.wide_char);
+				changed_text.append_wstring(Span(xim_text->string.wide_char, xim_text->length));
 			} else {
 				changed_text.append_utf8(xim_text->string.multi_byte);
 			}
