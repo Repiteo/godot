@@ -11,10 +11,10 @@ if "serve" in COMMAND_LINE_TARGETS or "run" in COMMAND_LINE_TARGETS:
 
     from serve import serve
 
-    port = os.environ.get("GODOT_WEB_TEST_PORT", 8060)
+    port = os.environ.get("GODOT_WEB_TEST_PORT", "8060")
     try:
         port = int(port)
-    except Exception:
+    except ValueError:
         print_error("GODOT_WEB_TEST_PORT must be a valid integer")
         sys.exit(255)
     serve(env.Dir(env.GetTemplateZipPath()).abspath, port, "run" in COMMAND_LINE_TARGETS)
@@ -70,9 +70,9 @@ for ext in sys_env["JS_EXTERNS"]:
 sys_env["ENV"]["EMCC_CLOSURE_ARGS"] = sys_env["ENV"]["EMCC_CLOSURE_ARGS"].strip()
 
 if len(env["EXPORTED_FUNCTIONS"]):
-    sys_env.Append(LINKFLAGS=["-sEXPORTED_FUNCTIONS=" + repr(sorted(list(set(env["EXPORTED_FUNCTIONS"]))))])
+    sys_env.Append(LINKFLAGS=["-sEXPORTED_FUNCTIONS=" + repr(sorted(set(env["EXPORTED_FUNCTIONS"])))])
 if len(env["EXPORTED_RUNTIME_METHODS"]):
-    sys_env.Append(LINKFLAGS=["-sEXPORTED_RUNTIME_METHODS=" + repr(sorted(list(set(env["EXPORTED_RUNTIME_METHODS"]))))])
+    sys_env.Append(LINKFLAGS=["-sEXPORTED_RUNTIME_METHODS=" + repr(sorted(set(env["EXPORTED_RUNTIME_METHODS"])))])
 
 build = []
 build_targets = ["#bin/godot${PROGSUFFIX}.js", "#bin/godot${PROGSUFFIX}.wasm"]

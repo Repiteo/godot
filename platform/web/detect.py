@@ -129,7 +129,7 @@ def configure(env: "SConsEnvironment"):
 
     try:
         env["initial_memory"] = int(env["initial_memory"])
-    except Exception:
+    except ValueError:
         print_error("Initial memory must be a valid integer")
         sys.exit(255)
 

@@ -18,7 +18,7 @@ sdk_path = env["APPLE_SDK_PATH"]
 current_path = Dir(".").abspath
 bridging_header_filename = "bridging_header_apple_embedded.h"
 swift_files = Glob("*.swift")
-swift_file_names = list(map(lambda f: f.name, swift_files))
+swift_file_names = [f.name for f in swift_files]
 setup_swift_builder(
     env_apple_embedded, apple_platform, sdk_path, current_path, bridging_header_filename, swift_file_names
 )

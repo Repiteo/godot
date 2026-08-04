@@ -35,12 +35,10 @@ def try_cmd(test, prefix, arch, check_clang=False):
                 stderr=subprocess.PIPE,
                 stdout=subprocess.PIPE,
             )
-            outs, errs = out.communicate()
+            outs, _ = out.communicate()
             if out.returncode == 0:
-                if check_clang and not outs.startswith(b"clang"):
-                    return False
-                return True
-        except Exception:
+                return not (check_clang and not outs.startswith(b"clang"))
+        except (OSError, FileNotFoundError):
             pass
 
     return False
@@ -98,18 +96,18 @@ def detect_build_env_arch():
     if os.getenv("VCTOOLSINSTALLDIR"):
         if os.getenv("Platform"):
             msvc_arch = os.getenv("Platform").lower()
-            if msvc_arch in msvc_target_aliases.keys():
+            if msvc_arch in msvc_target_aliases:
                 return msvc_target_aliases[msvc_arch]
 
         if os.getenv("VSCMD_ARG_TGT_ARCH"):
             msvc_arch = os.getenv("VSCMD_ARG_TGT_ARCH").lower()
-            if msvc_arch in msvc_target_aliases.keys():
+            if msvc_arch in msvc_target_aliases:
                 return msvc_target_aliases[msvc_arch]
 
         host_path_index = os.getenv("PATH").upper().find(os.getenv("VCTOOLSINSTALLDIR").upper() + "BIN\\HOST")
         if host_path_index > -1:
             first_path_arch = os.getenv("PATH")[host_path_index:].split(";")[0].rsplit("\\", 1)[-1].lower()
-            if first_path_arch in msvc_target_aliases.keys():
+            if first_path_arch in msvc_target_aliases:
                 return msvc_target_aliases[first_path_arch]
 
     msys_target_aliases = {
@@ -122,7 +120,7 @@ def detect_build_env_arch():
     }
     if os.getenv("MSYSTEM"):
         msys_arch = os.getenv("MSYSTEM").lower()
-        if msys_arch in msys_target_aliases.keys():
+        if msys_arch in msys_target_aliases:
             return msys_target_aliases[msys_arch]
 
     return ""
@@ -216,7 +214,7 @@ def get_opts():
             caller_frame = inspect.stack()[1]
             caller_script_dir = os.path.dirname(os.path.abspath(caller_frame[1]))
             deps_folder = os.path.join(caller_script_dir, "bin", "build_deps")
-        except Exception:  # Give up.
+        except (IndexError, OSError):  # Give up.
             deps_folder = ""
 
     return [
@@ -868,29 +866,28 @@ def configure_mingw(env: "SConsEnvironment"):
         ]
     )
 
-    if env["winrt"]:
-        if not os.path.exists(env["winrt_path"]):
-            prefix = os.getenv("MINGW_PREFIX", "")
-            msys = os.getenv("MSYSTEM", "")
-            if msys != "" and prefix != "":
-                if not os.path.exists(os.path.join(prefix, "include/winrt")):
-                    print_warning(
-                        "The WinRT/OneCore API requires dependencies to be installed.\n"
-                        f"You can install them by installing `cppwinrt` MSYS2 package or by running `python {os.path.join('misc', 'scripts', 'install_winrt.py')}`.\n"
-                        "See the documentation for more information:\n"
-                        "\thttps://docs.godotengine.org/en/latest/engine_details/development/compiling/compiling_for_windows.html\n"
-                        "Alternatively, disable this driver by compiling with `winrt=no` explicitly."
-                    )
-                env["winrt"] = False
-            else:
+    if env["winrt"] and not os.path.exists(env["winrt_path"]):
+        prefix = os.getenv("MINGW_PREFIX", "")
+        msys = os.getenv("MSYSTEM", "")
+        if msys != "" and prefix != "":
+            if not os.path.exists(os.path.join(prefix, "include/winrt")):
                 print_warning(
                     "The WinRT/OneCore API requires dependencies to be installed.\n"
-                    f"You can install them by running `python {os.path.join('misc', 'scripts', 'install_winrt.py')}`.\n"
+                    f"You can install them by installing `cppwinrt` MSYS2 package or by running `python {os.path.join('misc', 'scripts', 'install_winrt.py')}`.\n"
                     "See the documentation for more information:\n"
                     "\thttps://docs.godotengine.org/en/latest/engine_details/development/compiling/compiling_for_windows.html\n"
                     "Alternatively, disable this driver by compiling with `winrt=no` explicitly."
                 )
-                env["winrt"] = False
+            env["winrt"] = False
+        else:
+            print_warning(
+                "The WinRT/OneCore API requires dependencies to be installed.\n"
+                f"You can install them by running `python {os.path.join('misc', 'scripts', 'install_winrt.py')}`.\n"
+                "See the documentation for more information:\n"
+                "\thttps://docs.godotengine.org/en/latest/engine_details/development/compiling/compiling_for_windows.html\n"
+                "Alternatively, disable this driver by compiling with `winrt=no` explicitly."
+            )
+            env["winrt"] = False
 
     if env["accesskit"]:
         if os.path.exists(env["accesskit_sdk_path"]):

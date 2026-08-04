@@ -38,7 +38,7 @@ def detect_arch():
     host_machine = platform.machine().lower()
     if host_machine in architectures:
         return host_machine
-    elif host_machine in architecture_aliases.keys():
+    elif host_machine in architecture_aliases:
         return architecture_aliases[host_machine]
     elif "86" in host_machine:
         # Catches x86, i386, i486, i586, i686, etc.
@@ -283,7 +283,7 @@ def generate_bundle_apple_embedded(platform, framework_dir, framework_dir_sim, u
 
     # Remove other platform xcframeworks
     for entry in os.listdir(app_dir):
-        if (entry.startswith("libgodot.") or entry.startswith("libgodot_")) and entry.endswith(".xcframework"):
+        if (entry.startswith(("libgodot.", "libgodot_"))) and entry.endswith(".xcframework"):
             parts = entry.split(".")
             if len(parts) >= 3 and parts[1] != platform:
                 full_path = os.path.join(app_dir, entry)
@@ -323,7 +323,7 @@ def setup_swift_builder(env, apple_platform, sdk_path, current_path, bridging_he
         target_suffix = "xros26.0-simulator"
 
     else:
-        raise Exception("Invalid platform argument passed to detect_darwin_sdk_path")
+        raise ValueError("Invalid platform argument passed to detect_darwin_sdk_path")
 
     swiftc_target = env["arch"] + "-apple-" + target_suffix
 

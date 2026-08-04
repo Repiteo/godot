@@ -40,7 +40,7 @@ def get_opts():
             caller_frame = inspect.stack()[1]
             caller_script_dir = os.path.dirname(os.path.abspath(caller_frame[1]))
             deps_folder = os.path.join(caller_script_dir, "bin", "build_deps")
-        except Exception:  # Give up.
+        except (IndexError, OSError):  # Give up.
             deps_folder = ""
 
     return [

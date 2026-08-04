@@ -681,16 +681,14 @@ class ReservedTagCheck:
         self.tag_stack_error = ""
 
     def run_final_check(self) -> None:
-        if len(self.tag_stack) > 0:
-            if self.tag_stack_error == "":
-                self.tag_stack_error = f"unmatched opening tag(s) [{']['.join(self.tag_stack)}]"
+        if len(self.tag_stack) > 0 and self.tag_stack_error == "":
+            self.tag_stack_error = f"unmatched opening tag(s) [{']['.join(self.tag_stack)}]"
 
     def add_opening_tag(self, tag_state_name: str) -> None:
         self.tag_depth += 1
 
-        if tag_state_name in self.tag_stack:
-            if self.tag_stack_error == "":
-                self.tag_stack_error = f"duplicated opening tags [{']['.join(self.tag_stack)}][{tag_state_name}]"
+        if tag_state_name in self.tag_stack and self.tag_stack_error == "":
+            self.tag_stack_error = f"duplicated opening tags [{']['.join(self.tag_stack)}][{tag_state_name}]"
 
         self.tag_stack.append(tag_state_name)
 
@@ -757,7 +755,7 @@ def main() -> None:
                 import polib  # type: ignore
             except ImportError:
                 print("Base template strings localization requires `polib`.")
-                exit(1)
+                sys.exit(1)
 
             pofile = polib.pofile(lang_file)
             for entry in pofile.translated_entries():
@@ -772,7 +770,7 @@ def main() -> None:
 
     for path in args.path:
         # Cut off trailing slashes so os.path.basename doesn't choke.
-        if path.endswith("/") or path.endswith("\\"):
+        if path.endswith(("/", "\\")):
             path = path[:-1]
 
         if os.path.basename(path) in ["modules", "platform"]:
@@ -813,7 +811,7 @@ def main() -> None:
     for name, data in classes.items():
         try:
             state.parse_class(data[0], data[1])
-        except Exception as e:
+        except AssertionError as e:
             print_error(f"{name}.xml: Exception while parsing class: {e}", state)
 
     state.sort_classes()
@@ -844,12 +842,12 @@ def main() -> None:
                 grouped_classes["editor"] = []
             grouped_classes["editor"].append(class_name)
 
-    print("")
+    print()
     print("Generating the index file...")
 
     make_rst_index(grouped_classes, args.dry_run, args.output)
 
-    print("")
+    print()
 
     # Print out checks.
 
@@ -863,13 +861,13 @@ def main() -> None:
                 f"{Ansi.YELLOW}{state.script_language_parity_check.hit_count} code samples failed parity check:{Ansi.RESET}"
             )
 
-            for class_name in state.script_language_parity_check.hit_map.keys():
+            for class_name in state.script_language_parity_check.hit_map:
                 class_hits = state.script_language_parity_check.hit_map[class_name]
                 print(f'{Ansi.YELLOW}- {len(class_hits)} hits in class "{class_name}"{Ansi.RESET}')
 
                 for context, error in class_hits:
                     print(f"  - {error} in {format_context_name(context)}")
-        print("")
+        print()
 
     # Print out warnings and errors, or lack thereof, and exit with an appropriate code.
 
@@ -894,7 +892,7 @@ def main() -> None:
         if not args.dry_run:
             print(f"Wrote reStructuredText files for each class to: {args.output}")
     else:
-        exit(1)
+        sys.exit(1)
 
 
 # Common helpers.
@@ -1043,8 +1041,7 @@ def make_rst_class(class_def: ClassDef, state: State, dry_run: bool, output_dir:
             f.write(".. rst-class:: classref-introduction-group\n\n")
             f.write(make_heading("Tutorials", "-"))
 
-            for url, title in class_def.tutorials:
-                f.write(f"- {make_link(url, title)}\n\n")
+            f.writelines(f"- {make_link(url, title)}\n\n" for url, title in class_def.tutorials)
 
         ### REFERENCE TABLES ###
 
@@ -1124,9 +1121,7 @@ def make_rst_class(class_def: ClassDef, state: State, dry_run: bool, output_dir:
             f.write(".. rst-class:: classref-descriptions-group\n\n")
             f.write(make_heading("Signals", "-"))
 
-            index = 0
-
-            for signal in class_def.signals.values():
+            for index, signal in enumerate(class_def.signals.values()):
                 if index != 0:
                     f.write(make_separator())
 
@@ -1155,17 +1150,13 @@ def make_rst_class(class_def: ClassDef, state: State, dry_run: bool, output_dir:
                         + "\n\n"
                     )
 
-                index += 1
-
         # Enumeration descriptions
         if len(class_def.enums) > 0:
             f.write(make_separator(True))
             f.write(".. rst-class:: classref-descriptions-group\n\n")
             f.write(make_heading("Enumerations", "-"))
 
-            index = 0
-
-            for e in class_def.enums.values():
+            for index, e in enumerate(class_def.enums.values()):
                 if index != 0:
                     f.write(make_separator())
 
@@ -1206,8 +1197,6 @@ def make_rst_class(class_def: ClassDef, state: State, dry_run: bool, output_dir:
 
                     f.write("\n\n")
 
-                index += 1
-
         # Constant descriptions
         if len(class_def.constants) > 0:
             f.write(make_separator(True))
@@ -1247,9 +1236,7 @@ def make_rst_class(class_def: ClassDef, state: State, dry_run: bool, output_dir:
             f.write(".. rst-class:: classref-descriptions-group\n\n")
             f.write(make_heading("Annotations", "-"))
 
-            index = 0
-
-            for method_list in class_def.annotations.values():  # type: ignore
+            for index, method_list in enumerate(class_def.annotations.values()):  # type: ignore
                 for i, m in enumerate(method_list):
                     if index != 0:
                         f.write(make_separator())
@@ -1280,17 +1267,13 @@ def make_rst_class(class_def: ClassDef, state: State, dry_run: bool, output_dir:
                             + "\n\n"
                         )
 
-                    index += 1
-
         # Property descriptions
         if any(not p.overrides for p in class_def.properties.values()) > 0:
             f.write(make_separator(True))
             f.write(".. rst-class:: classref-descriptions-group\n\n")
             f.write(make_heading("Property Descriptions", "-"))
 
-            index = 0
-
-            for property_def in class_def.properties.values():
+            for index, property_def in enumerate(class_def.properties.values()):
                 if property_def.overrides:
                     continue
 
@@ -1349,17 +1332,13 @@ def make_rst_class(class_def: ClassDef, state: State, dry_run: bool, output_dir:
                     copy_note = f"[b]Note:[/b] The returned array is [i]copied[/i] and any changes to it will not update the original property value. See [{property_def.type_name.type_name}] for more details."
                     f.write(f"{format_text_block(copy_note, property_def, state)}\n\n")
 
-                index += 1
-
         # Constructor, Method, Operator descriptions
         if len(class_def.constructors) > 0:
             f.write(make_separator(True))
             f.write(".. rst-class:: classref-descriptions-group\n\n")
             f.write(make_heading("Constructor Descriptions", "-"))
 
-            index = 0
-
-            for method_list in class_def.constructors.values():
+            for index, method_list in enumerate(class_def.constructors.values()):
                 for i, m in enumerate(method_list):
                     if index != 0:
                         f.write(make_separator())
@@ -1392,16 +1371,12 @@ def make_rst_class(class_def: ClassDef, state: State, dry_run: bool, output_dir:
                             + "\n\n"
                         )
 
-                    index += 1
-
         if len(class_def.methods) > 0:
             f.write(make_separator(True))
             f.write(".. rst-class:: classref-descriptions-group\n\n")
             f.write(make_heading("Method Descriptions", "-"))
 
-            index = 0
-
-            for method_list in class_def.methods.values():
+            for index, method_list in enumerate(class_def.methods.values()):
                 for i, m in enumerate(method_list):
                     if index != 0:
                         f.write(make_separator())
@@ -1446,9 +1421,7 @@ def make_rst_class(class_def: ClassDef, state: State, dry_run: bool, output_dir:
             f.write(".. rst-class:: classref-descriptions-group\n\n")
             f.write(make_heading("Operator Descriptions", "-"))
 
-            index = 0
-
-            for method_list in class_def.operators.values():
+            for index, method_list in enumerate(class_def.operators.values()):
                 for i, m in enumerate(method_list):
                     if index != 0:
                         f.write(make_separator())
@@ -1483,17 +1456,13 @@ def make_rst_class(class_def: ClassDef, state: State, dry_run: bool, output_dir:
                             + "\n\n"
                         )
 
-                    index += 1
-
         # Theme property descriptions
         if len(class_def.theme_items) > 0:
             f.write(make_separator(True))
             f.write(".. rst-class:: classref-descriptions-group\n\n")
             f.write(make_heading("Theme Property Descriptions", "-"))
 
-            index = 0
-
-            for theme_item_def in class_def.theme_items.values():
+            for index, theme_item_def in enumerate(class_def.theme_items.values()):
                 if index != 0:
                     f.write(make_separator())
 
@@ -1527,8 +1496,6 @@ def make_rst_class(class_def: ClassDef, state: State, dry_run: bool, output_dir:
                         )
                         + "\n\n"
                     )
-
-                index += 1
 
         f.write(make_footer())
 
@@ -1790,21 +1757,21 @@ def make_rst_index(grouped_classes: dict[str, list[str]], dry_run: bool, output_
 
         f.write(make_heading("All classes", "="))
 
-        for group_name in CLASS_GROUPS:
-            if group_name in grouped_classes:
-                f.write(make_heading(CLASS_GROUPS[group_name], "="))
+        for key, value in CLASS_GROUPS.items():
+            if key in grouped_classes:
+                f.write(make_heading(value, "="))
 
                 f.write(".. toctree::\n")
                 f.write("    :maxdepth: 1\n")
-                f.write(f"    :name: toc-class-ref-{group_name}s\n")
+                f.write(f"    :name: toc-class-ref-{key}s\n")
                 f.write("\n")
 
-                if group_name in CLASS_GROUPS_BASE:
-                    f.write(f"    class_{sanitize_class_name(CLASS_GROUPS_BASE[group_name], True)}\n")
+                if key in CLASS_GROUPS_BASE:
+                    f.write(f"    class_{sanitize_class_name(CLASS_GROUPS_BASE[key], True)}\n")
 
-                for class_name in grouped_classes[group_name]:
-                    if group_name in CLASS_GROUPS_BASE and sanitize_class_name(
-                        CLASS_GROUPS_BASE[group_name], True
+                for class_name in grouped_classes[key]:
+                    if key in CLASS_GROUPS_BASE and sanitize_class_name(
+                        CLASS_GROUPS_BASE[key], True
                     ) == sanitize_class_name(class_name, True):
                         continue
 
@@ -2065,7 +2032,7 @@ def format_text_block(
                     inside_code_text = text[endq_pos + 1 : endcode_pos]
                     if inside_code_text.endswith("()"):
                         # It's formatted like a call for some reason, may still be a mistake.
-                        inside_code_text = inside_code_text[:-2]
+                        inside_code_text = inside_code_text.removesuffix("()")
 
                     if inside_code_text in state.classes:
                         print_warning(
@@ -2505,14 +2472,14 @@ def preformat_text_block(text: str, state: State) -> str | None:
                 # Remove extraneous tabs and replace remaining tabs with spaces.
                 result += "\n" + "    " * (tab_count - indent_level + 1) + stripped_line
         else:
-            if (
-                stripped_line.startswith("[codeblock]")
-                or stripped_line.startswith("[codeblock ")
-                or stripped_line.startswith("[gdscript]")
-                or stripped_line.startswith("[gdscript ")
-                or stripped_line.startswith("[csharp]")
-                or stripped_line.startswith("[csharp ")
-            ):
+            if stripped_line.startswith((
+                "[codeblock]",
+                "[codeblock ",
+                "[gdscript]",
+                "[gdscript ",
+                "[csharp]",
+                "[csharp ",
+            )):
                 if result:
                     result += "\n"
                 result += stripped_line
@@ -2585,8 +2552,7 @@ def format_table(f: TextIO, data: list[tuple[str | None, ...]], remove_empty_col
     for row in data:
         for i, text in enumerate(row):
             text_length = len(text or "")
-            if text_length > column_sizes[i]:
-                column_sizes[i] = text_length
+            column_sizes[i] = max(column_sizes[i], text_length)
 
     # Each table row is wrapped in two separators, consecutive rows share the same separator.
     # All separators, or rather borders, have the same shape and content. We compose it once,

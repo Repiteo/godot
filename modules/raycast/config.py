@@ -4,8 +4,8 @@ def can_build(env, platform):
         return False
     if env["arch"] in ["x86_64", "arm64", "wasm32"]:
         return True
-    if env["arch"] == "x86_32" and platform == "windows":
-        return True
+    if env["arch"] == "x86_32":
+        return platform == "windows"
     return False
 
 

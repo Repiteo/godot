@@ -88,7 +88,7 @@ for x in sorted(glob.glob("platform/*")):
         doc_path = detect.get_doc_path()
         for c in doc_classes:
             platform_doc_class_path[c] = x.replace("\\", "/") + "/" + doc_path
-    except Exception:
+    except AttributeError:
         pass
 
     platform_name = x[9:]
@@ -142,7 +142,7 @@ env["x86_libtheora_opt_gcc"] = False
 env["x86_libtheora_opt_vc"] = False
 
 # avoid issues when building with different versions of python out of the same directory
-env.SConsignFile(File("#.sconsign{0}.dblite".format(pickle.HIGHEST_PROTOCOL)).abspath)
+env.SConsignFile(File(f"#.sconsign{pickle.HIGHEST_PROTOCOL}.dblite").abspath)
 
 # Build options
 
@@ -649,7 +649,8 @@ if env["build_profile"] != "":
     import json
 
     try:
-        ft = json.load(open(env["build_profile"], "r", encoding="utf-8"))
+        with open(env["build_profile"], "r", encoding="utf-8") as file:
+            ft = json.load(file)
         if "disabled_classes" in ft:
             env.disabled_classes = ft["disabled_classes"]
         if "disabled_build_options" in ft:
@@ -822,11 +823,10 @@ elif methods.using_clang(env) or methods.using_emcc(env):
         env.AppendUnique(CCFLAGS=["-fansi-escape-codes"])
 
 # Attempt to reduce transitive includes.
-if env["limit_transitive_includes"]:
-    if not env.msvc:
-        # FIXME: This define only affects `libcpp`, but lack of guaranteed, granular detection means
-        #  we're better off applying it universally.
-        env.AppendUnique(CPPDEFINES=["_LIBCPP_REMOVE_TRANSITIVE_INCLUDES"])
+if env["limit_transitive_includes"] and not env.msvc:
+    # FIXME: This define only affects `libcpp`, but lack of guaranteed, granular detection means
+    #  we're better off applying it universally.
+    env.AppendUnique(CPPDEFINES=["_LIBCPP_REMOVE_TRANSITIVE_INCLUDES"])
 
 # Set optimize and debug_symbols flags.
 # "custom" means do nothing and let users set their own optimization flags.
@@ -1129,13 +1129,13 @@ for name, path in modules_detected.items():
             doc_path = config.get_doc_path()
             for c in doc_classes:
                 env.doc_class_path[c] = path + "/" + doc_path
-        except Exception:
+        except AttributeError:
             pass
         # Get icon paths (if present)
         try:
             icons_path = config.get_icons_path()
             env.module_icons_paths.append(path + "/" + icons_path)
-        except Exception:
+        except AttributeError:
             # Default path for module icons
             env.module_icons_paths.append(path + "/" + "icons")
         modules_enabled[name] = path

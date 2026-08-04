@@ -171,9 +171,11 @@ def find_section_name(sub_folder):
 
 
 # "extension" will usually be cpp, but can also be set to c (for e.g. third party libraries that use c)
-def process_folder(folders, sought_exceptions=[], includes_per_scu=0, extension="cpp"):
+def process_folder(folders, sought_exceptions=None, includes_per_scu=0, extension="cpp"):
     if len(folders) == 0:
         return
+    if sought_exceptions is None:
+        sought_exceptions = []
 
     # Construct the filename prefix from the FIRST folder name
     # e.g. "scene_3d"
@@ -187,7 +189,6 @@ def process_folder(folders, sought_exceptions=[], includes_per_scu=0, extension=
 
     # Keep a record of all folders that have been processed for SCU,
     # this enables deciding what to do when we call "add_source_files()"
-    global _scu_folders
     _scu_folders.add(main_folder)
 
     # main folder (first)
@@ -212,8 +213,7 @@ def process_folder(folders, sought_exceptions=[], includes_per_scu=0, extension=
     if includes_per_scu == 0:
         includes_per_scu = _max_includes_per_scu
     else:
-        if includes_per_scu > _max_includes_per_scu:
-            includes_per_scu = _max_includes_per_scu
+        includes_per_scu = min(includes_per_scu, _max_includes_per_scu)
 
     num_output_files = max(math.ceil(total_lines / float(includes_per_scu)), 1)
 
@@ -228,7 +228,7 @@ def process_folder(folders, sought_exceptions=[], includes_per_scu=0, extension=
 
     fresh_files = set()
 
-    for file_count in range(0, num_output_files):
+    for file_count in range(num_output_files):
         end_line = start_line + lines_per_file
 
         # special case to cover rounding error in final file

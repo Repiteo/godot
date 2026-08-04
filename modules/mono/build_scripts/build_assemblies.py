@@ -107,7 +107,7 @@ def find_msbuild_tools_path_reg():
         print("Error reading output from vswhere: " + str(e))
     except OSError:
         pass  # Fine, vswhere not found
-    except (subprocess.CalledProcessError, OSError):
+    except subprocess.CalledProcessError:
         pass
 
 
@@ -231,7 +231,7 @@ def build_godot_api(msbuild_tool, module_dir, output_dir, push_nupkgs_local, pre
             assert not os.path.isfile(editor_api_dir)
             os.makedirs(editor_api_dir)
 
-        def copy_target(target_path):
+        def copy_target(target_path, core_src_dir, editor_src_dir, plugins_src_dir):
             from shutil import copy
 
             filename = os.path.basename(target_path)
@@ -246,7 +246,7 @@ def build_godot_api(msbuild_tool, module_dir, output_dir, push_nupkgs_local, pre
             copy(src_path, target_path)
 
         for scons_target in targets:
-            copy_target(scons_target)
+            copy_target(scons_target, core_src_dir, editor_src_dir, plugins_src_dir)
 
     return 0
 
@@ -312,8 +312,8 @@ def generate_sdk_package_versions():
             f"GODOT{version.major}_{version.minor}_{version.patch}",
         ]
         + [f"GODOT{v}_OR_GREATER" for v in range(4, version.major + 1)]
-        + [f"GODOT{version.major}_{v}_OR_GREATER" for v in range(0, version.minor + 1)]
-        + [f"GODOT{version.major}_{version.minor}_{v}_OR_GREATER" for v in range(0, version.patch + 1)]
+        + [f"GODOT{version.major}_{v}_OR_GREATER" for v in range(version.minor + 1)]
+        + [f"GODOT{version.major}_{version.minor}_{v}_OR_GREATER" for v in range(version.patch + 1)]
     )
 
     props = f"""<Project>

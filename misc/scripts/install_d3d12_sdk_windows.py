@@ -110,15 +110,31 @@ if has_mingw:
     cwd = os.getcwd()
     os.chdir(pix_folder)
     subprocess.run([gendef, "./bin/x64/WinPixEventRuntime.dll"])
-    subprocess.run(
-        [dlltool]
-        + "--machine i386:x86-64 --no-leading-underscore -d WinPixEventRuntime.def -D WinPixEventRuntime.dll -l ./bin/x64/libWinPixEventRuntime.a".split()
-    )
+    subprocess.run([
+        dlltool,
+        "--machine",
+        "i386:x86-64",
+        "--no-leading-underscore",
+        "-d",
+        "WinPixEventRuntime.def",
+        "-D",
+        "WinPixEventRuntime.dll",
+        "-l",
+        "./bin/x64/libWinPixEventRuntime.a",
+    ])
     subprocess.run([gendef, "./bin/ARM64/WinPixEventRuntime.dll"])
-    subprocess.run(
-        [dlltool]
-        + "--machine arm64 --no-leading-underscore -d WinPixEventRuntime.def -D WinPixEventRuntime.dll -l ./bin/ARM64/libWinPixEventRuntime.a".split()
-    )
+    subprocess.run([
+        dlltool,
+        "--machine",
+        "arm64",
+        "--no-leading-underscore",
+        "-d",
+        "WinPixEventRuntime.def",
+        "-D",
+        "WinPixEventRuntime.dll",
+        "-l",
+        "./bin/ARM64/libWinPixEventRuntime.a",
+    ])
     os.chdir(cwd)
 else:
     print(

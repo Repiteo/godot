@@ -159,7 +159,7 @@ def check_formatting(buffer, data, filename):
     if len(diff) > 0:
         print(" *** Apply this patch to fix: ***\n")
         print("\n".join(diff))
-        raise Exception(f"Formatting issues in {filename}")
+        raise SyntaxError(f"Formatting issues in {filename}")
 
 
 # Note: most symbols (enum values, struct members, argument names) already cause a compile error if duplicated.
@@ -169,7 +169,9 @@ def check_duplicate(name, defined, what):
         raise Exception(f"Found duplicate {what} '{name}'")
 
 
-def check_allowed_keys(data, required, optional=[]):
+def check_allowed_keys(data, required, optional=None):
+    if optional is None:
+        optional = []
     keys = data.keys()
     allowed = required + optional
     for k in keys:
@@ -192,11 +194,7 @@ class UnknownTypeError(Exception):
 
 
 def base_type_name(type_name):
-    if type_name.startswith("const "):
-        type_name = type_name[6:]
-    if type_name.endswith("*"):
-        type_name = type_name[:-1]
-    return type_name
+    return type_name.removeprefix("const ").removesuffix("*")
 
 
 def format_type_and_name(type, name=None):
@@ -230,9 +228,8 @@ def check_type(kind, type, valid_data_types):
         for arg in type["arguments"]:
             if not is_valid_type(arg["type"], valid_data_types):
                 raise UnknownTypeError(arg["type"], type["name"], arg.get("name"))
-        if "return_value" in type:
-            if not is_valid_type(type["return_value"]["type"], valid_data_types):
-                raise UnknownTypeError(type["return_value"]["type"], type["name"])
+        if "return_value" in type and not is_valid_type(type["return_value"]["type"], valid_data_types):
+            raise UnknownTypeError(type["return_value"]["type"], type["name"])
 
 
 def write_doc(file, doc, indent=""):
@@ -257,7 +254,7 @@ def write_doc(file, doc, indent=""):
 def make_deprecated_message(data):
     parts = [
         f"Deprecated in Godot {data['since']}.",
-        data["message"] if "message" in data else "",
+        data.get("message", ""),
         f"Use `{data['replace_with']}` instead." if "replace_with" in data else "",
     ]
     return " ".join([x for x in parts if x.strip() != ""])

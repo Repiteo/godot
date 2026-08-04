@@ -46,14 +46,16 @@ def generate_bundle(target, source, env):
         if "mono" in env.module_version_string:
             shutil.copytree(env.Dir("#bin/GodotSharp").abspath, app_dir + "/Contents/Resources/GodotSharp")
         version = get_version_info("", True)
-        with open(env.Dir("#misc/dist/macos").abspath + "/editor_info_plist.template", "rt", encoding="utf-8") as fin:
-            with open(app_dir + "/Contents/Info.plist", "wt", encoding="utf-8", newline="\n") as fout:
-                for line in fin:
-                    line = line.replace("$version", "{major}.{minor}.{patch}.{status}.{build}".format(**version))
-                    line = line.replace("$short_version", "{major}.{minor}.{patch}".format(**version))
-                    if version["build"] != "official" and version["build"] != "steam":
-                        line = line.replace("org.godotengine.godot", "org.godotengine.godot." + version["build"])
-                    fout.write(line)
+        with (
+            open(env.Dir("#misc/dist/macos").abspath + "/editor_info_plist.template", "rt", encoding="utf-8") as fin,
+            open(app_dir + "/Contents/Info.plist", "wt", encoding="utf-8", newline="\n") as fout,
+        ):
+            for line in fin:
+                line = line.replace("$version", "{major}.{minor}.{patch}.{status}.{build}".format(**version))
+                line = line.replace("$short_version", "{major}.{minor}.{patch}".format(**version))
+                if version["build"] != "official" and version["build"] != "steam":
+                    line = line.replace("org.godotengine.godot", "org.godotengine.godot." + version["build"])
+                fout.write(line)
 
         # Sign .app bundle.
         if env["bundle_sign_identity"] != "":
