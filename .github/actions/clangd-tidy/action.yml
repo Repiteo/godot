@@ -32,7 +32,7 @@ runs:
           echo "No changed files to check."
         elif [ "$CHANGED_FILES_LENGTH" -gt 100000 ]; then
           # Avoid argument length limitations by using xargs to pass the file list.
-          printf '%s\n' $CHANGED_FILES | tr -d '"' | xargs clangd-tidy
+          printf '%s\n' $CHANGED_FILES | xargs clangd-tidy
         else
           clangd-tidy $CHANGED_FILES
         fi

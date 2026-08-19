@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     outputs:
-      changed-files: '"${{ steps.changed-files.outputs.clangd_all_changed_files }}"' # Wrap with quotes to bookend internal quote separators.
-      sources-changed: ${{ steps.changed-files.outputs.sources_any_changed }}
+      changed-files: ${{ steps.changed-files.outputs.CLANGD_ALL_CHANGED_FILES }}
+      sources-changed: ${{ steps.changed-files.outputs.SOURCES_ANY_CHANGED }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -32,36 +32,62 @@ jobs:
 
       - name: Get changed files
         id: changed-files
-        uses: tj-actions/changed-files@v47
-        with:
-          safe_output: false # Output passed to environment variable to avoid command injection.
-          separator: '" "' # To account for paths with spaces, ensure our items are split by quotes internally.
-          skip_initial_fetch: true
-          files_yaml_from_source_file: .github/changed_files.yml
-
-      - name: Decide prek file scope (all files or only changed files)
-        id: prek-scope
-        shell: bash
-        env:
-          CHANGED_FILES: '"${{ steps.changed-files.outputs.everything_all_changed_files }}"' # Wrap with quotes to bookend internal quote separators.
+        shell: sh
         run: |
-          CHANGED_FILES_LENGTH=${#CHANGED_FILES}
-          if [ "$CHANGED_FILES_LENGTH" -lt 5 ] || [ "$CHANGED_FILES_LENGTH" -gt 100000 ]; then
-            echo "use_all_files=true" >> "$GITHUB_OUTPUT"
+          echo "::group::Determine 'BASE_SHA'"
+          if git cat-file -e ${{ github.event.before }} > /dev/null 2>&1; then
+            BASE_SHA="${{ github.event.before }}"
           else
-            echo "use_all_files=false" >> "$GITHUB_OUTPUT"
+            echo "Could not determine previous SHA; falling back to 'HEAD~1'."
+            BASE_SHA="HEAD~1"
           fi
+          echo "$BASE_SHA"
+          echo "BASE_SHA=$BASE_SHA" >> "$GITHUB_OUTPUT"
+          echo "::endgroup::"
 
-      - name: Style checks via prek (all files)
-        if: steps.prek-scope.outputs.use_all_files == 'true'
-        uses: j178/prek-action@v2
-        with:
-          extra-args: --all-files
+          BASE_SHA="HEAD~100"
 
-      - name: Style checks via prek (changed files)
-        if: steps.prek-scope.outputs.use_all_files == 'false'
-        uses: j178/prek-action@v2
-        env:
-          CHANGED_FILES: '"${{ steps.changed-files.outputs.everything_all_changed_files }}"' # Wrap with quotes to bookend internal quote separators.
+          echo "::group::Determine 'SOURCES_ANY_CHANGED'"
+          # Determines if build actions should occur after static checks are ran. Broadly speaking, these
+          #  files changing would result in SCons rebuilding the engine, or are otherwise pertinent to the
+          #  buildsystem itself.
+          SOURCES_ALL_CHANGED_FILES=$(git diff --name-only -z $BASE_SHA HEAD -- \
+            '.github/{actions/*,workflows}/*.yml' \
+            '**/{SConstruct,SCsub,*.py}' \
+            '**/*.{h,hpp,hh,hxx,c,cpp,cc,cxx,m,mm,inc,glsl}' \
+            'core/extension/gdextension_interface.json' \
+            'misc/extension_api_validation/**' \
+            'modules/*/tests/**' \
+            'modules/mono/**/*.{cs,csproj,sln,props,targets}' \
+            'platform/android/java/{gradle*,**/*.{jar,java,kt,gradle}}' \
+            'platform/web/{package{,-lock}.json,js/**/*.js}' \
+            'tests/**' \
+          )
+          echo "$SOURCES_ALL_CHANGED_FILES"
+          [ -z "$SOURCES_ALL_CHANGED_FILES" ] && SOURCES_ANY_CHANGED="false" || SOURCES_ANY_CHANGED="true"
+          echo "$SOURCES_ANY_CHANGED"
+          echo "SOURCES_ANY_CHANGED=$SOURCES_ANY_CHANGED" >> "$GITHUB_OUTPUT"
+          echo "::endgroup::"
+
+          echo "::group::Determine 'CLANGD_ALL_CHANGED_FILES'"
+          # Determines which files are appropriate for running clangd-tidy checks on. This is a subset out
+          #  of necessity, as we're only evaluating a Linux runner.
+          CLANGD_ALL_CHANGED_FILES=$(git diff --name-only -z $BASE_SHA HEAD -- \
+            **/*.{h,hpp,hxx,hh,c,cpp,cxx,cc} \
+            :(exclude)**/thirdparty/** \
+            :(exclude)**/*-so_wrap.{h,c} \
+            :(exclude)drivers/{apple*,core*,d3d12,metal,wasapi,windows,winmidi,xaudio2}/** \
+            :(exclude)editor/shader/shader_baker/shader_baker_export_plugin_platform_{d3d12,metal}.{h,cpp} \
+            :(exclude)modules/camera/camera_{android,macos,win}.{h,cpp} \
+            :(exclude)modules/openxr/extensions/platform/openxr_{android,metal}_extension.{h,cpp} \
+            :(exclude)platform/{android,ios,macos,visionos,web,windows}/** \
+            platform/{android,ios,macos,visionos,web,windows}/{api,export}/*.{h,hpp,hxx,hh,c,cpp,cxx,cc} \
+          | tr '\0' ' ')
+          echo "$CLANGD_ALL_CHANGED_FILES"
+          echo "CLANGD_ALL_CHANGED_FILES=$CLANGD_ALL_CHANGED_FILES" >> "$GITHUB_OUTPUT"
+          echo "::endgroup::"
+
+      - name: Style checks via prek
+        uses: j178/prek-action@v3.0.0
         with:
-          extra-args: --files ${{ env.CHANGED_FILES }}
+          extra-args: --from-ref ${{ steps.changed-files.outputs.BASE_SHA }}
