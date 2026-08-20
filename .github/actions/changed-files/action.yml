@@ -1,0 +1,13 @@
+name: changed-files
+description: Determines which files were changed in a given action.
+
+# outputs:
+#   changed-files:
+#     description: A nul-delimited list of changes files.
+#     value: ${{ jobs.static-checks.outputs.changed-files }}
+
+runs:
+  using: composite
+  steps:
+    - shell: sh
+      run: python ./.github/actions/changed-files/action.py

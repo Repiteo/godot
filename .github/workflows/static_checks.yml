@@ -30,6 +30,9 @@ jobs:
         run: |
           bash ./misc/scripts/gitignore_check.sh
 
+      - name: Get changed files (action)
+        uses: ./.github/actions/changed-files
+
       - name: Get changed files
         id: changed-files
         shell: sh
@@ -91,3 +94,6 @@ jobs:
         uses: j178/prek-action@v3.0.0
         with:
           extra-args: --from-ref ${{ steps.changed-files.outputs.BASE_SHA }}
+
+      - name: Force fail
+        run: exit 1
