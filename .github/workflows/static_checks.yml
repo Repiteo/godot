@@ -41,10 +41,10 @@ jobs:
 
       - name: Style checks via prek
         uses: j178/prek-action@v3.0.0
-        env:
-          FROM_REF: >-
-            ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha
-            || github.event.before != '0000000000000000000000000000000000000000' && github.event.before
-            || 'HEAD~1' }}
-        with:
-          extra-args: --from-ref ${{ env.FROM_REF }}
+        # env:
+        #   FROM_REF: >-
+        #     ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha
+        #     || github.event.before != '0000000000000000000000000000000000000000' && github.event.before
+        #     || 'HEAD~1' }}
+        # with:
+        #   extra-args: --from-ref ${{ env.FROM_REF }}
