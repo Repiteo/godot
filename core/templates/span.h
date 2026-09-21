@@ -33,25 +33,14 @@
 #include "core/error/error_macros.h"
 #include "core/typedefs.h"
 
-template <typename LHS, typename RHS>
-bool are_spans_equal(const LHS *p_lhs, const RHS *p_rhs, size_t p_size) {
-	if constexpr (std::is_same_v<LHS, RHS> && std::is_fundamental_v<LHS>) {
-		// Optimize trivial type comparison.
-		// is_trivially_equality_comparable would help, but it doesn't exist.
-		// memcmp requires pointer argument to be valid even on size = 0 (C11 §7.24.1(2)).
-		// Span allows ptr arguments to be invalid as long as size = 0, so only call when p_size > 0.
-		return p_size == 0 || memcmp(p_lhs, p_rhs, p_size * sizeof(LHS)) == 0;
-	} else {
-		// Normal case: Need to iterate the array manually.
-		for (size_t j = 0; j < p_size; j++) {
-			if (p_lhs[j] != p_rhs[j]) {
-				return false;
-			}
-		}
+template <typename T1, typename T2 = T1, typename = void>
+struct HasComparisonOperators : std::false_type {};
 
-		return true;
-	}
-}
+template <typename T1, typename T2>
+struct HasComparisonOperators<T1, T2, std::void_t<decltype(std::declval<T1>() < std::declval<T2>())>> : std::true_type {};
+
+template <typename T1, typename T2>
+inline constexpr bool has_comparison_operators_v = HasComparisonOperators<T1, T2>::value;
 
 // Equivalent of std::span.
 // Represents a view into a contiguous memory space.
@@ -72,10 +61,10 @@ public:
 
 	_FORCE_INLINE_ constexpr Span() = default;
 
-	_FORCE_INLINE_ Span(const T *p_ptr, uint64_t p_len) :
+	_FORCE_INLINE_ constexpr Span(const T *p_ptr, uint64_t p_len) :
 			_ptr(p_ptr), _len(p_len) {
 #ifdef DEBUG_ENABLED
-		// TODO In c++20, make this check run only in non-consteval, and make this constructor constexpr.
+		// TODO: In c++20, make this check run only in non-consteval.
 		if (_ptr == nullptr && _len > 0) {
 			ERR_PRINT("Internal bug, please report: Span was created from nullptr with size > 0. Recovering by using size = 0.");
 			_len = 0;
@@ -111,29 +100,87 @@ public:
 	_FORCE_INLINE_ constexpr const T *begin() const { return _ptr; }
 	_FORCE_INLINE_ constexpr const T *end() const { return _ptr + _len; }
 
-	template <typename T1>
-	_FORCE_INLINE_ constexpr Span<T1> reinterpret() const {
-		return Span<T1>(reinterpret_cast<const T1 *>(_ptr), _len * sizeof(T) / sizeof(T1));
+	template <typename T_Other>
+	_FORCE_INLINE_ Span<T_Other> reinterpret() const {
+		return Span<T_Other>(reinterpret_cast<const T_Other *>(_ptr), _len * sizeof(T_Other) / sizeof(T_Other));
 	}
 
 	// Algorithms.
 	constexpr int64_t find(const T &p_val, uint64_t p_from = 0) const;
-	template <typename T1 = T>
-	constexpr int64_t find_sequence(const Span<T1> &p_span, uint64_t p_from = 0) const;
+	template <typename T_Other = T>
+	constexpr int64_t find_sequence(const Span<T_Other> &p_span, uint64_t p_from = 0) const;
 	constexpr int64_t rfind(const T &p_val, uint64_t p_from) const;
 	_FORCE_INLINE_ constexpr int64_t rfind(const T &p_val) const { return rfind(p_val, size() - 1); }
-	template <typename T1 = T>
-	constexpr int64_t rfind_sequence(const Span<T1> &p_span, uint64_t p_from) const;
-	template <typename T1 = T>
-	_FORCE_INLINE_ constexpr int64_t rfind_sequence(const Span<T1> &p_span) const { return rfind_sequence(p_span, size() - p_span.size()); }
+	template <typename T_Other = T>
+	constexpr int64_t rfind_sequence(const Span<T_Other> &p_span, uint64_t p_from) const;
+	template <typename T_Other = T>
+	_FORCE_INLINE_ constexpr int64_t rfind_sequence(const Span<T_Other> &p_span) const { return rfind_sequence(p_span, size() - p_span.size()); }
 	constexpr uint64_t count(const T &p_val) const;
 	/// Find the index of the given value using binary search.
 	/// Note: Assumes that elements in the span are sorted. Otherwise, use find() instead.
 	template <typename Comparator = Comparator<T>>
 	constexpr uint64_t bisect(const T &p_value, bool p_before, Comparator p_compare = Comparator()) const;
+	constexpr Span subspan(uint64_t p_pos, uint64_t p_len) const;
+	_FORCE_INLINE_ constexpr Span subspan(uint64_t p_pos) const { return subspan(p_pos, size() - p_pos); }
 
 	/// The caller is responsible to ensure size() > 0.
 	constexpr T max() const;
+	/// The caller is responsible to ensure size() > 0.
+	constexpr T min() const;
+
+	template <typename T_Other = T>
+	[[nodiscard]] constexpr int8_t compare(const Span<T_Other> &p_other) const;
+
+	template <typename T_Other = T>
+	[[nodiscard]] _FORCE_INLINE_ constexpr bool operator==(const Span<T_Other> &p_other) const { return compare(p_other) == 0; }
+	template <typename T_Other = T>
+	[[nodiscard]] _FORCE_INLINE_ constexpr bool operator!=(const Span<T_Other> &p_other) const { return compare(p_other) != 0; }
+	template <typename T_Other = T>
+	[[nodiscard]] _FORCE_INLINE_ constexpr bool operator<(const Span<T_Other> &p_other) const {
+		static_assert(has_comparison_operators_v<T, T_Other>);
+		return compare(p_other) < 0;
+	}
+	template <typename T_Other = T>
+	[[nodiscard]] _FORCE_INLINE_ constexpr bool operator<=(const Span<T_Other> &p_other) const {
+		static_assert(has_comparison_operators_v<T, T_Other>);
+		return compare(p_other) <= 0;
+	}
+	template <typename T_Other = T>
+	[[nodiscard]] _FORCE_INLINE_ constexpr bool operator>(const Span<T_Other> &p_other) const {
+		static_assert(has_comparison_operators_v<T, T_Other>);
+		return compare(p_other) > 0;
+	}
+	template <typename T_Other = T>
+	[[nodiscard]] _FORCE_INLINE_ constexpr bool operator>=(const Span<T_Other> &p_other) const {
+		static_assert(has_comparison_operators_v<T, T_Other>);
+		return compare(p_other) >= 0;
+	}
+
+	// Allow comparing C-style arrays directly.
+	template <typename T_Other = T, size_t N>
+	[[nodiscard]] _FORCE_INLINE_ constexpr bool operator==(const T_Other (&p_other)[N]) const { return compare(Span(p_other)) == 0; }
+	template <typename T_Other = T, size_t N>
+	[[nodiscard]] _FORCE_INLINE_ constexpr bool operator!=(const T_Other (&p_other)[N]) const { return compare(Span(p_other)) != 0; }
+	template <typename T_Other = T, size_t N>
+	[[nodiscard]] _FORCE_INLINE_ constexpr bool operator<(const T_Other (&p_other)[N]) const {
+		static_assert(has_comparison_operators_v<T, T_Other>);
+		return compare(Span(p_other)) < 0;
+	}
+	template <typename T_Other = T, size_t N>
+	[[nodiscard]] _FORCE_INLINE_ constexpr bool operator<=(const T_Other (&p_other)[N]) const {
+		static_assert(has_comparison_operators_v<T, T_Other>);
+		return compare(Span(p_other)) <= 0;
+	}
+	template <typename T_Other = T, size_t N>
+	[[nodiscard]] _FORCE_INLINE_ constexpr bool operator>(const T_Other (&p_other)[N]) const {
+		static_assert(has_comparison_operators_v<T, T_Other>);
+		return compare(Span(p_other)) > 0;
+	}
+	template <typename T_Other = T, size_t N>
+	[[nodiscard]] _FORCE_INLINE_ constexpr bool operator>=(const T_Other (&p_other)[N]) const {
+		static_assert(has_comparison_operators_v<T, T_Other>);
+		return compare(Span(p_other)) >= 0;
+	}
 };
 
 template <typename T>
@@ -147,10 +194,10 @@ constexpr int64_t Span<T>::find(const T &p_val, uint64_t p_from) const {
 }
 
 template <typename T>
-template <typename T1>
-constexpr int64_t Span<T>::find_sequence(const Span<T1> &p_span, uint64_t p_from) const {
+template <typename T_Other>
+constexpr int64_t Span<T>::find_sequence(const Span<T_Other> &p_span, uint64_t p_from) const {
 	for (uint64_t i = p_from; i <= size() - p_span.size(); i++) {
-		if (are_spans_equal(ptr() + i, p_span.ptr(), p_span.size())) {
+		if (subspan(i, p_span.size()) == p_span) {
 			return i;
 		}
 	}
@@ -170,11 +217,11 @@ constexpr int64_t Span<T>::rfind(const T &p_val, uint64_t p_from) const {
 }
 
 template <typename T>
-template <typename T1>
-constexpr int64_t Span<T>::rfind_sequence(const Span<T1> &p_span, uint64_t p_from) const {
+template <typename T_Other>
+constexpr int64_t Span<T>::rfind_sequence(const Span<T_Other> &p_span, uint64_t p_from) const {
 	DEV_ASSERT(p_from + p_span.size() <= size());
 	for (int64_t i = p_from; i >= 0; i--) {
-		if (are_spans_equal(ptr() + i, p_span.ptr(), p_span.size())) {
+		if (subspan(i, p_span.size()) == p_span) {
 			return i;
 		}
 	}
@@ -232,14 +279,49 @@ constexpr T Span<T>::max() const {
 	return max_val;
 }
 
-template <typename LHS, typename RHS>
-bool operator==(const Span<LHS> &p_lhs, const Span<RHS> &p_rhs) {
-	return p_lhs.size() == p_rhs.size() && are_spans_equal(p_lhs.ptr(), p_rhs.ptr(), p_lhs.size());
+template <typename T>
+constexpr T Span<T>::min() const {
+	DEV_ASSERT(size() > 0);
+	T min_val = _ptr[0];
+	for (size_t i = 1; i < _len; ++i) {
+		if (_ptr[i] < min_val) {
+			min_val = _ptr[i];
+		}
+	}
+	return min_val;
 }
 
-template <typename LHS, typename RHS>
-_FORCE_INLINE_ bool operator!=(const Span<LHS> &p_lhs, const Span<RHS> &p_rhs) {
-	return !(p_lhs == p_rhs);
+template <typename T>
+constexpr Span<T> Span<T>::subspan(uint64_t p_pos, uint64_t p_len) const {
+	DEV_ASSERT(size() >= p_pos);
+	DEV_ASSERT(size() - p_pos >= p_len);
+	return Span<T>(begin() + p_pos, p_len);
+}
+
+template <typename T>
+template <typename T_Other>
+constexpr int8_t Span<T>::compare(const Span<T_Other> &p_other) const {
+	if (size() < p_other.size()) {
+		return -1;
+	} else if (size() > p_other.size()) {
+		return 1;
+	}
+
+	for (uint64_t i = 0; i < size(); i++) {
+		if constexpr (has_comparison_operators_v<T, T_Other>) {
+			if (ptr()[i] < p_other.ptr()[i]) {
+				return -1;
+			} else if (p_other.ptr()[i] < ptr()[i]) {
+				return 1;
+			}
+		} else {
+			if (ptr()[i] != p_other.ptr()[i]) {
+				return -1;
+			}
+		}
+	}
+
+	return 0;
 }
 
 // Zero-constructing Span initializes _ptr and _len to 0 (and thus empty).
