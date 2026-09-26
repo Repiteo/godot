@@ -1153,6 +1153,11 @@ for name, path in modules_detected.items():
             env.module_icons_paths.append(path + "/" + "icons")
         modules_enabled[name] = path
 
+    else:
+        env.disabled_modules.add(name)
+        if ARGUMENTS.get(f"module_{name}_enabled"):  # Only print warning when explicitly enabled.
+            print_warning(f'Module "{name}" is unsupported with the provided configuration; disabling.')
+
     sys.path.remove(path)
     sys.modules.pop("config")
 
