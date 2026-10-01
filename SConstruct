@@ -945,6 +945,9 @@ elif env.msvc:
 # Configure compiler warnings
 env.AppendUnique(CCFLAGS=["$WARNLEVEL"])
 if env.msvc and not methods.using_clang(env):  # MSVC
+    # Disable warnings from includes enclosed by angle brackets.
+    env.Append(CCFLAGS=["/external:anglebrackets", "/external:W0"])
+
     # Disable warnings which we don't plan to fix.
     disabled_warnings = [
         "/wd4100",  # C4100 (unreferenced formal parameter): Doesn't play nice with polymorphism.

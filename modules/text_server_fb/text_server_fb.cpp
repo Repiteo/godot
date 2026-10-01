@@ -46,7 +46,6 @@
 
 #ifdef MODULE_MSDFGEN_ENABLED
 GODOT_GCC_WARNING_PUSH_AND_IGNORE("-Wshadow")
-GODOT_MSVC_WARNING_PUSH_AND_IGNORE(4458) // "Declaration of 'identifier' hides class member".
 
 #include <core/EdgeHolder.h>
 #include <core/ShapeDistanceFinder.h>
@@ -55,7 +54,6 @@ GODOT_MSVC_WARNING_PUSH_AND_IGNORE(4458) // "Declaration of 'identifier' hides c
 #include <msdfgen.h>
 
 GODOT_GCC_WARNING_POP
-GODOT_MSVC_WARNING_POP
 #endif
 
 #ifdef MODULE_FREETYPE_ENABLED
