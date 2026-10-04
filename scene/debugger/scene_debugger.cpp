@@ -527,14 +527,14 @@ Error SceneDebugger::_msg_runtime_node_select_setup(const Array &p_args) {
 
 Error SceneDebugger::_msg_runtime_node_select_set_node_type(const Array &p_args) {
 	ERR_FAIL_COND_V(p_args.is_empty(), ERR_INVALID_DATA);
-	RuntimeNodeSelect::NodeType type = (RuntimeNodeSelect::NodeType)p_args[0];
+	RuntimeNodeSelect::NodeType type = p_args[0].to<RuntimeNodeSelect::NodeType>();
 	RuntimeNodeSelect::get_singleton()->_set_node_type(type);
 	return OK;
 }
 
 Error SceneDebugger::_msg_runtime_node_select_set_ci_tool(const Array &p_args) {
 	ERR_FAIL_COND_V(p_args.is_empty(), ERR_INVALID_DATA);
-	CanvasItemManipulator::Tool tool = (CanvasItemManipulator::Tool)p_args[0];
+	CanvasItemManipulator::Tool tool = p_args[0].to<CanvasItemManipulator::Tool>();
 	RuntimeNodeSelect::get_singleton()->_set_ci_tool(tool);
 	return OK;
 }
@@ -548,7 +548,7 @@ Error SceneDebugger::_msg_runtime_node_select_set_ci_local_space(const Array &p_
 
 Error SceneDebugger::_msg_runtime_node_select_set_n3d_tool(const Array &p_args) {
 	ERR_FAIL_COND_V(p_args.is_empty(), ERR_INVALID_DATA);
-	RuntimeNodeSelect::SelectMode tool = (RuntimeNodeSelect::SelectMode)p_args[0];
+	RuntimeNodeSelect::SelectMode tool = p_args[0].to<RuntimeNodeSelect::SelectMode>();
 	RuntimeNodeSelect::get_singleton()->_set_n3d_tool(tool);
 	return OK;
 }

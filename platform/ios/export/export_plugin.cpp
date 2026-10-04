@@ -99,7 +99,7 @@ HashMap<String, Variant> EditorExportPlatformIOS::get_custom_project_settings(co
 	switch (image_scale_mode) {
 		case 0: {
 			String logo_path = get_project_setting(p_preset, "application/boot_splash/image");
-			RSE::SplashStretchMode stretch_mode = get_project_setting(p_preset, "application/boot_splash/stretch_mode");
+			RSE::SplashStretchMode stretch_mode = get_project_setting(p_preset, "application/boot_splash/stretch_mode").to<RSE::SplashStretchMode>();
 			// If custom logo is not specified, Godot does not scale default one, so we should do the same.
 			if (logo_path.is_empty()) {
 				value = "center";

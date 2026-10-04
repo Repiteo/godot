@@ -1135,7 +1135,7 @@ void EditorNode::_notification(int p_what) {
 		case EditorSettings::NOTIFICATION_EDITOR_SETTINGS_CHANGED: {
 			if (EditorSettings::get_singleton()->check_changed_settings_in_group("filesystem/file_dialog")) {
 				FileDialog::set_default_show_hidden_files(EDITOR_GET("filesystem/file_dialog/show_hidden_files"));
-				FileDialog::set_default_display_mode(EDITOR_GET("filesystem/file_dialog/display_mode"));
+				FileDialog::set_default_display_mode(EDITOR_GET("filesystem/file_dialog/display_mode").to<FileDialog::DisplayMode>());
 			}
 
 			if (EditorSettings::get_singleton()->check_changed_settings_in_group("interface/editor/input/tablet_driver")) {
@@ -8631,7 +8631,7 @@ EditorNode::EditorNode() {
 	}
 
 	FileDialog::set_default_show_hidden_files(EDITOR_GET("filesystem/file_dialog/show_hidden_files"));
-	FileDialog::set_default_display_mode(EDITOR_GET("filesystem/file_dialog/display_mode"));
+	FileDialog::set_default_display_mode(EDITOR_GET("filesystem/file_dialog/display_mode").to<FileDialog::DisplayMode>());
 
 	int swap_cancel_ok = EDITOR_GET("interface/editor/appearance/accept_dialog_cancel_ok_buttons");
 	if (swap_cancel_ok != 0) { // 0 is auto, set in register_scene based on DisplayServer.

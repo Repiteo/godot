@@ -751,7 +751,7 @@ void ScenePaint2DEditor::_update_paint_mode() {
 }
 
 ScenePaint2DEditor::PaintMode ScenePaint2DEditor::_reload_paint_mode() {
-	return (PaintMode)get_meta("_paint_mode", 0);
+	return get_meta("_paint_mode", 0).to<PaintMode>();
 }
 
 void ScenePaint2DEditor::_grid_step_changed() {

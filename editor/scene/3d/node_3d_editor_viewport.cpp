@@ -3241,7 +3241,7 @@ void Node3DEditorViewport::_notification(int p_what) {
 					continue;
 				}
 
-				SupportedRenderingMethods rendering_methods = item_data[0];
+				SupportedRenderingMethods rendering_methods = item_data[0].to<SupportedRenderingMethods>();
 				String base_tooltip = item_data[1];
 
 				bool disabled = false;

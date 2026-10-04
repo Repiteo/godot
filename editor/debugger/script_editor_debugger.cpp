@@ -944,7 +944,7 @@ void ScriptEditorDebugger::_msg_remote_nothing_selected(uint64_t p_thread_id, co
 
 void ScriptEditorDebugger::_msg_remote_selection_invalidated(uint64_t p_thread_id, const Array &p_data) {
 	ERR_FAIL_COND(p_data.is_empty());
-	inspector->invalidate_selection_from_cache(p_data[0]);
+	inspector->invalidate_selection_from_cache(p_data[0].to<TypedArray<uint64_t>>());
 }
 
 void ScriptEditorDebugger::_msg_remote_undo_redo_action(uint64_t p_thread_id, const Array &p_data) {

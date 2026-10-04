@@ -52,7 +52,7 @@ bool GameViewDebuggerMacOS::_msg_set_context_id(const Array &p_args) {
 bool GameViewDebuggerMacOS::_msg_cursor_set_shape(const Array &p_args) {
 	ERR_FAIL_COND_V_MSG(p_args.size() != 1, false, "cursor_set_shape: invalid number of arguments.");
 
-	Control::CursorShape shape = Control::CursorShape(p_args[0]);
+	Control::CursorShape shape = p_args[0].to<Control::CursorShape>();
 	embedded_process->get_layer_host()->set_default_cursor_shape(static_cast<Control::CursorShape>(shape));
 
 	return true;
@@ -67,7 +67,7 @@ bool GameViewDebuggerMacOS::_msg_cursor_set_custom_image(const Array &p_args) {
 	if (!cursor_data.is_empty()) {
 		image->load_png_from_buffer(cursor_data);
 	}
-	DisplayServerEnums::CursorShape shape = DisplayServerEnums::CursorShape(p_args[1]);
+	DisplayServerEnums::CursorShape shape = p_args[1].to<DisplayServerEnums::CursorShape>();
 	Vector2 hotspot = p_args[2];
 
 	embedded_process->get_layer_host()->cursor_set_custom_image(image, shape, hotspot);
@@ -78,7 +78,7 @@ bool GameViewDebuggerMacOS::_msg_cursor_set_custom_image(const Array &p_args) {
 bool GameViewDebuggerMacOS::_msg_mouse_set_mode(const Array &p_args) {
 	ERR_FAIL_COND_V_MSG(p_args.size() != 1, false, "mouse_set_mode: invalid number of arguments.");
 
-	DisplayServerEnums::MouseMode mode = DisplayServerEnums::MouseMode(p_args[0]);
+	DisplayServerEnums::MouseMode mode = p_args[0].to<DisplayServerEnums::MouseMode>();
 	embedded_process->mouse_set_mode(mode);
 
 	return true;

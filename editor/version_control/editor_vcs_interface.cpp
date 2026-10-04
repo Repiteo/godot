@@ -283,7 +283,7 @@ EditorVCSInterface::DiffHunk EditorVCSInterface::_convert_diff_hunk(const Dictio
 	dh.old_lines = p_diff_hunk["old_lines"];
 	dh.new_start = p_diff_hunk["new_start"];
 	dh.old_start = p_diff_hunk["old_start"];
-	TypedArray<Dictionary> diff_lines = p_diff_hunk["diff_lines"];
+	TypedArray<Dictionary> diff_lines = p_diff_hunk["diff_lines"].to<TypedArray<Dictionary>>();
 	for (int i = 0; i < diff_lines.size(); i++) {
 		DiffLine dl = _convert_diff_line(diff_lines[i]);
 		dh.diff_lines.push_back(dl);
@@ -295,7 +295,7 @@ EditorVCSInterface::DiffFile EditorVCSInterface::_convert_diff_file(const Dictio
 	DiffFile df;
 	df.new_file = p_diff_file["new_file"];
 	df.old_file = p_diff_file["old_file"];
-	TypedArray<Dictionary> diff_hunks = p_diff_file["diff_hunks"];
+	TypedArray<Dictionary> diff_hunks = p_diff_file["diff_hunks"].to<TypedArray<Dictionary>>();
 	for (int i = 0; i < diff_hunks.size(); i++) {
 		DiffHunk dh = _convert_diff_hunk(diff_hunks[i]);
 		df.diff_hunks.push_back(dh);

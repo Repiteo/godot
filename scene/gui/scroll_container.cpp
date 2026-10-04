@@ -561,7 +561,7 @@ void ScrollContainer::_accessibility_action_scroll_set(const Variant &p_data) {
 }
 
 void ScrollContainer::_accessibility_action_scroll_up(const Variant &p_data) {
-	if ((AccessibilityServerEnums::AccessibilityScrollUnit)p_data == AccessibilityServerEnums::SCROLL_UNIT_ITEM) {
+	if (p_data.to<AccessibilityServerEnums::AccessibilityScrollUnit>() == AccessibilityServerEnums::SCROLL_UNIT_ITEM) {
 		v_scroll->set_value(v_scroll->get_value() - v_scroll->get_page() / ScrollBar::PAGE_DIVISOR);
 	} else {
 		v_scroll->set_value(v_scroll->get_value() - v_scroll->get_page());
@@ -569,7 +569,7 @@ void ScrollContainer::_accessibility_action_scroll_up(const Variant &p_data) {
 }
 
 void ScrollContainer::_accessibility_action_scroll_down(const Variant &p_data) {
-	if ((AccessibilityServerEnums::AccessibilityScrollUnit)p_data == AccessibilityServerEnums::SCROLL_UNIT_ITEM) {
+	if (p_data.to<AccessibilityServerEnums::AccessibilityScrollUnit>() == AccessibilityServerEnums::SCROLL_UNIT_ITEM) {
 		v_scroll->set_value(v_scroll->get_value() + v_scroll->get_page() / ScrollBar::PAGE_DIVISOR);
 	} else {
 		v_scroll->set_value(v_scroll->get_value() + v_scroll->get_page());
@@ -577,7 +577,7 @@ void ScrollContainer::_accessibility_action_scroll_down(const Variant &p_data) {
 }
 
 void ScrollContainer::_accessibility_action_scroll_left(const Variant &p_data) {
-	if ((AccessibilityServerEnums::AccessibilityScrollUnit)p_data == AccessibilityServerEnums::SCROLL_UNIT_ITEM) {
+	if (p_data.to<AccessibilityServerEnums::AccessibilityScrollUnit>() == AccessibilityServerEnums::SCROLL_UNIT_ITEM) {
 		h_scroll->set_value(h_scroll->get_value() - h_scroll->get_page() / ScrollBar::PAGE_DIVISOR);
 	} else {
 		h_scroll->set_value(h_scroll->get_value() - h_scroll->get_page());
@@ -585,7 +585,7 @@ void ScrollContainer::_accessibility_action_scroll_left(const Variant &p_data) {
 }
 
 void ScrollContainer::_accessibility_action_scroll_right(const Variant &p_data) {
-	if ((AccessibilityServerEnums::AccessibilityScrollUnit)p_data == AccessibilityServerEnums::SCROLL_UNIT_ITEM) {
+	if (p_data.to<AccessibilityServerEnums::AccessibilityScrollUnit>() == AccessibilityServerEnums::SCROLL_UNIT_ITEM) {
 		h_scroll->set_value(h_scroll->get_value() + h_scroll->get_page() / ScrollBar::PAGE_DIVISOR);
 	} else {
 		h_scroll->set_value(h_scroll->get_value() + h_scroll->get_page());

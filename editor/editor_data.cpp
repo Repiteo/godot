@@ -387,7 +387,7 @@ void EditorData::load_editor_plugin_states_from_config(const Ref<ConfigFile> &p_
 
 	const Node *root = es.root;
 	if (root && p_config_file->has_section_key("editor_states", "$selected_nodes")) {
-		TypedArray<NodePath> node_paths = p_config_file->get_value("editor_states", "$selected_nodes");
+		TypedArray<NodePath> node_paths = p_config_file->get_value("editor_states", "$selected_nodes").to<TypedArray<NodePath>>();
 		List<Node *> nodes;
 
 		for (const Variant &np : node_paths) {

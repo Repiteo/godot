@@ -49,7 +49,7 @@ void OggPacketSequence::set_packet_data(const TypedArray<Array> &p_data) {
 	for (int page_idx = 0; page_idx < p_data.size(); page_idx++) {
 		// Push a new page. We cleared the vector so this will be at index `page_idx`.
 		page_data.push_back(Vector<PackedByteArray>());
-		TypedArray<PackedByteArray> this_page_data = p_data[page_idx];
+		TypedArray<PackedByteArray> this_page_data = p_data[page_idx].to<TypedArray<PackedByteArray>>();
 		for (int packet = 0; packet < this_page_data.size(); packet++) {
 			page_data.write[page_idx].push_back(this_page_data[packet]);
 		}

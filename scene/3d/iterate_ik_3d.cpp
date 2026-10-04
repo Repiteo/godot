@@ -55,7 +55,7 @@ bool IterateIK3D::_set(const StringName &p_path, const Variant &p_value) {
 				if (opt.is_empty()) {
 					set_joint_limitation(which, idx, p_value);
 				} else if (opt == "right_axis") {
-					set_joint_limitation_right_axis(which, idx, p_value);
+					set_joint_limitation_right_axis(which, idx, p_value.to<SecondaryDirection>());
 				} else if (opt == "right_axis_vector") {
 					set_joint_limitation_right_axis_vector(which, idx, p_value);
 				} else if (opt == "rotation_offset") {

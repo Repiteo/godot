@@ -197,15 +197,15 @@ void RuntimeNodeSelect::_setup(const Dictionary &p_settings) {
 	view_3d_controller->set_translation_sensitivity(p_settings.get("editors/3d/navigation_feel/translation_sensitivity", 1));
 	view_3d_controller->set_translation_inertia(p_settings.get("editors/3d/navigation_feel/translation_inertia", 0));
 
-	view_3d_controller->set_pan_mouse_button(p_settings.get("editors/3d/navigation/pan_mouse_button", View3DController::NAV_MOUSE_BUTTON_MIDDLE));
+	view_3d_controller->set_pan_mouse_button(p_settings.get("editors/3d/navigation/pan_mouse_button", View3DController::NAV_MOUSE_BUTTON_MIDDLE).to<View3DController::NavigationMouseButton>());
 
-	view_3d_controller->set_orbit_mouse_button(p_settings.get("editors/3d/navigation/orbit_mouse_button", View3DController::NAV_MOUSE_BUTTON_MIDDLE));
+	view_3d_controller->set_orbit_mouse_button(p_settings.get("editors/3d/navigation/orbit_mouse_button", View3DController::NAV_MOUSE_BUTTON_MIDDLE).to<View3DController::NavigationMouseButton>());
 	view_3d_controller->set_orbit_sensitivity(p_settings.get("editors/3d/navigation_feel/orbit_sensitivity", 0.004));
 	view_3d_controller->set_orbit_inertia(p_settings.get("editors/3d/navigation_feel/orbit_inertia", 0));
 
-	view_3d_controller->set_zoom_style(p_settings.get("editors/3d/navigation/zoom_style", View3DController::ZOOM_VERTICAL));
+	view_3d_controller->set_zoom_style(p_settings.get("editors/3d/navigation/zoom_style", View3DController::ZOOM_VERTICAL).to<View3DController::ZoomStyle>());
 	view_3d_controller->set_zoom_inertia(p_settings.get("editors/3d/navigation_feel/zoom_inertia", 0));
-	view_3d_controller->set_zoom_mouse_button(p_settings.get("editors/3d/navigation/zoom_mouse_button", View3DController::NAV_MOUSE_BUTTON_MIDDLE));
+	view_3d_controller->set_zoom_mouse_button(p_settings.get("editors/3d/navigation/zoom_mouse_button", View3DController::NAV_MOUSE_BUTTON_MIDDLE).to<View3DController::NavigationMouseButton>());
 
 	view_3d_controller->set_angle_snap_threshold(p_settings.get("editors/3d/navigation_feel/angle_snap_threshold", 10));
 

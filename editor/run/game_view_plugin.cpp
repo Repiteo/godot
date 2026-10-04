@@ -435,7 +435,7 @@ bool GameViewDebugger::_msg_get_screenshot(const Array &p_args) {
 
 bool GameViewDebugger::_msg_show_toaster(const Array &p_args) {
 	ERR_FAIL_COND_V_MSG(p_args.size() != 2, false, "show_toaster: invalid number of arguments");
-	EditorToaster::get_singleton()->popup_str(p_args[0], p_args[1]);
+	EditorToaster::get_singleton()->popup_str(p_args[0], p_args[1].to<EditorToaster::Severity>());
 	return true;
 }
 

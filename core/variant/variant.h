@@ -489,15 +489,6 @@ public:
 	operator Vector<Variant>() const;
 	operator Vector<StringName>() const;
 
-	template <typename T, std::enable_if_t<std::is_enum_v<T>, int> = 0>
-	_FORCE_INLINE_ operator T() const { return to<T>(); }
-	template <typename T>
-	_FORCE_INLINE_ operator BitField<T>() const { return to<BitField<T>>(); }
-	template <typename T>
-	_FORCE_INLINE_ operator TypedArray<T>() const { return to<TypedArray<T>>(); }
-	template <typename K, typename V>
-	_FORCE_INLINE_ operator TypedDictionary<K, V>() const { return to<TypedDictionary<K, V>>(); }
-
 	Object *get_validated_object() const;
 	Object *get_validated_object_with_check(bool &r_previously_freed) const;
 

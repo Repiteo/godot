@@ -1194,17 +1194,17 @@ Vector<Vector3> Geometry3D::compute_convex_mesh_points(const TypedArray<Plane> &
 
 TypedArray<Plane> Geometry3D::build_box_planes(const Vector3 &p_extents) {
 	Variant ret = ::Geometry3D::build_box_planes(p_extents);
-	return ret;
+	return ret.to<TypedArray<Plane>>();
 }
 
 TypedArray<Plane> Geometry3D::build_cylinder_planes(float p_radius, float p_height, int p_sides, Vector3::Axis p_axis) {
 	Variant ret = ::Geometry3D::build_cylinder_planes(p_radius, p_height, p_sides, p_axis);
-	return ret;
+	return ret.to<TypedArray<Plane>>();
 }
 
 TypedArray<Plane> Geometry3D::build_capsule_planes(float p_radius, float p_height, int p_sides, int p_lats, Vector3::Axis p_axis) {
 	Variant ret = ::Geometry3D::build_capsule_planes(p_radius, p_height, p_sides, p_lats, p_axis);
-	return ret;
+	return ret.to<TypedArray<Plane>>();
 }
 
 Vector<Vector3> Geometry3D::get_closest_points_between_segments(const Vector3 &p_p1, const Vector3 &p_p2, const Vector3 &p_q1, const Vector3 &p_q2) {

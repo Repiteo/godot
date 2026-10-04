@@ -1696,7 +1696,7 @@ void EditorAssetLibrary::_update_button_icon(Button *p_button, const StringName 
 
 void EditorAssetLibrary::_api_request(const String &p_request, RequestType p_request_type, bool p_is_parallel) {
 	if (!p_is_parallel) {
-		if ((RequestType)request->get_meta("requesting") != REQUESTING_NONE) {
+		if (request->get_meta("requesting").to<RequestType>() != REQUESTING_NONE) {
 			request->cancel_request();
 		}
 		error_hb->hide();
@@ -1759,7 +1759,7 @@ void EditorAssetLibrary::_http_request_completed(int p_status, int p_code, const
 		} break;
 	}
 
-	RequestType requested = p_requester->get_meta("requesting");
+	RequestType requested = p_requester->get_meta("requesting").to<RequestType>();
 	if (p_requester != request) {
 		// This was done as a parallel request, so free the node.
 		p_requester->queue_free();

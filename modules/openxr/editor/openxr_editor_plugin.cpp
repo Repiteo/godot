@@ -169,7 +169,7 @@ String OpenXRExportPlugin::get_android_manifest_activity_element_contents(const 
 )n";
 
 		// Get the initial bounds mode.
-		OpenXRSpatialContainerState::BoundsMode initial_bounds_mode = (OpenXRSpatialContainerState::BoundsMode)get_export_platform()->get_project_setting(get_export_preset(), "xr/openxr/extensions/spatial_container/bounds_mode");
+		OpenXRSpatialContainerState::BoundsMode initial_bounds_mode = get_export_platform()->get_project_setting(get_export_preset(), "xr/openxr/extensions/spatial_container/bounds_mode").to<OpenXRSpatialContainerState::BoundsMode>();
 		String manifest_initial_bounds_mode_value = "XR_SPATIAL_CONTAINER_INITIAL_BOUNDS_MODE_UNDEFINED";
 		switch (initial_bounds_mode) {
 			case OpenXRSpatialContainerState::BOUNDS_MODE_BOUNDED:

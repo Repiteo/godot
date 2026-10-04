@@ -89,7 +89,7 @@ Error EmbeddedDebugger::_msg_window_size(const Array &p_args) {
 
 Error EmbeddedDebugger::_msg_mouse_set_mode(const Array &p_args) {
 	ERR_FAIL_COND_V_MSG(p_args.size() != 1, ERR_INVALID_PARAMETER, "Invalid number of arguments for 'mouse_set_mode' message.");
-	DisplayServerEnums::MouseMode mode = p_args[0];
+	DisplayServerEnums::MouseMode mode = p_args[0].to<DisplayServerEnums::MouseMode>();
 	ds->mouse_set_mode(mode);
 	return OK;
 }
@@ -148,7 +148,7 @@ Error EmbeddedDebugger::_msg_event(const Array &p_args) {
 
 Error EmbeddedDebugger::_msg_win_event(const Array &p_args) {
 	ERR_FAIL_COND_V_MSG(p_args.size() != 1, ERR_INVALID_PARAMETER, "Invalid number of arguments for 'win_event' message.");
-	DisplayServerEnums::WindowEvent win_event = p_args[0];
+	DisplayServerEnums::WindowEvent win_event = p_args[0].to<DisplayServerEnums::WindowEvent>();
 	ds->send_window_event_by_id(win_event, DisplayServerEnums::MAIN_WINDOW_ID);
 	if (win_event == DisplayServerEnums::WindowEvent::WINDOW_EVENT_MOUSE_EXIT) {
 		Input::get_singleton()->release_pressed_events();
