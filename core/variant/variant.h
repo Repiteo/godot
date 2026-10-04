@@ -382,6 +382,14 @@ private:
 	Variant(const Variant *) {}
 	Variant(const Variant **) {}
 
+	// Internal conversion handler.
+	template <typename T, typename = void>
+	struct To {
+		_FORCE_INLINE_ static T value(const Variant &p_this) {
+			return p_this;
+		}
+	};
+
 public:
 	_FORCE_INLINE_ Type get_type() const {
 		return type;
@@ -414,7 +422,7 @@ public:
 
 	// Canonical conversion operator.
 	template <typename T>
-	_FORCE_INLINE_ T to() const { return *this; }
+	_FORCE_INLINE_ T to() const { return To<T>::value(*this); }
 
 	// Legacy conversion operators. Use `variant.to<Type>()` instead. These operators will be phased out over time.
 	operator bool() const;
@@ -482,13 +490,13 @@ public:
 	operator Vector<StringName>() const;
 
 	template <typename T, std::enable_if_t<std::is_enum_v<T>, int> = 0>
-	_FORCE_INLINE_ operator T() const { return static_cast<T>(operator int64_t()); }
+	_FORCE_INLINE_ operator T() const { return to<T>(); }
 	template <typename T>
-	_FORCE_INLINE_ operator BitField<T>() const { return static_cast<T>(operator uint64_t()); }
+	_FORCE_INLINE_ operator BitField<T>() const { return to<BitField<T>>(); }
 	template <typename T>
-	_FORCE_INLINE_ operator TypedArray<T>() const { return operator Array(); }
+	_FORCE_INLINE_ operator TypedArray<T>() const { return to<TypedArray<T>>(); }
 	template <typename K, typename V>
-	_FORCE_INLINE_ operator TypedDictionary<K, V>() const { return operator Dictionary(); }
+	_FORCE_INLINE_ operator TypedDictionary<K, V>() const { return to<TypedDictionary<K, V>>(); }
 
 	Object *get_validated_object() const;
 	Object *get_validated_object_with_check(bool &r_previously_freed) const;
@@ -885,8 +893,41 @@ public:
 	}
 };
 
-template <>
-IPAddress Variant::to<IPAddress>() const;
+#define VARIANT_TO_DECLARE(m_type) \
+	template <> \
+	struct Variant::To<m_type> { \
+		static m_type value(const Variant &p_this); \
+	}
+
+VARIANT_TO_DECLARE(IPAddress);
+
+template <typename T>
+struct Variant::To<T, std::enable_if_t<std::is_enum_v<T>>> {
+	_FORCE_INLINE_ static T value(const Variant &p_this) {
+		return static_cast<T>(p_this.to<int64_t>());
+	}
+};
+
+template <typename T>
+struct Variant::To<BitField<T>> {
+	_FORCE_INLINE_ static BitField<T> value(const Variant &p_this) {
+		return static_cast<T>(p_this.to<int64_t>());
+	}
+};
+
+template <typename T>
+struct Variant::To<TypedArray<T>> {
+	_FORCE_INLINE_ static TypedArray<T> value(const Variant &p_this) {
+		return p_this.to<Array>();
+	}
+};
+
+template <typename K, typename V>
+struct Variant::To<TypedDictionary<K, V>> {
+	_FORCE_INLINE_ static TypedDictionary<K, V> value(const Variant &p_this) {
+		return p_this.to<Dictionary>();
+	}
+};
 
 template <typename... VarArgs>
 Vector<Variant> varray(VarArgs... p_args) {

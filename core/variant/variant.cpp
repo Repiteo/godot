@@ -2323,16 +2323,15 @@ Variant::operator Vector<StringName>() const {
 	return to;
 }
 
-template <>
-IPAddress Variant::to<IPAddress>() const {
-	if (type == PACKED_FLOAT32_ARRAY || type == PACKED_INT32_ARRAY || type == PACKED_FLOAT64_ARRAY || type == PACKED_INT64_ARRAY || type == PACKED_BYTE_ARRAY) {
-		Vector<int> addr = operator Vector<int>();
+IPAddress Variant::To<IPAddress>::value(const Variant &p_this) {
+	if (p_this.type == PACKED_FLOAT32_ARRAY || p_this.type == PACKED_INT32_ARRAY || p_this.type == PACKED_FLOAT64_ARRAY || p_this.type == PACKED_INT64_ARRAY || p_this.type == PACKED_BYTE_ARRAY) {
+		Vector<int> addr = p_this.to<Vector<int>>();
 		if (addr.size() == 4) {
 			return IPAddress(addr.get(0), addr.get(1), addr.get(2), addr.get(3));
 		}
 	}
 
-	return IPAddress(operator String());
+	return IPAddress(p_this.to<String>());
 }
 
 Variant::Variant(bool p_bool) :
