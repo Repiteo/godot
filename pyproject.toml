@@ -1,3 +1,24 @@
+[project]
+name = "godot-engine"
+version = "4.8.0-beta"
+requires-python = ">= 3.9, < 4.0"
+classifiers = ["Private :: Do Not Upload"]
+dependencies = [
+	"scons >= 4.4",
+	"tomli >= 1.0; python_version < '3.11'",
+	"zstandard >= 0.19; python_version < '3.14'",
+]
+
+[dependency-groups]
+dev = [
+	"codespell >= 2.4.3",
+	"mypy >= 1.19.1",
+	"ruff >= 0.15.20",
+]
+
+[tool.uv]
+package = false
+
 [tool.mypy]
 disallow_any_generics = true
 explicit_package_bases = true

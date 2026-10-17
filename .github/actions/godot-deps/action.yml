@@ -1,33 +1,39 @@
-name: Setup Python and SCons
-description: Setup Python, install the pip version of SCons.
+name: Setup uv, Python, and SCons
+description: Setup Python via uv, install the pip version of SCons.
 
 inputs:
   python-version:
     description: The Python version to use.
-    default: 3.x
+    default: ""
   python-arch:
-    description: The Python architecture.
-    default: x64
-  scons-version:
-    description: The SCons version to use.
-    default: 4.11.1
+    description: The uv/Python architecture.
+    default: ""
+  resolution:
+    description: Resolution strategy when resolving version ranges (`highest` or `lowest`).
+    default: highest
 
 runs:
   using: composite
   steps:
-    - name: Set up Python 3.x
-      uses: actions/setup-python@v7
+    - name: Set up Python 3.x with uv
+      uses: astral-sh/setup-uv@v10.3.0
       with:
-        # Semantic version range syntax or exact version of a Python version.
         python-version: ${{ inputs.python-version }}
-        # Optional - x64 or x86 architecture, defaults to x64.
-        architecture: ${{ inputs.python-arch }}
+        python-arch: ${{ inputs.python-arch }}
+        # resolution-strategy: ${{ inputs.resolution }}
 
-    - name: Setup SCons
+    - name: Set up project dependencies
       shell: bash
+      env:
+        # UV_SYSTEM_PYTHON: 1
+        # UV_BREAK_SYSTEM_PACKAGES: 1
+        # Workaround no lower bound for `setup-tools` in SCons < 4.7.
+        RESOLUTION: ${{ inputs.resolution == 'highest' && 'highest' || 'lowest-direct' }}
       run: |
-        python -c "import sys; print(sys.version)"
-        python -m pip install scons==${{ inputs.scons-version }} zstandard
+        python --version
+        uv python install --default
+        python --version
+        uv pip install -r pyproject.toml --resolution=${{ env.RESOLUTION }}
         scons --version
 
     - name: Setup problem matchers

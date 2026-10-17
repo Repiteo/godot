@@ -155,7 +155,8 @@ jobs:
         with:
           # Sync with Ensure*Version in SConstruct.
           python-version: 3.9
-          scons-version: 4.4
+          resolution: lowest
+          # scons-version: 4.4
 
       - name: Force remove preinstalled .NET SDKs
         if: matrix.build-mono
