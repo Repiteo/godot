@@ -207,6 +207,9 @@ cscope.out
 cscope.in.out
 cscope.po.out
 
+# uv
+/uv.lock
+
 # Vim
 *.swo
 *.swp

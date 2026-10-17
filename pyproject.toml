@@ -1,3 +1,35 @@
+[project]
+name = "godot-engine"
+version = "4.8.0-beta"
+readme = "README.md"
+requires-python = ">= 3.9, < 4.0"
+license = "MIT"
+license-files = ["LICENSE.txt", "thirdparty/README.md"]
+classifiers = ["Private :: Do Not Upload"]
+
+[project.urls]
+changelog = "https://godotengine.github.io/godot-interactive-changelog/"
+contributing = "https://contributing.godotengine.org/en/latest/"
+documentation = "https://docs.godotengine.org/en/latest/"
+funding = "https://fund.godotengine.org/"
+homepage = "https://godotengine.org/"
+issues = "https://github.com/godotengine/godot/issues/"
+security = "https://github.com/godotengine/.github/blob/master/SECURITY.md"
+source = "https://github.com/godotengine/godot/"
+
+[dependency-groups]
+dev = [
+	"codespell >= 2.4.3",
+	"mypy >= 1.19.1",
+	"ruff >= 0.15.20",
+	{ include-group = "build" },
+]
+build = [
+	"scons >= 4.4",
+	"tomli >= 1.0; python_version < '3.11'",
+	"zstandard >= 0.19; python_version < '3.14'",
+]
+
 [tool.mypy]
 disallow_any_generics = true
 explicit_package_bases = true
@@ -10,12 +42,10 @@ warn_redundant_casts = true
 warn_return_any = true
 warn_unreachable = true
 exclude = ["thirdparty/"]
-python_version = "3.9"
 
 [tool.ruff]
 extend-exclude = ["thirdparty"]
 extend-include = ["*SConstruct", "*SCsub"]
-target-version = "py39"
 line-length = 120
 preview = true
 fix = true
