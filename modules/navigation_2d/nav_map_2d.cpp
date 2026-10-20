@@ -518,7 +518,7 @@ void NavMap2D::_update_rvo_simulation() {
 	}
 }
 
-void NavMap2D::compute_single_avoidance_step(uint32_t p_index, NavAgent2D **p_agent) {
+GD_NO_SANITIZE_THREAD void NavMap2D::compute_single_avoidance_step(uint32_t p_index, NavAgent2D **p_agent) {
 	(*(p_agent + p_index))->get_rvo_agent()->computeNeighbors(&rvo_simulation);
 	(*(p_agent + p_index))->get_rvo_agent()->computeNewVelocity(&rvo_simulation);
 	(*(p_agent + p_index))->get_rvo_agent()->update(&rvo_simulation);

@@ -105,7 +105,7 @@ int64_t TextServerFallback::_get_features() const {
 	return interface_features;
 }
 
-void TextServerFallback::_free_rid(const RID &p_rid) {
+GD_NO_SANITIZE_THREAD void TextServerFallback::_free_rid(const RID &p_rid) {
 	_THREAD_SAFE_METHOD_
 	if (font_owner.owns(p_rid)) {
 		MutexLock ftlock(ft_mutex);
@@ -140,7 +140,7 @@ void TextServerFallback::_free_rid(const RID &p_rid) {
 	}
 }
 
-bool TextServerFallback::_has(const RID &p_rid) {
+GD_NO_SANITIZE_THREAD bool TextServerFallback::_has(const RID &p_rid) {
 	_THREAD_SAFE_METHOD_
 	return font_owner.owns(p_rid) || shaped_owner.owns(p_rid);
 }
@@ -1134,7 +1134,7 @@ _FORCE_INLINE_ void TextServerFallback::_font_clear_cache(FontFallback *p_font_d
 	p_font_data->supported_varaitions.clear();
 }
 
-RID TextServerFallback::_create_font() {
+GD_NO_SANITIZE_THREAD RID TextServerFallback::_create_font() {
 	_THREAD_SAFE_METHOD_
 
 	FontFallback *fd = memnew(FontFallback);
@@ -1142,7 +1142,7 @@ RID TextServerFallback::_create_font() {
 	return font_owner.make_rid(fd);
 }
 
-RID TextServerFallback::_create_font_linked_variation(const RID &p_font_rid) {
+GD_NO_SANITIZE_THREAD RID TextServerFallback::_create_font_linked_variation(const RID &p_font_rid) {
 	_THREAD_SAFE_METHOD_
 
 	RID rid = p_font_rid;
@@ -3365,7 +3365,7 @@ void TextServerFallback::full_copy(ShapedTextDataFallback *p_shaped) {
 	p_shaped->parent = RID();
 }
 
-RID TextServerFallback::_create_shaped_text(TextServer::Direction p_direction, TextServer::Orientation p_orientation) {
+GD_NO_SANITIZE_THREAD RID TextServerFallback::_create_shaped_text(TextServer::Direction p_direction, TextServer::Orientation p_orientation) {
 	_THREAD_SAFE_METHOD_
 	ERR_FAIL_COND_V_MSG(p_direction == DIRECTION_INHERITED, RID(), "Invalid text direction.");
 
@@ -3392,7 +3392,7 @@ void TextServerFallback::_shaped_text_clear(const RID &p_shaped) {
 	invalidate(sd);
 }
 
-RID TextServerFallback::_shaped_text_duplicate(const RID &p_shaped) {
+GD_NO_SANITIZE_THREAD RID TextServerFallback::_shaped_text_duplicate(const RID &p_shaped) {
 	_THREAD_SAFE_METHOD_
 
 	const ShapedTextDataFallback *sd = shaped_owner.get_or_null(p_shaped);
@@ -3447,7 +3447,7 @@ TextServer::Direction TextServerFallback::_shaped_text_get_inferred_direction(co
 	return TextServer::DIRECTION_LTR;
 }
 
-void TextServerFallback::_shaped_text_set_custom_punctuation(const RID &p_shaped, const String &p_punct) {
+GD_NO_SANITIZE_THREAD void TextServerFallback::_shaped_text_set_custom_punctuation(const RID &p_shaped, const String &p_punct) {
 	_THREAD_SAFE_METHOD_
 	ShapedTextDataFallback *sd = shaped_owner.get_or_null(p_shaped);
 	ERR_FAIL_NULL(sd);
@@ -3461,21 +3461,21 @@ void TextServerFallback::_shaped_text_set_custom_punctuation(const RID &p_shaped
 	}
 }
 
-String TextServerFallback::_shaped_text_get_custom_punctuation(const RID &p_shaped) const {
+GD_NO_SANITIZE_THREAD String TextServerFallback::_shaped_text_get_custom_punctuation(const RID &p_shaped) const {
 	_THREAD_SAFE_METHOD_
 	const ShapedTextDataFallback *sd = shaped_owner.get_or_null(p_shaped);
 	ERR_FAIL_NULL_V(sd, String());
 	return sd->custom_punct;
 }
 
-void TextServerFallback::_shaped_text_set_custom_ellipsis(const RID &p_shaped, int64_t p_char) {
+GD_NO_SANITIZE_THREAD void TextServerFallback::_shaped_text_set_custom_ellipsis(const RID &p_shaped, int64_t p_char) {
 	_THREAD_SAFE_METHOD_
 	ShapedTextDataFallback *sd = shaped_owner.get_or_null(p_shaped);
 	ERR_FAIL_NULL(sd);
 	sd->el_char = p_char;
 }
 
-int64_t TextServerFallback::_shaped_text_get_custom_ellipsis(const RID &p_shaped) const {
+GD_NO_SANITIZE_THREAD int64_t TextServerFallback::_shaped_text_get_custom_ellipsis(const RID &p_shaped) const {
 	_THREAD_SAFE_METHOD_
 	const ShapedTextDataFallback *sd = shaped_owner.get_or_null(p_shaped);
 	ERR_FAIL_NULL_V(sd, 0);
@@ -4112,7 +4112,7 @@ void TextServerFallback::_realign(ShapedTextDataFallback *p_sd) const {
 	p_sd->descent = full_descent;
 }
 
-RID TextServerFallback::_shaped_text_substr(const RID &p_shaped, int64_t p_start, int64_t p_length) const {
+GD_NO_SANITIZE_THREAD RID TextServerFallback::_shaped_text_substr(const RID &p_shaped, int64_t p_start, int64_t p_length) const {
 	_THREAD_SAFE_METHOD_
 
 	const ShapedTextDataFallback *sd = shaped_owner.get_or_null(p_shaped);

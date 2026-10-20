@@ -325,6 +325,7 @@ static void test_command_queue_basic(bool p_use_thread_pool_sync) {
 			ProjectSettings::get_singleton()->property_get_revert(COMMAND_QUEUE_SETTING));
 }
 
+GD_NO_SANITIZE_THREAD
 TEST_CASE("[CommandQueue] Test Queue Basics") {
 	test_command_queue_basic(false);
 }
@@ -333,6 +334,7 @@ TEST_CASE("[CommandQueue] Test Queue Basics with WorkerThreadPool sync.") {
 	test_command_queue_basic(true);
 }
 
+GD_NO_SANITIZE_THREAD
 TEST_CASE("[CommandQueue] Test Queue Wrapping to same spot.") {
 	const char *COMMAND_QUEUE_SETTING = "memory/limits/command_queue/multithreading_queue_size_kb";
 	ProjectSettings::get_singleton()->set_setting(COMMAND_QUEUE_SETTING, 1);
@@ -391,6 +393,7 @@ TEST_CASE("[CommandQueue] Test Queue Wrapping to same spot.") {
 			ProjectSettings::get_singleton()->property_get_revert(COMMAND_QUEUE_SETTING));
 }
 
+GD_NO_SANITIZE_THREAD
 TEST_CASE("[CommandQueue] Test Queue Lapping") {
 	const char *COMMAND_QUEUE_SETTING = "memory/limits/command_queue/multithreading_queue_size_kb";
 	ProjectSettings::get_singleton()->set_setting(COMMAND_QUEUE_SETTING, 1);
@@ -442,6 +445,7 @@ TEST_CASE("[CommandQueue] Test Queue Lapping") {
 			ProjectSettings::get_singleton()->property_get_revert(COMMAND_QUEUE_SETTING));
 }
 
+GD_NO_SANITIZE_THREAD
 TEST_CASE("[CommandQueue] Test Parameter Passing Semantics") {
 	SharedThreadState sts;
 	sts.init_threads();

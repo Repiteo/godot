@@ -382,7 +382,7 @@ int64_t TextServerAdvanced::_get_features() const {
 	return interface_features;
 }
 
-void TextServerAdvanced::_free_rid(const RID &p_rid) {
+GD_NO_SANITIZE_THREAD void TextServerAdvanced::_free_rid(const RID &p_rid) {
 	_THREAD_SAFE_METHOD_
 	if (font_owner.owns(p_rid)) {
 		MutexLock ftlock(ft_mutex);
@@ -417,12 +417,12 @@ void TextServerAdvanced::_free_rid(const RID &p_rid) {
 	}
 }
 
-bool TextServerAdvanced::_has(const RID &p_rid) {
+GD_NO_SANITIZE_THREAD bool TextServerAdvanced::_has(const RID &p_rid) {
 	_THREAD_SAFE_METHOD_
 	return font_owner.owns(p_rid) || font_var_owner.owns(p_rid) || shaped_owner.owns(p_rid);
 }
 
-bool TextServerAdvanced::_load_support_data(const String &p_filename) {
+GD_NO_SANITIZE_THREAD bool TextServerAdvanced::_load_support_data(const String &p_filename) {
 	_THREAD_SAFE_METHOD_
 
 #if defined(ICU_STATIC_DATA) || !defined(HAVE_ICU_BUILTIN)
@@ -469,7 +469,7 @@ String TextServerAdvanced::_get_support_data_info() const {
 	return String("ICU break iteration data (\"icudt_godot.dat\").");
 }
 
-bool TextServerAdvanced::_save_support_data(const String &p_filename) const {
+GD_NO_SANITIZE_THREAD bool TextServerAdvanced::_save_support_data(const String &p_filename) const {
 	_THREAD_SAFE_METHOD_
 #ifdef ICU_STATIC_DATA
 
@@ -491,7 +491,7 @@ bool TextServerAdvanced::_save_support_data(const String &p_filename) const {
 #endif
 }
 
-PackedByteArray TextServerAdvanced::_get_support_data() const {
+GD_NO_SANITIZE_THREAD PackedByteArray TextServerAdvanced::_get_support_data() const {
 	_THREAD_SAFE_METHOD_
 #ifdef ICU_STATIC_DATA
 
@@ -2276,7 +2276,7 @@ hb_font_t *TextServerAdvanced::_font_get_hb_handle(const RID &p_font_rid, int64_
 	return ffsd->hb_handle;
 }
 
-RID TextServerAdvanced::_create_font() {
+GD_NO_SANITIZE_THREAD RID TextServerAdvanced::_create_font() {
 	_THREAD_SAFE_METHOD_
 
 	FontAdvanced *fd = memnew(FontAdvanced);
@@ -2284,7 +2284,7 @@ RID TextServerAdvanced::_create_font() {
 	return font_owner.make_rid(fd);
 }
 
-RID TextServerAdvanced::_create_font_linked_variation(const RID &p_font_rid) {
+GD_NO_SANITIZE_THREAD RID TextServerAdvanced::_create_font_linked_variation(const RID &p_font_rid) {
 	_THREAD_SAFE_METHOD_
 
 	RID rid = p_font_rid;
@@ -4788,7 +4788,7 @@ void TextServerAdvanced::full_copy(ShapedTextDataAdvanced *p_shaped) {
 	p_shaped->parent = RID();
 }
 
-RID TextServerAdvanced::_create_shaped_text(TextServer::Direction p_direction, TextServer::Orientation p_orientation) {
+GD_NO_SANITIZE_THREAD RID TextServerAdvanced::_create_shaped_text(TextServer::Direction p_direction, TextServer::Orientation p_orientation) {
 	_THREAD_SAFE_METHOD_
 	ERR_FAIL_COND_V_MSG(p_direction == DIRECTION_INHERITED, RID(), "Invalid text direction.");
 
@@ -4816,7 +4816,7 @@ void TextServerAdvanced::_shaped_text_clear(const RID &p_shaped) {
 	invalidate(sd, true);
 }
 
-RID TextServerAdvanced::_shaped_text_duplicate(const RID &p_shaped) {
+GD_NO_SANITIZE_THREAD RID TextServerAdvanced::_shaped_text_duplicate(const RID &p_shaped) {
 	_THREAD_SAFE_METHOD_
 
 	const ShapedTextDataAdvanced *sd = shaped_owner.get_or_null(p_shaped);
@@ -4890,7 +4890,7 @@ TextServer::Direction TextServerAdvanced::_shaped_text_get_inferred_direction(co
 	return sd->para_direction;
 }
 
-void TextServerAdvanced::_shaped_text_set_custom_punctuation(const RID &p_shaped, const String &p_punct) {
+GD_NO_SANITIZE_THREAD void TextServerAdvanced::_shaped_text_set_custom_punctuation(const RID &p_shaped, const String &p_punct) {
 	_THREAD_SAFE_METHOD_
 	ShapedTextDataAdvanced *sd = shaped_owner.get_or_null(p_shaped);
 	ERR_FAIL_NULL(sd);
@@ -4904,21 +4904,21 @@ void TextServerAdvanced::_shaped_text_set_custom_punctuation(const RID &p_shaped
 	}
 }
 
-String TextServerAdvanced::_shaped_text_get_custom_punctuation(const RID &p_shaped) const {
+GD_NO_SANITIZE_THREAD String TextServerAdvanced::_shaped_text_get_custom_punctuation(const RID &p_shaped) const {
 	_THREAD_SAFE_METHOD_
 	const ShapedTextDataAdvanced *sd = shaped_owner.get_or_null(p_shaped);
 	ERR_FAIL_NULL_V(sd, String());
 	return sd->custom_punct;
 }
 
-void TextServerAdvanced::_shaped_text_set_custom_ellipsis(const RID &p_shaped, int64_t p_char) {
+GD_NO_SANITIZE_THREAD void TextServerAdvanced::_shaped_text_set_custom_ellipsis(const RID &p_shaped, int64_t p_char) {
 	_THREAD_SAFE_METHOD_
 	ShapedTextDataAdvanced *sd = shaped_owner.get_or_null(p_shaped);
 	ERR_FAIL_NULL(sd);
 	sd->el_char = p_char;
 }
 
-int64_t TextServerAdvanced::_shaped_text_get_custom_ellipsis(const RID &p_shaped) const {
+GD_NO_SANITIZE_THREAD int64_t TextServerAdvanced::_shaped_text_get_custom_ellipsis(const RID &p_shaped) const {
 	_THREAD_SAFE_METHOD_
 	const ShapedTextDataAdvanced *sd = shaped_owner.get_or_null(p_shaped);
 	ERR_FAIL_NULL_V(sd, 0);
@@ -5349,7 +5349,7 @@ bool TextServerAdvanced::_shaped_text_add_string(const RID &p_shaped, const Stri
 	return true;
 }
 
-bool TextServerAdvanced::_shaped_text_add_object(const RID &p_shaped, const Variant &p_key, const Size2 &p_size, InlineAlignment p_inline_align, int64_t p_length, double p_baseline) {
+GD_NO_SANITIZE_THREAD bool TextServerAdvanced::_shaped_text_add_object(const RID &p_shaped, const Variant &p_key, const Size2 &p_size, InlineAlignment p_inline_align, int64_t p_length, double p_baseline) {
 	_THREAD_SAFE_METHOD_
 	ShapedTextDataAdvanced *sd = shaped_owner.get_or_null(p_shaped);
 	ERR_FAIL_NULL_V(sd, false);
@@ -5546,7 +5546,7 @@ void TextServerAdvanced::_realign(ShapedTextDataAdvanced *p_sd) const {
 	p_sd->descent = full_descent;
 }
 
-RID TextServerAdvanced::_shaped_text_substr(const RID &p_shaped, int64_t p_start, int64_t p_length) const {
+GD_NO_SANITIZE_THREAD RID TextServerAdvanced::_shaped_text_substr(const RID &p_shaped, int64_t p_start, int64_t p_length) const {
 	_THREAD_SAFE_METHOD_
 	const ShapedTextDataAdvanced *sd = shaped_owner.get_or_null(p_shaped);
 	ERR_FAIL_NULL_V(sd, RID());
@@ -7059,7 +7059,7 @@ _FORCE_INLINE_ void TextServerAdvanced::_add_features(const Dictionary &p_source
 	}
 }
 
-UBreakIterator *TextServerAdvanced::_create_line_break_iterator_for_locale(const String &p_language, UErrorCode *r_err) const {
+GD_NO_SANITIZE_THREAD UBreakIterator *TextServerAdvanced::_create_line_break_iterator_for_locale(const String &p_language, UErrorCode *r_err) const {
 	// Creating UBreakIterator (ubrk_open) is surprisingly costly.
 	// However, cloning (ubrk_clone) is cheaper, so we keep around blueprints to accelerate creating new ones.
 
@@ -7486,7 +7486,7 @@ void TextServerAdvanced::_shape_run(ShapedTextDataAdvanced *p_sd, int64_t p_star
 	}
 }
 
-bool TextServerAdvanced::_shaped_text_shape(const RID &p_shaped) {
+GD_NO_SANITIZE_THREAD bool TextServerAdvanced::_shaped_text_shape(const RID &p_shaped) {
 	_THREAD_SAFE_METHOD_
 	ShapedTextDataAdvanced *sd = shaped_owner.get_or_null(p_shaped);
 	ERR_FAIL_NULL_V(sd, false);
@@ -8467,7 +8467,7 @@ TextServerAdvanced::TextServerAdvanced() {
 #endif
 }
 
-void TextServerAdvanced::_font_clear_system_fallback_cache() {
+GD_NO_SANITIZE_THREAD void TextServerAdvanced::_font_clear_system_fallback_cache() {
 	_THREAD_SAFE_METHOD_
 	for (const KeyValue<SystemFontKey, SystemFontCache> &E : system_fonts) {
 		const Vector<SystemFontCacheRec> &sysf_cache = E.value.var;

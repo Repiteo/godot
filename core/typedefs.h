@@ -88,6 +88,20 @@ static_assert(__cplusplus >= 201703L, "Minimum of C++17 required.");
 #error Undefined behavior sanitizer was enabled without defining `UBSAN_ENABLED`
 #endif
 
+#ifndef _MSC_VER
+#define GD_NO_SANITIZE_ADDRESS __attribute__((no_sanitize("address")))
+#define GD_NO_SANITIZE_LEAK __attribute__((no_sanitize("leak")))
+#define GD_NO_SANITIZE_MEMORY __attribute__((no_sanitize("memory")))
+#define GD_NO_SANITIZE_THREAD __attribute__((no_sanitize("thread")))
+#define GD_NO_SANITIZE_UNDEFINED __attribute__((no_sanitize("undefined")))
+#else
+#define GD_NO_SANITIZE_ADDRESS __declspec(no_sanitize_address)
+#define GD_NO_SANITIZE_LEAK
+#define GD_NO_SANITIZE_MEMORY
+#define GD_NO_SANITIZE_THREAD
+#define GD_NO_SANITIZE_UNDEFINED
+#endif
+
 // Turn argument to string constant:
 // https://gcc.gnu.org/onlinedocs/cpp/Stringizing.html#Stringizing
 #ifndef _STR

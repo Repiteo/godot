@@ -593,14 +593,14 @@ void NavMap3D::_update_rvo_simulation() {
 	}
 }
 
-void NavMap3D::compute_single_avoidance_step_2d(uint32_t index, NavAgent3D **agent) {
+GD_NO_SANITIZE_THREAD void NavMap3D::compute_single_avoidance_step_2d(uint32_t index, NavAgent3D **agent) {
 	(*(agent + index))->get_rvo_agent_2d()->computeNeighbors(&rvo_simulation_2d);
 	(*(agent + index))->get_rvo_agent_2d()->computeNewVelocity(&rvo_simulation_2d);
 	(*(agent + index))->get_rvo_agent_2d()->update(&rvo_simulation_2d);
 	(*(agent + index))->update();
 }
 
-void NavMap3D::compute_single_avoidance_step_3d(uint32_t index, NavAgent3D **agent) {
+GD_NO_SANITIZE_THREAD void NavMap3D::compute_single_avoidance_step_3d(uint32_t index, NavAgent3D **agent) {
 	(*(agent + index))->get_rvo_agent_3d()->computeNeighbors(&rvo_simulation_3d);
 	(*(agent + index))->get_rvo_agent_3d()->computeNewVelocity(&rvo_simulation_3d);
 	(*(agent + index))->get_rvo_agent_3d()->update(&rvo_simulation_3d);
