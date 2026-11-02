@@ -56,6 +56,7 @@
 #include "core/os/time.h"
 #include "core/profiling/profiling.h"
 #include "core/register_core_types.h"
+#include "core/sanitizers.h"
 #include "core/string/translation_server.h"
 #include "core/variant/variant_parser.h"
 #include "core/version.h"
@@ -983,6 +984,7 @@ int Main::test_entrypoint(int argc, char *argv[], bool &tests_need_run) {
 
 Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_phase) {
 	GodotProfileZone("setup");
+	Sanitizers::persist_sanitizers();
 	Thread::make_main_thread();
 	set_current_thread_safe_for_nodes(true);
 
